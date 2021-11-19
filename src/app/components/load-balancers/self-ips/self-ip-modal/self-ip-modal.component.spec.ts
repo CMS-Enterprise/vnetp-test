@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { SelfIpModalComponent } from './self-ip-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerSelfIp, LoadBalancerVlan, V1LoadBalancerSelfIpsService, V1LoadBalancerVlansService } from 'api_client';
+import { LoadBalancerSelfIp, LoadBalancerVlan, V1LoadBalancerSelfIpsService, V1LoadBalancerVlansService } from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { SelfIpModalDto } from './self-ip-modal.dto';
 
@@ -67,11 +67,11 @@ describe('SelfIpModalComponent', () => {
 
     expect(component.form.controls.name.disabled).toBe(true);
     expect(component.form.controls.ipAddress.disabled).toBe(true);
-    expect(component.form.controls.loadBalancerVlanId.disabled).toBe(false);
+    expect(component.form.controls.loadBalancerVlanId.disabled).toBe(true);
   });
 
   it('should create a new self ip', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerSelfIpsPost');
+    const spy = jest.spyOn(service, 'createOneLoadBalancerSelfIp');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: SelfIpModalDto = {
         tierId: '1',
@@ -98,7 +98,7 @@ describe('SelfIpModalComponent', () => {
   });
 
   it('should update an existing self ip', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerSelfIpsIdPut');
+    const spy = jest.spyOn(service, 'updateOneLoadBalancerSelfIp');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: SelfIpModalDto = {
         tierId: '1',
@@ -118,8 +118,8 @@ describe('SelfIpModalComponent', () => {
     expect(spy).toHaveBeenCalledWith({
       id: '2',
       loadBalancerSelfIp: {
-        ipAddress: '192.168.1.2',
         loadBalancerVlanId: '3',
+        ipAddress: '192.168.1.2',
         name: 'NewName',
         tierId: null,
       },

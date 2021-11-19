@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActifioProfileDto, V1ActifioGmProfilesService } from 'api_client';
+import { ActifioProfileDto, V1ActifioGmProfilesService } from 'client';
 
 interface ProfileView extends ActifioProfileDto {
   mostRecentChangeDate: string;
@@ -47,7 +47,7 @@ export class ProfileListComponent implements OnInit {
 
   public loadProfiles(): void {
     this.isLoading = true;
-    this.agmProfileService.v1ActifioGmProfilesGet({}).subscribe(profiles => {
+    this.agmProfileService.getProfilesActifioProfile({}).subscribe(profiles => {
       this.profiles = profiles.map(profile => {
         return {
           ...profile,

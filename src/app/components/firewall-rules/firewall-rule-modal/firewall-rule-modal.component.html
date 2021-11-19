@@ -27,7 +27,7 @@
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
           <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
         </div>
       </div>
 
@@ -139,6 +139,7 @@
           />
           <div *ngIf="submitted && f.ruleIndex.errors" class="invalid-feedback">
             <div *ngIf="f.ruleIndex.errors.required">Rule Index is required</div>
+            <div *ngIf="f.ruleIndex.errors.min">Rule Index must be greater than or equal to 1</div>
           </div>
         </div>
       </div>
@@ -170,12 +171,8 @@
             *ngIf="f.sourceNetworkType.value === 'IpAddress'"
           />
           <div *ngIf="submitted && f.sourceIpAddress.errors" class="invalid-feedback">
-            <div *ngIf="f.sourceIpAddress.errors.required">
-              Source IP Address is required.
-            </div>
-            <div *ngIf="f.sourceIpAddress.errors.invalidIpAny">
-              Invalid IP address, must be a valid IPv4/IPv6 address or CIDR.
-            </div>
+            <div *ngIf="f.sourceIpAddress.errors.required">Source IP Address is required</div>
+            <div *ngIf="f.sourceIpAddress.errors.invalidIpAny">Invalid IP address, must be a valid IPv4/IPv6 address or CIDR</div>
           </div>
 
           <label for="sourceNetworkObject" *ngIf="f.sourceNetworkType.value === 'NetworkObject'">Source Network Object</label>
@@ -193,9 +190,7 @@
             bindValue="id"
           ></ng-select>
           <div *ngIf="submitted && f.sourceNetworkObject.errors" class="invalid-feedback">
-            <div *ngIf="f.sourceNetworkObject.errors.required">
-              Source Network Object is required
-            </div>
+            <div *ngIf="f.sourceNetworkObject.errors.required">Source Network Object is required</div>
           </div>
 
           <label for="sourceNetworkObjectGroup" *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'"
@@ -216,9 +211,7 @@
           >
           </ng-select>
           <div *ngIf="submitted && f.sourceNetworkObjectGroup.errors" class="invalid-feedback">
-            <div *ngIf="f.sourceNetworkObjectGroup.errors.required">
-              Source Network Object Group is required
-            </div>
+            <div *ngIf="f.sourceNetworkObjectGroup.errors.required">Source Network Object Group is required</div>
           </div>
         </div>
       </div>
@@ -253,12 +246,8 @@
             *ngIf="f.destinationNetworkType.value === 'IpAddress'"
           />
           <div *ngIf="submitted && f.destinationIpAddress.errors" class="invalid-feedback">
-            <div *ngIf="f.destinationIpAddress.errors.required">
-              Destination IP is required
-            </div>
-            <div *ngIf="f.destinationIpAddress.errors.invalidIpAny">
-              Invalid IP address, must be a valid IPv4/IPv6 address or CIDR.
-            </div>
+            <div *ngIf="f.destinationIpAddress.errors.required">Destination IP is required</div>
+            <div *ngIf="f.destinationIpAddress.errors.invalidIpAny">Invalid IP address, must be a valid IPv4/IPv6 address or CIDR</div>
           </div>
 
           <label for="destinationNetworkObject" *ngIf="f.destinationNetworkType.value === 'NetworkObject'"
@@ -279,9 +268,7 @@
           >
           </ng-select>
           <div *ngIf="submitted && f.destinationNetworkObject.errors" class="invalid-feedback">
-            <div *ngIf="f.destinationNetworkObject.errors.required">
-              Destination Network Object is required
-            </div>
+            <div *ngIf="f.destinationNetworkObject.errors.required">Destination Network Object is required</div>
           </div>
 
           <label for="destinationNetworkObjectGroup" *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'"
@@ -302,9 +289,7 @@
           >
           </ng-select>
           <div *ngIf="submitted && f.destinationNetworkObjectGroup.errors" class="invalid-feedback">
-            <div *ngIf="f.destinationNetworkObjectGroup.errors.required">
-              Destination Network Object Group is required
-            </div>
+            <div *ngIf="f.destinationNetworkObjectGroup.errors.required">Destination Network Object Group is required</div>
           </div>
         </div>
       </div>
@@ -338,9 +323,7 @@
             *ngIf="f.serviceType.value === 'Port'"
           />
           <div *ngIf="submitted && f.sourcePorts.errors" class="invalid-feedback">
-            <div *ngIf="f.sourcePorts.errors.required">
-              Source Port is required
-            </div>
+            <div *ngIf="f.sourcePorts.errors.required">Source Port is required</div>
           </div>
         </div>
 
@@ -357,9 +340,7 @@
             *ngIf="f.serviceType.value === 'Port'"
           />
           <div *ngIf="submitted && f.destinationPorts.errors" class="invalid-feedback">
-            <div *ngIf="f.destinationPorts.errors.required">
-              Destination Port is required
-            </div>
+            <div *ngIf="f.destinationPorts.errors.required">Destination Port is required</div>
           </div>
 
           <label for="serviceObject" *ngIf="f.serviceType.value === 'ServiceObject'">Service Object </label>
@@ -378,9 +359,7 @@
           >
           </ng-select>
           <div *ngIf="submitted && f.serviceObject.errors" class="invalid-feedback">
-            <div *ngIf="f.serviceObject.errors.required">
-              Service Object is required
-            </div>
+            <div *ngIf="f.serviceObject.errors.required">Service Object is required</div>
           </div>
 
           <label for="serviceObjectGroup" *ngIf="f.serviceType.value === 'ServiceObjectGroup'">Service Object Group</label>
@@ -399,9 +378,7 @@
           >
           </ng-select>
           <div *ngIf="submitted && f.serviceObjectGroup.errors" class="invalid-feedback">
-            <div *ngIf="f.serviceObjectGroup.errors.required">
-              Service Object Group is required
-            </div>
+            <div *ngIf="f.serviceObjectGroup.errors.required">Service Object Group is required</div>
           </div>
         </div>
       </div>

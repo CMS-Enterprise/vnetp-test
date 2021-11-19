@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { Subscription } from 'rxjs';
-import { V1ActifioRdsRecoveryPlansService } from 'api_client';
+import { ActifioRdsRecoveryPlanDto, V1ActifioRdsRecoveryPlansService } from 'client';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { ActifioRdsRecoveryPlanDto } from 'api_client/model/actifioRdsRecoveryPlanDto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 export interface RecoveryPlanView {
@@ -72,7 +71,7 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
 
   public executeAllRecoveryPlans(): void {
     const executeAllFunction = () => {
-      this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansExecutePost().subscribe(() => {
+      this.rdsRecoveryPlanService.executeAllRecoveryPlansRecoveryPlan().subscribe(() => {
         this.loadRecoveryPlans();
       });
     };
@@ -90,7 +89,7 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
   public executeRecoveryPlan(recoveryPlan: RecoveryPlanView): void {
     const { id, name } = recoveryPlan;
     const executeFunction = () => {
-      this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansIdExecutePost({ id }).subscribe(() => {
+      this.rdsRecoveryPlanService.executeRecoveryPlanRecoveryPlan({ id }).subscribe(() => {
         this.loadRecoveryPlans();
       });
     };
@@ -108,7 +107,7 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
   public deleteRecoveryPlan(recoveryPlan: RecoveryPlanView): void {
     const { id, name } = recoveryPlan;
     const deleteFunction = () => {
-      this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansIdDelete({ id }).subscribe(() => {
+      this.rdsRecoveryPlanService.deleteRecoveryPlanRecoveryPlan({ id }).subscribe(() => {
         this.loadRecoveryPlans();
       });
     };
@@ -126,9 +125,9 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
   public loadRecoveryPlans(): void {
     this.recoveryPlans = [];
     this.isLoading = true;
-    this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansGet().subscribe(recoveryPlans => {
-      this.recoveryPlanDtos = recoveryPlans;
-      this.recoveryPlans = recoveryPlans.map(this.mapRecoveryPlan);
+    this.rdsRecoveryPlanService.getRecoveryPlansRecoveryPlan().subscribe((recoveryPlans: unknown) => {
+      this.recoveryPlanDtos = recoveryPlans as ActifioRdsRecoveryPlanDto[];
+      this.recoveryPlans = (recoveryPlans as ActifioRdsRecoveryPlanDto[]).map(this.mapRecoveryPlan);
       this.isLoading = false;
     });
   }

@@ -1,4 +1,4 @@
-import { LoadBalancerVlan } from 'api_client';
+import { LoadBalancerVlan } from 'client';
 
 export interface VlanModalDto {
   tierId: string;

@@ -3,7 +3,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { Tier } from 'api_client/model/tier';
+import { Tier } from 'client/model/tier';
 import {
   V1TiersService,
   Subnet,
@@ -12,7 +12,7 @@ import {
   V1NetworkVlansService,
   SubnetImportCollectionDto,
   SubnetImport,
-} from 'api_client';
+} from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
@@ -127,15 +127,15 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   public deleteSubnet(subnet: Subnet): void {
     this.entityService.deleteEntity(subnet, {
       entityName: 'Subnet',
-      delete$: this.subnetService.v1NetworkSubnetsIdDelete({ id: subnet.id }),
-      softDelete$: this.subnetService.v1NetworkSubnetsIdSoftDelete({ id: subnet.id }),
+      delete$: this.subnetService.deleteOneSubnet({ id: subnet.id }),
+      softDelete$: this.subnetService.softDeleteOneSubnet({ id: subnet.id }),
       onSuccess: () => this.getSubnets(),
     });
   }
 
   restoreSubnet(subnet: Subnet) {
     if (subnet.deletedAt) {
-      this.subnetService.v1NetworkSubnetsIdRestorePatch({ id: subnet.id }).subscribe(() => {
+      this.subnetService.restoreOneSubnet({ id: subnet.id }).subscribe(() => {
         this.getSubnets();
       });
     }
@@ -144,10 +144,10 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   public deleteVlan(vlan: Vlan): void {
     this.entityService.deleteEntity(vlan, {
       entityName: 'VLAN',
-      delete$: this.vlanService.v1NetworkVlansIdDelete({
+      delete$: this.vlanService.deleteOneVlan({
         id: vlan.id,
       }),
-      softDelete$: this.vlanService.v1NetworkVlansIdSoftDelete({
+      softDelete$: this.vlanService.softDeleteOneVlan({
         id: vlan.id,
       }),
       onSuccess: () => this.getVlans(),
@@ -157,7 +157,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   restoreVlan(vlan: Vlan) {
     if (vlan.deletedAt) {
       this.vlanService
-        .v1NetworkVlansIdRestorePatch({
+        .restoreOneVlan({
           id: vlan.id,
         })
         .subscribe(() => {
@@ -177,7 +177,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       subnetsDto.subnets = event as SubnetImport[];
 
       this.subnetService
-        .v1NetworkSubnetsBulkImportPost({
+        .bulkImportSubnetsSubnet({
           subnetImportCollectionDto: subnetsDto,
         })
         .subscribe(() => {
@@ -197,8 +197,14 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       'Import VLANs',
       `Are you sure you would like to import ${event.length} VLAN${event.length > 1 ? 's' : ''}?`,
     );
+    event.map(e => {
+      e.vlanNumber = Number(e.vlanNumber);
+
+      // TODO AFTER MERGE : refactor bulk upload files to all use consistent schema
+      e.tierId = this.getTierId(e['vrfName']);
+    });
     const onConfirm = () => {
-      this.vlanService.v1NetworkVlansBulkPost({ generatedVlanBulkDto: { bulk: event } }).subscribe(() => {
+      this.vlanService.createManyVlan({ createManyVlanDto: { bulk: event } }).subscribe(() => {
         this.getVlans();
       });
     };
@@ -207,6 +213,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     };
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
+
+  public getTierName = (id: string) => ObjectUtil.getObjectName(id, this.tiers);
+  public getTierId = (name: string) => ObjectUtil.getObjectId(name, this.tiers);
 
   getObjectsForNavIndex() {
     if (!this.currentTier) {
@@ -226,7 +235,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     if (!this.hasCurrentTier()) {
       return;
     }
-    this.tierService.v1TiersIdGet({ id: this.currentTier.id, join: 'subnets' }).subscribe(data => {
+    this.tierService.getOneTier({ id: this.currentTier.id, join: ['subnets'] }).subscribe(data => {
       this.subnets = data.subnets;
     });
   }
@@ -235,7 +244,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     if (!this.hasCurrentTier()) {
       return;
     }
-    this.tierService.v1TiersIdGet({ id: this.currentTier.id, join: 'vlans' }).subscribe(data => {
+    this.tierService.getOneTier({ id: this.currentTier.id, join: ['vlans'] }).subscribe(data => {
       this.vlans = data.vlans;
 
       if (getSubnets) {

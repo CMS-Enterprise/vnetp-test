@@ -10,11 +10,11 @@
     "build:prod": "ng build --prod",
     "documentation": "compodoc --watch --serve --open",
     "format": "prettier --write \"src/**/*.ts\"",
-    "test": "jest --no-cache",
+    "test": "jest --no-cache --runInBand",
     "test:ci": "jest --ci --no-cache --runInBand --coverage --verbose --silent",
     "lint": "ng lint",
     "sonar": "sonar-scanner",
-    "generate-client": "openapi-generator generate -c generator-config.json -g typescript-angular -i ./swagger-spec.yaml -o ./api_client"
+    "generate-client": "TS_POST_PROCESS_FILE=./node_modules/.bin/prettier openapi-generator-cli generate"
   },
   "private": true,
   "dependencies": {
@@ -48,7 +48,6 @@
     "ngx-papaparse": "^5.0.0",
     "ngx-smart-modal": "^7.1.1",
     "ngx-toastr": "^12.1.0",
-    "oidc-client": "git+https://svc_tower:781c628fd3928c036f047f644baa903a498f44d5@git-dc01-prod.draas.cdsvdc.lcl/CTMZ/oidc-client.git#local",
     "rxjs": "~6.5.3",
     "save-svg-as-png": "^1.4.14",
     "tslib": "^1.10.0",
@@ -61,7 +60,7 @@
     "@angular/compiler-cli": "^9.1.12",
     "@angular/language-service": "^9.1.12",
     "@compodoc/compodoc": "^1.1.11",
-    "@openapitools/openapi-generator-cli": "^1.0.13-4.3.1",
+    "@openapitools/openapi-generator-cli": "^2.3.3",
     "@types/d3": "^5.7.2",
     "@types/jest": "^26.0.9",
     "@types/ldapjs": "0.0.0",
@@ -86,7 +85,7 @@
     }
   },
   "lint-staged": {
-    "!(api_client)/**/*.{js,ts}": [
+    "!(client)/**/*.{js,ts}": [
       "prettier --write",
       "git add"
     ]

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IpAddressCidrValidator, IpAddressIpValidator } from 'src/app/validators/network-form-validators';
-import { StaticRoute, V1NetworkStaticRoutesService } from 'api_client';
+import { StaticRoute, V1NetworkStaticRoutesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { StaticRouteModalDto } from 'src/app/models/network/static-route-modal-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
@@ -39,7 +39,7 @@ export class StaticRouteModalComponent implements OnInit {
       modalStaticRoute.destinationNetwork = this.form.value.destinationNetwork;
       modalStaticRoute.nextHop = this.form.value.nextHop;
       this.staticRouteService
-        .v1NetworkStaticRoutesPost({
+        .createOneStaticRoute({
           staticRoute: modalStaticRoute,
         })
         .subscribe(
@@ -50,7 +50,7 @@ export class StaticRouteModalComponent implements OnInit {
         );
     } else {
       this.staticRouteService
-        .v1NetworkStaticRoutesIdPut({
+        .updateOneStaticRoute({
           id: this.StaticRouteId,
           staticRoute: modalStaticRoute,
         })
@@ -113,7 +113,7 @@ export class StaticRouteModalComponent implements OnInit {
       name: ['', NameValidator()],
       destinationNetwork: ['', Validators.compose([Validators.required, IpAddressCidrValidator])],
       nextHop: ['', Validators.compose([Validators.required, IpAddressIpValidator])],
-      metric: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(255)])],
+      metric: [1, Validators.compose([Validators.required, Validators.min(1), Validators.max(255)])],
     });
   }
 

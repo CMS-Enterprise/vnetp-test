@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
-import { ActifioApplicationDto, ActifioHostDto } from 'api_client';
+import { ActifioApplicationDto, ActifioHostDto } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({

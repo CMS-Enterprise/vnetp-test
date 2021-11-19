@@ -7,7 +7,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
-import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup } from 'api_client';
+import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
@@ -35,11 +35,11 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   public getTierGroups(loadTiers = false): void {
     this.tierGroupService
-      .v1TierGroupsGet({
-        filter: `datacenterId||eq||${this.currentDatacenter.id}`,
+      .getManyTierGroup({
+        filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
       })
-      .subscribe(data => {
-        this.tierGroups = data;
+      .subscribe((data: unknown) => {
+        this.tierGroups = data as TierGroup[];
 
         if (loadTiers) {
           this.getTiers();
@@ -48,8 +48,8 @@ export class TiersComponent implements OnInit, OnDestroy {
   }
 
   public getTiers(): void {
-    this.tierService.v1TiersGet({ filter: `datacenterId||eq||${this.currentDatacenter.id}` }).subscribe(data => {
-      this.tiers = data;
+    this.tierService.getManyTier({ filter: [`datacenterId||eq||${this.currentDatacenter.id}`] }).subscribe((data: unknown) => {
+      this.tiers = data as Tier[];
     });
   }
 
@@ -72,8 +72,8 @@ export class TiersComponent implements OnInit, OnDestroy {
   public deleteTier(tier: Tier): void {
     this.entityService.deleteEntity(tier, {
       entityName: 'Tier',
-      delete$: this.tierService.v1TiersIdDelete({ id: tier.id }),
-      softDelete$: this.tierService.v1TiersIdSoftDelete({ id: tier.id }),
+      delete$: this.tierService.deleteOneTier({ id: tier.id }),
+      softDelete$: this.tierService.softDeleteOneTier({ id: tier.id }),
       onSuccess: () => this.getTiers(),
     });
   }
@@ -82,7 +82,7 @@ export class TiersComponent implements OnInit, OnDestroy {
     if (!tier.deletedAt) {
       return;
     }
-    this.tierService.v1TiersIdRestorePatch({ id: tier.id }).subscribe(() => {
+    this.tierService.restoreOneTier({ id: tier.id }).subscribe(() => {
       this.getTiers();
     });
   }
@@ -97,8 +97,8 @@ export class TiersComponent implements OnInit, OnDestroy {
     );
     const onConfirm = () => {
       this.tierService
-        .v1TiersBulkPost({
-          generatedTierBulkDto: { bulk: this.sanitizeTiers(tiers) },
+        .createManyTier({
+          createManyTierDto: { bulk: this.sanitizeTiers(tiers) },
         })
         .subscribe(() => {
           this.getTiers();

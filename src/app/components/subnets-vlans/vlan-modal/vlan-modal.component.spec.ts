@@ -7,7 +7,7 @@ import { VlanModalComponent } from './vlan-modal.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
-import { V1NetworkVlansService } from 'api_client';
+import { V1NetworkVlansService } from 'client';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
 
 describe('VlanModalComponent', () => {
@@ -90,7 +90,7 @@ describe('VlanModalComponent', () => {
 
     it('should not create a vlan when the form is invalid', () => {
       const service = TestBed.inject(V1NetworkVlansService);
-      const createVlanSpy = jest.spyOn(service, 'v1NetworkVlansPost');
+      const createVlanSpy = jest.spyOn(service, 'createOneVlan');
 
       component.ModalMode = ModalMode.Create;
       component.form.setValue({
@@ -106,7 +106,7 @@ describe('VlanModalComponent', () => {
 
     it('should create a vlan when in create mode', () => {
       const service = TestBed.inject(V1NetworkVlansService);
-      const createVlanSpy = jest.spyOn(service, 'v1NetworkVlansPost');
+      const createVlanSpy = jest.spyOn(service, 'createOneVlan');
 
       component.ModalMode = ModalMode.Create;
       component.form.setValue({
@@ -129,7 +129,7 @@ describe('VlanModalComponent', () => {
 
     it('should edit an existing vlan when in edit mode', () => {
       const service = TestBed.inject(V1NetworkVlansService) as any;
-      const updateVlanSpy = jest.spyOn(service, 'v1NetworkVlansIdPut');
+      const updateVlanSpy = jest.spyOn(service, 'updateOneVlan');
 
       component.ModalMode = ModalMode.Edit;
       component.form.setValue({

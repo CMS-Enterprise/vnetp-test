@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HealthMonitorModalHelpText } from 'src/app/helptext/help-text-networking';
-import { LoadBalancerHealthMonitor, LoadBalancerHealthMonitorType, V1LoadBalancerHealthMonitorsService } from 'api_client';
+import { LoadBalancerHealthMonitor, LoadBalancerHealthMonitorTypeEnum, V1LoadBalancerHealthMonitorsService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { HealthMonitorModalDto } from './health-monitor-modal.dto';
@@ -16,10 +16,10 @@ export class HealthMonitorModalComponent implements OnInit {
   public form: FormGroup;
   public submitted: boolean;
 
-  public healthMonitorTypes: LoadBalancerHealthMonitorType[] = [
-    LoadBalancerHealthMonitorType.HTTP,
-    LoadBalancerHealthMonitorType.HTTPS,
-    LoadBalancerHealthMonitorType.TCP,
+  public healthMonitorTypes: LoadBalancerHealthMonitorTypeEnum[] = [
+    LoadBalancerHealthMonitorTypeEnum.Http,
+    LoadBalancerHealthMonitorTypeEnum.Https,
+    LoadBalancerHealthMonitorTypeEnum.Tcp,
   ];
 
   private healthMonitorId: string;
@@ -53,7 +53,7 @@ export class HealthMonitorModalComponent implements OnInit {
       return;
     }
 
-    const { name, type, servicePort, interval, timeout } = this.form.getRawValue();
+    const { name, type, servicePort, interval, timeout } = this.form.value;
 
     const healthMonitor: LoadBalancerHealthMonitor = {
       tierId: this.tierId,
@@ -108,7 +108,7 @@ export class HealthMonitorModalComponent implements OnInit {
   }
 
   private createHealthMonitor(loadBalancerHealthMonitor: LoadBalancerHealthMonitor): void {
-    this.healthMonitorService.v1LoadBalancerHealthMonitorsPost({ loadBalancerHealthMonitor }).subscribe(
+    this.healthMonitorService.createOneLoadBalancerHealthMonitor({ loadBalancerHealthMonitor }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -117,7 +117,7 @@ export class HealthMonitorModalComponent implements OnInit {
   private updateHealthMonitor(loadBalancerHealthMonitor: LoadBalancerHealthMonitor): void {
     loadBalancerHealthMonitor.tierId = null;
     this.healthMonitorService
-      .v1LoadBalancerHealthMonitorsIdPut({
+      .updateOneLoadBalancerHealthMonitor({
         id: this.healthMonitorId,
         loadBalancerHealthMonitor,
       })

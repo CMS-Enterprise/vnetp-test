@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { LoadBalancerNodeBulkImportDto, V1LoadBalancerPoolsService } from 'api_client';
+import { LoadBalancerNodeBulkImportDto, V1LoadBalancerPoolsService } from 'client';
 
 @Component({
   selector: 'app-pool-relations',
@@ -12,7 +12,7 @@ export class PoolRelationsComponent {
 
   public import(nodes: LoadBalancerNodeBulkImportDto[]): void {
     this.poolsService
-      .v1LoadBalancerPoolsBulkUpdatePost({
+      .bulkUpdatePoolsLoadBalancerPool({
         nodeImportCollectionDto: {
           nodes,
           datacenterId: this.datacenterId,

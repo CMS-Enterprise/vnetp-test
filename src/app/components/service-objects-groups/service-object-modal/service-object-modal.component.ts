@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ValidatePortRange } from 'src/app/validators/network-form-validators';
-import { ServiceObject, V1NetworkSecurityServiceObjectsService } from 'api_client';
+import { ServiceObject, V1NetworkSecurityServiceObjectsService } from 'client';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ServiceObjectModalHelpText } from 'src/app/helptext/help-text-networking';
@@ -103,7 +103,7 @@ export class ServiceObjectModalComponent implements OnInit {
 
   private createServiceObject(serviceObject: ServiceObject): void {
     serviceObject.tierId = this.TierId;
-    this.serviceObjectsService.v1NetworkSecurityServiceObjectsPost({ serviceObject }).subscribe(
+    this.serviceObjectsService.createOneServiceObject({ serviceObject }).subscribe(
       () => {
         this.closeModal();
       },
@@ -115,7 +115,7 @@ export class ServiceObjectModalComponent implements OnInit {
     serviceObject.name = null;
     serviceObject.protocol = null;
     this.serviceObjectsService
-      .v1NetworkSecurityServiceObjectsIdPut({
+      .updateOneServiceObject({
         id: this.ServiceObjectId,
         serviceObject,
       })

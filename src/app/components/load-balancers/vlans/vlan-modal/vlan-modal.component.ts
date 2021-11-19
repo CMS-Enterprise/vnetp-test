@@ -3,7 +3,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
-import { LoadBalancerVlan, V1LoadBalancerVlansService } from 'api_client';
+import { LoadBalancerVlan, V1LoadBalancerVlansService } from 'client';
 import { VlanModalDto } from './vlan-modal.dto';
 import { RangeValidator } from 'src/app/validators/range-validator';
 
@@ -37,11 +37,12 @@ export class VlanModalComponent implements OnInit {
 
   public save(): void {
     this.submitted = true;
+
     if (this.form.invalid) {
       return;
     }
 
-    const { name, tag } = this.form.getRawValue();
+    const { name, tag } = this.form.value;
 
     const vlan: LoadBalancerVlan = {
       tierId: this.tierId,
@@ -86,7 +87,7 @@ export class VlanModalComponent implements OnInit {
   }
 
   private createVlan(loadBalancerVlan: LoadBalancerVlan): void {
-    this.vlansService.v1LoadBalancerVlansPost({ loadBalancerVlan }).subscribe(
+    this.vlansService.createOneLoadBalancerVlan({ loadBalancerVlan }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -95,7 +96,7 @@ export class VlanModalComponent implements OnInit {
   private updateVlan(loadBalancerVlan: LoadBalancerVlan): void {
     loadBalancerVlan.tierId = null;
     this.vlansService
-      .v1LoadBalancerVlansIdPut({
+      .updateOneLoadBalancerVlan({
         id: this.vlanId,
         loadBalancerVlan,
       })

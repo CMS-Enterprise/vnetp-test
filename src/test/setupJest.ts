@@ -10,7 +10,7 @@ const mock = () => {
     clear: () => (storage = {}),
   };
 };
-const envMock = { environment: { oidc: {} } };
+const envMock = { environment: { ldap: {} } };
 
 Object.defineProperty(window, 'config', { get: () => envMock });
 Object.defineProperty(window, 'setInterval', { value: () => {} });

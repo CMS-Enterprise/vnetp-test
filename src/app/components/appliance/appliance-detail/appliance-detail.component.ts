@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { V1AppliancesService, Appliance, ApplianceNetworkPort } from 'api_client';
+import { V1AppliancesService, Appliance, ApplianceNetworkPort } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import ConversionUtil from 'src/app/utils/ConversionUtil';
@@ -26,7 +26,7 @@ export class ApplianceDetailComponent implements OnInit {
 
   getAppliance() {
     this.applianceService
-      .v1AppliancesIdGet({
+      .getOneAppliance({
         id: this.Id,
       })
       .subscribe(data => {
@@ -40,7 +40,7 @@ export class ApplianceDetailComponent implements OnInit {
     const deleteFunction = () => {
       if (!a.deletedAt) {
         this.applianceService
-          .v1AppliancesIdSoftDelete({
+          .softDeleteOneAppliance({
             id: a.id,
           })
           .subscribe(() => {
@@ -48,7 +48,7 @@ export class ApplianceDetailComponent implements OnInit {
           });
       } else {
         this.applianceService
-          .v1AppliancesIdDelete({
+          .deleteOneAppliance({
             id: a.id,
           })
           .subscribe(() => {
@@ -69,7 +69,7 @@ export class ApplianceDetailComponent implements OnInit {
   restoreAppliance(a: Appliance) {
     if (a.deletedAt) {
       this.applianceService
-        .v1AppliancesIdRestorePatch({
+        .restoreOneAppliance({
           id: a.id,
         })
         .subscribe(() => {

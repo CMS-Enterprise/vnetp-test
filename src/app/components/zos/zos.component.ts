@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
-import { ConfigurationUploadType, V1ConfigurationUploadService, ConfigurationUpload } from 'api_client';
+import { ConfigurationUploadTypeEnum, V1ConfigurationUploadService, ConfigurationUpload } from 'client';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import DownloadUtil from 'src/app/utils/DownloadUtil';
 
@@ -20,19 +20,19 @@ export class ZosComponent implements OnInit, OnDestroy {
 
   getConfigurations() {
     this.configurationService
-      .v1ConfigurationUploadGet({
-        fields: 'id,requestedAt,configuredAt',
-        filter: `type||eq||${ConfigurationUploadType.OS}`,
+      .getManyConfigurationUpload({
+        fields: ['id,requestedAt,configuredAt'],
+        filter: [`type||eq||${ConfigurationUploadTypeEnum.Os}`],
       })
-      .subscribe(data => {
-        this.configurations = data;
+      .subscribe((data: unknown) => {
+        this.configurations = data as ConfigurationUpload[];
       });
   }
 
   getConfigurationFile(event: Event, id: string) {
     event.preventDefault();
     this.configurationService
-      .v1ConfigurationUploadIdGet({
+      .getOneConfigurationUpload({
         id,
       })
       .subscribe(data => {
@@ -45,7 +45,7 @@ export class ZosComponent implements OnInit, OnDestroy {
     const configurationDto = {
       id,
       uploadType,
-      type: ConfigurationUploadType.OS,
+      type: ConfigurationUploadTypeEnum.Os,
     };
     this.subscribeToRequestModal();
     this.ngx.setModalData(configurationDto, 'requestModal');

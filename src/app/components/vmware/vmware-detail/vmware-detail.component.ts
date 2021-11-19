@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { V1VmwareVirtualMachinesService, VmwareVirtualMachine, VmwareVirtualDisk, VmwareNetworkAdapter } from 'api_client';
+import { V1VmwareVirtualMachinesService, VmwareVirtualMachine, VmwareVirtualDisk, VmwareNetworkAdapter } from 'client';
 import ConversionUtil from 'src/app/utils/ConversionUtil';
 import { EntityService } from 'src/app/services/entity.service';
 
@@ -26,9 +26,9 @@ export class VmwareDetailComponent implements OnInit {
 
   getVirtualMachine() {
     this.virtualMachineService
-      .v1VmwareVirtualMachinesIdGet({
+      .getOneVmwareVirtualMachine({
         id: this.Id,
-        join: 'virtualDisks,networkAdapters',
+        join: ['virtualDisks,networkAdapters'],
       })
       .subscribe(data => {
         this.VirtualMachine = data;
@@ -40,10 +40,10 @@ export class VmwareDetailComponent implements OnInit {
   public deleteVirtualMachine(vm: VmwareVirtualMachine): void {
     this.entityService.deleteEntity(vm, {
       entityName: 'Virtual Machine',
-      delete$: this.virtualMachineService.v1VmwareVirtualMachinesIdDelete({
+      delete$: this.virtualMachineService.deleteOneVmwareVirtualMachine({
         id: vm.id,
       }),
-      softDelete$: this.virtualMachineService.v1VmwareVirtualMachinesIdSoftDelete({
+      softDelete$: this.virtualMachineService.softDeleteOneVmwareVirtualMachine({
         id: vm.id,
       }),
       onSuccess: () => {
@@ -59,7 +59,7 @@ export class VmwareDetailComponent implements OnInit {
   restoreVirtualMachine(vm: VmwareVirtualMachine) {
     if (vm.deletedAt) {
       this.virtualMachineService
-        .v1VmwareVirtualMachinesIdRestorePatch({
+        .restoreOneVmwareVirtualMachine({
           id: vm.id,
         })
         .subscribe(() => {

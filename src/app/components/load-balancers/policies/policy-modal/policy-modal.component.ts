@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoadBalancerPolicy, LoadBalancerPolicyType, V1LoadBalancerPoliciesService } from 'api_client';
+import { LoadBalancerPolicy, LoadBalancerPolicyTypeEnum, V1LoadBalancerPoliciesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { PolicyModalDto } from './policy-modal.dto';
@@ -16,7 +16,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 export class PolicyModalComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public submitted: boolean;
-  public PolicyType = LoadBalancerPolicyType;
+  public PolicyType = LoadBalancerPolicyTypeEnum;
 
   private policyId: string;
   private modalMode: ModalMode;
@@ -94,8 +94,8 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
 
     reader.onload = () => {
       const result = reader.result.toString();
-      const type = this.form.get('type').value as LoadBalancerPolicyType;
-      const field: keyof LoadBalancerPolicy = type === LoadBalancerPolicyType.ASM ? 'asmContent' : 'apmContent';
+      const type = this.form.get('type').value as LoadBalancerPolicyTypeEnum;
+      const field: keyof LoadBalancerPolicy = type === LoadBalancerPolicyTypeEnum.Asm ? 'asmContent' : 'apmContent';
       this.form.get(field).setValue(result);
     };
     reader.readAsText(file);
@@ -105,13 +105,13 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
       type: ['', Validators.required],
-      apmContent: ['', ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerPolicyType.APM)],
-      asmContent: ['', ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerPolicyType.ASM)],
+      apmContent: ['', ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerPolicyTypeEnum.Apm)],
+      asmContent: ['', ValidatorUtil.optionallyRequired(() => this.form.get('type').value === LoadBalancerPolicyTypeEnum.Asm)],
     });
   }
 
   private createPolicy(loadBalancerPolicy: LoadBalancerPolicy): void {
-    this.policyService.v1LoadBalancerPoliciesPost({ loadBalancerPolicy }).subscribe(
+    this.policyService.createOneLoadBalancerPolicy({ loadBalancerPolicy }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -119,8 +119,9 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
 
   private updatePolicy(loadBalancerPolicy: LoadBalancerPolicy): void {
     loadBalancerPolicy.tierId = null;
+    loadBalancerPolicy.type = undefined;
     this.policyService
-      .v1LoadBalancerPoliciesIdPut({
+      .updateOneLoadBalancerPolicy({
         id: this.policyId,
         loadBalancerPolicy,
       })
@@ -131,8 +132,9 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
   }
 
   private getPolicyForSave(): LoadBalancerPolicy {
-    const { name, type, apmContent, asmContent } = this.form.getRawValue();
-    if (type === LoadBalancerPolicyType.APM) {
+    const { name, apmContent, asmContent } = this.form.value;
+    const { type } = this.form.getRawValue();
+    if (type === LoadBalancerPolicyTypeEnum.Apm) {
       return {
         apmContent,
         name,
@@ -142,7 +144,7 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
       };
     }
 
-    if (type === LoadBalancerPolicyType.ASM) {
+    if (type === LoadBalancerPolicyTypeEnum.Asm) {
       return {
         asmContent,
         name,
@@ -159,9 +161,9 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
     const apmContent = this.form.get('apmContent');
     const asmContent = this.form.get('asmContent');
 
-    const types = new Set([LoadBalancerPolicyType.APM, LoadBalancerPolicyType.ASM]);
+    const types = new Set([LoadBalancerPolicyTypeEnum.Apm, LoadBalancerPolicyTypeEnum.Asm]);
 
-    return this.form.get('type').valueChanges.subscribe((type: LoadBalancerPolicyType) => {
+    return this.form.get('type').valueChanges.subscribe((type: LoadBalancerPolicyTypeEnum) => {
       if (!types.has(type)) {
         return;
       }

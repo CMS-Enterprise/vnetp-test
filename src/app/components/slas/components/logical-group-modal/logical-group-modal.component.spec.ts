@@ -7,7 +7,7 @@ import {
   V1ActifioGmLogicalGroupsService,
   V1ActifioGmProfilesService,
   V1ActifioGmTemplatesService,
-} from 'api_client';
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   MockYesNoModalComponent,

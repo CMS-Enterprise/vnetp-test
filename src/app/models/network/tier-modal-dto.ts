@@ -1,5 +1,5 @@
 import { ModalMode } from '../other/modal-mode';
-import { Tier } from 'api_client';
+import { Tier } from 'client';
 
 export class TierModalDto {
   DatacenterId: string;

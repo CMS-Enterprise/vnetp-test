@@ -1,6 +1,6 @@
-import { LoadBalancerNodeType } from 'api_client';
+import { LoadBalancerNodeTypeEnum } from 'client';
 
-export const nodeTypeLookup: Record<LoadBalancerNodeType, string> = {
-  [LoadBalancerNodeType.Fqdn]: 'FQDN',
-  [LoadBalancerNodeType.IpAddress]: 'IP Address',
+export const nodeTypeLookup: Record<LoadBalancerNodeTypeEnum, string> = {
+  [LoadBalancerNodeTypeEnum.Fqdn]: 'FQDN',
+  [LoadBalancerNodeTypeEnum.IpAddress]: 'IP Address',
 };

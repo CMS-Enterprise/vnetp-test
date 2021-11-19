@@ -8,7 +8,7 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerPolicy, LoadBalancerPolicyType, Tier, V1LoadBalancerPoliciesService } from 'api_client';
+import { LoadBalancerPolicy, LoadBalancerPolicyTypeEnum, Tier, V1LoadBalancerPoliciesService } from 'client';
 import { PolicyListComponent, ImportPolicy, PolicyView } from './policy-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
@@ -54,9 +54,9 @@ describe('PolicyListComponent', () => {
   });
 
   it('should map policies', () => {
-    jest.spyOn(service, 'v1LoadBalancerPoliciesGet').mockImplementation(() => {
+    jest.spyOn(service, 'getManyLoadBalancerPolicy').mockImplementation(() => {
       return of(([
-        { id: '1', name: 'Policy1', provisionedAt: {}, type: LoadBalancerPolicyType.APM },
+        { id: '1', name: 'Policy1', provisionedAt: {}, type: LoadBalancerPolicyTypeEnum.Apm },
         { id: '2', name: 'Policy2' },
       ] as LoadBalancerPolicy[]) as any);
     });
@@ -83,7 +83,7 @@ describe('PolicyListComponent', () => {
 
   it('should default policies to be empty on error', () => {
     component.policies = [{ id: '1', name: 'Policy1' }] as PolicyView[];
-    jest.spyOn(service, 'v1LoadBalancerPoliciesGet').mockImplementation(() => throwError(''));
+    jest.spyOn(service, 'getManyLoadBalancerPolicy').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
@@ -92,12 +92,12 @@ describe('PolicyListComponent', () => {
 
   it('should import policies', () => {
     const policies = [{ name: 'Policy1', vrfName: 'Tier1' }, { name: 'Policy2' }] as ImportPolicy[];
-    const spy = jest.spyOn(service, 'v1LoadBalancerPoliciesBulkPost');
+    const spy = jest.spyOn(service, 'createManyLoadBalancerPolicy');
 
     component.import(policies);
 
     expect(spy).toHaveBeenCalledWith({
-      generatedLoadBalancerPolicyBulkDto: {
+      createManyLoadBalancerPolicyDto: {
         bulk: [{ name: 'Policy1', tierId: '1', vrfName: 'Tier1' }, { name: 'Policy2' }],
       },
     });
@@ -113,7 +113,7 @@ describe('PolicyListComponent', () => {
   });
 
   it('should restore a policy', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerPoliciesIdRestorePatch');
+    const spy = jest.spyOn(service, 'restoreOneLoadBalancerPolicy');
 
     component.restore({} as PolicyView);
     expect(spy).not.toHaveBeenCalled();

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { V1NetworkSubnetsService, Subnet, Vlan } from 'api_client';
+import { V1NetworkSubnetsService, Subnet, Vlan } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { SubnetModalHelpText } from 'src/app/helptext/help-text-networking';
@@ -103,7 +103,7 @@ export class SubnetModalComponent implements OnInit {
   private createSubnet(subnet: Subnet): void {
     subnet.tierId = this.TierId;
     subnet.vlanId = this.form.value.vlan;
-    this.subnetService.v1NetworkSubnetsPost({ subnet }).subscribe(
+    this.subnetService.createOneSubnet({ subnet }).subscribe(
       () => {
         this.closeModal();
       },
@@ -117,7 +117,7 @@ export class SubnetModalComponent implements OnInit {
     subnet.gateway = null;
     subnet.tierId = null;
     subnet.vlanId = null;
-    this.subnetService.v1NetworkSubnetsIdPut({ id: this.SubnetId, subnet }).subscribe(
+    this.subnetService.updateOneSubnet({ id: this.SubnetId, subnet }).subscribe(
       () => {
         this.closeModal();
       },

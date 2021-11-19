@@ -10,7 +10,7 @@ import {
   ActifioPortGroupDto,
   V1ActifioRdsRecoveryPlansService,
   ActifioRdsRecoveryPlanDto,
-} from 'api_client';
+} from 'client';
 import { Observable, Subscription, of, forkJoin } from 'rxjs';
 import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -104,19 +104,19 @@ export class RecoveryPlanModalComponent implements OnInit, OnDestroy {
   }
 
   private loadArmServers(): void {
-    this.rdsArmServerService.v1ActifioRdsArmServersGet().subscribe(armServers => {
+    this.rdsArmServerService.getArmServersArmServer().subscribe(armServers => {
       this.armServers = armServers;
       this.isLoadingArmServers = false;
     });
   }
 
   private loadAvailableApplicationGroups(armServerId: string): Observable<ActifioApplicationGroupDto[]> {
-    return this.rdsArmServerService.v1ActifioRdsArmServersIdApplicationGroupsGet({ id: armServerId });
+    return this.rdsArmServerService.getApplicationGroupsArmServer({ id: armServerId });
   }
 
   private loadVirtualManagementServers(armServerId: string, applicationGroupIds?: string[]): void {
     this.rdsVirtualManagementService
-      .v1ActifioRdsVirtualManagementServersGet({ armServerId, applicationGroupIds })
+      .getVirtualManagementServersVirtualManagement({ armServerId, applicationGroupIds })
       .subscribe(virtualManagementServers => {
         this.virtualManagementServers = virtualManagementServers;
         this.isLoadingVirtualManagementServers = false;
@@ -124,22 +124,22 @@ export class RecoveryPlanModalComponent implements OnInit, OnDestroy {
   }
 
   private loadResourcePools(virtualManagementServerId: string): Observable<ActifioRdsResourcePoolDto[]> {
-    return this.rdsVirtualManagementService.v1ActifioRdsVirtualManagementServersIdResourcePoolsGet({ id: virtualManagementServerId });
+    return this.rdsVirtualManagementService.getResourcePoolsVirtualManagement({ id: virtualManagementServerId });
   }
 
   private loadPortGroups(virtualManagementServerId: string, resourcePoolId: string): Observable<ActifioPortGroupDto[]> {
-    return this.rdsVirtualManagementService.v1ActifioRdsVirtualManagementServersIdResourcePoolsResourcePoolIdPortGroupsGet({
+    return this.rdsVirtualManagementService.getPortGroupsVirtualManagement({
       id: virtualManagementServerId,
       resourcePoolId,
     });
   }
 
   private editRecoveryPlan(id: string, dto: ActifioRdsAddRecoveryPlanDto): void {
-    this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansIdPut({ id, actifioRdsAddRecoveryPlanDto: dto }).subscribe(() => this.onClose());
+    this.rdsRecoveryPlanService.updateRecoveryPlanRecoveryPlan({ id, actifioRdsAddRecoveryPlanDto: dto }).subscribe(() => this.onClose());
   }
 
   private createRecoveryPlan(dto: ActifioRdsAddRecoveryPlanDto): void {
-    this.rdsRecoveryPlanService.v1ActifioRdsRecoveryPlansPost({ actifioRdsAddRecoveryPlanDto: dto }).subscribe(() => this.onClose());
+    this.rdsRecoveryPlanService.createRecoveryPlanRecoveryPlan({ actifioRdsAddRecoveryPlanDto: dto }).subscribe(() => this.onClose());
   }
 
   private subscribeToNameChanges(): Subscription {

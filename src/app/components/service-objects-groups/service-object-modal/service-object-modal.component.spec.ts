@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1NetworkSecurityServiceObjectsService, ServiceObjectProtocol } from 'api_client';
+import { V1NetworkSecurityServiceObjectsService, ServiceObjectProtocolEnum } from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -79,7 +79,7 @@ describe('ServiceObjectModalComponent', () => {
 
   it('should not create a service object when the form is invalid', () => {
     const service = TestBed.inject(V1NetworkSecurityServiceObjectsService);
-    const createServiceObjectSpy = jest.spyOn(service, 'v1NetworkSecurityServiceObjectsPost');
+    const createServiceObjectSpy = jest.spyOn(service, 'createOneServiceObject');
 
     component.ModalMode = ModalMode.Create;
     component.form.setValue({
@@ -97,12 +97,12 @@ describe('ServiceObjectModalComponent', () => {
 
   it('should call to create a service object when in create mode', () => {
     const service = TestBed.inject(V1NetworkSecurityServiceObjectsService);
-    const createServiceObjectSpy = jest.spyOn(service, 'v1NetworkSecurityServiceObjectsPost');
+    const createServiceObjectSpy = jest.spyOn(service, 'createOneServiceObject');
 
     component.ModalMode = ModalMode.Create;
     component.form.setValue({
       name: 'Test',
-      protocol: ServiceObjectProtocol.IP,
+      protocol: ServiceObjectProtocolEnum.Ip,
       destinationPorts: 'any',
       sourcePorts: 'any',
     });
@@ -114,7 +114,7 @@ describe('ServiceObjectModalComponent', () => {
       serviceObject: {
         tierId: '1',
         name: 'Test',
-        protocol: ServiceObjectProtocol.IP,
+        protocol: ServiceObjectProtocolEnum.Ip,
         destinationPorts: 'any',
         sourcePorts: 'any',
       },
@@ -123,12 +123,12 @@ describe('ServiceObjectModalComponent', () => {
 
   it('should call to edit an existing service object when in edit mode', () => {
     const service = TestBed.inject(V1NetworkSecurityServiceObjectsService) as any;
-    const updateServiceObjectSpy = jest.spyOn(service, 'v1NetworkSecurityServiceObjectsIdPut');
+    const updateServiceObjectSpy = jest.spyOn(service, 'updateOneServiceObject');
 
     component.ModalMode = ModalMode.Edit;
     component.form.setValue({
       name: 'Test',
-      protocol: ServiceObjectProtocol.IP,
+      protocol: ServiceObjectProtocolEnum.Ip,
       destinationPorts: 'any',
       sourcePorts: 'any',
     });
@@ -155,7 +155,7 @@ describe('ServiceObjectModalComponent', () => {
           tierId: '1',
           id: '2',
           name: 'ServiceObject',
-          protocol: ServiceObjectProtocol.IP,
+          protocol: ServiceObjectProtocolEnum.Ip,
           destinationPorts: 'any',
           sourcePorts: 'any',
         },

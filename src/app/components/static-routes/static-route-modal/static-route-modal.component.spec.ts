@@ -3,7 +3,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1NetworkStaticRoutesService } from 'api_client';
+import { V1NetworkStaticRoutesService } from 'client';
 import { StaticRouteModalComponent } from './static-route-modal.component';
 
 describe('StaticRouteModalComponent', () => {

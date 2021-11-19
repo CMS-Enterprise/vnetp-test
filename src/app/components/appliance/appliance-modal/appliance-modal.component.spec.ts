@@ -4,7 +4,7 @@ import { MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalCom
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1AppliancesService } from 'api_client';
+import { V1AppliancesService } from 'client';
 
 describe('ApplianceModalComponent', () => {
   let component: ApplianceModalComponent;
