@@ -6,6 +6,7 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { Tab } from 'src/app/common/tabs/tabs.component';
+import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
@@ -17,34 +18,37 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
   public DatacenterId: string;
   public currentFirewallRulePage = 1;
   public firewallRuleGroups: FirewallRuleGroup[] = [];
-  public currentTab = FirewallRuleGroupTypeEnum.External;
+  // public currentTab = FirewallRuleGroupTypeEnum.External;
   public perPage = 20;
   public tiers: Tier[] = [];
+  currentTier: Tier;
 
-  public tabs: Tab[] = [
-    {
-      name: 'External',
-      tooltip: this.helpText.External,
-    },
-    {
-      name: 'Intervrf',
-      tooltip: this.helpText.InterVrf,
-    },
-  ];
+  // public tabs: Tab[] = [
+  //   {
+  //     name: 'External',
+  //     tooltip: this.helpText.External,
+  //   },
+  //   {
+  //     name: 'Intervrf',
+  //     tooltip: this.helpText.InterVrf,
+  //   },
+  // ];
 
   private currentDatacenterSubscription: Subscription;
+  private currentTierSubscription: Subscription;
 
   constructor(
     public helpText: FirewallRulesHelpText,
     private ngx: NgxSmartModalService,
     private datacenterContextService: DatacenterContextService,
     private tierService: V1TiersService,
+    public tierContextService: TierContextService,
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
   ) {}
 
-  public handleTabChange(tab: Tab): void {
-    this.currentTab = tab.name === 'External' ? FirewallRuleGroupTypeEnum.External : FirewallRuleGroupTypeEnum.Intervrf;
-  }
+  // public handleTabChange(tab: Tab): void {
+  //   this.currentTab = tab.name === 'External' ? FirewallRuleGroupTypeEnum.External : FirewallRuleGroupTypeEnum.Intervrf;
+  // }
 
   public getTiers(): void {
     this.tierService
@@ -54,6 +58,7 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
       })
       .subscribe((data: unknown) => {
         this.tiers = data as Tier[];
+        console.log('The tiers: ', data);
         this.firewallRuleGroups = [];
         this.tiers.forEach(tier => {
           this.firewallRuleGroups = this.firewallRuleGroups.concat(tier.firewallRuleGroups);
@@ -62,7 +67,7 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
   }
 
   public filterFirewallRuleGroup = (firewallRuleGroup: FirewallRuleGroup): boolean => {
-    return firewallRuleGroup.type === this.currentTab;
+    return firewallRuleGroup.tierId === this.currentTier.id;
     // tslint:disable-next-line: semicolon
   };
 
@@ -121,9 +126,15 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
         this.getTiers();
       }
     });
+
+    this.currentTierSubscription = this.tierContextService.currentTier.subscribe(ct => {
+      if (ct) {
+        this.currentTier = ct;
+      }
+    });
   }
 
   ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription]);
+    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription, this.currentTierSubscription]);
   }
 }
