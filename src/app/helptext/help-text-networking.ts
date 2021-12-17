@@ -97,7 +97,8 @@ export class NetworkObjectsGroupsHelpText {
 export class NetworkObjectModalHelpText {
   Name = 'Name of the Network Object.';
   Type = `Type of Network Object (IpAddress, Range).`;
-  IpAddress = `Ip Address/Subnet the Network Object.`;
+  Fqdn = `Fully-Qualified Domain Name of the Network Object.`;
+  IpAddress = `Ip Address/Subnet of the Network Object.`;
   StartIpAddress = `Start Address (X.X.X.X) of Range Network Object.`;
   EndIpAddress = `End Address (X.X.X.X) of Range Network Object.`;
   Nat = `Sets whether Network Object should be NATed.`;

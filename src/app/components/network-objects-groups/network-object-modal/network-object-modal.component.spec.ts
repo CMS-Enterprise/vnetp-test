@@ -76,6 +76,13 @@ describe('NetworkObjectModalComponent', () => {
     expect(isRequired('ipAddress')).toBe(true);
   });
 
+  it('should require fqdn when type is set to "Fqdn"', () => {
+    const type = getFormControl('type');
+    type.setValue('Fqdn');
+
+    expect(isRequired('fqdn')).toBe(true);
+  });
+
   it('should require starting and ending ip address when type is set to "Range"', () => {
     const type = getFormControl('type');
     type.setValue('Range');
