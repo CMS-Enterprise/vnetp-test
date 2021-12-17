@@ -20,7 +20,7 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
   public firewallRuleGroups: FirewallRuleGroup[] = [];
   public perPage = 20;
   public tiers: Tier[] = [];
-  currentTier: Tier;
+  public currentTier: Tier;
 
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
