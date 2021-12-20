@@ -2118,6 +2118,366 @@
           "tierId"
         ]
       },
+      "GetManyNatRuleGroupResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRuleGroup"
+            }
+          },
+          "count": {
+            "type": "number"
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "pageCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "data",
+          "count",
+          "total",
+          "page",
+          "pageCount"
+        ]
+      },
+      "GetManyNatRuleResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRule"
+            }
+          },
+          "count": {
+            "type": "number"
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "pageCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "data",
+          "count",
+          "total",
+          "page",
+          "pageCount"
+        ]
+      },
+      "NatRule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "ruleIndex": {
+            "type": "number",
+            "minimum": 1
+          },
+          "translationType": {
+            "type": "string",
+            "enum": [
+              "Static",
+              "DynamicIp",
+              "DynamicIpAndPort"
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "In",
+              "Out"
+            ]
+          },
+          "biDirectional": {
+            "type": "boolean"
+          },
+          "originalSourceAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "translatedSourceAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "originalDestinationAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "translatedDestinationAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "originalServiceType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "ServiceObject"
+            ]
+          },
+          "translatedServiceType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "ServiceObject"
+            ]
+          },
+          "natRuleGroupId": {
+            "type": "string"
+          },
+          "originalSourceNetworkObjectId": {
+            "type": "string"
+          },
+          "originalSourceNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "translatedSourceNetworkObjectId": {
+            "type": "string"
+          },
+          "translatedSourceNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "originalDestinationNetworkObjectId": {
+            "type": "string"
+          },
+          "originalDestinationNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "translatedDestinationNetworkObjectId": {
+            "type": "string"
+          },
+          "translatedDestinationNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "originalServiceObjectId": {
+            "type": "string"
+          },
+          "translatedServiceObjectId": {
+            "type": "string"
+          },
+          "originalSourceNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "originalSourceNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "translatedSourceNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "translatedSourceNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "originalDestinationNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "originalDestinationNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "translatedDestinationNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "translatedDestinationNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "originalServiceObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObject"
+              }
+            ]
+          },
+          "translatedServiceObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObject"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "enabled",
+          "ruleIndex",
+          "translationType",
+          "direction",
+          "biDirectional",
+          "originalSourceAddressType",
+          "translatedSourceAddressType",
+          "originalDestinationAddressType",
+          "translatedDestinationAddressType",
+          "originalServiceType",
+          "translatedServiceType",
+          "natRuleGroupId"
+        ]
+      },
+      "NatRuleGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Intervrf",
+              "External"
+            ]
+          },
+          "tierId": {
+            "type": "string"
+          },
+          "natRules": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRule"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "tierId"
+        ]
+      },
       "GetManyLoadBalancerIruleResponseDto": {
         "type": "object",
         "properties": {
@@ -3278,6 +3638,13 @@
               "$ref": "#/components/schemas/FirewallRuleGroup"
             }
           },
+          "natRuleGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRuleGroup"
+            }
+          },
           "networkObjects": {
             "readOnly": true,
             "type": "array",
@@ -3951,6 +4318,307 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/NetworkObject"
+            }
+          }
+        },
+        "required": [
+          "bulk"
+        ]
+      },
+      "NatRuleImport": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "ruleIndex": {
+            "type": "number",
+            "minimum": 1
+          },
+          "translationType": {
+            "type": "string",
+            "enum": [
+              "Static",
+              "DynamicIp",
+              "DynamicIpAndPort"
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "In",
+              "Out"
+            ]
+          },
+          "biDirectional": {
+            "type": "boolean"
+          },
+          "originalSourceAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "translatedSourceAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "originalDestinationAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "translatedDestinationAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "originalServiceType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "ServiceObject"
+            ]
+          },
+          "translatedServiceType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "ServiceObject"
+            ]
+          },
+          "natRuleGroupId": {
+            "type": "string"
+          },
+          "originalSourceNetworkObjectId": {
+            "type": "string"
+          },
+          "originalSourceNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "translatedSourceNetworkObjectId": {
+            "type": "string"
+          },
+          "translatedSourceNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "originalDestinationNetworkObjectId": {
+            "type": "string"
+          },
+          "originalDestinationNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "translatedDestinationNetworkObjectId": {
+            "type": "string"
+          },
+          "translatedDestinationNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "originalServiceObjectId": {
+            "type": "string"
+          },
+          "translatedServiceObjectId": {
+            "type": "string"
+          },
+          "originalSourceNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "originalSourceNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "translatedSourceNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "translatedSourceNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "originalDestinationNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "originalDestinationNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "translatedDestinationNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "translatedDestinationNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "originalServiceObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObject"
+              }
+            ]
+          },
+          "translatedServiceObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObject"
+              }
+            ]
+          },
+          "vrfName": {
+            "type": "string"
+          },
+          "natRuleGroupType": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "enabled",
+          "ruleIndex",
+          "translationType",
+          "direction",
+          "biDirectional",
+          "originalSourceAddressType",
+          "translatedSourceAddressType",
+          "originalDestinationAddressType",
+          "translatedDestinationAddressType",
+          "originalServiceType",
+          "translatedServiceType",
+          "natRuleGroupId",
+          "vrfName",
+          "natRuleGroupType"
+        ]
+      },
+      "NatRuleImportCollectionDto": {
+        "type": "object",
+        "properties": {
+          "datacenterId": {
+            "type": "string"
+          },
+          "natRules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRuleImport"
+            }
+          },
+          "dryRun": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "datacenterId",
+          "natRules",
+          "dryRun"
+        ]
+      },
+      "NatRulePreview": {
+        "type": "object",
+        "properties": {
+          "natRulesToBeDeleted": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRule"
+            }
+          },
+          "natRulesToBeUploaded": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRule"
+            }
+          }
+        },
+        "required": [
+          "natRulesToBeDeleted",
+          "natRulesToBeUploaded"
+        ]
+      },
+      "CreateManyNatRuleGroupDto": {
+        "type": "object",
+        "properties": {
+          "bulk": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRuleGroup"
             }
           }
         },
@@ -10791,6 +11459,956 @@
         },
         "tags": [
           "v1/network-security/network-objects"
+        ]
+      }
+    },
+    "/v1/network-security/nat-rules/bulk-import": {
+      "post": {
+        "operationId": "bulkImportNatRulesNatRule",
+        "summary": "",
+        "description": "Bulk Import NAT Rules",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NatRuleImportCollectionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NatRulePreview"
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NatRule"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
+      }
+    },
+    "/v1/network-security/nat-rules/group/{id}": {
+      "get": {
+        "operationId": "getNatRulesNatRule",
+        "summary": "",
+        "description": "Get NAT Rules w/ Object Relations for NAT Rule Group.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NatRule"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
+      }
+    },
+    "/v1/network-security/nat-rules/{id}": {
+      "get": {
+        "operationId": "getOneNatRule",
+        "summary": "Retrieve one NatRule",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields",
+            "description": "Selects resource fields.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": false
+          },
+          {
+            "name": "join",
+            "description": "Adds relational resources.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "cache",
+            "description": "Reset cache (if was enabled).",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get one base response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NatRule"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
+      },
+      "patch": {
+        "operationId": "updateOneNatRule",
+        "summary": "Update one NatRule",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NatRule"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NatRule"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
+      },
+      "put": {
+        "operationId": "replaceOneNatRule",
+        "summary": "Replace one NatRule",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NatRule"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NatRule"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneNatRule",
+        "summary": "Delete one NatRule",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete one base response"
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
+      }
+    },
+    "/v1/network-security/nat-rules": {
+      "get": {
+        "operationId": "getManyNatRule",
+        "summary": "Retrieve many NatRule",
+        "parameters": [
+          {
+            "name": "fields",
+            "description": "Selects resource fields.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": false
+          },
+          {
+            "name": "s",
+            "description": "Adds search condition.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter",
+            "description": "Adds filter condition.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "or",
+            "description": "Adds OR condition.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "sort",
+            "description": "Adds sort by field.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "join",
+            "description": "Adds relational resources.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "limit",
+            "description": "Limit amount of resources.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "description": "Offset amount of resources.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "description": "Page portion of resources.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "cache",
+            "description": "Reset cache (if was enabled).",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get many base response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetManyNatRuleResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
+      },
+      "post": {
+        "operationId": "createOneNatRule",
+        "summary": "Create one NatRule",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NatRule"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Get create one base response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NatRule"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
+      }
+    },
+    "/v1/network-security/nat-rules/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneNatRule",
+        "summary": "",
+        "description": "Soft deletes an Entity.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
+      }
+    },
+    "/v1/network-security/nat-rules/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneNatRule",
+        "summary": "",
+        "description": "Restores a Soft-Deleted Entity.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
+      }
+    },
+    "/v1/network-security/nat-rule-groups/{id}": {
+      "get": {
+        "operationId": "getOneNatRuleGroup",
+        "summary": "Retrieve one NatRuleGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields",
+            "description": "Selects resource fields.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": false
+          },
+          {
+            "name": "join",
+            "description": "Adds relational resources.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "cache",
+            "description": "Reset cache (if was enabled).",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get one base response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NatRuleGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
+      },
+      "patch": {
+        "operationId": "updateOneNatRuleGroup",
+        "summary": "Update one NatRuleGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NatRuleGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NatRuleGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
+      },
+      "put": {
+        "operationId": "replaceOneNatRuleGroup",
+        "summary": "Replace one NatRuleGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NatRuleGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NatRuleGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneNatRuleGroup",
+        "summary": "Delete one NatRuleGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete one base response"
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
+      }
+    },
+    "/v1/network-security/nat-rule-groups": {
+      "get": {
+        "operationId": "getManyNatRuleGroup",
+        "summary": "Retrieve many NatRuleGroup",
+        "parameters": [
+          {
+            "name": "fields",
+            "description": "Selects resource fields.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": false
+          },
+          {
+            "name": "s",
+            "description": "Adds search condition.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter",
+            "description": "Adds filter condition.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "or",
+            "description": "Adds OR condition.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "sort",
+            "description": "Adds sort by field.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "join",
+            "description": "Adds relational resources.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "limit",
+            "description": "Limit amount of resources.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "offset",
+            "description": "Offset amount of resources.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "description": "Page portion of resources.",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "cache",
+            "description": "Reset cache (if was enabled).",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get many base response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetManyNatRuleGroupResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
+      },
+      "post": {
+        "operationId": "createOneNatRuleGroup",
+        "summary": "Create one NatRuleGroup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NatRuleGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Get create one base response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NatRuleGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
+      }
+    },
+    "/v1/network-security/nat-rule-groups/bulk": {
+      "post": {
+        "operationId": "createManyNatRuleGroup",
+        "summary": "Create many NatRuleGroup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateManyNatRuleGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Get create many base response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NatRuleGroup"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
+      }
+    },
+    "/v1/network-security/nat-rule-groups/{id}/provision": {
+      "put": {
+        "operationId": "provisionOneNatRuleGroup",
+        "summary": "",
+        "description": "Provisions an Entity.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
+      }
+    },
+    "/v1/network-security/nat-rule-groups/{id}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionOneNatRuleGroup",
+        "summary": "",
+        "description": "Deprovisions an Entity.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
+      }
+    },
+    "/v1/network-security/nat-rule-groups/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneNatRuleGroup",
+        "summary": "",
+        "description": "Soft deletes an Entity.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
+      }
+    },
+    "/v1/network-security/nat-rule-groups/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneNatRuleGroup",
+        "summary": "",
+        "description": "Restores a Soft-Deleted Entity.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/nat-rule-groups"
         ]
       }
     },
