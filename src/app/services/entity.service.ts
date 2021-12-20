@@ -41,8 +41,8 @@ export class EntityService {
 }
 
 export interface Entity {
-  deletedAt?: object;
-  provisionedAt?: object;
+  deletedAt?: object | string;
+  provisionedAt?: object | string;
   name: string;
 }
 

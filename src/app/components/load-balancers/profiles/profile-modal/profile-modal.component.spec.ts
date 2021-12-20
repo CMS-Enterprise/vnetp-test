@@ -5,7 +5,7 @@ import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalCompon
 import { ProfileModalComponent, ProfileReverseProxyType } from './profile-modal.component';
 import { ToastrService } from 'ngx-toastr';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerProfile, LoadBalancerProfileType, V1LoadBalancerProfilesService } from 'api_client';
+import { LoadBalancerProfile, LoadBalancerProfileTypeEnum, V1LoadBalancerProfilesService } from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { ProfileModalDto } from './profile-modal.dto';
 
@@ -35,7 +35,7 @@ describe('ProfileModalComponent', () => {
       tierId: '1',
       id: '2',
       name: 'Profile2',
-      type: LoadBalancerProfileType.ClientSSL,
+      type: LoadBalancerProfileTypeEnum.ClientSsl,
       certificate: 'a'.repeat(60),
       reverseProxy: null,
       properties: [],
@@ -58,7 +58,7 @@ describe('ProfileModalComponent', () => {
 
   it('certificate should be required when type is "ClientSSL"', () => {
     const { type } = component.f;
-    type.setValue(LoadBalancerProfileType.ClientSSL);
+    type.setValue(LoadBalancerProfileTypeEnum.ClientSsl);
     fixture.detectChanges();
 
     const fields = ['certificate'];
@@ -67,7 +67,7 @@ describe('ProfileModalComponent', () => {
 
   it('reverseProxy should be required when type is "Http"', () => {
     const { type } = component.f;
-    type.setValue(LoadBalancerProfileType.Http);
+    type.setValue(LoadBalancerProfileTypeEnum.Http);
     fixture.detectChanges();
 
     const fields = ['reverseProxy'];
@@ -93,7 +93,7 @@ describe('ProfileModalComponent', () => {
   });
 
   it('should create a new profile', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerProfilesPost');
+    const spy = jest.spyOn(service, 'createOneLoadBalancerProfile');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: ProfileModalDto = {
         tierId: '1',
@@ -107,7 +107,7 @@ describe('ProfileModalComponent', () => {
       description: 'Description',
       name: 'NewName',
       reverseProxy: ProfileReverseProxyType.Explicit,
-      type: LoadBalancerProfileType.Http,
+      type: LoadBalancerProfileTypeEnum.Http,
     });
     component.save();
 
@@ -120,13 +120,13 @@ describe('ProfileModalComponent', () => {
         properties: null,
         reverseProxy: ProfileReverseProxyType.Explicit,
         tierId: '1',
-        type: LoadBalancerProfileType.Http,
+        type: LoadBalancerProfileTypeEnum.Http,
       },
     });
   });
 
   it('should update an existing profile', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerProfilesIdPut');
+    const spy = jest.spyOn(service, 'updateOneLoadBalancerProfile');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: ProfileModalDto = {
         tierId: '1',
@@ -141,7 +141,7 @@ describe('ProfileModalComponent', () => {
       description: 'Description',
       name: 'NewName',
       reverseProxy: ProfileReverseProxyType.Explicit,
-      type: LoadBalancerProfileType.Http,
+      type: LoadBalancerProfileTypeEnum.Http,
     });
     component.save();
 
@@ -151,11 +151,11 @@ describe('ProfileModalComponent', () => {
         certificate: null,
         description: 'Description',
         key: null,
-        name: 'NewName',
+        name: undefined,
         properties: null,
         reverseProxy: ProfileReverseProxyType.Explicit,
         tierId: null,
-        type: LoadBalancerProfileType.Http,
+        type: undefined,
       },
     });
   });

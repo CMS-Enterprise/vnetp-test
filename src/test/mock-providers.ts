@@ -96,7 +96,7 @@ const generateMockProvider = <T extends object>(provider: Constructor<T>, additi
 
   const functions = getFunctions(new provider());
   functions.forEach(fn => {
-    const isGetList = fn.endsWith('Get') && !fn.endsWith('IdGet');
+    const isGetList = fn.startsWith('get') || (fn.startsWith('getMany') && !fn.startsWith('getOne'));
     const returnType = isGetList ? [] : {};
     mockProvider[fn] = jest.fn(() => of(returnType));
   });

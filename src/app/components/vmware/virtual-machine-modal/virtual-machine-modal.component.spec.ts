@@ -9,7 +9,7 @@ import {
   V1PriorityGroupsService,
   V1VmwareVirtualDisksService,
   V1VmwareVirtualMachinesService,
-} from 'api_client';
+} from 'client';
 
 describe('VirtualMachineModalComponent', () => {
   let component: VirtualMachineModalComponent;

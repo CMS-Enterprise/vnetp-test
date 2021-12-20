@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { RouteModalComponent } from './route-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerRoute, V1LoadBalancerRoutesService } from 'api_client';
+import { LoadBalancerRoute, V1LoadBalancerRoutesService } from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { RouteModalDto } from './route-modal.dto';
 
@@ -69,7 +69,7 @@ describe('RouteModalComponent', () => {
   });
 
   it('should create a new route', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerRoutesPost');
+    const spy = jest.spyOn(service, 'createOneLoadBalancerRoute');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: RouteModalDto = {
         tierId: '1',
@@ -98,7 +98,7 @@ describe('RouteModalComponent', () => {
   });
 
   it('should update an existing route', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerRoutesIdPut');
+    const spy = jest.spyOn(service, 'updateOneLoadBalancerRoute');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: RouteModalDto = {
         tierId: '1',

@@ -1,4 +1,4 @@
-import { ServiceObject } from 'api_client';
+import { ServiceObject } from 'client';
 import { ModalMode } from '../other/modal-mode';
 
 export class ServiceObjectModalDto {

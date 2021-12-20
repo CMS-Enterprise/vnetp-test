@@ -11,8 +11,6 @@
 
 <ng-template #actionsTemplate let-vlan="datum">
   <section class="table__actions">
-    <app-icon-button *ngIf="!vlan?.deletedAt" icon="edit" label="Edit VLAN" (handleClick)="openModal(vlan)"></app-icon-button>
-
     <app-icon-button
       *ngIf="vlan?.deletedAt"
       icon="undo"

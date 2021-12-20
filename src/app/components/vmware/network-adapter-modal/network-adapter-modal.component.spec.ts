@@ -4,7 +4,7 @@ import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/m
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1VmwareNetworkAdapterService, V1TiersService } from 'api_client';
+import { V1VmwareNetworkAdapterService, V1TiersService } from 'client';
 
 describe('NetworkAdapterModalComponent', () => {
   let component: NetworkAdapterModalComponent;

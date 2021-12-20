@@ -8,7 +8,7 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerProfile, Tier, V1LoadBalancerProfilesService } from 'api_client';
+import { LoadBalancerProfile, Tier, V1LoadBalancerProfilesService } from 'client';
 import { ProfileListComponent, ImportProfile, ProfileView } from './profile-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
@@ -54,7 +54,7 @@ describe('ProfileListComponent', () => {
   });
 
   it('should map profiles', () => {
-    jest.spyOn(service, 'v1LoadBalancerProfilesGet').mockImplementation(() => {
+    jest.spyOn(service, 'getManyLoadBalancerProfile').mockImplementation(() => {
       return of(([
         { id: '1', name: 'Profile1', provisionedAt: {}, reverseProxy: 'Explicit' },
         { id: '2', name: 'Profile2' },
@@ -85,7 +85,7 @@ describe('ProfileListComponent', () => {
 
   it('should default profiles to be empty on error', () => {
     component.profiles = [{ id: '1', name: 'Profile1' }] as ProfileView[];
-    jest.spyOn(service, 'v1LoadBalancerProfilesGet').mockImplementation(() => throwError(''));
+    jest.spyOn(service, 'getManyLoadBalancerProfile').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
@@ -94,12 +94,12 @@ describe('ProfileListComponent', () => {
 
   it('should import profiles', () => {
     const newProfiles = [{ name: 'Profile1', vrfName: 'Tier1' }, { name: 'Profile2' }] as ImportProfile[];
-    const spy = jest.spyOn(service, 'v1LoadBalancerProfilesBulkPost');
+    const spy = jest.spyOn(service, 'createManyLoadBalancerProfile');
 
     component.import(newProfiles);
 
     expect(spy).toHaveBeenCalledWith({
-      generatedLoadBalancerProfileBulkDto: {
+      createManyLoadBalancerProfileDto: {
         bulk: [{ name: 'Profile1', tierId: '1', vrfName: 'Tier1' }, { name: 'Profile2' }],
       },
     });
@@ -115,7 +115,7 @@ describe('ProfileListComponent', () => {
   });
 
   it('should restore a profile', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerProfilesIdRestorePatch');
+    const spy = jest.spyOn(service, 'restoreOneLoadBalancerProfile');
 
     component.restore({} as ProfileView);
     expect(spy).not.toHaveBeenCalled();

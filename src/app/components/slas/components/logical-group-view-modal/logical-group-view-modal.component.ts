@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ActifioDetailedLogicalGroupDto } from 'api_client';
+import { ActifioDetailedLogicalGroupDto } from 'client';
 
 @Component({
   selector: 'app-logical-group-view-modal',

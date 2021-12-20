@@ -4,7 +4,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1NetworkSecurityNetworkObjectsService } from 'api_client';
+import { V1NetworkSecurityNetworkObjectsService } from 'client';
 
 describe('NetworkObjectModalComponent', () => {
   let component: NetworkObjectModalComponent;

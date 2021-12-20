@@ -1,4 +1,4 @@
-import { LoadBalancerPool } from 'api_client';
+import { LoadBalancerPool } from 'client';
 
 export interface PoolModalDto {
   tierId: string;

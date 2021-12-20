@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Tier, V1TiersService } from 'api_client';
+import { Tier, V1TiersService } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -19,12 +19,12 @@ export class StaticRoutesComponent implements OnInit, OnDestroy {
 
   public getTiers(): void {
     this.tierService
-      .v1TiersGet({
-        filter: `datacenterId||eq||${this.DatacenterId}`,
-        join: 'staticRoutes',
+      .getManyTier({
+        filter: [`datacenterId||eq||${this.DatacenterId}`],
+        join: ['staticRoutes'],
       })
-      .subscribe(data => {
-        this.tiers = data;
+      .subscribe((data: unknown) => {
+        this.tiers = data as Tier[];
       });
   }
 

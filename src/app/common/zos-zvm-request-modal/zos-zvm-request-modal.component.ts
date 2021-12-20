@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { V1ConfigurationUploadService, ConfigurationUploadType, ConfigurationUpload } from 'api_client';
+import { V1ConfigurationUploadService, ConfigurationUploadTypeEnum, ConfigurationUpload } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
@@ -9,11 +9,11 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 })
 export class ZosZvmRequestModalComponent implements OnInit {
   form: FormGroup;
-  configurationType: ConfigurationUploadType;
+  configurationType: ConfigurationUploadTypeEnum;
   uploadType: string;
   uploadId: string;
 
-  ConfigurationUploadType = ConfigurationUploadType;
+  ConfigurationUploadType = ConfigurationUploadTypeEnum;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -75,13 +75,13 @@ export class ZosZvmRequestModalComponent implements OnInit {
       file: this.form.get('file').value,
     } as ConfigurationUpload;
 
-    this.configurationService.v1ConfigurationUploadPost({ configurationUpload }).subscribe(() => this.closeModal());
+    this.configurationService.createOneConfigurationUpload({ configurationUpload }).subscribe(() => this.closeModal());
   }
 
   private updateConfiguration(): void {
     const configuration = this.form.get('file').value;
     this.configurationService
-      .v1ConfigurationUploadIdConfigurePatch({
+      .configureConfigurationUpload({
         id: this.uploadId,
         configurationDto: { configuration },
       })

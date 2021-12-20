@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PhysicalServer, V1PhysicalServersService, PhysicalServerNetworkPort } from 'api_client';
+import { PhysicalServer, V1PhysicalServersService, PhysicalServerNetworkPort } from 'client';
 import { ActivatedRoute, Router } from '@angular/router';
 import ConversionUtil from 'src/app/utils/ConversionUtil';
 import { EntityService } from 'src/app/services/entity.service';
@@ -24,7 +24,7 @@ export class PhysicalServerDetailComponent implements OnInit {
 
   getPhysicalServer() {
     this.physicalServerService
-      .v1PhysicalServersIdGet({
+      .getOnePhysicalServer({
         id: this.Id,
       })
       .subscribe(data => {
@@ -35,10 +35,10 @@ export class PhysicalServerDetailComponent implements OnInit {
   public deletePhysicalServer(physicalServer: PhysicalServer): void {
     this.entityService.deleteEntity(physicalServer, {
       entityName: 'Physical Server',
-      delete$: this.physicalServerService.v1PhysicalServersIdDelete({
+      delete$: this.physicalServerService.deleteOnePhysicalServer({
         id: physicalServer.id,
       }),
-      softDelete$: this.physicalServerService.v1PhysicalServersIdSoftDelete({
+      softDelete$: this.physicalServerService.softDeleteOnePhysicalServer({
         id: physicalServer.id,
       }),
       onSuccess: () => {
@@ -56,7 +56,7 @@ export class PhysicalServerDetailComponent implements OnInit {
   restorePhysicalServer(ps: PhysicalServer) {
     if (ps.deletedAt) {
       this.physicalServerService
-        .v1PhysicalServersIdRestorePatch({
+        .restoreOnePhysicalServer({
           id: ps.id,
         })
         .subscribe(() => {

@@ -1,4 +1,4 @@
-def nodeImage = 'node:lts'
+def nodeImage = 'node:16.3.0'
 def sonarImage = 'sonarsource/sonar-scanner-cli'
 
 pipeline {
@@ -32,7 +32,7 @@ pipeline {
       steps {
         script {
           docker.image("${nodeImage}").inside("--user node") {
-            sh 'npm config set registry http://10.151.14.53/artifactory/api/npm/npm-remote/'
+            //sh 'npm config set registry http://10.151.14.53/artifactory/api/npm/npm-remote/'
             sh 'npm i'
             sh 'npm run build:prod'
           }

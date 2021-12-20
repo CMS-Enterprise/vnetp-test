@@ -4,7 +4,7 @@ import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockProvider } from 'src/test/mock-providers';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { V1TiersService } from 'api_client';
+import { V1TiersService } from 'client';
 
 describe('StaticRoutesComponent', () => {
   let component: StaticRoutesComponent;
@@ -31,12 +31,12 @@ describe('StaticRoutesComponent', () => {
 
   it('should load tiers', () => {
     const tierService = TestBed.inject(V1TiersService);
-    const loadTiersSpy = jest.spyOn(tierService, 'v1TiersGet');
+    const loadTiersSpy = jest.spyOn(tierService, 'getManyTier');
     component.getTiers();
 
     expect(loadTiersSpy).toHaveBeenCalledWith({
-      filter: 'datacenterId||eq||1',
-      join: 'staticRoutes',
+      filter: ['datacenterId||eq||1'],
+      join: ['staticRoutes'],
     });
   });
 });

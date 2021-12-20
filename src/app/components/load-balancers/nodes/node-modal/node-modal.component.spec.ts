@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NodeModalComponent } from './node-modal.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1LoadBalancerPoolsService, V1LoadBalancerNodesService, LoadBalancerNodeType, LoadBalancerNode } from 'api_client';
+import { V1LoadBalancerPoolsService, V1LoadBalancerNodesService, LoadBalancerNodeTypeEnum, LoadBalancerNode } from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { NodeModalDto } from './node-modal.dto';
 
@@ -36,7 +36,7 @@ describe('NodeModalComponent', () => {
       autoPopulate: true,
       fqdn: 'www.google.com',
       ipAddress: null,
-      type: LoadBalancerNodeType.Fqdn,
+      type: LoadBalancerNodeTypeEnum.Fqdn,
     };
   };
 
@@ -60,14 +60,14 @@ describe('NodeModalComponent', () => {
 
   it('ipAddress should be required when type is "IpAddress"', () => {
     const { type } = component.f;
-    type.setValue(LoadBalancerNodeType.IpAddress);
+    type.setValue(LoadBalancerNodeTypeEnum.IpAddress);
 
     expect(TestUtil.isFormControlRequired(component.f.ipAddress)).toBe(true);
   });
 
   it('fqdn should be required when type is "Fqdn"', () => {
     const { type } = component.f;
-    type.setValue(LoadBalancerNodeType.Fqdn);
+    type.setValue(LoadBalancerNodeTypeEnum.Fqdn);
 
     expect(TestUtil.isFormControlRequired(component.f.fqdn)).toBe(true);
   });
@@ -91,7 +91,7 @@ describe('NodeModalComponent', () => {
   });
 
   it('should create a new node', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerNodesPost');
+    const spy = jest.spyOn(service, 'createOneLoadBalancerNode');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: NodeModalDto = {
         tierId: '1',
@@ -105,7 +105,7 @@ describe('NodeModalComponent', () => {
       fqdn: null,
       ipAddress: null,
       name: 'Node1',
-      type: LoadBalancerNodeType.IpAddress,
+      type: LoadBalancerNodeTypeEnum.IpAddress,
     });
     component.f.ipAddress.setValue('192.168.1.1');
     component.save();
@@ -117,13 +117,13 @@ describe('NodeModalComponent', () => {
         ipAddress: '192.168.1.1',
         name: 'Node1',
         tierId: '1',
-        type: LoadBalancerNodeType.IpAddress,
+        type: LoadBalancerNodeTypeEnum.IpAddress,
       },
     });
   });
 
   it('should update an existing node', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerNodesIdPut');
+    const spy = jest.spyOn(service, 'updateOneLoadBalancerNode');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: NodeModalDto = {
         tierId: '1',
@@ -138,7 +138,7 @@ describe('NodeModalComponent', () => {
       fqdn: null,
       ipAddress: null,
       name: 'NewName',
-      type: LoadBalancerNodeType.IpAddress,
+      type: LoadBalancerNodeTypeEnum.IpAddress,
     });
     component.f.ipAddress.setValue('192.168.1.2');
     component.save();
@@ -149,9 +149,9 @@ describe('NodeModalComponent', () => {
         autoPopulate: null,
         fqdn: null,
         ipAddress: '192.168.1.2',
-        name: 'NewName',
+        name: undefined,
         tierId: null,
-        type: LoadBalancerNodeType.IpAddress,
+        type: LoadBalancerNodeTypeEnum.IpAddress,
       },
     });
   });

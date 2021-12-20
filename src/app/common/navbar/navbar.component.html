@@ -71,8 +71,8 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" [routerLinkActive]="['active']" routerLink="wizard" queryParamsHandling="merge">
-          Wizard
+        <a>
+          <span *ngIf="tenant">{{ tenant }}</span>
         </a>
       </li>
 

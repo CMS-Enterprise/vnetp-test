@@ -21,7 +21,7 @@
             <div *ngIf="f.name.errors.required">Name is required</div>
             <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
             <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-            <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", ".".</div>
+            <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
           </div>
         </div>
 
@@ -71,7 +71,7 @@
         </div>
       </div>
 
-      <div class="form-row" *ngIf="f.type.value === ProfileType.ClientSSL">
+      <div class="form-row" *ngIf="f.type.value === ProfileType.ClientSsl">
         <div class="form-group col-md-12">
           <label for="publicKey">Client SSL Certificate</label>
           <textarea
@@ -84,13 +84,13 @@
           >
           </textarea>
           <div *ngIf="submitted && f.certificate.errors" class="invalid-feedback">
-            <div *ngIf="f.certificate.errors.required">Certificate is required</div>
-            <div *ngIf="f.certificate.errors.minLength">Certificate must be at least 50 characters.</div>
+            <div *ngIf="f.certificate.errors.required">Client SSL Certificate is required</div>
+            <div *ngIf="f.certificate.errors.minLength">Client SSL Certificate must be at least 50 characters.</div>
           </div>
         </div>
       </div>
 
-      <div class="form-row" *ngIf="f.type.value === ProfileType.ClientSSL">
+      <div class="form-row" *ngIf="f.type.value === ProfileType.ClientSsl">
         <div class="form-group col-md-6">
           <button class="btn btn-warning" (click)="privateKeyCipherUploader.click()" type="button">
             <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>

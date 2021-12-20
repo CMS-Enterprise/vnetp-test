@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { LoadBalancerPolicy, Tier, V1LoadBalancerPoliciesService } from 'api_client';
+import { LoadBalancerPolicy, Tier, V1LoadBalancerPoliciesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -63,8 +63,8 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
   public delete(policy: PolicyView): void {
     this.entityService.deleteEntity(policy, {
       entityName: 'Policy',
-      delete$: this.policiesService.v1LoadBalancerPoliciesIdDelete({ id: policy.id }),
-      softDelete$: this.policiesService.v1LoadBalancerPoliciesIdSoftDelete({ id: policy.id }),
+      delete$: this.policiesService.deleteOneLoadBalancerPolicy({ id: policy.id }),
+      softDelete$: this.policiesService.softDeleteOneLoadBalancerPolicy({ id: policy.id }),
       onSuccess: () => this.loadPolicies(),
     });
   }
@@ -72,12 +72,12 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
   public loadPolicies(): void {
     this.isLoading = true;
     this.policiesService
-      .v1LoadBalancerPoliciesGet({
-        filter: `tierId||eq||${this.currentTier.id}`,
+      .getManyLoadBalancerPolicy({
+        filter: [`tierId||eq||${this.currentTier.id}`],
       })
       .subscribe(
-        policies => {
-          this.policies = policies.map(p => {
+        (policies: unknown) => {
+          this.policies = (policies as PolicyView[]).map(p => {
             return {
               ...p,
               nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
@@ -109,8 +109,8 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.policiesService
-      .v1LoadBalancerPoliciesBulkPost({
-        generatedLoadBalancerPolicyBulkDto: { bulk },
+      .createManyLoadBalancerPolicy({
+        createManyLoadBalancerPolicyDto: { bulk },
       })
       .subscribe(() => this.loadPolicies());
   }
@@ -128,7 +128,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!policy.deletedAt) {
       return;
     }
-    this.policiesService.v1LoadBalancerPoliciesIdRestorePatch({ id: policy.id }).subscribe(() => this.loadPolicies());
+    this.policiesService.restoreOneLoadBalancerPolicy({ id: policy.id }).subscribe(() => this.loadPolicies());
   }
 
   private subscribeToDataChanges(): Subscription {

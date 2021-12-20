@@ -11,12 +11,12 @@ import {
 import { MockProvider } from 'src/test/mock-providers';
 import {
   LoadBalancerVirtualServer,
-  LoadBalancerVirtualServerSourceAddressTranslation,
-  LoadBalancerVirtualServerType,
+  LoadBalancerVirtualServerSourceAddressTranslationEnum,
+  LoadBalancerVirtualServerTypeEnum,
   V1LoadBalancerPoolsService,
   V1LoadBalancerVirtualServersService,
   V1TiersService,
-} from 'api_client';
+} from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { VirtualServerModalDto } from './virtual-server-modal.dto';
 
@@ -60,9 +60,9 @@ describe('VirtualServerModalComponent', () => {
       defaultPoolId: '10bc339d-1ede-7e84-d129-259ef7f0f',
       name: 'VirtualServer2',
       servicePort: 5,
-      sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation.AutoMap,
+      sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslationEnum.AutoMap,
       sourceIpAddress: '192.168.1.1/11',
-      type: LoadBalancerVirtualServerType.Standard,
+      type: LoadBalancerVirtualServerTypeEnum.Standard,
     };
   };
 
@@ -100,7 +100,7 @@ describe('VirtualServerModalComponent', () => {
   });
 
   it('should create a new virtual server', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerVirtualServersPost');
+    const spy = jest.spyOn(service, 'createOneLoadBalancerVirtualServer');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: VirtualServerModalDto = {
         tierId: '1',
@@ -118,9 +118,9 @@ describe('VirtualServerModalComponent', () => {
       selectedPolicyId: '1',
       selectedProfileId: '1',
       servicePort: 5,
-      sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation.AutoMap,
+      sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslationEnum.AutoMap,
       sourceIpAddress: '192.168.1.1/11',
-      type: LoadBalancerVirtualServerType.Standard,
+      type: LoadBalancerVirtualServerTypeEnum.Standard,
     });
     component.save();
 
@@ -131,16 +131,16 @@ describe('VirtualServerModalComponent', () => {
         destinationIpAddress: '192.168.1.2',
         name: 'NewName',
         servicePort: 5,
-        sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation.AutoMap,
+        sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslationEnum.AutoMap,
         sourceIpAddress: '192.168.1.1/11',
-        type: LoadBalancerVirtualServerType.Standard,
+        type: LoadBalancerVirtualServerTypeEnum.Standard,
         tierId: '1',
       },
     });
   });
 
   it('should update an existing virtual server', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerVirtualServersIdPut');
+    const spy = jest.spyOn(service, 'updateOneLoadBalancerVirtualServer');
     jest.spyOn(ngx, 'getModalData').mockImplementation(() => {
       const dto: VirtualServerModalDto = {
         tierId: '1',
@@ -159,9 +159,9 @@ describe('VirtualServerModalComponent', () => {
       selectedPolicyId: '1',
       selectedProfileId: '1',
       servicePort: 5,
-      sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation.AutoMap,
+      sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslationEnum.AutoMap,
       sourceIpAddress: '192.168.1.1/11',
-      type: LoadBalancerVirtualServerType.Standard,
+      type: LoadBalancerVirtualServerTypeEnum.Standard,
     });
     component.save();
 
@@ -171,11 +171,11 @@ describe('VirtualServerModalComponent', () => {
         description: 'Description',
         defaultPoolId: '1',
         destinationIpAddress: '192.168.1.2',
-        name: 'NewName',
+        name: undefined,
         servicePort: 5,
-        sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslation.AutoMap,
+        sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslationEnum.AutoMap,
         sourceIpAddress: '192.168.1.1/11',
-        type: LoadBalancerVirtualServerType.Standard,
+        type: undefined,
         tierId: null,
       },
     });

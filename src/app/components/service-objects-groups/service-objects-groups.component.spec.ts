@@ -16,7 +16,7 @@ import { MockProvider } from 'src/test/mock-providers';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { V1NetworkSecurityServiceObjectGroupsService, V1NetworkSecurityServiceObjectsService, V1TiersService } from 'api_client';
+import { V1NetworkSecurityServiceObjectGroupsService, V1NetworkSecurityServiceObjectsService, V1TiersService } from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { ToastrService } from 'ngx-toastr';
 

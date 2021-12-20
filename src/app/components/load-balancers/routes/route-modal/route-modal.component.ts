@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoadBalancerRoute, V1LoadBalancerRoutesService } from 'api_client';
+import { LoadBalancerRoute, V1LoadBalancerRoutesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { RouteModalDto } from './route-modal.dto';
@@ -41,7 +41,7 @@ export class RouteModalComponent implements OnInit {
       return;
     }
 
-    const { destination, gateway, name } = this.form.getRawValue();
+    const { destination, gateway, name } = this.form.value;
 
     const route: LoadBalancerRoute = {
       tierId: this.tierId,
@@ -66,11 +66,9 @@ export class RouteModalComponent implements OnInit {
     if (this.modalMode === ModalMode.Edit) {
       const { destination, gateway, name, id } = route;
       this.routeId = id;
-
+      this.form.controls.name.disable();
       this.form.controls.destination.disable();
       this.form.controls.gateway.disable();
-      this.form.controls.name.disable();
-
       this.form.controls.destination.setValue(destination);
       this.form.controls.gateway.setValue(gateway);
       this.form.controls.name.setValue(name);
@@ -91,7 +89,7 @@ export class RouteModalComponent implements OnInit {
   }
 
   private createRoute(loadBalancerRoute: LoadBalancerRoute): void {
-    this.routeService.v1LoadBalancerRoutesPost({ loadBalancerRoute }).subscribe(
+    this.routeService.createOneLoadBalancerRoute({ loadBalancerRoute }).subscribe(
       () => this.closeModal(),
       () => {},
     );
@@ -100,7 +98,7 @@ export class RouteModalComponent implements OnInit {
   private updateRoute(loadBalancerRoute: LoadBalancerRoute): void {
     loadBalancerRoute.tierId = null;
     this.routeService
-      .v1LoadBalancerRoutesIdPut({
+      .updateOneLoadBalancerRoute({
         id: this.routeId,
         loadBalancerRoute,
       })

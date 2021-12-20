@@ -8,7 +8,7 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerRoute, Tier, V1LoadBalancerRoutesService } from 'api_client';
+import { LoadBalancerRoute, Tier, V1LoadBalancerRoutesService } from 'client';
 import { RouteListComponent, ImportRoute, RouteView } from './route-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
@@ -55,7 +55,7 @@ describe('RouteListComponent', () => {
   });
 
   it('should map routes', () => {
-    jest.spyOn(service, 'v1LoadBalancerRoutesGet').mockImplementation(() => {
+    jest.spyOn(service, 'getManyLoadBalancerRoute').mockImplementation(() => {
       return of(([
         { id: '1', name: 'Route1', provisionedAt: {} },
         { id: '2', name: 'Route2' },
@@ -83,7 +83,7 @@ describe('RouteListComponent', () => {
 
   it('should default routes to be empty on error', () => {
     component.routes = [{ id: '1', name: 'Route1' }] as RouteView[];
-    jest.spyOn(service, 'v1LoadBalancerRoutesGet').mockImplementation(() => throwError(''));
+    jest.spyOn(service, 'getManyLoadBalancerRoute').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
@@ -92,12 +92,12 @@ describe('RouteListComponent', () => {
 
   it('should import routes', () => {
     const routes = [{ name: 'Route1', vrfName: 'Tier1' }, { name: 'Route2' }] as ImportRoute[];
-    const spy = jest.spyOn(service, 'v1LoadBalancerRoutesBulkPost');
+    const spy = jest.spyOn(service, 'createManyLoadBalancerRoute');
 
     component.import(routes);
 
     expect(spy).toHaveBeenCalledWith({
-      generatedLoadBalancerRouteBulkDto: {
+      createManyLoadBalancerRouteDto: {
         bulk: [{ name: 'Route1', tierId: '1', vrfName: 'Tier1' }, { name: 'Route2' }],
       },
     });
@@ -113,7 +113,7 @@ describe('RouteListComponent', () => {
   });
 
   it('should restore a route', () => {
-    const spy = jest.spyOn(service, 'v1LoadBalancerRoutesIdRestorePatch');
+    const spy = jest.spyOn(service, 'restoreOneLoadBalancerRoute');
 
     component.restore({} as RouteView);
     expect(spy).not.toHaveBeenCalled();

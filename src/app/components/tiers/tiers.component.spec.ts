@@ -15,7 +15,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { MockProvider } from 'src/test/mock-providers';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { V1TiersService, V1TierGroupsService } from 'api_client';
+import { of } from 'rxjs';
+import { V1TiersService, V1TierGroupsService } from 'client';
 
 describe('TiersComponent', () => {
   let component: TiersComponent;
@@ -37,15 +38,17 @@ describe('TiersComponent', () => {
       providers: [
         MockProvider(DatacenterContextService),
         MockProvider(NgxSmartModalService),
-        MockProvider(V1TierGroupsService),
-        MockProvider(V1TiersService),
+        MockProvider(V1TierGroupsService, { getManyTierGroup: () => of([]) }),
+        MockProvider(V1TiersService, { getManyDatacenterTier: () => of([]) }),
       ],
-    });
+    }).compileComponents();
+  }));
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(TiersComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

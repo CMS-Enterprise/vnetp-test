@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { LoadBalancerVirtualServer, Tier, V1LoadBalancerVirtualServersService, VirtualServerImportDto } from 'api_client';
+import { LoadBalancerVirtualServer, Tier, V1LoadBalancerVirtualServersService, VirtualServerImportDto } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -68,8 +68,8 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
   public delete(virtualServer: VirtualServerView): void {
     this.entityService.deleteEntity(virtualServer, {
       entityName: 'Virtual Server',
-      delete$: this.virtualServersService.v1LoadBalancerVirtualServersIdDelete({ id: virtualServer.id }),
-      softDelete$: this.virtualServersService.v1LoadBalancerVirtualServersIdSoftDelete({ id: virtualServer.id }),
+      delete$: this.virtualServersService.deleteOneLoadBalancerVirtualServer({ id: virtualServer.id }),
+      softDelete$: this.virtualServersService.softDeleteOneLoadBalancerVirtualServer({ id: virtualServer.id }),
       onSuccess: () => this.loadVirtualServers(),
     });
   }
@@ -77,13 +77,13 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
   public loadVirtualServers(): void {
     this.isLoading = true;
     this.virtualServersService
-      .v1LoadBalancerVirtualServersGet({
-        join: 'irules,defaultPool',
-        filter: `tierId||eq||${this.currentTier.id}`,
+      .getManyLoadBalancerVirtualServer({
+        join: ['irules,defaultPool'],
+        filter: [`tierId||eq||${this.currentTier.id}`],
       })
       .subscribe(
-        virtualServers => {
-          this.virtualServers = virtualServers.map(v => {
+        (virtualServers: unknown) => {
+          this.virtualServers = (virtualServers as VirtualServerView[]).map(v => {
             return {
               ...v,
               nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
@@ -107,7 +107,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
 
   public import(virtualServers: VirtualServerImportDto[]): void {
     this.virtualServersService
-      .v1LoadBalancerVirtualServersBulkImportPost({
+      .bulkImportVirtualServersLoadBalancerVirtualServer({
         virtualServerImportCollectionDto: { datacenterId: this.datacenterId, virtualServers },
       })
       .subscribe(() => this.loadVirtualServers());
@@ -126,9 +126,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
     if (!virtualServer.deletedAt) {
       return;
     }
-    this.virtualServersService
-      .v1LoadBalancerVirtualServersIdRestorePatch({ id: virtualServer.id })
-      .subscribe(() => this.loadVirtualServers());
+    this.virtualServersService.restoreOneLoadBalancerVirtualServer({ id: virtualServer.id }).subscribe(() => this.loadVirtualServers());
   }
 
   private subscribeToDataChanges(): Subscription {

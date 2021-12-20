@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockFontAwesomeComponent, MockIconButtonComponent, MockComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { PriorityGroupListComponent } from './priority-group-list.component';
-import { V1PriorityGroupsService, PriorityGroup, V1DatacentersService } from 'api_client';
+import { V1PriorityGroupsService, PriorityGroup, V1DatacentersService } from 'client';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -60,7 +60,7 @@ describe('PriorityGroupListComponent', () => {
   describe('Restoring', () => {
     it('should not restore a priority group when it is not soft-deleted', () => {
       const pg = { id: '1' } as PriorityGroup;
-      const restoreSpy = jest.spyOn(TestBed.inject(V1PriorityGroupsService), 'v1PriorityGroupsIdRestorePatch');
+      const restoreSpy = jest.spyOn(TestBed.inject(V1PriorityGroupsService), 'restoreOnePriorityGroup');
 
       component.restorePriorityGroup(pg);
       expect(restoreSpy).not.toHaveBeenCalled();
@@ -68,7 +68,7 @@ describe('PriorityGroupListComponent', () => {
 
     it('should restore a soft-deleted priority group', () => {
       const pg = { id: '1', deletedAt: {} } as PriorityGroup;
-      const restoreSpy = jest.spyOn(TestBed.inject(V1PriorityGroupsService), 'v1PriorityGroupsIdRestorePatch');
+      const restoreSpy = jest.spyOn(TestBed.inject(V1PriorityGroupsService), 'restoreOnePriorityGroup');
 
       component.restorePriorityGroup(pg);
       expect(restoreSpy).toHaveBeenCalledWith({ id: '1' });

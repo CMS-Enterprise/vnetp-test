@@ -1,5 +1,5 @@
 import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockYesNoModalComponent } from 'src/test/mock-components';
-import { ActifioLogicalGroupDto, V1ActifioGmLogicalGroupsService } from 'api_client';
+import { ActifioLogicalGroupDto, V1ActifioGmLogicalGroupsService } from 'client';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -55,8 +55,8 @@ describe('LogicalGroupListComponent', () => {
       ],
       providers: [
         MockProvider(V1ActifioGmLogicalGroupsService, {
-          v1ActifioGmLogicalGroupsGet: of(createLogicalGroups()),
-          v1ActifioGmLogicalGroupsIdGet: of({ members: [] }),
+          getLogicalGroupsActifioLogicalGroup: of(createLogicalGroups()),
+          getLogicalGroupActifioLogicalGroup: of({ members: [] }),
         }),
         MockProvider(NgxSmartModalService),
         MockProvider(ToastrService),
@@ -76,7 +76,7 @@ describe('LogicalGroupListComponent', () => {
 
   it('should call to get logical groups on init', () => {
     const logicalGroupService = TestBed.inject(V1ActifioGmLogicalGroupsService);
-    const spy = jest.spyOn(logicalGroupService, 'v1ActifioGmLogicalGroupsGet');
+    const spy = jest.spyOn(logicalGroupService, 'getLogicalGroupsActifioLogicalGroup');
 
     component.ngOnInit();
 
@@ -95,7 +95,7 @@ describe('LogicalGroupListComponent', () => {
 
   it('should delete a single logical group', () => {
     const logicalGroupService = TestBed.inject(V1ActifioGmLogicalGroupsService);
-    const deleteSpy = jest.spyOn(logicalGroupService, 'v1ActifioGmLogicalGroupsIdDelete');
+    const deleteSpy = jest.spyOn(logicalGroupService, 'deleteLogicalGroupActifioLogicalGroup');
     jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn) => {
       confirmFn();
       return of().subscribe();

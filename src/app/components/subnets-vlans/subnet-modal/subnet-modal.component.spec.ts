@@ -1,14 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import {
+  MockFontAwesomeComponent,
+  MockTooltipComponent,
+  MockNgxSmartModalComponent,
+  MockNgSelectComponent,
+} from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { SubnetModalComponent } from './subnet-modal.component';
 import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
-import { V1NetworkSubnetsService } from 'api_client';
+import { V1NetworkSubnetsService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 describe('SubnetModalComponent', () => {
   let component: SubnetModalComponent;
@@ -16,7 +22,7 @@ describe('SubnetModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
+      imports: [FormsModule, ReactiveFormsModule, NgSelectModule],
       declarations: [SubnetModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSubnetsService)],
     })
@@ -87,7 +93,7 @@ describe('SubnetModalComponent', () => {
 
   it('should not call to create a subnet when the form is invalid', () => {
     const service = TestBed.inject(V1NetworkSubnetsService);
-    const createSubnetSpy = jest.spyOn(service, 'v1NetworkSubnetsPost');
+    const createSubnetSpy = jest.spyOn(service, 'createOneSubnet');
 
     component.ModalMode = ModalMode.Create;
     component.form.setValue({
@@ -106,7 +112,7 @@ describe('SubnetModalComponent', () => {
 
   it('should call to create a subnet when in create mode', () => {
     const service = TestBed.inject(V1NetworkSubnetsService);
-    const createSubnetSpy = jest.spyOn(service, 'v1NetworkSubnetsPost');
+    const createSubnetSpy = jest.spyOn(service, 'createOneSubnet');
 
     component.ModalMode = ModalMode.Create;
     component.form.setValue({
@@ -134,7 +140,7 @@ describe('SubnetModalComponent', () => {
 
   it('should call to edit an existing subnet when in edit mode', () => {
     const service = TestBed.inject(V1NetworkSubnetsService);
-    const updateSubnetSpy = jest.spyOn(service, 'v1NetworkSubnetsIdPut');
+    const updateSubnetSpy = jest.spyOn(service, 'updateOneSubnet');
 
     component.ModalMode = ModalMode.Edit;
     component.form.setValue({
