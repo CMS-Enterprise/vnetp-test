@@ -1,3 +1,5 @@
+// TODO: Re-enable this test file.
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {
@@ -10,7 +12,7 @@ import {
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { V1TiersService } from '../../../../api_client';
+import { V1TiersService } from 'client';
 import { MockProvider } from '../../../test/mock-providers';
 import { FilterPipe } from '../../pipes/filter.pipe';
 import { DatacenterContextService } from '../../services/datacenter-context.service';
