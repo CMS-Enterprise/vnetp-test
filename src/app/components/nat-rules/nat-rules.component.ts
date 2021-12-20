@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NatRule, NatRuleGroup, NatRuleGroupType, Tier, V1TiersService } from 'api_client';
+import { NatRule, NatRuleGroup, NatRuleGroupType, Tier, V1TiersService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, of, Observable } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -54,12 +54,12 @@ export class NatRulesComponent implements OnInit, OnDestroy {
 
   public getTiers(): void {
     this.tierService
-      .v1DatacentersDatacenterIdTiersGet({
+      .getManyDatacenterTier({
         datacenterId: this.DatacenterId,
         join: 'natRuleGroups',
       })
-      .subscribe(data => {
-        this.tiers = data;
+      .subscribe(response => {
+        this.tiers = response.data;
         this.natRuleGroups = [];
         this.tiers.forEach(tier => {
           this.natRuleGroups = this.natRuleGroups.concat(tier.natRuleGroups);

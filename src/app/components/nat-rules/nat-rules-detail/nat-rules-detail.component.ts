@@ -19,13 +19,14 @@ import {
   V1NetworkSecurityServiceObjectsService,
   NatRuleImport,
   NatRulePreview,
-} from 'api_client';
+} from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { EntityService } from 'src/app/services/entity.service';
 import { NatRuleModalDto } from '../../../models/nat/nat-rule-modal-dto';
 import { TableConfig } from '../../../common/table/table.component';
 import { PreviewModalDto } from '../../../models/other/preview-modal-dto';
+import { exception } from 'console';
 
 @Component({
   selector: 'app-nat-rules-detail',
@@ -119,7 +120,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
 
   getNatRuleGroup(): void {
     this.natRuleGroupService
-      .v1NetworkSecurityNatRuleGroupsIdGet({
+      .getOneNatRuleGroup({
         id: this.Id,
       })
       .subscribe(data => {
@@ -137,9 +138,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
 
   getNatRules(): void {
     this.natRuleService
-      .v1NetworkSecurityNatRulesGet({
-        filter: `natRuleGroupId||eq||${this.NatRuleGroup.id}`,
-        perPage: this.perPage,
+      .getManyNatRule({
+        filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],
+        offset: this.perPage,
         page: this.currentNatRulePage,
       })
       .subscribe(data => {
@@ -152,25 +153,25 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   getObjects(): void {
-    const tierRequest = this.tierService.v1TiersIdGet({ id: this.TierId });
-    const networkObjectRequest = this.networkObjectService.v1NetworkSecurityNetworkObjectsGet({
-      filter: `tierId||eq||${this.TierId}`,
-      fields: 'id,name',
+    const tierRequest = this.tierService.getOneTier({ id: this.TierId });
+    const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
+      filter: [`tierId||eq||${this.TierId}`],
+      fields: ['id,name'],
     });
-    const networkObjectGroupRequest = this.networkObjectGroupService.v1NetworkSecurityNetworkObjectGroupsGet({
-      filter: `tierId||eq||${this.TierId}`,
-      fields: 'id,name',
+    const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
+      filter: [`tierId||eq||${this.TierId}`],
+      fields: ['id,name'],
     });
-    const serviceObjectRequest = this.serviceObjectService.v1NetworkSecurityServiceObjectsGet({
-      filter: `tierId||eq||${this.TierId}`,
-      fields: 'id,name',
+    const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
+      filter: [`tierId||eq||${this.TierId}`],
+      fields: ['id,name'],
     });
 
     forkJoin([tierRequest, networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest]).subscribe(result => {
       this.TierName = result[0].name;
-      this.networkObjects = result[1];
-      this.networkObjectGroups = result[2];
-      this.serviceObjects = result[3];
+      this.networkObjects = result[1].data;
+      this.networkObjectGroups = result[2].data;
+      this.serviceObjects = result[3].data;
       this.getNatRules();
     });
   }
@@ -214,15 +215,15 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   public deleteNatRule(natRule: NatRule): void {
     this.entityService.deleteEntity(natRule, {
       entityName: 'Nat Rule',
-      delete$: this.natRuleService.v1NetworkSecurityNatRulesIdDelete({ id: natRule.id }),
-      softDelete$: this.natRuleService.v1NetworkSecurityNatRulesIdSoftDelete({ id: natRule.id }),
+      delete$: this.natRuleService.deleteOneNatRule({ id: natRule.id }),
+      softDelete$: this.natRuleService.softDeleteOneNatRule({ id: natRule.id }),
       onSuccess: () => this.getNatRules(),
     });
   }
 
   restoreNatRule(natRule: NatRule): void {
     if (natRule.deletedAt) {
-      this.natRuleService.v1NetworkSecurityNatRulesIdRestorePatch({ id: natRule.id }).subscribe(() => {
+      this.natRuleService.restoreOneNatRule({ id: natRule.id }).subscribe(() => {
         this.getNatRules();
       });
     }
@@ -236,11 +237,12 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     };
 
     this.natRuleService
-      .v1NetworkSecurityNatRulesBulkImportPost({
+      .bulkImportNatRulesNatRule({
         natRuleImportCollectionDto: nrDto,
       })
       .subscribe(data => {
-        this.createPreview(data, event);
+        throw new Error('Update Preview TODO');
+        // this.createPreview(data, event);
       });
   }
 
@@ -302,7 +304,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
         };
 
         this.natRuleService
-          .v1NetworkSecurityNatRulesBulkImportPost({
+          .bulkImportNatRulesNatRule({
             natRuleImportCollectionDto: natConfirmDto,
           })
           .subscribe(() => {
