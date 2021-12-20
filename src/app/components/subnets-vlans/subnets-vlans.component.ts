@@ -201,6 +201,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       e.vlanNumber = Number(e.vlanNumber);
 
       // TODO AFTER MERGE : refactor bulk upload files to all use consistent schema
+      /* tslint:disable-next-line */
       e.tierId = this.getTierId(e['vrfName']);
     });
     const onConfirm = () => {
