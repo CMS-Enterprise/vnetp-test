@@ -5,19 +5,19 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import {
-  NatRuleDirection,
-  NatRuleOriginalDestinationAddressType,
-  NatRuleOriginalServiceType,
-  NatRuleOriginalSourceAddressType,
-  NatRuleTranslatedDestinationAddressType,
-  NatRuleTranslatedServiceType,
-  NatRuleTranslatedSourceAddressType,
-  NatRuleTranslationType,
+  NatRuleDirectionEnum,
+  NatRuleOriginalDestinationAddressTypeEnum,
+  NatRuleOriginalServiceTypeEnum,
+  NatRuleOriginalSourceAddressTypeEnum,
+  NatRuleTranslatedDestinationAddressTypeEnum,
+  NatRuleTranslatedServiceTypeEnum,
+  NatRuleTranslatedSourceAddressTypeEnum,
+  NatRuleTranslationTypeEnum,
   NetworkObject,
   NetworkObjectGroup,
   ServiceObject,
   V1NetworkSecurityNatRulesService,
-} from 'api_client';
+} from 'client';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { NatRuleModalDto } from '../../../models/nat/nat-rule-modal-dto';
 
@@ -38,14 +38,14 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   public natRuleId: string;
 
   // Enums
-  public NatRuleDirection = NatRuleDirection;
-  public NatRuleTranslationType = NatRuleTranslationType;
-  public NatRuleOriginalSourceAddressType = NatRuleOriginalSourceAddressType;
-  public NatRuleTranslatedSourceAddressType = NatRuleTranslatedSourceAddressType;
-  public NatRuleOriginalDestinationAddressType = NatRuleOriginalDestinationAddressType;
-  public NatRuleTranslatedDestinationAddressType = NatRuleTranslatedDestinationAddressType;
-  public NatRuleOriginalServiceType = NatRuleOriginalServiceType;
-  public NatRuleTranslatedServiceType = NatRuleTranslatedServiceType;
+  public NatRuleDirection = NatRuleDirectionEnum;
+  public NatRuleTranslationType = NatRuleTranslationTypeEnum;
+  public NatRuleOriginalSourceAddressType = NatRuleOriginalSourceAddressTypeEnum;
+  public NatRuleTranslatedSourceAddressType = NatRuleTranslatedSourceAddressTypeEnum;
+  public NatRuleOriginalDestinationAddressType = NatRuleOriginalDestinationAddressTypeEnum;
+  public NatRuleTranslatedDestinationAddressType = NatRuleTranslatedDestinationAddressTypeEnum;
+  public NatRuleOriginalServiceType = NatRuleOriginalServiceTypeEnum;
+  public NatRuleTranslatedServiceType = NatRuleTranslatedServiceTypeEnum;
 
   private subscriptions: Subscription[] = [];
 
@@ -116,51 +116,51 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     modalNatRule.translatedSourceNetworkObjectGroupId = null;
     modalNatRule.translatedDestinationNetworkObjectId = null;
     modalNatRule.translatedDestinationNetworkObjectGroupId = null;
-    if (modalNatRule.originalServiceType === NatRuleOriginalServiceType.ServiceObject) {
+    if (modalNatRule.originalServiceType === NatRuleOriginalServiceTypeEnum.ServiceObject) {
       modalNatRule.originalServiceObjectId = modalNatRule.originalServiceObject;
       modalNatRule.originalServiceObject = null;
     }
-    if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressType.NetworkObject) {
+    if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressTypeEnum.NetworkObject) {
       modalNatRule.originalSourceNetworkObjectId = modalNatRule.originalSourceNetworkObject;
       modalNatRule.originalSourceNetworkObject = null;
-    } else if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressType.NetworkObjectGroup) {
+    } else if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.originalSourceNetworkObjectGroupId = modalNatRule.originalSourceNetworkObjectGroup;
       modalNatRule.originalSourceNetworkObjectGroup = null;
     }
-    if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressType.NetworkObject) {
+    if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressTypeEnum.NetworkObject) {
       modalNatRule.originalDestinationNetworkObjectId = modalNatRule.originalDestinationNetworkObject;
       modalNatRule.originalDestinationNetworkObject = null;
-    } else if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressType.NetworkObjectGroup) {
+    } else if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.originalDestinationNetworkObjectGroupId = modalNatRule.originalDestinationNetworkObjectGroup;
       modalNatRule.originalDestinationNetworkObjectGroup = null;
     }
-    if (modalNatRule.translatedServiceType === NatRuleTranslatedServiceType.ServiceObject) {
+    if (modalNatRule.translatedServiceType === NatRuleTranslatedServiceTypeEnum.ServiceObject) {
       modalNatRule.translatedServiceObjectId = modalNatRule.translatedServiceObject;
       modalNatRule.translatedServiceObject = null;
     }
-    if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressType.NetworkObject) {
+    if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressTypeEnum.NetworkObject) {
       modalNatRule.translatedSourceNetworkObjectId = modalNatRule.translatedSourceNetworkObject;
       modalNatRule.translatedSourceNetworkObject = null;
 
       // add form validation
-      if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressType.None) {
+      if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressTypeEnum.None) {
         console.log('original source address type must not be none!!!!!');
         return;
       }
-    } else if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressType.NetworkObjectGroup) {
+    } else if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.translatedSourceNetworkObjectGroupId = modalNatRule.translatedSourceNetworkObjectGroup;
       modalNatRule.translatedSourceNetworkObjectGroup = null;
     }
-    if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressType.NetworkObject) {
+    if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressTypeEnum.NetworkObject) {
       modalNatRule.translatedDestinationNetworkObjectId = modalNatRule.translatedDestinationNetworkObject;
       modalNatRule.translatedDestinationNetworkObject = null;
 
       // add form validation
-      if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressType.None) {
+      if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressTypeEnum.None) {
         console.log('original destination address type must not be none!!!!');
         return;
       }
-    } else if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressType.NetworkObjectGroup) {
+    } else if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.translatedDestinationNetworkObjectGroupId = modalNatRule.translatedDestinationNetworkObjectGroup;
       modalNatRule.translatedDestinationNetworkObjectGroup = null;
     }
@@ -168,7 +168,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     if (this.modalMode === ModalMode.Create) {
       modalNatRule.natRuleGroupId = this.natRuleGroupId;
       this.natRuleService
-        .v1NetworkSecurityNatRulesPost({
+        .createOneNatRule({
           natRule: modalNatRule,
         })
         .subscribe(
@@ -179,7 +179,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         );
     } else {
       this.natRuleService
-        .v1NetworkSecurityNatRulesIdPut({
+        .updateOneNatRule({
           id: this.natRuleId,
           natRule: modalNatRule,
         })
@@ -196,27 +196,27 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       biDirectional: [true],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      direction: [NatRuleDirection.In, Validators.required],
+      direction: [NatRuleDirectionEnum.In, Validators.required],
       enabled: [true, Validators.required],
       name: ['', NameValidator()],
-      originalDestinationAddressType: [NatRuleOriginalDestinationAddressType.None, Validators.required],
+      originalDestinationAddressType: [NatRuleOriginalDestinationAddressTypeEnum.None, Validators.required],
       originalDestinationNetworkObject: null,
       originalDestinationNetworkObjectGroup: null,
       originalServiceObject: null,
-      originalServiceType: [NatRuleOriginalServiceType.None, Validators.required],
-      originalSourceAddressType: [NatRuleOriginalSourceAddressType.None, Validators.required],
+      originalServiceType: [NatRuleOriginalServiceTypeEnum.None, Validators.required],
+      originalSourceAddressType: [NatRuleOriginalSourceAddressTypeEnum.None, Validators.required],
       originalSourceNetworkObject: null,
       originalSourceNetworkObjectGroup: null,
       ruleIndex: [1, Validators.compose([Validators.required, Validators.min(1)])],
-      translatedDestinationAddressType: [NatRuleTranslatedDestinationAddressType.None, Validators.required],
+      translatedDestinationAddressType: [NatRuleTranslatedDestinationAddressTypeEnum.None, Validators.required],
       translatedDestinationNetworkObject: null,
       translatedDestinationNetworkObjectGroup: null,
       translatedServiceObject: null,
-      translatedServiceType: [NatRuleTranslatedServiceType.None, Validators.required],
-      translatedSourceAddressType: [NatRuleTranslatedSourceAddressType.None, Validators.required],
+      translatedServiceType: [NatRuleTranslatedServiceTypeEnum.None, Validators.required],
+      translatedSourceAddressType: [NatRuleTranslatedSourceAddressTypeEnum.None, Validators.required],
       translatedSourceNetworkObject: null,
       translatedSourceNetworkObjectGroup: null,
-      translationType: [NatRuleTranslationType.Static, Validators.required],
+      translationType: [NatRuleTranslationTypeEnum.Static, Validators.required],
     });
 
     this.subscriptions = [
@@ -236,7 +236,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
     const handler: Record<string, () => void> = {
       ['true']: () => {
-        translationType.setValue(NatRuleTranslationType.Static);
+        translationType.setValue(NatRuleTranslationTypeEnum.Static);
         translationType.updateValueAndValidity();
       },
     };
@@ -252,25 +252,25 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   private subscribeToOriginalServiceTypeChanges(): Subscription {
     const { originalServiceType, originalServiceObject, translatedServiceType, translatedServiceObject } = this.form.controls;
 
-    const handler: Record<NatRuleOriginalServiceType, () => void> = {
-      [NatRuleOriginalServiceType.None]: () => {
+    const handler: Record<NatRuleOriginalServiceTypeEnum, () => void> = {
+      [NatRuleOriginalServiceTypeEnum.None]: () => {
         originalServiceObject.setValue(null);
         originalServiceObject.clearValidators();
         originalServiceObject.updateValueAndValidity();
-        translatedServiceType.setValue(NatRuleTranslatedServiceType.None);
+        translatedServiceType.setValue(NatRuleTranslatedServiceTypeEnum.None);
         translatedServiceType.updateValueAndValidity();
         translatedServiceObject.setValue(null);
         translatedServiceObject.clearValidators();
         translatedServiceObject.updateValueAndValidity();
       },
-      [NatRuleOriginalServiceType.ServiceObject]: () => {
+      [NatRuleOriginalServiceTypeEnum.ServiceObject]: () => {
         originalServiceObject.setValue(null);
         originalServiceObject.setValidators(Validators.required);
         originalServiceObject.updateValueAndValidity();
       },
     };
     return originalServiceType.valueChanges.subscribe(
-      (type: NatRuleOriginalServiceType) => {
+      (type: NatRuleOriginalServiceTypeEnum) => {
         this.updateForm(type, handler);
       },
       () => {},
@@ -281,17 +281,17 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   private subscribeToTranslatedServiceTypeChanges(): Subscription {
     const { translatedServiceType, translatedServiceObject, originalServiceType, originalServiceObject } = this.form.controls;
 
-    const handler: Record<NatRuleTranslatedServiceType, () => void> = {
-      [NatRuleTranslatedServiceType.None]: () => {
+    const handler: Record<NatRuleTranslatedServiceTypeEnum, () => void> = {
+      [NatRuleTranslatedServiceTypeEnum.None]: () => {
         translatedServiceObject.setValue(null);
         translatedServiceObject.clearValidators();
         translatedServiceObject.updateValueAndValidity();
       },
-      [NatRuleTranslatedServiceType.ServiceObject]: () => {
+      [NatRuleTranslatedServiceTypeEnum.ServiceObject]: () => {
         translatedServiceObject.setValue(null);
         translatedServiceObject.setValidators(Validators.required);
-        if (originalServiceType.value !== NatRuleOriginalServiceType.ServiceObject) {
-          originalServiceType.setValue(NatRuleOriginalServiceType.ServiceObject);
+        if (originalServiceType.value !== NatRuleOriginalServiceTypeEnum.ServiceObject) {
+          originalServiceType.setValue(NatRuleOriginalServiceTypeEnum.ServiceObject);
           originalServiceObject.setValidators(Validators.required);
           originalServiceObject.updateValueAndValidity();
           originalServiceType.updateValueAndValidity();
@@ -299,15 +299,15 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedServiceObject.updateValueAndValidity();
       },
     };
-    return translatedServiceType.valueChanges.subscribe((type: NatRuleTranslatedServiceType) => this.updateForm(type, handler));
+    return translatedServiceType.valueChanges.subscribe((type: NatRuleTranslatedServiceTypeEnum) => this.updateForm(type, handler));
   }
 
   // when the original destination address is updated, update the appropriate form controls
   private subscribeToOriginalDestinationAddressTypeChanges(): Subscription {
     const { originalDestinationAddressType, originalDestinationNetworkObject, originalDestinationNetworkObjectGroup } = this.form.controls;
 
-    const handler: Record<NatRuleOriginalDestinationAddressType, () => void> = {
-      [NatRuleOriginalDestinationAddressType.None]: () => {
+    const handler: Record<NatRuleOriginalDestinationAddressTypeEnum, () => void> = {
+      [NatRuleOriginalDestinationAddressTypeEnum.None]: () => {
         originalDestinationNetworkObject.setValue(null);
         originalDestinationNetworkObject.clearValidators();
         originalDestinationNetworkObjectGroup.setValue(null);
@@ -315,7 +315,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         originalDestinationNetworkObject.updateValueAndValidity();
         originalDestinationNetworkObjectGroup.updateValueAndValidity();
       },
-      [NatRuleOriginalDestinationAddressType.NetworkObject]: () => {
+      [NatRuleOriginalDestinationAddressTypeEnum.NetworkObject]: () => {
         originalDestinationNetworkObject.setValue(null);
         originalDestinationNetworkObject.setValidators(Validators.required);
         originalDestinationNetworkObjectGroup.setValue(null);
@@ -323,7 +323,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         originalDestinationNetworkObject.updateValueAndValidity();
         originalDestinationNetworkObjectGroup.updateValueAndValidity();
       },
-      [NatRuleOriginalDestinationAddressType.NetworkObjectGroup]: () => {
+      [NatRuleOriginalDestinationAddressTypeEnum.NetworkObjectGroup]: () => {
         originalDestinationNetworkObject.setValue(null);
         originalDestinationNetworkObject.clearValidators();
         originalDestinationNetworkObjectGroup.setValue(null);
@@ -332,7 +332,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         originalDestinationNetworkObjectGroup.updateValueAndValidity();
       },
     };
-    return originalDestinationAddressType.valueChanges.subscribe((type: NatRuleOriginalDestinationAddressType) =>
+    return originalDestinationAddressType.valueChanges.subscribe((type: NatRuleOriginalDestinationAddressTypeEnum) =>
       this.updateForm(type, handler),
     );
   }
@@ -342,11 +342,11 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     const { biDirectional, translatedDestinationAddressType, translatedSourceAddressType, translationType } = this.form.controls;
 
     const requireTranslatedFields = () => {
-      if (translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObjectGroup) {
-        translatedSourceAddressType.setValue(NatRuleTranslatedSourceAddressType.None);
+      if (translatedSourceAddressType.value === NatRuleTranslatedSourceAddressTypeEnum.NetworkObjectGroup) {
+        translatedSourceAddressType.setValue(NatRuleTranslatedSourceAddressTypeEnum.None);
       }
-      if (translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObjectGroup) {
-        translatedDestinationAddressType.setValue(NatRuleTranslatedDestinationAddressType.None);
+      if (translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressTypeEnum.NetworkObjectGroup) {
+        translatedDestinationAddressType.setValue(NatRuleTranslatedDestinationAddressTypeEnum.None);
       }
       translatedSourceAddressType.setValidators(Validators.required);
       translatedDestinationAddressType.setValidators(Validators.required);
@@ -355,8 +355,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     };
 
     const translationTypeNotStatic = () => {
-      if (translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.None) {
-        translatedSourceAddressType.setValue(NatRuleTranslatedSourceAddressType.NetworkObject);
+      if (translatedSourceAddressType.value === NatRuleTranslatedSourceAddressTypeEnum.None) {
+        translatedSourceAddressType.setValue(NatRuleTranslatedSourceAddressTypeEnum.NetworkObject);
         translatedSourceAddressType.setValidators(Validators.required);
       }
       biDirectional.setValue(false);
@@ -364,20 +364,20 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedSourceAddressType.updateValueAndValidity();
     };
 
-    const handler: Record<NatRuleTranslationType, () => void> = {
-      [NatRuleTranslationType.Static]: requireTranslatedFields,
-      [NatRuleTranslationType.DynamicIp]: translationTypeNotStatic,
-      [NatRuleTranslationType.DynamicIpAndPort]: translationTypeNotStatic,
+    const handler: Record<NatRuleTranslationTypeEnum, () => void> = {
+      [NatRuleTranslationTypeEnum.Static]: requireTranslatedFields,
+      [NatRuleTranslationTypeEnum.DynamicIp]: translationTypeNotStatic,
+      [NatRuleTranslationTypeEnum.DynamicIpAndPort]: translationTypeNotStatic,
     };
-    return translationType.valueChanges.subscribe((type: NatRuleTranslationType) => this.updateForm(type, handler));
+    return translationType.valueChanges.subscribe((type: NatRuleTranslationTypeEnum) => this.updateForm(type, handler));
   }
 
   // when the original source address type is updated, update the appropriate form controls
   private subscribeToOriginalSourceAddressTypeChanges(): Subscription {
     const { originalSourceAddressType, originalSourceNetworkObject, originalSourceNetworkObjectGroup } = this.form.controls;
 
-    const handler: Record<NatRuleOriginalSourceAddressType, () => void> = {
-      [NatRuleOriginalSourceAddressType.None]: () => {
+    const handler: Record<NatRuleOriginalSourceAddressTypeEnum, () => void> = {
+      [NatRuleOriginalSourceAddressTypeEnum.None]: () => {
         originalSourceNetworkObject.setValue(null);
         originalSourceNetworkObject.clearValidators();
         originalSourceNetworkObjectGroup.setValue(null);
@@ -385,7 +385,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         originalSourceNetworkObject.updateValueAndValidity();
         originalSourceNetworkObjectGroup.updateValueAndValidity();
       },
-      [NatRuleOriginalSourceAddressType.NetworkObject]: () => {
+      [NatRuleOriginalSourceAddressTypeEnum.NetworkObject]: () => {
         originalSourceNetworkObject.setValue(null);
         originalSourceNetworkObject.setValidators(Validators.required);
         originalSourceNetworkObjectGroup.setValue(null);
@@ -393,7 +393,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         originalSourceNetworkObject.updateValueAndValidity();
         originalSourceNetworkObjectGroup.updateValueAndValidity();
       },
-      [NatRuleOriginalSourceAddressType.NetworkObjectGroup]: () => {
+      [NatRuleOriginalSourceAddressTypeEnum.NetworkObjectGroup]: () => {
         originalSourceNetworkObject.setValue(null);
         originalSourceNetworkObject.clearValidators();
         originalSourceNetworkObjectGroup.setValue(null);
@@ -403,15 +403,15 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       },
     };
 
-    return originalSourceAddressType.valueChanges.subscribe((type: NatRuleOriginalSourceAddressType) => this.updateForm(type, handler));
+    return originalSourceAddressType.valueChanges.subscribe((type: NatRuleOriginalSourceAddressTypeEnum) => this.updateForm(type, handler));
   }
 
   // when the translated service type is updated, update the appropriate form controls
   private subscribeToTranslatedSourceAddressTypeChanges(): Subscription {
     const { translatedSourceAddressType, translatedSourceNetworkObject, translatedSourceNetworkObjectGroup } = this.form.controls;
 
-    const handler: Record<NatRuleTranslatedSourceAddressType, () => void> = {
-      [NatRuleTranslatedSourceAddressType.None]: () => {
+    const handler: Record<NatRuleTranslatedSourceAddressTypeEnum, () => void> = {
+      [NatRuleTranslatedSourceAddressTypeEnum.None]: () => {
         translatedSourceNetworkObject.setValue(null);
         translatedSourceNetworkObject.clearValidators();
         translatedSourceNetworkObjectGroup.setValue(null);
@@ -419,7 +419,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedSourceNetworkObject.updateValueAndValidity();
         translatedSourceNetworkObjectGroup.updateValueAndValidity();
       },
-      [NatRuleTranslatedSourceAddressType.NetworkObject]: () => {
+      [NatRuleTranslatedSourceAddressTypeEnum.NetworkObject]: () => {
         translatedSourceNetworkObject.setValue(null);
         translatedSourceNetworkObject.setValidators(Validators.required);
         translatedSourceNetworkObjectGroup.setValue(null);
@@ -427,7 +427,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedSourceNetworkObject.updateValueAndValidity();
         translatedSourceNetworkObjectGroup.updateValueAndValidity();
       },
-      [NatRuleTranslatedSourceAddressType.NetworkObjectGroup]: () => {
+      [NatRuleTranslatedSourceAddressTypeEnum.NetworkObjectGroup]: () => {
         translatedSourceNetworkObject.setValue(null);
         translatedSourceNetworkObject.clearValidators();
         translatedSourceNetworkObjectGroup.setValue(null);
@@ -436,7 +436,9 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedSourceNetworkObjectGroup.updateValueAndValidity();
       },
     };
-    return translatedSourceAddressType.valueChanges.subscribe((type: NatRuleTranslatedSourceAddressType) => this.updateForm(type, handler));
+    return translatedSourceAddressType.valueChanges.subscribe((type: NatRuleTranslatedSourceAddressTypeEnum) =>
+      this.updateForm(type, handler),
+    );
   }
 
   // when the translated destination type is updated, update the appropriate form controls
@@ -447,8 +449,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedDestinationNetworkObjectGroup,
     } = this.form.controls;
 
-    const handler: Record<NatRuleTranslatedDestinationAddressType, () => void> = {
-      [NatRuleTranslatedDestinationAddressType.None]: () => {
+    const handler: Record<NatRuleTranslatedDestinationAddressTypeEnum, () => void> = {
+      [NatRuleTranslatedDestinationAddressTypeEnum.None]: () => {
         translatedDestinationNetworkObject.setValue(null);
         translatedDestinationNetworkObject.clearValidators();
         translatedDestinationNetworkObjectGroup.setValue(null);
@@ -456,7 +458,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedDestinationNetworkObject.updateValueAndValidity();
         translatedDestinationNetworkObjectGroup.updateValueAndValidity();
       },
-      [NatRuleTranslatedDestinationAddressType.NetworkObject]: () => {
+      [NatRuleTranslatedDestinationAddressTypeEnum.NetworkObject]: () => {
         translatedDestinationNetworkObject.setValue(null);
         translatedDestinationNetworkObject.setValidators(Validators.required);
         translatedDestinationNetworkObjectGroup.setValue(null);
@@ -464,7 +466,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedDestinationNetworkObject.updateValueAndValidity();
         translatedDestinationNetworkObjectGroup.updateValueAndValidity();
       },
-      [NatRuleTranslatedDestinationAddressType.NetworkObjectGroup]: () => {
+      [NatRuleTranslatedDestinationAddressTypeEnum.NetworkObjectGroup]: () => {
         translatedDestinationNetworkObject.setValue(null);
         translatedDestinationNetworkObject.clearValidators();
         translatedDestinationNetworkObjectGroup.setValue(null);
@@ -473,7 +475,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translatedDestinationNetworkObjectGroup.updateValueAndValidity();
       },
     };
-    return translatedDestinationAddressType.valueChanges.subscribe((type: NatRuleTranslatedDestinationAddressType) =>
+    return translatedDestinationAddressType.valueChanges.subscribe((type: NatRuleTranslatedDestinationAddressTypeEnum) =>
       this.updateForm(type, handler),
     );
   }

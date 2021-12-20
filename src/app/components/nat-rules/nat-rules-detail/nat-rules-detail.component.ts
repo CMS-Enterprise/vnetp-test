@@ -26,7 +26,6 @@ import { EntityService } from 'src/app/services/entity.service';
 import { NatRuleModalDto } from '../../../models/nat/nat-rule-modal-dto';
 import { TableConfig } from '../../../common/table/table.component';
 import { PreviewModalDto } from '../../../models/other/preview-modal-dto';
-import { exception } from 'console';
 
 @Component({
   selector: 'app-nat-rules-detail',

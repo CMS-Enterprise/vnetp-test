@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NatRule, NatRuleGroup, NatRuleGroupType, Tier, V1TiersService } from 'client';
+import { NatRule, NatRuleGroup, Tier, V1TiersService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, of, Observable } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -8,6 +8,7 @@ import { NatRulesHelpText } from '../../helptext/help-text-networking';
 import { DatacenterContextService } from '../../services/datacenter-context.service';
 import ObjectUtil from '../../utils/ObjectUtil';
 import SubscriptionUtil from '../../utils/SubscriptionUtil';
+import { NatRuleGroupTypeEnum } from 'client';
 
 @Component({
   selector: 'app-nat-rules',
@@ -21,7 +22,7 @@ export class NatRulesComponent implements OnInit, OnDestroy {
   public ModalMode = ModalMode;
   public natRules: NatRule[] = [];
   public natRuleGroups: NatRuleGroup[] = [];
-  public currentTab = NatRuleGroupType.External;
+  public currentTab = NatRuleGroupTypeEnum.External;
   public tiers: Tier[] = [];
   public tabs: Tab[] = [
     {
@@ -56,7 +57,7 @@ export class NatRulesComponent implements OnInit, OnDestroy {
     this.tierService
       .getManyDatacenterTier({
         datacenterId: this.DatacenterId,
-        join: 'natRuleGroups',
+        join: ['natRuleGroups'],
       })
       .subscribe(response => {
         this.tiers = response.data;
@@ -68,7 +69,7 @@ export class NatRulesComponent implements OnInit, OnDestroy {
   }
 
   public handleTabChange(tab: Tab): void {
-    this.currentTab = tab.name === 'External' ? NatRuleGroupType.External : NatRuleGroupType.Intervrf;
+    this.currentTab = tab.name === 'External' ? NatRuleGroupTypeEnum.External : NatRuleGroupTypeEnum.Intervrf;
   }
 
   public ngOnDestroy(): void {
