@@ -59,8 +59,9 @@ export class NatRulesComponent implements OnInit, OnDestroy {
         datacenterId: this.DatacenterId,
         join: ['natRuleGroups'],
       })
-      .subscribe(response => {
-        this.tiers = response.data;
+      .subscribe((data: unknown) => {
+        this.tiers = data as Tier[];
+        console.log(this.tiers);
         this.natRuleGroups = [];
         this.tiers.forEach(tier => {
           this.natRuleGroups = this.natRuleGroups.concat(tier.natRuleGroups);

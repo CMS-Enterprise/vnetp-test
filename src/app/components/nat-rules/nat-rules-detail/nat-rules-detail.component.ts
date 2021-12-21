@@ -139,13 +139,10 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.natRuleService
       .getManyNatRule({
         filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],
-        offset: this.perPage,
+        limit: this.perPage,
         page: this.currentNatRulePage,
       })
-      .subscribe(data => {
-        // TODO: Review this approach, see if we can resolve
-        // this in the generated client.
-        const result = data as any;
+      .subscribe(result => {
         this.natRules = result.data;
         this.totalNatRules = result.total;
       });
@@ -166,11 +163,12 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       fields: ['id,name'],
     });
 
-    forkJoin([tierRequest, networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest]).subscribe(result => {
+    forkJoin([tierRequest, networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest]).subscribe((result: unknown) => {
       this.TierName = result[0].name;
-      this.networkObjects = result[1].data;
-      this.networkObjectGroups = result[2].data;
-      this.serviceObjects = result[3].data;
+      this.networkObjects = (result as NetworkObject)[1];
+      this.networkObjectGroups = (result as NetworkObjectGroup)[2];
+      this.serviceObjects = (result as ServiceObject)[3];
+
       this.getNatRules();
     });
   }
