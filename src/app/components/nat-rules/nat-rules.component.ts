@@ -86,5 +86,6 @@ export class NatRulesComponent implements OnInit, OnDestroy {
       return false;
     }
     return natRuleGroup.type === this.currentTab;
+    /* tslint:disable-next-line */
   };
 }
