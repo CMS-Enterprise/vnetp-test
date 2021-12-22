@@ -1,11 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FirewallRulesHelpText } from 'src/app/helptext/help-text-networking';
-import { Tier, V1TiersService, FirewallRuleGroup, FirewallRuleGroupTypeEnum, V1NetworkSecurityFirewallRuleGroupsService } from 'client';
+import { Tier, V1TiersService, FirewallRuleGroup, V1NetworkSecurityFirewallRuleGroupsService } from 'client';
 import { Subscription } from 'rxjs';
-import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { Tab } from 'src/app/common/tabs/tabs.component';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -15,19 +12,15 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   templateUrl: './firewall-rules.component.html',
 })
 export class FirewallRulesComponent implements OnInit, OnDestroy {
-  public DatacenterId: string;
   public currentFirewallRulePage = 1;
   public firewallRuleGroups: FirewallRuleGroup[] = [];
   public perPage = 20;
-  public tiers: Tier[] = [];
   public currentTier: Tier;
 
-  private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
 
   constructor(
     private ngx: NgxSmartModalService,
-    private datacenterContextService: DatacenterContextService,
     private tierService: V1TiersService,
     public tierContextService: TierContextService,
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
@@ -35,27 +28,22 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
 
   public getTiers(): void {
     this.tierService
-      .getManyDatacenterTier({
-        datacenterId: this.DatacenterId,
+      .getOneTier({
+        id: this.currentTier.id,
         join: ['firewallRuleGroups'],
       })
-      .subscribe((data: unknown) => {
-        this.tiers = data as Tier[];
-        this.firewallRuleGroups = [];
-        this.tiers.forEach(tier => {
-          this.firewallRuleGroups = this.firewallRuleGroups.concat(tier.firewallRuleGroups);
-        });
-        this.firewallRuleGroups = this.firewallRuleGroups.filter(group => group.type !== 'Intravrf');
+      .subscribe(data => {
+        this.firewallRuleGroups = data.firewallRuleGroups;
       });
   }
 
   public filterFirewallRuleGroup = (firewallRuleGroup: FirewallRuleGroup): boolean => {
-    return firewallRuleGroup.tierId === this.currentTier.id;
+    return firewallRuleGroup.name !== 'Intravrf';
     // tslint:disable-next-line: semicolon
   };
 
   public getTierName(tierId: string): string {
-    return ObjectUtil.getObjectName(tierId, this.tiers, 'Error Resolving Name');
+    return ObjectUtil.getObjectName(tierId, [this.currentTier], 'Error Resolving Name');
   }
 
   public importFirewallRuleGroupsConfig(event): void {
@@ -94,7 +82,7 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
         obj[key] = String(val).trim();
       }
       if (key === 'vrf_name' || key === 'vrfName') {
-        obj[key] = ObjectUtil.getObjectId(val as string, this.tiers);
+        obj[key] = ObjectUtil.getObjectId(val as string, [this.currentTier]);
         obj.tierId = obj[key];
         delete obj[key];
       }
@@ -103,21 +91,15 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
-      if (cd) {
-        this.DatacenterId = cd.id;
-        this.getTiers();
-      }
-    });
-
     this.currentTierSubscription = this.tierContextService.currentTier.subscribe(ct => {
       if (ct) {
         this.currentTier = ct;
+        this.getTiers();
       }
     });
   }
 
   ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.currentDatacenterSubscription, this.currentTierSubscription]);
+    SubscriptionUtil.unsubscribe([this.currentTierSubscription]);
   }
 }
