@@ -211,7 +211,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
 
   public deleteNatRule(natRule: NatRule): void {
     this.entityService.deleteEntity(natRule, {
-      entityName: 'Nat Rule',
+      entityName: 'NAT Rule',
       delete$: this.natRuleService.deleteOneNatRule({ id: natRule.id }),
       softDelete$: this.natRuleService.softDeleteOneNatRule({ id: natRule.id }),
       onSuccess: () => this.getNatRules(),
