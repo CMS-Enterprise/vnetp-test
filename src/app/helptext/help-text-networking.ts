@@ -51,8 +51,8 @@ export class FirewallRulesHelpText {
 export class NatRulesHelpText {
   wikiBase: string = environment.wikiBase;
 
-  External = `Nat Rules between a Tier and CMSnet/Internet.`;
-  InterVrf = `Nat Rules between 2 Tiers.`;
+  External = `NAT Rules between a Tier and CMSnet/Internet.`;
+  InterVrf = `NAT Rules between 2 Tiers.`;
 }
 
 @Injectable({
