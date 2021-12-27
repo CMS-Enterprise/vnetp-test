@@ -238,7 +238,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
         natRuleImportCollectionDto: nrDto,
       })
       .subscribe(data => {
-        this.createPreview(data[0], event);
+        this.createPreview(data, event);
       });
   }
 

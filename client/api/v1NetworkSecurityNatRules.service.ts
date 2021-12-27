@@ -161,9 +161,9 @@ export class V1NetworkSecurityNatRulesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public bulkImportNatRulesNatRule(requestParameters: BulkImportNatRulesNatRuleRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<NatRulePreview>>;
-    public bulkImportNatRulesNatRule(requestParameters: BulkImportNatRulesNatRuleRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<NatRulePreview>>>;
-    public bulkImportNatRulesNatRule(requestParameters: BulkImportNatRulesNatRuleRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<NatRulePreview>>>;
+    public bulkImportNatRulesNatRule(requestParameters: BulkImportNatRulesNatRuleRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<NatRulePreview>;
+    public bulkImportNatRulesNatRule(requestParameters: BulkImportNatRulesNatRuleRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<NatRulePreview>>;
+    public bulkImportNatRulesNatRule(requestParameters: BulkImportNatRulesNatRuleRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<NatRulePreview>>;
     public bulkImportNatRulesNatRule(requestParameters: BulkImportNatRulesNatRuleRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const natRuleImportCollectionDto = requestParameters.natRuleImportCollectionDto;
         if (natRuleImportCollectionDto === null || natRuleImportCollectionDto === undefined) {
@@ -199,7 +199,7 @@ export class V1NetworkSecurityNatRulesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<NatRulePreview>>(`${this.configuration.basePath}/v1/network-security/nat-rules/bulk-import`,
+        return this.httpClient.post<NatRulePreview>(`${this.configuration.basePath}/v1/network-security/nat-rules/bulk-import`,
             natRuleImportCollectionDto,
             {
                 responseType: <any>responseType,

@@ -11484,10 +11484,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/NatRulePreview"
-                  }
+                  "$ref": "#/components/schemas/NatRulePreview"
                 }
               }
             }
