@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Tier, V1TiersService, V1TierGroupsService, TierGroup } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
-import { DatacenterTierNameValidator } from 'src/app/validators/name-validator';
+import { DatacenterTierNameValidator } from 'src/app/validators/datacenter-tier-name-validator';
 
 @Component({
   selector: 'app-tier-modal',

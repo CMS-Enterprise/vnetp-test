@@ -4,10 +4,6 @@ function ValidName(control: FormControl): { invalidName: boolean } | null {
   return ValidateName(control, /^[A-Za-z0-9-_:.]*$/);
 }
 
-function ValidDatacenterTierName(control: FormControl): { invalidName: boolean } | null {
-  return ValidateName(control, /^[A-Za-z0-9_]*$/);
-}
-
 function ValidateName(control: FormControl, regex) {
   if (!control || !control.value) {
     return null;
@@ -23,13 +19,4 @@ function ValidateName(control: FormControl, regex) {
 
 export const NameValidator = (minLength = 3, maxLength = 100) => {
   return Validators.compose([Validators.required, Validators.minLength(minLength), Validators.maxLength(maxLength), ValidName]);
-};
-
-export const DatacenterTierNameValidator = (minLength = 3, maxLength = 100) => {
-  return Validators.compose([
-    Validators.required,
-    Validators.minLength(minLength),
-    Validators.maxLength(maxLength),
-    ValidDatacenterTierName,
-  ]);
 };
