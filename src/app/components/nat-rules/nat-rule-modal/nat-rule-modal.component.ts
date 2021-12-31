@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -20,6 +20,7 @@ import {
 } from 'client';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { NatRuleModalDto } from '../../../models/nat/nat-rule-modal-dto';
+import FormUtils from '../../../utils/FormUtils';
 
 @Component({
   selector: 'app-nat-rule-modal',
@@ -102,8 +103,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   public save(): void {
     this.submitted = true;
     if (this.form.invalid) {
-      console.log(this.form);
       console.log('form invalid');
+      console.log(new FormUtils().findInvalidControlsRecursive(this.form));
       return;
     }
     const modalNatRule = this.form.value;
@@ -194,6 +195,9 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   }
 
   private initForm(): void {
+    if (this.form) {
+      this.form.reset();
+    }
     this.form = this.formBuilder.group({
       biDirectional: [true],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
@@ -219,6 +223,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       translatedSourceNetworkObjectGroup: null,
       translationType: [NatRuleTranslationTypeEnum.Static, Validators.required],
     });
+
+    this.form.updateValueAndValidity();
 
     this.subscriptions = [
       this.subscribeToBiDirectionalChanges(),
