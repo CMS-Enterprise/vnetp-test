@@ -49,7 +49,6 @@
             formControlName="direction"
             class="form-control"
             [class.is-invalid]="submitted && f.direction.errors"
-            required
           >
             <option [value]="NatRuleDirection.In">In</option>
             <option [value]="NatRuleDirection.Out">Out</option>
@@ -66,7 +65,6 @@
             formControlName="biDirectional"
             class="form-control"
             [class.is-invalid]="submitted && f.biDirectional.errors"
-            required
           >
             <option [ngValue]="true">True</option>
             <option [ngValue]="false">False</option>
@@ -85,7 +83,6 @@
             formControlName="ruleIndex"
             class="form-control"
             [class.is-invalid]="submitted && f.ruleIndex.errors"
-            required
           />
           <div *ngIf="submitted && f.ruleIndex.errors" class="invalid-feedback">
             <div *ngIf="f.ruleIndex.errors.required">Rule Index is required</div>
@@ -123,7 +120,6 @@
             formControlName="originalServiceType"
             class="form-control"
             [class.is-invalid]="submitted && f.originalServiceType.errors"
-            required
           >
             <option *ngIf="f.translatedServiceType.value === NatRuleTranslatedServiceType.None" [value]="NatRuleOriginalServiceType.None"
               >None</option
@@ -164,7 +160,6 @@
             formControlName="originalSourceAddressType"
             class="form-control"
             [class.is-invalid]="submitted && f.originalSourceAddressType.errors"
-            required
           >
             <option
               *ngIf="f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.None"
@@ -190,7 +185,6 @@
             formControlName="originalSourceNetworkObject"
             class="form-control"
             [class.is-invalid]="submitted && f.originalSourceNetworkObject.errors"
-            required
           >
             <option></option>
             <option *ngFor="let networkObject of networkObjects" [value]="networkObject.id">{{ networkObject.name }}</option>
@@ -208,7 +202,6 @@
             formControlName="originalSourceNetworkObjectGroup"
             class="form-control"
             [class.is-invalid]="submitted && f.originalSourceNetworkObjectGroup.errors"
-            required
           >
             <option></option>
             <option *ngFor="let networkObjectGroup of networkObjectGroups" [value]="networkObjectGroup.id">{{
@@ -230,7 +223,6 @@
             formControlName="originalDestinationAddressType"
             class="form-control"
             [class.is-invalid]="submitted && f.originalDestinationAddressType.errors"
-            required
           >
             <option
               *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.None"
@@ -259,7 +251,6 @@
             formControlName="originalDestinationNetworkObject"
             class="form-control"
             [class.is-invalid]="submitted && f.originalDestinationNetworkObject.errors"
-            required
           >
             <option></option>
             <option *ngFor="let networkObject of networkObjects" [value]="networkObject.id">{{ networkObject.name }}</option>
@@ -280,7 +271,6 @@
             formControlName="originalDestinationNetworkObjectGroup"
             class="form-control"
             [class.is-invalid]="submitted && f.originalDestinationNetworkObjectGroup.errors"
-            required
           >
             <option></option>
             <option *ngFor="let networkObjectGroup of networkObjectGroups" [value]="networkObjectGroup.id">{{
@@ -305,7 +295,6 @@
           formControlName="translationType"
           class="form-control"
           [class.is-invalid]="submitted && f.translationType.errors"
-          required
         >
           <option [value]="NatRuleTranslationType.Static">Static</option>
           <option [value]="NatRuleTranslationType.DynamicIp">Dynamic IP</option>
@@ -326,7 +315,6 @@
               formControlName="translatedServiceType"
               class="form-control"
               [class.is-invalid]="submitted && f.translatedServiceType.errors"
-              required
             >
               <option [value]="NatRuleTranslatedServiceType.None">None</option>
               <option [value]="NatRuleTranslatedServiceType.ServiceObject">Service Object</option>
@@ -344,7 +332,6 @@
               formControlName="translatedServiceObject"
               class="form-control"
               [class.is-invalid]="submitted && f.translatedServiceObject.errors"
-              required
             >
               <option></option>
               <option *ngFor="let serviceObject of serviceObjects" [value]="serviceObject.id">{{ serviceObject.name }}</option>
@@ -365,7 +352,6 @@
               formControlName="translatedSourceAddressType"
               class="form-control"
               [class.is-invalid]="submitted && f.translatedSourceAddressType.errors"
-              required
             >
               <option *ngIf="f.translationType.value === NatRuleTranslationType.Static" [value]="NatRuleTranslatedSourceAddressType.None"
                 >None</option
@@ -390,7 +376,6 @@
               formControlName="translatedSourceNetworkObject"
               class="form-control"
               [class.is-invalid]="submitted && f.translatedSourceNetworkObject.errors"
-              required
             >
               <option></option>
               <option *ngFor="let networkObject of networkObjects" [value]="networkObject.id">{{ networkObject.name }}</option>
@@ -411,7 +396,6 @@
               formControlName="translatedSourceNetworkObjectGroup"
               class="form-control"
               [class.is-invalid]="submitted && f.translatedSourceNetworkObjectGroup.errors"
-              required
             >
               <option></option>
               <option *ngFor="let networkObjectGroup of networkObjectGroups" [value]="networkObjectGroup.id">{{
@@ -433,7 +417,6 @@
               formControlName="translatedDestinationAddressType"
               class="form-control"
               [class.is-invalid]="submitted && f.translatedDestinationAddressType.errors"
-              required
             >
               <option [value]="NatRuleTranslatedDestinationAddressType.None">None</option>
               <option [value]="NatRuleTranslatedDestinationAddressType.NetworkObject">Network Object</option>
@@ -459,7 +442,6 @@
               formControlName="translatedDestinationNetworkObject"
               class="form-control"
               [class.is-invalid]="submitted && f.translatedDestinationNetworkObject.errors"
-              required
             >
               <option></option>
               <option *ngFor="let networkObject of networkObjects" [value]="networkObject.id">{{ networkObject.name }}</option>
@@ -480,7 +462,6 @@
               formControlName="translatedDestinationNetworkObjectGroup"
               class="form-control"
               [class.is-invalid]="submitted && f.translatedDestinationNetworkObjectGroup.errors"
-              required
             >
               <option></option>
               <option *ngFor="let networkObjectGroup of networkObjectGroups" [value]="networkObjectGroup.id">{{
