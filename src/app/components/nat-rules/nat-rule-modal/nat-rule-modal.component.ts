@@ -534,9 +534,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     for (const [key, value] of Object.entries(modalNatRule)) {
       if (value != null) {
         const property = key.slice(0, key.length - 2);
-        const propertyId = property + 'Id';
         modalNatRule[property] = value;
-        modalNatRule[propertyId] = null;
       }
     }
 
