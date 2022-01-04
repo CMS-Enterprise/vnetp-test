@@ -203,7 +203,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       direction: [NatRuleDirectionEnum.In, Validators.required],
       enabled: [true, Validators.required],
-      name: ['', NameValidator()],
+      name: ['', NameValidator(3, 60)],
       originalDestinationAddressType: [NatRuleOriginalDestinationAddressTypeEnum.None, Validators.required],
       originalDestinationNetworkObject: null,
       originalDestinationNetworkObjectGroup: null,

@@ -2207,7 +2207,7 @@
           "name": {
             "type": "string",
             "minLength": 3,
-            "maxLength": 100
+            "maxLength": 60
           },
           "description": {
             "type": "string",
@@ -4354,7 +4354,7 @@
           "name": {
             "type": "string",
             "minLength": 3,
-            "maxLength": 100
+            "maxLength": 60
           },
           "description": {
             "type": "string",
