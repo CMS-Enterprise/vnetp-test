@@ -30,12 +30,12 @@
         <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
           <a class="dropdown-item" routerLink="tiers" queryParamsHandling="merge">Tiers</a>
           <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="subnets-vlans" queryParamsHandling="merge">Subnets & VLANs</a>
-          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="static-routes" queryParamsHandling="merge">Routing</a>
-          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="firewall-rules" queryParamsHandling="merge">Firewall Rules</a>
-          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="nat-rules" queryParamsHandling="merge">NAT Rules/Groups</a>
+          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="firewall-rules" queryParamsHandling="merge">Firewall Rule Groups</a>
+          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="nat-rules" queryParamsHandling="merge">NAT Rule Groups</a>
           <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="network-objects-groups" queryParamsHandling="merge">Network Objects/Groups</a>
           <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="service-objects-groups" queryParamsHandling="merge">Service Objects/Groups</a>
           <a *ngIf="role === 'admin' || role === 'loadbalancer_admin'" class="dropdown-item" routerLink="load-balancers" queryParamsHandling="merge">Load Balancers</a>
+          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="static-routes" queryParamsHandling="merge">Routing</a>
         </div>
       </li>
       <li *ngIf="role === 'admin' || role === 'x86_admin' || role === 'mainframe_admin'" class="nav-item dropdown">
