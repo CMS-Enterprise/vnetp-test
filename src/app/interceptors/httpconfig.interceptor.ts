@@ -76,6 +76,7 @@ export class HttpConfigInterceptor {
     return next.handle(request).pipe(
       map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
+          this.processSuccessRequest(request, event);
           if (!environment.production) {
             // console.log('debug-httpevent-->>', event);
           }
@@ -114,5 +115,20 @@ export class HttpConfigInterceptor {
         return throwError(error);
       }),
     );
+  }
+
+  // if not a GET request, show appropriate success message
+  processSuccessRequest(request, responseEvent) {
+    if (request.method === 'GET') {
+      return;
+    }
+    const loginNotificationMsg = 'Login Successful';
+    const postNotificationMsg = 'Request Successful';
+    const bulkNotificationMessage = 'Bulk Upload Successful';
+    return responseEvent.url.includes('auth/')
+      ? this.toastr.success(loginNotificationMsg)
+      : responseEvent.url.includes('bulk')
+      ? this.toastr.success(bulkNotificationMessage)
+      : this.toastr.success(postNotificationMsg);
   }
 }
