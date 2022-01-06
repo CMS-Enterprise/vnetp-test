@@ -15,6 +15,7 @@
       <!-- Name -->
       <div class="form-group">
         <label for="name">Name</label>
+        <tooltip [message]="helpText.Name"></tooltip>
         <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" required />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
@@ -44,6 +45,7 @@
         <!-- NAT Direction -->
         <div class="form-group col-md-3">
           <label for="direction">NAT Direction</label>
+          <tooltip [message]="helpText.Direction"></tooltip>
           <select
             id="direction"
             formControlName="direction"
@@ -59,7 +61,8 @@
         </div>
 
         <div class="form-group col-md-3">
-          <label for="biDirectional">biDirectional</label>
+          <label for="biDirectional">Bi-directional</label>
+          <tooltip [message]="helpText.Bidirectional"></tooltip>
           <select
             id="biDirectional"
             formControlName="biDirectional"
@@ -77,6 +80,7 @@
         <!-- Rule Index -->
         <div class="form-group col-md-3">
           <label for="ruleIndex">Rule Index</label>
+          <tooltip [message]="helpText.Bidirectional"></tooltip>
           <input
             id="ruleIndex"
             type="number"
@@ -93,6 +97,7 @@
         <!-- Enabled -->
         <div class="form-group col-md-3">
           <label for="enabled">Enabled</label>
+          <tooltip [message]="helpText.Enabled"></tooltip>
           <select
             id="enabled"
             formControlName="enabled"
@@ -115,6 +120,7 @@
         <!-- Original Service Type -->
         <div class="form-group col-md-6">
           <label for="originalServiceType">Original Service Type</label>
+          <tooltip [message]="helpText.OriginalServiceType"></tooltip>
           <select
             id="originalServiceType"
             formControlName="originalServiceType"
@@ -155,6 +161,7 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="originalSourceAddressType">Original Source Address Type</label>
+          <tooltip [message]="helpText.OriginalSourceAddressType"></tooltip>
           <select
             id="originalSourceAddressType"
             formControlName="originalSourceAddressType"
@@ -218,6 +225,7 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="originalDestinationAddressType">Original Destination Address Type</label>
+          <tooltip [message]="helpText.OriginalDestinationAddressType"></tooltip>
           <select
             id="originalDestinationAddressType"
             formControlName="originalDestinationAddressType"
@@ -290,6 +298,7 @@
       <!-- Translation Type -->
       <div class="form-group">
         <label for="translationType">Translation Type</label>
+        <tooltip [message]="helpText.TranslationType"></tooltip>
         <select
           id="translationType"
           formControlName="translationType"
@@ -310,6 +319,7 @@
           <!-- Translated Service Type -->
           <div class="form-group col-md-6">
             <label for="translatedServiceType">Translated Service Type</label>
+            <tooltip [message]="helpText.TranslatedServiceType"></tooltip>
             <select
               id="translatedServiceType"
               formControlName="translatedServiceType"
@@ -347,6 +357,7 @@
           <!-- Translated Source Address Type -->
           <div class="form-group col-md-6">
             <label for="translatedSourceAddressType">Translated Source Address Type</label>
+            <tooltip [message]="helpText.TranslatedSourceAddressType"></tooltip>
             <select
               id="translatedSourceAddressType"
               formControlName="translatedSourceAddressType"
@@ -412,6 +423,7 @@
           <!-- Translated Destination Address Type -->
           <div class="form-group col-md-6">
             <label for="translatedDestinationAddressType">Translated Destination Address Type</label>
+            <tooltip [message]="helpText.TranslatedDestinationAddressType"></tooltip>
             <select
               id="translatedDestinationAddressType"
               formControlName="translatedDestinationAddressType"

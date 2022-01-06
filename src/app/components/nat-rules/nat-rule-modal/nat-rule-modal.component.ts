@@ -21,6 +21,7 @@ import {
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { NatRuleModalDto } from '../../../models/nat/nat-rule-modal-dto';
 import FormUtils from '../../../utils/FormUtils';
+import { NatRuleModalHelpText } from '../../../helptext/help-text-networking';
 
 @Component({
   selector: 'app-nat-rule-modal',
@@ -54,6 +55,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
     private natRuleService: V1NetworkSecurityNatRulesService,
+    public helpText: NatRuleModalHelpText,
   ) {}
 
   get f() {
