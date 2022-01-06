@@ -107,7 +107,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       console.log(new FormUtils().findInvalidControlsRecursive(this.form));
       return;
     }
-    const modalNatRule = this.form.value;
+    const modalNatRule = this.form.getRawValue();
     modalNatRule.originalServiceObjectId = null;
     modalNatRule.originalSourceNetworkObjectId = null;
     modalNatRule.originalSourceNetworkObjectGroupId = null;
@@ -124,47 +124,26 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     }
     if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressTypeEnum.NetworkObject) {
       modalNatRule.originalSourceNetworkObjectId = modalNatRule.originalSourceNetworkObject;
-      modalNatRule.originalSourceNetworkObject = null;
     } else if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.originalSourceNetworkObjectGroupId = modalNatRule.originalSourceNetworkObjectGroup;
-      modalNatRule.originalSourceNetworkObjectGroup = null;
     }
     if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressTypeEnum.NetworkObject) {
       modalNatRule.originalDestinationNetworkObjectId = modalNatRule.originalDestinationNetworkObject;
-      modalNatRule.originalDestinationNetworkObject = null;
     } else if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.originalDestinationNetworkObjectGroupId = modalNatRule.originalDestinationNetworkObjectGroup;
-      modalNatRule.originalDestinationNetworkObjectGroup = null;
     }
     if (modalNatRule.translatedServiceType === NatRuleTranslatedServiceTypeEnum.ServiceObject) {
       modalNatRule.translatedServiceObjectId = modalNatRule.translatedServiceObject;
-      modalNatRule.translatedServiceObject = null;
     }
     if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressTypeEnum.NetworkObject) {
       modalNatRule.translatedSourceNetworkObjectId = modalNatRule.translatedSourceNetworkObject;
-      modalNatRule.translatedSourceNetworkObject = null;
-
-      // add form validation
-      if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressTypeEnum.None) {
-        console.log('original source address type must not be none!!!!!');
-        return;
-      }
     } else if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.translatedSourceNetworkObjectGroupId = modalNatRule.translatedSourceNetworkObjectGroup;
-      modalNatRule.translatedSourceNetworkObjectGroup = null;
     }
     if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressTypeEnum.NetworkObject) {
       modalNatRule.translatedDestinationNetworkObjectId = modalNatRule.translatedDestinationNetworkObject;
-      modalNatRule.translatedDestinationNetworkObject = null;
-
-      // add form validation
-      if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressTypeEnum.None) {
-        console.log('original destination address type must not be none!!!!');
-        return;
-      }
     } else if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.translatedDestinationNetworkObjectGroupId = modalNatRule.translatedDestinationNetworkObjectGroup;
-      modalNatRule.translatedDestinationNetworkObjectGroup = null;
     }
 
     if (this.modalMode === ModalMode.Create) {
