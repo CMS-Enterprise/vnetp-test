@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
-import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { NgxSmartModalModule, NgxSmartModalService } from 'ngx-smart-modal';
+import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockTooltipComponent } from 'src/test/mock-components';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { NatRuleModalComponent } from './nat-rule-modal.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockProvider } from '../../../../test/mock-providers';
@@ -16,9 +16,7 @@ import {
   NatRuleTranslatedSourceAddressTypeEnum,
   NatRuleTranslationTypeEnum,
   V1NetworkSecurityNatRulesService,
-  V1TiersService,
 } from 'client';
-import { DatacenterContextService } from '../../../services/datacenter-context.service';
 
 describe('NatRuleModalComponent', () => {
   let component: NatRuleModalComponent;
@@ -27,7 +25,13 @@ describe('NatRuleModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
-      declarations: [MockComponent('app-nat-rule-modal'), NatRuleModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent],
+      declarations: [
+        MockComponent('app-nat-rule-modal'),
+        NatRuleModalComponent,
+        MockTooltipComponent,
+        MockNgxSmartModalComponent,
+        MockFontAwesomeComponent,
+      ],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityNatRulesService), MockProvider(TierContextService)],
     })
       .compileComponents()
@@ -44,6 +48,8 @@ describe('NatRuleModalComponent', () => {
     newValue: any;
     expectedRequiredFields: string[];
     expectedOptionalFields: string[];
+    expectedTruthyFields?: string[];
+    expectedFalsyFields?: string[];
   }) => {
     const formControl = component.f[options.field];
     formControl.setValue(options.newValue);
@@ -54,6 +60,14 @@ describe('NatRuleModalComponent', () => {
 
     (options.expectedOptionalFields || []).forEach(f => {
       expect(TestUtil.isFormControlRequired(getFormControl(f))).toBe(false);
+    });
+
+    (options.expectedTruthyFields || []).forEach(f => {
+      expect(TestUtil.formControlValueBoolean(getFormControl(f))).toBe(true);
+    });
+
+    (options.expectedFalsyFields || []).forEach(f => {
+      expect(TestUtil.formControlValueBoolean(getFormControl(f))).toBe(false);
     });
   };
 
@@ -170,21 +184,23 @@ describe('NatRuleModalComponent', () => {
       });
     });
 
-    it('should require "Translated Source Address Type", "Translated Destination Address Type" and "Translated Service Type" when set to "DynamicIp"', () => {
+    it('should require "Translated Source Address Type", "Translated Destination Address Type" and "Translated Service Type" and "biDirectional" should be false when set to "DynamicIp"', () => {
       testRequiredFields({
         field: 'translationType',
         newValue: NatRuleTranslationTypeEnum.DynamicIp,
         expectedRequiredFields: ['translatedSourceAddressType', 'translatedDestinationAddressType', 'translatedServiceType'],
         expectedOptionalFields: [],
+        expectedFalsyFields: ['biDirectional'],
       });
     });
 
-    it('should require "Translated Source Address Type", "Translated Destination Address Type" and "Translated Service Type" when set to "DynamicIpAndPort"', () => {
+    it('should require "Translated Source Address Type", "Translated Destination Address Type" and "Translated Service Type" and "biDirectional" should be false when set to "DynamicIpAndPort"', () => {
       testRequiredFields({
         field: 'translationType',
         newValue: NatRuleTranslationTypeEnum.DynamicIpAndPort,
         expectedRequiredFields: ['translatedSourceAddressType', 'translatedDestinationAddressType', 'translatedServiceType'],
         expectedOptionalFields: [],
+        expectedFalsyFields: ['biDirectional'],
       });
     });
   });

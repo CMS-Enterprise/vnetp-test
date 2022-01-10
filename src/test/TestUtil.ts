@@ -13,6 +13,14 @@ export default class TestUtil {
     return !!errors.required;
   }
 
+  static formControlValueBoolean(control: AbstractControl): boolean {
+    if (!control) {
+      return false;
+    }
+
+    return !!control.value;
+  }
+
   static areRequiredFields(form: FormGroup, fields: string[]): boolean {
     return fields.map(f => form.controls[f]).every(control => TestUtil.isFormControlRequired(control));
   }

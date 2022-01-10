@@ -180,7 +180,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       this.form.reset();
     }
     this.form = this.formBuilder.group({
-      biDirectional: [true],
+      biDirectional: [false],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       direction: [NatRuleDirectionEnum.In, Validators.required],
       enabled: [true, Validators.required],
