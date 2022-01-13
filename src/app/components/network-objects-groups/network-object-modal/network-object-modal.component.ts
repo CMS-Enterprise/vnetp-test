@@ -157,6 +157,14 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       ipAddress: [''],
       startIpAddress: [''],
       endIpAddress: [''],
+      nat: [false],
+      natType: [''],
+      natDirection: [''],
+      translatedIpAddress: [''],
+      natService: [false],
+      natProtocol: [''],
+      natSourcePort: ['', ValidatePortRange],
+      natTranslatedPort: ['', ValidatePortRange],
     });
   }
 

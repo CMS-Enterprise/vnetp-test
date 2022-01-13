@@ -17,6 +17,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { V1TiersService, V1NetworkSecurityFirewallRuleGroupsService } from 'client';
+import { TierContextService } from 'src/app/services/tier-context.service';
 
 describe('FirewallRulesComponent', () => {
   let component: FirewallRulesComponent;
@@ -29,6 +30,7 @@ describe('FirewallRulesComponent', () => {
         FilterPipe,
         FirewallRulesComponent,
         MockComponent('app-firewall-rule-modal'),
+        MockComponent('app-tier-select'),
         MockImportExportComponent,
         MockFontAwesomeComponent,
         MockNgxSmartModalComponent,
@@ -39,6 +41,7 @@ describe('FirewallRulesComponent', () => {
       providers: [
         MockProvider(NgxSmartModalService),
         MockProvider(DatacenterContextService),
+        MockProvider(TierContextService),
         MockProvider(V1TiersService),
         MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
       ],

@@ -1,7 +1,7 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
-import { NameValidator } from './name-validator';
+import { DatacenterTierNameValidator } from './datacenter-tier-name-validator';
 
-describe('NameValidator', () => {
+describe('Datacenter/Tier Name Validator', () => {
   const createValidator = (validator: ValidatorFn) => {
     const formControl = new FormControl();
 
@@ -13,19 +13,16 @@ describe('NameValidator', () => {
     };
   };
 
-  it('should be valid name (Name Validator)', () => {
-    const { validate } = createValidator(NameValidator());
+  it('should be valid name (Datacenter Tier Validator Name Validator)', () => {
+    const { validate } = createValidator(DatacenterTierNameValidator());
     expect(validate('Test')).toBeNull();
     expect(validate('TestName')).toBeNull();
-    expect(validate('Test:Name')).toBeNull();
-    expect(validate('Test-Name')).toBeNull();
     expect(validate('Test_Name')).toBeNull();
     expect(validate('Test99Name')).toBeNull();
-    expect(validate('Test99.Name')).toBeNull();
   });
 
-  it('should be invalid name (Name Validator)', () => {
-    const { validate } = createValidator(NameValidator());
+  it('should be invalid name (Datacemter Tier Name Validator)', () => {
+    const { validate } = createValidator(DatacenterTierNameValidator());
     expect(validate('Test/')).toBeTruthy();
     expect(validate('Test  ')).toBeTruthy();
     expect(validate('192.168.10.0/24_test')).toBeTruthy();
@@ -33,5 +30,8 @@ describe('NameValidator', () => {
     expect(validate('Test(%)')).toBeTruthy();
     expect(validate('Test(!)')).toBeTruthy();
     expect(validate('Test Name (!)')).toBeTruthy();
+    expect(validate('Test:Name')).toBeTruthy();
+    expect(validate('Test-Name')).toBeTruthy();
+    expect(validate('Test99.Name')).toBeTruthy();
   });
 });

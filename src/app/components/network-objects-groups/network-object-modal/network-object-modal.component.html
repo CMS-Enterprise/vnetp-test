@@ -196,6 +196,7 @@
             mask="09999"
           />
           <div *ngIf="submitted && f.natSourcePort.errors" class="invalid-feedback">
+            <div *ngIf="f.natSourcePort.errors.invalidPortNumber">Source Port/Range must be between 1-65535</div>
             <div *ngIf="f.natSourcePort.errors.required">Source Port is required</div>
           </div>
         </div>
@@ -212,6 +213,7 @@
             mask="09999"
           />
           <div *ngIf="submitted && f.natTranslatedPort.errors" class="invalid-feedback">
+            <div *ngIf="f.natTranslatedPort.errors.invalidPortNumber">Destination Port must be between 1-65535</div>
             <div *ngIf="f.natTranslatedPort.errors.required">Destination Port is required</div>
           </div>
         </div>
