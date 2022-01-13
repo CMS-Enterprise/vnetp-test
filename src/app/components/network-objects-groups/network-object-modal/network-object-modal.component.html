@@ -24,7 +24,7 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" *ngIf="!f.nat.value">
         <label for="type">Type</label>
         <tooltip [message]="helpText.Type"></tooltip>
         <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors" aria-label="Type">
@@ -94,7 +94,7 @@
         </div>
       </div>
 
-      <!-- <div class="form-group" *ngIf="f.type.value === 'IpAddress'">
+      <div class="form-group" *ngIf="f.type.value === 'IpAddress'">
         <div class="form-check form-check-inline">
           <input type="checkbox" name="nat" class="form-check-input" formControlName="nat" aria-label="NAT" />
           <label class="form-check-label" for="nat">NAT</label>
@@ -217,7 +217,7 @@
             <div *ngIf="f.natTranslatedPort.errors.required">Destination Port is required</div>
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
 
     <footer class="modal-footer">

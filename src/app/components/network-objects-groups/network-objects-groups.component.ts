@@ -6,7 +6,6 @@ import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-ob
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { ToastrService } from 'ngx-toastr';
 import { Tier } from 'client/model/tier';
 import {
   V1TiersService,
@@ -57,7 +56,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     private tierContextService: TierContextService,
     private tierService: V1TiersService,
     public helpText: NetworkObjectsGroupsHelpText,
-    private toastrService: ToastrService,
   ) {}
 
   public handleTabChange(tab: Tab): void {
@@ -232,7 +230,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.getNetworkObjects();
         });
-      this.toastrService.success('Upload Successful');
     };
 
     const onClose = () => {
