@@ -3,7 +3,6 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { ToastrService } from 'ngx-toastr';
 import { Tier } from 'client/model/tier';
 import {
   V1TiersService,
@@ -56,7 +55,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private tierContextService: TierContextService,
     private tierService: V1TiersService,
-    private toastrService: ToastrService,
   ) {}
 
   public handleTabChange(tab: Tab): void {
@@ -232,7 +230,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.getServiceObjects();
         });
-      this.toastrService.success('Upload Successful');
     };
 
     const onClose = () => {

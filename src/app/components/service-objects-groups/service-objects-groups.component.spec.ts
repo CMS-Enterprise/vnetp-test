@@ -18,7 +18,6 @@ import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.co
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { V1NetworkSecurityServiceObjectGroupsService, V1NetworkSecurityServiceObjectsService, V1TiersService } from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
-import { ToastrService } from 'ngx-toastr';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
@@ -45,7 +44,6 @@ describe('ServicesObjectsGroupsComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(V1NetworkSecurityServiceObjectGroupsService),
         MockProvider(V1NetworkSecurityServiceObjectsService),
-        MockProvider(ToastrService),
         MockProvider(TierContextService),
         MockProvider(V1TiersService),
       ],
