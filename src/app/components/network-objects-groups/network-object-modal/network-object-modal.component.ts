@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { IpAddressIpValidator, ValidatePortRange, IpAddressAnyValidator } from 'src/app/validators/network-form-validators';
+import { IpAddressIpValidator, ValidatePortRange, IpAddressAnyValidator, FqdnValidator } from 'src/app/validators/network-form-validators';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { NetworkObjectModalHelpText } from 'src/app/helptext/help-text-networking';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -47,6 +47,8 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     } else if (modalNetworkObject.type === NetworkObjectTypeEnum.Range) {
       modalNetworkObject.startIpAddress = this.form.value.startIpAddress;
       modalNetworkObject.endIpAddress = this.form.value.endIpAddress;
+    } else if (modalNetworkObject.type === NetworkObjectTypeEnum.Fqdn) {
+      modalNetworkObject.fqdn = this.form.value.fqdn;
     }
 
     modalNetworkObject.nat = this.form.value.nat;
@@ -111,6 +113,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     const ipAddress = this.form.get('ipAddress');
     const startIpAddress = this.form.get('startIpAddress');
     const endIpAddress = this.form.get('endIpAddress');
+    const fqdn = this.form.get('fqdn');
     const nat = this.form.get('nat');
 
     this.networkTypeSubscription = this.form.get('type').valueChanges.subscribe(type => {
@@ -120,6 +123,9 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
         startIpAddress.setValue(null);
         endIpAddress.setValidators(null);
         endIpAddress.setValue(null);
+
+        fqdn.setValidators(null);
+        fqdn.setValue(null);
       }
 
       if (type === 'Range') {
@@ -130,12 +136,28 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
 
         ipAddress.setValidators(null);
         ipAddress.setValue(null);
+
+        fqdn.setValidators(null);
+        fqdn.setValue(null);
+        nat.setValue(false);
+      }
+
+      if (type === 'Fqdn') {
+        ipAddress.setValidators(null);
+        ipAddress.setValue(null);
+        startIpAddress.setValidators(null);
+        startIpAddress.setValue(null);
+        endIpAddress.setValidators(null);
+        endIpAddress.setValue(null);
+
+        fqdn.setValidators(Validators.compose([Validators.required, FqdnValidator]));
         nat.setValue(false);
       }
 
       ipAddress.updateValueAndValidity();
       startIpAddress.updateValueAndValidity();
       endIpAddress.updateValueAndValidity();
+      fqdn.updateValueAndValidity();
       nat.updateValueAndValidity({ emitEvent: false });
     });
 
@@ -208,6 +230,8 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       this.form.controls.startIpAddress.setValue(networkObject.startIpAddress);
       this.form.controls.endIpAddress.setValue(networkObject.endIpAddress);
 
+      this.form.controls.fqdn.setValue(networkObject.fqdn);
+
       this.form.controls.nat.setValue(networkObject.nat);
 
       this.form.controls.natType.setValue(networkObject.natType);
@@ -230,6 +254,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       ipAddress: [''],
       startIpAddress: [''],
       endIpAddress: [''],
+      fqdn: [''],
       nat: [false],
       natType: [''],
       natDirection: [''],

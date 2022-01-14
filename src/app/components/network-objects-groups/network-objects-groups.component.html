@@ -44,6 +44,7 @@
           <td>
             <span *ngIf="netObj?.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
             <span *ngIf="netObj?.type === 'Range'"> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
+            <span *ngIf="netObj?.type === 'Fqdn'"> {{ netObj?.fqdn }}  </span>
           </td>
           <td>
             <span>{{ netObj?.translatedIpAddress }}</span>

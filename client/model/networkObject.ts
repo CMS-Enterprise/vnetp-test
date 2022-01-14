@@ -22,6 +22,7 @@ export interface NetworkObject {
     name: string;
     description?: string;
     type: NetworkObjectTypeEnum;
+    fqdn?: string;
     ipAddress?: string;
     startIpAddress?: string;
     endIpAddress?: string;
@@ -37,7 +38,8 @@ export interface NetworkObject {
 }
 export enum NetworkObjectTypeEnum {
     IpAddress = 'IpAddress',
-    Range = 'Range'
+    Range = 'Range',
+    Fqdn = 'Fqdn'
 };
 export enum NetworkObjectNatDirectionEnum {
     In = 'In',

@@ -31,6 +31,7 @@
           <option></option>
           <option value="IpAddress">Ip Address</option>
           <option value="Range">Range</option>
+          <option value="Fqdn">FQDN</option>
         </select>
         <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
           <div *ngIf="f.type.errors.required">Type is required</div>
@@ -91,6 +92,24 @@
         <div *ngIf="submitted && f.endIpAddress.errors" class="invalid-feedback">
           <div *ngIf="f.endIpAddress.errors.invalidIpAddress">IP Address is invalid</div>
           <div *ngIf="f.endIpAddress.errors.required">End Address is required</div>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="f.type.value == 'Fqdn'">
+        <label for="fqdn">FQDN</label>
+        <tooltip *ngIf="f.type.value == 'Fqdn'" [message]="helpText.Fqdn"></tooltip>
+        <input
+          type="text"
+          id="fqdn"
+          formControlName="fqdn"
+          class="form-control"
+          [class.is-invalid]="submitted && f.fqdn.errors"
+          aria-label="FQDN"
+          *ngIf="f.type.value == 'Fqdn'"
+        />
+        <div *ngIf="submitted && f.fqdn.errors" class="invalid-feedback">
+          <div *ngIf="f.fqdn.errors.required">FQDN is required</div>
+          <div *ngIf="f.fqdn.errors.invalidFqdn">FQDN is invalid.</div>
         </div>
       </div>
 
