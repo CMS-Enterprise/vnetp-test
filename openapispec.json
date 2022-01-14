@@ -1515,8 +1515,12 @@
             "type": "string",
             "enum": [
               "IpAddress",
-              "Range"
+              "Range",
+              "Fqdn"
             ]
+          },
+          "fqdn": {
+            "type": "string"
           },
           "ipAddress": {
             "type": "string"
