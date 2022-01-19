@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ResolvePipe } from '../pipes/resolve.pipe';
+import { FilterPipe } from '../pipes/filter.pipe';
 
 @NgModule({
   imports: [
@@ -23,7 +24,7 @@ import { ResolvePipe } from '../pipes/resolve.pipe';
     NgSelectModule,
     NgxPaginationModule,
   ],
-  declarations: [ImportExportComponent, ResolvePipe, TierSelectComponent, YesNoModalComponent, ZosZvmRequestModalComponent],
-  exports: [ImportExportComponent, ResolvePipe, TierSelectComponent, YesNoModalComponent, ZosZvmRequestModalComponent],
+  declarations: [ImportExportComponent, ResolvePipe, FilterPipe, TierSelectComponent, YesNoModalComponent, ZosZvmRequestModalComponent],
+  exports: [ImportExportComponent, ResolvePipe, FilterPipe, TierSelectComponent, YesNoModalComponent, ZosZvmRequestModalComponent],
 })
 export class SharedModule {}

@@ -36,6 +36,8 @@ api/v1LoadBalancerVirtualServers.service.ts
 api/v1LoadBalancerVlans.service.ts
 api/v1NetworkSecurityFirewallRuleGroups.service.ts
 api/v1NetworkSecurityFirewallRules.service.ts
+api/v1NetworkSecurityNatRuleGroups.service.ts
+api/v1NetworkSecurityNatRules.service.ts
 api/v1NetworkSecurityNetworkObjectGroups.service.ts
 api/v1NetworkSecurityNetworkObjects.service.ts
 api/v1NetworkSecurityServiceObjectGroups.service.ts
@@ -108,6 +110,7 @@ model/createManyLoadBalancerProfileDto.ts
 model/createManyLoadBalancerRouteDto.ts
 model/createManyLoadBalancerSelfIpDto.ts
 model/createManyLoadBalancerVlanDto.ts
+model/createManyNatRuleGroupDto.ts
 model/createManyNetworkObjectDto.ts
 model/createManyNetworkObjectGroupDto.ts
 model/createManyPhysicalServerDto.ts
@@ -145,6 +148,8 @@ model/getManyLoadBalancerRouteResponseDto.ts
 model/getManyLoadBalancerSelfIpResponseDto.ts
 model/getManyLoadBalancerVirtualServerResponseDto.ts
 model/getManyLoadBalancerVlanResponseDto.ts
+model/getManyNatRuleGroupResponseDto.ts
+model/getManyNatRuleResponseDto.ts
 model/getManyNetworkObjectGroupResponseDto.ts
 model/getManyNetworkObjectResponseDto.ts
 model/getManyPhysicalServerResponseDto.ts
@@ -173,6 +178,11 @@ model/loadBalancerSelfIp.ts
 model/loadBalancerVirtualServer.ts
 model/loadBalancerVlan.ts
 model/models.ts
+model/natRule.ts
+model/natRuleGroup.ts
+model/natRuleImport.ts
+model/natRuleImportCollectionDto.ts
+model/natRulePreview.ts
 model/networkObject.ts
 model/networkObjectGroup.ts
 model/networkObjectGroupRelationBulkImportCollectionDto.ts

@@ -28,6 +28,7 @@ import { NetworkObjectGroup } from './networkObjectGroup';
 import { FirewallRuleGroup } from './firewallRuleGroup';
 import { Subnet } from './subnet';
 import { LoadBalancerPolicy } from './loadBalancerPolicy';
+import { NatRuleGroup } from './natRuleGroup';
 
 
 export interface Tier { 
@@ -49,6 +50,7 @@ export interface Tier {
     readonly subnets?: Array<Subnet>;
     readonly staticRoutes?: Array<StaticRoute>;
     readonly firewallRuleGroups?: Array<FirewallRuleGroup>;
+    readonly natRuleGroups?: Array<NatRuleGroup>;
     readonly networkObjects?: Array<NetworkObject>;
     readonly networkObjectGroups?: Array<NetworkObjectGroup>;
     readonly serviceObjects?: Array<ServiceObject>;

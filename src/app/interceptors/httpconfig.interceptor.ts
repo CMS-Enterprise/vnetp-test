@@ -91,6 +91,9 @@ export class HttpConfigInterceptor {
             case 400:
               if (error?.error?.message?.message) {
                 toastrMessage = `Bad Request - ${error.error.message.message}`;
+              }
+              if (error?.error?.message) {
+                toastrMessage = `Bad Request - ${error.error.message}`;
               } else {
                 toastrMessage = 'Bad Request';
               }

@@ -36,6 +36,8 @@ import { V1LoadBalancerVirtualServersService } from './api/v1LoadBalancerVirtual
 import { V1LoadBalancerVlansService } from './api/v1LoadBalancerVlans.service';
 import { V1NetworkSecurityFirewallRuleGroupsService } from './api/v1NetworkSecurityFirewallRuleGroups.service';
 import { V1NetworkSecurityFirewallRulesService } from './api/v1NetworkSecurityFirewallRules.service';
+import { V1NetworkSecurityNatRuleGroupsService } from './api/v1NetworkSecurityNatRuleGroups.service';
+import { V1NetworkSecurityNatRulesService } from './api/v1NetworkSecurityNatRules.service';
 import { V1NetworkSecurityNetworkObjectGroupsService } from './api/v1NetworkSecurityNetworkObjectGroups.service';
 import { V1NetworkSecurityNetworkObjectsService } from './api/v1NetworkSecurityNetworkObjects.service';
 import { V1NetworkSecurityServiceObjectGroupsService } from './api/v1NetworkSecurityServiceObjectGroups.service';

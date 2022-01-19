@@ -131,10 +131,11 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   private subscribeToTierModal(): void {
     this.tierModalSubscription = this.ngx.getModal('tierModal').onCloseFinished.subscribe(() => {
-      this.getTiers();
       this.ngx.resetModalData('tierModal');
       this.datacenterContextService.unlockDatacenter();
       this.tierModalSubscription.unsubscribe();
+      this.getTiers();
+      this.datacenterContextService.refreshDatacenter();
     });
   }
 
