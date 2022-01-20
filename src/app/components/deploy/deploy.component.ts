@@ -1,5 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup, V1JobsService, Job, FirewallRuleGroupTypeEnum } from 'client';
+import {
+  V1TiersService,
+  Tier,
+  Datacenter,
+  V1TierGroupsService,
+  TierGroup,
+  V1JobsService,
+  Job,
+  FirewallRuleGroupTypeEnum,
+  NatRuleGroupTypeEnum,
+} from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Subscription } from 'rxjs';
 import { TableRowWrapper } from 'src/app/models/other/table-row-wrapper';
@@ -72,7 +82,6 @@ export class DeployComponent implements OnInit {
     this.tierService
       .getManyDatacenterTier({
         datacenterId: this.currentDatacenter.id,
-        join: ['firewallRuleGroups'],
       })
       .subscribe((data: unknown) => {
         this.tiers = (data as Tier[]).map(tier => new TableRowWrapper(tier));
@@ -97,8 +106,6 @@ export class DeployComponent implements OnInit {
       tierNetworkSecurityJob.jobType = 'provision-tier-network-security';
       tierNetworkSecurityJob.definition = {
         tierId: tier.id,
-        intervrfFirewallRuleGroupId: tier.firewallRuleGroups.find(f => f.type === FirewallRuleGroupTypeEnum.Intervrf).id,
-        externalFirewallRuleGroupId: tier.firewallRuleGroups.find(f => f.type === FirewallRuleGroupTypeEnum.External).id,
       };
 
       this.jobService.createOneJob({ job: tierNetworkSecurityJob }).subscribe(() => {});
