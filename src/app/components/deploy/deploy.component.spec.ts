@@ -75,7 +75,7 @@ describe('DeployComponent', () => {
 
     datacenterSubject.next(testData.datacenter);
 
-    expect(tiersService.getManyDatacenterTier).toHaveBeenCalledWith({ datacenterId: '1', join: ['firewallRuleGroups'] });
+    expect(tiersService.getManyDatacenterTier).toHaveBeenCalledWith({ datacenterId: '1' });
     expect(tierGroupService.getManyTierGroup).toHaveBeenCalledWith({ filter: ['datacenterId||eq||1'] });
     expect(component.tiers.length).toBe(1);
   });
