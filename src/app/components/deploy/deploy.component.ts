@@ -82,7 +82,6 @@ export class DeployComponent implements OnInit {
     this.tierService
       .getManyDatacenterTier({
         datacenterId: this.currentDatacenter.id,
-        join: ['firewallRuleGroups', 'natRuleGroups'],
       })
       .subscribe((data: unknown) => {
         this.tiers = (data as Tier[]).map(tier => new TableRowWrapper(tier));
