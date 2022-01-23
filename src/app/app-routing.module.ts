@@ -121,6 +121,12 @@ const routes: Routes = [
     loadChildren: () => import('./components/appliance/appliance.module').then(m => m.ApplianceModule),
   },
   {
+    path: 'nat-rules',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'NAT Rules' },
+    loadChildren: () => import('./components/nat-rules/nat-rules.module').then(m => m.NatRulesModule),
+  },
+  {
     path: 'unauthorized',
     loadChildren: () => import('./components/unauthorized/unauthorized.module').then(m => m.UnauthorizedModule),
   },

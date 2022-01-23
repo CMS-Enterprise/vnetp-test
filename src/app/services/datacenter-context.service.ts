@@ -114,6 +114,20 @@ export class DatacenterContextService {
     });
   }
 
+  // Refreshes datacenters and current datacenter subject from API
+  public refreshDatacenter() {
+    const currentDatacenterId = this.currentDatacenterValue.id;
+    this.datacenterService.getManyDatacenters({ join: ['tiers'] }).subscribe(response => {
+      // Update internal datacenters array and external subject.
+      this._datacenters = response.data;
+      this.datacentersSubject.next(response.data);
+
+      const datacenter = this._datacenters.find(dc => dc.id === currentDatacenterId);
+
+      this.currentDatacenterSubject.next(datacenter);
+    });
+  }
+
   public switchDatacenter(datacenterId: string): boolean {
     if (this.lockCurrentDatacenterSubject.value) {
       this.messageService.sendMessage(new Message(null, null, 'Current datacenter locked'));

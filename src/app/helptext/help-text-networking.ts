@@ -48,6 +48,16 @@ export class FirewallRulesHelpText {
 @Injectable({
   providedIn: 'root',
 })
+export class NatRulesHelpText {
+  wikiBase: string = environment.wikiBase;
+
+  External = `NAT Rules between a Tier and CMSnet/Internet.`;
+  InterVrf = `NAT Rules between 2 Tiers.`;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
 export class NetworkInterfacesHelpText {
   wikiBase: string = environment.wikiBase;
 
@@ -61,7 +71,7 @@ export class NetworkInterfacesHelpText {
 export class FirewallRuleModalHelpText {
   wikiBase: string = environment.wikiBase;
 
-  Name = 'Name of the Firewall Rule, 28 characters max.';
+  Name = 'Name of the Firewall Rule.';
   Action = `Action that the firewall will take on traffic that matches this rule.`;
   Direction = `Direction that this traffic flow will take. 'In' represents traffic entering the VRF from external/intervrf and 'Out' represents traffic leaving the VRF to external/intervrf.`;
   Protocol = `Layer 4 Protocol that matching traffic uses.`;
@@ -83,6 +93,44 @@ export class FirewallRuleModalHelpText {
 @Injectable({
   providedIn: 'root',
 })
+export class NatRuleModalHelpText {
+  wikiBase: string = environment.wikiBase;
+
+  Name = 'Name of the NAT rule.';
+  Direction = `Direction that this traffic flow will take. 'In' represents traffic entering the VRF from external/intervrf and 'Out' represents traffic leaving the VRF to external/intervrf.`;
+  Bidirectional = `Indicates whether the NAT rule applies to traffic in both Directions.
+  <br>
+  <p>Constraints:</p>
+  <p>*Bi-directional must be False when Translation Type is not Static.</p>
+  <p>*Bi-directional must be False when a rule has Source and Destination Address translation.</p>
+  `;
+  Enabled = 'Indicates whether the NAT rule is enabled.';
+  Logging = `Indicates whether traffic that matches this rule should be logged.`;
+  OriginalServiceType = `Type of Original Service (None, Service Object).`;
+  OriginalSourceAddressType = `Type of Original Source Address (None, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
+  OriginalDestinationAddressType = `Type of Original Destination Address (None, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>
+  <br>
+  <p>Constraints:</p>
+  <p>*When a translated destination address type is not 'None', the original destination address must also not be 'None'.</p>
+  `;
+  TranslationType = `NAT Translation Type (Static, DynamicIp, DynamicIpAndPort).
+  <br>
+  <p>Constraints:</p>
+  <p>*Translated Source and Destination Network Object Groups are not allowed with Static Translation Type.</p>
+  <p>*Translated Source and Destination Network Objects/Object Groups must be provided with DynamicIp or DynamicIpAndPort Translation Types.</p>
+  `;
+  TranslatedServiceType = `Type of Destination Service (None, Service Object). Note that if a Service Object is chosen, the Service Object must have a source port that is not 'any' or a range.`;
+  TranslatedSourceAddressType = `Type of Translated Source Address (None, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>
+  <br>
+  <p>Constraints:</p>
+  <p>When translation type is dynamicIp or dynamicIpAndPort translatedSourceAddress MUST NOT be 'None'</p>`;
+  TranslatedDestinationAddressType = `Type of Translated Destination Address (None, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
+  RuleIndex = `Index of the rule relative to other rules in the ruleset. Rules with a lower index will be applied first.`;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
 export class NetworkObjectsGroupsHelpText {
   wikiBase: string = environment.wikiBase;
 
@@ -96,8 +144,9 @@ export class NetworkObjectsGroupsHelpText {
 })
 export class NetworkObjectModalHelpText {
   Name = 'Name of the Network Object.';
-  Type = `Type of Network Object (IpAddress, Range).`;
-  IpAddress = `Ip Address/Subnet the Network Object.`;
+  Type = `Type of Network Object (IpAddress, Range, FQDN).`;
+  Fqdn = `Fully-Qualified Domain Name of the Network Object.`;
+  IpAddress = `Ip Address/Subnet of the Network Object.`;
   StartIpAddress = `Start Address (X.X.X.X) of Range Network Object.`;
   EndIpAddress = `End Address (X.X.X.X) of Range Network Object.`;
   Nat = `Sets whether Network Object should be NATed.`;
