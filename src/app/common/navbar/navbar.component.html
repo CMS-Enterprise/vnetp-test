@@ -29,16 +29,16 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
           <a class="dropdown-item" routerLink="tiers" queryParamsHandling="merge">Tiers</a>
-          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="subnets-vlans" queryParamsHandling="merge">Subnets & VLANs</a>
-          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="firewall-rules" queryParamsHandling="merge">Firewall Rule Groups</a>
-          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="nat-rules" queryParamsHandling="merge">NAT Rule Groups</a>
-          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="network-objects-groups" queryParamsHandling="merge">Network Objects/Groups</a>
-          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="service-objects-groups" queryParamsHandling="merge">Service Objects/Groups</a>
-          <a *ngIf="role === 'admin' || role === 'loadbalancer_admin'" class="dropdown-item" routerLink="load-balancers" queryParamsHandling="merge">Load Balancers</a>
-          <a *ngIf="role === 'admin' || role === 'network_admin'" class="dropdown-item" routerLink="static-routes" queryParamsHandling="merge">Routing</a>
+          <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="subnets-vlans" queryParamsHandling="merge">Subnets & VLANs</a>
+          <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="firewall-rules" queryParamsHandling="merge">Firewall Rule Groups</a>
+          <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="nat-rules" queryParamsHandling="merge">NAT Rule Groups</a>
+          <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="network-objects-groups" queryParamsHandling="merge">Network Objects/Groups</a>
+          <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="service-objects-groups" queryParamsHandling="merge">Service Objects/Groups</a>
+          <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('loadbalancer_admin')" class="dropdown-item" routerLink="load-balancers" queryParamsHandling="merge">Load Balancers</a>
+          <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="static-routes" queryParamsHandling="merge">Routing</a>
         </div>
       </li>
-      <li *ngIf="role === 'admin' || role === 'x86_admin' || role === 'mainframe_admin'" class="nav-item dropdown">
+      <li *ngIf="userRoles?.includes('admin') || userRoles?.includes('x86_admin') || userRoles?.includes('mainframe_admin')" class="nav-item dropdown">
         <a
           class="nav-link dropdown-toggle"
           href="#"
@@ -50,15 +50,15 @@
           >Systems
         </a>
         <div class="dropdown-menu" aria-labelledby="systemsNavbarDropdown">
-          <a *ngIf="role !== 'mainframe_admin'" class="dropdown-item" routerLink="physical-server" queryParamsHandling="merge">Physical Servers</a>
-          <a *ngIf="role !== 'mainframe_admin'" class="dropdown-item" routerLink="vmware" queryParamsHandling="merge">VMWare</a>
-          <a *ngIf="role === 'admin' || role === 'mainframe_admin'" class="dropdown-item" routerLink="zvm" queryParamsHandling="merge">z/VM</a>
-          <a *ngIf="role === 'admin' || role === 'mainframe_admin'" class="dropdown-item" routerLink="zos" queryParamsHandling="merge">z/OS</a>
-          <a *ngIf="role !== 'mainframe_admin'" class="dropdown-item" routerLink="appliance" queryParamsHandling="merge">Appliance aaS</a>
-          <a *ngIf="role !== 'mainframe_admin'" class="dropdown-item" routerLink="application-groups" queryParamsHandling="merge">Actifio - Application Groups</a>
-          <a *ngIf="role !== 'mainframe_admin'" class="dropdown-item" routerLink="recovery-plans" queryParamsHandling="merge">Actifio - Recovery Plans</a>
-          <a *ngIf="role !== 'mainframe_admin'" class="dropdown-item" routerLink="slas" queryParamsHandling="merge">Actifio - SLAs</a>
-          <a *ngIf="role !== 'mainframe_admin'" class="dropdown-item" routerLink="virtual-machines" queryParamsHandling="merge">Actifio - Virtual Machines</a>
+          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="physical-server" queryParamsHandling="merge">Physical Servers</a>
+          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="vmware" queryParamsHandling="merge">VMWare</a>
+          <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="zvm" queryParamsHandling="merge">z/VM</a>
+          <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="zos" queryParamsHandling="merge">z/OS</a>
+          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="appliance" queryParamsHandling="merge">Appliance aaS</a>
+          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="application-groups" queryParamsHandling="merge">Actifio - Application Groups</a>
+          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="recovery-plans" queryParamsHandling="merge">Actifio - Recovery Plans</a>
+          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="slas" queryParamsHandling="merge">Actifio - SLAs</a>
+          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="virtual-machines" queryParamsHandling="merge">Actifio - Virtual Machines</a>
         </div>
       </li>
     </ul>
