@@ -3,7 +3,6 @@ import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { ActivatedRoute, Router } from '@angular/router';
 import { UserDto } from '../../../../client';
 
 @Component({
