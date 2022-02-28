@@ -31,23 +31,18 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
       this.tenant = tenant;
-    });
-
-    const tenantQueryParam = JSON.parse(localStorage.getItem('tenantQueryParam'));
-    this.tenant = tenantQueryParam;
-
-    this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
-      this.user = user;
-      if (user) {
-        this.userRoles = this.user.dcsPermissions.find(d => d.tenant === this.tenant || d.tenant === '*').roles;
-
-        // this is a slight trick for the user, if they are a RO user regardless of prefix (network, x86, etc...)
-        // show them all dropdown options, they will get denied at the component level
-        // this allows for more flexibility of the word "admin" in the HTML with no risk
-        if (this.userRoles && this.userRoles.includes('ro')) {
-          this.userRoles = ['admin'];
+      this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
+        this.user = user;
+        if (this.user && this.tenant) {
+          this.userRoles = this.user.dcsPermissions.find(d => d.tenant === this.tenant || d.tenant === '*').roles;
+          // this is a slight trick for the user, if they are a RO user regardless of prefix (network, x86, etc...)
+          // show them all dropdown options, they will get denied at the component level
+          // this allows for more flexibility of the word "admin" in the HTML with no risk
+          if (this.userRoles && this.userRoles.includes('ro')) {
+            this.userRoles = ['admin'];
+          }
         }
-      }
+      });
     });
   }
 
