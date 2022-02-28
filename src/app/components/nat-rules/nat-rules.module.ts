@@ -14,6 +14,7 @@ import { NatRuleModalComponent } from './nat-rule-modal/nat-rule-modal.component
 import { IconButtonModule } from '../../common/icon-button/icon-button.module';
 import { NatRulesComponent } from './nat-rules.component';
 import { PreviewModalModule } from '../../common/preview-modal/preview-modal.module';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 const routes: Routes = [
   {
@@ -43,6 +44,7 @@ const routes: Routes = [
     TabsModule,
     TooltipModule,
     RouterModule.forChild(routes),
+    NgSelectModule,
   ],
   declarations: [NatRulesComponent, NatRuleModalComponent, NatRulesDetailComponent],
 })
