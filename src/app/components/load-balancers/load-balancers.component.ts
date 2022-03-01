@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ContentChild, Query, AfterContentChecked, AfterContentInit } from '@angular/core';
-import { combineLatest, Subject, Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy, ContentChild } from '@angular/core';
+import { combineLatest, Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Datacenter, Tier } from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
