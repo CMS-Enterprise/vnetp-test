@@ -38,8 +38,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
           // this is a slight trick for the user, if they are a RO user regardless of prefix (network, x86, etc...)
           // show them all dropdown options, they will get denied at the component level
           // this allows for more flexibility of the word "admin" in the HTML with no risk
-          if (this.userRoles && this.userRoles.includes('ro')) {
-            this.userRoles = ['admin'];
+          if (this.userRoles) {
+            const ro = this.userRoles.find(role => {
+              if (role.includes('ro')) {
+                return true;
+              }
+            });
+
+            if (ro) {
+              this.userRoles = ['admin'];
+            }
           }
         }
       });
