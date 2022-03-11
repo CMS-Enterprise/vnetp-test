@@ -197,7 +197,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       'Import VLANs',
       `Are you sure you would like to import ${event.length} VLAN${event.length > 1 ? 's' : ''}?`,
     );
-    event.map(e => {
+    event.forEach(e => {
       e.vlanNumber = Number(e.vlanNumber);
 
       // TODO AFTER MERGE : refactor bulk upload files to all use consistent schema

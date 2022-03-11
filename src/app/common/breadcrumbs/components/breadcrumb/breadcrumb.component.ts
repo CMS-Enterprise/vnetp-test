@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd, PRIMARY_OUTLET } from '@angular/router';
-import { colorSets } from '@swimlane/ngx-charts';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';

@@ -1,6 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
-import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockTooltipComponent } from 'src/test/mock-components';
+import {
+  MockComponent,
+  MockFontAwesomeComponent,
+  MockNgSelectComponent,
+  MockNgxSmartModalComponent,
+  MockTooltipComponent,
+} from 'src/test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { NatRuleModalComponent } from './nat-rule-modal.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -31,6 +37,7 @@ describe('NatRuleModalComponent', () => {
         MockTooltipComponent,
         MockNgxSmartModalComponent,
         MockFontAwesomeComponent,
+        MockNgSelectComponent,
       ],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityNatRulesService), MockProvider(TierContextService)],
     })
