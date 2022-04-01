@@ -2,7 +2,33 @@
   <div class="text-center">
     <img src="/assets/img/logo-alt.png" class="logo" alt="CMS DRaaS Logo" />
 
-    <form *ngIf="!tenantSelect" name="loginForm" (ngSubmit)="form.form.valid && login()" #form="ngForm" novalidate>
+    <form name="loginForm" (ngSubmit)="form.form.valid && login()" #form="ngForm" novalidate>
+
+      <div class="form-group">
+        <label for="location">Location</label>
+        <select
+          id="location"
+          name="location"
+          class="form-control"
+          #location="ngModel"
+          [(ngModel)]="selectedLocation"
+          aria-label="location"
+          [ngClass]="{ 'is-invalid': form.submitted && location.invalid }"
+          (change)="navToLocation()"
+          required
+        >
+          <option></option>
+          <option *ngFor="let availablelocation of availableLocations">
+            {{ availablelocation }}
+          </option>
+        </select>
+
+        <div *ngIf="form.submitted && location.invalid" class="invalid-feedback">
+          <div *ngIf="location.errors.required">Select a location</div>
+        </div>
+      </div>
+
+
       <div class="form-group">
         <label for="username">Username</label>
         <input
@@ -16,6 +42,7 @@
           [(ngModel)]="userpass.username"
           aria-label="Username"
           [ngClass]="{ 'is-invalid': form.submitted && username.invalid }"
+          [disabled]="disableUserPass"
           required
         />
         <div *ngIf="form.submitted && username.invalid" class="invalid-feedback">
@@ -36,17 +63,20 @@
           [(ngModel)]="userpass.password"
           aria-label="Password"
           [ngClass]="{ 'is-invalid': form.submitted && password.invalid }"
+          [disabled]="disableUserPass"
           required
         />
+
+        <div class="form-group col-md-3">
+          <button id="getAccountsButton" *ngIf="!showTenantButton" class="btn btn-primary btn-lg" type="submit">
+            Get Accounts
+          </button>
+        </div>
 
         <div *ngIf="form.submitted && password.invalid" class="invalid-feedback">
           <div *ngIf="password.errors.required">Password is required</div>
         </div>
       </div>
-
-      <button class="btn btn-primary btn-lg" type="submit">
-        Login
-      </button>
 
       <div *ngIf="errorMessage" class="alert alert-danger mt-3">
         {{ errorMessage }}
@@ -54,14 +84,13 @@
     </form>
 
     <form
-      *ngIf="tenantSelect"
       name="tenantForm"
-      (ngSubmit)="form.form.valid && setTenantAndNavigate(selectedTenant)"
-      #form="ngForm"
+      (ngSubmit)="secondform.form.valid && setTenantAndNavigate(selectedTenant)"
+      #secondform="ngForm"
       novalidate
     >
       <div class="form-group">
-        <label for="tenant">Tenant</label>
+        <label for="tenant">Account</label>
         <select
           id="tenant"
           name="tenant"
@@ -69,22 +98,23 @@
           #tenant="ngModel"
           [(ngModel)]="selectedTenant"
           aria-label="Tenant"
-          [ngClass]="{ 'is-invalid': form.submitted && tenant.invalid }"
+          [ngClass]="{ 'is-invalid': secondform.submitted && tenant.invalid }"
+          [disabled]="!showTenantButton"
           required
         >
           <option></option>
-          <option *ngFor="let availableTenant of availableTenants" [ngValue]="availableTenant.tenantQueryParameter">
-            {{ availableTenant.tenantFullName }}
+          <option *ngFor="let availableTenant of availableTenants" [ngValue]="availableTenant">
+            {{ availableTenant.tenant }}
           </option>
         </select>
 
-        <div *ngIf="form.submitted && tenant.invalid" class="invalid-feedback">
-          <div *ngIf="tenant.errors.required">Select a Tenant</div>
+        <div *ngIf="secondform.submitted && tenant.invalid" class="invalid-feedback">
+          <div *ngIf="tenant.errors.required">Select Account</div>
         </div>
       </div>
 
-      <button class="btn btn-primary btn-lg" type="submit">
-        Select Tenant
+      <button *ngIf="showTenantButton" class="btn btn-primary btn-lg" type="submit">
+        Select Account
       </button>
     </form>
   </div>
