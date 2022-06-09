@@ -40,14 +40,15 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
     const modalNetworkObject = {} as NetworkObject;
 
     modalNetworkObject.name = this.form.value.name;
-    modalNetworkObject.type = this.form.getRawValue().type;
 
-    if (modalNetworkObject.type === NetworkObjectTypeEnum.IpAddress) {
+    const networkObjectType = this.form.getRawValue().type;
+
+    if (networkObjectType === NetworkObjectTypeEnum.IpAddress) {
       modalNetworkObject.ipAddress = this.form.value.ipAddress;
-    } else if (modalNetworkObject.type === NetworkObjectTypeEnum.Range) {
+    } else if (networkObjectType === NetworkObjectTypeEnum.Range) {
       modalNetworkObject.startIpAddress = this.form.value.startIpAddress;
       modalNetworkObject.endIpAddress = this.form.value.endIpAddress;
-    } else if (modalNetworkObject.type === NetworkObjectTypeEnum.Fqdn) {
+    } else if (networkObjectType === NetworkObjectTypeEnum.Fqdn) {
       modalNetworkObject.fqdn = this.form.value.fqdn;
     }
 
@@ -57,6 +58,10 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       modalNetworkObject.translatedIpAddress = this.form.value.translatedIpAddress;
       modalNetworkObject.natDirection = this.form.value.natDirection;
       modalNetworkObject.natType = this.form.value.natType;
+    } else {
+      modalNetworkObject.translatedIpAddress = null;
+      modalNetworkObject.natDirection = null;
+      modalNetworkObject.natType = null;
     }
 
     modalNetworkObject.natService = this.form.value.natService;
@@ -65,10 +70,15 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
       modalNetworkObject.natProtocol = this.form.value.natProtocol;
       modalNetworkObject.natSourcePort = this.form.value.natSourcePort;
       modalNetworkObject.natTranslatedPort = this.form.value.natTranslatedPort;
+    } else {
+      modalNetworkObject.natProtocol = null;
+      modalNetworkObject.natSourcePort = null;
+      modalNetworkObject.natTranslatedPort = null;
     }
 
     if (this.ModalMode === ModalMode.Create) {
       modalNetworkObject.tierId = this.TierId;
+      modalNetworkObject.type = networkObjectType;
       this.networkObjectService
         .createOneNetworkObject({
           networkObject: modalNetworkObject,
@@ -80,7 +90,6 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
           () => {},
         );
     } else {
-      modalNetworkObject.type = null;
       this.networkObjectService
         .updateOneNetworkObject({
           id: this.NetworkObjectId,

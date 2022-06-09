@@ -15,6 +15,7 @@ import {
   V1LoadBalancerHealthMonitorsService,
   V1LoadBalancerNodesService,
   V1LoadBalancerPoolsService,
+  V1TiersService,
 } from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -41,6 +42,7 @@ describe('PoolModalComponent', () => {
         MockProvider(V1LoadBalancerHealthMonitorsService),
         MockProvider(V1LoadBalancerNodesService),
         MockProvider(V1LoadBalancerPoolsService),
+        MockProvider(V1TiersService),
       ],
     });
 

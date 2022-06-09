@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
+import { TableModule } from '../../common/table/table.module';
 
 const routes: Routes = [
   {
@@ -29,6 +30,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
+    TableModule,
     TooltipModule,
   ],
   declarations: [TiersComponent, TierModalComponent],

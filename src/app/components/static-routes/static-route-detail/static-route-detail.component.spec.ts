@@ -21,6 +21,7 @@ describe('StaticRouteDetailComponent', () => {
         StaticRouteDetailComponent,
         YesNoModalComponent,
         MockComponent('app-static-route-modal'),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,

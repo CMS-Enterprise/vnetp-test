@@ -33,6 +33,19 @@ describe('DeployComponent', () => {
       },
       isSelected: true,
     },
+    getManyDatacenterTierResponse: {
+      data: [
+        {
+          id: '1',
+          datacenterId: '1',
+          name: 'Tier1',
+          firewallRuleGroups: [
+            { tierId: '1', name: 'I', type: FirewallRuleGroupTypeEnum.Intervrf, id: '11' },
+            { tierId: '1', name: 'E', type: FirewallRuleGroupTypeEnum.External, id: '22' },
+          ],
+        },
+      ],
+    },
   };
 
   const datacenterSubject = new Subject();
@@ -49,7 +62,7 @@ describe('DeployComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(V1JobsService),
         MockProvider(V1TierGroupsService),
-        MockProvider(V1TiersService, { getManyDatacenterTier: of([testData.tier.item]) }),
+        MockProvider(V1TiersService, { getManyDatacenterTier: of(testData.getManyDatacenterTierResponse) }),
         { provide: DatacenterContextService, useValue: datacenterService },
       ],
     })
@@ -75,8 +88,8 @@ describe('DeployComponent', () => {
 
     datacenterSubject.next(testData.datacenter);
 
-    expect(tiersService.getManyDatacenterTier).toHaveBeenCalledWith({ datacenterId: '1' });
-    expect(tierGroupService.getManyTierGroup).toHaveBeenCalledWith({ filter: ['datacenterId||eq||1'] });
+    expect(tiersService.getManyDatacenterTier).toHaveBeenCalledWith({ datacenterId: '1', page: 1, limit: 1000 });
+    expect(tierGroupService.getManyTierGroup).toHaveBeenCalledWith({ filter: ['datacenterId||eq||1'], page: 1, limit: 1000 });
     expect(component.tiers.length).toBe(1);
   });
 

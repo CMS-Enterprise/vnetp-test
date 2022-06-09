@@ -8,13 +8,14 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'client';
+import { GetManyLoadBalancerVlanResponseDto, LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'client';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
 import { ImportVlan, VlanListComponent, VlanView } from './vlan-list.component';
 import { By } from '@angular/platform-browser';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('VlanListComponent', () => {
   let component: VlanListComponent;
@@ -23,10 +24,11 @@ describe('VlanListComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([])],
       declarations: [
         VlanListComponent,
         MockComponent('app-vlan-modal'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockImportExportComponent,
@@ -55,15 +57,21 @@ describe('VlanListComponent', () => {
 
   it('should map vlans', () => {
     jest.spyOn(service, 'getManyLoadBalancerVlan').mockImplementation(() => {
-      return of(([
-        { id: '1', name: 'VLAN1', provisionedAt: {} },
-        { id: '2', name: 'VLAN2' },
-      ] as LoadBalancerVlan[]) as any);
+      return of({
+        data: [
+          { id: '1', name: 'VLAN1', provisionedAt: {} },
+          { id: '2', name: 'VLAN2' },
+        ] as LoadBalancerVlan[],
+        count: 2,
+        total: 2,
+        page: 1,
+        pageCount: 1,
+      } as any);
     });
 
     component.ngOnInit();
 
-    const [vlan1, vlan2] = component.vlans;
+    const [vlan1, vlan2] = component.vlans.data;
     expect(vlan1).toEqual({
       id: '1',
       name: 'VLAN1',
@@ -81,12 +89,18 @@ describe('VlanListComponent', () => {
   });
 
   it('should default vlans to be empty on error', () => {
-    component.vlans = [{ id: '1', name: 'VLAN1' }] as VlanView[];
+    component.vlans = {
+      data: [{ id: '1', name: 'VLAN1' }],
+      count: 1,
+      total: 1,
+      page: 1,
+      pageCount: 1,
+    } as GetManyLoadBalancerVlanResponseDto;
     jest.spyOn(service, 'getManyLoadBalancerVlan').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
-    expect(component.vlans).toEqual([]);
+    expect(component.vlans).toEqual(null);
   });
 
   it('should import vlans', () => {

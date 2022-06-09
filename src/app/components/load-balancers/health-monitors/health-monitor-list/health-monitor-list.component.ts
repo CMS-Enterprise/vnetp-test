@@ -1,13 +1,16 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'client';
+import { GetManyLoadBalancerHealthMonitorResponseDto, LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
+import { TableContextService } from 'src/app/services/table-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
 import { HealthMonitorModalDto } from '../health-monitor-modal/health-monitor-modal.dto';
 
 export interface HealthMonitorView extends LoadBalancerHealthMonitor {
@@ -22,6 +25,7 @@ export interface HealthMonitorView extends LoadBalancerHealthMonitor {
 export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
+  public searchColumns: SearchColumnConfig[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -37,7 +41,9 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       { name: '', template: () => this.actionsTemplate },
     ],
   };
-  public healthMonitors: HealthMonitorView[] = [];
+  public healthMonitors = {} as GetManyLoadBalancerHealthMonitorResponseDto;
+  public tableComponentDto = new TableComponentDto();
+  public perPage = 20;
   public isLoading = false;
 
   private healthMonitorChanges: Subscription;
@@ -49,6 +55,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
     private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
+    private tableContextService: TableContextService,
   ) {}
 
   ngOnInit() {
@@ -68,19 +75,49 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       entityName: 'Health Monitor',
       delete$: this.healthMonitorsService.deleteOneLoadBalancerHealthMonitor({ id: healthMonitor.id }),
       softDelete$: this.healthMonitorsService.softDeleteOneLoadBalancerHealthMonitor({ id: healthMonitor.id }),
-      onSuccess: () => this.loadHealthMonitors(),
+      onSuccess: () => {
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.loadHealthMonitors(params);
+        } else {
+          this.loadHealthMonitors();
+        }
+      },
     });
   }
 
-  public loadHealthMonitors(): void {
+  public onTableEvent(event: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.loadHealthMonitors(event);
+  }
+
+  public loadHealthMonitors(event?): void {
     this.isLoading = true;
+    let eventParams;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
     this.healthMonitorsService
       .getManyLoadBalancerHealthMonitor({
-        filter: [`tierId||eq||${this.currentTier.id}`],
+        filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
+        page: this.tableComponentDto.page,
+        limit: this.tableComponentDto.perPage,
       })
       .subscribe(
-        (healthMonitors: unknown) => {
-          this.healthMonitors = (healthMonitors as HealthMonitorView[]).map(h => {
+        response => {
+          this.healthMonitors = response;
+          this.healthMonitors.data = (this.healthMonitors.data as HealthMonitorView[]).map(h => {
             return {
               ...h,
               nameView: h.name.length >= 20 ? h.name.slice(0, 19) + '...' : h.name,
@@ -89,7 +126,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
           });
         },
         () => {
-          this.healthMonitors = [];
+          this.healthMonitors = null;
         },
         () => {
           this.isLoading = false;
@@ -131,7 +168,19 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
     if (!healthMonitor.deletedAt) {
       return;
     }
-    this.healthMonitorsService.restoreOneLoadBalancerHealthMonitor({ id: healthMonitor.id }).subscribe(() => this.loadHealthMonitors());
+    this.healthMonitorsService.restoreOneLoadBalancerHealthMonitor({ id: healthMonitor.id }).subscribe(() => {
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.loadHealthMonitors(params);
+      } else {
+        this.loadHealthMonitors();
+      }
+    });
   }
 
   private subscribeToDataChanges(): Subscription {
@@ -148,7 +197,17 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
 
   private subscribeToHealthMonitorModal(): Subscription {
     return this.ngx.getModal('healthMonitorModal').onCloseFinished.subscribe(() => {
-      this.loadHealthMonitors();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.loadHealthMonitors(params);
+      } else {
+        this.loadHealthMonitors();
+      }
       this.ngx.resetModalData('healthMonitorModal');
     });
   }

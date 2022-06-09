@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { TableModule } from '../../common/table/table.module';
 
 const routes: Routes = [
   {
@@ -36,6 +37,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
+    TableModule,
   ],
   declarations: [StaticRoutesComponent, StaticRouteModalComponent, StaticRouteDetailComponent],
 })

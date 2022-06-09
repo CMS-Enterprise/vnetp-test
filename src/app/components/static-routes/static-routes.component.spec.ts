@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StaticRoutesComponent } from './static-routes.component';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { MockComponent, MockFontAwesomeComponent } from 'src/test/mock-components';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockProvider } from 'src/test/mock-providers';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -13,7 +13,7 @@ describe('StaticRoutesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes([])],
-      declarations: [StaticRoutesComponent, MockFontAwesomeComponent],
+      declarations: [StaticRoutesComponent, MockFontAwesomeComponent, MockComponent({ selector: 'app-table', inputs: ['config', 'data'] })],
       providers: [MockProvider(DatacenterContextService), MockProvider(V1TiersService)],
     });
   }));
@@ -37,6 +37,8 @@ describe('StaticRoutesComponent', () => {
     expect(loadTiersSpy).toHaveBeenCalledWith({
       filter: ['datacenterId||eq||1'],
       join: ['staticRoutes'],
+      limit: 1000,
+      page: 1,
     });
   });
 });

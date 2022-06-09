@@ -23,6 +23,7 @@ export interface Subnet {
     description?: string;
     network: string;
     gateway: string;
+    sharedBetweenVrfs?: boolean;
     vlanId: string;
     tierId: string;
 }

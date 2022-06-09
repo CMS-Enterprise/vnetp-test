@@ -1,14 +1,8 @@
 {
   "environment": {
-    "current_tenants": [
-      {
-        "name": "CDS",
-        "db_name": "draas"
-      },
-      {
-        "name": "Third Packet",
-        "db_name": "dcs_thirdpacket"
-      }
+    "dcsLocations": [
+      { "name": "East - Ashburn", "url": "http://localhost-east:4200" },
+      { "name": "West - Kent", "url": "http://localhost-west:4200" }
     ]
   }
 }

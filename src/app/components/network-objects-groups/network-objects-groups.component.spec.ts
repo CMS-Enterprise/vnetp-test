@@ -19,6 +19,7 @@ import { ToastrService } from 'ngx-toastr';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { V1NetworkSecurityNetworkObjectGroupsService, V1NetworkSecurityNetworkObjectsService, V1TiersService } from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { FilterPipe } from '../../pipes/filter.pipe';
 
 describe('NetworkObjectsGroupsComponent', () => {
   let component: NetworkObjectsGroupsComponent;
@@ -28,10 +29,12 @@ describe('NetworkObjectsGroupsComponent', () => {
     TestBed.configureTestingModule({
       imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
+        FilterPipe,
         ImportExportComponent,
         MockComponent('app-network-object-group-modal'),
         MockComponent('app-network-object-modal'),
         MockComponent('app-tier-select'),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,

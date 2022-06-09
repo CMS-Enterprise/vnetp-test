@@ -52,6 +52,10 @@ export class TierSelectComponent implements OnInit, OnDestroy {
     }
   }
 
+  clearTier() {
+    this.selectedTier = '';
+  }
+
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {

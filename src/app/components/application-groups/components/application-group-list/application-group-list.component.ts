@@ -5,6 +5,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { ActifioApplicationGroupDto, ActifioSequenceOrderDto, V1ActifioRdcApplicationGroupsService } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { Subscription } from 'rxjs';
+import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
 
 export interface ApplicationGroupView {
   id: string;
@@ -21,6 +22,7 @@ export class ApplicationGroupListComponent implements OnInit, OnDestroy {
 
   public isLoading = false;
   public applicationGroups: ApplicationGroupView[] = [];
+  public searchColumns: SearchColumnConfig[] = [{ propertyName: 'name', displayName: 'Name' }];
 
   public config: TableConfig<ApplicationGroupView> = {
     description: 'List of Application Groups',

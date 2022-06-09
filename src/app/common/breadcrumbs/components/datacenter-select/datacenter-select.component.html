@@ -4,10 +4,12 @@
   </span>
 
   <span *ngIf="!currentDatacenter">No Datacenter Selected</span>
+  <tooltip *ngIf="disableSelect" message="Switch Datacenter on Dashboard."></tooltip>
 
-  <button class="btn btn-primary ml-3" [disabled]="lockCurrentDatacenter" (click)="openDatacenterSwitchModal()">
+  <button class="btn btn-primary ml-3" [disabled]="lockCurrentDatacenter || disableSelect" (click)="openDatacenterSwitchModal()">
     {{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter
   </button>
+
 </div>
 
 <ngx-smart-modal #datacenterSwitchModal identifier="datacenterSwitchModal">

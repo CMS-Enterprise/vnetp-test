@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockFontAwesomeComponent } from 'src/test/mock-components';
+import { MockComponent, MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TableComponent } from './table.component';
 import { By } from '@angular/platform-browser';
+import { SearchBarComponent } from '../seach-bar/search-bar.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 interface Data {
   name: string;
@@ -14,8 +16,14 @@ describe('TableComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NgxPaginationModule],
-      declarations: [TableComponent, MockFontAwesomeComponent],
+      imports: [NgxPaginationModule, RouterTestingModule.withRoutes([])],
+      declarations: [
+        TableComponent,
+        MockTooltipComponent,
+        MockFontAwesomeComponent,
+        MockComponent({ selector: 'app-search-bar', inputs: ['columns'] }),
+      ],
+      providers: [SearchBarComponent],
     });
 
     fixture = TestBed.createComponent(TableComponent);
@@ -24,7 +32,7 @@ describe('TableComponent', () => {
       description: 'Description',
       columns: [],
     };
-    component.data = [];
+    component.data = { data: [], count: 0, total: 0, page: 0, pageCount: 0 };
     fixture.detectChanges();
   });
 
@@ -34,10 +42,11 @@ describe('TableComponent', () => {
 
   it('should render data in HTML', () => {
     component.config.columns = [{ property: 'name', name: 'Name' }];
-    component.data = [{ name: 'Example' }];
+    component.searchColumns = [{ propertyName: 'example-prop', displayName: 'exampleProp' }];
+    component.data = { data: [], count: 0, total: 0, page: 0, pageCount: 0 };
     fixture.detectChanges();
 
     const el = fixture.debugElement.query(By.css('tbody td'));
-    expect(el.nativeElement.textContent).toBe('Example');
+    expect(el.nativeElement.textContent).toBe('No Objects in this Tier');
   });
 });

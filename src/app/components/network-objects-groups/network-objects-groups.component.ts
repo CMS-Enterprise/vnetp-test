@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
@@ -14,6 +14,8 @@ import {
   NetworkObjectGroup,
   V1NetworkSecurityNetworkObjectGroupsService,
   NetworkObjectGroupRelationBulkImportCollectionDto,
+  GetManyNetworkObjectResponseDto,
+  GetManyNetworkObjectGroupResponseDto,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TierContextService } from 'src/app/services/tier-context.service';
@@ -21,6 +23,10 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { EntityService } from 'src/app/services/entity.service';
+import { TableConfig } from '../../common/table/table.component';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
+import { TableContextService } from 'src/app/services/table-context.service';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -29,13 +35,14 @@ import { EntityService } from 'src/app/services/entity.service';
 export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   currentTier: Tier;
-  currentNetworkObjectsPage = 1;
-  currentNetworkObjectGroupsPage = 1;
   perPage = 20;
   ModalMode = ModalMode;
 
-  networkObjects: NetworkObject[] = [];
-  networkObjectGroups: NetworkObjectGroup[] = [];
+  networkObjects = {} as GetManyNetworkObjectResponseDto;
+  networkObjectGroups = {} as GetManyNetworkObjectGroupResponseDto;
+
+  public netObjTableComponentDto = new TableComponentDto();
+  public netObjGrpTableComponentDto = new TableComponentDto();
 
   navIndex = 0;
   showRadio = false;
@@ -47,6 +54,46 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   private networkObjectGroupModalSubscription: Subscription;
   private networkObjectModalSubscription: Subscription;
 
+  public isLoadingObjects = false;
+  public isLoadingGroups = false;
+
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+  @ViewChild('membersTemplate') membersTemplate: TemplateRef<any>;
+  @ViewChild('addressTemplate') addressTemplate: TemplateRef<any>;
+  @ViewChild('natServiceTemplate') natServiceTemplate: TemplateRef<any>;
+  @ViewChild('objStateTemplate') objStateTemplate: TemplateRef<any>;
+  @ViewChild('groupStateTemplate') groupStateTemplate: TemplateRef<any>;
+
+  public objectSearchColumns: SearchColumnConfig[] = [];
+
+  public groupSearchColumns: SearchColumnConfig[] = [];
+
+  public networkObjectConfig: TableConfig<any> = {
+    description: 'Network Objects can consist of a single host (with NAT/PAT), range or subnet',
+    columns: [
+      { name: 'Name', property: 'name' },
+      { name: 'Type', property: 'type' },
+      { name: 'Address', template: () => this.addressTemplate },
+      { name: 'Nat Translated IP Address', property: 'natDirection' },
+      { name: 'Nat Type', property: 'natType' },
+      { name: 'Nat Direction', property: 'natDirection' },
+      { name: 'Nat Protocol', property: 'natProtocol' },
+      { name: 'NAT Source:Translated Port', template: () => this.natServiceTemplate },
+      { name: 'State', template: () => this.objStateTemplate },
+      { name: '', template: () => this.actionsTemplate },
+    ],
+  };
+
+  public networkObjectGroupConfig: TableConfig<any> = {
+    description: 'Network Object Groups are a collection of Network Objects',
+    columns: [
+      { name: 'Name', property: 'name' },
+      { name: 'Members', template: () => this.membersTemplate },
+      { name: 'State', template: () => this.groupStateTemplate },
+      { name: '', template: () => this.actionsTemplate },
+    ],
+  };
+
   constructor(
     private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,
@@ -56,28 +103,91 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     private tierContextService: TierContextService,
     private tierService: V1TiersService,
     public helpText: NetworkObjectsGroupsHelpText,
+    private tableContextService: TableContextService,
   ) {}
 
+  public onNetObjTableEvent(event: TableComponentDto): void {
+    this.netObjTableComponentDto = event;
+    this.getNetworkObjects(event);
+  }
+  public onNetObjGrpTableEvent(event: TableComponentDto): void {
+    this.netObjGrpTableComponentDto = event;
+    this.getNetworkObjectGroups(event);
+  }
+
   public handleTabChange(tab: Tab): void {
+    // if user clicks on the same tab that they are currently on, don't load any new objects
+    if (this.navIndex === this.tabs.findIndex(t => t.name === tab.name)) {
+      return;
+    }
+    this.tableContextService.removeSearchLocalStorage();
     this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
     this.getObjectsForNavIndex();
   }
 
-  getNetworkObjects() {
-    this.tierService.getOneTier({ id: this.currentTier.id, join: ['networkObjects'] }).subscribe(data => {
-      this.networkObjects = data.networkObjects;
-    });
+  getNetworkObjects(event?): void {
+    let eventParams;
+    this.isLoadingObjects = true;
+    if (event) {
+      this.netObjTableComponentDto.page = event.page ? event.page : 1;
+      this.netObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
+    this.networkObjectService
+      .getManyNetworkObject({
+        filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
+        page: this.netObjTableComponentDto.page,
+        limit: this.netObjTableComponentDto.perPage,
+        sort: ['updatedAt,ASC'],
+      })
+      .subscribe(
+        response => {
+          this.networkObjects = response;
+        },
+        () => {
+          this.networkObjects = null;
+        },
+        () => {
+          this.isLoadingObjects = false;
+        },
+      );
   }
 
-  getNetworkObjectGroups() {
+  getNetworkObjectGroups(event?): void {
+    this.isLoadingGroups = true;
+    let eventParams;
+    if (event) {
+      this.netObjGrpTableComponentDto.page = event.page ? event.page : 1;
+      this.netObjGrpTableComponentDto.perPage = event.perPage ? event.perPage : 50;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
     this.networkObjectGroupService
       .getManyNetworkObjectGroup({
         join: ['networkObjects'],
-        filter: [`tierId||eq||${this.currentTier.id}`],
+        filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
+        page: this.netObjGrpTableComponentDto.page,
+        limit: this.netObjGrpTableComponentDto.perPage,
+        sort: ['updatedAt,ASC'],
       })
-      .subscribe((data: unknown) => {
-        this.networkObjectGroups = data as NetworkObjectGroup[];
-      });
+      .subscribe(
+        response => {
+          this.networkObjectGroups = response;
+        },
+        () => {
+          this.networkObjectGroups = null;
+        },
+        () => {
+          this.isLoadingGroups = false;
+        },
+      );
   }
 
   openNetworkObjectModal(modalMode: ModalMode, networkObject?: NetworkObject) {
@@ -122,7 +232,17 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
   subscribeToNetworkObjectModal() {
     this.networkObjectModalSubscription = this.ngx.getModal('networkObjectModal').onCloseFinished.subscribe(() => {
-      this.getNetworkObjects();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.getNetworkObjects(params);
+      } else {
+        this.getNetworkObjects();
+      }
       this.ngx.resetModalData('networkObjectModal');
       this.datacenterContextService.unlockDatacenter();
     });
@@ -130,7 +250,17 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
   subscribeToNetworkObjectGroupModal() {
     this.networkObjectGroupModalSubscription = this.ngx.getModal('networkObjectGroupModal').onCloseFinished.subscribe(() => {
-      this.getNetworkObjectGroups();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.getNetworkObjectGroups(params);
+      } else {
+        this.getNetworkObjectGroups();
+      }
       this.ngx.resetModalData('networkObjectGroupModal');
       this.datacenterContextService.unlockDatacenter();
     });
@@ -141,14 +271,36 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       entityName: 'Network Object',
       delete$: this.networkObjectService.deleteOneNetworkObject({ id: networkObject.id }),
       softDelete$: this.networkObjectService.softDeleteOneNetworkObject({ id: networkObject.id }),
-      onSuccess: () => this.getNetworkObjects(),
+      onSuccess: () => {
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getNetworkObjects(params);
+        } else {
+          this.getNetworkObjects();
+        }
+      },
     });
   }
 
   restoreNetworkObject(networkObject: NetworkObject) {
     if (networkObject.deletedAt) {
       this.networkObjectService.restoreOneNetworkObject({ id: networkObject.id }).subscribe(() => {
-        this.getNetworkObjects();
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getNetworkObjects(params);
+        } else {
+          this.getNetworkObjects();
+        }
       });
     }
   }
@@ -162,7 +314,19 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       softDelete$: this.networkObjectGroupService.softDeleteOneNetworkObjectGroup({
         id: networkObjectGroup.id,
       }),
-      onSuccess: () => this.getNetworkObjectGroups(),
+      onSuccess: () => {
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getNetworkObjectGroups(params);
+        } else {
+          this.getNetworkObjectGroups();
+        }
+      },
     });
   }
 
@@ -173,7 +337,17 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
           id: networkObjectGroup.id,
         })
         .subscribe(() => {
-          this.getNetworkObjectGroups();
+          // get search params from local storage
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
+
+          // if filtered results boolean is true, apply search params in the
+          // subsequent get call
+          if (filteredResults) {
+            this.getNetworkObjectGroups(params);
+          } else {
+            this.getNetworkObjectGroups();
+          }
         });
     }
   }
@@ -184,8 +358,12 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     }
 
     if (this.navIndex === 0) {
+      this.netObjGrpTableComponentDto.page = 1;
+      this.netObjGrpTableComponentDto.perPage = 20;
       this.getNetworkObjects();
     } else {
+      this.netObjTableComponentDto.page = 1;
+      this.netObjTableComponentDto.perPage = 20;
       this.getNetworkObjectGroups();
     }
   }
@@ -291,15 +469,14 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       }
     });
     return obj;
-    // tslint:disable-next-line: semicolon
   };
 
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.tiers = cd.tiers;
-        this.networkObjects = [];
-        this.networkObjectGroups = [];
+        this.networkObjects = null;
+        this.networkObjectGroups = null;
 
         if (cd.tiers.length) {
           this.getObjectsForNavIndex();

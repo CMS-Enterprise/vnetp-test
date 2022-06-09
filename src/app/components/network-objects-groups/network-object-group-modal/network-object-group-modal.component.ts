@@ -167,6 +167,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
   public reset() {
     this.submitted = false;
     this.networkObjects = [];
+    this.selectedNetworkObject = null;
     this.buildForm();
   }
 

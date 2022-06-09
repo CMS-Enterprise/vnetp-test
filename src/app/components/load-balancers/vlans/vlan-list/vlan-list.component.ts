@@ -1,13 +1,16 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'client';
+import { GetManyLoadBalancerVlanResponseDto, GetManyVlanResponseDto, LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
+import { TableContextService } from 'src/app/services/table-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
 import { VlanModalDto } from '../vlan-modal/vlan-modal.dto';
 
 export interface VlanView extends LoadBalancerVlan {
@@ -22,6 +25,7 @@ export interface VlanView extends LoadBalancerVlan {
 export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
+  public searchColumns: SearchColumnConfig[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -34,7 +38,9 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: '', template: () => this.actionsTemplate },
     ],
   };
-  public vlans: VlanView[] = [];
+  public vlans = {} as GetManyLoadBalancerVlanResponseDto;
+  public tableComponentDto = new TableComponentDto();
+  public perPage = 20;
   public isLoading = false;
 
   private dataChanges: Subscription;
@@ -46,17 +52,18 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
     private vlansService: V1LoadBalancerVlansService,
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
+    private tableContextService: TableContextService,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.vlanChanges = this.subscribeToVlanModal();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.vlanChanges, this.dataChanges]);
   }
 
@@ -65,19 +72,49 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
       entityName: 'VLAN',
       delete$: this.vlansService.deleteOneLoadBalancerVlan({ id: vlan.id }),
       softDelete$: this.vlansService.softDeleteOneLoadBalancerVlan({ id: vlan.id }),
-      onSuccess: () => this.loadVlans(),
+      onSuccess: () => {
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.loadVlans(params);
+        } else {
+          this.loadVlans();
+        }
+      },
     });
   }
 
-  public loadVlans(): void {
+  public onTableEvent(event: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.loadVlans(event);
+  }
+
+  public loadVlans(event?): void {
     this.isLoading = true;
+    let eventParams;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
     this.vlansService
       .getManyLoadBalancerVlan({
-        filter: [`tierId||eq||${this.currentTier.id}`],
+        filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
+        page: this.tableComponentDto.page,
+        limit: this.tableComponentDto.perPage,
       })
       .subscribe(
-        (vlans: unknown) => {
-          this.vlans = (vlans as VlanView[]).map(v => {
+        response => {
+          this.vlans = response;
+          this.vlans.data = (this.vlans.data as VlanView[]).map(v => {
             return {
               ...v,
               nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
@@ -86,7 +123,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.vlans = [];
+          this.vlans = null;
         },
         () => {
           this.isLoading = false;
@@ -96,6 +133,10 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(vlans: ImportVlan[]): void {
     const bulk = vlans.map(vlan => {
+      // this becomes unnecessary with the PapaParse dynamicTyping property
+      if (vlan.tag && typeof vlan.tag !== 'number') {
+        vlan.tag = +vlan.tag;
+      }
       const { vrfName } = vlan;
       if (!vrfName) {
         return vlan;
@@ -128,7 +169,19 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!vlan.deletedAt) {
       return;
     }
-    this.vlansService.restoreOneLoadBalancerVlan({ id: vlan.id }).subscribe(() => this.loadVlans());
+    this.vlansService.restoreOneLoadBalancerVlan({ id: vlan.id }).subscribe(() => {
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.loadVlans(params);
+      } else {
+        this.loadVlans();
+      }
+    });
   }
 
   private subscribeToDataChanges(): Subscription {
@@ -145,7 +198,17 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private subscribeToVlanModal(): Subscription {
     return this.ngx.getModal('vlanModal').onCloseFinished.subscribe(() => {
-      this.loadVlans();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.loadVlans(params);
+      } else {
+        this.loadVlans();
+      }
       this.ngx.resetModalData('vlanModal');
     });
   }

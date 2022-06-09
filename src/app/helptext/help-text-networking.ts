@@ -5,6 +5,12 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root',
 })
+export class SearchBarHelpText {
+  CaseSensitive = `Search parameters are case sensitive!`;
+}
+@Injectable({
+  providedIn: 'root',
+})
 export class NetworkDetailHelpText {
   Vrf = `Tier (VRF) that the subnet is in.`;
   Deployed = `Deployment state of the subnet.`;
@@ -31,6 +37,7 @@ export class SubnetModalHelpText {
   Network = `CIDR Address (X.X.X.X/YY) of the Subnet.`;
   Gateway = `Gateway Address of the Subnet.`;
   Vlan = `VLAN associated with the Subnet.`;
+  SharedBetweenVrfs = `Enable if instructed to enable by DRaaS team.`;
 }
 
 @Injectable({

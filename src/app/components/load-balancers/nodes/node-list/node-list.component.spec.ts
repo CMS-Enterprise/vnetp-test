@@ -8,13 +8,14 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'client';
+import { GetManyLoadBalancerNodeResponseDto, LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'client';
 import { NodeListComponent, ImportNode, NodeView } from './node-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('NodeListComponent', () => {
   let component: NodeListComponent;
@@ -23,10 +24,11 @@ describe('NodeListComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([])],
       declarations: [
         NodeListComponent,
         MockComponent('app-node-modal'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockImportExportComponent,
@@ -55,15 +57,21 @@ describe('NodeListComponent', () => {
 
   it('should map nodes', () => {
     jest.spyOn(service, 'getManyLoadBalancerNode').mockImplementation(() => {
-      return of(([
-        { id: '1', name: 'Node1', provisionedAt: {}, autoPopulate: true, fqdn: 'www.google.com' },
-        { id: '2', name: 'Node2', ipAddress: '192.168.1.1' },
-      ] as LoadBalancerNode[]) as any);
+      return of({
+        data: [
+          { id: '1', name: 'Node1', provisionedAt: {}, autoPopulate: true, fqdn: 'www.google.com' },
+          { id: '2', name: 'Node2', ipAddress: '192.168.1.1' },
+        ] as LoadBalancerNode[],
+        count: 2,
+        total: 2,
+        page: 1,
+        pageCount: 1,
+      } as any);
     });
 
     component.ngOnInit();
 
-    const [node1, node2] = component.nodes;
+    const [node1, node2] = component.nodes.data;
     expect(node1).toEqual({
       autoPopulate: true,
       autoPopulateView: 'true',
@@ -88,12 +96,18 @@ describe('NodeListComponent', () => {
   });
 
   it('should default nodes to be empty on error', () => {
-    component.nodes = [{ id: '1', name: 'Node1' }] as NodeView[];
+    component.nodes = {
+      data: [{ id: '1', name: 'Node1' }],
+      count: 1,
+      total: 1,
+      page: 1,
+      pageCount: 1,
+    } as GetManyLoadBalancerNodeResponseDto;
     jest.spyOn(service, 'getManyLoadBalancerNode').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
-    expect(component.nodes).toEqual([]);
+    expect(component.nodes).toEqual(null);
   });
 
   it('should import nodes', () => {

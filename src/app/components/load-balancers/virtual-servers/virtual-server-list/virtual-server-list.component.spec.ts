@@ -8,13 +8,20 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerVirtualServer, Tier, V1LoadBalancerVirtualServersService, VirtualServerImportDto } from 'client';
+import {
+  GetManyLoadBalancerVirtualServerResponseDto,
+  LoadBalancerVirtualServer,
+  Tier,
+  V1LoadBalancerVirtualServersService,
+  VirtualServerImportDto,
+} from 'client';
 import { VirtualServerListComponent, VirtualServerView } from './virtual-server-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('VirtualServerListComponent', () => {
   let component: VirtualServerListComponent;
@@ -23,10 +30,11 @@ describe('VirtualServerListComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([])],
       declarations: [
         VirtualServerListComponent,
         MockComponent('app-virtual-server-modal'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockImportExportComponent,
@@ -56,15 +64,21 @@ describe('VirtualServerListComponent', () => {
   it('should map virtual servers', () => {
     const virtualServerService = TestBed.inject(V1LoadBalancerVirtualServersService);
     const spy = jest.spyOn(virtualServerService, 'getManyLoadBalancerVirtualServer').mockImplementation(() => {
-      return of(([
-        { id: '1', name: 'VirtualServer1', provisionedAt: {}, defaultPool: { name: 'Pool1' } },
-        { id: '2', name: 'VirtualServer2' },
-      ] as LoadBalancerVirtualServer[]) as any);
+      return of({
+        data: [
+          { id: '1', name: 'VirtualServer1', provisionedAt: {}, defaultPool: { name: 'Pool1' } },
+          { id: '2', name: 'VirtualServer2' },
+        ] as LoadBalancerVirtualServer[],
+        count: 2,
+        total: 2,
+        page: 1,
+        pageCount: 1,
+      } as any);
     });
 
     component.ngOnInit();
 
-    const [virtualServer1, virtualServer2] = component.virtualServers;
+    const [virtualServer1, virtualServer2] = component.virtualServers.data;
     expect(virtualServer1).toEqual({
       id: '1',
       name: 'VirtualServer1',
@@ -85,12 +99,18 @@ describe('VirtualServerListComponent', () => {
   });
 
   it('should default virtual servers to be empty on error', () => {
-    component.virtualServers = [{ id: '1', name: 'VirtualServer1' }] as VirtualServerView[];
+    component.virtualServers = {
+      data: [{ id: '1', name: 'VirtualServer1' }],
+      count: 1,
+      total: 1,
+      page: 1,
+      pageCount: 1,
+    } as GetManyLoadBalancerVirtualServerResponseDto;
     jest.spyOn(service, 'getManyLoadBalancerVirtualServer').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
-    expect(component.virtualServers).toEqual([]);
+    expect(component.virtualServers).toEqual(null);
   });
 
   it('should import virtual servers', () => {

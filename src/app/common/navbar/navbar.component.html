@@ -38,28 +38,13 @@
           <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="static-routes" queryParamsHandling="merge">Routing</a>
         </div>
       </li>
-      <li *ngIf="userRoles?.includes('admin') || userRoles?.includes('x86_admin') || userRoles?.includes('mainframe_admin')" class="nav-item dropdown">
-        <a
-          class="nav-link dropdown-toggle"
-          href="#"
-          id="systemsNavbarDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          >Systems
+    </ul>
+
+    <ul class="navbar-nav m-auto">
+      <li id="accountNumber" class="nav-item">
+        <a>
+          <span *ngIf="tenant">{{ tenant }}</span>
         </a>
-        <div class="dropdown-menu" aria-labelledby="systemsNavbarDropdown">
-          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="physical-server" queryParamsHandling="merge">Physical Servers</a>
-          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="vmware" queryParamsHandling="merge">VMWare</a>
-          <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="zvm" queryParamsHandling="merge">z/VM</a>
-          <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="zos" queryParamsHandling="merge">z/OS</a>
-          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="appliance" queryParamsHandling="merge">Appliance aaS</a>
-          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="application-groups" queryParamsHandling="merge">Actifio - Application Groups</a>
-          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="recovery-plans" queryParamsHandling="merge">Actifio - Recovery Plans</a>
-          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="slas" queryParamsHandling="merge">Actifio - SLAs</a>
-          <a *ngIf="!userRoles?.includes('mainframe_admin')" class="dropdown-item" routerLink="virtual-machines" queryParamsHandling="merge">Actifio - Virtual Machines</a>
-        </div>
       </li>
     </ul>
 
@@ -67,12 +52,6 @@
       <li class="nav-item">
         <a class="nav-link" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
           <span>Jobs</span>
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a>
-          <span *ngIf="tenant">{{ tenant }}</span>
         </a>
       </li>
 

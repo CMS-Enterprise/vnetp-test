@@ -18,6 +18,7 @@ import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.co
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { V1NetworkSecurityServiceObjectGroupsService, V1NetworkSecurityServiceObjectsService, V1TiersService } from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { FilterPipe } from '../../pipes/filter.pipe';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
@@ -27,10 +28,12 @@ describe('ServicesObjectsGroupsComponent', () => {
     TestBed.configureTestingModule({
       imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
+        FilterPipe,
         ImportExportComponent,
         MockComponent('app-service-object-group-modal'),
         MockComponent('app-service-object-modal'),
         MockComponent('app-tier-select'),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,

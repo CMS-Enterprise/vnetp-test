@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
@@ -11,6 +11,8 @@ import {
   ServiceObjectGroup,
   V1NetworkSecurityServiceObjectGroupsService,
   ServiceObjectGroupRelationBulkImportCollectionDto,
+  GetManyServiceObjectResponseDto,
+  GetManyServiceObjectGroupResponseDto,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
@@ -20,6 +22,10 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { EntityService } from 'src/app/services/entity.service';
+import { TableConfig } from '../../common/table/table.component';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
+import { TableContextService } from 'src/app/services/table-context.service';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -28,24 +34,58 @@ import { EntityService } from 'src/app/services/entity.service';
 export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   currentTier: Tier;
-
-  currentServiceObjectsPage = 1;
-  currentServiceObjectGroupsPage = 1;
-  perPage = 20;
+  public perPage = 20;
   ModalMode = ModalMode;
 
-  serviceObjects: ServiceObject[] = [];
-  serviceObjectGroups: ServiceObjectGroup[] = [];
+  serviceObjects = {} as GetManyServiceObjectResponseDto;
+  serviceObjectGroups = {} as GetManyServiceObjectGroupResponseDto;
+
+  public svcObjTableComponentDto = new TableComponentDto();
+  public svcObjGrpTableComponentDto = new TableComponentDto();
 
   navIndex = 0;
   showRadio = false;
 
   public tabs: Tab[] = [{ name: 'Service Objects' }, { name: 'Service Object Groups' }, { name: 'Service Object Group Relations' }];
+  public objectSearchColumns: SearchColumnConfig[] = [];
+
+  public groupSearchColumns: SearchColumnConfig[] = [];
 
   private serviceObjectModalSubscription: Subscription;
   private serviceObjectGroupModalSubscription: Subscription;
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
+
+  public isLoadingObjects = false;
+  public isLoadingGroups = false;
+
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+  @ViewChild('membersTemplate') membersTemplate: TemplateRef<any>;
+  @ViewChild('objStateTemplate') objStateTemplate: TemplateRef<any>;
+  @ViewChild('groupStateTemplate') groupStateTemplate: TemplateRef<any>;
+
+  public serviceObjectConfig: TableConfig<any> = {
+    description: 'Service Objects consist of source and destination ports',
+    columns: [
+      { name: 'Name', property: 'name' },
+      { name: 'Type', property: 'protocol' },
+      { name: 'Source Port', property: 'sourcePorts' },
+      { name: 'Destination Port', property: 'destinationPorts' },
+      { name: 'State', template: () => this.objStateTemplate },
+      { name: '', template: () => this.actionsTemplate },
+    ],
+  };
+
+  public serviceObjectGroupConfig: TableConfig<any> = {
+    description: 'Service Object Groups are a collection of Service Objects',
+    columns: [
+      { name: 'Name', property: 'name' },
+      { name: 'Type', property: 'type' },
+      { name: 'Members', template: () => this.membersTemplate },
+      { name: 'State', template: () => this.groupStateTemplate },
+      { name: '', template: () => this.actionsTemplate },
+    ],
+  };
 
   constructor(
     private datacenterContextService: DatacenterContextService,
@@ -55,28 +95,91 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private tierContextService: TierContextService,
     private tierService: V1TiersService,
+    private tableContextService: TableContextService,
   ) {}
 
+  public onSvcObjTableEvent(event: TableComponentDto): void {
+    this.svcObjTableComponentDto = event;
+    this.getServiceObjects(event);
+  }
+  public onSvcObjGrpTableEvent(event: TableComponentDto): void {
+    this.svcObjGrpTableComponentDto = event;
+    this.getServiceObjectGroups(event);
+  }
+
   public handleTabChange(tab: Tab): void {
+    // if user clicks on the same tab that they are currently on, don't load any new objects
+    if (this.navIndex === this.tabs.findIndex(t => t.name === tab.name)) {
+      return;
+    }
+    this.tableContextService.removeSearchLocalStorage();
     this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
     this.getObjectsForNavIndex();
   }
 
-  getServiceObjects() {
-    this.tierService.getOneTier({ id: this.currentTier.id, join: ['serviceObjects'] }).subscribe(data => {
-      this.serviceObjects = data.serviceObjects;
-    });
+  getServiceObjects(event?): void {
+    this.isLoadingObjects = true;
+    let eventParams;
+    if (event) {
+      this.svcObjTableComponentDto.page = event.page ? event.page : 1;
+      this.svcObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
+    this.serviceObjectService
+      .getManyServiceObject({
+        filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
+        page: this.svcObjTableComponentDto.page,
+        limit: this.svcObjTableComponentDto.perPage,
+        sort: ['updatedAt,ASC'],
+      })
+      .subscribe(
+        response => {
+          this.serviceObjects = response;
+        },
+        () => {
+          this.serviceObjects = null;
+        },
+        () => {
+          this.isLoadingObjects = false;
+        },
+      );
   }
 
-  getServiceObjectGroups() {
+  getServiceObjectGroups(event?): void {
+    this.isLoadingGroups = true;
+    let eventParams;
+    if (event) {
+      this.svcObjGrpTableComponentDto.page = event.page ? event.page : 1;
+      this.svcObjGrpTableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
     this.serviceObjectGroupService
       .getManyServiceObjectGroup({
         join: ['serviceObjects'],
-        filter: [`tierId||eq||${this.currentTier.id}`],
+        filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
+        page: this.svcObjGrpTableComponentDto.page,
+        limit: this.svcObjGrpTableComponentDto.perPage,
+        sort: ['updatedAt,ASC'],
       })
-      .subscribe((data: unknown) => {
-        this.serviceObjectGroups = data as ServiceObjectGroup[];
-      });
+      .subscribe(
+        response => {
+          this.serviceObjectGroups = response;
+        },
+        () => {
+          this.serviceObjectGroups = null;
+        },
+        () => {
+          this.isLoadingGroups = false;
+        },
+      );
   }
 
   openServiceObjectModal(modalMode: ModalMode, serviceObject?: ServiceObject) {
@@ -121,7 +224,17 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   subscribeToServiceObjectModal() {
     this.serviceObjectModalSubscription = this.ngx.getModal('serviceObjectModal').onCloseFinished.subscribe(() => {
-      this.getServiceObjects();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.getServiceObjects(params);
+      } else {
+        this.getServiceObjects();
+      }
       this.ngx.resetModalData('serviceObjectModal');
       this.datacenterContextService.unlockDatacenter();
     });
@@ -129,7 +242,17 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   subscribeToServiceObjectGroupModal() {
     this.serviceObjectGroupModalSubscription = this.ngx.getModal('serviceObjectGroupModal').onCloseFinished.subscribe(() => {
-      this.getServiceObjectGroups();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.getServiceObjectGroups(params);
+      } else {
+        this.getServiceObjectGroups();
+      }
       this.ngx.resetModalData('serviceObjectGroupModal');
       this.datacenterContextService.unlockDatacenter();
     });
@@ -140,14 +263,36 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       entityName: 'Service Object',
       delete$: this.serviceObjectService.deleteOneServiceObject({ id: serviceObject.id }),
       softDelete$: this.serviceObjectService.softDeleteOneServiceObject({ id: serviceObject.id }),
-      onSuccess: () => this.getServiceObjects(),
+      onSuccess: () => {
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getServiceObjects(params);
+        } else {
+          this.getServiceObjects();
+        }
+      },
     });
   }
 
   restoreServiceObject(serviceObject: ServiceObject) {
     if (serviceObject.deletedAt) {
       this.serviceObjectService.restoreOneServiceObject({ id: serviceObject.id }).subscribe(() => {
-        this.getServiceObjects();
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getServiceObjects(params);
+        } else {
+          this.getServiceObjects();
+        }
       });
     }
   }
@@ -161,7 +306,19 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       softDelete$: this.serviceObjectGroupService.softDeleteOneServiceObjectGroup({
         id: serviceObjectGroup.id,
       }),
-      onSuccess: () => this.getServiceObjectGroups(),
+      onSuccess: () => {
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getServiceObjectGroups(params);
+        } else {
+          this.getServiceObjectGroups();
+        }
+      },
     });
   }
 
@@ -172,7 +329,17 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
           id: serviceObjectGroup.id,
         })
         .subscribe(() => {
-          this.getServiceObjectGroups();
+          // get search params from local storage
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
+
+          // if filtered results boolean is true, apply search params in the
+          // subsequent get call
+          if (filteredResults) {
+            this.getServiceObjectGroups(params);
+          } else {
+            this.getServiceObjectGroups();
+          }
         });
     }
   }
@@ -183,8 +350,12 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     }
 
     if (this.navIndex === 0) {
+      this.svcObjGrpTableComponentDto.page = 1;
+      this.svcObjGrpTableComponentDto.perPage = 20;
       this.getServiceObjects();
     } else {
+      this.svcObjTableComponentDto.page = 1;
+      this.svcObjTableComponentDto.perPage = 20;
       this.getServiceObjectGroups();
     }
   }
@@ -228,7 +399,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
           serviceObjectGroupRelationBulkImportCollectionDto: serviceObjectRelationsDto,
         })
         .subscribe(() => {
-          this.getServiceObjects();
+          this.getServiceObjectGroups();
         });
     };
 
@@ -291,8 +462,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.tiers = cd.tiers;
-        this.serviceObjects = [];
-        this.serviceObjectGroups = [];
+        this.serviceObjects = null;
+        this.serviceObjectGroups = null;
 
         if (cd.tiers.length) {
           this.getObjectsForNavIndex();

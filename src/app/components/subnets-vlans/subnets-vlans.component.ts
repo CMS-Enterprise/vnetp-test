@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
@@ -12,6 +12,8 @@ import {
   V1NetworkVlansService,
   SubnetImportCollectionDto,
   SubnetImport,
+  GetManyVlanResponseDto,
+  GetManySubnetResponseDto,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
@@ -22,6 +24,10 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { EntityService } from 'src/app/services/entity.service';
+import { TableConfig } from '../../common/table/table.component';
+import { TableComponentDto } from '../../models/other/table-component-dto';
+import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
+import { TableContextService } from 'src/app/services/table-context.service';
 
 @Component({
   selector: 'app-subnets-vlans',
@@ -31,23 +37,62 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   currentTier: Tier;
 
-  currentSubnetsPage = 1;
-  currentVlansPage = 1;
   perPage = 20;
   ModalMode = ModalMode;
 
-  subnets: Subnet[] = [];
-  vlans: Vlan[] = [];
+  subnets = {} as GetManySubnetResponseDto;
+  vlans = {} as GetManyVlanResponseDto;
+  public subnetSearchColumns: SearchColumnConfig[] = [];
+  public vlanSearchColumns: SearchColumnConfig[] = [];
 
   navIndex = 0;
   showRadio = false;
 
   public tabs: Tab[] = [{ name: 'Subnets' }, { name: 'VLANs' }];
 
+  public isLoadingSubnets = false;
+  public isLoadingVlans = false;
+
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
   private subnetModalSubscription: Subscription;
   private vlanModalSubscription: Subscription;
+
+  subnetTableComponentDto = new TableComponentDto();
+  vlanTableComponentDto = new TableComponentDto();
+
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+  @ViewChild('membersTemplate') membersTemplate: TemplateRef<any>;
+  @ViewChild('addressTemplate') addressTemplate: TemplateRef<any>;
+  @ViewChild('natServiceTemplate') natServiceTemplate: TemplateRef<any>;
+  @ViewChild('subnetStateTemplate') subnetStateTemplate: TemplateRef<any>;
+  @ViewChild('vlanStateTemplate') vlanStateTemplate: TemplateRef<any>;
+  @ViewChild('vlanIdTemplate') vlanIdTemplate: TemplateRef<any>;
+
+  public subnetConfig: TableConfig<any> = {
+    description: 'Subnets in the currently selected Tier',
+    columns: [
+      { name: 'Name', property: 'name' },
+      { name: 'Description', property: 'description' },
+      { name: 'VLAN', template: () => this.vlanIdTemplate },
+      { name: 'Network', property: 'network' },
+      { name: 'Gateway', property: 'gateway' },
+      { name: 'State', template: () => this.subnetStateTemplate },
+      { name: 'Shared Between VRFs', property: 'sharedBetweenVrfs' },
+      { name: '', template: () => this.actionsTemplate },
+    ],
+  };
+
+  public vlanConfig: TableConfig<any> = {
+    description: 'VLANs in the currently selected Tier',
+    columns: [
+      { name: 'Name', property: 'name' },
+      { name: 'Description', property: 'description' },
+      { name: 'VLAN Number', property: 'vlanNumber' },
+      { name: 'State', template: () => this.vlanStateTemplate },
+      { name: '', template: () => this.actionsTemplate },
+    ],
+  };
 
   constructor(
     private entityService: EntityService,
@@ -58,11 +103,27 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     private tierService: V1TiersService,
     private vlanService: V1NetworkVlansService,
     private subnetService: V1NetworkSubnetsService,
+    private tableContextService: TableContextService,
   ) {}
 
   public handleTabChange(tab: Tab): void {
+    // if user clicks on the same tab that they are currently on, don't load any new objects
+    if (this.navIndex === this.tabs.findIndex(t => t.name === tab.name)) {
+      return;
+    }
+    this.tableContextService.removeSearchLocalStorage();
     this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
     this.getObjectsForNavIndex();
+  }
+
+  public onSubnetTableEvent(event: TableComponentDto): void {
+    this.subnetTableComponentDto = event;
+    this.getSubnets(event);
+  }
+
+  public onVlanTableEvent(event: TableComponentDto): void {
+    this.vlanTableComponentDto = event;
+    this.getVlans(false, event);
   }
 
   public openSubnetModal(modalMode: ModalMode, subnet?: Subnet): void {
@@ -74,7 +135,6 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
 
     dto.ModalMode = modalMode;
     dto.TierId = this.currentTier.id;
-    dto.Vlans = this.vlans;
 
     if (modalMode === ModalMode.Edit) {
       dto.Subnet = subnet;
@@ -108,7 +168,17 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
 
   subscribeToSubnetModal() {
     this.subnetModalSubscription = this.ngx.getModal('subnetModal').onCloseFinished.subscribe(() => {
-      this.getSubnets();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.getSubnets(params);
+      } else {
+        this.getSubnets();
+      }
       this.ngx.resetModalData('subnetModal');
       this.datacenterService.unlockDatacenter();
       this.subnetModalSubscription.unsubscribe();
@@ -117,7 +187,17 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
 
   subscribeToVlanModal() {
     this.vlanModalSubscription = this.ngx.getModal('vlanModal').onCloseFinished.subscribe(() => {
-      this.getVlans();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.getVlans(false, params);
+      } else {
+        this.getVlans();
+      }
       this.ngx.resetModalData('vlanModal');
       this.datacenterService.unlockDatacenter();
       this.vlanModalSubscription.unsubscribe();
@@ -129,14 +209,36 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       entityName: 'Subnet',
       delete$: this.subnetService.deleteOneSubnet({ id: subnet.id }),
       softDelete$: this.subnetService.softDeleteOneSubnet({ id: subnet.id }),
-      onSuccess: () => this.getSubnets(),
+      onSuccess: () => {
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getSubnets(params);
+        } else {
+          this.getSubnets();
+        }
+      },
     });
   }
 
   restoreSubnet(subnet: Subnet) {
     if (subnet.deletedAt) {
       this.subnetService.restoreOneSubnet({ id: subnet.id }).subscribe(() => {
-        this.getSubnets();
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getSubnets(params);
+        } else {
+          this.getSubnets();
+        }
       });
     }
   }
@@ -150,7 +252,19 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       softDelete$: this.vlanService.softDeleteOneVlan({
         id: vlan.id,
       }),
-      onSuccess: () => this.getVlans(),
+      onSuccess: () => {
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getVlans(false, params);
+        } else {
+          this.getVlans();
+        }
+      },
     });
   }
 
@@ -161,7 +275,17 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
           id: vlan.id,
         })
         .subscribe(() => {
-          this.getVlans();
+          // get search params from local storage
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
+
+          // if filtered results boolean is true, apply search params in the
+          // subsequent get call
+          if (filteredResults) {
+            this.getVlans(false, params);
+          } else {
+            this.getVlans();
+          }
         });
     }
   }
@@ -201,7 +325,6 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       e.vlanNumber = Number(e.vlanNumber);
 
       // TODO AFTER MERGE : refactor bulk upload files to all use consistent schema
-      /* tslint:disable-next-line */
       e.tierId = this.getTierId(e['vrfName']);
     });
     const onConfirm = () => {
@@ -224,34 +347,88 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     }
 
     if (this.navIndex === 0) {
-      this.getVlans(true);
+      this.vlanTableComponentDto.page = 1;
+      this.vlanTableComponentDto.perPage = 20;
+      this.getSubnets();
     } else {
+      this.subnetTableComponentDto.page = 1;
+      this.subnetTableComponentDto.perPage = 20;
       this.getVlans();
     }
   }
 
-  public getVlanName = (id: string) => ObjectUtil.getObjectName(id, this.vlans);
-
-  private getSubnets(): void {
+  public getSubnets(event?): void {
+    this.isLoadingSubnets = true;
+    let eventParams;
+    if (event) {
+      this.subnetTableComponentDto.page = event.page ? event.page : 1;
+      this.subnetTableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
     if (!this.hasCurrentTier()) {
       return;
     }
-    this.tierService.getOneTier({ id: this.currentTier.id, join: ['subnets'] }).subscribe(data => {
-      this.subnets = data.subnets;
-    });
+    this.subnetService
+      .getManySubnet({
+        join: ['vlan'],
+        filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
+        page: this.subnetTableComponentDto.page,
+        limit: this.subnetTableComponentDto.perPage,
+        sort: ['updatedAt,ASC'],
+      })
+      .subscribe(
+        response => {
+          this.subnets = response;
+        },
+        () => {
+          this.subnets = null;
+        },
+        () => {
+          this.isLoadingSubnets = false;
+        },
+      );
   }
 
-  private getVlans(getSubnets = false): void {
+  public getVlans(getSubnets = false, event?): void {
+    this.isLoadingVlans = true;
+    let eventParams;
+    if (event) {
+      this.vlanTableComponentDto.page = event.page ? event.page : 1;
+      this.vlanTableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
     if (!this.hasCurrentTier()) {
       return;
     }
-    this.tierService.getOneTier({ id: this.currentTier.id, join: ['vlans'] }).subscribe(data => {
-      this.vlans = data.vlans;
+    this.vlanService
+      .getManyVlan({
+        filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
+        page: this.vlanTableComponentDto.page,
+        limit: this.vlanTableComponentDto.perPage,
+      })
+      .subscribe(
+        response => {
+          this.vlans = response;
 
-      if (getSubnets) {
-        this.getSubnets();
-      }
-    });
+          if (getSubnets) {
+            this.getSubnets();
+          }
+        },
+        () => {
+          this.vlans = null;
+        },
+        () => {
+          this.isLoadingVlans = false;
+        },
+      );
   }
 
   private hasCurrentTier(): boolean {
@@ -262,11 +439,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.tiers = cd.tiers;
-        this.subnets = [];
-        this.vlans = [];
 
         if (cd.tiers.length) {
-          this.getVlans(true);
+          this.getObjectsForNavIndex();
         }
       }
     });

@@ -29,7 +29,8 @@ describe('NatRuleComponent', () => {
       declarations: [
         FilterPipe,
         NatRulesComponent,
-        MockComponent({ selector: 'app-nat-rule-modal' }),
+        MockComponent('app-nat-rule-modal'),
+        MockComponent('app-tier-select'),
         MockFontAwesomeComponent,
         MockNgxSmartModalComponent,
         MockTabsComponent,

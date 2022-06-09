@@ -3,10 +3,11 @@ import { DatacenterSelectComponent } from './datacenter-select.component';
 import { FormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from 'ngx-toastr';
-import { MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { MockNgxSmartModalComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { By } from '@angular/platform-browser';
 import { MockProvider } from 'src/test/mock-providers';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('DatacenterSelectComponent', () => {
   let component: DatacenterSelectComponent;
@@ -14,8 +15,8 @@ describe('DatacenterSelectComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule],
-      declarations: [DatacenterSelectComponent, MockNgxSmartModalComponent],
+      imports: [FormsModule, RouterTestingModule.withRoutes([])],
+      declarations: [DatacenterSelectComponent, MockNgxSmartModalComponent, MockTooltipComponent],
       providers: [MockProvider(NgxSmartModalService), MockProvider(ToastrService), MockProvider(DatacenterContextService)],
     });
 

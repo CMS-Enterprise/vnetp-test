@@ -94,8 +94,8 @@ export class TierModalComponent implements OnInit {
   }
 
   private getTierGroups(): void {
-    this.tierGroupService.getManyTierGroup({ filter: [`datacenterId||eq||${this.DatacenterId}`] }).subscribe((data: unknown) => {
-      this.tierGroups = data as TierGroup[];
+    this.tierGroupService.getManyTierGroup({ filter: [`datacenterId||eq||${this.DatacenterId}`] }).subscribe(response => {
+      this.tierGroups = response.data as TierGroup[];
     });
   }
 

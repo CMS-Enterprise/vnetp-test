@@ -104,7 +104,11 @@ export class TierContextService {
         // If a tier matching currentTierId is present
         // set currentTier to that tier.
         if (currentTierId) {
-          this.switchTier(currentTierId);
+          if (this._tiers.some(t => t.id === currentTierId)) {
+            this.switchTier(currentTierId);
+          } else {
+            this.clearTier();
+          }
         }
       });
     });
@@ -118,6 +122,7 @@ export class TierContextService {
 
     const tier = this._tiers.find(t => t.id === tierId);
     if (!tier) {
+      this.clearTier();
       return false;
     }
 
@@ -137,5 +142,14 @@ export class TierContextService {
     });
     this.messageService.sendMessage(new Message(oldTierId, tierId, 'Tier Switched'));
     return true;
+  }
+
+  clearTier() {
+    this.currentTierSubject.next(null);
+    this.ignoreNextQueryParamEvent = true;
+    this.router.navigate([], {
+      queryParams: { tier: null },
+      queryParamsHandling: 'merge',
+    });
   }
 }

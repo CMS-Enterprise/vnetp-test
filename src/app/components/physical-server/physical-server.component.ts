@@ -31,9 +31,11 @@ export class PhysicalServerComponent implements OnInit, OnDestroy {
   ) {}
 
   public getPhysicalServers(): void {
-    this.physicalServerService.getManyPhysicalServer({ filter: [`datacenterId||eq||${this.datacenterId}`] }).subscribe((data: unknown) => {
-      this.physicalServers = data as PhysicalServer[];
-    });
+    this.physicalServerService
+      .getManyPhysicalServer({ filter: [`datacenterId||eq||${this.datacenterId}`], page: 1, limit: 1000 })
+      .subscribe(response => {
+        this.physicalServers = response.data;
+      });
   }
 
   public openPhysicalServerModal(modalMode: ModalMode, physicalServer?: PhysicalServer) {

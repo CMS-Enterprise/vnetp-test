@@ -3,7 +3,7 @@
   <span>Back</span>
 </a>
 
-<h1>{{ TierName }} - {{ NatRuleGroup?.name }} Nat Rules</h1>
+<h1>{{ TierName }} - {{ NatRuleGroup?.name }} Nat Rules ({{ natRules?.total }} items)</h1>
 
 <section class="btn-toolbar" role="toolbar">
   <!-- Add Nat Rule -->
@@ -19,96 +19,27 @@
   </button>
 </section>
 
-<table class="table table-striped">
-  <caption>
-    <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-    <span>{{ NatRuleGroup?.name }} Nat Rules</span>
-  </caption>
-  <thead>
-    <tr>
-      <th scope="col" *ngFor="let header of tableHeaders">{{ header }}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let natRule of natRules | paginate: { itemsPerPage: perPage, currentPage: currentNatRulePage, totalItems: totalNatRules }">
-      <td>
-        <p>{{ natRule?.name }}</p>
-      </td>
-      <td>
-        <p>{{ natRule?.direction }}</p>
-      </td>
+<ng-container *ngIf="!isLoading; else loading">
+  <app-table [config]="config" [data]="natRules" (clearResults)="getNatRules($event)" (searchParams)="getNatRules($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+</ng-container>
 
-      <td>
-        <p>{{ natRule?.biDirectional }}</p>
-      </td>
-      <td>
-        <ng-container *ngTemplateOutlet="originalServiceType; context: { datum: natRule }"></ng-container>
-      </td>
-      <td>
-        <ng-container *ngTemplateOutlet="originalSourceAddress; context: { datum: natRule }"></ng-container>
-      </td>
-      <td>
-        <ng-container *ngTemplateOutlet="originalDestinationAddress; context: { datum: natRule }"></ng-container>
-      </td>
-      <td>
-        <p>{{ natRule?.translationType }}</p>
-      </td>
-      <td>
-        <ng-container *ngTemplateOutlet="translatedServiceType; context: { datum: natRule }"></ng-container>
-      </td>
-      <td>
-        <ng-container *ngTemplateOutlet="translatedSourceAddress; context: { datum: natRule }"></ng-container>
-      </td>
-      <td>
-        <ng-container *ngTemplateOutlet="translatedDestinationAddress; context: { datum: natRule }"></ng-container>
-      </td>
-      <td>
-        <p>{{ natRule?.enabled }}</p>
-      </td>
-      <td>
-        <span>{{ natRule?.ruleIndex }}</span>
-      </td>
-      <td class="table__actions">
-        <app-icon-button
-          *ngIf="!natRule?.deletedAt"
-          icon="edit"
-          label="Edit Nat Rule"
-          (handleClick)="openNatRuleModal(ModalMode.Edit, natRule)"
-        ></app-icon-button>
+<ng-template #actionsTemplate let-natRule="datum">
+  <section class="table__actions">
+    <app-icon-button *ngIf="!natRule?.deletedAt" icon="edit" label="Edit Nat Rule"
+      (handleClick)="openNatRuleModal(ModalMode.Edit, natRule)"></app-icon-button>
 
-        <app-icon-button
-          *ngIf="natRule?.deletedAt"
-          icon="undo"
-          label="Restore Nat Rule"
-          type="success"
-          (handleClick)="restoreNatRule(natRule)"
-        ></app-icon-button>
+    <app-icon-button *ngIf="natRule?.deletedAt" icon="undo" label="Restore Nat Rule" type="success"
+      (handleClick)="restoreNatRule(natRule)"></app-icon-button>
 
-        <app-icon-button
-          icon="delete"
-          label="Soft-Delete/Delete Appliance"
-          [type]="natRule.deletedAt ? 'danger' : 'default'"
-          (handleClick)="deleteNatRule(natRule)"
-        >
-        </app-icon-button>
-      </td>
-    </tr>
-    <tr *ngIf="natRules?.length === 0" class="text-center">
-      <td colspan="13">No Nat Rules</td>
-    </tr>
-  </tbody>
-</table>
+    <app-icon-button icon="delete" label="Soft-Delete/Delete Appliance"
+      [type]="natRule.deletedAt ? 'danger' : 'default'" (handleClick)="deleteNatRule(natRule)">
+    </app-icon-button>
+  </section>
+</ng-template>
 
-<pagination-controls (pageChange)="currentNatRulePage = $event; getNatRules()"></pagination-controls>
-
-<section class="btn-toolbar btn-toolbar--start" role="toolbar">
-  <span class="mr-3">Entities per page</span>
-  <div class="btn-group" role="group">
-    <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
-    <button type="button" value="100" (click)="perPage = $event.target.value" class="btn btn-light">100</button>
-    <button type="button" value="200" (click)="perPage = $event.target.value" class="btn btn-light">200</button>
-  </div>
-</section>
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
 
 <section class="btn-toolbar" role="toolbar">
   <app-import-export

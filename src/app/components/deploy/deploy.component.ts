@@ -68,9 +68,11 @@ export class DeployComponent implements OnInit {
     this.tierGroupService
       .getManyTierGroup({
         filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
+        page: 1,
+        limit: 1000,
       })
-      .subscribe((data: unknown) => {
-        this.tierGroups = data as TierGroup[];
+      .subscribe(response => {
+        this.tierGroups = response.data;
 
         if (loadTiers) {
           this.getTiers();
@@ -82,9 +84,11 @@ export class DeployComponent implements OnInit {
     this.tierService
       .getManyDatacenterTier({
         datacenterId: this.currentDatacenter.id,
+        page: 1,
+        limit: 1000,
       })
-      .subscribe((data: unknown) => {
-        this.tiers = (data as Tier[]).map(tier => new TableRowWrapper(tier));
+      .subscribe(response => {
+        this.tiers = response.data.map(tier => new TableRowWrapper(tier));
       });
   }
 

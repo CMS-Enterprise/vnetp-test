@@ -31,6 +31,7 @@ describe('FirewallRulesComponent', () => {
         FirewallRulesComponent,
         MockComponent('app-firewall-rule-modal'),
         MockComponent('app-tier-select'),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
         MockImportExportComponent,
         MockFontAwesomeComponent,
         MockNgxSmartModalComponent,

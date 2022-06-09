@@ -93,7 +93,7 @@ export class HttpConfigInterceptor {
                 toastrMessage = `Bad Request - ${error.error.message.message}`;
               }
               if (error?.error?.message) {
-                toastrMessage = `Bad Request - ${error.error.message}`;
+                toastrMessage = `Bad Request - ${error.error.message.detail}`;
               } else {
                 toastrMessage = 'Bad Request';
               }

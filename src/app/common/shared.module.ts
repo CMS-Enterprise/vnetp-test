@@ -12,6 +12,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ResolvePipe } from '../pipes/resolve.pipe';
 import { FilterPipe } from '../pipes/filter.pipe';
+import { SearchBarComponent } from './seach-bar/search-bar.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,23 @@ import { FilterPipe } from '../pipes/filter.pipe';
     NgSelectModule,
     NgxPaginationModule,
   ],
-  declarations: [ImportExportComponent, ResolvePipe, FilterPipe, TierSelectComponent, YesNoModalComponent, ZosZvmRequestModalComponent],
-  exports: [ImportExportComponent, ResolvePipe, FilterPipe, TierSelectComponent, YesNoModalComponent, ZosZvmRequestModalComponent],
+  declarations: [
+    SearchBarComponent,
+    ImportExportComponent,
+    ResolvePipe,
+    FilterPipe,
+    TierSelectComponent,
+    YesNoModalComponent,
+    ZosZvmRequestModalComponent,
+  ],
+  exports: [
+    SearchBarComponent,
+    ImportExportComponent,
+    ResolvePipe,
+    FilterPipe,
+    TierSelectComponent,
+    YesNoModalComponent,
+    ZosZvmRequestModalComponent,
+  ],
 })
 export class SharedModule {}

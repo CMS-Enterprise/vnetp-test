@@ -8,13 +8,14 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerProfile, Tier, V1LoadBalancerProfilesService } from 'client';
+import { GetManyLoadBalancerProfileResponseDto, LoadBalancerProfile, Tier, V1LoadBalancerProfilesService } from 'client';
 import { ProfileListComponent, ImportProfile, ProfileView } from './profile-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ProfileListComponent', () => {
   let component: ProfileListComponent;
@@ -23,10 +24,11 @@ describe('ProfileListComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([])],
       declarations: [
         ProfileListComponent,
         MockComponent('app-profile-modal'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockImportExportComponent,
@@ -55,15 +57,21 @@ describe('ProfileListComponent', () => {
 
   it('should map profiles', () => {
     jest.spyOn(service, 'getManyLoadBalancerProfile').mockImplementation(() => {
-      return of(([
-        { id: '1', name: 'Profile1', provisionedAt: {}, reverseProxy: 'Explicit' },
-        { id: '2', name: 'Profile2' },
-      ] as LoadBalancerProfile[]) as any);
+      return of({
+        data: [
+          { id: '1', name: 'Profile1', provisionedAt: {}, reverseProxy: 'Explicit' },
+          { id: '2', name: 'Profile2' },
+        ] as LoadBalancerProfile[],
+        count: 2,
+        total: 2,
+        page: 1,
+        pageCount: 1,
+      } as any);
     });
 
     component.ngOnInit();
 
-    const [profile1, profile2] = component.profiles;
+    const [profile1, profile2] = component.profiles.data;
     expect(profile1).toEqual({
       id: '1',
       name: 'Profile1',
@@ -84,12 +92,18 @@ describe('ProfileListComponent', () => {
   });
 
   it('should default profiles to be empty on error', () => {
-    component.profiles = [{ id: '1', name: 'Profile1' }] as ProfileView[];
+    component.profiles = {
+      data: [{ id: '1', name: 'Profile1' }],
+      count: 1,
+      total: 1,
+      page: 1,
+      pageCount: 1,
+    } as GetManyLoadBalancerProfileResponseDto;
     jest.spyOn(service, 'getManyLoadBalancerProfile').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
-    expect(component.profiles).toEqual([]);
+    expect(component.profiles).toEqual(null);
   });
 
   it('should import profiles', () => {

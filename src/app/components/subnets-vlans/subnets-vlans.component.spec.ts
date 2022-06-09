@@ -33,6 +33,7 @@ describe('SubnetsVlansComponent', () => {
         MockComponent('app-subnet-modal'),
         MockComponent('app-tier-select'),
         MockComponent('app-vlan-modal'),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,

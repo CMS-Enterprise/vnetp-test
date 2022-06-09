@@ -8,13 +8,14 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'client';
+import { GetManyLoadBalancerHealthMonitorResponseDto, LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'client';
 import { HealthMonitorListComponent, HealthMonitorView, ImportHealthMonitor } from './health-monitor-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('HealthMonitorListComponent', () => {
   let component: HealthMonitorListComponent;
@@ -23,10 +24,11 @@ describe('HealthMonitorListComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([])],
       declarations: [
         HealthMonitorListComponent,
         MockComponent('app-health-monitor-modal'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockImportExportComponent,
@@ -55,15 +57,21 @@ describe('HealthMonitorListComponent', () => {
 
   it('should map health monitors', () => {
     jest.spyOn(service, 'getManyLoadBalancerHealthMonitor').mockImplementation(() => {
-      return of(([
-        { id: '1', name: 'HealthMonitor1', provisionedAt: {} },
-        { id: '2', name: 'HealthMonitor2' },
-      ] as LoadBalancerHealthMonitor[]) as any);
+      return of({
+        data: [
+          { id: '1', name: 'HealthMonitor1', provisionedAt: {} },
+          { id: '2', name: 'HealthMonitor2' },
+        ] as LoadBalancerHealthMonitor[],
+        count: 2,
+        total: 2,
+        page: 1,
+        pageCount: 1,
+      } as any);
     });
 
     component.ngOnInit();
 
-    const [healthMonitor1, healthMonitor2] = component.healthMonitors;
+    const [healthMonitor1, healthMonitor2] = component.healthMonitors.data;
     expect(healthMonitor1).toEqual({
       id: '1',
       name: 'HealthMonitor1',
@@ -81,12 +89,18 @@ describe('HealthMonitorListComponent', () => {
   });
 
   it('should default health monitors to be empty on error', () => {
-    component.healthMonitors = [{ id: '1', name: 'HealthMonitor1' }] as HealthMonitorView[];
+    component.healthMonitors = {
+      data: [{ id: '1', name: 'HealthMonitor1' }],
+      count: 1,
+      total: 1,
+      page: 1,
+      pageCount: 1,
+    } as GetManyLoadBalancerHealthMonitorResponseDto;
     jest.spyOn(service, 'getManyLoadBalancerHealthMonitor').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
-    expect(component.healthMonitors).toEqual([]);
+    expect(component.healthMonitors).toEqual(null);
   });
 
   it('should import health monitors', () => {

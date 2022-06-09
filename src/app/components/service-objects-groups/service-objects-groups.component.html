@@ -3,7 +3,6 @@
 <h1>Service Objects & Groups</h1>
 <ng-container *ngIf="currentTier; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
-
   <div *ngIf="navIndex === 0">
     <section class="btn-toolbar" role="toolbar">
       <!-- Create Service Object -->
@@ -13,68 +12,53 @@
       </button>
     </section>
 
-    <table class="table table-striped">
-      <caption>
-        <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-        <span>Service Objects consist of source and destination ports</span>
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Type</th>
-          <th scope="col">Source Port</th>
-          <th scope="col">Destination Port</th>
-          <th scope="col">State</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let svcObj of serviceObjects | paginate: { itemsPerPage: perPage, currentPage: currentServiceObjectsPage }">
-          <td>
-            <span>{{ svcObj?.name | slice: 0:20 }}{{ svcObj?.name.length > 20 ? '...' : '' }}</span>
-          </td>
-          <td>
-            <span>{{ svcObj?.protocol }}</span>
-          </td>
-          <td>
-            <span>{{ svcObj?.sourcePorts }}</span>
-          </td>
-          <td>
-            <span>{{ svcObj?.destinationPorts }}</span>
-          </td>
-          <td>
-            <span>{{ svcObj?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
-          </td>
-          <td class="table__actions">
-            <app-icon-button
-              *ngIf="!svcObj?.deletedAt"
+    <ng-container *ngIf="!isLoadingObjects; else loading">
+      <app-table [config]="serviceObjectConfig" [data]="serviceObjects" (clearResults)="getServiceObjects($event)" (searchParams)="getServiceObjects($event)" [searchColumns]="objectSearchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onSvcObjTableEvent($event)"></app-table>
+      <section class="btn-toolbar" role="toolbar">
+        <app-import-export
+          [exportObject]="serviceObjects"
+          exportFileName="serviceObjects-{{ currentTier?.name }}"
+          [disableJson]="false"
+          (import)="importServiceObjectsConfig($event)"
+        ></app-import-export>
+      </section>
+    </ng-container>
+
+    <ng-template #objStateTemplate let-serviceObj="datum">
+      <section>
+        <span>{{ serviceObj.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+      </section>
+    </ng-template>
+
+    <ng-template #actionsTemplate let-serviceObj="datum">
+      <section class="table__actions">
+        <app-icon-button
+              *ngIf="!serviceObj?.deletedAt"
               icon="edit"
               label="Edit Service Object"
-              (handleClick)="openServiceObjectModal(ModalMode.Edit, svcObj)"
+              (handleClick)="openServiceObjectModal(ModalMode.Edit, serviceObj)"
             ></app-icon-button>
 
             <app-icon-button
-              *ngIf="svcObj?.deletedAt"
+              *ngIf="serviceObj?.deletedAt"
               icon="undo"
               label="Restore Service Object"
               type="success"
-              (handleClick)="restoreServiceObject(svcObj)"
+              (handleClick)="restoreServiceObject(serviceObj)"
             ></app-icon-button>
 
             <app-icon-button
               icon="delete"
               label="Soft-Delete/Delete Service Object"
-              [type]="svcObj?.deletedAt ? 'danger' : 'default'"
-              (handleClick)="deleteServiceObject(svcObj)"
+              [type]="serviceObj?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteServiceObject(serviceObj)"
             ></app-icon-button>
-          </td>
-        </tr>
-        <tr *ngIf="!serviceObjects?.length" class="text-center">
-          <td colspan="6">No Service Objects in this Tier</td>
-        </tr>
-      </tbody>
-    </table>
-    <pagination-controls (pageChange)="currentServiceObjectsPage = $event"></pagination-controls>
+      </section>
+    </ng-template>
+
+    <ng-template #loading>
+      <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </ng-template>
   </div>
 
   <div *ngIf="navIndex === 1">
@@ -86,105 +70,64 @@
       </button>
     </section>
 
-    <table class="table table-striped">
-      <caption>
-        <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-        <span>Service Object Groups are a collection of Service Objects</span>
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Type</th>
-          <th scope="col">Members</th>
-          <th scope="col">State</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="
-            let svcObjGroup of serviceObjectGroups
-              | paginate
-                : {
-                    itemsPerPage: perPage,
-                    currentPage: currentServiceObjectGroupsPage
-                  }
-          "
-        >
-          <td>
-            <span>{{ svcObjGroup.name | slice: 0:20 }}{{ svcObjGroup.name.length > 20 ? '...' : '' }}</span>
-          </td>
-          <td>
-            <span>{{ svcObjGroup.type }}</span>
-          </td>
-          <td>
-            <span>{{ svcObjGroup.serviceObjects?.length }}</span>
-          </td>
-          <td>
-            <span>{{ svcObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
-          </td>
-          <td class="table__actions">
-            <app-icon-button
-              *ngIf="!svcObjGroup?.deletedAt"
+    <ng-container *ngIf="!isLoadingGroups; else loading">
+      <app-table [config]="serviceObjectGroupConfig" [data]="serviceObjectGroups" (clearResults)="getServiceObjectGroups($event)" (searchParams)="getServiceObjectGroups($event)" [searchColumns]="groupSearchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onSvcObjGrpTableEvent($event)"></app-table>
+      <section class="btn-toolbar" role="toolbar">
+        <app-import-export
+          [exportObject]="serviceObjectGroups"
+          exportFileName="serviceObjectGroups-{{ currentTier?.name }}"
+          [disableJson]="false"
+          (import)="importServiceObjectGroupsConfig($event)"
+        ></app-import-export>
+      </section>
+    </ng-container>
+
+    <ng-template #membersTemplate let-serviceObjGroup="datum">
+      <section>
+        <span> {{ serviceObjGroup.serviceObjects?.length }}</span>
+      </section>
+    </ng-template>
+
+    <ng-template #groupStateTemplate let-serviceObjGroup="datum">
+      <section>
+        <span>{{ serviceObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+      </section>
+    </ng-template>
+
+    <ng-template #actionsTemplate let-serviceObjGroup="datum">
+      <section class="table__actions">
+        <app-icon-button
+              *ngIf="!serviceObjGroup?.deletedAt"
               icon="edit"
               label="Edit Service Object Group"
-              (handleClick)="openServiceObjectGroupModal(ModalMode.Edit, svcObjGroup)"
+              (handleClick)="openServiceObjectGroupModal(ModalMode.Edit, serviceObjGroup)"
             ></app-icon-button>
 
             <app-icon-button
-              *ngIf="svcObjGroup?.deletedAt"
+              *ngIf="serviceObjGroup?.deletedAt"
               icon="undo"
               label="Restore Service Object Group"
               type="success"
-              (handleClick)="restoreServiceObjectGroup(svcObjGroup)"
+              (handleClick)="restoreServiceObjectGroup(serviceObjGroup)"
             ></app-icon-button>
 
             <app-icon-button
               icon="delete"
               label="Soft-Delete/Delete Service Object Group"
-              [type]="svcObjGroup?.deletedAt ? 'danger' : 'default'"
-              (handleClick)="deleteServiceObjectGroup(svcObjGroup)"
+              [type]="serviceObjGroup?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteServiceObjectGroup(serviceObjGroup)"
             ></app-icon-button>
-          </td>
-        </tr>
-        <tr *ngIf="!serviceObjectGroups?.length" class="text-center">
-          <td colspan="5">No Service Object Groups in this Tier</td>
-        </tr>
-      </tbody>
-    </table>
-    <pagination-controls (pageChange)="currentServiceObjectGroupsPage = $event"></pagination-controls>
+      </section>
+    </ng-template>
+
+    <ng-template #loading>
+      <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </ng-template>
   </div>
 
   <div *ngIf="navIndex === 2">
     <label class="mt-3 ml-3">Click the import CSV button to add Service Object Group relations</label>
   </div>
-
-  <section class="btn-toolbar btn-toolbar--start" role="toolbar" *ngIf="navIndex !== 2">
-    <span class="mr-3">Entities per page</span>
-    <div class="btn-group" role="group">
-      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
-      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
-      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
-    </div>
-  </section>
-
-  <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 0">
-    <app-import-export
-      [exportObject]="serviceObjects"
-      exportFileName="serviceObjects-{{ currentTier?.name }}"
-      [disableJson]="false"
-      (import)="importServiceObjectsConfig($event)"
-    ></app-import-export>
-  </section>
-
-  <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 1">
-    <app-import-export
-      [exportObject]="serviceObjectGroups"
-      exportFileName="serviceObjectGroups-{{ currentTier?.name }}"
-      [disableJson]="false"
-      (import)="importServiceObjectGroupsConfig($event)"
-    ></app-import-export>
-  </section>
 
   <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 2">
     <app-import-export

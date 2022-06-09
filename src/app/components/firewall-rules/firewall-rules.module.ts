@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FirewallRulesComponent } from './firewall-rules.component';
-import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { SharedModule } from 'src/app/common/shared.module';
 import { FirewallRulesDetailComponent } from './firewall-rules-detail/firewall-rules-detail.component';
 import { AuthGuard } from 'src/app/guards/auth.guard';
@@ -16,6 +15,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TableModule } from '../../common/table/table.module';
 
 const routes: Routes = [
   {
@@ -43,6 +43,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
+    TableModule,
     TabsModule,
     TooltipModule,
   ],

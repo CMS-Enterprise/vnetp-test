@@ -13,7 +13,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   public breadcrumbs: Breadcrumb[] = [];
   public render = true;
 
-  private routesNotToRender = ['/tenant', '/unauthorized', '/logout', '/login'];
+  private routesNotToRender = ['/unauthorized', '/logout', '/login'];
   private routeChanges: Subscription;
 
   constructor(private router: Router, private route: ActivatedRoute) {}

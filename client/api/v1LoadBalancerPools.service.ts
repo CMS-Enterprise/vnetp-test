@@ -71,6 +71,8 @@ export interface GetPoolLoadBalancerPoolRequestParams {
 export interface GetPoolsLoadBalancerPoolRequestParams {
     /** UUID. */
     id: string;
+    page?: number;
+    limit?: number;
 }
 
 export interface ProvisionOneLoadBalancerPoolRequestParams {
@@ -636,6 +638,18 @@ export class V1LoadBalancerPoolsService {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getPoolsLoadBalancerPool.');
         }
+        const page = requestParameters.page;
+        const limit = requestParameters.limit;
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (page !== undefined && page !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -656,8 +670,9 @@ export class V1LoadBalancerPoolsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}/tierId`,
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}/tierId/`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

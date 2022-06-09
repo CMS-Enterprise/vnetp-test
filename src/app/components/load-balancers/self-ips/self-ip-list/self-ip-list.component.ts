@@ -1,13 +1,16 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'client';
+import { GetManyLoadBalancerSelfIpResponseDto, LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
+import { TableContextService } from 'src/app/services/table-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
 import { SelfIpModalDto } from '../self-ip-modal/self-ip-modal.dto';
 
 export interface SelfIpView extends LoadBalancerSelfIp {
@@ -23,6 +26,7 @@ export interface SelfIpView extends LoadBalancerSelfIp {
 export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
+  public searchColumns: SearchColumnConfig[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -36,7 +40,9 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: '', template: () => this.actionsTemplate },
     ],
   };
-  public selfIps: SelfIpView[] = [];
+  public selfIps = {} as GetManyLoadBalancerSelfIpResponseDto;
+  public tableComponentDto = new TableComponentDto();
+  public perPage = 20;
   public isLoading = false;
 
   private dataChanges: Subscription;
@@ -48,17 +54,18 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
     private selfIpsService: V1LoadBalancerSelfIpsService,
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
+    private tableContextService: TableContextService,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.selfIpChanges = this.subscribeToSelfIpModal();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.selfIpChanges]);
   }
 
@@ -67,20 +74,50 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
       entityName: 'Self IP',
       delete$: this.selfIpsService.deleteOneLoadBalancerSelfIp({ id: selfIp.id }),
       softDelete$: this.selfIpsService.softDeleteOneLoadBalancerSelfIp({ id: selfIp.id }),
-      onSuccess: () => this.loadSelfIps(),
+      onSuccess: () => {
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.loadSelfIps(params);
+        } else {
+          this.loadSelfIps();
+        }
+      },
     });
   }
 
-  public loadSelfIps(): void {
+  public onTableEvent(event: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.loadSelfIps(event);
+  }
+
+  public loadSelfIps(event?): void {
     this.isLoading = true;
+    let eventParams;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
     this.selfIpsService
       .getManyLoadBalancerSelfIp({
-        filter: [`tierId||eq||${this.currentTier.id}`],
+        filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         join: ['loadBalancerVlan'],
+        page: this.tableComponentDto.page,
+        limit: this.tableComponentDto.perPage,
       })
       .subscribe(
-        (selfIps: unknown) => {
-          this.selfIps = (selfIps as SelfIpView[]).map((s: LoadBalancerSelfIp) => {
+        response => {
+          this.selfIps = response;
+          this.selfIps.data = (this.selfIps.data as SelfIpView[]).map((s: LoadBalancerSelfIp) => {
             // TODO: Fix back-end generated type
             const loadBalancerVlan = (s as any).loadBalancerVlan as { name: string };
             return {
@@ -96,7 +133,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.selfIps = [];
+          this.selfIps = null;
         },
         () => {
           this.isLoading = false;
@@ -138,7 +175,19 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!selfIp.deletedAt) {
       return;
     }
-    this.selfIpsService.restoreOneLoadBalancerSelfIp({ id: selfIp.id }).subscribe(() => this.loadSelfIps());
+    this.selfIpsService.restoreOneLoadBalancerSelfIp({ id: selfIp.id }).subscribe(() => {
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.loadSelfIps(params);
+      } else {
+        this.loadSelfIps();
+      }
+    });
   }
 
   private subscribeToDataChanges(): Subscription {
@@ -155,7 +204,17 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private subscribeToSelfIpModal(): Subscription {
     return this.ngx.getModal('selfIpModal').onCloseFinished.subscribe(() => {
-      this.loadSelfIps();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.loadSelfIps(params);
+      } else {
+        this.loadSelfIps();
+      }
       this.ngx.resetModalData('selfIpModal');
     });
   }

@@ -8,13 +8,14 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerRoute, Tier, V1LoadBalancerRoutesService } from 'client';
+import { GetManyLoadBalancerRouteResponseDto, LoadBalancerRoute, Tier, V1LoadBalancerRoutesService } from 'client';
 import { RouteListComponent, ImportRoute, RouteView } from './route-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('RouteListComponent', () => {
   let component: RouteListComponent;
@@ -23,10 +24,11 @@ describe('RouteListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([])],
       declarations: [
         RouteListComponent,
         MockComponent('app-route-modal'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockImportExportComponent,
@@ -56,15 +58,21 @@ describe('RouteListComponent', () => {
 
   it('should map routes', () => {
     jest.spyOn(service, 'getManyLoadBalancerRoute').mockImplementation(() => {
-      return of(([
-        { id: '1', name: 'Route1', provisionedAt: {} },
-        { id: '2', name: 'Route2' },
-      ] as LoadBalancerRoute[]) as any);
+      return of({
+        data: [
+          { id: '1', name: 'Route1', provisionedAt: {} },
+          { id: '2', name: 'Route2' },
+        ] as LoadBalancerRoute[],
+        count: 2,
+        total: 2,
+        page: 1,
+        pageCount: 1,
+      } as any);
     });
 
     component.ngOnInit();
 
-    const [route1, route2] = component.routes;
+    const [route1, route2] = component.routes.data;
     expect(route1).toEqual({
       id: '1',
       name: 'Route1',
@@ -82,12 +90,18 @@ describe('RouteListComponent', () => {
   });
 
   it('should default routes to be empty on error', () => {
-    component.routes = [{ id: '1', name: 'Route1' }] as RouteView[];
+    component.routes = {
+      data: [{ id: '1', name: 'Route1' }],
+      count: 1,
+      total: 1,
+      page: 1,
+      pageCount: 1,
+    } as GetManyLoadBalancerRouteResponseDto;
     jest.spyOn(service, 'getManyLoadBalancerRoute').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
-    expect(component.routes).toEqual([]);
+    expect(component.routes).toEqual(null);
   });
 
   it('should import routes', () => {

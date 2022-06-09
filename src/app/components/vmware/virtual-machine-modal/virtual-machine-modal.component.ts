@@ -254,9 +254,9 @@ export class VirtualMachineModalComponent implements OnInit, OnDestroy {
 
   private loadPriorityGroups(): void {
     this.priorityGroupService
-      .getManyPriorityGroup({ filter: [`datacenterId||eq||${this.DatacenterId}`], join: ['vmwareVirtualMachines'] })
-      .subscribe((data: unknown) => {
-        this.priorityGroups = data as PriorityGroup[];
+      .getManyPriorityGroup({ filter: [`datacenterId||eq||${this.DatacenterId}`], join: ['vmwareVirtualMachines'], page: 1, limit: 1000 })
+      .subscribe(response => {
+        this.priorityGroups = response.data;
       });
   }
 

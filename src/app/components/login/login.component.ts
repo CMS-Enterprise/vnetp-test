@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { UserPass } from 'client/model/userPass';
 import { TenantName } from '../../models/other/tenant-name';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -21,9 +22,32 @@ export class LoginComponent implements OnInit {
   selectedTenant: string;
   oldTenant: string;
 
+  availableLocations: string[] = [];
+  selectedLocation: string;
+  lockLocation = false;
+  showLogin = false;
+  disableUserPass = true;
+  showTenantButton = false;
+
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
 
   ngOnInit() {
+    environment.environment.dcsLocations.map(location => {
+      this.availableLocations.push(location.name);
+    });
+    const currentUrl = location.href;
+    environment.environment.dcsLocations.map(location => {
+      if (currentUrl.includes(location.url.toLowerCase())) {
+        this.showLogin = true;
+        this.selectedLocation = location.name;
+      }
+    });
+    if (this.selectedLocation) {
+      this.showLogin = true;
+      this.disableUserPass = false;
+    } else {
+      this.disableUserPass = true;
+    }
     this.returnUrl = '/dashboard';
 
     if (this.route.snapshot.queryParams.returnUrl) {
@@ -43,6 +67,21 @@ export class LoginComponent implements OnInit {
 
     if (tenantExec) {
       this.selectedTenant = this.oldTenant = tenantExec[1];
+    }
+  }
+
+  navToLocation() {
+    const match = environment.environment.dcsLocations.find(location => location.name === this.selectedLocation);
+    if (match) {
+      const currentURL = location.href;
+      if (currentURL.includes(match.url)) {
+      } else {
+        location.href = match.url;
+      }
+    }
+    if (this.userpass) {
+      this.disableUserPass = false;
+      return this.login();
     }
   }
 
@@ -67,20 +106,14 @@ export class LoginComponent implements OnInit {
             .subscribe(
               tenantData => {
                 const currentTenants = tenantData;
-                // If the user doesn't have global access and only has one Tenant
-                if (!userTenants.some(t => t === '*') && currentTenants.length === 1) {
-                  this.setTenantAndNavigate(currentTenants[0].tenantQueryParameter);
+                if (userTenants.some(t => t === '*')) {
+                  // If the user is a global admin, they have access to all available tenants.
+                  this.availableTenants = currentTenants;
                 } else {
-                  if (userTenants.some(t => t === '*')) {
-                    // If the user is a global admin, they have access to all available tenants.
-                    this.availableTenants = currentTenants;
-                  } else {
-                    // If the user is not a global admin, filter current tenats based on their tenants.
-                    this.availableTenants = currentTenants.filter(ct => userTenants.find(ut => ct.tenant === ut));
-                  }
-
-                  this.tenantSelect = true;
+                  // If the user is not a global admin, filter current tenats based on their tenants.
+                  this.availableTenants = currentTenants.filter(ct => userTenants.find(ut => ct.tenant === ut));
                 }
+                this.showTenantButton = true;
               },
               error => {
                 this.toastr.error('Error getting tenants');
@@ -97,26 +130,27 @@ export class LoginComponent implements OnInit {
       );
   }
 
-  setTenantAndNavigate(tenant: string) {
+  setTenantAndNavigate(tenant) {
+    const { tenantQueryParameter } = tenant;
     this.toastr.success(`Welcome ${this.userpass.username}!`);
-    this.authService.currentTenantValue = tenant;
+    this.authService.currentTenantValue = tenantQueryParameter;
     // if the user had a session expire, and they can choose from multiple tenants,
     // we pre-select their old tenant for them above if they stay with that same tenant,
     // we will apply the returnURL from that session, to redirect them back to whatever
     // page they were on after login if they choose a different tenant, we redirect them
     // to the dashboard after they login
-    if (tenant !== this.oldTenant) {
+    if (tenantQueryParameter !== this.oldTenant) {
       this.returnUrl = '/dashboard';
     }
     // if the returnUrl is /dashboard then we assume the user is starting a brand new session
     // when they login we allow them to select a tenant and then they are brought to the dashboard
     if (this.returnUrl === '/dashboard') {
-      localStorage.setItem('tenantQueryParam', JSON.stringify(tenant));
+      localStorage.setItem('tenantQueryParam', JSON.stringify(tenantQueryParameter));
       this.router.navigate([this.returnUrl], {
-        queryParams: { tenant },
+        queryParams: { tenant: tenantQueryParameter },
       });
     } else {
-      localStorage.setItem('tenantQueryParam', JSON.stringify(tenant));
+      localStorage.setItem('tenantQueryParam', JSON.stringify(tenantQueryParameter));
       // else, if the returnURL is more than just /dashboard we can assume the user came from a
       // previous session when they login, currently we still allow them to select tenant (being taken out)
       // and then we navigate them to the returnURL, however the selected tenant is overwritten by what is
