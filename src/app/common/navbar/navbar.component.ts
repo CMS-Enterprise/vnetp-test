@@ -14,6 +14,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public user: UserDto;
   public userRoles: string[];
   public tenant: string;
+  public tenantAccountNumber: string;
   private currentUserSubscription: Subscription;
   private currentTenantSubscription: Subscription;
 

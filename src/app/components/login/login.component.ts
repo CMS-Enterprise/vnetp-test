@@ -48,6 +48,7 @@ export class LoginComponent implements OnInit {
     } else {
       this.disableUserPass = true;
     }
+
     this.returnUrl = '/dashboard';
 
     if (this.route.snapshot.queryParams.returnUrl) {
