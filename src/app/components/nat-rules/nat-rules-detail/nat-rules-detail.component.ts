@@ -73,18 +73,19 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
-    description: 'Firewall Rules for the currently selected Tier',
+    description: 'NAT Rules for the currently selected Tier',
     columns: [
       { name: 'Name', property: 'name' },
-      { name: 'Action', property: 'action' },
-      { name: 'Protocol', property: 'protocol' },
       { name: 'Direction', property: 'direction' },
+      { name: 'BiDirectional', property: 'biDirectional' },
       { name: 'Original Service Type', template: () => this.originalServiceTemplate },
       { name: 'Original Source Address', template: () => this.originalSourceAddressTemplate },
       { name: 'Original Destination Address', template: () => this.originalDestinationAddressTemplate },
       { name: 'Translated Service Type', template: () => this.translatedServiceTemplate },
       { name: 'Translated Source Address', template: () => this.translatedSourceAddressTemplate },
       { name: 'Translated Destination Address', template: () => this.translatedDestinationAddressTemplate },
+      { name: 'Enabled', property: 'enabled' },
+      { name: 'Rule Index', property: 'ruleIndex' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
