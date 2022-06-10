@@ -48,14 +48,6 @@
       </li>
     </ul>
 
-    <ul class="navbar-nav m-auto">
-      <li id="accountNumber" class="nav-item">
-        <a>
-          <span *ngIf="tenant">{{ tenant }}</span>
-        </a>
-      </li>
-    </ul>
-
     <ul class="navbar-nav ml-auto align-items-lg-center">
       <li class="nav-item">
         <a class="nav-link" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
