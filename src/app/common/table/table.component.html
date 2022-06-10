@@ -1,4 +1,6 @@
 <ng-container *ngIf="show">
+  <tooltip *ngIf="showSearchBar" [message]="helpText?.CaseSensitive"></tooltip>
+  <app-search-bar *ngIf="showSearchBar" (searchBarClearResults)="clearTableResults()" [columns]="searchColumns" (searchCriteria)="getObjectsAndFilter($event)"></app-search-bar>
   <table class="table table-striped">
     <caption>
       <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
@@ -10,8 +12,11 @@
       </tr>
     </thead>
     <tbody>
+      <tr *ngIf="data && data?.data?.length === 0" class="text-center">
+        <td [attr.colspan]="config.columns.length">No Objects in this Tier</td>
+      </tr>
       <tr
-        *ngFor="let datum of data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, id: uniqueTableId }"
+        *ngFor="let datum of data?.data | paginate: { itemsPerPage: data?.total / data?.pageCount, currentPage: data?.page, id: uniqueTableId, totalItems: data?.total }"
         [ngStyle]="config.rowStyle ? config.rowStyle(datum) : null"
       >
         <td *ngFor="let column of config.columns">
@@ -24,8 +29,16 @@
     </tbody>
     <tfoot>
       <td [attr.colspan]="config.columns.length">
-        <pagination-controls [id]="uniqueTableId" (pageChange)="currentPage = $event"></pagination-controls>
+        <pagination-controls *ngIf="paginationControlsOn" [id]="uniqueTableId" (pageChange)="currentPage = $event; onTableEvent()"></pagination-controls>
       </td>
     </tfoot>
   </table>
+  <section *ngIf="paginationControlsOn" class="btn-toolbar btn-toolbar--start" role="toolbar">
+    <span class="mr-3">Entities per page</span>
+    <div class="btn-group" role="group">
+      <button type="button" value="20" (click)="itemsPerPage = $event.target.value; onTableEvent()" class="btn btn-light">20</button>
+      <button *ngIf="data?.total >= 50" type="button" value="50" (click)="itemsPerPage = $event.target.value; onTableEvent()" class="btn btn-light">50</button>
+      <button *ngIf="data?.total >= 100" type="button" value="100" (click)="itemsPerPage = $event.target.value; onTableEvent()" class="btn btn-light">100</button>
+    </div>
+  </section>
 </ng-container>

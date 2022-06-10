@@ -3,7 +3,6 @@
 <h1>Network Objects & Groups</h1>
 <ng-container *ngIf="currentTier; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
-
   <div *ngIf="navIndex === 0">
     <section class="btn-toolbar" role="toolbar">
       <!-- Create Network Object -->
@@ -13,59 +12,41 @@
       </button>
     </section>
 
-    <table class="table table-striped">
-      <caption>
-        <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-        <span>Network Objects can consist of a single host (with NAT/PAT), range or subnet</span>
-      </caption>
-      <!-- TODO: are all of these fields necessary to show on the summary page? -->
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Type</th>
-          <th scope="col">Address</th>
-          <th scope="col">NAT Translated IP Address</th>
-          <th scope="col">NAT Type</th>
-          <th scope="col">NAT Direction</th>
-          <th scope="col">NAT Protocol</th>
-          <th scope="col">NAT Source:Translated Port</th>
-          <th scope="col">State</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let netObj of networkObjects | paginate: { itemsPerPage: perPage, currentPage: currentNetworkObjectsPage }">
-          <td>
-            <span>{{ netObj?.name | slice: 0:20 }}{{ netObj?.name.length > 20 ? '...' : '' }}</span>
-          </td>
-          <td>
-            <span>{{ netObj?.type }}</span>
-          </td>
-          <td>
-            <span *ngIf="netObj?.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
-            <span *ngIf="netObj?.type === 'Range'"> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
-            <span *ngIf="netObj?.type === 'Fqdn'"> {{ netObj?.fqdn }}  </span>
-          </td>
-          <td>
-            <span>{{ netObj?.translatedIpAddress }}</span>
-          </td>
-          <td>
-            <span>{{ netObj?.natType }}</span>
-          </td>
-          <td>
-            <span>{{ netObj?.natDirection }}</span>
-          </td>
-          <td>
-            <span>{{ netObj?.natProtocol }}</span>
-          </td>
-          <td>
-            <span *ngIf="netObj?.natService"> {{ netObj?.natSourcePort }} : {{ netObj?.natTranslatedPort }} </span>
-          </td>
-          <td>
-            <span>{{ netObj?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
-          </td>
-          <td class="table__actions">
-            <app-icon-button
+    <ng-container *ngIf="!isLoadingObjects; else loading">
+      <app-table [config]="networkObjectConfig" [data]="networkObjects" (clearResults)="getNetworkObjects($event)" (searchParams)="getNetworkObjects($event)" [searchColumns]="objectSearchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onNetObjTableEvent($event)"></app-table>
+      <section class="btn-toolbar" role="toolbar">
+        <app-import-export
+          [exportObject]="networkObjects"
+          exportFileName="networkObjects-{{ currentTier?.name }}"
+          [disableJson]="false"
+          (import)="importNetworkObjectsConfig($event)"
+        ></app-import-export>
+      </section>
+    </ng-container>
+
+    <ng-template #addressTemplate let-netObj="datum">
+      <section>
+        <span *ngIf="netObj?.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
+        <span *ngIf="netObj?.type === 'Range'"> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
+        <span *ngIf="netObj?.type === 'Fqdn'"> {{ netObj?.fqdn }}</span>
+      </section>
+    </ng-template>
+
+    <ng-template #natServiceTemplate let-netObj="datum">
+      <section>
+        <span *ngIf="netObj?.natService"> {{ netObj?.natSourcePort }} : {{ netObj?.natTranslatedPort }} </span>
+      </section>
+    </ng-template>
+
+    <ng-template #objStateTemplate let-netObj="datum">
+      <section>
+        <span>{{ netObj.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+      </section>
+    </ng-template>
+
+    <ng-template #actionsTemplate let-netObj="datum">
+      <section class="table__actions">
+        <app-icon-button
               *ngIf="!netObj?.deletedAt"
               icon="edit"
               label="Edit Network Object"
@@ -86,14 +67,12 @@
               [type]="netObj?.deletedAt ? 'danger' : 'default'"
               (handleClick)="deleteNetworkObject(netObj)"
             ></app-icon-button>
-          </td>
-        </tr>
-        <tr *ngIf="!networkObjects?.length" class="text-center">
-          <td colspan="10">No Network Objects in this Tier</td>
-        </tr>
-      </tbody>
-    </table>
-    <pagination-controls (pageChange)="currentNetworkObjectsPage = $event"></pagination-controls>
+      </section>
+    </ng-template>
+
+    <ng-template #loading>
+      <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </ng-template>
   </div>
 
   <div *ngIf="navIndex === 1">
@@ -105,34 +84,33 @@
       </button>
     </section>
 
-    <table class="table table-striped">
-      <caption>
-        <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-        <span>Network Object Groups are a collection of Network Objects</span>
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Members</th>
-          <th scope="col">State</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let netObjGroup of networkObjectGroups | paginate: { itemsPerPage: perPage, currentPage: currentNetworkObjectGroupsPage }"
-        >
-          <td>
-            <span>{{ netObjGroup.name | slice: 0:20 }}{{ netObjGroup?.name.length > 20 ? '...' : '' }}</span>
-          </td>
-          <td>
-            <span>{{ netObjGroup.networkObjects?.length }}</span>
-          </td>
-          <td>
-            <span>{{ netObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
-          </td>
-          <td class="table__actions">
-            <app-icon-button
+    <ng-container *ngIf="!isLoadingGroups; else loading">
+      <app-table [config]="networkObjectGroupConfig" [data]="networkObjectGroups" (clearResults)="getNetworkObjectGroups($event)" (searchParams)="getNetworkObjectGroups($event)" [searchColumns]="groupSearchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onNetObjGrpTableEvent($event)"></app-table>
+      <section class="btn-toolbar" role="toolbar">
+        <app-import-export
+          [exportObject]="networkObjectGroups"
+          exportFileName="networkObjectGroups-{{ currentTier?.name }}"
+          [disableJson]="false"
+          (import)="importNetworkObjectGroupsConfig($event)"
+        ></app-import-export>
+      </section>
+    </ng-container>
+
+    <ng-template #membersTemplate let-netObjGroup="datum">
+      <section>
+        <span> {{ netObjGroup.networkObjects?.length }}</span>
+      </section>
+    </ng-template>
+
+    <ng-template #groupStateTemplate let-netObjGroup="datum">
+      <section>
+        <span>{{ netObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+      </section>
+    </ng-template>
+
+    <ng-template #actionsTemplate let-netObjGroup="datum">
+      <section class="table__actions">
+        <app-icon-button
               *ngIf="!netObjGroup?.deletedAt"
               icon="edit"
               label="Edit Network Object Group"
@@ -153,46 +131,17 @@
               [type]="netObjGroup?.deletedAt ? 'danger' : 'default'"
               (handleClick)="deleteNetworkObjectGroup(netObjGroup)"
             ></app-icon-button>
-          </td>
-        </tr>
-        <tr *ngIf="!networkObjectGroups?.length" class="text-center">
-          <td colspan="4">No Network Object Groups in this Tier</td>
-        </tr>
-      </tbody>
-    </table>
-    <pagination-controls (pageChange)="currentNetworkObjectGroupsPage = $event"></pagination-controls>
+      </section>
+    </ng-template>
+
+    <ng-template #loading>
+      <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </ng-template>
   </div>
 
   <div *ngIf="navIndex === 2">
     <label class="mt-3 ml-3">Click the import CSV button to add network object group relations</label>
   </div>
-
-  <section class="btn-toolbar btn-toolbar--start" role="toolbar" *ngIf="navIndex !== 2">
-    <span class="mr-3">Entities per page</span>
-    <div class="btn-group" role="group">
-      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
-      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
-      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
-    </div>
-  </section>
-
-  <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 0">
-    <app-import-export
-      [exportObject]="networkObjects"
-      exportFileName="networkObjects-{{ currentTier?.name }}"
-      [disableJson]="false"
-      (import)="importNetworkObjectsConfig($event)"
-    ></app-import-export>
-  </section>
-
-  <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 1">
-    <app-import-export
-      [exportObject]="networkObjectGroups"
-      exportFileName="networkObjectGroups-{{ currentTier?.name }}"
-      [disableJson]="false"
-      (import)="importNetworkObjectGroupsConfig($event)"
-    ></app-import-export>
-  </section>
 
   <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 2">
     <app-import-export

@@ -23,9 +23,11 @@ export class ZvmComponent implements OnInit, OnDestroy {
       .getManyConfigurationUpload({
         fields: ['id,requestedAt,configuredAt'],
         filter: [`type||eq||${ConfigurationUploadTypeEnum.Vm}`],
+        page: this.currentConfigurationPage,
+        limit: this.perPage,
       })
-      .subscribe((data: unknown) => {
-        this.configurations = data as ConfigurationUpload[];
+      .subscribe(response => {
+        this.configurations = response.data;
       });
   }
 

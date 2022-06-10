@@ -175,6 +175,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
   public reset() {
     this.submitted = false;
     this.serviceObjects = new Array<ServiceObject>();
+    this.selectedServiceObject = null;
     this.buildForm();
   }
 

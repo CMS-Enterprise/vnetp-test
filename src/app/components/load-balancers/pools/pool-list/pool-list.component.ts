@@ -1,13 +1,21 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { LoadBalancerPool, LoadBalancerPoolBulkImportDto, Tier, V1LoadBalancerPoolsService } from 'client';
+import {
+  GetManyLoadBalancerPoolResponseDto,
+  LoadBalancerPool,
+  LoadBalancerPoolBulkImportDto,
+  Tier,
+  V1LoadBalancerPoolsService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { methodsLookup } from 'src/app/lookups/load-balancing-method.lookup';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
 import { PoolModalDto } from '../pool-modal/pool-modal.dto';
 
 export interface PoolView extends LoadBalancerPool {
@@ -26,6 +34,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public datacenterId: string;
   public tiers: Tier[] = [];
+  public searchColumns: SearchColumnConfig[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -40,7 +49,9 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: '', template: () => this.actionsTemplate },
     ],
   };
-  public pools: PoolView[] = [];
+  public pools: GetManyLoadBalancerPoolResponseDto;
+  public tableComponentDto = new TableComponentDto();
+  public perPage = 20;
   public isLoading = false;
 
   private dataChanges: Subscription;
@@ -54,15 +65,15 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     private tierContextService: TierContextService,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.poolChanges = this.subscribeToPoolModal();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.poolChanges, this.dataChanges]);
   }
 
@@ -75,19 +86,26 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  public onTableEvent(event: TableComponentDto) {
+    this.tableComponentDto = event;
+    this.loadPools();
+  }
+
   public loadPools(): void {
     this.isLoading = true;
     this.poolsService
       .getPoolsLoadBalancerPool({
         id: this.currentTier.id,
+        page: this.tableComponentDto.page,
+        limit: this.tableComponentDto.perPage,
       })
       .subscribe(
-        (pools: LoadBalancerPool[]) => {
+        response => {
           const getTotal = <T>(array: T[]) => {
             return array ? array.length : 0;
           };
-
-          this.pools = pools.map(p => {
+          this.pools = response;
+          this.pools.data = this.pools.data.map(p => {
             return {
               ...p,
               nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
@@ -99,7 +117,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.pools = [];
+          this.pools = null;
         },
         () => {
           this.isLoading = false;

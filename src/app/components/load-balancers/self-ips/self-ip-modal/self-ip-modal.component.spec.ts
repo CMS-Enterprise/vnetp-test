@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { SelfIpModalComponent } from './self-ip-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerSelfIp, LoadBalancerVlan, V1LoadBalancerSelfIpsService, V1LoadBalancerVlansService } from 'client';
+import { LoadBalancerSelfIp, LoadBalancerVlan, V1LoadBalancerSelfIpsService, V1LoadBalancerVlansService, V1TiersService } from 'client';
 import TestUtil from 'src/test/TestUtil';
 import { SelfIpModalDto } from './self-ip-modal.dto';
 
@@ -18,7 +18,12 @@ describe('SelfIpModalComponent', () => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [SelfIpModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1LoadBalancerSelfIpsService), MockProvider(V1LoadBalancerVlansService)],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1LoadBalancerSelfIpsService),
+        MockProvider(V1LoadBalancerVlansService),
+        MockProvider(V1TiersService),
+      ],
     });
 
     fixture = TestBed.createComponent(SelfIpModalComponent);

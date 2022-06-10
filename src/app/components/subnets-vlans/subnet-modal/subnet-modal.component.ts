@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { V1NetworkSubnetsService, Subnet, Vlan } from 'client';
+import { V1NetworkSubnetsService, Subnet, Vlan, V1NetworkVlansService, GetManyVlanResponseDto } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { SubnetModalHelpText } from 'src/app/helptext/help-text-networking';
@@ -18,13 +18,14 @@ export class SubnetModalComponent implements OnInit {
   public TierId: string;
   public form: FormGroup;
   public submitted: boolean;
-  public vlans: Vlan[] = [];
+  public vlans: Vlan[];
 
   constructor(
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
     private subnetService: V1NetworkSubnetsService,
     public helpText: SubnetModalHelpText,
+    public vlanService: V1NetworkVlansService,
   ) {}
 
   get f() {
@@ -37,12 +38,13 @@ export class SubnetModalComponent implements OnInit {
       return;
     }
 
-    const { name, description, network, gateway } = this.form.value;
+    const { name, description, network, gateway, sharedBetweenVrfs } = this.form.value;
     const subnet = {
       name,
       description,
       network,
       gateway,
+      sharedBetweenVrfs,
     } as Subnet;
 
     if (this.ModalMode === ModalMode.Create) {
@@ -55,6 +57,24 @@ export class SubnetModalComponent implements OnInit {
   public closeModal(): void {
     this.ngx.close('subnetModal');
     this.reset();
+  }
+
+  private getTierVlans(): void {
+    this.vlanService
+      .getManyVlan({
+        filter: [`tierId||eq||${this.TierId}`],
+        sort: ['updatedAt,ASC'],
+        page: 1,
+        limit: 10000,
+      })
+      .subscribe(
+        response => {
+          this.vlans = response.data;
+        },
+        () => {
+          this.vlans = null;
+        },
+      );
   }
 
   public getData(): void {
@@ -75,7 +95,9 @@ export class SubnetModalComponent implements OnInit {
       this.form.controls.gateway.enable();
     }
 
-    this.vlans = dto.Vlans.filter(v => !v.deletedAt);
+    // get all Vlans that belong to this tier, no filtering
+    this.getTierVlans();
+
     const subnet = dto.Subnet;
 
     if (subnet !== undefined) {
@@ -88,6 +110,7 @@ export class SubnetModalComponent implements OnInit {
       this.form.controls.network.disable();
       this.form.controls.gateway.setValue(subnet.gateway);
       this.form.controls.gateway.disable();
+      this.form.controls.sharedBetweenVrfs.setValue(subnet.sharedBetweenVrfs);
     }
     this.ngx.resetModalData('subnetModal');
   }
@@ -132,6 +155,7 @@ export class SubnetModalComponent implements OnInit {
       network: ['', Validators.compose([Validators.required, IpAddressCidrValidator])],
       gateway: ['', Validators.compose([Validators.required, IpAddressIpValidator])],
       vlan: ['', Validators.required],
+      sharedBetweenVrfs: [''],
     });
   }
 

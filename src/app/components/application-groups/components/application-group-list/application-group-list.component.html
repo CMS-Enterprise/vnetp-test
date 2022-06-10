@@ -13,7 +13,7 @@
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
-  <app-table [config]="config" [data]="applicationGroups"></app-table>
+  <app-table (clearResults)="loadApplicationGroups()" [searchColumns]="searchColumns" [config]="config" [data]="applicationGroups"></app-table>
 </ng-container>
 
 <app-yes-no-modal></app-yes-no-modal>

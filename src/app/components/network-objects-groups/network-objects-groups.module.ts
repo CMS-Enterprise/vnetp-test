@@ -13,6 +13,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TableModule } from '../../common/table/table.module';
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
+    TableModule,
     TabsModule,
     TooltipModule,
   ],

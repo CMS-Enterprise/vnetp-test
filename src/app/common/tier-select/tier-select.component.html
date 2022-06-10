@@ -9,7 +9,7 @@
   </button>
 </div>
 
-<ngx-smart-modal #tierSwitchModal identifier="tierSwitchModal">
+<ngx-smart-modal [dismissable]="false" (onClose)="clearTier()" #tierSwitchModal identifier="tierSwitchModal">
   <header class="modal-header">
     <h4 class="modal-title">{{ currentTier ? 'Switch' : 'Select' }} Tier</h4>
   </header>
@@ -20,7 +20,7 @@
   </div>
 
   <footer class="modal-footer">
-    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="tierSwitchModal.close()">
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="tierSwitchModal.close(); clearTier()">
       Cancel
     </button>
 

@@ -37,21 +37,12 @@
         </td>
         <td>{{ natRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
       </tr>
-      <tr *ngIf="natRuleGroups.length === 0" class="text-center">
+      <tr *ngIf="natRuleGroups?.length === 0" class="text-center">
         <td colspan="3">No Nat Rule Groups</td>
       </tr>
     </tbody>
   </table>
   <pagination-controls (pageChange)="currentNatRulePage = $event"></pagination-controls>
-
-  <section class="btn-toolbar btn-toolbar--start" role="toolbar">
-    <span class="mr-3">Entities per page</span>
-    <div class="btn-group" role="group">
-      <button type="button" value="10" (click)="perPage = $event.target.value" class="btn btn-light">10</button>
-      <button type="button" value="20" (click)="perPage = $event.target.value" class="btn btn-light">20</button>
-      <button type="button" value="50" (click)="perPage = $event.target.value" class="btn btn-light">50</button>
-    </div>
-  </section>
 </ng-container>
 <app-yes-no-modal></app-yes-no-modal>
 <ng-template #warningMessage>

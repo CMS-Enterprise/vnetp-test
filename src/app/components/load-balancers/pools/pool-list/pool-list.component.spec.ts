@@ -9,6 +9,7 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import {
+  GetManyLoadBalancerPoolResponseDto,
   LoadBalancerPool,
   LoadBalancerPoolBulkImportDto,
   LoadBalancerPoolLoadBalancingMethodEnum,
@@ -32,7 +33,7 @@ describe('PoolListComponent', () => {
       declarations: [
         PoolListComponent,
         MockComponent('app-pool-modal'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockImportExportComponent,
@@ -61,23 +62,29 @@ describe('PoolListComponent', () => {
 
   it('should map pools', () => {
     jest.spyOn(service, 'getPoolsLoadBalancerPool').mockImplementation(() => {
-      return of(([
-        {
-          id: '1',
-          name: 'Pool1',
-          loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.PredictiveMember,
-          provisionedAt: {},
-          nodes: [{}],
-          healthMonitors: [{}],
-          defaultHealthMonitors: [{}],
-        },
-        { id: '2', name: 'Pool2', loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.DynamicRatioMember },
-      ] as LoadBalancerPool[]) as any);
+      return of({
+        data: [
+          {
+            id: '1',
+            name: 'Pool1',
+            loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.PredictiveMember,
+            provisionedAt: {},
+            nodes: [{}],
+            healthMonitors: [{}],
+            defaultHealthMonitors: [{}],
+          },
+          { id: '2', name: 'Pool2', loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.DynamicRatioMember },
+        ] as LoadBalancerPool[],
+        count: 2,
+        total: 2,
+        page: 1,
+        pageCount: 1,
+      } as any);
     });
 
     component.ngOnInit();
 
-    const [pool1, pool2] = component.pools;
+    const [pool1, pool2] = component.pools.data;
     expect(pool1).toEqual({
       defaultHealthMonitors: [{}],
       healthMonitors: [{}],
@@ -106,12 +113,18 @@ describe('PoolListComponent', () => {
   });
 
   it('should default pools to be empty on error', () => {
-    component.pools = [{ id: '1', name: 'Pool1' }] as PoolView[];
+    component.pools = {
+      data: [{ id: '1', name: 'Pool1' }],
+      count: 1,
+      total: 1,
+      page: 1,
+      pageCount: 1,
+    } as GetManyLoadBalancerPoolResponseDto;
     jest.spyOn(service, 'getPoolsLoadBalancerPool').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
-    expect(component.pools).toEqual([]);
+    expect(component.pools).toEqual(null);
   });
 
   it('should import pools', () => {

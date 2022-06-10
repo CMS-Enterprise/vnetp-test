@@ -6,7 +6,7 @@
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
-  <app-table [config]="config" [data]="pools"></app-table>
+  <app-table [config]="config" [data]="pools" (clearResults)="loadPools()" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
 </ng-container>
 
 <ng-template #actionsTemplate let-pool="datum">

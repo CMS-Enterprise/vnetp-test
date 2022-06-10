@@ -52,9 +52,13 @@ export class VmwareComponent implements OnInit, OnDestroy {
 
   getVirtualMachines(): void {
     this.virtualMachineService
-      .getManyVmwareVirtualMachine({ filter: [`datacenterId||eq||${this.datacenterId}`] })
-      .subscribe((data: unknown) => {
-        this.virtualMachines = data as VmwareVirtualMachine[];
+      .getManyVmwareVirtualMachine({
+        filter: [`datacenterId||eq||${this.datacenterId}`],
+        page: this.currentVMWarePage,
+        limit: this.perPage,
+      })
+      .subscribe(response => {
+        this.virtualMachines = response.data;
         this.highPerformanceVirtualMachines = this.virtualMachines.filter(vm => vm.highPerformance);
         this.ungroupedVirtualMachines = this.virtualMachines.filter(vm => !vm.priorityGroupId);
       });

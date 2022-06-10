@@ -61,6 +61,31 @@
     ></app-import-export>
   </section>
 </ng-container>
+
+
+<ng-template #nameTemplate let-firewallRuleGroup="datum">
+  <section>
+    {{ getTierName(firewallRuleGroup.tierId) }}
+  </section>
+</ng-template>
+
+<ng-template #fwRuleTemplate let-firewallRuleGroup="datum">
+  <section>
+    <a routerLink="/firewall-rules/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge"
+          >{{ firewallRuleGroup.name | slice: 0:20 }}{{ firewallRuleGroup.name.length > 20 ? '...' : '' }}</a
+        >
+  </section>
+</ng-template>
+
+<ng-template #stateTemplate let-firewallRuleGroup="datum">
+  <section>
+    <span>{{ firewallRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
 <app-yes-no-modal></app-yes-no-modal>
 <ng-template #warningMessage>
   <p>Select a Tier to display Firewall Rule groups.</p>

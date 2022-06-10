@@ -3,6 +3,6 @@
     "dcsLocations": [
       { "name": "East - Ashburn", "url": "http://localhost-east:4200" },
       { "name": "West - Kent", "url": "http://localhost-west:4200" }
-    ] 
+    ]
   }
 }

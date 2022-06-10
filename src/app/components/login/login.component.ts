@@ -147,13 +147,11 @@ export class LoginComponent implements OnInit {
     // when they login we allow them to select a tenant and then they are brought to the dashboard
     if (this.returnUrl === '/dashboard') {
       localStorage.setItem('tenantQueryParam', JSON.stringify(tenantQueryParameter));
-      localStorage.setItem('tenantAccountNumber', JSON.stringify(tenant.tenant));
       this.router.navigate([this.returnUrl], {
         queryParams: { tenant: tenantQueryParameter },
       });
     } else {
       localStorage.setItem('tenantQueryParam', JSON.stringify(tenantQueryParameter));
-      localStorage.setItem('tenantAccountNumber', JSON.stringify(tenant.tenant));
       // else, if the returnURL is more than just /dashboard we can assume the user came from a
       // previous session when they login, currently we still allow them to select tenant (being taken out)
       // and then we navigate them to the returnURL, however the selected tenant is overwritten by what is

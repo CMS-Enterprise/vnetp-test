@@ -5,6 +5,8 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ToastrService } from 'ngx-toastr';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-datacenter-select',
@@ -16,15 +18,19 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
   currentDatacenter: Datacenter;
   selectedDatacenter: Datacenter;
   lockCurrentDatacenter: boolean;
+  disableSelect = false;
 
   private currentDatacenterSubscription: Subscription;
   private datacenterLockSubscription: Subscription;
   private datacentersSubscription: Subscription;
+  private routeChangesSubscription: Subscription;
 
   constructor(
     private datacenterContextService: DatacenterContextService,
     private ngx: NgxSmartModalService,
     private toastrService: ToastrService,
+    private router: Router,
+    private activedRoute: ActivatedRoute,
   ) {}
 
   public openDatacenterSwitchModal(): void {
@@ -50,9 +56,20 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
     this.datacenterLockSubscription = this.datacenterContextService.lockCurrentDatacenter.subscribe(
       lockCurrentDatacenter => (this.lockCurrentDatacenter = lockCurrentDatacenter),
     );
+
+    this.routeChangesSubscription = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
+      const root: ActivatedRoute = this.activedRoute.root;
+      const currentRoute = this.router.url.split('?')[0];
+      this.disableSelect = !currentRoute.includes('/dashboard');
+    });
   }
 
   ngOnDestroy() {
-    SubscriptionUtil.unsubscribe([this.datacentersSubscription, this.currentDatacenterSubscription, this.datacenterLockSubscription]);
+    SubscriptionUtil.unsubscribe([
+      this.datacentersSubscription,
+      this.currentDatacenterSubscription,
+      this.datacenterLockSubscription,
+      this.routeChangesSubscription,
+    ]);
   }
 }

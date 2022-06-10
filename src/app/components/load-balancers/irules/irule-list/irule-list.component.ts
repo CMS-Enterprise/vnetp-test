@@ -1,13 +1,16 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { LoadBalancerIrule, Tier, V1LoadBalancerIrulesService } from 'client';
+import { GetManyLoadBalancerIruleResponseDto, LoadBalancerIrule, Tier, V1LoadBalancerIrulesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
+import { TableContextService } from 'src/app/services/table-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
 import { IRuleModalDto } from '../irule-modal/irule-modal.dto';
 
 export interface IRuleView extends LoadBalancerIrule {
@@ -24,6 +27,7 @@ export interface IRuleView extends LoadBalancerIrule {
 export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
+  public searchColumns: SearchColumnConfig[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -37,8 +41,9 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: '', template: () => this.actionsTemplate },
     ],
   };
-  public iRules: IRuleView[] = [];
-  public iRulesTable: IRuleView[] = [];
+  public iRules = {} as GetManyLoadBalancerIruleResponseDto;
+  public tableComponentDto = new TableComponentDto();
+  public perPage = 20;
   public isLoading = false;
 
   private dataChanges: Subscription;
@@ -50,17 +55,18 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
     private iRuleService: V1LoadBalancerIrulesService,
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
+    private tableContextService: TableContextService,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.iRuleChanges = this.subscribeToIRuleModal();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.iRuleChanges, this.dataChanges]);
   }
 
@@ -69,19 +75,49 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
       entityName: 'iRule',
       delete$: this.iRuleService.deleteOneLoadBalancerIrule({ id: iRule.id }),
       softDelete$: this.iRuleService.softDeleteOneLoadBalancerIrule({ id: iRule.id }),
-      onSuccess: () => this.loadIRules(),
+      onSuccess: () => {
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.loadIRules(params);
+        } else {
+          this.loadIRules();
+        }
+      },
     });
   }
 
-  public loadIRules(): void {
+  public onTableEvent(event: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.loadIRules(event);
+  }
+
+  public loadIRules(event?): void {
     this.isLoading = true;
+    let eventParams;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
     this.iRuleService
       .getManyLoadBalancerIrule({
-        filter: [`tierId||eq||${this.currentTier.id}`],
+        filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
+        page: this.tableComponentDto.page,
+        limit: this.tableComponentDto.perPage,
       })
       .subscribe(
-        (iRules: unknown) => {
-          this.iRules = (iRules as IRuleView[]).map(i => {
+        response => {
+          this.iRules = response;
+          this.iRules.data = (this.iRules.data as IRuleView[]).map(i => {
             return {
               ...i,
               nameView: i.name.length >= 20 ? i.name.slice(0, 19) + '...' : i.name,
@@ -96,7 +132,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.iRules = [];
+          this.iRules = null;
         },
         () => {
           this.isLoading = false;
@@ -138,7 +174,19 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!iRule.deletedAt) {
       return;
     }
-    this.iRuleService.restoreOneLoadBalancerIrule({ id: iRule.id }).subscribe(() => this.loadIRules());
+    this.iRuleService.restoreOneLoadBalancerIrule({ id: iRule.id }).subscribe(() => {
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.loadIRules(params);
+      } else {
+        this.loadIRules();
+      }
+    });
   }
 
   private subscribeToDataChanges(): Subscription {
@@ -155,7 +203,17 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private subscribeToIRuleModal(): Subscription {
     return this.ngx.getModal('iRuleModal').onCloseFinished.subscribe(() => {
-      this.loadIRules();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.loadIRules(params);
+      } else {
+        this.loadIRules();
+      }
       this.ngx.resetModalData('iRuleModal');
     });
   }

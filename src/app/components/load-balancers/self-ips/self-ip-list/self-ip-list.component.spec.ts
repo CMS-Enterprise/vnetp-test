@@ -8,13 +8,14 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'client';
+import { GetManyLoadBalancerSelfIpResponseDto, LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'client';
 import { SelfIpListComponent, ImportSelfIp, SelfIpView } from './self-ip-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SelfIpListComponent', () => {
   let component: SelfIpListComponent;
@@ -23,10 +24,11 @@ describe('SelfIpListComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([])],
       declarations: [
         SelfIpListComponent,
         MockComponent('app-self-ip-modal'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockImportExportComponent,
@@ -55,15 +57,21 @@ describe('SelfIpListComponent', () => {
 
   it('should map self ips', () => {
     jest.spyOn(service, 'getManyLoadBalancerSelfIp').mockImplementation(() => {
-      return of(([
-        { id: '1', name: 'SelfIp1', provisionedAt: {}, loadBalancerVlan: { name: 'VLAN' } },
-        { id: '2', name: 'SelfIp2' },
-      ] as LoadBalancerSelfIp[]) as any);
+      return of({
+        data: [
+          { id: '1', name: 'SelfIp1', provisionedAt: {}, loadBalancerVlan: { name: 'VLAN' } },
+          { id: '2', name: 'SelfIp2' },
+        ] as LoadBalancerSelfIp[],
+        count: 2,
+        total: 2,
+        page: 1,
+        pageCount: 1,
+      } as any);
     });
 
     component.ngOnInit();
 
-    const [selfIp1, selfIp2] = component.selfIps;
+    const [selfIp1, selfIp2] = component.selfIps.data;
     expect(selfIp1).toEqual({
       id: '1',
       name: 'SelfIp1',
@@ -84,12 +92,18 @@ describe('SelfIpListComponent', () => {
   });
 
   it('should default self ips to be empty on error', () => {
-    component.selfIps = [{ id: '1', name: 'SelfIp1' }] as SelfIpView[];
+    component.selfIps = {
+      data: [{ id: '1', name: 'SelfIp1' }],
+      count: 1,
+      total: 1,
+      page: 1,
+      pageCount: 1,
+    } as GetManyLoadBalancerSelfIpResponseDto;
     jest.spyOn(service, 'getManyLoadBalancerSelfIp').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
-    expect(component.selfIps).toEqual([]);
+    expect(component.selfIps).toEqual(null);
   });
 
   it('should import self ips', () => {

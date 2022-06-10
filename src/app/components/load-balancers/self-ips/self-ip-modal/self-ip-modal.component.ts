@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoadBalancerSelfIp, LoadBalancerVlan, V1LoadBalancerSelfIpsService, V1LoadBalancerVlansService } from 'client';
+import {
+  LoadBalancerSelfIp,
+  LoadBalancerVlan,
+  Tier,
+  V1LoadBalancerSelfIpsService,
+  V1LoadBalancerVlansService,
+  V1TiersService,
+} from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { SelfIpModalDto } from './self-ip-modal.dto';
@@ -25,6 +32,7 @@ export class SelfIpModalComponent implements OnInit {
     private formBuilder: FormBuilder,
     private selfIpService: V1LoadBalancerSelfIpsService,
     private vlansService: V1LoadBalancerVlansService,
+    private tiersService: V1TiersService,
   ) {}
 
   ngOnInit(): void {
@@ -94,9 +102,13 @@ export class SelfIpModalComponent implements OnInit {
     this.vlansService
       .getManyLoadBalancerVlan({
         filter: [`tierId||eq||${this.tierId}`],
+        // review what to do in this scenario. currently it is a unique issue but
+        // if we carry this functionality over to LB-pools it will share the same issue
+        limit: 10000,
+        page: 1,
       })
-      .subscribe((vlans: unknown) => {
-        this.availableVlans = vlans as LoadBalancerVlan[];
+      .subscribe(response => {
+        this.availableVlans = response.data as LoadBalancerVlan[];
       });
   }
 

@@ -245,9 +245,15 @@ export class VirtualServerModalComponent implements OnInit {
     this.poolsService
       .getPoolsLoadBalancerPool({
         id: this.tierId,
+
+        // review this approach, we either need to take action here or at the API level
+        // to determine how to retrieve these objects. i have commented out the action at the API level.
+        // there is only 2 instances of this scenario
+        limit: 10000,
+        page: 1,
       })
       .subscribe(pools => {
-        this.pools = pools;
+        this.pools = pools.data;
       });
   }
 

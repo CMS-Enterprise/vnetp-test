@@ -5,6 +5,7 @@ import { ActifioRdsRecoveryPlanDto, V1ActifioRdsRecoveryPlansService } from 'cli
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
 
 export interface RecoveryPlanView {
   id: string;
@@ -23,6 +24,7 @@ export class RecoveryPlanListComponent implements OnInit, OnDestroy {
   public isLoading = false;
   public recoveryPlans: RecoveryPlanView[] = [];
   public recoveryPlanDtos: ActifioRdsRecoveryPlanDto[] = [];
+  public searchColumns: SearchColumnConfig[] = [];
 
   public config: TableConfig<RecoveryPlanView> = {
     description: 'List of Recovery Plans',

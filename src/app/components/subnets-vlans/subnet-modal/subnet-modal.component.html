@@ -103,6 +103,16 @@
           </div>
         </div>
       </div>
+
+      <hr/>
+
+      <div class="form-group">
+        <div class="form-check form-check-inline">
+          <input type="checkbox" name="sharedBetweenVrfs" class="form-check-input" formControlName="sharedBetweenVrfs" aria-label="Shared Between Vrfs" />
+          <label class="form-check-label" for="sharedBetweenVrfs">Shared between VRFs</label>
+          <tooltip [message]="helpText.SharedBetweenVrfs"></tooltip>
+        </div>
+      </div>
     </div>
 
     <footer class="modal-footer">

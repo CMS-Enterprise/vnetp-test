@@ -8,13 +8,14 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { LoadBalancerIrule, Tier, V1LoadBalancerIrulesService } from 'client';
+import { GetManyLoadBalancerIruleResponseDto, LoadBalancerIrule, Tier, V1LoadBalancerIrulesService } from 'client';
 import { IRuleListComponent, ImportIRule, IRuleView } from './irule-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('IRuleListComponent', () => {
   let component: IRuleListComponent;
@@ -23,10 +24,11 @@ describe('IRuleListComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([])],
       declarations: [
         IRuleListComponent,
         MockComponent('app-irule-modal'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockImportExportComponent,
@@ -55,15 +57,21 @@ describe('IRuleListComponent', () => {
 
   it('should map iRules', () => {
     jest.spyOn(service, 'getManyLoadBalancerIrule').mockImplementation(() => {
-      return of(([
-        { id: '1', name: 'iRule1', provisionedAt: {} },
-        { id: '2', name: 'iRule2', description: 'Description' },
-      ] as LoadBalancerIrule[]) as any);
+      return of({
+        data: [
+          { id: '1', name: 'iRule1', provisionedAt: {} },
+          { id: '2', name: 'iRule2', description: 'Description' },
+        ] as LoadBalancerIrule[],
+        count: 2,
+        total: 2,
+        page: 1,
+        pageCount: 1,
+      } as any);
     });
 
     component.ngOnInit();
 
-    const [iRule1, iRule2] = component.iRules;
+    const [iRule1, iRule2] = component.iRules.data;
     expect(iRule1).toEqual({
       contentView: undefined,
       description: undefined,
@@ -87,12 +95,18 @@ describe('IRuleListComponent', () => {
   });
 
   it('should default iRules to be empty on error', () => {
-    component.iRules = [{ id: '1', name: 'iRule1' }] as IRuleView[];
+    component.iRules = {
+      data: [{ id: '1', name: 'iRule1' }],
+      count: 1,
+      total: 1,
+      page: 1,
+      pageCount: 1,
+    } as GetManyLoadBalancerIruleResponseDto;
     jest.spyOn(service, 'getManyLoadBalancerIrule').mockImplementation(() => throwError(''));
 
     component.ngOnInit();
 
-    expect(component.iRules).toEqual([]);
+    expect(component.iRules).toEqual(null);
   });
 
   it('should import iRules', () => {

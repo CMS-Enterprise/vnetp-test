@@ -1266,6 +1266,9 @@
           "gateway": {
             "type": "string"
           },
+          "sharedBetweenVrfs": {
+            "type": "boolean"
+          },
           "vlanId": {
             "type": "string"
           },
@@ -4693,6 +4696,9 @@
           },
           "gateway": {
             "type": "string"
+          },
+          "sharedBetweenVrfs": {
+            "type": "boolean"
           },
           "vlanId": {
             "type": "string"
@@ -19354,7 +19360,7 @@
         ]
       }
     },
-    "/v1/load-balancer/pools/{id}/tierId": {
+    "/v1/load-balancer/pools/{id}/tierId/": {
       "get": {
         "operationId": "getPoolsLoadBalancerPool",
         "summary": "",
@@ -19367,6 +19373,22 @@
             "description": "UUID.",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
             }
           }
         ],

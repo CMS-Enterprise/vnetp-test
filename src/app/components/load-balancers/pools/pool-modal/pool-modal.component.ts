@@ -9,9 +9,11 @@ import {
   LoadBalancerPool,
   LoadBalancerPoolDefaultHealthMonitorsEnum,
   LoadBalancerPoolLoadBalancingMethodEnum,
+  Tier,
   V1LoadBalancerHealthMonitorsService,
   V1LoadBalancerNodesService,
   V1LoadBalancerPoolsService,
+  V1TiersService,
 } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
@@ -58,11 +60,10 @@ export class PoolModalComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private healthMonitorsService: V1LoadBalancerHealthMonitorsService,
     private ngx: NgxSmartModalService,
-    private nodesService: V1LoadBalancerNodesService,
     private poolService: V1LoadBalancerPoolsService,
     public helpText: PoolModalHelpText,
+    private tiersService: V1TiersService,
   ) {}
 
   ngOnInit(): void {
@@ -294,20 +295,14 @@ export class PoolModalComponent implements OnInit {
   }
 
   private loadAvailableResources(): void {
-    this.nodesService
-      .getManyLoadBalancerNode({
-        filter: [`tierId||eq||${this.tierId}`],
+    this.tiersService
+      .getOneTier({
+        id: this.tierId,
+        join: ['loadBalancerNodes,loadBalancerHealthMonitors'],
       })
-      .subscribe((nodes: unknown) => {
-        this.availableNodes = nodes as LoadBalancerNode[];
-      });
-
-    this.healthMonitorsService
-      .getManyLoadBalancerHealthMonitor({
-        filter: [`tierId||eq||${this.tierId}`],
-      })
-      .subscribe((healthMonitors: unknown) => {
-        this.availableHealthMonitors = healthMonitors as LoadBalancerHealthMonitor[];
+      .subscribe((tier: Tier) => {
+        this.availableNodes = tier.loadBalancerNodes;
+        this.availableHealthMonitors = tier.loadBalancerHealthMonitors;
       });
   }
 }

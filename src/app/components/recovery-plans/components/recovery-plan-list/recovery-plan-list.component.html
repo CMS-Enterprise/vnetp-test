@@ -16,7 +16,7 @@
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
-  <app-table [config]="config" [data]="recoveryPlans"></app-table>
+  <app-table (clearResults)="loadRecoveryPlans()" [searchColumns]="searchColumns" [config]="config" [data]="recoveryPlans"></app-table>
 </ng-container>
 
 <app-yes-no-modal></app-yes-no-modal>

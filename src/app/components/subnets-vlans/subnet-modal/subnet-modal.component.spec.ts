@@ -11,7 +11,7 @@ import { MockProvider } from 'src/test/mock-providers';
 import { SubnetModalComponent } from './subnet-modal.component';
 import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
-import { V1NetworkSubnetsService } from 'client';
+import { V1NetworkSubnetsService, V1NetworkVlansService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -24,7 +24,7 @@ describe('SubnetModalComponent', () => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, NgSelectModule],
       declarations: [SubnetModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSubnetsService)],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSubnetsService), MockProvider(V1NetworkVlansService)],
     })
       .compileComponents()
       .then(() => {
@@ -102,6 +102,7 @@ describe('SubnetModalComponent', () => {
       network: null,
       gateway: null,
       vlan: null,
+      sharedBetweenVrfs: null,
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -121,6 +122,7 @@ describe('SubnetModalComponent', () => {
       network: '255.255.255.255/32',
       gateway: '255.255.255.255',
       vlan: '3',
+      sharedBetweenVrfs: true,
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -134,6 +136,7 @@ describe('SubnetModalComponent', () => {
         network: '255.255.255.255/32',
         gateway: '255.255.255.255',
         vlanId: '3',
+        sharedBetweenVrfs: true,
       },
     });
   });
@@ -149,6 +152,7 @@ describe('SubnetModalComponent', () => {
       network: '255.255.255.255/32',
       gateway: '255.255.255.255',
       vlan: '3',
+      sharedBetweenVrfs: null,
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -163,6 +167,7 @@ describe('SubnetModalComponent', () => {
         network: null,
         gateway: null,
         vlanId: null,
+        sharedBetweenVrfs: null,
       },
     });
   });
@@ -178,8 +183,9 @@ describe('SubnetModalComponent', () => {
           gateway: '255.255.255.255',
           vlanId: '3',
           tierId: '1',
+          sharedBetweenVrfs: false,
         },
-        Vlans: [],
+        Vlans: { data: [], count: 0, total: 0, page: 0, pageCount: 0 },
         ModalMode: ModalMode.Edit,
       };
     };

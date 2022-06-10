@@ -7,9 +7,10 @@ import { RouterModule } from '@angular/router';
 import { DatacenterSelectComponent } from './components/datacenter-select/datacenter-select.component';
 import { ToastrModule } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
+import { TooltipModule } from '../tooltip/tooltip.module';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule, FormsModule, NgxSmartModalModule, RouterModule, ToastrModule],
+  imports: [CommonModule, FontAwesomeModule, FormsModule, NgxSmartModalModule, RouterModule, ToastrModule, TooltipModule],
   declarations: [BreadcrumbComponent, DatacenterSelectComponent],
   exports: [BreadcrumbComponent, DatacenterSelectComponent],
 })

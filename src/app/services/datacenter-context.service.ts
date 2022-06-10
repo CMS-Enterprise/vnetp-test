@@ -101,15 +101,21 @@ export class DatacenterContextService {
    * array of datacenters returned from the API. If it is present then that datacenter will be selected.
    */
   private getDatacenters(datacenterParam?: string) {
-    this.datacenterService.getManyDatacenters({ join: ['tiers'] }).subscribe((data: unknown) => {
+    this.datacenterService.getManyDatacenters({ join: ['tiers'], page: 1, limit: 1000 }).subscribe(response => {
       // Update internal datacenters array and external subject.
-      this._datacenters = data as Datacenter[];
-      this.datacentersSubject.next(data as Datacenter[]);
+      this._datacenters = response.data;
+      this.datacentersSubject.next(response.data);
 
       // If a datacenter matching currentDatacenterId is present
       // set currentDatacenter to that datacenter.
       if (datacenterParam) {
         this.switchDatacenter(datacenterParam);
+      }
+
+      // If there is only 1 datacenter within the tenant-database
+      // autoselect this datacenter
+      if (this._datacenters.length === 1) {
+        this.switchDatacenter(this._datacenters[0].id);
       }
     });
   }

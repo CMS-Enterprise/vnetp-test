@@ -14,6 +14,7 @@ import { NatRuleModalComponent } from './nat-rule-modal/nat-rule-modal.component
 import { IconButtonModule } from '../../common/icon-button/icon-button.module';
 import { NatRulesComponent } from './nat-rules.component';
 import { PreviewModalModule } from '../../common/preview-modal/preview-modal.module';
+import { TableModule } from 'src/app/common/table/table.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 const routes: Routes = [
@@ -41,6 +42,7 @@ const routes: Routes = [
     PreviewModalModule,
     ReactiveFormsModule,
     SharedModule,
+    TableModule,
     TabsModule,
     TooltipModule,
     RouterModule.forChild(routes),

@@ -1,13 +1,16 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'client';
+import { GetManyLoadBalancerNodeResponseDto, LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
+import { TableContextService } from 'src/app/services/table-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
 import { NodeModalDto } from '../node-modal/node-modal.dto';
 
 export interface NodeView extends LoadBalancerNode {
@@ -23,13 +26,14 @@ export interface NodeView extends LoadBalancerNode {
 export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
+  public searchColumns: SearchColumnConfig[] = [];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<NodeView> = {
     description: 'Nodes in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
       { name: 'IP Address', property: 'ipAddress' },
       { name: 'FQDN', property: 'fqdn' },
@@ -38,7 +42,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: '', template: () => this.actionsTemplate },
     ],
   };
-  public nodes: NodeView[] = [];
+  public nodes = {} as GetManyLoadBalancerNodeResponseDto;
+  public tableComponentDto = new TableComponentDto();
+  public perPage = 20;
   public isLoading = false;
 
   private dataChanges: Subscription;
@@ -50,17 +56,18 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
     private nodesService: V1LoadBalancerNodesService,
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
+    private tableContextService: TableContextService,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.nodeChanges = this.subscribeToNodeModal();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.nodeChanges, this.dataChanges]);
   }
 
@@ -69,19 +76,49 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
       entityName: 'Node',
       delete$: this.nodesService.deleteOneLoadBalancerNode({ id: node.id }),
       softDelete$: this.nodesService.softDeleteOneLoadBalancerNode({ id: node.id }),
-      onSuccess: () => this.loadNodes(),
+      onSuccess: () => {
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.loadNodes(params);
+        } else {
+          this.loadNodes();
+        }
+      },
     });
   }
 
-  public loadNodes(): void {
+  public onTableEvent(event: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.loadNodes(event);
+  }
+
+  public loadNodes(event?): void {
     this.isLoading = true;
+    let eventParams;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
     this.nodesService
       .getManyLoadBalancerNode({
-        filter: [`tierId||eq||${this.currentTier.id}`],
+        filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
+        page: this.tableComponentDto.page,
+        limit: this.tableComponentDto.perPage,
       })
       .subscribe(
-        (nodes: unknown) => {
-          this.nodes = (nodes as NodeView[]).map(n => {
+        response => {
+          this.nodes = response;
+          this.nodes.data = (this.nodes.data as NodeView[]).map(n => {
             const defaultVal = (key: keyof LoadBalancerNode) => {
               const val = n[key];
               return val === null || val === undefined ? '--' : n[key].toString();
@@ -97,7 +134,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.nodes = [];
+          this.nodes = null;
         },
         () => {
           this.isLoading = false;
@@ -139,7 +176,19 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!node.deletedAt) {
       return;
     }
-    this.nodesService.restoreOneLoadBalancerNode({ id: node.id }).subscribe(() => this.loadNodes());
+    this.nodesService.restoreOneLoadBalancerNode({ id: node.id }).subscribe(() => {
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.loadNodes(params);
+      } else {
+        this.loadNodes();
+      }
+    });
   }
 
   private subscribeToDataChanges(): Subscription {
@@ -156,7 +205,17 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private subscribeToNodeModal(): Subscription {
     return this.ngx.getModal('nodeModal').onCloseFinished.subscribe(() => {
-      this.loadNodes();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.loadNodes(params);
+      } else {
+        this.loadNodes();
+      }
       this.ngx.resetModalData('nodeModal');
     });
   }
