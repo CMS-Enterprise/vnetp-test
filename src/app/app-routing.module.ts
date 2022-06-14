@@ -31,6 +31,12 @@ const routes: Routes = [
     loadChildren: () => import('./components/jobs/jobs.module').then(m => m.JobsModule),
   },
   {
+    path: 'audit-log',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Audit Log', title: 'Automation - Audit Log' },
+    loadChildren: () => import('./components/audit-log/audit-log.module').then(m => m.AuditLogModule),
+  },
+  {
     path: 'network-objects-groups',
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Network Objects', title: 'Automation - Network Objects' },

@@ -16,6 +16,7 @@ import { TierGroup } from './tierGroup';
 import { PhysicalServer } from './physicalServer';
 import { PriorityGroup } from './priorityGroup';
 import { Job } from './job';
+import { AuditLog } from './auditLog';
 
 
 export interface Datacenter { 
@@ -33,5 +34,6 @@ export interface Datacenter {
     readonly tiers?: Array<Tier>;
     readonly tierGroups?: Array<TierGroup>;
     readonly jobs?: Array<Job>;
+    readonly auditLogs?: Array<AuditLog>;
 }
 

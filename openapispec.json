@@ -3828,6 +3828,96 @@
           "datacenterId"
         ]
       },
+      "AuditLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "actionType": {
+            "type": "string",
+            "enum": [
+              "BulkUpload",
+              "Create",
+              "Update",
+              "SoftDelete",
+              "Restore",
+              "Delete",
+              "Deploy"
+            ]
+          },
+          "entityType": {
+            "type": "string",
+            "enum": [
+              "Appliance",
+              "Datacenter",
+              "Job",
+              "provision-tier",
+              "provision-tier-network-security",
+              "LoadBalancerHealthMonitor",
+              "LoadBalancerIrule",
+              "LoadBalancerNode",
+              "LoadBalancerProfile",
+              "LoadBalancerPolicy",
+              "LoadBalancerRoute",
+              "LoadBalancerPool",
+              "LoadBalancerSelfIp",
+              "LoadBalancerVirtualServer",
+              "LoadBalancerVlan",
+              "PhysicalServer",
+              "NetworkObject",
+              "NetworkObjectGroup",
+              "ServiceObject",
+              "ServiceObjectGroup",
+              "StaticRoute",
+              "FirewallRule",
+              "NatRule",
+              "Subnet",
+              "Vlan",
+              "Tier"
+            ]
+          },
+          "entityBefore": {
+            "type": "object"
+          },
+          "entityAfter": {
+            "type": "object"
+          },
+          "changedProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "timestamp": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "changedBy": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "groupName": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "tierId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "actionType",
+          "entityType",
+          "timestamp",
+          "changedBy",
+          "datacenterId"
+        ]
+      },
       "Datacenter": {
         "type": "object",
         "properties": {
@@ -3910,6 +4000,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Job"
+            }
+          },
+          "auditLogs": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditLog"
             }
           }
         },
@@ -24763,6 +24860,65 @@
         },
         "tags": [
           "v1/actifio/rdc/recovery-types"
+        ]
+      }
+    },
+    "/v1/audit-log": {
+      "get": {
+        "operationId": "getAuditLogAuditLog",
+        "summary": "",
+        "description": "Get Audit Logs",
+        "parameters": [
+          {
+            "name": "datacenterId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entityType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "actionType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenant",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditLog"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/audit-log"
         ]
       }
     }

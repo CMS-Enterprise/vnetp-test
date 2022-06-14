@@ -39,6 +39,7 @@ export * from './actifioVMMemberDto';
 export * from './actifioVirtualManagementServerDto';
 export * from './appliance';
 export * from './applianceNetworkPort';
+export * from './auditLog';
 export * from './configurationDto';
 export * from './configurationUpload';
 export * from './createManyApplianceDto';
