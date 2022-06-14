@@ -469,7 +469,9 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       }
     });
     return obj;
+    /* tslint:disable */
   };
+  /* tslint:enable */
 
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
