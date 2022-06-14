@@ -69,11 +69,9 @@ export class AuditLogComponent implements OnInit {
 
   public getAuditLogs(): void {
     this.isLoading = true;
-    console.log('datacenterId', `${this.currentDatacenter.id}`);
     this.auditLogService.getAuditLogAuditLog({ datacenterId: `${this.currentDatacenter.id}` }).subscribe(
       data => {
         this.auditLogs = data;
-        console.log('this.auditLogs', this.auditLogs);
         if (this.auditLogs) {
           this.auditLogs.map(log => {
             log.tierName = ObjectUtil.getObjectName(log.tierId, this.tiers);
@@ -117,12 +115,10 @@ export class AuditLogComponent implements OnInit {
                 // if a property on the "before" entity does not match a property on the "after" entity, we know
                 // that the value of that property has changed
                 if (entityBefore[key] !== entityAfter[key]) {
-                  console.log('key', key);
                   if (key.includes('Id')) {
                     let beforeMatch;
                     let afterMatch;
                     const lowerCaseKey = key.toLocaleLowerCase();
-                    console.log('lowerCaseKey', lowerCaseKey);
                     if (lowerCaseKey.includes('networkobjectid')) {
                       beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.networkObjects);
                       beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
@@ -152,26 +148,6 @@ export class AuditLogComponent implements OnInit {
                       afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
                       entityAfter[key] = afterMatch;
                     }
-                    // switch (key) {
-                    //   case 'destinationNetworkObjectGroupId':
-                    //     entityAfter[key] = ObjectUtil.getObjectName(entityAfter[key], this.networkObjectGroups);
-                    //     break
-                    //   case 'destinationNetworkObjectId':
-                    //     entityAfter[key] = ObjectUtil.getObjectName(entityAfter[key], this.networkObjects);
-                    //     break
-                    //   case 'sourceNetworkObjectId':
-                    //     entityAfter[key] = ObjectUtil.getObjectName(entityAfter[key], this.networkObjects);
-                    //     break
-                    //   case 'sourceNetworkObjectGroupId':
-                    //     entityAfter[key] = ObjectUtil.getObjectName(entityAfter[key], this.networkObjectGroups);
-                    //     break
-                    //   case 'serviceObjectId':
-                    //     entityAfter[key] = ObjectUtil.getObjectName(entityAfter[key], this.serviceObjects);
-                    //     break
-                    //   case 'serviceObjectGroupId':
-                    //     entityAfter[key] = ObjectUtil.getObjectName(entityAfter[key], this.serviceObjectGroups);
-                    //     break
-                    // }
                   }
                   // so we create a string message listing the property that was changed and its "before" and "after" values
                   const message = { propertyName: key, before: entityBefore[key], after: entityAfter[key] };
@@ -183,7 +159,6 @@ export class AuditLogComponent implements OnInit {
               messageArray.sort((a, b) => a.propertyName.localeCompare(b.propertyName));
               log.changedProperties = messageArray;
             } else if (log.actionType === AuditLogActionTypeEnum.Deploy) {
-              console.log('hit deploy', log);
             }
           });
         }
@@ -217,11 +192,6 @@ export class AuditLogComponent implements OnInit {
           this.serviceObjectGroups.push(...tier.serviceObjectGroups);
           this.getAuditLogs();
         });
-        console.log('this.tiers', this.tiers);
-        console.log('this.networkObjects', this.networkObjects);
-        console.log('this.networkObjectGroups', this.networkObjectGroups);
-        console.log('this.serviceObjects', this.serviceObjects);
-        console.log('this.serviceObjectGroups', this.serviceObjectGroups);
       });
   }
 
@@ -236,11 +206,6 @@ export class AuditLogComponent implements OnInit {
         this.networkObjectGroups = (result as NetworkObjectGroup)[1];
         this.serviceObjects = (result as ServiceObject)[2];
         this.serviceObjectGroups = (result as ServiceObjectGroup)[3];
-        console.log('this.tiers', this.tiers);
-        console.log('this.networkObjects', this.networkObjects);
-        console.log('this.networkObjectGroups', this.networkObjectGroups);
-        console.log('this.serviceObjects', this.serviceObjects);
-        console.log('this.serviceObjectGroups', this.serviceObjectGroups);
         this.getAuditLogs();
       },
     );
@@ -257,32 +222,6 @@ export class AuditLogComponent implements OnInit {
       });
   }
 
-  // private getTierInformation(entityBefore, entityAfter) {
-  //   // check entity before or entity after for tier information to display on table
-  //   let tierId;
-  //   let keys = Object.keys(entityBefore);
-  //   keys.map(key => {
-  //     if (key === 'tierId') {
-  //       tierId = entityBefore[key]
-  //     }
-  //   })
-  //   keys = Object.keys(entityAfter);
-
-  //   keys.map(key => {
-  //     if (key === 'tierId') {
-  //       tierId = entityAfter[key]
-
-  //     }
-  //   })
-  //   if (tierId) {
-  //     return this.getTierName(tierId);
-  //   }
-  // }
-
-  // public getTierName(tierId: string): string {
-  //   return ObjectUtil.getObjectName(tierId, this.tiers, 'Error Resolving Name');
-  // }
-
   public openDetailedModal(auditLog: any): void {
     if (auditLog.entityBefore) {
       auditLog.objectName = auditLog.entityBefore.name;
@@ -291,7 +230,6 @@ export class AuditLogComponent implements OnInit {
     } else {
       auditLog.objectName = 'unknown';
     }
-    console.log('auditLog', auditLog);
     this.selectedAuditLog = [auditLog];
     this.ngx.getModal('auditLogViewModal').open();
   }
@@ -301,7 +239,6 @@ export class AuditLogComponent implements OnInit {
       if (cd) {
         this.currentDatacenter = cd;
         this.getTiers();
-        // this.getAuditLogs();
       }
     });
   }
