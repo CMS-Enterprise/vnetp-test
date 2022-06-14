@@ -13,7 +13,10 @@ import {
   LoadBalancerVirtualServer,
   LoadBalancerVirtualServerSourceAddressTranslationEnum,
   LoadBalancerVirtualServerTypeEnum,
+  V1LoadBalancerIrulesService,
+  V1LoadBalancerPoliciesService,
   V1LoadBalancerPoolsService,
+  V1LoadBalancerProfilesService,
   V1LoadBalancerVirtualServersService,
   V1TiersService,
 } from 'client';
@@ -41,6 +44,9 @@ describe('VirtualServerModalComponent', () => {
         MockProvider(V1LoadBalancerPoolsService),
         MockProvider(V1LoadBalancerVirtualServersService),
         MockProvider(V1TiersService),
+        MockProvider(V1LoadBalancerProfilesService),
+        MockProvider(V1LoadBalancerPoliciesService),
+        MockProvider(V1LoadBalancerIrulesService),
       ],
     });
 
