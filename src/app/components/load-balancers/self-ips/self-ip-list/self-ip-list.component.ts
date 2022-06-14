@@ -1,5 +1,11 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { GetManyLoadBalancerSelfIpResponseDto, LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'client';
+import {
+  GetManyLoadBalancerSelfIpResponseDto,
+  LoadBalancerSelfIp,
+  Tier,
+  V1LoadBalancerSelfIpsService,
+  V1LoadBalancerVlansService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -40,6 +46,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: '', template: () => this.actionsTemplate },
     ],
   };
+  public vlans;
   public selfIps = {} as GetManyLoadBalancerSelfIpResponseDto;
   public tableComponentDto = new TableComponentDto();
   public perPage = 20;
@@ -55,6 +62,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
+    private vlansService: V1LoadBalancerVlansService,
   ) {}
 
   ngOnInit(): void {
@@ -88,6 +96,16 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       },
     });
+  }
+
+  public loadVlans() {
+    this.vlansService
+      .getManyLoadBalancerVlan({
+        filter: [`tierId||eq||${this.currentTier.id}`],
+      })
+      .subscribe(data => {
+        this.vlans = data;
+      });
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -147,8 +165,14 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!vrfName) {
         return selfIp;
       }
+      const { loadBalancerVlanId } = selfIp;
+      // continue getting vlanUUID
 
       const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const vlanId = ObjectUtil.getObjectId(loadBalancerVlanId, this.vlans);
+      if (loadBalancerVlanId) {
+        selfIp.loadBalancerVlanId = vlanId;
+      }
       return {
         ...selfIp,
         tierId,
@@ -198,6 +222,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
       const [datacenter, tier] = data;
       this.currentTier = tier;
       this.tiers = datacenter.tiers;
+      this.loadVlans();
       this.loadSelfIps();
     });
   }
