@@ -20,6 +20,7 @@ api/v1ActifioRdsArmServers.service.ts
 api/v1ActifioRdsRecoveryPlans.service.ts
 api/v1ActifioRdsVirtualManagementServers.service.ts
 api/v1Appliances.service.ts
+api/v1AuditLog.service.ts
 api/v1Auth.service.ts
 api/v1ConfigurationUpload.service.ts
 api/v1Datacenters.service.ts
@@ -98,6 +99,7 @@ model/actifioVMMemberDto.ts
 model/actifioVirtualManagementServerDto.ts
 model/appliance.ts
 model/applianceNetworkPort.ts
+model/auditLog.ts
 model/configurationDto.ts
 model/configurationUpload.ts
 model/createManyApplianceDto.ts
