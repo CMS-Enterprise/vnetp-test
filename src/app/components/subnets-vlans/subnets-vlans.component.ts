@@ -324,8 +324,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     event.forEach(e => {
       e.vlanNumber = Number(e.vlanNumber);
 
-      // TODO AFTER MERGE : refactor bulk upload files to all use consistent schema
+      /* tslint:disable */
       e.tierId = this.getTierId(e['vrfName']);
+      /* tslint:enable */
     });
     const onConfirm = () => {
       this.vlanService.createManyVlan({ createManyVlanDto: { bulk: event } }).subscribe(() => {
