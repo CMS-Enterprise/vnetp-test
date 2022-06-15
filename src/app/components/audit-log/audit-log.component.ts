@@ -72,8 +72,8 @@ export class AuditLogComponent implements OnInit {
     this.auditLogService.getAuditLogAuditLog({ datacenterId: `${this.currentDatacenter.id}` }).subscribe(
       data => {
         this.auditLogs = data;
-        if (this.auditLogs) {
-          this.auditLogs.map(log => {
+        if (this.auditLogs.data) {
+          this.auditLogs.data.map(log => {
             log.tierName = ObjectUtil.getObjectName(log.tierId, this.tiers);
             // if entityType is firewall rule or nat rule
             // append the group name to the tier name
@@ -230,7 +230,8 @@ export class AuditLogComponent implements OnInit {
     } else {
       auditLog.objectName = 'unknown';
     }
-    this.selectedAuditLog = [auditLog];
+    this.selectedAuditLog = { data: [auditLog], page: 1, pageCount: 1, count: 1, total: 1 };
+
     this.ngx.getModal('auditLogViewModal').open();
   }
 

@@ -72,6 +72,8 @@ export class TableComponent<T> implements AfterViewInit {
       'pools-in-the-currently-selected-tier',
       'static-routes-listed-by-tier',
       'static-routes-for-the-currently-selected-tier',
+      'audit-log',
+      'detailed-audit-log-entry',
     ];
 
     const importControl = ['import-preview'];
