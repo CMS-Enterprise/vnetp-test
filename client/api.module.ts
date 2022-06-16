@@ -20,6 +20,7 @@ import { V1ActifioRdsArmServersService } from './api/v1ActifioRdsArmServers.serv
 import { V1ActifioRdsRecoveryPlansService } from './api/v1ActifioRdsRecoveryPlans.service';
 import { V1ActifioRdsVirtualManagementServersService } from './api/v1ActifioRdsVirtualManagementServers.service';
 import { V1AppliancesService } from './api/v1Appliances.service';
+import { V1AuditLogService } from './api/v1AuditLog.service';
 import { V1AuthService } from './api/v1Auth.service';
 import { V1ConfigurationUploadService } from './api/v1ConfigurationUpload.service';
 import { V1DatacentersService } from './api/v1Datacenters.service';
