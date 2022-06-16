@@ -196,10 +196,22 @@ export class AuditLogComponent implements OnInit {
   }
 
   getObjects(): void {
-    const networkObjectRequest = this.networkObjectService.getManyNetworkObject({});
-    const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({});
-    const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({});
-    const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({});
+    const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
+      fields: ['id,name'],
+      limit: 50000,
+    });
+    const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
+      fields: ['id,name'],
+      limit: 50000,
+    });
+    const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
+      fields: ['id,name'],
+      limit: 50000,
+    });
+    const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
+      fields: ['id,name'],
+      limit: 50000,
+    });
     forkJoin([networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest, serviceObjectGroupRequest]).subscribe(
       (result: unknown) => {
         this.networkObjects = (result as NetworkObject)[0];
@@ -215,6 +227,7 @@ export class AuditLogComponent implements OnInit {
     this.tierService
       .getManyDatacenterTier({
         datacenterId: this.currentDatacenter.id,
+        limit: 50000,
       })
       .subscribe((data: unknown) => {
         this.tiers = data as Tier[];
