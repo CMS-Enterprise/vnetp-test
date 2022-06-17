@@ -83,19 +83,18 @@ export class HttpConfigInterceptor {
         }
         return event;
       }),
-      catchError((error: HttpErrorResponse) => {
+      catchError((errorResponse: HttpErrorResponse) => {
         let toastrMessage = 'Request Failed!';
 
         if (!isLogin) {
-          switch (error.status) {
+          switch (errorResponse.status) {
             case 400:
-              if (error?.error?.message?.message) {
-                toastrMessage = `Bad Request - ${error.error.message.message}`;
-              }
-              if (error?.error?.message) {
-                toastrMessage = `Bad Request - ${error.error.message.detail}`;
+              if (errorResponse?.error?.message?.description) {
+                toastrMessage = `Bad Request - ${errorResponse.error.message.description}`;
               } else {
-                toastrMessage = 'Bad Request';
+                // TODO: Adding this temporarily to capture errors without description.
+                console.log(errorResponse);
+                toastrMessage = 'Unhandled Error Response';
               }
               break;
             case 401:
@@ -108,14 +107,14 @@ export class HttpConfigInterceptor {
         }
 
         const data = {
-          error,
-          status: error.status,
+          error: errorResponse,
+          status: errorResponse.status,
         };
 
         console.error(data);
 
         this.toastr.error(toastrMessage);
-        return throwError(error);
+        return throwError(errorResponse);
       }),
     );
   }
