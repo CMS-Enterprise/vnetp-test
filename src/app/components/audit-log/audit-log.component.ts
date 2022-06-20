@@ -119,6 +119,7 @@ export class AuditLogComponent implements OnInit {
                     let beforeMatch;
                     let afterMatch;
                     const lowerCaseKey = key.toLocaleLowerCase();
+                    /* tslint:disable */
                     if (lowerCaseKey.includes('networkobjectid')) {
                       beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.networkObjects);
                       beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
@@ -148,6 +149,7 @@ export class AuditLogComponent implements OnInit {
                       afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
                       entityAfter[key] = afterMatch;
                     }
+                    /* tslint:enable */
                   }
                   // so we create a string message listing the property that was changed and its "before" and "after" values
                   const message = { propertyName: key, before: entityBefore[key], after: entityAfter[key] };
