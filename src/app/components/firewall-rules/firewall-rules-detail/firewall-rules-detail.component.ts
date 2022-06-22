@@ -180,7 +180,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     } else {
       this.tableComponentDto.perPage = this.perPage;
     }
-    console.log(this.tableComponentDto);
     this.firewallRuleService
       .getManyFirewallRule({
         filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`, eventParams],
