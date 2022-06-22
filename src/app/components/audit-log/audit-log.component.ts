@@ -100,14 +100,37 @@ export class AuditLogComponent implements OnInit {
                   key === 'irules' ||
                   key === 'pools' ||
                   key === 'healthMonitors' ||
-                  key === 'pools'
+                  key === 'pools' ||
+                  key === 'nodes'
                 ) {
-                  const beforeList = entityBefore[key].map(obj => {
-                    return obj.name;
-                  });
-                  const afterList = entityAfter[key].map(obj => {
-                    return obj.name;
-                  });
+                  let beforeList;
+                  let afterList;
+                  if (key === 'nodes') {
+                    if (entityBefore[key] === undefined || entityAfter[key] === undefined) {
+                      return;
+                    }
+                    if (entityBefore[key]) {
+                      beforeList = entityBefore[key].map(obj => {
+                        return obj.loadBalancerNode.name;
+                      });
+                    }
+                    if (entityAfter[key]) {
+                      afterList = entityAfter[key].map(obj => {
+                        return obj.loadBalancerNode.name;
+                      });
+                    }
+                  } else {
+                    beforeList = entityBefore[key].map(obj => {
+                      return obj.name;
+                    });
+                    afterList = entityAfter[key].map(obj => {
+                      return obj.name;
+                    });
+                  }
+
+                  if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {
+                    return;
+                  }
                   const message = { propertyName: key, before: beforeList, after: afterList };
                   messageArray.push(message);
                   return;
