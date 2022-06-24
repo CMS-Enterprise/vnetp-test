@@ -8,7 +8,13 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { GetManyLoadBalancerSelfIpResponseDto, LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService } from 'client';
+import {
+  GetManyLoadBalancerSelfIpResponseDto,
+  LoadBalancerSelfIp,
+  Tier,
+  V1LoadBalancerSelfIpsService,
+  V1LoadBalancerVlansService,
+} from 'client';
 import { SelfIpListComponent, ImportSelfIp, SelfIpView } from './self-ip-list.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { of, throwError } from 'rxjs';
@@ -40,6 +46,7 @@ describe('SelfIpListComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(TierContextService),
         MockProvider(V1LoadBalancerSelfIpsService),
+        MockProvider(V1LoadBalancerVlansService),
       ],
     });
 

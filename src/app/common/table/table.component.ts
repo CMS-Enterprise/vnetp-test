@@ -72,16 +72,18 @@ export class TableComponent<T> implements AfterViewInit {
       'pools-in-the-currently-selected-tier',
       'static-routes-listed-by-tier',
       'static-routes-for-the-currently-selected-tier',
+      'audit-log',
+      'detailed-audit-log-entry',
     ];
 
-    const importControl = ['import-preview'];
+    const hidePagination = ['import-preview', 'audit-log', 'detailed-audit-log-entry'];
 
     // if tableId is a badList ID, we hide the search bar
     if (badList.includes(this.uniqueTableId)) {
       this.showSearchBar = false;
     }
 
-    if (importControl.includes(this.uniqueTableId)) {
+    if (hidePagination.includes(this.uniqueTableId)) {
       this.paginationControlsOn = false;
     }
 

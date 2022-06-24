@@ -9,7 +9,10 @@ import {
   LoadBalancerProfile,
   LoadBalancerVirtualServer,
   Tier,
+  V1LoadBalancerIrulesService,
+  V1LoadBalancerPoliciesService,
   V1LoadBalancerPoolsService,
+  V1LoadBalancerProfilesService,
   V1LoadBalancerVirtualServersService,
   V1TiersService,
 } from 'client';
@@ -32,9 +35,9 @@ export class VirtualServerModalComponent implements OnInit {
   public submitted: boolean;
   public ModalMode = ModalMode;
 
-  public availableIRules: LoadBalancerIrule[] = [];
-  public availableProfiles: LoadBalancerProfile[] = [];
-  public availablePolicies: LoadBalancerPolicy[] = [];
+  public availableIRules;
+  public availableProfiles;
+  public availablePolicies;
 
   public selectedIRules: LoadBalancerIrule[] = [];
   public selectedProfiles: LoadBalancerProfile[] = [];
@@ -50,10 +53,31 @@ export class VirtualServerModalComponent implements OnInit {
     private poolsService: V1LoadBalancerPoolsService,
     private virtualServerService: V1LoadBalancerVirtualServersService,
     public helpText: VirtualServerModalHelpText,
+    private profilesService: V1LoadBalancerProfilesService,
+    private policiesService: V1LoadBalancerPoliciesService,
+    private iRulesService: V1LoadBalancerIrulesService,
   ) {}
 
   ngOnInit(): void {
     this.buildForm();
+  }
+
+  private loadProfiles(): void {
+    this.profilesService.getManyLoadBalancerProfile({ filter: [`tierId||eq||${this.tierId}`], limit: 10000 }).subscribe(response => {
+      this.availableProfiles = response;
+    });
+  }
+
+  private loadPolicies(): void {
+    this.policiesService.getManyLoadBalancerPolicy({ filter: [`tierId||eq||${this.tierId}`], limit: 10000 }).subscribe(response => {
+      this.availablePolicies = response;
+    });
+  }
+
+  private loadIRules(): void {
+    this.iRulesService.getManyLoadBalancerIrule({ filter: [`tierId||eq||${this.tierId}`], limit: 10000 }).subscribe(response => {
+      this.availableIRules = response;
+    });
   }
 
   get f() {
@@ -206,7 +230,7 @@ export class VirtualServerModalComponent implements OnInit {
       this.form.controls.sourceAddressTranslation.setValue(sourceAddressTranslation);
       this.form.controls.type.setValue(type);
 
-      this.loadAvailableResources();
+      // this.loadAvailableResources();
       this.loadSelectedResources();
     } else {
       this.form.controls.name.enable();
@@ -214,6 +238,9 @@ export class VirtualServerModalComponent implements OnInit {
     }
 
     this.loadPools();
+    this.loadProfiles();
+    this.loadPolicies();
+    this.loadIRules();
     this.ngx.resetModalData('virtualServerModal');
   }
 

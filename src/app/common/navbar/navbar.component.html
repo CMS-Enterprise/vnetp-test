@@ -66,6 +66,7 @@
           <span *ngIf="user">{{ user.uid }} ({{ user.cn }})</span>
         </a>
         <div class="dropdown-menu dropdown-menu--reverse" aria-labelledby="userNavbarDropdown">
+          <a *ngIf="userRoles?.includes('admin')" class="dropdown-item" routerLink="audit-log" queryParamsHandling="merge">Audit Log</a>
           <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://jiraent.cms.gov/">Ticketing System</a>
           <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="http://wiki.draas.cdsvdc.lcl/">Documentation</a>
           <a class="dropdown-item" (click)="openLogoutModal()">Logout</a>
