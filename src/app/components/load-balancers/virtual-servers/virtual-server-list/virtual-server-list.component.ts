@@ -91,7 +91,9 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.loadVirtualServers(params);
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.loadVirtualServers(this.tableComponentDto);
         } else {
           this.loadVirtualServers();
         }
@@ -122,7 +124,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
         limit: this.tableComponentDto.perPage,
-        sort: ['updatedAt,ASC'],
+        sort: ['name,ASC'],
       })
       .subscribe(
         response => {
@@ -178,7 +180,9 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadVirtualServers(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadVirtualServers(this.tableComponentDto);
       } else {
         this.loadVirtualServers();
       }

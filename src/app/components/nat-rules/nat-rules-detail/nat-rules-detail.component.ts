@@ -29,6 +29,7 @@ import { TableConfig } from '../../../common/table/table.component';
 import { PreviewModalDto } from '../../../models/other/preview-modal-dto';
 import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { TableContextService } from 'src/app/services/table-context.service';
 
 @Component({
   selector: 'app-nat-rules-detail',
@@ -101,6 +102,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private datacenterService: DatacenterContextService,
+    private tableContextService: TableContextService,
   ) {}
 
   ngOnInit(): void {
@@ -256,14 +258,32 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       entityName: 'NAT Rule',
       delete$: this.natRuleService.deleteOneNatRule({ id: natRule.id }),
       softDelete$: this.natRuleService.softDeleteOneNatRule({ id: natRule.id }),
-      onSuccess: () => this.getNatRules(),
+      onSuccess: () => {
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+        if (filteredResults) {
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.getNatRules(this.tableComponentDto);
+        } else {
+          this.getNatRules();
+        }
+      },
     });
   }
 
   restoreNatRule(natRule: NatRule): void {
     if (natRule.deletedAt) {
       this.natRuleService.restoreOneNatRule({ id: natRule.id }).subscribe(() => {
-        this.getNatRules();
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+        if (filteredResults) {
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.getNatRules(this.tableComponentDto);
+        } else {
+          this.getNatRules();
+        }
       });
     }
   }
