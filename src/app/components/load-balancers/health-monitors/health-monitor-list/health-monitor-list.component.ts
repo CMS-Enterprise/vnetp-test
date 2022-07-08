@@ -83,7 +83,9 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.loadHealthMonitors(params);
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.loadHealthMonitors(this.tableComponentDto);
         } else {
           this.loadHealthMonitors();
         }
@@ -113,6 +115,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
         limit: this.tableComponentDto.perPage,
+        sort: ['name,ASC'],
       })
       .subscribe(
         response => {
@@ -176,7 +179,9 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadHealthMonitors(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadHealthMonitors(this.tableComponentDto);
       } else {
         this.loadHealthMonitors();
       }

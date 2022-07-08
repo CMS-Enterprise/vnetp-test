@@ -142,7 +142,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.netObjTableComponentDto.page,
         limit: this.netObjTableComponentDto.perPage,
-        sort: ['updatedAt,ASC'],
+        sort: ['name,ASC'],
       })
       .subscribe(
         response => {
@@ -175,7 +175,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.netObjGrpTableComponentDto.page,
         limit: this.netObjGrpTableComponentDto.perPage,
-        sort: ['updatedAt,ASC'],
+        sort: ['name,ASC'],
       })
       .subscribe(
         response => {
@@ -279,7 +279,9 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getNetworkObjects(params);
+          this.netObjTableComponentDto.searchColumn = params.searchColumn;
+          this.netObjTableComponentDto.searchText = params.searchText;
+          this.getNetworkObjects(this.netObjTableComponentDto);
         } else {
           this.getNetworkObjects();
         }
@@ -297,7 +299,9 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getNetworkObjects(params);
+          this.netObjTableComponentDto.searchColumn = params.searchColumn;
+          this.netObjTableComponentDto.searchText = params.searchText;
+          this.getNetworkObjects(this.netObjTableComponentDto);
         } else {
           this.getNetworkObjects();
         }
@@ -322,7 +326,9 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getNetworkObjectGroups(params);
+          this.netObjGrpTableComponentDto.searchColumn = params.searchColumn;
+          this.netObjGrpTableComponentDto.searchText = params.searchText;
+          this.getNetworkObjectGroups(this.netObjGrpTableComponentDto);
         } else {
           this.getNetworkObjectGroups();
         }
@@ -344,7 +350,9 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
           // if filtered results boolean is true, apply search params in the
           // subsequent get call
           if (filteredResults) {
-            this.getNetworkObjectGroups(params);
+            this.netObjGrpTableComponentDto.searchColumn = params.searchColumn;
+            this.netObjGrpTableComponentDto.searchText = params.searchText;
+            this.getNetworkObjectGroups(this.netObjGrpTableComponentDto);
           } else {
             this.getNetworkObjectGroups();
           }

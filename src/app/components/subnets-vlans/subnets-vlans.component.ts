@@ -217,7 +217,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getSubnets(params);
+          this.subnetTableComponentDto.searchColumn = params.searchColumn;
+          this.subnetTableComponentDto.searchText = params.searchText;
+          this.getSubnets(this.subnetTableComponentDto);
         } else {
           this.getSubnets();
         }
@@ -235,7 +237,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getSubnets(params);
+          this.subnetTableComponentDto.searchColumn = params.searchColumn;
+          this.subnetTableComponentDto.searchText = params.searchText;
+          this.getSubnets(this.subnetTableComponentDto);
         } else {
           this.getSubnets();
         }
@@ -260,7 +264,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getVlans(false, params);
+          this.vlanTableComponentDto.searchColumn = params.searchColumn;
+          this.vlanTableComponentDto.searchText = params.searchText;
+          this.getVlans(false, this.vlanTableComponentDto);
         } else {
           this.getVlans();
         }
@@ -278,11 +284,12 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
           // get search params from local storage
           const params = this.tableContextService.getSearchLocalStorage();
           const { filteredResults } = params;
-
           // if filtered results boolean is true, apply search params in the
           // subsequent get call
           if (filteredResults) {
-            this.getVlans(false, params);
+            this.vlanTableComponentDto.searchColumn = params.searchColumn;
+            this.vlanTableComponentDto.searchText = params.searchText;
+            this.getVlans(false, this.vlanTableComponentDto);
           } else {
             this.getVlans();
           }
@@ -379,7 +386,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.subnetTableComponentDto.page,
         limit: this.subnetTableComponentDto.perPage,
-        sort: ['updatedAt,ASC'],
+        sort: ['name,ASC'],
       })
       .subscribe(
         response => {
@@ -414,6 +421,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.vlanTableComponentDto.page,
         limit: this.vlanTableComponentDto.perPage,
+        sort: ['vlanNumber,ASC'],
       })
       .subscribe(
         response => {

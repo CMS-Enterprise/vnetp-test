@@ -80,7 +80,9 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.loadPolicies(params);
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.loadPolicies(this.tableComponentDto);
         } else {
           this.loadPolicies();
         }
@@ -110,6 +112,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
         limit: this.tableComponentDto.perPage,
+        sort: ['name,ASC'],
       })
       .subscribe(
         response => {
@@ -173,7 +176,9 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadPolicies(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadPolicies(this.tableComponentDto);
       } else {
         this.loadPolicies();
       }
