@@ -22,6 +22,15 @@ export interface Vlan {
     name: string;
     description?: string;
     vlanNumber: number;
+    vcdVlanType?: VlanVcdVlanTypeEnum;
     tierId: string;
 }
+export enum VlanVcdVlanTypeEnum {
+    None = 'None',
+    Dev = 'Dev',
+    Prod = 'Prod',
+    Both = 'Both'
+};
+
+
 
