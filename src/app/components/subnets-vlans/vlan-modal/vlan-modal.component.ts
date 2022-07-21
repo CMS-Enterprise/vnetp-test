@@ -72,7 +72,7 @@ export class VlanModalComponent implements OnInit {
     }
 
     const { name, description, vcdVlanType } = this.form.value;
-    const vlan = { name, description, vcdVlanType } as Vlan;
+    const vlan = { name, description, vcdVlanType: vcdVlanType || null } as Vlan;
 
     if (this.ModalMode === ModalMode.Create) {
       this.createVlan(vlan);

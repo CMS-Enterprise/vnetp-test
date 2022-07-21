@@ -61,9 +61,8 @@
 
       <div class="form-group">
         <label for="vcdVlanType">VCD VLAN Type</label>
-        <select id="vcdVlanType" formControlName="vcdVlanType" class="form-control" [class.is-invalid]="submitted && f.type.errors" aria-label="Type">
-          <option></option>
-          <option value="None">None</option>
+        <select id="vcdVlanType" formControlName="vcdVlanType" class="form-control" aria-label="Type">
+          <option [ngValue]="null">None</option>
           <option value="Dev">Dev</option>
           <option value="Prod">Prod</option>
           <option value="Both">Both</option>

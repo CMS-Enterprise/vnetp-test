@@ -354,7 +354,6 @@
           "vcdVlanType": {
             "type": "string",
             "enum": [
-              "None",
               "Dev",
               "Prod",
               "Both"
