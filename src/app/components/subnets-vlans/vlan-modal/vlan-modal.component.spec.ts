@@ -7,7 +7,7 @@ import { VlanModalComponent } from './vlan-modal.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import TestUtil from 'src/test/TestUtil';
 import { By } from '@angular/platform-browser';
-import { V1NetworkVlansService } from 'client';
+import { V1NetworkVlansService, VlanVcdVlanTypeEnum } from 'client';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
 
 describe('VlanModalComponent', () => {
@@ -97,6 +97,7 @@ describe('VlanModalComponent', () => {
         name: null,
         description: 'Description',
         vlanNumber: null,
+        vcdVlanType: '3',
       });
 
       clickSaveButton();
@@ -113,6 +114,7 @@ describe('VlanModalComponent', () => {
         name: 'Test',
         description: 'Description',
         vlanNumber: 400,
+        vcdVlanType: VlanVcdVlanTypeEnum.Dev,
       });
 
       clickSaveButton();
@@ -123,6 +125,7 @@ describe('VlanModalComponent', () => {
           tierId: '1',
           description: 'Description',
           vlanNumber: 400,
+          vcdVlanType: VlanVcdVlanTypeEnum.Dev,
         },
       });
     });
@@ -136,6 +139,7 @@ describe('VlanModalComponent', () => {
         name: 'Test2',
         description: 'Description stays',
         vlanNumber: 401,
+        vcdVlanType: 'Dev',
       });
 
       clickSaveButton();
@@ -146,6 +150,7 @@ describe('VlanModalComponent', () => {
           name: null,
           vlanNumber: null,
           description: 'Description stays',
+          vcdVlanType: 'Dev',
         },
       });
     });
@@ -160,6 +165,7 @@ describe('VlanModalComponent', () => {
           id: '2',
           name: 'Vlan',
           vlanNumber: 400,
+          vcdVlanType: VlanVcdVlanTypeEnum.Dev,
           description: 'Optional!',
         },
         ModalMode: ModalMode.Edit,

@@ -89,6 +89,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       { name: 'Name', property: 'name' },
       { name: 'Description', property: 'description' },
       { name: 'VLAN Number', property: 'vlanNumber' },
+      { name: 'VCD VLAN Type', property: 'vcdVlanType' },
       { name: 'State', template: () => this.vlanStateTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],

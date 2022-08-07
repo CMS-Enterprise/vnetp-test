@@ -53,6 +53,7 @@ export class VlanModalComponent implements OnInit {
       this.form.controls.description.setValue(vlan.description);
       this.form.controls.vlanNumber.setValue(vlan.vlanNumber);
       this.form.controls.vlanNumber.disable();
+      this.form.controls.vcdVlanType.setValue(vlan.vcdVlanType);
     }
     this.ngx.resetModalData('vlanModal');
   }
@@ -70,8 +71,8 @@ export class VlanModalComponent implements OnInit {
       return;
     }
 
-    const { name, description } = this.form.value;
-    const vlan = { name, description } as Vlan;
+    const { name, description, vcdVlanType } = this.form.value;
+    const vlan = { name, description, vcdVlanType: vcdVlanType || null } as Vlan;
 
     if (this.ModalMode === ModalMode.Create) {
       this.createVlan(vlan);
@@ -84,11 +85,13 @@ export class VlanModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
+      vcdVlanType: [null],
       vlanNumber: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(4094)])],
     });
   }
 
   private createVlan(vlan: Vlan): void {
+    vlan.vcdVlanType = this.form.value.vcdVlanType;
     vlan.vlanNumber = this.form.value.vlanNumber;
     vlan.tierId = this.TierId;
     this.vlanService.createOneVlan({ vlan }).subscribe(

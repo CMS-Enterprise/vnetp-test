@@ -351,6 +351,14 @@
             "minimum": 1,
             "maximum": 4094
           },
+          "vcdVlanType": {
+            "type": "string",
+            "enum": [
+              "Dev",
+              "Prod",
+              "Both"
+            ]
+          },
           "tierId": {
             "type": "string"
           }
