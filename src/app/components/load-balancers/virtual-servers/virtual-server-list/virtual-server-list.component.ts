@@ -211,7 +211,9 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadVirtualServers(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadVirtualServers(this.tableComponentDto);
       } else {
         this.loadVirtualServers();
       }

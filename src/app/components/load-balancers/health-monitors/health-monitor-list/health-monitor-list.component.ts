@@ -209,7 +209,9 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadHealthMonitors(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadHealthMonitors(this.tableComponentDto);
       } else {
         this.loadHealthMonitors();
       }

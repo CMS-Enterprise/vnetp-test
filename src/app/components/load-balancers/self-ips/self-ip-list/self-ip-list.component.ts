@@ -241,7 +241,9 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadSelfIps(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadSelfIps(this.tableComponentDto);
       } else {
         this.loadSelfIps();
       }

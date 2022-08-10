@@ -215,7 +215,9 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadIRules(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadIRules(this.tableComponentDto);
       } else {
         this.loadIRules();
       }

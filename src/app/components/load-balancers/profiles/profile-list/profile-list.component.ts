@@ -213,7 +213,9 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadProfiles(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadProfiles(this.tableComponentDto);
       } else {
         this.loadProfiles();
       }

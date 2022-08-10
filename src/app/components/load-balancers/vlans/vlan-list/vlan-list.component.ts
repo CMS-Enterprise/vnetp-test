@@ -210,7 +210,9 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadVlans(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadVlans(this.tableComponentDto);
       } else {
         this.loadVlans();
       }
