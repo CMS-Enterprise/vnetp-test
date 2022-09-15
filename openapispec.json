@@ -4016,6 +4016,13 @@
             "items": {
               "$ref": "#/components/schemas/AuditLog"
             }
+          },
+          "selfServices": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": [
@@ -6552,6 +6559,136 @@
         "required": [
           "ipAddress",
           "id"
+        ]
+      },
+      "SelfServiceConvertedArtifactObjects": {
+        "type": "object",
+        "properties": {
+          "subnets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "vlans": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "networkObjects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "networkObjectGroups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "serviceObjects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "serviceObjectGroups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "intervrfFWRules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "intervrfNatRules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "externalFWRules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "externalNatRules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SelfService": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "rawConfigType": {
+            "type": "string",
+            "nullable": true
+          },
+          "rawXMLConfig": {
+            "type": "object",
+            "nullable": true
+          },
+          "rawTextConfig": {
+            "type": "string",
+            "nullable": true
+          },
+          "rawJsonConfig": {
+            "type": "object",
+            "nullable": true
+          },
+          "intervrfSubnets": {
+            "type": "string",
+            "nullable": true
+          },
+          "convertedConfig": {
+            "$ref": "#/components/schemas/SelfServiceConvertedArtifactObjects"
+          },
+          "datacenterId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "rawConfigType",
+          "rawXMLConfig",
+          "rawTextConfig",
+          "rawJsonConfig",
+          "intervrfSubnets",
+          "convertedConfig",
+          "datacenterId"
+        ]
+      },
+      "SelfServiceRawConfig": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "rawXMLConfig": {
+            "type": "object"
+          },
+          "rawTextConfig": {
+            "type": "object"
+          },
+          "rawJsonConfig": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "type"
         ]
       }
     }
@@ -24927,6 +25064,234 @@
         },
         "tags": [
           "v1/audit-log"
+        ]
+      }
+    },
+    "/v1/self-service": {
+      "get": {
+        "operationId": "getSelfServicesSelfService",
+        "summary": "",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SelfService"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
+      }
+    },
+    "/v1/self-service/{selfServiceId}": {
+      "get": {
+        "operationId": "getSelfServiceSelfService",
+        "summary": "",
+        "description": "",
+        "parameters": [
+          {
+            "name": "selfServiceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SelfService"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
+      }
+    },
+    "/v1/self-service/{selfServiceId}/raw/xml": {
+      "get": {
+        "operationId": "getSelfServiceXMLSelfService",
+        "summary": "",
+        "description": "get self service entity xml config",
+        "parameters": [
+          {
+            "name": "selfServiceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
+      }
+    },
+    "/v1/self-service/{selfServiceId}/raw/text": {
+      "get": {
+        "operationId": "getSelfServiceTextSelfService",
+        "summary": "",
+        "description": "get self service entity text config",
+        "parameters": [
+          {
+            "name": "selfServiceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
+      }
+    },
+    "/v1/self-service/{selfServiceId}/raw/json": {
+      "get": {
+        "operationId": "getSelfServiceJsonSelfService",
+        "summary": "",
+        "description": "get self service entity json config",
+        "parameters": [
+          {
+            "name": "selfServiceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
+      }
+    },
+    "/v1/self-service/asa": {
+      "post": {
+        "operationId": "processAsaConfigSelfService",
+        "summary": "",
+        "description": "create new self service",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
+      }
+    },
+    "/v1/self-service/pa": {
+      "post": {
+        "operationId": "processPAConfigSelfService",
+        "summary": "",
+        "description": "process PA config",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
+      }
+    },
+    "/v1/self-service/{selfServiceId}/replace-config": {
+      "put": {
+        "operationId": "replaceExistingRawConfigSelfService",
+        "summary": "",
+        "description": "replace the currently existing raw config for the self service entity",
+        "parameters": [
+          {
+            "name": "selfServiceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelfServiceRawConfig"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
+      }
+    },
+    "/v1/self-service/{selfServiceId}/converted-artifacts": {
+      "put": {
+        "operationId": "updateConversionArtifactsSelfService",
+        "summary": "",
+        "description": "apply converted objects to entity",
+        "parameters": [
+          {
+            "name": "selfServiceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/self-service"
         ]
       }
     }

@@ -1,0 +1,52 @@
+<ngx-smart-modal #selfServiceModal identifier="selfServiceModal" [dismissable]="true" customClass="large-modal">
+    <header class="modal-header">
+      <h4 class="modal-title">Title</h4>
+    </header>
+
+    <main class="modal-body">
+      <form [formGroup]="form">
+        <div class="form-row">
+
+          <div class="form-group col-md-3">
+            <label for="deviceType">Device Type</label>
+            <select id="deviceType" formControlName="deviceType" class="form-control" [class.is-invalid]="submitted && f.deviceType.errors" aria-label="Device Type">
+              <option></option>
+              <option value="ASA">ASA</option>
+              <option value="PA">PA</option>
+            </select>
+            <div *ngIf="submitted && f.deviceType.errors" class="invalid-feedback">
+              <div *ngIf="f.deviceType.errors.required">Device Type is required</div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="tierSelect">Select a Tier</label>
+            <ng-select formControlName="tierSelect" id="tierSelect" [items]="tiers" bindLabel="name" bindValue="name"></ng-select>
+            <div *ngIf="submitted && f.tierSelect.errors" class="invalid-feedback">
+              <div *ngIf="f.tierSelect.errors.required">Please select a tier</div>
+            </div>
+          </div>
+
+          <div class="form-group col">
+            <label for="deviceConfig">Device Config</label>
+            <input formControlName="deviceConfig" id="deviceConfig" type="file" class="form-control-file" (change)="deviceConfigFileChange($event)">
+          </div>
+
+          <div *ngIf="f.deviceType.value === 'PA'" class="form-group col">
+            <label *ngIf="f.deviceType.value === 'PA'" for="intervrfSubnets">Intervrf Subnets</label>
+            <input *ngIf="f.deviceType.value === 'PA'" formControlName="intervrfSubnets" id="intervrfSubnets" type="file" class="form-control-file" (change)="intervrfSubnetsFileChange($event)">
+          </div>
+
+
+        </div>
+
+        
+      </form>
+    </main>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="selfServiceModal.close()">
+        Close
+      </button>
+    </footer>
+  </ngx-smart-modal>

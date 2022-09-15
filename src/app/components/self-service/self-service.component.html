@@ -1,0 +1,17 @@
+<h1>Self Service</h1>
+<ng-container>
+    <section class="btn-toolbar" role="toolbar">
+        <!-- Create Tier -->
+        <button type="button" class="btn btn-success" (click)="openSelfServiceModal()">
+          <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+          <span>Import Config</span>
+        </button>
+      </section>
+    
+    <ng-container>
+        <app-table [config]="config" [data]="selfServices">
+        </app-table>
+    </ng-container>
+
+</ng-container>
+<app-self-service-modal></app-self-service-modal>
