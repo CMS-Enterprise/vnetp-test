@@ -25203,6 +25203,22 @@
         ]
       }
     },
+    "/v1/self-service/parse/xml": {
+      "post": {
+        "operationId": "parseXmlSelfService",
+        "summary": "",
+        "description": "parse the xml file",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
+      }
+    },
     "/v1/self-service/asa": {
       "post": {
         "operationId": "processAsaConfigSelfService",
