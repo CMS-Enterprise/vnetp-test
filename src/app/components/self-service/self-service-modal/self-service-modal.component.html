@@ -1,15 +1,18 @@
-<ngx-smart-modal #selfServiceModal identifier="selfServiceModal" [dismissable]="true" customClass="large-modal" (onClose)="onClose()">
-    <header class="modal-header">
-      <h4 class="modal-title">Title</h4>
-    </header>
+<ngx-smart-modal #selfServiceModal identifier="selfServiceModal" [dismissable]="true" customClass="large-modal"
+  (onClose)="onClose()">
+  <header class="modal-header">
+    <h4 class="modal-title">Title</h4>
+  </header>
 
-    <main class="modal-body">
-      <form [formGroup]="form">
+  <main class="modal-body">
+    <div [hidden]="tiersSaved" class="page-1">
+      <form [formGroup]="initialForm">
         <div class="form-row">
 
           <div class="form-group col-md-3">
             <label for="deviceType">Device Type</label>
-            <select id="deviceType" formControlName="deviceType" class="form-control" [class.is-invalid]="submitted && f.deviceType.errors" aria-label="Device Type">
+            <select id="deviceType" formControlName="deviceType" class="form-control"
+              [class.is-invalid]="submitted && f.deviceType.errors" aria-label="Device Type">
               <option></option>
               <option value="ASA">ASA</option>
               <option value="PA">PA</option>
@@ -21,7 +24,8 @@
 
           <div class="form-group col-md-3">
             <label for="DCSTierSelect">Select a Tier</label>
-            <ng-select formControlName="DCSTierSelect" id="DCSTierSelect" [items]="tiers" bindLabel="name" bindValue="name"></ng-select>
+            <ng-select formControlName="DCSTierSelect" id="DCSTierSelect" [items]="tiers" bindLabel="name"
+              bindValue="name"></ng-select>
             <div *ngIf="submitted && f.DCSTierSelect.errors" class="invalid-feedback">
               <div *ngIf="f.DCSTierSelect.errors.required">Please select a tier</div>
             </div>
@@ -29,20 +33,23 @@
 
           <div class="form-group col">
             <label for="deviceConfig">Device Config</label>
-            <input formControlName="deviceConfig" id="deviceConfig" type="file" class="form-control-file" (change)="deviceConfigFileChange($event)">
+            <input formControlName="deviceConfig" id="deviceConfig" type="file" class="form-control-file"
+              (change)="deviceConfigFileChange($event)">
           </div>
 
           <div *ngIf="f.deviceType.value === 'PA'" class="form-group col">
             <label *ngIf="f.deviceType.value === 'PA'" for="intervrfSubnets">Intervrf Subnets</label>
-            <input *ngIf="f.deviceType.value === 'PA'" formControlName="intervrfSubnets" id="intervrfSubnets" type="file" class="form-control-file" (change)="intervrfSubnetsFileChange($event)">
+            <input *ngIf="f.deviceType.value === 'PA'" formControlName="intervrfSubnets" id="intervrfSubnets"
+              type="file" class="form-control-file" (change)="intervrfSubnetsFileChange($event)">
           </div>
 
           <div *ngIf="tiersFromConfig && tiersFromConfig.length > 0" class="form-group col">
             <label for="selectedTiersFromConfig">Select Tier(s) from the config</label>
             <!-- <select formControlName="extractedTiersFromConfig">
-              <option *ngFor="let tier of extractedTiersFromConfig" [ngValue]="tier" (click)="addToSelectedList(tier)">{{tier}}</option>
-            </select> -->
-            <ng-select (click)="addFormControlToListItem()" [multiple]="true" formControlName="selectedTiersFromConfig" id="selectedTiersFromConfig" [items]="tiersFromConfig"></ng-select>
+                <option *ngFor="let tier of extractedTiersFromConfig" [ngValue]="tier" (click)="addToSelectedList(tier)">{{tier}}</option>
+              </select> -->
+            <ng-select (click)="addFormControlToListItem()" [multiple]="true" formControlName="selectedTiersFromConfig"
+              id="selectedTiersFromConfig" [items]="tiersFromConfig"></ng-select>
             <div *ngIf="submitted && f.selectedTiersFromConfig.errors" class="invalid-feedback">
               <div *ngIf="f.selectedTiersFromConfig.errors.required">Please select a tier</div>
             </div>
@@ -50,33 +57,54 @@
         </div>
 
         <ul *ngIf="f.selectedTiersFromConfig && f.selectedTiersFromConfig.value">
-          <label>Add a unique namespace for each selected tier</label>
+          <!-- <label>Add a unique namespace for each selected tier</label> -->
           <li *ngFor="let tier of f.selectedTiersFromConfig.value">{{tier}}
-            <input class="form-control" [formControlName]="tier" type="text">
+            <!-- <textarea></textarea> -->
           </li>
-          <button type="button" class="btn btn-primary" (click)="saveNameSpaces()">
+          <button type="button" class="btn btn-primary" (click)="saveTiers()">
             <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-            <span>Save Name Spaces</span>
+            <span>Next</span>
           </button>
         </ul>
       </form>
-      
-    </main>
 
-    <footer class="modal-footer">
-      <button type="button" class="btn btn-warning" data-dismiss="modal" (click)="reset()">
-        <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
-        <span>Reset</span>
-      </button>
+    </div>
+
+    <div *ngIf="tiersSaved" class="page-2">
+      <form [formGroup]="continuedForm">
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <li class="custom" *ngFor="let tier of cf.selectedTiers.value; let i = index">
+              <span id="tier">{{tier}}</span>
+              <textarea></textarea>
+            </li>
+            <button type="button" class="btn btn-primary" (click)="saveNameSpaces()">
+              <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+              <span>Next</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
 
 
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="onClose()">
-        Cancel
-      </button>
-      
-      <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="save()">
-        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-        <span>Submit</span>
-      </button>
-    </footer>
-  </ngx-smart-modal>
+
+  </main>
+
+  <footer class="modal-footer">
+    <button type="button" class="btn btn-warning" data-dismiss="modal" (click)="reset()">
+      <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
+      <span>Reset</span>
+    </button>
+
+
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="onClose()">
+      Cancel
+    </button>
+
+    <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="save()">
+      <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+      <span>Submit</span>
+    </button>
+  </footer>
+</ngx-smart-modal>
