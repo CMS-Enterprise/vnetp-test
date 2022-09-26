@@ -20,6 +20,9 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   selectedTiers;
   tiersSaved: boolean;
   storedInterfaces = [];
+  mappedInterfacesToHostnames = [];
+  vsysHolderArray = [];
+  zoneHolderArray = [];
 
   private currentDatacenterSubscription: Subscription;
 
@@ -39,6 +42,45 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     return this.continuedForm.controls;
   }
 
+  xml2json(xml) {
+    try {
+      var obj = {};
+      if (xml.children.length > 0) {
+        for (var i = 0; i < xml.children.length; i++) {
+          var item = xml.children.item(i);
+          var nodeName = item.nodeName;
+
+          if (xml.nodeName === 'vsys') {
+            const vsysName = item.attributes[0].value;
+            this.vsysHolderArray.push(vsysName);
+          }
+
+          if (xml.nodeName === 'zone') {
+            const zoneName = item.attributes[0].value;
+            this.zoneHolderArray.push(zoneName);
+          }
+
+          if (typeof obj[nodeName] == 'undefined') {
+            obj[nodeName] = this.xml2json(item);
+          } else {
+            if (typeof obj[nodeName].push == 'undefined') {
+              var old = obj[nodeName];
+
+              obj[nodeName] = [];
+              obj[nodeName].push(old);
+            }
+            obj[nodeName].push(this.xml2json(item));
+          }
+        }
+      } else {
+        obj = xml.textContent;
+      }
+      return obj;
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+
   private buildForm() {
     this.initialForm = this.formBuilder.group({
       deviceType: ['', Validators.required],
@@ -50,47 +92,47 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   }
 
   public saveTiers() {
-    console.log('this.form', this.initialForm);
+    const selectedTiers = this.f.selectedTiersFromConfig.value;
+    console.log('selectedTiers', selectedTiers);
+    console.log('mappedInterfaces', this.mappedInterfacesToHostnames);
+    this.mappedInterfacesToHostnames.map(int => {
+      if (!selectedTiers.includes(int.hostname)) {
+        this.mappedInterfacesToHostnames.splice(this.mappedInterfacesToHostnames.indexOf(int));
+      }
+    });
+    console.log('mappedInterfaces', this.mappedInterfacesToHostnames);
+    // find union between selectedTiers and mappedHostnamesWithInterfaces
+    // console.log('this.cf', this.cf);
     this.tiersSaved = true;
     this.initialForm.controls.selectedTiersFromConfig.disable();
     this.continuedForm = this.formBuilder.group({
-      selectedTiers: [this.initialForm.controls.selectedTiersFromConfig.value],
+      selectedTiers: [this.mappedInterfacesToHostnames],
     });
+    console.log('this.cf', this.cf);
   }
 
   public saveNameSpaces() {
-    const grouped = document.getElementsByClassName('custom');
-    const groupedArray = [];
-    for (let i = 0; i < grouped.length; i++) {
-      groupedArray.push(grouped[i]);
-    }
-    const mappedObjectsArray = [];
-    groupedArray.map(group => {
-      const populateThisObject = { tierName: '', nameSpace: '' };
-      populateThisObject.tierName = group.textContent;
-      populateThisObject.nameSpace = group.lastChild.value;
-      mappedObjectsArray.push(populateThisObject);
-    });
-    console.log('mappedObjectsArray', mappedObjectsArray);
+    console.log('this.cf', this.cf);
   }
 
-  public extractInterfaceMatrix() {}
+  public markInterfaceIntervrf(int) {
+    int.intervrf = true;
+    int.external = false;
+    return int;
+  }
 
-  public addFormControlToListItem() {
-    console.log('this.form', this.initialForm);
-    //.forEach((moveMaker ) => this.moveMakerForm .addControl(moveMaker.id, new FormControl('', Validators.required)));
-    const selectedTiersFromConfig: [] = this.initialForm.controls.selectedTiersFromConfig.value
-      ? this.initialForm.controls.selectedTiersFromConfig.value
-      : null;
-    if (selectedTiersFromConfig === null) {
-      return;
-    }
-    selectedTiersFromConfig.forEach(selectedTierFromConfig => {
-      let i = '1';
-      console.log('selectedTierFromConfig', selectedTierFromConfig);
-      return this.initialForm.addControl(selectedTierFromConfig, new FormControl('', Validators.required));
-    });
-    console.log('this.form', this.initialForm);
+  public markInterfaceExternal(int) {
+    int.external = true;
+    int.intervrf = false;
+    int.inside = false;
+    return int;
+  }
+
+  public markInterfaceInside(int) {
+    int.intervrf = true;
+    int.inside = true;
+    int.external = false;
+    return int;
   }
 
   public getTiers(): void {
@@ -115,7 +157,25 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       const deviceType = this.initialForm.controls.deviceType.value;
       if (deviceType === 'PA') {
         const parser = new DOMParser();
+        const zoneRegex = /zone(.*)/g;
+        const zones = readableText.match(zoneRegex);
         const parsed = parser.parseFromString(readableText, 'text/xml');
+        const json: any = this.xml2json(parsed);
+        console.log('json', json);
+        const vsysArrayFromConfig = json.config.devices.entry.vsys.entry;
+        for (let i = 0; i < vsysArrayFromConfig.length; i++) {
+          vsysArrayFromConfig[i].name = this.vsysHolderArray[i];
+        }
+        vsysArrayFromConfig.map(vsys => {
+          vsys.zones = [];
+          const numOfZones = vsys.zone.entry.length;
+
+          // close
+          // need to pop off elements as they move from one array to another
+          for (let i = 0; i < numOfZones; i++) {
+            vsys.zones.push(this.zoneHolderArray[i]);
+          }
+        });
         const childNodes = parsed.childNodes[0];
         const devices = childNodes.childNodes[5];
         const entry = devices.childNodes[1];
@@ -129,9 +189,16 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
             entryArray.push(entries[i]);
           }
         }
+        const securityZones = [];
         const vsysValueArray = [];
         entryArray.map(entry => {
-          vsysValueArray.push(entry.attributes[0].value);
+          const zoneChildren = entry.childNodes[13].children;
+          // for (let i = 0; i < zoneChildren.length; i++) {
+          //   securityZones.push(zoneChildren[i].attributes[0].value)
+          // }
+          const vsysName = entry.attributes[0].value;
+          vsysValueArray.push(vsysName);
+          this.mappedInterfacesToHostnames.push({ hostname: vsysName, interfaces: securityZones });
         });
         this.tiersFromConfig = vsysValueArray;
       }
@@ -146,7 +213,10 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         const hostnameIndexes = [];
         hostnames.map(hostname => {
           const hostnameIndex = splitFileByLine.indexOf(hostname + '\r');
+
+          // get index (line number) of the hostname in the ASA config file
           if (hostnameIndex !== -1) {
+            hostname = hostname.split(' ')[1];
             hostnameIndexes.push({ hostname: hostname, hostnameIndex: hostnameIndex });
           }
         });
@@ -158,19 +228,19 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         // we must run the first instance of any duplicate entries to get their index
         // so we can use that index as an offset to get the next matching instance
 
+        // strip any duplicate entries from the collected interfaces
         const uniqueIndexes = [...new Set(interfaces)];
 
+        // pass each interface to a function that will recursively get the index for the interfaces
         uniqueIndexes.map(int => {
           this.recursivelyGetIndexes(int, splitFileByLine);
         });
-        hostnameIndexes.map(host => {
-          host.hostname = host.hostname.split(' ')[1];
-        });
+
         this.tiersFromConfig = hostnameIndexes.map(hostnameIndex => {
           return hostnameIndex.hostname;
         });
-        const mappedEverything = this.interfaceMatrixHelper(hostnameIndexes, this.storedInterfaces, splitFileByLine.length);
-        console.log('mappedEverything', mappedEverything);
+        this.mappedInterfacesToHostnames = this.interfaceMatrixHelper(hostnameIndexes, this.storedInterfaces, splitFileByLine.length);
+        console.log('mappedEverything', this.mappedInterfacesToHostnames);
       }
     };
   }
@@ -180,7 +250,11 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   // if there are multiple entries with the same value
   // pass the same args to the function this time providing an offset
   // the offset is the index found in the initial function run
+  // the offset will also be the index each time a duplicate interface is encountered
+  // this ensures we are always checking the NEXT instance of an interface match
   private recursivelyGetIndexes(val, file, offset?) {
+    // if we've already encountered an interface match, we use the offset
+    // which is the index of that interface match to give us our starting point
     if (offset) {
       const index = file.indexOf(' ' + val + '\r', offset + 1);
       if (index !== -1) {
@@ -200,6 +274,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     }
   }
 
+  // helper function for building the interface matrix
   private interfaceMatrixHelper(hostnamesWithIndex, interfacesWithIndex, eof) {
     for (let i = 0; i < hostnamesWithIndex.length; i++) {
       const range = { min: '', max: '' };
@@ -233,6 +308,8 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   }
 
   public reset() {
+    this.storedInterfaces = [];
+    this.mappedInterfacesToHostnames = [];
     this.selectedTier = null;
     this.tiersFromConfig = null;
     this.tiersSaved = false;

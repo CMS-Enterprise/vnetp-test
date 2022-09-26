@@ -48,7 +48,7 @@
             <!-- <select formControlName="extractedTiersFromConfig">
                 <option *ngFor="let tier of extractedTiersFromConfig" [ngValue]="tier" (click)="addToSelectedList(tier)">{{tier}}</option>
               </select> -->
-            <ng-select (click)="addFormControlToListItem()" [multiple]="true" formControlName="selectedTiersFromConfig"
+            <ng-select [multiple]="true" formControlName="selectedTiersFromConfig"
               id="selectedTiersFromConfig" [items]="tiersFromConfig"></ng-select>
             <div *ngIf="submitted && f.selectedTiersFromConfig.errors" class="invalid-feedback">
               <div *ngIf="f.selectedTiersFromConfig.errors.required">Please select a tier</div>
@@ -73,11 +73,23 @@
     <div *ngIf="tiersSaved" class="page-2">
       <form [formGroup]="continuedForm">
         <div class="form-row">
-          <div class="form-group col-md-3">
-            <li class="custom" *ngFor="let tier of cf.selectedTiers.value; let i = index">
-              <span id="tier">{{tier}}</span>
-              <textarea></textarea>
-            </li>
+          <div class="form-group">
+            <ul>
+              <li *ngFor="let tier of cf.selectedTiers.value; let i = index">
+                <span id="tier">{{tier.hostname}} - Interfaces</span>
+                <div>
+                  <ul>
+                    <li *ngFor="let interface of tier.interfaces">{{interface.interface}}
+                      <input [ngModelOptions]="{standalone: true}" [(ngModel)]="interface.intervrf" type="checkbox" (click)="markInterfaceIntervrf(interface)"> Intervrf
+                      <input [ngModelOptions]="{standalone: true}" [(ngModel)]="interface.external" type="checkbox" (click)="markInterfaceExternal(interface)"> External
+                      <input [ngModelOptions]="{standalone: true}" [(ngModel)]="interface.inside" type="checkbox" (click)="markInterfaceInside(interface)"> Inside
+                    </li>
+                  </ul>
+                </div>
+                <textarea [ngModelOptions]="{standalone: true}" [(ngModel)]="tier.namespace"></textarea>
+              </li>
+            </ul>
+
             <button type="button" class="btn btn-primary" (click)="saveNameSpaces()">
               <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
               <span>Next</span>
