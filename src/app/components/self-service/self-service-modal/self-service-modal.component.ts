@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Tier, V1DatacentersService, V1SelfServiceService, V1TiersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -12,15 +12,13 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 export class SelfServiceModalComponent implements OnInit, OnDestroy {
   initialForm: FormGroup;
   continuedForm: FormGroup;
-  submitted: boolean;
+  submittedFirstForm: boolean;
+  submittedSecondForm: boolean;
   tiers: Tier[];
-  selectedTier: Tier;
   datacenterId;
   tiersFromConfig = [];
-  selectedTiers;
-  tiersSaved: boolean;
-  storedInterfaces = [];
-  mappedInterfacesToHostnames = [];
+  asaInterfacesWithIndex = [];
+  hostsWithInterfaces = [];
   vsysHolderArray = [];
   zoneHolderArray = [];
 
@@ -91,27 +89,55 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     });
   }
 
+  // submits first form/locks the users selectedTiersFromConfig selections
   public saveTiers() {
+    this.submittedFirstForm = true;
+    if (this.initialForm.invalid) {
+      return;
+    }
+    // find union between selectedTiers and mappedHostnamesWithInterfaces
     const selectedTiers = this.f.selectedTiersFromConfig.value;
-    console.log('selectedTiers', selectedTiers);
-    console.log('mappedInterfaces', this.mappedInterfacesToHostnames);
-    this.mappedInterfacesToHostnames.map(int => {
+    this.hostsWithInterfaces.map(int => {
       if (!selectedTiers.includes(int.hostname)) {
-        this.mappedInterfacesToHostnames.splice(this.mappedInterfacesToHostnames.indexOf(int));
+        this.hostsWithInterfaces.splice(this.hostsWithInterfaces.indexOf(int));
       }
     });
-    console.log('mappedInterfaces', this.mappedInterfacesToHostnames);
-    // find union between selectedTiers and mappedHostnamesWithInterfaces
-    // console.log('this.cf', this.cf);
-    this.tiersSaved = true;
+
+    // disable first form
     this.initialForm.controls.selectedTiersFromConfig.disable();
+
+    // create second form using the value from the union we created above
     this.continuedForm = this.formBuilder.group({
-      selectedTiers: [this.mappedInterfacesToHostnames],
+      selectedTiers: [this.hostsWithInterfaces],
     });
-    console.log('this.cf', this.cf);
   }
 
+  // submits second form/locks the users interface selections
   public saveNameSpaces() {
+    this.cf.selectedTiers.value.map(hostWithInterfaces => {
+      // each host will have an interfaceMatrix
+      const interfaceMatrix = { external: [], intervrf: [], insidePrefix: '' };
+
+      // we build the interfaceMatrix based on the users check box values in the continued form
+      hostWithInterfaces.interfaces.map(int => {
+        // if the interface has the inside checkbox checked (inside: true)
+        if (int.inside) {
+          interfaceMatrix.insidePrefix = int.interface;
+        }
+        // if the interface has the external checkbox checked (external: true)
+        if (int.external) {
+          interfaceMatrix.external.push(int.interface);
+
+          // if the interface has the intervrf checkbox checked (external: true)
+        } else if (int.intervrf) {
+          interfaceMatrix.intervrf.push(int.interface);
+        }
+      });
+      hostWithInterfaces.interfaceMatrix = interfaceMatrix;
+    });
+
+    // lock second form
+    this.submittedSecondForm = true;
     console.log('this.cf', this.cf);
   }
 
@@ -148,7 +174,6 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
   public deviceConfigFileChange(event) {
     this.initialForm.controls.deviceType.disable();
-    this.initialForm.controls.DCSTierSelect.disable();
     const reader = new FileReader();
     const file = event.target.files[0];
     reader.readAsText(file);
@@ -157,8 +182,6 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       const deviceType = this.initialForm.controls.deviceType.value;
       if (deviceType === 'PA') {
         const parser = new DOMParser();
-        const zoneRegex = /zone(.*)/g;
-        const zones = readableText.match(zoneRegex);
         const parsed = parser.parseFromString(readableText, 'text/xml');
         const json: any = this.xml2json(parsed);
         console.log('json', json);
@@ -169,38 +192,59 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         vsysArrayFromConfig.map(vsys => {
           vsys.zones = [];
           const numOfZones = vsys.zone.entry.length;
+          const zonesToApply = this.zoneHolderArray.splice(0, numOfZones);
+          zonesToApply.map(zone => {
+            vsys.zones.push({ interface: zone });
+          });
+          this.hostsWithInterfaces.push({ hostname: vsys.name, interfaces: vsys.zones });
+          this.tiersFromConfig.push(vsys.name);
+        });
 
-          // close
-          // need to pop off elements as they move from one array to another
-          for (let i = 0; i < numOfZones; i++) {
-            vsys.zones.push(this.zoneHolderArray[i]);
-          }
-        });
-        const childNodes = parsed.childNodes[0];
-        const devices = childNodes.childNodes[5];
-        const entry = devices.childNodes[1];
-        const vsys = entry.childNodes[5];
-        const entries = vsys.childNodes;
-        const entryArray = [];
-        for (let i = 0; i < entries.length; i++) {
-          if (i % 2 === 0) {
-            continue;
-          } else {
-            entryArray.push(entries[i]);
-          }
-        }
-        const securityZones = [];
-        const vsysValueArray = [];
-        entryArray.map(entry => {
-          const zoneChildren = entry.childNodes[13].children;
-          // for (let i = 0; i < zoneChildren.length; i++) {
-          //   securityZones.push(zoneChildren[i].attributes[0].value)
-          // }
-          const vsysName = entry.attributes[0].value;
-          vsysValueArray.push(vsysName);
-          this.mappedInterfacesToHostnames.push({ hostname: vsysName, interfaces: securityZones });
-        });
-        this.tiersFromConfig = vsysValueArray;
+        // BLOCK CODE COMMENT
+        // THIS WAS OLD CODE THAT WORKED BEFORE IMPLEMENTING A NEW SOLUTION
+        // USING AN XML -> JSON FUNCTION
+        // KEEP THIS AROUND IN CASE OF A NEED TO REVERT
+
+        // vsysArrayFromConfig.map(vsys => {
+        //   vsys.zones = [];
+        //   const numOfZones = vsys.zone.entry.length;
+
+        //   // close
+        //   // need to pop off elements as they move from one array to another
+        //   for (let i = 0; i < numOfZones; i++) {
+        //     vsys.zones.push(this.zoneHolderArray[i]);
+        //   }
+        // });
+        // const childNodes = parsed.childNodes[0];
+        // const devices = childNodes.childNodes[5];
+        // const entry = devices.childNodes[1];
+        // const vsys = entry.childNodes[5];
+        // const entries = vsys.childNodes;
+        // const entryArray = [];
+        // for (let i = 0; i < entries.length; i++) {
+        //   if (i % 2 === 0) {
+        //     continue;
+        //   } else {
+        //     entryArray.push(entries[i]);
+        //   }
+        // }
+        // const securityZones = [];
+        // const vsysValueArray = [];
+        // entryArray.map(entry => {
+        //   const zoneChildren = entry.childNodes[13].children;
+        // for (let i = 0; i < zoneChildren.length; i++) {
+        //   securityZones.push(zoneChildren[i].attributes[0].value)
+        // }
+        //   const vsysName = entry.attributes[0].value;
+        //   vsysValueArray.push(vsysName);
+        //   this.hostsWithInterfaces.push({ hostname: vsysName, interfaces: securityZones });
+        // });
+        // this.tiersFromConfig = vsysArrayFromConfig.map(vsys => {
+        //   return `${vsys.name}`;
+        // });
+        // vsysArrayFromConfig.map(vsys => {
+        //   this.hostsWithInterfaces.push({'hostname': vsys.name, 'interfaces': vsys.zones})
+        // })
       }
 
       // use regex to search for hostname for ASA configs
@@ -218,6 +262,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
           if (hostnameIndex !== -1) {
             hostname = hostname.split(' ')[1];
             hostnameIndexes.push({ hostname: hostname, hostnameIndex: hostnameIndex });
+            this.tiersFromConfig.push(hostname);
           }
         });
 
@@ -236,11 +281,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
           this.recursivelyGetIndexes(int, splitFileByLine);
         });
 
-        this.tiersFromConfig = hostnameIndexes.map(hostnameIndex => {
-          return hostnameIndex.hostname;
-        });
-        this.mappedInterfacesToHostnames = this.interfaceMatrixHelper(hostnameIndexes, this.storedInterfaces, splitFileByLine.length);
-        console.log('mappedEverything', this.mappedInterfacesToHostnames);
+        this.hostsWithInterfaces = this.interfaceMatrixHelper(hostnameIndexes, this.asaInterfacesWithIndex, splitFileByLine.length);
       }
     };
   }
@@ -258,7 +299,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     if (offset) {
       const index = file.indexOf(' ' + val + '\r', offset + 1);
       if (index !== -1) {
-        this.storedInterfaces.push({ interface: val, index: index });
+        this.asaInterfacesWithIndex.push({ interface: val, index: index });
         this.recursivelyGetIndexes(val, file, index);
       } else {
         return;
@@ -266,7 +307,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     } else {
       const index = file.indexOf(' ' + val + '\r');
       if (index !== -1) {
-        this.storedInterfaces.push({ interface: val, index: index });
+        this.asaInterfacesWithIndex.push({ interface: val, index: index });
         this.recursivelyGetIndexes(val, file, index);
       } else {
         return;
@@ -275,20 +316,35 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   }
 
   // helper function for building the interface matrix
+
+  // after this function executes we will have a range associated with each hostname
+  // this range tells us that any interfaces that fall within this range should belong to that hostname
   private interfaceMatrixHelper(hostnamesWithIndex, interfacesWithIndex, eof) {
     for (let i = 0; i < hostnamesWithIndex.length; i++) {
+      // get range for each hostname
       const range = { min: '', max: '' };
+
+      // the min range is the index of the starting hostname
       range.min = hostnamesWithIndex[i].hostnameIndex;
+
       if (hostnamesWithIndex[i + 1]) {
+        // the max range is the index of the NEXT hostname
         range.max = hostnamesWithIndex[i + 1].hostnameIndex;
       } else {
+        // if there is no next hostname, the max range is end of file
         range.max = eof;
       }
       hostnamesWithIndex[i].range = range;
     }
+
+    // map through each hostname now that we have ranges for each one
     hostnamesWithIndex.map(host => {
       host.interfaces = [];
+
+      // map through all interfaces (with their index)
       interfacesWithIndex.map(int => {
+        // if the index of the interface falls between the host's range
+        // we add that interface to the list of host.interfaces
         if (int.index > host.range.min && int.index < host.range.max) {
           host.interfaces.push(int);
         }
@@ -308,15 +364,18 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   }
 
   public reset() {
-    this.storedInterfaces = [];
-    this.mappedInterfacesToHostnames = [];
-    this.selectedTier = null;
-    this.tiersFromConfig = null;
-    this.tiersSaved = false;
+    this.submittedFirstForm = false;
+    this.submittedSecondForm = false;
+    this.asaInterfacesWithIndex = [];
+    this.hostsWithInterfaces = [];
+    this.tiersFromConfig = [];
     this.initialForm.reset();
     this.initialForm.enable();
-    this.continuedForm.reset();
-    this.continuedForm.enable();
+    if (this.continuedForm) {
+      this.continuedForm.reset();
+      this.continuedForm.enable();
+    }
+
     console.log('this.form', this.initialForm);
   }
 
