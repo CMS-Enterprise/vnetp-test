@@ -9,6 +9,29 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
   selector: 'app-self-service-modal',
   templateUrl: './self-service-modal.component.html',
 })
+
+// export class Interface {
+//   interface: string;
+//   index: number;
+//   intervrf: boolean;
+//   external: boolean;
+//   inside: boolean;
+// }
+
+// export class InterfaceMatrix {
+//   external: [];
+//   intervrf: [];
+//   insidePrefix: string;
+// }
+
+// export class SelfServiceAPIDto {
+//   hostname: string;
+//   hostnameIndex: number;
+//   interfaces;
+//   interfaceMatrix?
+//   namespace?
+//   range?
+// }
 export class SelfServiceModalComponent implements OnInit, OnDestroy {
   initialForm: FormGroup;
   continuedForm: FormGroup;
@@ -92,6 +115,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
   // submits first form/locks the users selectedTiersFromConfig selections
   public saveTiers() {
+    console.log('this.f', this.f);
     this.submittedFirstForm = true;
     if (this.initialForm.invalid) {
       this.showSecondForm = false;
@@ -100,12 +124,20 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     this.showSecondForm = true;
     // find union between selectedTiers and mappedHostnamesWithInterfaces
     const selectedTiers = this.f.selectedTiersFromConfig.value;
-    this.hostsWithInterfaces.map(int => {
-      if (!selectedTiers.includes(int.hostname)) {
-        this.hostsWithInterfaces.splice(this.hostsWithInterfaces.indexOf(int));
+    if (this.f.deviceType.value === 'ASA') {
+      this.hostsWithInterfaces.map(host => {
+        host.interfaces.map(int => {
+          int.interface = int.interface.split(' ')[1];
+          return int;
+        });
+      });
+    }
+
+    this.hostsWithInterfaces = this.hostsWithInterfaces.filter(host => {
+      if (selectedTiers.includes(host.hostname)) {
+        return host;
       }
     });
-
     // disable first form
     this.initialForm.controls.selectedTiersFromConfig.disable();
 

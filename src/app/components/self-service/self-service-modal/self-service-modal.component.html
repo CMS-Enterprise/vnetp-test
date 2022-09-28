@@ -87,6 +87,10 @@
                   <label>Namespace</label>
                   <textarea [ngModelOptions]="{standalone: true}" [(ngModel)]="tier.namespace"></textarea>
                 </div>
+
+                <div *ngIf="tier.interfaceMatrix">{{tier.interfaceMatrix | json }}
+                  
+                </div>
                 
               </li>
             </ul>
