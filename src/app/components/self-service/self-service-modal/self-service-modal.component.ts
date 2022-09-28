@@ -14,6 +14,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   continuedForm: FormGroup;
   submittedFirstForm: boolean;
   submittedSecondForm: boolean;
+  showSecondForm;
   tiers: Tier[];
   datacenterId;
   tiersFromConfig = [];
@@ -93,8 +94,10 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   public saveTiers() {
     this.submittedFirstForm = true;
     if (this.initialForm.invalid) {
+      this.showSecondForm = false;
       return;
     }
+    this.showSecondForm = true;
     // find union between selectedTiers and mappedHostnamesWithInterfaces
     const selectedTiers = this.f.selectedTiersFromConfig.value;
     this.hostsWithInterfaces.map(int => {

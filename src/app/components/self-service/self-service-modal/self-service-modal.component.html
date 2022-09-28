@@ -5,7 +5,7 @@
   </header>
 
   <main class="modal-body">
-    <div [hidden]="submittedFirstForm" class="page-1">
+    <div [hidden]="submittedFirstForm && showSecondForm" class="page-1">
       <form [formGroup]="initialForm">
         <div class="form-row">
 
@@ -31,7 +31,7 @@
             </div>
           </div>
 
-          <div class="form-group col">
+          <div *ngIf="f.deviceType.value" class="form-group col">
             <label for="deviceConfig">Device Config</label>
             <input [class.is-invalid]="submittedFirstForm && f.deviceConfig.errors" formControlName="deviceConfig" id="deviceConfig" type="file" class="form-control-file" 
               (change)="deviceConfigFileChange($event)">
@@ -67,7 +67,7 @@
 
     </div>
 
-    <div *ngIf="submittedFirstForm" class="page-2">
+    <div *ngIf="submittedFirstForm && showSecondForm" class="page-2">
       <form [formGroup]="continuedForm">
         <div class="form-row">
           <div class="form-group">
