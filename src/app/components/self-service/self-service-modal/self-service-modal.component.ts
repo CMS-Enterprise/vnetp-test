@@ -4,6 +4,8 @@ import { Tier, V1DatacentersService, V1SelfServiceService, V1TiersService } from
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { SelfServiceModalHostWithInterfaces } from './self-service-modal-dtos/self-service-modal-host-with-interfaces-dto';
+import { SelfServiceModalAsaInterfaceWithIndex } from './self-service-modal-dtos/self-service-modal-asa-interface-with-index-dto';
 
 @Component({
   selector: 'app-self-service-modal',
@@ -37,14 +39,14 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   continuedForm: FormGroup;
   submittedFirstForm: boolean;
   submittedSecondForm: boolean;
-  showSecondForm;
+  showSecondForm: boolean;
   tiers: Tier[];
-  datacenterId;
-  tiersFromConfig = [];
-  asaInterfacesWithIndex = [];
-  hostsWithInterfaces = [];
-  vsysHolderArray = [];
-  zoneHolderArray = [];
+  datacenterId: string;
+  tiersFromConfig: string[] = [];
+  asaInterfacesWithIndex: SelfServiceModalAsaInterfaceWithIndex[] = [];
+  hostsWithInterfaces: SelfServiceModalHostWithInterfaces[] = [];
+  vsysHolderArray: string[] = [];
+  zoneHolderArray: string[] = [];
 
   private currentDatacenterSubscription: Subscription;
 
@@ -103,7 +105,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  private buildForm() {
+  private buildForm(): void {
     this.initialForm = this.formBuilder.group({
       deviceType: ['', Validators.required],
       DCSTierSelect: ['', Validators.required],
@@ -114,7 +116,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   }
 
   // submits first form/locks the users selectedTiersFromConfig selections
-  public saveTiers() {
+  public saveTiers(): void {
     console.log('this.f', this.f);
     this.submittedFirstForm = true;
     if (this.initialForm.invalid) {
@@ -148,7 +150,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   }
 
   // submits second form/locks the users interface selections
-  public saveNameSpaces() {
+  public saveNameSpaces(): void {
     this.cf.selectedTiers.value.map(hostWithInterfaces => {
       // each host will have an interfaceMatrix
       const interfaceMatrix = { external: [], intervrf: [], insidePrefix: '' };
@@ -207,7 +209,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       });
   }
 
-  public deviceConfigFileChange(event) {
+  public deviceConfigFileChange(event): void {
     this.initialForm.controls.deviceType.disable();
     const reader = new FileReader();
     const file = event.target.files[0];
@@ -328,7 +330,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   // the offset is the index found in the initial function run
   // the offset will also be the index each time a duplicate interface is encountered
   // this ensures we are always checking the NEXT instance of an interface match
-  private recursivelyGetIndexes(val, file, offset?) {
+  private recursivelyGetIndexes(val, file, offset?): void {
     // if we've already encountered an interface match, we use the offset
     // which is the index of that interface match to give us our starting point
     if (offset) {
