@@ -18,6 +18,7 @@ export interface SelfService {
     rawXMLConfig: object | null;
     rawTextConfig: string | null;
     rawJsonConfig: object | null;
+    mappedObjects: object | null;
     intervrfSubnets: string | null;
     convertedConfig: SelfServiceConvertedArtifactObjects;
     datacenterId: string | null;

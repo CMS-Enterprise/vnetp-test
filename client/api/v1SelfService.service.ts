@@ -18,6 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { SelfService } from '../model/models';
+import { SelfServiceConfig } from '../model/models';
 import { SelfServiceRawConfig } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -38,6 +39,14 @@ export interface GetSelfServiceTextSelfServiceRequestParams {
 
 export interface GetSelfServiceXMLSelfServiceRequestParams {
     selfServiceId: string;
+}
+
+export interface ProcessAsaConfigSelfServiceRequestParams {
+    selfServiceConfig: SelfServiceConfig;
+}
+
+export interface ProcessPAConfigSelfServiceRequestParams {
+    selfServiceConfig: SelfServiceConfig;
 }
 
 export interface ReplaceExistingRawConfigSelfServiceRequestParams {
@@ -331,55 +340,19 @@ export class V1SelfServiceService {
     }
 
     /**
-     * parse the xml file
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public parseXmlSelfService(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public parseXmlSelfService(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public parseXmlSelfService(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public parseXmlSelfService(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/self-service/parse/xml`,
-            null,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
      * create new self service
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public processAsaConfigSelfService(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public processAsaConfigSelfService(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public processAsaConfigSelfService(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public processAsaConfigSelfService(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public processAsaConfigSelfService(requestParameters: ProcessAsaConfigSelfServiceRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public processAsaConfigSelfService(requestParameters: ProcessAsaConfigSelfServiceRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public processAsaConfigSelfService(requestParameters: ProcessAsaConfigSelfServiceRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public processAsaConfigSelfService(requestParameters: ProcessAsaConfigSelfServiceRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const selfServiceConfig = requestParameters.selfServiceConfig;
+        if (selfServiceConfig === null || selfServiceConfig === undefined) {
+            throw new Error('Required parameter selfServiceConfig was null or undefined when calling processAsaConfigSelfService.');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -394,6 +367,15 @@ export class V1SelfServiceService {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
 
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
@@ -401,7 +383,7 @@ export class V1SelfServiceService {
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/self-service/asa`,
-            null,
+            selfServiceConfig,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -414,13 +396,18 @@ export class V1SelfServiceService {
 
     /**
      * process PA config
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public processPAConfigSelfService(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public processPAConfigSelfService(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public processPAConfigSelfService(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public processPAConfigSelfService(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public processPAConfigSelfService(requestParameters: ProcessPAConfigSelfServiceRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public processPAConfigSelfService(requestParameters: ProcessPAConfigSelfServiceRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public processPAConfigSelfService(requestParameters: ProcessPAConfigSelfServiceRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public processPAConfigSelfService(requestParameters: ProcessPAConfigSelfServiceRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const selfServiceConfig = requestParameters.selfServiceConfig;
+        if (selfServiceConfig === null || selfServiceConfig === undefined) {
+            throw new Error('Required parameter selfServiceConfig was null or undefined when calling processPAConfigSelfService.');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -436,13 +423,22 @@ export class V1SelfServiceService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
             responseType = 'text';
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/self-service/pa`,
-            null,
+            selfServiceConfig,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

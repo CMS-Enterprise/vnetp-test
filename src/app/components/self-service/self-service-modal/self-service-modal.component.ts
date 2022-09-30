@@ -11,29 +11,6 @@ import { SelfServiceModalAsaInterfaceWithIndex } from './self-service-modal-dtos
   selector: 'app-self-service-modal',
   templateUrl: './self-service-modal.component.html',
 })
-
-// export class Interface {
-//   interface: string;
-//   index: number;
-//   intervrf: boolean;
-//   external: boolean;
-//   inside: boolean;
-// }
-
-// export class InterfaceMatrix {
-//   external: [];
-//   intervrf: [];
-//   insidePrefix: string;
-// }
-
-// export class SelfServiceAPIDto {
-//   hostname: string;
-//   hostnameIndex: number;
-//   interfaces;
-//   interfaceMatrix?
-//   namespace?
-//   range?
-// }
 export class SelfServiceModalComponent implements OnInit, OnDestroy {
   initialForm: FormGroup;
   continuedForm: FormGroup;
@@ -47,6 +24,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   hostsWithInterfaces: SelfServiceModalHostWithInterfaces[] = [];
   vsysHolderArray: string[] = [];
   zoneHolderArray: string[] = [];
+  rawConfig;
 
   private currentDatacenterSubscription: Subscription;
 
@@ -117,7 +95,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
   // submits first form/locks the users selectedTiersFromConfig selections
   public saveTiers(): void {
-    console.log('this.f', this.f);
+    console.log('this.initialForm', this.initialForm);
     this.submittedFirstForm = true;
     if (this.initialForm.invalid) {
       this.showSecondForm = false;
@@ -156,20 +134,34 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       const interfaceMatrix = { external: [], intervrf: [], insidePrefix: '' };
 
       // we build the interfaceMatrix based on the users check box values in the continued form
+
+      let oneInsidePrefix = false;
       hostWithInterfaces.interfaces.map(int => {
+        if (!int.inside && !int.outside) {
+          int.needsSelection = true;
+        }
         // if the interface has the inside checkbox checked (inside: true)
         if (int.inside) {
+          oneInsidePrefix = true;
+          int.needsSelection = false;
           interfaceMatrix.insidePrefix = int.interface;
         }
         // if the interface has the external checkbox checked (external: true)
         if (int.external) {
+          int.needsSelection = false;
           interfaceMatrix.external.push(int.interface);
 
           // if the interface has the intervrf checkbox checked (external: true)
         } else if (int.intervrf) {
+          int.needsSelection = false;
           interfaceMatrix.intervrf.push(int.interface);
         }
       });
+      if (!oneInsidePrefix) {
+        hostWithInterfaces.needsInsidePrefix = true;
+      } else {
+        hostWithInterfaces.needsInsidePrefix = false;
+      }
       hostWithInterfaces.interfaceMatrix = interfaceMatrix;
     });
 
@@ -218,10 +210,11 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       const readableText = reader.result.toString();
       const deviceType = this.initialForm.controls.deviceType.value;
       if (deviceType === 'PA') {
+        this.f.intervrfSubnets.setValidators(Validators.required);
         const parser = new DOMParser();
         const parsed = parser.parseFromString(readableText, 'text/xml');
         const json: any = this.xml2json(parsed);
-        console.log('json', json);
+        this.rawConfig = readableText;
         const vsysArrayFromConfig = json.config.devices.entry.vsys.entry;
         for (let i = 0; i < vsysArrayFromConfig.length; i++) {
           vsysArrayFromConfig[i].name = this.vsysHolderArray[i];
@@ -286,6 +279,8 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
       // use regex to search for hostname for ASA configs
       if (deviceType === 'ASA') {
+        this.f.intervrfSubnets.clearValidators();
+        this.rawConfig = readableText;
         const splitFileByLine = readableText.split('\n');
         const hostnameRegex = /hostname(.*)/g;
         const nameifRegex = /nameif(.*)/g;
@@ -321,6 +316,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         this.hostsWithInterfaces = this.interfaceMatrixHelper(hostnameIndexes, this.asaInterfacesWithIndex, splitFileByLine.length);
       }
     };
+    this.f.deviceConfig.disable();
   }
 
   //psuedo :
@@ -416,7 +412,32 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     console.log('this.form', this.initialForm);
   }
 
-  public save() {}
+  public save() {
+    this.submittedSecondForm = true;
+    const mappedObjects = this.cf.selectedTiers.value;
+    if (this.continuedForm.invalid) {
+      return;
+    }
+    const filteredMappedObjects = mappedObjects.map(obj => {
+      return { hostname: obj.hostname, interfaceMatrix: obj.interfaceMatrix, namespace: obj.namespace ? obj.namespace : null };
+    });
+    const configDto = { mappedObjects: filteredMappedObjects, rawConfig: '' };
+    configDto.rawConfig = this.rawConfig;
+    console.log('configDto', configDto);
+    this.createSelfService(configDto);
+  }
+
+  private createSelfService(configDto) {
+    if (this.f.deviceType.value === 'ASA') {
+      this.selfServiceService.processAsaConfigSelfService({ selfServiceConfig: configDto }).subscribe(data => {
+        console.log('data', data);
+      });
+    } else if (this.f.deviceType.value === 'PA') {
+      this.selfServiceService.processPAConfigSelfService({ selfServiceConfig: configDto }).subscribe(data => {
+        console.log('data', data);
+      });
+    }
+  }
 
   ngOnInit() {
     this.buildForm();

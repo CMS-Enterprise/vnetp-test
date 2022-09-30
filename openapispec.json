@@ -6648,6 +6648,10 @@
             "type": "object",
             "nullable": true
           },
+          "mappedObjects": {
+            "type": "object",
+            "nullable": true
+          },
           "intervrfSubnets": {
             "type": "string",
             "nullable": true
@@ -6666,9 +6670,21 @@
           "rawXMLConfig",
           "rawTextConfig",
           "rawJsonConfig",
+          "mappedObjects",
           "intervrfSubnets",
           "convertedConfig",
           "datacenterId"
+        ]
+      },
+      "SelfServiceConfig": {
+        "type": "object",
+        "properties": {
+          "config": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "config"
         ]
       },
       "SelfServiceRawConfig": {
@@ -25203,28 +25219,22 @@
         ]
       }
     },
-    "/v1/self-service/parse/xml": {
-      "post": {
-        "operationId": "parseXmlSelfService",
-        "summary": "",
-        "description": "parse the xml file",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v1/self-service"
-        ]
-      }
-    },
     "/v1/self-service/asa": {
       "post": {
         "operationId": "processAsaConfigSelfService",
         "summary": "",
         "description": "create new self service",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelfServiceConfig"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
@@ -25241,6 +25251,16 @@
         "summary": "",
         "description": "process PA config",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelfServiceConfig"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""

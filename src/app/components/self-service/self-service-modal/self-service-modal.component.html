@@ -39,8 +39,11 @@
 
           <div *ngIf="f.deviceType.value === 'PA'" class="form-group col">
             <label for="intervrfSubnets">Intervrf Subnets</label>
-            <input formControlName="intervrfSubnets" id="intervrfSubnets"
+            <input [class.is-invalid]="submittedFirstForm && f.intervrfSubnets.errors" formControlName="intervrfSubnets" id="intervrfSubnets"
               type="file" class="form-control-file" (change)="intervrfSubnetsFileChange($event)">
+              <div *ngIf="submittedFirstForm && f.intervrfSubnets.errors" class="invalid-feedback">
+                <div *ngIf="f.intervrfSubnets.errors.required">Please upload an intervrf subnets file for PA conversion</div>
+              </div>
           </div>
 
           <div *ngIf="tiersFromConfig && tiersFromConfig.length > 0" class="form-group col">
@@ -74,12 +77,17 @@
             <ul>
               <li *ngFor="let tier of cf.selectedTiers.value; let i = index">
                 <span id="tier">{{tier.hostname}} - Interfaces</span>
+                <div class="hostNeedsInsidePrefix" *ngIf="tier.needsInsidePrefix">one interface must be inside</div>
                 <div>
                   <ul>
                     <li *ngFor="let interface of tier.interfaces">{{interface.interface}}
                       <input [ngModelOptions]="{standalone: true}" [(ngModel)]="interface.intervrf" type="checkbox" (click)="markInterfaceIntervrf(interface)"> Intervrf
                       <input [ngModelOptions]="{standalone: true}" [(ngModel)]="interface.external" type="checkbox" (click)="markInterfaceExternal(interface)"> External
                       <input [ngModelOptions]="{standalone: true}" [(ngModel)]="interface.inside" type="checkbox" (click)="markInterfaceInside(interface)"> Inside
+                      <div *ngIf="interface.needsSelection">
+                        <div class="interfaceNeedsSelection">Make a selection</div>
+
+                      </div>
                     </li>
                   </ul>
                 </div>
