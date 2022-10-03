@@ -33,8 +33,11 @@
 
           <div *ngIf="f.deviceType.value" class="form-group col">
             <label for="deviceConfig">Device Config</label>
-            <input [class.is-invalid]="submittedFirstForm && f.deviceConfig.errors" formControlName="deviceConfig" id="deviceConfig" type="file" class="form-control-file" 
+            <input [class.is-invalid]="f.deviceConfig.errors" formControlName="deviceConfig" id="deviceConfig" type="file" class="form-control-file" 
               (change)="deviceConfigFileChange($event)">
+              <div *ngIf="f.deviceConfig.errors" class="invalid-feedback">
+                <div *ngIf="f.deviceConfig.errors.incorrectFileType">Please upload a config file with the correct type for the device chosen</div>
+              </div>
           </div>
 
           <div *ngIf="f.deviceType.value === 'PA'" class="form-group col">

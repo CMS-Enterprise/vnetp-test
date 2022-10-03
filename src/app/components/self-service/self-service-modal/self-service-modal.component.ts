@@ -44,6 +44,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     return this.continuedForm.controls;
   }
 
+  // converts XML data to JSON format
   xml2json(xml) {
     try {
       var obj = {};
@@ -52,11 +53,12 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
           var item = xml.children.item(i);
           var nodeName = item.nodeName;
 
+          // custom logic to get the list of vsys's from the XML data
           if (xml.nodeName === 'vsys') {
             const vsysName = item.attributes[0].value;
             this.vsysHolderArray.push(vsysName);
           }
-
+          // custom logic to get the list of security zones from the XML data
           if (xml.nodeName === 'zone') {
             const zoneName = item.attributes[0].value;
             this.zoneHolderArray.push(zoneName);
@@ -88,7 +90,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       deviceType: ['', Validators.required],
       DCSTierSelect: ['', Validators.required],
       deviceConfig: ['', Validators.required],
-      intervrfSubnets: [''],
+      intervrfSubnets: [null],
       selectedTiersFromConfig: ['', Validators.required],
     });
   }
@@ -102,17 +104,19 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       return;
     }
     this.showSecondForm = true;
-    // find union between selectedTiers and mappedHostnamesWithInterfaces
     const selectedTiers = this.f.selectedTiersFromConfig.value;
     if (this.f.deviceType.value === 'ASA') {
       this.hostsWithInterfaces.map(host => {
         host.interfaces.map(int => {
+          // strip `nameof` from ASA interfaces
           int.interface = int.interface.split(' ')[1];
           return int;
         });
       });
     }
-
+    // find union between selectedTiers and mappedHostnamesWithInterfaces
+    // if a tier from the config was not choosen by the user
+    // filter it out from mapping that tier and moving on the interfaces form
     this.hostsWithInterfaces = this.hostsWithInterfaces.filter(host => {
       if (selectedTiers.includes(host.hostname)) {
         return host;
@@ -157,8 +161,11 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
           interfaceMatrix.intervrf.push(int.interface);
         }
       });
+      // if none of the interfaces are selected as inside
+      // remove the inside prefix from the interface matrix and flip `needsInsidePrefix` flag for that tier
       if (!oneInsidePrefix) {
         hostWithInterfaces.needsInsidePrefix = true;
+        interfaceMatrix.insidePrefix = '';
       } else {
         hostWithInterfaces.needsInsidePrefix = false;
       }
@@ -205,28 +212,63 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     this.initialForm.controls.deviceType.disable();
     const reader = new FileReader();
     const file = event.target.files[0];
+    const deviceType = this.initialForm.controls.deviceType.value;
+
+    // do file type checking
+    // for PA devices the file type must be text/xml
+    // if not we set an error on that form field
+    if (deviceType === 'PA') {
+      if (file.type !== 'text/xml') {
+        this.f.deviceConfig.setErrors({ incorrectFileType: true });
+        return;
+      } else {
+        this.f.deviceConfig.setErrors(null);
+      }
+    }
+    // for ASA devices the file type must be '' (.log does not register)
+    // if not we set an error on that form field
+    if (deviceType === 'ASA') {
+      if (file.type !== '') {
+        this.f.deviceConfig.setErrors({ incorrectFileType: true });
+        return;
+      } else {
+        this.f.deviceConfig.setErrors(null);
+      }
+    }
     reader.readAsText(file);
     reader.onload = () => {
+      // convert file reader result to human readable text
       const readableText = reader.result.toString();
-      const deviceType = this.initialForm.controls.deviceType.value;
       if (deviceType === 'PA') {
+        // if device type is PA, set a new required validator on the intervrfSubnets form field
         this.f.intervrfSubnets.setValidators(Validators.required);
+        this.f.intervrfSubnets.updateValueAndValidity();
+        // instantiate parser to read XML data
         const parser = new DOMParser();
         const parsed = parser.parseFromString(readableText, 'text/xml');
+        // convert XML parsed data to json format for object readability
         const json: any = this.xml2json(parsed);
         this.rawConfig = readableText;
+        // the vsys array is located here in the json object body
         const vsysArrayFromConfig = json.config.devices.entry.vsys.entry;
+        // add name property to vsys array from config
         for (let i = 0; i < vsysArrayFromConfig.length; i++) {
           vsysArrayFromConfig[i].name = this.vsysHolderArray[i];
         }
+        // map through the vsys array from the config
         vsysArrayFromConfig.map(vsys => {
           vsys.zones = [];
+          // get the number of security zones in each vsys
           const numOfZones = vsys.zone.entry.length;
+          // use the numOfZones to break up the current zoneHolderArray by each vsys
           const zonesToApply = this.zoneHolderArray.splice(0, numOfZones);
+          // add the zones to the vsys.zones array
           zonesToApply.map(zone => {
             vsys.zones.push({ interface: zone });
           });
+          // append newly mapped object to component hostsWithInterfaces object
           this.hostsWithInterfaces.push({ hostname: vsys.name, interfaces: vsys.zones });
+          // add the vsys name to the list of tiers that were extracted from the device config
           this.tiersFromConfig.push(vsys.name);
         });
 
@@ -279,21 +321,29 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
       // use regex to search for hostname for ASA configs
       if (deviceType === 'ASA') {
+        // since deviceType is not PA, we do not need a required validator on the intervrfSubnets form field
         this.f.intervrfSubnets.clearValidators();
+        this.f.intervrfSubnets.updateValueAndValidity();
         this.rawConfig = readableText;
+        // split readableText into an array of lines, each member in the array is an individual line in the device config
         const splitFileByLine = readableText.split('\n');
         const hostnameRegex = /hostname(.*)/g;
         const nameifRegex = /nameif(.*)/g;
+        // use regex to find the hostnames in the device config
         const hostnames = readableText.match(hostnameRegex);
+        // use regex to find the interfaces in the device config
         const interfaces = readableText.match(nameifRegex);
         const hostnameIndexes = [];
+        // map through each hostname
         hostnames.map(hostname => {
+          // get the index (line number) of each hostname
           const hostnameIndex = splitFileByLine.indexOf(hostname + '\r');
-
-          // get index (line number) of the hostname in the ASA config file
           if (hostnameIndex !== -1) {
+            // strip whitespace from hostname
             hostname = hostname.split(' ')[1];
+            // add newly mapped hostname to hostnameIndexes array
             hostnameIndexes.push({ hostname: hostname, hostnameIndex: hostnameIndex });
+            // add the hostname to the list of tiers extracted from the device config
             this.tiersFromConfig.push(hostname);
           }
         });
@@ -312,7 +362,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         uniqueIndexes.map(int => {
           this.recursivelyGetIndexes(int, splitFileByLine);
         });
-
+        // after getting the index for each interface, pass the hostnameIndexes, asaInterfaceIndexes, and the length of the file (number of lines) to helper func
         this.hostsWithInterfaces = this.interfaceMatrixHelper(hostnameIndexes, this.asaInterfacesWithIndex, splitFileByLine.length);
       }
     };
@@ -320,7 +370,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   }
 
   //psuedo :
-  // take the value, find the index in the string
+  // take the value, find the index (line number) in the string (text file)
   // if there are multiple entries with the same value
   // pass the same args to the function this time providing an offset
   // the offset is the index found in the initial function run
@@ -349,7 +399,6 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   }
 
   // helper function for building the interface matrix
-
   // after this function executes we will have a range associated with each hostname
   // this range tells us that any interfaces that fall within this range should belong to that hostname
   private interfaceMatrixHelper(hostnamesWithIndex, interfacesWithIndex, eof) {
@@ -367,6 +416,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         // if there is no next hostname, the max range is end of file
         range.max = eof;
       }
+      // assign range property to hostname
       hostnamesWithIndex[i].range = range;
     }
 
@@ -387,7 +437,14 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   }
 
   public intervrfSubnetsFileChange(event) {
-    console.log('event', event);
+    const reader = new FileReader();
+    const file = event.target.files[0];
+    reader.readAsText(file);
+    reader.onload = () => {
+      const readableText = reader.result.toString();
+      this.f.intervrfSubnets.setValue(readableText);
+    };
+    console.log('file', event);
   }
 
   public onClose() {
@@ -414,14 +471,17 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
   public save() {
     this.submittedSecondForm = true;
+    // the form field `cf.selectedTiers` holds all of the mapped objects that we want to use in the conversion script
     const mappedObjects = this.cf.selectedTiers.value;
     if (this.continuedForm.invalid) {
       return;
     }
+    // make object types the same regardless of device type for reusability
     const filteredMappedObjects = mappedObjects.map(obj => {
       return { hostname: obj.hostname, interfaceMatrix: obj.interfaceMatrix, namespace: obj.namespace ? obj.namespace : null };
     });
-    const configDto = { mappedObjects: filteredMappedObjects, rawConfig: '' };
+    // create configDto
+    const configDto = { mappedObjects: filteredMappedObjects, rawConfig: '', intervrfSubnets: null };
     configDto.rawConfig = this.rawConfig;
     console.log('configDto', configDto);
     this.createSelfService(configDto);
@@ -433,6 +493,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         console.log('data', data);
       });
     } else if (this.f.deviceType.value === 'PA') {
+      configDto.intervrfSubnets = this.f.intervrfSubnets.value;
       this.selfServiceService.processPAConfigSelfService({ selfServiceConfig: configDto }).subscribe(data => {
         console.log('data', data);
       });
