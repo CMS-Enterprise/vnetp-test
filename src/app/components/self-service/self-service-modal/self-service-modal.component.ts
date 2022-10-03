@@ -9,6 +9,7 @@ import { SelfServiceModalAsaInterfaceWithIndex } from './self-service-modal-dtos
 
 @Component({
   selector: 'app-self-service-modal',
+  styleUrls: ['./self-service-modal.component.scss'],
   templateUrl: './self-service-modal.component.html',
 })
 export class SelfServiceModalComponent implements OnInit, OnDestroy {
@@ -25,6 +26,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   vsysHolderArray: string[] = [];
   zoneHolderArray: string[] = [];
   rawConfig;
+  invalidInterface: boolean;
 
   private currentDatacenterSubscription: Subscription;
 
@@ -166,7 +168,9 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       if (!oneInsidePrefix) {
         hostWithInterfaces.needsInsidePrefix = true;
         interfaceMatrix.insidePrefix = '';
+        this.invalidInterface = true;
       } else {
+        this.invalidInterface = false;
         hostWithInterfaces.needsInsidePrefix = false;
       }
       hostWithInterfaces.interfaceMatrix = interfaceMatrix;

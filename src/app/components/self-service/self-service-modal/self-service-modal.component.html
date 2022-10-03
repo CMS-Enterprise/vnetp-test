@@ -1,7 +1,7 @@
 <ngx-smart-modal #selfServiceModal identifier="selfServiceModal" [dismissable]="true" customClass="large-modal"
   (onClose)="onClose()">
   <header class="modal-header">
-    <h4 class="modal-title">Title</h4>
+    <h4 class="modal-title">Self Service</h4>
   </header>
 
   <main class="modal-body">
@@ -9,7 +9,7 @@
       <form [formGroup]="initialForm">
         <div class="form-row">
 
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-2">
             <label for="deviceType">Device Type</label>
             <select id="deviceType" formControlName="deviceType" class="form-control"
               [class.is-invalid]="submittedFirstForm && f.deviceType.errors" aria-label="Device Type">
@@ -22,7 +22,7 @@
             </div>
           </div>
 
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-2">
             <label for="DCSTierSelect">Select a Tier</label>
             <ng-select [class.is-invalid]="submittedFirstForm && f.DCSTierSelect.errors" formControlName="DCSTierSelect" id="DCSTierSelect" [items]="tiers" bindLabel="name"
               bindValue="name"></ng-select>
@@ -59,8 +59,8 @@
           </div>
         </div>
 
-        <ul *ngIf="f.selectedTiersFromConfig && f.selectedTiersFromConfig.value">
-          <!-- <label>Add a unique namespace for each selected tier</label> -->
+        <ul *ngIf="f.selectedTiersFromConfig && f.selectedTiersFromConfig.value && f.selectedTiersFromConfig.value.length > 0">
+          <label><u>Selected Tiers</u></label>
           <li *ngFor="let tier of f.selectedTiersFromConfig.value">{{tier}}
             <!-- <textarea></textarea> -->
           </li>
@@ -76,11 +76,11 @@
     <div *ngIf="submittedFirstForm && showSecondForm" class="page-2">
       <form [formGroup]="continuedForm">
         <div class="form-row">
-          <div class="form-group">
+          <div class="form-group col">
             <ul>
               <li *ngFor="let tier of cf.selectedTiers.value; let i = index">
                 <span id="tier">{{tier.hostname}} - Interfaces</span>
-                <div class="hostNeedsInsidePrefix" *ngIf="tier.needsInsidePrefix">one interface must be inside</div>
+                <div class="hostNeedsInsidePrefix" *ngIf="tier.needsInsidePrefix">one interface must be inside for tier "{{tier.hostname}}"</div>
                 <div>
                   <ul>
                     <li *ngFor="let interface of tier.interfaces">{{interface.interface}}
@@ -94,12 +94,11 @@
                     </li>
                   </ul>
                 </div>
+                <!-- <label>Namespace</label> -->
                 <div>
-                  <label>Namespace</label>
-                  <textarea [ngModelOptions]="{standalone: true}" [(ngModel)]="tier.namespace"></textarea>
+                  <textarea placeholder="Namespace" [ngModelOptions]="{standalone: true}" [(ngModel)]="tier.namespace"></textarea>
                 </div>
-
-                <div *ngIf="tier.interfaceMatrix">{{tier.interfaceMatrix | json }}
+                <div class="form-group col" *ngIf="tier.interfaceMatrix"> {{tier.hostname}} - {{tier.interfaceMatrix | json }}
                   
                 </div>
                 
@@ -108,9 +107,17 @@
 
             <button type="button" class="btn btn-primary" (click)="saveNameSpaces()">
               <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-              <span>Next</span>
+              <span>Save</span>
             </button>
           </div>
+          <!-- <ul>
+            <li *ngFor="let tier of cf.selectedTiers.value">
+              <div class="form-group col" *ngIf="tier.interfaceMatrix"> {{tier.hostname}} - {{tier.interfaceMatrix | json }}
+                  
+              </div>
+            </li>
+          </ul> -->
+          
         </div>
       </form>
     </div>
@@ -130,7 +137,7 @@
       Cancel
     </button>
 
-    <button *ngIf="submittedSecondForm" type="submit" class="btn btn-primary" data-dismiss="modal" (click)="save()">
+    <button *ngIf="submittedSecondForm && !invalidInterface" type="submit" class="btn btn-primary" data-dismiss="modal" (click)="save()">
       <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
       <span>Submit</span>
     </button>
