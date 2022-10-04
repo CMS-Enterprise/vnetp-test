@@ -14,8 +14,7 @@ import { SelfServiceModalAsaInterfaceWithIndex } from './self-service-modal-dtos
 })
 export class SelfServiceModalComponent implements OnInit, OnDestroy {
   initialForm: FormGroup;
-  continuedForm: FormGroup;
-  submittedFirstForm: boolean;
+  submittedInitialForm: boolean;
   submittedSecondForm: boolean;
   showSecondForm: boolean;
   tiers: Tier[];
@@ -27,6 +26,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   zoneHolderArray: string[] = [];
   rawConfig;
   invalidInterface: boolean;
+  selectedTiers = [];
 
   private currentDatacenterSubscription: Subscription;
 
@@ -40,10 +40,6 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
   get f() {
     return this.initialForm.controls;
-  }
-
-  get cf() {
-    return this.continuedForm.controls;
   }
 
   // converts XML data to JSON format
@@ -99,8 +95,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
   // submits first form/locks the users selectedTiersFromConfig selections
   public saveTiers(): void {
-    console.log('this.initialForm', this.initialForm);
-    this.submittedFirstForm = true;
+    this.submittedInitialForm = true;
     if (this.initialForm.invalid) {
       this.showSecondForm = false;
       return;
@@ -128,26 +123,31 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     this.initialForm.controls.selectedTiersFromConfig.disable();
 
     // create second form using the value from the union we created above
-    this.continuedForm = this.formBuilder.group({
-      selectedTiers: [this.hostsWithInterfaces],
-    });
+    this.selectedTiers = this.hostsWithInterfaces;
+    // this.continuedForm = this.formBuilder.group({
+    //   selectedTiers: [this.hostsWithInterfaces],
+    // });
   }
 
   // submits second form/locks the users interface selections
   public saveNameSpaces(): void {
-    this.cf.selectedTiers.value.map(hostWithInterfaces => {
+    this.selectedTiers.map(hostWithInterfaces => {
       // each host will have an interfaceMatrix
       const interfaceMatrix = { external: [], intervrf: [], insidePrefix: '' };
 
       // we build the interfaceMatrix based on the users check box values in the continued form
 
       let oneInsidePrefix = false;
+      let multipleInsidePrefix = false;
       hostWithInterfaces.interfaces.map(int => {
         if (!int.inside && !int.outside) {
           int.needsSelection = true;
         }
         // if the interface has the inside checkbox checked (inside: true)
         if (int.inside) {
+          if (oneInsidePrefix) {
+            multipleInsidePrefix = true;
+          }
           oneInsidePrefix = true;
           int.needsSelection = false;
           interfaceMatrix.insidePrefix = int.interface;
@@ -173,12 +173,21 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         this.invalidInterface = false;
         hostWithInterfaces.needsInsidePrefix = false;
       }
+      if (multipleInsidePrefix) {
+        hostWithInterfaces.tooManyInside = true;
+      } else {
+        hostWithInterfaces.tooManyInside = false;
+      }
       hostWithInterfaces.interfaceMatrix = interfaceMatrix;
+    });
+    this.selectedTiers.map(host => {
+      if (host.needsInsidePrefix || host.tooManyInside) {
+        this.invalidInterface = true;
+      }
     });
 
     // lock second form
     this.submittedSecondForm = true;
-    console.log('this.cf', this.cf);
   }
 
   public markInterfaceIntervrf(int) {
@@ -213,6 +222,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   }
 
   public deviceConfigFileChange(event): void {
+    // do not allow user to change the device type once a device config has been uploaded
     this.initialForm.controls.deviceType.disable();
     const reader = new FileReader();
     const file = event.target.files[0];
@@ -458,28 +468,28 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   }
 
   public reset() {
-    this.submittedFirstForm = false;
+    this.submittedInitialForm = false;
     this.submittedSecondForm = false;
     this.asaInterfacesWithIndex = [];
     this.hostsWithInterfaces = [];
     this.tiersFromConfig = [];
+    this.selectedTiers = [];
     this.initialForm.reset();
     this.initialForm.enable();
-    if (this.continuedForm) {
-      this.continuedForm.reset();
-      this.continuedForm.enable();
-    }
+    // if (this.continuedForm) {
+    //   this.continuedForm.reset();
+    //   this.continuedForm.enable();
+    // }
 
     console.log('this.form', this.initialForm);
   }
 
   public save() {
-    this.submittedSecondForm = true;
-    // the form field `cf.selectedTiers` holds all of the mapped objects that we want to use in the conversion script
-    const mappedObjects = this.cf.selectedTiers.value;
-    if (this.continuedForm.invalid) {
-      return;
-    }
+    // the form field `selectedTiers` holds all of the mapped objects that we want to use in the conversion script
+    const mappedObjects = this.selectedTiers;
+    // if (this.continuedForm.invalid) {
+    //   return;
+    // }
     // make object types the same regardless of device type for reusability
     const filteredMappedObjects = mappedObjects.map(obj => {
       return { hostname: obj.hostname, interfaceMatrix: obj.interfaceMatrix, namespace: obj.namespace ? obj.namespace : null };
@@ -493,14 +503,16 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
   private createSelfService(configDto) {
     if (this.f.deviceType.value === 'ASA') {
-      this.selfServiceService.processAsaConfigSelfService({ selfServiceConfig: configDto }).subscribe(data => {
-        console.log('data', data);
-      });
+      this.selfServiceService.processAsaConfigSelfService({ selfServiceConfig: configDto }).subscribe(
+        () => this.onClose(),
+        () => {},
+      );
     } else if (this.f.deviceType.value === 'PA') {
       configDto.intervrfSubnets = this.f.intervrfSubnets.value;
-      this.selfServiceService.processPAConfigSelfService({ selfServiceConfig: configDto }).subscribe(data => {
-        console.log('data', data);
-      });
+      this.selfServiceService.processPAConfigSelfService({ selfServiceConfig: configDto }).subscribe(
+        () => this.onClose(),
+        () => {},
+      );
     }
   }
 

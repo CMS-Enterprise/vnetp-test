@@ -14,4 +14,7 @@
     </ng-container>
 
 </ng-container>
+<ng-template #mappedObjects let-selfService="datum">
+  <div>{{selfService.mappedObjects | json}}</div>
+</ng-template>
 <app-self-service-modal></app-self-service-modal>

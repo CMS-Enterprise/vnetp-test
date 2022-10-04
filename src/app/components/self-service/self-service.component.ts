@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { V1SelfServiceService } from 'client/api/v1SelfService.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -9,11 +9,12 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
   templateUrl: './self-service.component.html',
 })
 export class SelfServiceComponent implements OnInit {
+  @ViewChild('mappedObjects') mappedObjectsTemplate: TemplateRef<any>;
   public config: TableConfig<any> = {
     description: 'Self Services',
     columns: [
       { name: 'Id', property: 'id' },
-      { name: 'Raw XML Config', property: 'rawXMLConfig' },
+      { name: 'Mapped Objects', template: () => this.mappedObjectsTemplate },
     ],
   };
 
