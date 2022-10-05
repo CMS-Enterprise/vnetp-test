@@ -145,6 +145,8 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         }
         // if the interface has the inside checkbox checked (inside: true)
         if (int.inside) {
+          // if one interface is already marked as "inside" we flip a validation flag
+          // only one interface may be marked as "inside" per tier
           if (oneInsidePrefix) {
             multipleInsidePrefix = true;
           }
@@ -173,6 +175,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         this.invalidInterface = false;
         hostWithInterfaces.needsInsidePrefix = false;
       }
+      // if this tier has multiple inside prefixes, flip validation flag in tier properties
       if (multipleInsidePrefix) {
         hostWithInterfaces.tooManyInside = true;
       } else {
@@ -180,6 +183,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       }
       hostWithInterfaces.interfaceMatrix = interfaceMatrix;
     });
+    // if any host needs an inside prefix or has too many "inside" interfaces, that host/interface is marked as invalid
     this.selectedTiers.map(host => {
       if (host.needsInsidePrefix || host.tooManyInside) {
         this.invalidInterface = true;
@@ -190,24 +194,24 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     this.submittedSecondForm = true;
   }
 
-  public markInterfaceIntervrf(int) {
+  public markInterfaceIntervrf(int): void {
     int.intervrf = true;
     int.external = false;
-    return int;
+    // return int;
   }
 
-  public markInterfaceExternal(int) {
+  public markInterfaceExternal(int): void {
     int.external = true;
     int.intervrf = false;
     int.inside = false;
-    return int;
+    // return int;
   }
 
-  public markInterfaceInside(int) {
+  public markInterfaceInside(int): void {
     int.intervrf = true;
     int.inside = true;
     int.external = false;
-    return int;
+    // return int;
   }
 
   public getTiers(): void {
@@ -450,7 +454,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     return hostnamesWithIndex;
   }
 
-  public intervrfSubnetsFileChange(event) {
+  public intervrfSubnetsFileChange(event): void {
     const reader = new FileReader();
     const file = event.target.files[0];
     reader.readAsText(file);
@@ -458,16 +462,15 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       const readableText = reader.result.toString();
       this.f.intervrfSubnets.setValue(readableText);
     };
-    console.log('file', event);
   }
 
-  public onClose() {
+  public onClose(): void {
     this.ngx.resetModalData('selfServiceModal');
     this.ngx.getModal('selfServiceModal').close();
     this.reset();
   }
 
-  public reset() {
+  public reset(): void {
     this.submittedInitialForm = false;
     this.submittedSecondForm = false;
     this.asaInterfacesWithIndex = [];
@@ -476,15 +479,9 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     this.selectedTiers = [];
     this.initialForm.reset();
     this.initialForm.enable();
-    // if (this.continuedForm) {
-    //   this.continuedForm.reset();
-    //   this.continuedForm.enable();
-    // }
-
-    console.log('this.form', this.initialForm);
   }
 
-  public save() {
+  public save(): void {
     // the form field `selectedTiers` holds all of the mapped objects that we want to use in the conversion script
     const mappedObjects = this.selectedTiers;
     // if (this.continuedForm.invalid) {
@@ -497,11 +494,10 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     // create configDto
     const configDto = { mappedObjects: filteredMappedObjects, rawConfig: '', intervrfSubnets: null };
     configDto.rawConfig = this.rawConfig;
-    console.log('configDto', configDto);
     this.createSelfService(configDto);
   }
 
-  private createSelfService(configDto) {
+  private createSelfService(configDto): void {
     if (this.f.deviceType.value === 'ASA') {
       this.selfServiceService.processAsaConfigSelfService({ selfServiceConfig: configDto }).subscribe(
         () => this.onClose(),
@@ -516,7 +512,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.buildForm();
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
