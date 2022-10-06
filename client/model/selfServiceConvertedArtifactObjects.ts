@@ -12,6 +12,7 @@
 
 
 export interface SelfServiceConvertedArtifactObjects { 
+    logs: Array<string>;
     subnets?: Array<string>;
     vlans?: Array<string>;
     networkObjects?: Array<string>;

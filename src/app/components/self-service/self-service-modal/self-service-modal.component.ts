@@ -27,6 +27,8 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   rawConfig;
   invalidInterface: boolean;
   selectedTiers = [];
+  receivedConfig: boolean;
+  returnedSelfServiceEntity;
 
   private currentDatacenterSubscription: Subscription;
 
@@ -464,12 +466,6 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     };
   }
 
-  public onClose(): void {
-    this.ngx.resetModalData('selfServiceModal');
-    this.ngx.getModal('selfServiceModal').close();
-    this.reset();
-  }
-
   public reset(): void {
     this.submittedInitialForm = false;
     this.submittedSecondForm = false;
@@ -497,11 +493,23 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     this.createSelfService(configDto);
   }
 
+  public onClose(): void {
+    this.ngx.resetModalData('selfServiceModal');
+    this.ngx.getModal('selfServiceModal').close();
+    this.reset();
+  }
+
   private createSelfService(configDto): void {
     if (this.f.deviceType.value === 'ASA') {
       this.selfServiceService.processAsaConfigSelfService({ selfServiceConfig: configDto }).subscribe(
-        () => this.onClose(),
-        () => {},
+        returnedSelfServiceEntity => {
+          this.receivedConfig = true;
+          this.returnedSelfServiceEntity = returnedSelfServiceEntity;
+          console.log('returnedSelfServiceEntity', returnedSelfServiceEntity);
+        },
+        data1 => {
+          console.log('data1', data1);
+        },
       );
     } else if (this.f.deviceType.value === 'PA') {
       configDto.intervrfSubnets = this.f.intervrfSubnets.value;

@@ -17,4 +17,8 @@
 <ng-template #mappedObjects let-selfService="datum">
   <div>{{selfService.mappedObjects | json}}</div>
 </ng-template>
+
+<ng-template #convertedObjects let-selfService="datum">
+  <div>{{selfService.convertedConfig | json}}</div>
+</ng-template>
 <app-self-service-modal></app-self-service-modal>

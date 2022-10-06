@@ -9,7 +9,6 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { SelfServiceConvertedArtifactObjects } from './selfServiceConvertedArtifactObjects';
 
 
 export interface SelfService { 
@@ -20,7 +19,7 @@ export interface SelfService {
     rawJsonConfig: object | null;
     mappedObjects: object | null;
     intervrfSubnets: string | null;
-    convertedConfig: SelfServiceConvertedArtifactObjects;
+    convertedConfig: object | null;
     datacenterId: string | null;
 }
 

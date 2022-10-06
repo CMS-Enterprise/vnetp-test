@@ -6561,9 +6561,107 @@
           "id"
         ]
       },
+      "SelfService": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "rawConfigType": {
+            "type": "string",
+            "nullable": true
+          },
+          "rawXMLConfig": {
+            "type": "object",
+            "nullable": true
+          },
+          "rawTextConfig": {
+            "type": "string",
+            "nullable": true
+          },
+          "rawJsonConfig": {
+            "type": "object",
+            "nullable": true
+          },
+          "mappedObjects": {
+            "type": "object",
+            "nullable": true
+          },
+          "intervrfSubnets": {
+            "type": "string",
+            "nullable": true
+          },
+          "convertedConfig": {
+            "type": "object",
+            "nullable": true
+          },
+          "datacenterId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "rawConfigType",
+          "rawXMLConfig",
+          "rawTextConfig",
+          "rawJsonConfig",
+          "mappedObjects",
+          "intervrfSubnets",
+          "convertedConfig",
+          "datacenterId"
+        ]
+      },
+      "SelfServiceConfig": {
+        "type": "object",
+        "properties": {
+          "mappedObjects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rawConfig": {
+            "type": "object"
+          },
+          "intervrfSubnets": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "mappedObjects",
+          "rawConfig"
+        ]
+      },
+      "SelfServiceRawConfig": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "rawXMLConfig": {
+            "type": "object"
+          },
+          "rawTextConfig": {
+            "type": "object"
+          },
+          "rawJsonConfig": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
       "SelfServiceConvertedArtifactObjects": {
         "type": "object",
         "properties": {
+          "logs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "subnets": {
             "type": "array",
             "items": {
@@ -6624,87 +6722,20 @@
               "type": "string"
             }
           }
-        }
+        },
+        "required": [
+          "logs"
+        ]
       },
-      "SelfService": {
+      "SelfServiceConvertedArtifact": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "rawConfigType": {
-            "type": "string",
-            "nullable": true
-          },
-          "rawXMLConfig": {
-            "type": "object",
-            "nullable": true
-          },
-          "rawTextConfig": {
-            "type": "string",
-            "nullable": true
-          },
-          "rawJsonConfig": {
-            "type": "object",
-            "nullable": true
-          },
-          "mappedObjects": {
-            "type": "object",
-            "nullable": true
-          },
-          "intervrfSubnets": {
-            "type": "string",
-            "nullable": true
-          },
-          "convertedConfig": {
+          "artifact": {
             "$ref": "#/components/schemas/SelfServiceConvertedArtifactObjects"
-          },
-          "datacenterId": {
-            "type": "string",
-            "nullable": true
           }
         },
         "required": [
-          "id",
-          "rawConfigType",
-          "rawXMLConfig",
-          "rawTextConfig",
-          "rawJsonConfig",
-          "mappedObjects",
-          "intervrfSubnets",
-          "convertedConfig",
-          "datacenterId"
-        ]
-      },
-      "SelfServiceConfig": {
-        "type": "object",
-        "properties": {
-          "config": {
-            "type": "object"
-          }
-        },
-        "required": [
-          "config"
-        ]
-      },
-      "SelfServiceRawConfig": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string"
-          },
-          "rawXMLConfig": {
-            "type": "object"
-          },
-          "rawTextConfig": {
-            "type": "object"
-          },
-          "rawJsonConfig": {
-            "type": "object"
-          }
-        },
-        "required": [
-          "type"
+          "artifact"
         ]
       }
     }
@@ -25321,6 +25352,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelfServiceConvertedArtifact"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""

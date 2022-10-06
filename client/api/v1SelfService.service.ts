@@ -19,6 +19,7 @@ import { Observable }                                        from 'rxjs';
 
 import { SelfService } from '../model/models';
 import { SelfServiceConfig } from '../model/models';
+import { SelfServiceConvertedArtifact } from '../model/models';
 import { SelfServiceRawConfig } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -56,6 +57,7 @@ export interface ReplaceExistingRawConfigSelfServiceRequestParams {
 
 export interface UpdateConversionArtifactsSelfServiceRequestParams {
     selfServiceId: string;
+    selfServiceConvertedArtifact: SelfServiceConvertedArtifact;
 }
 
 
@@ -522,6 +524,10 @@ export class V1SelfServiceService {
         if (selfServiceId === null || selfServiceId === undefined) {
             throw new Error('Required parameter selfServiceId was null or undefined when calling updateConversionArtifactsSelfService.');
         }
+        const selfServiceConvertedArtifact = requestParameters.selfServiceConvertedArtifact;
+        if (selfServiceConvertedArtifact === null || selfServiceConvertedArtifact === undefined) {
+            throw new Error('Required parameter selfServiceConvertedArtifact was null or undefined when calling updateConversionArtifactsSelfService.');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -537,13 +543,22 @@ export class V1SelfServiceService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
             responseType = 'text';
         }
 
         return this.httpClient.put<any>(`${this.configuration.basePath}/v1/self-service/${encodeURIComponent(String(selfServiceId))}/converted-artifacts`,
-            null,
+            selfServiceConvertedArtifact,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

@@ -135,6 +135,7 @@ export * from './poolImportCollectionDto';
 export * from './priorityGroup';
 export * from './selfService';
 export * from './selfServiceConfig';
+export * from './selfServiceConvertedArtifact';
 export * from './selfServiceConvertedArtifactObjects';
 export * from './selfServiceRawConfig';
 export * from './serviceObject';
