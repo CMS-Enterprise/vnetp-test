@@ -78,7 +78,7 @@
 
     </div>
 
-    <div *ngIf="submittedInitialForm && showSecondForm">
+    <div *ngIf="submittedInitialForm && showSecondForm && !receivedConfig && !showSpinner">
       <div>
         <ul>
           <li style="margin-bottom: inherit" *ngFor="let tier of selectedTiers">
@@ -112,14 +112,19 @@
           </li>
         </ul>
       </div>
-      <button style="position: relative; margin-left: 44%" type="button" class="btn btn-primary" (click)="saveNameSpaces()">
+      <!-- <button style="position: relative; margin-left: 44%" type="button" class="btn btn-primary" (click)="saveNameSpaces()">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
-      </button>
+      </button> -->
     </div>
 
 
+    <div *ngIf="showSpinner">
+      <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    </div>
+
     <div *ngIf="receivedConfig">
+      <h3>Conversion Status</h3>
       {{returnedSelfServiceEntity | json}}
 
     </div>
@@ -144,10 +149,14 @@
       <span>Next</span>
     </button>
 
-    <button *ngIf="submittedSecondForm && !invalidInterface" type="submit" class="btn btn-primary" data-dismiss="modal"
-      (click)="save()">
+    <button *ngIf="showSecondForm" type="submit" class="btn btn-primary" data-dismiss="modal"
+      (click)="saveNameSpaces()">
       <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
       <span>Submit</span>
     </button>
   </footer>
 </ngx-smart-modal>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>

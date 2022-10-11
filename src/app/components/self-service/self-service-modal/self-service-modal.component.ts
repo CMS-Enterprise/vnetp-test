@@ -29,6 +29,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   selectedTiers = [];
   receivedConfig: boolean;
   returnedSelfServiceEntity;
+  showSpinner: boolean;
 
   private currentDatacenterSubscription: Subscription;
 
@@ -194,6 +195,13 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
     // lock second form
     this.submittedSecondForm = true;
+
+    if (!this.invalidInterface) {
+      this.showSpinner = true;
+      this.save();
+    } else {
+      console.log('somethingisInvalid');
+    }
   }
 
   public markInterfaceIntervrf(int): void {
@@ -473,6 +481,9 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     this.hostsWithInterfaces = [];
     this.tiersFromConfig = [];
     this.selectedTiers = [];
+    this.receivedConfig = false;
+    this.showSpinner = false;
+    this.showSecondForm = false;
     this.initialForm.reset();
     this.initialForm.enable();
   }
@@ -503,18 +514,21 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     if (this.f.deviceType.value === 'ASA') {
       this.selfServiceService.processAsaConfigSelfService({ selfServiceConfig: configDto }).subscribe(
         returnedSelfServiceEntity => {
+          this.showSpinner = false;
           this.receivedConfig = true;
           this.returnedSelfServiceEntity = returnedSelfServiceEntity;
           console.log('returnedSelfServiceEntity', returnedSelfServiceEntity);
         },
-        data1 => {
-          console.log('data1', data1);
-        },
+        () => {},
       );
     } else if (this.f.deviceType.value === 'PA') {
       configDto.intervrfSubnets = this.f.intervrfSubnets.value;
       this.selfServiceService.processPAConfigSelfService({ selfServiceConfig: configDto }).subscribe(
-        () => this.onClose(),
+        returnedSelfServiceEntity => {
+          this.showSpinner = false;
+          this.receivedConfig = true;
+          this.returnedSelfServiceEntity = returnedSelfServiceEntity;
+        },
         () => {},
       );
     }

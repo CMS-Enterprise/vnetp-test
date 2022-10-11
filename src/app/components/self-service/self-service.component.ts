@@ -12,6 +12,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 })
 export class SelfServiceComponent implements OnInit, OnDestroy {
   private selfServiceModalSubscription: Subscription;
+  public loadingSelfServices: boolean;
 
   @ViewChild('mappedObjects') mappedObjectsTemplate: TemplateRef<any>;
   @ViewChild('convertedObjects') convertedObjectsTemplate: TemplateRef<any>;
@@ -29,9 +30,18 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   constructor(private selfServiceService: V1SelfServiceService, private ngx: NgxSmartModalService) {}
 
   public getSelfServices() {
-    this.selfServiceService.getSelfServicesSelfService().subscribe(data => {
-      this.selfServices = data;
-    });
+    this.loadingSelfServices = true;
+    this.selfServiceService.getSelfServicesSelfService().subscribe(
+      data => {
+        this.selfServices = data;
+      },
+      () => {
+        this.selfServices = null;
+      },
+      () => {
+        this.loadingSelfServices = false;
+      },
+    );
   }
 
   public subscribeToSelfServiceModal() {

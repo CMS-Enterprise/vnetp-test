@@ -1,5 +1,5 @@
 <h1>Self Service</h1>
-<ng-container>
+<ng-container *ngIf="!loadingSelfServices; else loading">
     <section class="btn-toolbar" role="toolbar">
         <!-- Create Tier -->
         <button type="button" class="btn btn-success" (click)="openSelfServiceModal()">
@@ -22,3 +22,6 @@
   <div>{{selfService.convertedConfig | json}}</div>
 </ng-template>
 <app-self-service-modal></app-self-service-modal>
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
