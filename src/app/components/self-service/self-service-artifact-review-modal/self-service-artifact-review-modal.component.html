@@ -1,0 +1,17 @@
+<ngx-smart-modal #selfServiceArtifactReviewModal identifier="selfServiceArtifactReviewModal" customClass="xlarge-modal">
+
+    <header class="modal-header">
+        <h4 class="modal-title">{{selfService?.id}}</h4>
+    </header>
+
+    <main class="modal-body">
+
+        <ng-container>
+            <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
+
+            <!-- <div *ngIf="navIndex === 0">
+
+            </div> -->
+        </ng-container>
+    </main>
+</ngx-smart-modal>

@@ -12,20 +12,24 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 })
 export class SelfServiceComponent implements OnInit, OnDestroy {
   private selfServiceModalSubscription: Subscription;
+  private selfServiceArtifactReviewModalSubscription: Subscription;
   public loadingSelfServices: boolean;
+  public selfServices;
+  selectedSelfService;
 
   @ViewChild('mappedObjects') mappedObjectsTemplate: TemplateRef<any>;
-  @ViewChild('convertedObjects') convertedObjectsTemplate: TemplateRef<any>;
+  @ViewChild('conversionStatus') conversionStatusTemplate: TemplateRef<any>;
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+
   public config: TableConfig<any> = {
     description: 'Self Services',
     columns: [
       { name: 'Id', property: 'id' },
       { name: 'Mapped Objects', template: () => this.mappedObjectsTemplate },
-      { name: 'Converted Objects', template: () => this.convertedObjectsTemplate },
+      { name: 'Conversion Status', template: () => this.conversionStatusTemplate },
+      { name: '', template: () => this.actionsTemplate },
     ],
   };
-
-  public selfServices;
 
   constructor(private selfServiceService: V1SelfServiceService, private ngx: NgxSmartModalService) {}
 
@@ -55,6 +59,20 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   public openSelfServiceModal() {
     this.subscribeToSelfServiceModal();
     this.ngx.getModal('selfServiceModal').open();
+  }
+
+  public subscribeToSelfServiceArtifactReviewModal() {
+    this.selfServiceArtifactReviewModalSubscription = this.ngx.getModal('selfServiceArtifactReviewModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('selfServiceArtifactReviewModal');
+      this.selfServiceArtifactReviewModalSubscription.unsubscribe();
+      this.getSelfServices();
+    });
+  }
+
+  public openSelfServiceArtifactReviewModal(selfService) {
+    this.subscribeToSelfServiceArtifactReviewModal();
+    this.selectedSelfService = selfService;
+    this.ngx.getModal('selfServiceArtifactReviewModal').open();
   }
 
   ngOnInit(): void {

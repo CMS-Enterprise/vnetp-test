@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Tier, V1DatacentersService, V1SelfServiceService, V1TiersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { SelfServiceModalHostWithInterfaces } from './self-service-modal-dtos/self-service-modal-host-with-interfaces-dto';
 import { SelfServiceModalAsaInterfaceWithIndex } from './self-service-modal-dtos/self-service-modal-asa-interface-with-index-dto';
+import { TableConfig } from 'src/app/common/table/table.component';
+import { Tab } from 'src/app/common/tabs/tabs.component';
 
 @Component({
   selector: 'app-self-service-modal',
@@ -28,8 +30,8 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   invalidInterface: boolean;
   selectedTiers = [];
   receivedConfig: boolean;
-  returnedSelfServiceEntity;
   showSpinner: boolean;
+  selfService: any;
 
   private currentDatacenterSubscription: Subscription;
 
@@ -207,21 +209,18 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   public markInterfaceIntervrf(int): void {
     int.intervrf = true;
     int.external = false;
-    // return int;
   }
 
   public markInterfaceExternal(int): void {
     int.external = true;
     int.intervrf = false;
     int.inside = false;
-    // return int;
   }
 
   public markInterfaceInside(int): void {
     int.intervrf = true;
     int.inside = true;
     int.external = false;
-    // return int;
   }
 
   public getTiers(): void {
@@ -489,11 +488,8 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   }
 
   public save(): void {
-    // the form field `selectedTiers` holds all of the mapped objects that we want to use in the conversion script
+    // `this.selectedTiers` holds all of the mapped objects that we want to use in the conversion script
     const mappedObjects = this.selectedTiers;
-    // if (this.continuedForm.invalid) {
-    //   return;
-    // }
     // make object types the same regardless of device type for reusability
     const filteredMappedObjects = mappedObjects.map(obj => {
       return { hostname: obj.hostname, interfaceMatrix: obj.interfaceMatrix, namespace: obj.namespace ? obj.namespace : null };
@@ -516,8 +512,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         returnedSelfServiceEntity => {
           this.showSpinner = false;
           this.receivedConfig = true;
-          this.returnedSelfServiceEntity = returnedSelfServiceEntity;
-          console.log('returnedSelfServiceEntity', returnedSelfServiceEntity);
+          this.onClose();
         },
         () => {},
       );
@@ -527,7 +522,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         returnedSelfServiceEntity => {
           this.showSpinner = false;
           this.receivedConfig = true;
-          this.returnedSelfServiceEntity = returnedSelfServiceEntity;
+          this.onClose();
         },
         () => {},
       );

@@ -20,6 +20,7 @@ export interface SelfService {
     mappedObjects: object | null;
     intervrfSubnets: string | null;
     convertedConfig: object | null;
+    status: string | null;
     datacenterId: string | null;
 }
 

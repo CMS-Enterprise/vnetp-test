@@ -8,6 +8,8 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { SharedModule } from 'src/app/common/shared.module';
 import { TableModule } from 'src/app/common/table/table.module';
+import { TabsModule } from 'src/app/common/tabs/tabs.module';
+import { SelfServiceArtifactReviewModalComponent } from './self-service-artifact-review-modal/self-service-artifact-review-modal.component';
 import { SelfServiceModalComponent } from './self-service-modal/self-service-modal.component';
 import { SelfServiceComponent } from './self-service.component';
 
@@ -30,7 +32,8 @@ const routes: Routes = [
     TableModule,
     RouterModule.forChild(routes),
     NgxSmartModalModule,
+    TabsModule,
   ],
-  declarations: [SelfServiceComponent, SelfServiceModalComponent],
+  declarations: [SelfServiceComponent, SelfServiceModalComponent, SelfServiceArtifactReviewModalComponent],
 })
 export class SelfServiceModule {}
