@@ -1,17 +1,43 @@
-<ngx-smart-modal #selfServiceArtifactReviewModal identifier="selfServiceArtifactReviewModal" customClass="xlarge-modal">
+<ngx-smart-modal [dismissable]="false" #selfServiceArtifactReviewModal identifier="selfServiceArtifactReviewModal" customClass="xlarge-modal" (onClose)="onClose()">
 
     <header class="modal-header">
-        <h4 class="modal-title">{{selfService?.id}}</h4>
+        <h4 class="modal-title">{{selfService?.id}} - Self Service Review</h4>
     </header>
 
     <main class="modal-body">
+        <div class="col-md-2">
+            <ng-select [clearable]="false" [(ngModel)]="selectedLog" (change)="handleLogChange($event)" [items]="logValues" bindLabel="name" bindValue="name"></ng-select>
+
+        </div>
 
         <ng-container>
-            <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
+            <div *ngIf="logIndex === 0">
+                <span>Logs: {{selfService?.convertedConfig?.artifact?.logs | json}}</span>
+            </div>
+            <div *ngIf="logIndex === 1">
+                <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
+    
+                <div *ngIf="navIndex === 0">
+                    <div>
+                        <span>Number of Subnets converted : {{selfService?.convertedConfig?.artifact?.subnets.length}}</span>
+                    </div>
+                    <!-- <div *ngFor="let subnet of selfService?.convertedConfig?.artifact?.subnets">
+                        <ul>
+                            <li><span>{{subnet.info?.errors | json}}</span></li>
+                        </ul>
+                        
+    
+                    </div> -->
+                </div>
+    
+                <div *ngIf="navIndex === 1">
+                    <span>{{selfService?.convertedConfig?.artifact?.vlans | json }}</span>
+                </div>
+            </div>
+            
+            
 
-            <!-- <div *ngIf="navIndex === 0">
-
-            </div> -->
+            
         </ng-container>
     </main>
 </ngx-smart-modal>

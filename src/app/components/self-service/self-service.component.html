@@ -15,18 +15,35 @@
 
 </ng-container>
 
-<ng-template #actionsTemplate let-selfService="datum">
-  <section class="table__actions">
-    <app-icon-button icon="edit" label="Open Self Service" (handleClick)="openSelfServiceArtifactReviewModal(selfService)"></app-icon-button>
-  </section>
+<ng-template #mappedObjects let-selfService="datum">
+  <div *ngFor="let mappedObj of selfService.mappedObjects">
+    <ul>
+      <li>Hostname: {{mappedObj.hostname}}, Namespace: "{{mappedObj.namespace}}", Interface Matrix : External : {{mappedObj.interfaceMatrix.external | json }}, Intervrf: {{mappedObj.interfaceMatrix.intervrf | json }}, InsidePrefix : "{{mappedObj.interfaceMatrix.insidePrefix}}"</li>
+    </ul>
+  </div>
 </ng-template>
 
-<ng-template #mappedObjects let-selfService="datum">
-  <div>{{selfService.mappedObjects | json}}</div>
+<!-- <ng-template #namespace let-selfService="datum">
+  <div>{{selfService.namespace}}</div>
+</ng-template> -->
+<!-- 
+<ng-template #interfaceMatrix let-selfService="datum">
+  <div>{{selfService.interfaceMatrix | json }}</div>
+</ng-template> -->
+
+<ng-template #deviceType let-selfService="datum">
+  <div>{{selfService.rawConfigType === 'Text' ? 'ASA' : 'PA'}}</div>
 </ng-template>
 
 <ng-template #conversionStatus let-selfService="datum">
   <div>{{selfService.status}}</div>
+</ng-template>
+
+<ng-template #actionsTemplate let-selfService="datum">
+  <section class="table__actions">
+    <app-icon-button icon="edit" label="Open Self Service" (handleClick)="openSelfServiceArtifactReviewModal(selfService)"></app-icon-button>
+    <app-icon-button *ngIf="selfService.status === 'Completed'" icon="execute" label="Begin Bulk Uploading" (handleClick)="openBulkUploadModal(selfService)"></app-icon-button>
+  </section>
 </ng-template>
 
 <ng-template #loading>
@@ -34,4 +51,5 @@
 </ng-template>
 
 <app-self-service-modal></app-self-service-modal>
+<app-self-service-bulk-upload-modal></app-self-service-bulk-upload-modal>
 <app-self-service-artifact-review-modal [selfService]="selectedSelfService"></app-self-service-artifact-review-modal>

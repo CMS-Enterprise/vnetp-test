@@ -13,11 +13,13 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 export class SelfServiceComponent implements OnInit, OnDestroy {
   private selfServiceModalSubscription: Subscription;
   private selfServiceArtifactReviewModalSubscription: Subscription;
+  private selfServiceBulkUploadModalSubscription: Subscription;
   public loadingSelfServices: boolean;
   public selfServices;
   selectedSelfService;
 
   @ViewChild('mappedObjects') mappedObjectsTemplate: TemplateRef<any>;
+  @ViewChild('deviceType') deviceTypeTemplate: TemplateRef<any>;
   @ViewChild('conversionStatus') conversionStatusTemplate: TemplateRef<any>;
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -26,12 +28,25 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     columns: [
       { name: 'Id', property: 'id' },
       { name: 'Mapped Objects', template: () => this.mappedObjectsTemplate },
+      { name: 'Device Type', template: () => this.deviceTypeTemplate },
       { name: 'Conversion Status', template: () => this.conversionStatusTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
 
   constructor(private selfServiceService: V1SelfServiceService, private ngx: NgxSmartModalService) {}
+
+  public subscribeToBulkUploadModal() {
+    this.selfServiceBulkUploadModalSubscription = this.ngx.getModal('selfServiceBulkUploadModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('selfServiceBulkUploadModal');
+      this.selfServiceBulkUploadModalSubscription.unsubscribe();
+      this.getSelfServices();
+    });
+  }
+  public openBulkUploadModal(selfService) {
+    this.subscribeToBulkUploadModal();
+    this.ngx.getModal('selfServiceBulkUploadModal').open();
+  }
 
   public getSelfServices() {
     this.loadingSelfServices = true;
@@ -81,6 +96,10 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.selfServiceModalSubscription]);
+    SubscriptionUtil.unsubscribe([
+      this.selfServiceModalSubscription,
+      this.selfServiceBulkUploadModalSubscription,
+      this.selfServiceArtifactReviewModalSubscription,
+    ]);
   }
 }
