@@ -12,6 +12,7 @@
 
 
 export interface SelfServiceConfig { 
+    dcsTier: string;
     mappedObjects: Array<string>;
     rawConfig: object;
     intervrfSubnets?: string;

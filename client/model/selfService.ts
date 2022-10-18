@@ -13,6 +13,7 @@
 
 export interface SelfService { 
     id: string;
+    dcsTier: string | null;
     rawConfigType: string | null;
     rawXMLConfig: object | null;
     rawTextConfig: string | null;

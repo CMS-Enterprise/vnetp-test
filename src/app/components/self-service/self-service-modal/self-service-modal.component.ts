@@ -495,8 +495,10 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       return { hostname: obj.hostname, interfaceMatrix: obj.interfaceMatrix, namespace: obj.namespace ? obj.namespace : null };
     });
     // create configDto
-    const configDto = { mappedObjects: filteredMappedObjects, rawConfig: '', intervrfSubnets: null };
+    const configDto = { dcsTier: '', mappedObjects: filteredMappedObjects, rawConfig: '', intervrfSubnets: null };
     configDto.rawConfig = this.rawConfig;
+    configDto.dcsTier = this.f.DCSTierSelect.value;
+    console.log('configDto', configDto);
     this.createSelfService(configDto);
   }
 

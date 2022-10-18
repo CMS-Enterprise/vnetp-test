@@ -36,18 +36,6 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
 
   constructor(private selfServiceService: V1SelfServiceService, private ngx: NgxSmartModalService) {}
 
-  public subscribeToBulkUploadModal() {
-    this.selfServiceBulkUploadModalSubscription = this.ngx.getModal('selfServiceBulkUploadModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('selfServiceBulkUploadModal');
-      this.selfServiceBulkUploadModalSubscription.unsubscribe();
-      this.getSelfServices();
-    });
-  }
-  public openBulkUploadModal(selfService) {
-    this.subscribeToBulkUploadModal();
-    this.ngx.getModal('selfServiceBulkUploadModal').open();
-  }
-
   public getSelfServices() {
     this.loadingSelfServices = true;
     this.selfServiceService.getSelfServicesSelfService().subscribe(
@@ -88,6 +76,19 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     this.subscribeToSelfServiceArtifactReviewModal();
     this.selectedSelfService = selfService;
     this.ngx.getModal('selfServiceArtifactReviewModal').open();
+  }
+
+  public subscribeToBulkUploadModal() {
+    this.selfServiceBulkUploadModalSubscription = this.ngx.getModal('selfServiceBulkUploadModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('selfServiceBulkUploadModal');
+      this.selfServiceBulkUploadModalSubscription.unsubscribe();
+      this.getSelfServices();
+    });
+  }
+  public openBulkUploadModal(selfService) {
+    this.subscribeToBulkUploadModal();
+    this.selectedSelfService = selfService;
+    this.ngx.getModal('selfServiceBulkUploadModal').open();
   }
 
   ngOnInit(): void {

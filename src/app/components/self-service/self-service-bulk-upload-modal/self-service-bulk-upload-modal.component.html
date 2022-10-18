@@ -1,12 +1,29 @@
 <ngx-smart-modal #selfServiceBulkUploadModal identifier="selfServiceBulkUploadModal" customClass="large-modal">
     <header class="modal-header">
-        <h4 class="modal-title">Self Service Bulk Upload</h4>
+        <h4 class="modal-title">{{selfService?.id}} - Self Service Bulk Upload</h4>
     </header>
 
     <main class="modal-body">
 
+        <ng-container>
+            <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
+
+            <div *ngIf="navIndex === 0">
+                <div>
+                    <span>Number of Subnets converted : {{selfService?.convertedConfig?.artifact?.subnets.length}}</span>
+                </div>
+            </div>
+        </ng-container>
 
         
+
     </main>
+
+    <footer class="modal-footer">
+        <button (click)="importObjects()" class="btn btn-warning">
+            <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
+            <span>Import</span>
+        </button>
+    </footer>
 
 </ngx-smart-modal>

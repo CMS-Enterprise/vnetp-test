@@ -51,5 +51,6 @@
 </ng-template>
 
 <app-self-service-modal></app-self-service-modal>
-<app-self-service-bulk-upload-modal></app-self-service-bulk-upload-modal>
+<app-self-service-bulk-upload-modal [selfService]="selectedSelfService"></app-self-service-bulk-upload-modal>
 <app-self-service-artifact-review-modal [selfService]="selectedSelfService"></app-self-service-artifact-review-modal>
+<app-yes-no-modal></app-yes-no-modal>

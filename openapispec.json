@@ -6567,6 +6567,10 @@
           "id": {
             "type": "string"
           },
+          "dcsTier": {
+            "type": "string",
+            "nullable": true
+          },
           "rawConfigType": {
             "type": "string",
             "nullable": true
@@ -6606,6 +6610,7 @@
         },
         "required": [
           "id",
+          "dcsTier",
           "rawConfigType",
           "rawXMLConfig",
           "rawTextConfig",
@@ -6620,6 +6625,9 @@
       "SelfServiceConfig": {
         "type": "object",
         "properties": {
+          "dcsTier": {
+            "type": "string"
+          },
           "mappedObjects": {
             "type": "array",
             "items": {
@@ -6634,6 +6642,7 @@
           }
         },
         "required": [
+          "dcsTier",
           "mappedObjects",
           "rawConfig"
         ]
@@ -25363,6 +25372,32 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SelfServiceConvertedArtifact"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
+      }
+    },
+    "/v1/self-service/bulkupload": {
+      "post": {
+        "operationId": "bulkUploadSelfService",
+        "summary": "",
+        "description": "Bulk Upload",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelfService"
               }
             }
           }
