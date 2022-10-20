@@ -8,6 +8,7 @@ import { SelfServiceModalHostWithInterfaces } from './self-service-modal-dtos/se
 import { SelfServiceModalAsaInterfaceWithIndex } from './self-service-modal-dtos/self-service-modal-asa-interface-with-index-dto';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { Tab } from 'src/app/common/tabs/tabs.component';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 @Component({
   selector: 'app-self-service-modal',
@@ -32,6 +33,8 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   receivedConfig: boolean;
   showSpinner: boolean;
   selfService: any;
+  firewallRuleGroupData = {} as any;
+  natRuleGroupData = {} as any;
 
   private currentDatacenterSubscription: Subscription;
 
@@ -41,6 +44,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     private datacenterService: V1DatacentersService,
     private datacenterContextService: DatacenterContextService,
     private selfServiceService: V1SelfServiceService,
+    private tiersService: V1TiersService,
   ) {}
 
   get f() {
@@ -221,17 +225,6 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     int.intervrf = true;
     int.inside = true;
     int.external = false;
-  }
-
-  public getTiers(): void {
-    this.datacenterService
-      .getOneDatacenters({
-        id: this.datacenterId,
-        join: ['tiers'],
-      })
-      .subscribe(data => {
-        this.tiers = data?.tiers?.filter(t => !t.deletedAt) ?? [];
-      });
   }
 
   public deviceConfigFileChange(event): void {
@@ -487,6 +480,47 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     this.initialForm.enable();
   }
 
+  public getTiers(): void {
+    this.tiersService
+      .getManyDatacenterTier({
+        datacenterId: this.datacenterId,
+        join: ['firewallRuleGroups', 'natRuleGroups'],
+      })
+      .subscribe(returnedData => {
+        this.tiers = returnedData as any;
+      });
+  }
+
+  private getNatRuleGroupInfo(tierName) {
+    const matchingTier = this.tiers.find(tier => tier.name === tierName);
+    // matchingTier.firewallRuleGroups.filter(fwRuleGroup => fwRuleGroup.name !== 'Intravrf')
+    this.natRuleGroupData = matchingTier.natRuleGroups.map(natRuleGroup => {
+      if (natRuleGroup.name === 'Intravrf') {
+        return;
+      }
+      return { tierName: matchingTier.name, tierUUId: matchingTier.id, name: natRuleGroup.name, natRuleGroupUUID: natRuleGroup.id };
+    });
+    this.natRuleGroupData = this.natRuleGroupData.filter(natRuleGroup => {
+      return natRuleGroup !== undefined;
+    });
+    return this.natRuleGroupData;
+  }
+
+  private getFwRuleGroupInfo(tierName) {
+    const matchingTier = this.tiers.find(tier => tier.name === tierName);
+    // matchingTier.firewallRuleGroups.filter(fwRuleGroup => fwRuleGroup.name !== 'Intravrf')
+    this.firewallRuleGroupData = matchingTier.firewallRuleGroups.map(fwRuleGroup => {
+      if (fwRuleGroup.name === 'Intravrf') {
+        return;
+      }
+      return { tierName: matchingTier.name, tierUUId: matchingTier.id, name: fwRuleGroup.name, fwRuleGroupUUID: fwRuleGroup.id };
+    });
+    this.firewallRuleGroupData = this.firewallRuleGroupData.filter(fwRuleGroup => {
+      return fwRuleGroup !== undefined;
+    });
+    return this.firewallRuleGroupData;
+  }
+
   public save(): void {
     // `this.selectedTiers` holds all of the mapped objects that we want to use in the conversion script
     const mappedObjects = this.selectedTiers;
@@ -495,12 +529,27 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       return { hostname: obj.hostname, interfaceMatrix: obj.interfaceMatrix, namespace: obj.namespace ? obj.namespace : null };
     });
     // create configDto
-    const configDto = { dcsTier: '', mappedObjects: filteredMappedObjects, rawConfig: '', intervrfSubnets: null };
+    const configDto = {
+      datacenterUUID: '',
+      natRuleGroupInfo: {},
+      fwRuleGroupInfo: {},
+      dcsTier: '',
+      dcsTierUUID: '',
+      mappedObjects: filteredMappedObjects,
+      rawConfig: '',
+      intervrfSubnets: null,
+    };
     configDto.rawConfig = this.rawConfig;
     configDto.dcsTier = this.f.DCSTierSelect.value;
+    configDto.dcsTierUUID = this.getTierId(configDto.dcsTier);
+    configDto.fwRuleGroupInfo = this.getFwRuleGroupInfo(configDto.dcsTier);
+    configDto.natRuleGroupInfo = this.getNatRuleGroupInfo(configDto.dcsTier);
+    configDto.datacenterUUID = this.datacenterId;
     console.log('configDto', configDto);
     this.createSelfService(configDto);
   }
+
+  public getTierId = (name: string) => ObjectUtil.getObjectId(name, this.tiers);
 
   public onClose(): void {
     this.ngx.resetModalData('selfServiceModal');
