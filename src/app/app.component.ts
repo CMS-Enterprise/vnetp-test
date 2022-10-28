@@ -32,6 +32,6 @@ export class AppComponent implements OnInit {
         this.title.setTitle(event.title || 'Automation');
       });
 
-    this.dcsVersion = environment?.dcsVersion;
+    this.dcsVersion = environment?.environment?.dcsVersion;
   }
 }
