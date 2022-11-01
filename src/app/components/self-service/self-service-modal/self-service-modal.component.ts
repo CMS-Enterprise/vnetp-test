@@ -498,7 +498,13 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       if (natRuleGroup.name === 'Intravrf') {
         return;
       }
-      return { tierName: matchingTier.name, tierUUId: matchingTier.id, name: natRuleGroup.name, natRuleGroupUUID: natRuleGroup.id };
+      return {
+        tierName: matchingTier.name,
+        tierUUId: matchingTier.id,
+        name: natRuleGroup.name,
+        natRuleGroupUUID: natRuleGroup.id,
+        type: natRuleGroup.type,
+      };
     });
     this.natRuleGroupData = this.natRuleGroupData.filter(natRuleGroup => {
       return natRuleGroup !== undefined;
@@ -513,7 +519,13 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       if (fwRuleGroup.name === 'Intravrf') {
         return;
       }
-      return { tierName: matchingTier.name, tierUUId: matchingTier.id, name: fwRuleGroup.name, fwRuleGroupUUID: fwRuleGroup.id };
+      return {
+        tierName: matchingTier.name,
+        tierUUId: matchingTier.id,
+        name: fwRuleGroup.name,
+        fwRuleGroupUUID: fwRuleGroup.id,
+        type: fwRuleGroup.type,
+      };
     });
     this.firewallRuleGroupData = this.firewallRuleGroupData.filter(fwRuleGroup => {
       return fwRuleGroup !== undefined;
