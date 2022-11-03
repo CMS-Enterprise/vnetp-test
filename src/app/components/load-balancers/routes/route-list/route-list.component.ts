@@ -215,7 +215,9 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadRoutes(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadRoutes(this.tableComponentDto);
       } else {
         this.loadRoutes();
       }

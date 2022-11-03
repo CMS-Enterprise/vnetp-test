@@ -176,7 +176,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.getSubnets(params);
+        this.subnetTableComponentDto.searchColumn = params.searchColumn;
+        this.subnetTableComponentDto.searchText = params.searchText;
+        this.getSubnets(this.subnetTableComponentDto);
       } else {
         this.getSubnets();
       }
@@ -195,7 +197,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.getVlans(false, params);
+        this.vlanTableComponentDto.searchColumn = params.searchColumn;
+        this.vlanTableComponentDto.searchText = params.searchText;
+        this.getVlans(false, this.vlanTableComponentDto);
       } else {
         this.getVlans();
       }
