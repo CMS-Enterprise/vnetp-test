@@ -89,7 +89,7 @@
               "{{tier.hostname}}"</div>
             <div>
               <ul>
-                <li *ngFor="let interface of tier.interfaces">{{interface.interface}}
+                <li *ngFor="let interface of tier.interfaces">{{interface.interface}} -
                   <input [(ngModel)]="interface.intervrf" type="checkbox" (click)="markInterfaceIntervrf(interface)">
                   Intervrf
                   <input [(ngModel)]="interface.external" type="checkbox" (click)="markInterfaceExternal(interface)">
@@ -105,8 +105,8 @@
               <div>
                 <textarea placeholder="Namespace" [(ngModel)]="tier.namespace"></textarea>
               </div>
-            </div>
-            <div class="form-group col" *ngIf="tier.interfaceMatrix"> {{tier.hostname}} - {{tier.interfaceMatrix | json }}
+              <div class="hostNeedsNamespace" *ngIf="tier.needsNamespace">Please add a namespace to append to all objects coming into DCS from this host</div>
+              <div class="hostNeedsNamespace" *ngIf="tier.sameNamespace">Namespaces cannot be the same for different hosts</div>
             </div>
           </li>
         </ul>

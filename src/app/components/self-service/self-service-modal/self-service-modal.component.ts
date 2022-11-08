@@ -140,6 +140,11 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
   // submits second form/locks the users interface selections
   public saveNameSpaces(): void {
+    let needsNamespace = false;
+    // if there is more than 1 host to import, we enforce the namespace property
+    if (this.selectedTiers.length > 1) {
+      needsNamespace = true;
+    }
     this.selectedTiers.map(hostWithInterfaces => {
       // each host will have an interfaceMatrix
       const interfaceMatrix = { external: [], intervrf: [], insidePrefix: '' };
@@ -191,10 +196,37 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         hostWithInterfaces.tooManyInside = false;
       }
       hostWithInterfaces.interfaceMatrix = interfaceMatrix;
+
+      // if there are multiple selectedTiers, we enforce the namespace property
+      if (needsNamespace) {
+        if (hostWithInterfaces.namespace) {
+          hostWithInterfaces.needsNamespace = false;
+        } else {
+          hostWithInterfaces.needsNamespace = true;
+        }
+      }
     });
-    // if any host needs an inside prefix or has too many "inside" interfaces, that host/interface is marked as invalid
+
+    // this for loop performs a check that loops through each selected tier
+    // if the namespace for a selected tier matches another host, we fail the form submission
+    // and tell the user to change one of the namespaces
+    for (let i = 0; i < this.selectedTiers.length; i++) {
+      const tier = this.selectedTiers[i];
+      this.selectedTiers.map(selectedTier => {
+        if (tier !== selectedTier) {
+          if (tier.namespace === selectedTier.namespace) {
+            selectedTier.sameNamespace = true;
+          } else {
+            selectedTier.sameNamespace = false;
+          }
+        }
+      });
+    }
+    // if any host needs an inside prefix, has too many "inside" interfaces,
+    // does not contain a namespace when it should, or contains the same namespace as another host
+    // that host/interface is marked as invalid
     this.selectedTiers.map(host => {
-      if (host.needsInsidePrefix || host.tooManyInside) {
+      if (host.needsInsidePrefix || host.tooManyInside || host.needsNamespace || host.sameNamespace) {
         this.invalidInterface = true;
       }
     });
@@ -459,9 +491,12 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   public intervrfSubnetsFileChange(event): void {
     const reader = new FileReader();
     const file = event.target.files[0];
+    console.log('file', file);
     reader.readAsText(file);
     reader.onload = () => {
       const readableText = reader.result.toString();
+      console.log('readAbleText', readableText);
+      const splitFileByLine = readableText.split('\n');
       this.f.intervrfSubnets.setValue(readableText);
     };
   }

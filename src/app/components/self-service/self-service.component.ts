@@ -41,6 +41,9 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     this.selfServiceService.getSelfServicesSelfService().subscribe(
       data => {
         this.selfServices = data;
+        this.selfServices.data.map(ss => {
+          ss.status = ss.status.split(/(?=[A-Z])/).join(' ');
+        });
       },
       () => {
         this.selfServices = null;

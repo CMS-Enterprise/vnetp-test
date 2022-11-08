@@ -18,7 +18,10 @@
 <ng-template #mappedObjects let-selfService="datum">
   <div *ngFor="let mappedObj of selfService.mappedObjects">
     <ul>
-      <li>Hostname: {{mappedObj.hostname}}, Namespace: "{{mappedObj.namespace}}", Interface Matrix : External : {{mappedObj.interfaceMatrix.external | json }}, Intervrf: {{mappedObj.interfaceMatrix.intervrf | json }}, InsidePrefix : "{{mappedObj.interfaceMatrix.insidePrefix}}"</li>
+      <li>Hostname: {{mappedObj.hostname}}</li>
+      <li>Interface Matrix : External : {{mappedObj.interfaceMatrix.external | json }}, Intervrf: {{mappedObj.interfaceMatrix.intervrf | json }}</li>
+      <li>InsidePrefix : "{{mappedObj.interfaceMatrix.insidePrefix}}"</li>
+      <li>Namespace: "{{mappedObj.namespace}}"</li>
     </ul>
   </div>
 </ng-template>
@@ -42,7 +45,7 @@
 <ng-template #actionsTemplate let-selfService="datum">
   <section class="table__actions">
     <app-icon-button icon="edit" label="Open Self Service" (handleClick)="openSelfServiceArtifactReviewModal(selfService)"></app-icon-button>
-    <app-icon-button *ngIf="selfService.status === 'Completed'" icon="execute" label="Begin Bulk Uploading" (handleClick)="openBulkUploadModal(selfService)"></app-icon-button>
+    <app-icon-button *ngIf="selfService.status === 'Ready For Import'" icon="execute" label="Begin Bulk Uploading" (handleClick)="openBulkUploadModal(selfService)"></app-icon-button>
   </section>
 </ng-template>
 
