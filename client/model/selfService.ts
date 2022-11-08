@@ -14,6 +14,9 @@
 export interface SelfService { 
     id: string;
     dcsTier: string | null;
+    dcsTierUUID: string | null;
+    fwRuleGroupInfo: object | null;
+    natRuleGroupInfo: object | null;
     rawConfigType: string | null;
     rawXMLConfig: object | null;
     rawTextConfig: string | null;
@@ -21,7 +24,9 @@ export interface SelfService {
     mappedObjects: object | null;
     intervrfSubnets: string | null;
     convertedConfig: object | null;
-    status: string | null;
+    conversionStatus: string | null;
+    deviceType: string | null;
+    bulkUploadStatus: string | null;
     datacenterId: string | null;
 }
 

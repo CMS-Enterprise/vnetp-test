@@ -1,7 +1,6 @@
 <h1>Self Service</h1>
 <ng-container *ngIf="!loadingSelfServices; else loading">
     <section class="btn-toolbar" role="toolbar">
-        <!-- Create Tier -->
         <button type="button" class="btn btn-success" (click)="openSelfServiceModal()">
           <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
           <span>Import Config</span>
@@ -26,26 +25,14 @@
   </div>
 </ng-template>
 
-<!-- <ng-template #namespace let-selfService="datum">
-  <div>{{selfService.namespace}}</div>
-</ng-template> -->
-<!-- 
-<ng-template #interfaceMatrix let-selfService="datum">
-  <div>{{selfService.interfaceMatrix | json }}</div>
-</ng-template> -->
-
-<ng-template #deviceType let-selfService="datum">
-  <div>{{selfService.rawConfigType === 'Text' ? 'ASA' : 'PA'}}</div>
-</ng-template>
-
 <ng-template #conversionStatus let-selfService="datum">
-  <div>{{selfService.status}}</div>
+  <div>{{selfService.conversionStatus}}</div>
 </ng-template>
 
 <ng-template #actionsTemplate let-selfService="datum">
   <section class="table__actions">
     <app-icon-button icon="edit" label="Open Self Service" (handleClick)="openSelfServiceArtifactReviewModal(selfService)"></app-icon-button>
-    <app-icon-button *ngIf="selfService.status === 'Ready For Import'" icon="execute" label="Begin Bulk Uploading" (handleClick)="openBulkUploadModal(selfService)"></app-icon-button>
+    <app-icon-button *ngIf="selfService.conversionStatus === 'Ready For Import'" icon="execute" label="Begin Bulk Uploading" (handleClick)="openBulkUploadModal(selfService)"></app-icon-button>
   </section>
 </ng-template>
 

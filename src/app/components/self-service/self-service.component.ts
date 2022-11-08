@@ -28,8 +28,8 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     columns: [
       { name: 'Id', property: 'id' },
       { name: 'Mapped Objects', template: () => this.mappedObjectsTemplate },
-      { name: 'Device Type', template: () => this.deviceTypeTemplate },
-      { name: 'Conversion Status', template: () => this.conversionStatusTemplate },
+      { name: 'Device Type', property: 'deviceType' },
+      { name: 'Conversion Status', property: 'conversionStatus' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -42,7 +42,8 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
       data => {
         this.selfServices = data;
         this.selfServices.data.map(ss => {
-          ss.status = ss.status.split(/(?=[A-Z])/).join(' ');
+          // split the conversion status on capital letters for readability
+          ss.conversionStatus = ss.conversionStatus.split(/(?=[A-Z])/).join(' ');
         });
       },
       () => {

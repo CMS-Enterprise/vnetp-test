@@ -6571,6 +6571,18 @@
             "type": "string",
             "nullable": true
           },
+          "dcsTierUUID": {
+            "type": "string",
+            "nullable": true
+          },
+          "fwRuleGroupInfo": {
+            "type": "object",
+            "nullable": true
+          },
+          "natRuleGroupInfo": {
+            "type": "object",
+            "nullable": true
+          },
           "rawConfigType": {
             "type": "string",
             "nullable": true
@@ -6599,7 +6611,15 @@
             "type": "object",
             "nullable": true
           },
-          "status": {
+          "conversionStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "bulkUploadStatus": {
             "type": "string",
             "nullable": true
           },
@@ -6611,6 +6631,9 @@
         "required": [
           "id",
           "dcsTier",
+          "dcsTierUUID",
+          "fwRuleGroupInfo",
+          "natRuleGroupInfo",
           "rawConfigType",
           "rawXMLConfig",
           "rawTextConfig",
@@ -6618,15 +6641,29 @@
           "mappedObjects",
           "intervrfSubnets",
           "convertedConfig",
-          "status",
+          "conversionStatus",
+          "deviceType",
+          "bulkUploadStatus",
           "datacenterId"
         ]
       },
       "SelfServiceConfig": {
         "type": "object",
         "properties": {
+          "datacenterUUID": {
+            "type": "string"
+          },
           "dcsTier": {
             "type": "string"
+          },
+          "dcsTierUUID": {
+            "type": "string"
+          },
+          "fwRuleGroupInfo": {
+            "type": "object"
+          },
+          "natRuleGroupInfo": {
+            "type": "object"
           },
           "mappedObjects": {
             "type": "array",
@@ -6642,7 +6679,11 @@
           }
         },
         "required": [
+          "datacenterUUID",
           "dcsTier",
+          "dcsTierUUID",
+          "fwRuleGroupInfo",
+          "natRuleGroupInfo",
           "mappedObjects",
           "rawConfig"
         ]
