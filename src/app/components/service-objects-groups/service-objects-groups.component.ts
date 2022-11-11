@@ -231,7 +231,9 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.getServiceObjects(params);
+        this.svcObjTableComponentDto.searchColumn = params.searchColumn;
+        this.svcObjTableComponentDto.searchText = params.searchText;
+        this.getServiceObjects(this.svcObjTableComponentDto);
       } else {
         this.getServiceObjects();
       }
@@ -249,7 +251,9 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.getServiceObjectGroups(params);
+        this.svcObjGrpTableComponentDto.searchColumn = params.searchColumn;
+        this.svcObjGrpTableComponentDto.searchText = params.searchText;
+        this.getServiceObjectGroups(this.svcObjGrpTableComponentDto);
       } else {
         this.getServiceObjectGroups();
       }

@@ -217,7 +217,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadNodes(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadNodes(this.tableComponentDto);
       } else {
         this.loadNodes();
       }
