@@ -5,6 +5,7 @@ class Environment extends DynamicEnvironment {
   public apiBase: string;
   public wikiBase: string;
   public dcsLocations;
+  public dcsVersion: string;
   constructor() {
     super();
     this.production = false;
@@ -14,6 +15,7 @@ class Environment extends DynamicEnvironment {
     ];
     this.apiBase = 'http://localhost:3000/api';
     this.wikiBase = 'http://wiki.draas.cdsvdc.lcl/index.php/UI';
+    this.dcsVersion = '1.14.3';
   }
 }
 

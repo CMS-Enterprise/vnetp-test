@@ -1,5 +1,5 @@
 <app-tier-select></app-tier-select>
-<h1>Nat Rules</h1>
+<h1>Nat Rule Groups</h1>
 <ng-container *ngIf="currentTier; else warningMessage">
   <section class="btn-toolbar" role="toolbar">
     <button type="button" class="btn btn-info" (click)="getTiers()">
@@ -16,7 +16,7 @@
     <thead>
       <tr>
         <th scope="col">Tier</th>
-        <th scope="col">NAT Rule Group Type</th>
+        <th scope="col">Name</th>
         <th scope="col">State</th>
       </tr>
     </thead>
