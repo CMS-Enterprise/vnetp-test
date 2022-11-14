@@ -3,7 +3,7 @@ import { V1SelfServiceService } from 'client/api/v1SelfService.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
-import { ModalMode } from 'src/app/models/other/modal-mode';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
@@ -55,6 +55,26 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     );
   }
 
+  public importObjects(selfService) {
+    console.log('this.selfService', selfService);
+    const modalDto = new YesNoModalDto('Import', `Are you sure you would like to bulk import the converted objects?`);
+    const onConfirm = () => {
+      this.selfServiceService.bulkUploadSelfService({ selfService: selfService }).subscribe(data => {
+        console.log('data', data);
+      }),
+        () => {},
+        () => {
+          this.getSelfServices();
+        };
+    };
+
+    const onClose = () => {
+      this.getSelfServices();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
+
   public subscribeToSelfServiceModal() {
     this.selfServiceModalSubscription = this.ngx.getModal('selfServiceModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('selfServiceModal');
@@ -89,11 +109,11 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
       this.getSelfServices();
     });
   }
-  public openBulkUploadModal(selfService) {
-    this.subscribeToBulkUploadModal();
-    this.selectedSelfService = selfService;
-    this.ngx.getModal('selfServiceBulkUploadModal').open();
-  }
+  // public openBulkUploadModal(selfService) {
+  //   this.subscribeToBulkUploadModal();
+  //   this.selectedSelfService = selfService;
+  //   this.ngx.getModal('selfServiceBulkUploadModal').open();
+  // }
 
   ngOnInit(): void {
     console.log('im initialized!');

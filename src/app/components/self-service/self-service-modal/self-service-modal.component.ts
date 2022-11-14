@@ -6,8 +6,6 @@ import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { SelfServiceModalHostWithInterfaces } from './self-service-modal-dtos/self-service-modal-host-with-interfaces-dto';
 import { SelfServiceModalAsaInterfaceWithIndex } from './self-service-modal-dtos/self-service-modal-asa-interface-with-index-dto';
-import { TableConfig } from 'src/app/common/table/table.component';
-import { Tab } from 'src/app/common/tabs/tabs.component';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 @Component({
@@ -41,7 +39,6 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
-    private datacenterService: V1DatacentersService,
     private datacenterContextService: DatacenterContextService,
     private selfServiceService: V1SelfServiceService,
     private tiersService: V1TiersService,
@@ -577,21 +574,27 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     });
     // create configDto
     const configDto = {
-      datacenterUUID: '',
+      datacenterId: '',
       natRuleGroupInfo: {},
       fwRuleGroupInfo: {},
       dcsTier: '',
       dcsTierUUID: '',
       mappedObjects: filteredMappedObjects,
-      rawConfig: '',
+      rawTextConfig: '',
+      rawXMLConfig: '',
       intervrfSubnets: null,
     };
-    configDto.rawConfig = this.rawConfig;
+    if (this.f.deviceType.value === 'ASA') {
+      configDto.rawTextConfig = this.rawConfig;
+    }
+    if (this.f.deviceType.value === 'PA') {
+      configDto.rawXMLConfig = this.rawConfig;
+    }
     configDto.dcsTier = this.f.DCSTierSelect.value;
     configDto.dcsTierUUID = this.getTierId(configDto.dcsTier);
     configDto.fwRuleGroupInfo = this.getFwRuleGroupInfo(configDto.dcsTier);
     configDto.natRuleGroupInfo = this.getNatRuleGroupInfo(configDto.dcsTier);
-    configDto.datacenterUUID = this.datacenterId;
+    configDto.datacenterId = this.datacenterId;
     console.log('configDto', configDto);
     this.createSelfService(configDto);
   }

@@ -33,8 +33,6 @@ export class SelfServiceBulkUploadModalComponent {
     private ngx: NgxSmartModalService,
     public datacenterService: DatacenterContextService,
     public tierContextService: TierContextService,
-    private subnetsService: V1NetworkSubnetsService,
-    private vlansService: V1NetworkVlansService,
     private selfServiceService: V1SelfServiceService,
   ) {}
 
@@ -49,41 +47,11 @@ export class SelfServiceBulkUploadModalComponent {
 
   public importObjects() {
     console.log('this.selfService', this.selfService);
-    // const tierName =  this.selfService.dcsTier;
-    // let dto = {} as any;
-    // dto.datacenterId = this.datacenterService.currentDatacenterValue.id;
-    // if (this.navIndex === 0) {
-    //   this.selfService.convertedConfig.artifact.subnets.map(subnet => {
-    //     subnet.vrfName = tierName;
-    //     return subnet;
-    //   })
-    //   dto.subnets = this.selfService.convertedConfig.artifact.subnets;
-    // };
-    // if (this.navIndex === 1) {
-    //   this.selfService.convertedConfig.artifact.vlans.map(vlan => {
-    //     vlan.vrfName = tierName;
-    //     return vlan;
-    //   })
-    //   dto = this.selfService.convertedConfig.artifact.subnets;
-    // };
-    // console.log('dto',dto);
     const modalDto = new YesNoModalDto('Import', `Are you sure you would like to import objects?`);
     const onConfirm = () => {
       this.selfServiceService.bulkUploadSelfService({ selfService: this.selfService }).subscribe(data => {
         console.log('data', data);
       });
-      // if (this.navIndex === 0) {
-      //   this.subnetsService.bulkImportSubnetsSubnet({
-      //     subnetImportCollectionDto: dto
-      //   }).subscribe((data) => {
-      //     console.log('data', data);
-      //   })
-      // }
-      // if (this.navIndex === 1) {
-      //   this.vlansService.createManyVlan({ createManyVlanDto: { bulk: dto } }).subscribe(() => {
-      //     console.log('fin')
-      //   })
-      // }
     };
 
     const onClose = () => {};
@@ -91,77 +59,3 @@ export class SelfServiceBulkUploadModalComponent {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }
-
-// [
-//   {
-//       "id": "289a095a-55f4-4a32-a382-6360ab3dc435",
-//       "info": {
-//           "errors": {
-//               "notFound?": "wheres your obj?",
-//               "wrongType": {
-//                   "expectedType": "X",
-//                   "recievedType": "Y"
-//               },
-//               "someOtherError": "why"
-//           },
-//           "lineNumber": 1000
-//       },
-//       "name": "vlan1",
-//       "tierId": "6c74c9e7-4d0e-48fc-a4f7-a546e7f9891e",
-//       "version": 1,
-//       "createdAt": "2022-10-06T14:09:38.381Z",
-//       "deletedAt": null,
-//       "updatedAt": "2022-10-06T14:09:38.381Z",
-//       "vlanNumber": 1,
-//       "description": "",
-//       "vcdVlanType": null,
-//       "provisionedAt": null,
-//       "provisionedVersion": null
-//   }
-// ]
-
-// {
-//   "datacenterId": "5a0a3af0-6be9-4e17-9870-ae6c9dba4236",
-//   "subnets": [
-//       {
-//           "name": "http",
-//           "description": "",
-//           "protocol": "TCP",
-//           "sourcePorts": "1-65535",
-//           "destinationPorts": "80",
-//           "vrf_name": "tier1"
-//       }
-//   ]
-// }
-
-// {
-//   "datacenterId": "5a0a3af0-6be9-4e17-9870-ae6c9dba4236",
-//   "subnets": [
-//       {
-//           "id": "289a095a-55f4-4a32-a382-6360ab3dc435",
-//           "info": {
-//               "errors": {
-//                   "notFound?": "wheres your obj?",
-//                   "wrongType": {
-//                       "expectedType": "X",
-//                       "recievedType": "Y"
-//                   },
-//                   "someOtherError": "why"
-//               },
-//               "lineNumber": 1000
-//           },
-//           "name": "vlan1",
-//           "tierId": "6c74c9e7-4d0e-48fc-a4f7-a546e7f9891e",
-//           "version": 1,
-//           "createdAt": "2022-10-06T14:09:38.381Z",
-//           "deletedAt": null,
-//           "updatedAt": "2022-10-06T14:09:38.381Z",
-//           "vlanNumber": 1,
-//           "description": "",
-//           "vcdVlanType": null,
-//           "provisionedAt": null,
-//           "provisionedVersion": null,
-//           "vrfName": "tier1"
-//       }
-//   ]
-// }

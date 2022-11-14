@@ -32,7 +32,7 @@
 <ng-template #actionsTemplate let-selfService="datum">
   <section class="table__actions">
     <app-icon-button icon="edit" label="Open Self Service" (handleClick)="openSelfServiceArtifactReviewModal(selfService)"></app-icon-button>
-    <app-icon-button *ngIf="selfService.conversionStatus === 'Ready For Import'" icon="execute" label="Begin Bulk Uploading" (handleClick)="openBulkUploadModal(selfService)"></app-icon-button>
+    <app-icon-button *ngIf="selfService.conversionStatus === 'Ready For Import'" icon="execute" label="Begin Bulk Uploading" (handleClick)="importObjects(selfService)"></app-icon-button>
   </section>
 </ng-template>
 
