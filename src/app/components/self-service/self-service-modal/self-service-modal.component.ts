@@ -609,7 +609,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
   private createSelfService(configDto): void {
     if (this.f.deviceType.value === 'ASA') {
-      this.selfServiceService.processAsaConfigSelfService({ selfServiceConfig: configDto }).subscribe(
+      this.selfServiceService.processAsaConfigSelfService({ selfService: configDto }).subscribe(
         returnedSelfServiceEntity => {
           this.showSpinner = false;
           this.receivedConfig = true;
@@ -619,7 +619,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       );
     } else if (this.f.deviceType.value === 'PA') {
       configDto.intervrfSubnets = this.f.intervrfSubnets.value;
-      this.selfServiceService.processPAConfigSelfService({ selfServiceConfig: configDto }).subscribe(
+      this.selfServiceService.processPAConfigSelfService({ selfService: configDto }).subscribe(
         returnedSelfServiceEntity => {
           this.showSpinner = false;
           this.receivedConfig = true;
