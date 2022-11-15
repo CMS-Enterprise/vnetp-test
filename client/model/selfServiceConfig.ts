@@ -12,13 +12,6 @@
 
 
 export interface SelfServiceConfig { 
-    datacenterUUID: string;
-    dcsTier: string;
-    dcsTierUUID: string;
-    fwRuleGroupInfo: object;
-    natRuleGroupInfo: object;
-    mappedObjects: Array<string>;
-    rawConfig: object;
-    intervrfSubnets?: string;
+    artifact: object;
 }
 

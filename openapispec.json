@@ -6561,6 +6561,17 @@
           "id"
         ]
       },
+      "SelfServiceConfig": {
+        "type": "object",
+        "properties": {
+          "artifact": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "artifact"
+        ]
+      },
       "SelfService": {
         "type": "object",
         "properties": {
@@ -6608,8 +6619,12 @@
             "nullable": true
           },
           "convertedConfig": {
-            "type": "object",
-            "nullable": true
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SelfServiceConfig"
+              }
+            ]
           },
           "conversionStatus": {
             "type": "string",
@@ -6645,47 +6660,6 @@
           "deviceType",
           "bulkUploadStatus",
           "datacenterId"
-        ]
-      },
-      "SelfServiceConfig": {
-        "type": "object",
-        "properties": {
-          "datacenterUUID": {
-            "type": "string"
-          },
-          "dcsTier": {
-            "type": "string"
-          },
-          "dcsTierUUID": {
-            "type": "string"
-          },
-          "fwRuleGroupInfo": {
-            "type": "object"
-          },
-          "natRuleGroupInfo": {
-            "type": "object"
-          },
-          "mappedObjects": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "rawConfig": {
-            "type": "object"
-          },
-          "intervrfSubnets": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "datacenterUUID",
-          "dcsTier",
-          "dcsTierUUID",
-          "fwRuleGroupInfo",
-          "natRuleGroupInfo",
-          "mappedObjects",
-          "rawConfig"
         ]
       },
       "SelfServiceRawConfig": {
@@ -25316,7 +25290,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SelfServiceConfig"
+                "$ref": "#/components/schemas/SelfService"
               }
             }
           }
@@ -25342,7 +25316,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SelfServiceConfig"
+                "$ref": "#/components/schemas/SelfService"
               }
             }
           }

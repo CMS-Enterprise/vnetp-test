@@ -18,7 +18,6 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { SelfService } from '../model/models';
-import { SelfServiceConfig } from '../model/models';
 import { SelfServiceConvertedArtifact } from '../model/models';
 import { SelfServiceRawConfig } from '../model/models';
 
@@ -47,11 +46,11 @@ export interface GetSelfServiceXMLSelfServiceRequestParams {
 }
 
 export interface ProcessAsaConfigSelfServiceRequestParams {
-    selfServiceConfig: SelfServiceConfig;
+    selfService: SelfService;
 }
 
 export interface ProcessPAConfigSelfServiceRequestParams {
-    selfServiceConfig: SelfServiceConfig;
+    selfService: SelfService;
 }
 
 export interface ReplaceExistingRawConfigSelfServiceRequestParams {
@@ -410,9 +409,9 @@ export class V1SelfServiceService {
     public processAsaConfigSelfService(requestParameters: ProcessAsaConfigSelfServiceRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
     public processAsaConfigSelfService(requestParameters: ProcessAsaConfigSelfServiceRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
     public processAsaConfigSelfService(requestParameters: ProcessAsaConfigSelfServiceRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const selfServiceConfig = requestParameters.selfServiceConfig;
-        if (selfServiceConfig === null || selfServiceConfig === undefined) {
-            throw new Error('Required parameter selfServiceConfig was null or undefined when calling processAsaConfigSelfService.');
+        const selfService = requestParameters.selfService;
+        if (selfService === null || selfService === undefined) {
+            throw new Error('Required parameter selfService was null or undefined when calling processAsaConfigSelfService.');
         }
 
         let headers = this.defaultHeaders;
@@ -444,7 +443,7 @@ export class V1SelfServiceService {
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/self-service/asa`,
-            selfServiceConfig,
+            selfService,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -465,9 +464,9 @@ export class V1SelfServiceService {
     public processPAConfigSelfService(requestParameters: ProcessPAConfigSelfServiceRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
     public processPAConfigSelfService(requestParameters: ProcessPAConfigSelfServiceRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
     public processPAConfigSelfService(requestParameters: ProcessPAConfigSelfServiceRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const selfServiceConfig = requestParameters.selfServiceConfig;
-        if (selfServiceConfig === null || selfServiceConfig === undefined) {
-            throw new Error('Required parameter selfServiceConfig was null or undefined when calling processPAConfigSelfService.');
+        const selfService = requestParameters.selfService;
+        if (selfService === null || selfService === undefined) {
+            throw new Error('Required parameter selfService was null or undefined when calling processPAConfigSelfService.');
         }
 
         let headers = this.defaultHeaders;
@@ -499,7 +498,7 @@ export class V1SelfServiceService {
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/self-service/pa`,
-            selfServiceConfig,
+            selfService,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { SelfServiceConfig } from './selfServiceConfig';
 
 
 export interface SelfService { 
@@ -23,7 +24,7 @@ export interface SelfService {
     rawJsonConfig: object | null;
     mappedObjects: object | null;
     intervrfSubnets: string | null;
-    convertedConfig: object | null;
+    convertedConfig: SelfServiceConfig | null;
     conversionStatus: string | null;
     deviceType: string | null;
     bulkUploadStatus: string | null;
