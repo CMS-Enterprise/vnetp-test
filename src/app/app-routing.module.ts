@@ -9,7 +9,7 @@ const routes: Routes = [
   {
     path: 'self-service',
     canActivate: [AuthGuard],
-    data: { breadcrumb: 'Self Service', title: 'Automation - Self Service' },
+    data: { breadcrumb: 'Managed Service', title: 'Automation - Managed Service' },
     loadChildren: () => import('./components/self-service/self-service.module').then(m => m.SelfServiceModule),
   },
   {

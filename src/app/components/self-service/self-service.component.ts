@@ -24,7 +24,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
-    description: 'Self Services',
+    description: 'Managed Services',
     columns: [
       { name: 'Id', property: 'id' },
       { name: 'Mapped Objects', template: () => this.mappedObjectsTemplate },
