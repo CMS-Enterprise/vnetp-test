@@ -9,9 +9,12 @@ import { Tab } from 'src/app/common/tabs/tabs.component';
 export class SelfServiceArtifactReviewModalComponent implements OnInit {
   @ViewChild('lineNumberTemplate') lineNumberTemplate: TemplateRef<any>;
   @Input() selfService;
+  selectedObjects;
   navIndex = 0;
   logIndex = 0;
   selectedLog;
+
+  public loadingTabObjects = false;
 
   public logValues = [{ name: 'Artifact-Logs' }, { name: 'Object-Logs' }];
   public tabs: Tab[] = [
@@ -29,14 +32,14 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
   ];
 
   public config = {
-    description: 'Network Objects',
+    description: 'Selected Objects',
     columns: [
       {
         name: 'Object Name',
-        template: 'name',
+        property: 'name',
       },
       {
-        name: 'Line Number',
+        name: 'Line Number (Original Config)',
         template: () => this.lineNumberTemplate,
       },
     ],
@@ -58,11 +61,88 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
     }
     this.logIndex = this.logValues.findIndex(l => l.name === val.name);
   }
+
   public handleTabChange(tab) {
+    this.loadingTabObjects = true;
     if (this.navIndex === this.tabs.findIndex(t => t.name === tab.name)) {
       return;
     }
     this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
+    switch (this.navIndex) {
+      case 1:
+        this.selectedObjects = {
+          data: this.selfService.convertedConfig.artifact.networkObjects,
+          page: 1,
+          pageCount: 1,
+          count: 1,
+          total: 1,
+        };
+        break;
+      case 2:
+        this.selectedObjects = {
+          data: this.selfService.convertedConfig.artifact.serviceObjects,
+          page: 1,
+          pageCount: 1,
+          count: 1,
+          total: 1,
+        };
+        break;
+      case 3:
+        this.selectedObjects = {
+          data: this.selfService.convertedConfig.artifact.networkObjectGroups,
+          page: 1,
+          pageCount: 1,
+          count: 1,
+          total: 1,
+        };
+        break;
+      case 4:
+        this.selectedObjects = {
+          data: this.selfService.convertedConfig.artifact.serviceObjectGroups,
+          page: 1,
+          pageCount: 1,
+          count: 1,
+          total: 1,
+        };
+        break;
+      case 5:
+        this.selectedObjects = {
+          data: this.selfService.convertedConfig.artifact.intervrfFirewallRules,
+          page: 1,
+          pageCount: 1,
+          count: 1,
+          total: 1,
+        };
+        break;
+      case 6:
+        this.selectedObjects = {
+          data: this.selfService.convertedConfig.artifact.externalFirewallRules,
+          page: 1,
+          pageCount: 1,
+          count: 1,
+          total: 1,
+        };
+        break;
+      case 7:
+        this.selectedObjects = {
+          data: this.selfService.convertedConfig.artifact.intervrfNatRules,
+          page: 1,
+          pageCount: 1,
+          count: 1,
+          total: 1,
+        };
+        break;
+      case 8:
+        this.selectedObjects = {
+          data: this.selfService.convertedConfig.artifact.externalNatRules,
+          page: 1,
+          pageCount: 1,
+          count: 1,
+          total: 1,
+        };
+        break;
+    }
+    this.loadingTabObjects = false;
     console.log('navIndex', this.navIndex);
   }
 }

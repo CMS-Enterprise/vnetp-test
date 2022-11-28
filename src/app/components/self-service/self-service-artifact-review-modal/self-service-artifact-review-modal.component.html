@@ -1,4 +1,5 @@
-<ngx-smart-modal [dismissable]="false" #selfServiceArtifactReviewModal identifier="selfServiceArtifactReviewModal" customClass="xlarge-modal" (onClose)="onClose()">
+<ngx-smart-modal [dismissable]="false" #selfServiceArtifactReviewModal identifier="selfServiceArtifactReviewModal"
+    customClass="xlarge-modal" (onClose)="onClose()">
 
     <header class="modal-header">
         <h4 class="modal-title">{{selfService?.id}} - Self Service Review</h4>
@@ -6,136 +7,33 @@
 
     <main class="modal-body">
         <div class="col-md-2">
-            <ng-select [clearable]="false" [(ngModel)]="selectedLog" (change)="handleLogChange($event)" [items]="logValues" bindLabel="name" bindValue="name"></ng-select>
+            <ng-select [clearable]="false" [(ngModel)]="selectedLog" (change)="handleLogChange($event)"
+                [items]="logValues" bindLabel="name" bindValue="name"></ng-select>
 
         </div>
 
-        <ng-container>
+     
             <div *ngIf="logIndex === 0">
                 <span>Logs: {{selfService?.convertedConfig?.artifact?.logs | json}}</span>
             </div>
-            <div *ngIf="logIndex === 1">
+            <ng-container *ngIf="logIndex === 1">
                 <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
-    
-                <div *ngIf="navIndex === 0">
-                    <div>
-                        <span>Errors during conversion : {{selfService?.convertedConfig?.artifact?.errors | json}}</span>
-                    </div>
-                </div>
-                <div *ngIf="navIndex === 1">
-                    <!-- <app-table [config]="config" [data]="selfService"></app-table> -->
-                    <div *ngFor="let netObj of selfService?.convertedConfig?.artifact?.networkObjects">
-                        <ul>
-                            <li>
-                                <span>Name: {{netObj.name}} </span><br>
-                                <span>Line Number: {{netObj.info.line_number}}</span>
-                            </li>
-                        </ul>
-                        
-    
-                    </div>
-                </div>
+                <ng-container *ngIf="!loadingTabObjects; else loadingObjects">
+                    <app-table [config]="config" [data]="selectedObjects"></app-table>
+                </ng-container>
+            </ng-container>
 
-                <div *ngIf="navIndex === 2">
-                    <div *ngFor="let svcObj of selfService?.convertedConfig?.artifact?.serviceObjects">
-                        <ul>
-                            <li>
-                                <span>Name: {{svcObj.name}} </span><br>
-                                <span>Line Number: {{svcObj.info.line_number}}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
 
-                <div *ngIf="navIndex === 3">
-                    <div *ngFor="let netObjGrp of selfService?.convertedConfig?.artifact?.networkObjectGroups">
-                        <ul>
-                            <li>
-                                <span>Name: {{netObjGrp.name}} </span><br>
-                                <span>Line Number: {{netObjGrp.info.line_number}}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
 
-                <div *ngIf="navIndex === 4">
-                    <div *ngFor="let svcObjGrp of selfService?.convertedConfig?.artifact?.serviceObjectGroups">
-                        <ul>
-                            <li>
-                                <span>Name: {{svcObjGrp.name}} </span><br>
-                                <span>Line Number: {{svcObjGrp.info.line_number}}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
 
-                <div *ngIf="navIndex === 5">
-                    <div *ngFor="let interFWRule of selfService?.convertedConfig?.artifact?.intervrfFirewallRules">
-                        <ul>
-                            <li>
-                                <span>Name: {{interFWRule.name}} </span><br>
-                                <span>Line Number: {{interFWRule.info.line_number}}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div *ngIf="navIndex === 6">
-                    <div *ngFor="let externalFWRule of selfService?.convertedConfig?.artifact?.externalFirewallRules">
-                        <ul>
-                            <li>
-                                <span>Name: {{externalFWRule.name}} </span><br>
-                                <span>Line Number: {{externalFWRule.info.line_number}}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div *ngIf="navIndex === 7">
-                    <div *ngFor="let interNatRule of selfService?.convertedConfig?.artifact?.intervrfNatRules">
-                        <ul>
-                            <li>
-                                <span>Name: {{interNatRule.name}} </span><br>
-                                <span>Line Number: {{interNatRule.info.line_number}}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div *ngIf="navIndex === 8">
-                    <div *ngFor="let externalNatRule of selfService?.convertedConfig?.artifact?.externalNatRules">
-                        <ul>
-                            <li>
-                                <span>Name: {{externalNatRule.name}} </span><br>
-                                <span>Line Number: {{externalNatRule.info.line_number}}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                    
-    
-                <!-- <div *ngIf="navIndex === 1">
-                    <span>{{selfService?.convertedConfig?.artifact?.vlans | json }}</span>
-                </div> -->
-            </div>
-            
-            
-
-            
-        </ng-container>
     </main>
-    <!-- <ng-template #nameTemplate let-artifact="datum">
-        <div *ngIf="navIndex === 1">
-            <div *ngFor="let netObj of artifact?.networkObjects">
-                <span>{{netObj?.name}}</span>
-            </div>
-           
-        </div>
-        
-    </ng-template> -->
-    <!-- <ng-template #lineNumberTemplate let-selfService="datum">
-        <div *ngIf="selfService.convertedConfig.artifact.networkObjects"></div>
-        <span>{{}}</span>
-        
-    </ng-template> -->
 </ngx-smart-modal>
+<ng-template #lineNumberTemplate let-selectedObject="datum">
+    <span>
+        {{selectedObject?.info?.line_number }}
+    </span>
+    
+</ng-template>
+<ng-template #loadingObjects>
+    <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
