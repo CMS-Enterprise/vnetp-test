@@ -4,6 +4,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { EntityService } from 'src/app/services/entity.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
@@ -29,12 +30,13 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
       { name: 'Id', property: 'id' },
       { name: 'Mapped Objects', template: () => this.mappedObjectsTemplate },
       { name: 'Device Type', property: 'deviceType' },
+      { name: 'DCS Tier', property: 'dcsTier' },
       { name: 'Conversion Status', property: 'conversionStatus' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
 
-  constructor(private selfServiceService: V1SelfServiceService, private ngx: NgxSmartModalService) {}
+  constructor(private entityService: EntityService, private selfServiceService: V1SelfServiceService, private ngx: NgxSmartModalService) {}
 
   public getSelfServices() {
     this.loadingSelfServices = true;
@@ -108,6 +110,27 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
       this.selfServiceBulkUploadModalSubscription.unsubscribe();
       this.getSelfServices();
     });
+  }
+
+  public deleteSelfService(selfService) {
+    console.log('selfService', selfService);
+    const dto = new YesNoModalDto(
+      `Delete Self Service`,
+      `Error(s): "${selfService.convertedConfig.artifact.error}"`,
+      // `${deleteDescription} ${entityName}`,
+      // 'Cancel',
+      // 'danger',
+    );
+    const onConfirm = () => {
+      this.selfServiceService.deleteSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(() => {
+        this.getSelfServices();
+      });
+    };
+
+    const onClose = () => {
+      this.getSelfServices();
+    };
+    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm, onClose);
   }
   // public openBulkUploadModal(selfService) {
   //   this.subscribeToBulkUploadModal();

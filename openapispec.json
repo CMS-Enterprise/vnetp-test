@@ -6681,91 +6681,6 @@
         "required": [
           "type"
         ]
-      },
-      "SelfServiceConvertedArtifactObjects": {
-        "type": "object",
-        "properties": {
-          "logs": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "subnets": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "vlans": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "networkObjects": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "networkObjectGroups": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "serviceObjects": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "serviceObjectGroups": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "intervrfFWRules": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "intervrfNatRules": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "externalFWRules": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "externalNatRules": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "required": [
-          "logs"
-        ]
-      },
-      "SelfServiceConvertedArtifact": {
-        "type": "object",
-        "properties": {
-          "artifact": {
-            "$ref": "#/components/schemas/SelfServiceConvertedArtifactObjects"
-          }
-        },
-        "required": [
-          "artifact"
-        ]
       }
     }
   },
@@ -25202,6 +25117,29 @@
         "tags": [
           "v1/self-service"
         ]
+      },
+      "delete": {
+        "operationId": "deleteSelfServiceSelfService",
+        "summary": "",
+        "description": "",
+        "parameters": [
+          {
+            "name": "selfServiceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
       }
     },
     "/v1/self-service/{selfServiceId}/raw/xml": {
@@ -25381,16 +25319,6 @@
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SelfServiceConvertedArtifact"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": ""

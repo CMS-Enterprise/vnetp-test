@@ -197,8 +197,6 @@ model/poolImportCollectionDto.ts
 model/priorityGroup.ts
 model/selfService.ts
 model/selfServiceConfig.ts
-model/selfServiceConvertedArtifact.ts
-model/selfServiceConvertedArtifactObjects.ts
 model/selfServiceRawConfig.ts
 model/serviceObject.ts
 model/serviceObjectGroup.ts

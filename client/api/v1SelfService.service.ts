@@ -18,7 +18,6 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { SelfService } from '../model/models';
-import { SelfServiceConvertedArtifact } from '../model/models';
 import { SelfServiceRawConfig } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -27,6 +26,10 @@ import { Configuration }                                     from '../configurat
 
 export interface BulkUploadSelfServiceRequestParams {
     selfService: SelfService;
+}
+
+export interface DeleteSelfServiceSelfServiceRequestParams {
+    selfServiceId: string;
 }
 
 export interface GetSelfServiceJsonSelfServiceRequestParams {
@@ -60,7 +63,6 @@ export interface ReplaceExistingRawConfigSelfServiceRequestParams {
 
 export interface UpdateConversionArtifactsSelfServiceRequestParams {
     selfServiceId: string;
-    selfServiceConvertedArtifact: SelfServiceConvertedArtifact;
 }
 
 
@@ -169,6 +171,50 @@ export class V1SelfServiceService {
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/self-service/bulkupload`,
             selfService,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deleteSelfServiceSelfService(requestParameters: DeleteSelfServiceSelfServiceRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deleteSelfServiceSelfService(requestParameters: DeleteSelfServiceSelfServiceRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deleteSelfServiceSelfService(requestParameters: DeleteSelfServiceSelfServiceRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deleteSelfServiceSelfService(requestParameters: DeleteSelfServiceSelfServiceRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const selfServiceId = requestParameters.selfServiceId;
+        if (selfServiceId === null || selfServiceId === undefined) {
+            throw new Error('Required parameter selfServiceId was null or undefined when calling deleteSelfServiceSelfService.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/self-service/${encodeURIComponent(String(selfServiceId))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -582,10 +628,6 @@ export class V1SelfServiceService {
         if (selfServiceId === null || selfServiceId === undefined) {
             throw new Error('Required parameter selfServiceId was null or undefined when calling updateConversionArtifactsSelfService.');
         }
-        const selfServiceConvertedArtifact = requestParameters.selfServiceConvertedArtifact;
-        if (selfServiceConvertedArtifact === null || selfServiceConvertedArtifact === undefined) {
-            throw new Error('Required parameter selfServiceConvertedArtifact was null or undefined when calling updateConversionArtifactsSelfService.');
-        }
 
         let headers = this.defaultHeaders;
 
@@ -601,22 +643,13 @@ export class V1SelfServiceService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
             responseType = 'text';
         }
 
         return this.httpClient.put<any>(`${this.configuration.basePath}/v1/self-service/${encodeURIComponent(String(selfServiceId))}/converted-artifacts`,
-            selfServiceConvertedArtifact,
+            null,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
