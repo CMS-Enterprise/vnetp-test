@@ -26,6 +26,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   vsysHolderArray: string[] = [];
   zoneHolderArray: string[] = [];
   rawConfig;
+  rawConfigFileName;
   invalidInterface: boolean;
   selectedTiers = [];
   receivedConfig: boolean;
@@ -297,6 +298,10 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         const parsed = parser.parseFromString(readableText, 'text/xml');
         // convert XML parsed data to json format for object readability
         const json: any = this.xml2json(parsed);
+        this.rawConfigFileName = this.initialForm.controls.deviceConfig.value;
+        this.rawConfigFileName = this.rawConfigFileName.split('\\');
+        const arrayLength = this.rawConfigFileName.length;
+        this.rawConfigFileName = this.rawConfigFileName[arrayLength - 1];
         this.rawConfig = readableText;
         // the vsys array is located here in the json object body
         const vsysArrayFromConfig = json.config.devices.entry.vsys.entry;
@@ -373,6 +378,10 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         // since deviceType is not PA, we do not need a required validator on the intervrfSubnets form field
         this.f.intervrfSubnets.clearValidators();
         this.f.intervrfSubnets.updateValueAndValidity();
+        this.rawConfigFileName = this.initialForm.controls.deviceConfig.value;
+        this.rawConfigFileName = this.rawConfigFileName.split('\\');
+        const arrayLength = this.rawConfigFileName.length;
+        this.rawConfigFileName = this.rawConfigFileName[arrayLength - 1];
         this.rawConfig = readableText;
         // split readableText into an array of lines, each member in the array is an individual line in the device config
         const splitFileByLine = readableText.split('\n');
@@ -583,6 +592,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       rawTextConfig: '',
       rawXMLConfig: '',
       intervrfSubnets: null,
+      rawConfigFileName: '',
     };
     if (this.f.deviceType.value === 'ASA') {
       configDto.rawTextConfig = this.rawConfig;
@@ -595,7 +605,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     configDto.fwRuleGroupInfo = this.getFwRuleGroupInfo(configDto.dcsTier);
     configDto.natRuleGroupInfo = this.getNatRuleGroupInfo(configDto.dcsTier);
     configDto.datacenterId = this.datacenterId;
-    console.log('configDto', configDto);
+    configDto.rawConfigFileName = this.rawConfigFileName;
     this.createSelfService(configDto);
   }
 

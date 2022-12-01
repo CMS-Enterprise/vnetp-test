@@ -6578,6 +6578,10 @@
           "id": {
             "type": "string"
           },
+          "rawConfigFileName": {
+            "type": "string",
+            "nullable": true
+          },
           "dcsTier": {
             "type": "string",
             "nullable": true
@@ -6645,6 +6649,7 @@
         },
         "required": [
           "id",
+          "rawConfigFileName",
           "dcsTier",
           "dcsTierUUID",
           "fwRuleGroupInfo",

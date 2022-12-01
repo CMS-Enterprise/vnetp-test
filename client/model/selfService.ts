@@ -14,6 +14,7 @@ import { SelfServiceConfig } from './selfServiceConfig';
 
 export interface SelfService { 
     id: string;
+    rawConfigFileName: string | null;
     dcsTier: string | null;
     dcsTierUUID: string | null;
     fwRuleGroupInfo: object | null;

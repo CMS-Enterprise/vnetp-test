@@ -67,6 +67,8 @@ export class TableComponent<T> implements AfterViewInit {
     this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
     // list of components that should have the search bar hidden when a user navigates to them
     const badList = [
+      'managed-network',
+      'selected-objects',
       'import-preview',
       'pools-in-the-currently-selected-tier',
       'static-routes-listed-by-tier',

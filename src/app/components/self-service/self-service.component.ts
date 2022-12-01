@@ -28,6 +28,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     description: 'Managed Network',
     columns: [
       { name: 'Id', property: 'id' },
+      { name: 'Raw Config File Name', property: 'rawConfigFileName' },
       { name: 'Mapped Objects', template: () => this.mappedObjectsTemplate },
       { name: 'Device Type', property: 'deviceType' },
       { name: 'DCS Tier', property: 'dcsTier' },
