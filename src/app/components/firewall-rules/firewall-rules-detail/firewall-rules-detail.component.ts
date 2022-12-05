@@ -209,28 +209,28 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     const tierRequest = this.tierService.getOneTier({ id: this.TierId });
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
       filter: [`tierId||eq||${this.TierId}`],
-      fields: ['id,name'],
+      fields: ['id,name,deletedAt'],
       sort: ['updatedAt,ASC'],
       page: 1,
       limit: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
       filter: [`tierId||eq||${this.TierId}`],
-      fields: ['id,name'],
+      fields: ['id,name,deletedAt'],
       sort: ['updatedAt,ASC'],
       page: 1,
       limit: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
       filter: [`tierId||eq||${this.TierId}`],
-      fields: ['id,name'],
+      fields: ['id,name,deletedAt'],
       sort: ['updatedAt,ASC'],
       page: 1,
       limit: 50000,
     });
     const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
       filter: [`tierId||eq||${this.TierId}`],
-      fields: ['id,name'],
+      fields: ['id,name,deletedAt'],
       sort: ['updatedAt,ASC'],
       page: 1,
       limit: 50000,
@@ -239,14 +239,15 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     forkJoin([tierRequest, networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest, serviceObjectGroupRequest]).subscribe(
       result => {
         this.TierName = result[0].name;
-        this.networkObjects = result[1].data;
-        this.networkObjectGroups = result[2].data;
-        this.serviceObjects = result[3].data;
-        this.serviceObjectGroups = result[4].data;
+        this.networkObjects = result[1].data.filter(networkObj => networkObj.deletedAt === null);
+        this.networkObjectGroups = result[2].data.filter(networkObjGroup => networkObjGroup.deletedAt === null);
+        this.serviceObjects = result[3].data.filter(serviceObj => serviceObj.deletedAt === null);
+        this.serviceObjectGroups = result[4].data.filter(serviceObjGroup => serviceObjGroup.deletedAt === null);
 
         this.getFirewallRules();
       },
     );
+    console.log(this.networkObjects);
   }
 
   createFirewallRule(): void {
