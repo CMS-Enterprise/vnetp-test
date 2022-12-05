@@ -97,6 +97,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
       .subscribe(() => {
         this.selectedServiceObject = null;
         this.getGroupServiceObjects();
+        this.getTierServiceObjects();
       });
   }
 
@@ -110,6 +111,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
         })
         .subscribe(() => {
           this.getGroupServiceObjects();
+          this.getTierServiceObjects();
         });
     };
 
@@ -149,7 +151,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
 
   private getTierServiceObjects() {
     this.tierService.getOneTier({ id: this.TierId, join: ['serviceObjects'] }).subscribe(data => {
-      this.tierServiceObjects = data.serviceObjects;
+      this.tierServiceObjects = data.serviceObjects.filter(tierObj => !this.serviceObjects.some(groupObj => groupObj.id === tierObj.id));
     });
   }
 

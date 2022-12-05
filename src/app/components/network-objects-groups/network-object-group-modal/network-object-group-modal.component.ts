@@ -94,6 +94,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
       .subscribe(() => {
         this.selectedNetworkObject = null;
         this.getGroupNetworkObjects();
+        this.getTierNetworkObjects();
       });
   }
 
@@ -107,6 +108,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
         })
         .subscribe(() => {
           this.getGroupNetworkObjects();
+          this.getTierNetworkObjects();
         });
     };
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
@@ -142,7 +144,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
 
   private getTierNetworkObjects() {
     this.tierService.getOneTier({ id: this.TierId, join: ['networkObjects'] }).subscribe(data => {
-      this.tierNetworkObjects = data.networkObjects;
+      this.tierNetworkObjects = data.networkObjects.filter(tierObj => !this.networkObjects.some(groupObj => groupObj.id === tierObj.id));
     });
   }
 
