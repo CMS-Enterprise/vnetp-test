@@ -156,8 +156,6 @@ export class NetworkObjectGroupModalComponent implements OnInit {
       })
       .subscribe(data => {
         this.networkObjects = data.networkObjects;
-        console.log('group');
-        console.log(this.networkObjects);
       });
   }
 
