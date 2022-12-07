@@ -34,6 +34,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   selfService: any;
   firewallRuleGroupData = {} as any;
   natRuleGroupData = {} as any;
+  showFooter = true;
 
   private currentDatacenterSubscription: Subscription;
 
@@ -612,12 +613,14 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   public getTierId = (name: string) => ObjectUtil.getObjectId(name, this.tiers);
 
   public onClose(): void {
+    this.showFooter = true;
     this.ngx.resetModalData('selfServiceModal');
     this.ngx.getModal('selfServiceModal').close();
     this.reset();
   }
 
   private createSelfService(configDto): void {
+    this.showFooter = false;
     if (this.f.deviceType.value === 'ASA') {
       this.selfServiceService.processAsaConfigSelfService({ selfService: configDto }).subscribe(
         returnedSelfServiceEntity => {
