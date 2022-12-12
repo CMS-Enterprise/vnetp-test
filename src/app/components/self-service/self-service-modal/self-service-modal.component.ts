@@ -305,8 +305,11 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         this.rawConfigFileName = this.rawConfigFileName[arrayLength - 1];
         this.rawConfig = readableText;
         // the vsys array is located here in the json object body
-        const vsysArrayFromConfig = json.config.devices.entry.vsys.entry;
+        let vsysArrayFromConfig = json.config.devices.entry.vsys.entry;
         // add name property to vsys array from config
+        if (!Array.isArray(vsysArrayFromConfig)) {
+          vsysArrayFromConfig = [vsysArrayFromConfig];
+        }
         for (let i = 0; i < vsysArrayFromConfig.length; i++) {
           vsysArrayFromConfig[i].name = this.vsysHolderArray[i];
         }
