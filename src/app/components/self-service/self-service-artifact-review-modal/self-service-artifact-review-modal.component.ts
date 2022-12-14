@@ -143,6 +143,7 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
         break;
     }
     this.loadingTabObjects = false;
+    console.log('this.selectedObjects', this.selectedObjects);
     console.log('navIndex', this.navIndex);
   }
 }

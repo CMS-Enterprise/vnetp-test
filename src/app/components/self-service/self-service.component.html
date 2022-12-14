@@ -25,10 +25,6 @@
   </div>
 </ng-template>
 
-<ng-template #conversionStatus let-selfService="datum">
-  <div>{{selfService.conversionStatus}}</div>
-</ng-template>
-
 <ng-template #actionsTemplate let-selfService="datum">
   <section class="table__actions">
     <app-icon-button *ngIf="selfService.conversionStatus === 'Failed'" 
@@ -38,7 +34,7 @@
               (handleClick)="deleteSelfService(selfService)"
             ></app-icon-button>
     <app-icon-button *ngIf="selfService.conversionStatus === 'Ready For Import'" icon="edit" label="Open Self Service" (handleClick)="openSelfServiceArtifactReviewModal(selfService)"></app-icon-button>
-    <app-icon-button *ngIf="selfService.conversionStatus === 'Ready For Import'" icon="execute" label="Begin Bulk Uploading" (handleClick)="importObjects(selfService)"></app-icon-button>
+    <app-icon-button *ngIf="selfService.conversionStatus === 'Ready For Import' && selfService.bulkUploadStatus !== 'Finished'" icon="execute" label="Begin Bulk Uploading" (handleClick)="importObjects(selfService)"></app-icon-button>
   </section>
 </ng-template>
 

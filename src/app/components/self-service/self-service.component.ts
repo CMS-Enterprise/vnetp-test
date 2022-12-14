@@ -20,8 +20,6 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   selectedSelfService;
 
   @ViewChild('mappedObjects') mappedObjectsTemplate: TemplateRef<any>;
-  @ViewChild('deviceType') deviceTypeTemplate: TemplateRef<any>;
-  @ViewChild('conversionStatus') conversionStatusTemplate: TemplateRef<any>;
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
@@ -33,6 +31,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
       { name: 'Device Type', property: 'deviceType' },
       { name: 'DCS Tier', property: 'dcsTier' },
       { name: 'Conversion Status', property: 'conversionStatus' },
+      { name: 'Bulk Upload Status', property: 'bulkUploadStatus' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -46,7 +45,8 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
         this.selfServices = data;
         this.selfServices.data.map(ss => {
           // split the conversion status on capital letters for readability
-          ss.conversionStatus = ss.conversionStatus.split(/(?=[A-Z])/).join(' ');
+          ss.conversionStatus = ss.conversionStatus?.split(/(?=[A-Z])/).join(' ');
+          ss.bulkUploadStatus = ss.bulkUploadStatus?.split(/(?=[A-Z])/).join(' ');
         });
       },
       () => {
