@@ -100,14 +100,37 @@ export class AuditLogComponent implements OnInit {
                   key === 'irules' ||
                   key === 'pools' ||
                   key === 'healthMonitors' ||
-                  key === 'pools'
+                  key === 'pools' ||
+                  key === 'nodes'
                 ) {
-                  const beforeList = entityBefore[key].map(obj => {
-                    return obj.name;
-                  });
-                  const afterList = entityAfter[key].map(obj => {
-                    return obj.name;
-                  });
+                  let beforeList;
+                  let afterList;
+                  if (key === 'nodes') {
+                    if (entityBefore[key] === undefined || entityAfter[key] === undefined) {
+                      return;
+                    }
+                    if (entityBefore[key]) {
+                      beforeList = entityBefore[key].map(obj => {
+                        return obj.loadBalancerNode.name;
+                      });
+                    }
+                    if (entityAfter[key]) {
+                      afterList = entityAfter[key].map(obj => {
+                        return obj.loadBalancerNode.name;
+                      });
+                    }
+                  } else {
+                    beforeList = entityBefore[key].map(obj => {
+                      return obj.name;
+                    });
+                    afterList = entityAfter[key].map(obj => {
+                      return obj.name;
+                    });
+                  }
+
+                  if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {
+                    return;
+                  }
                   const message = { propertyName: key, before: beforeList, after: afterList };
                   messageArray.push(message);
                   return;
@@ -119,6 +142,7 @@ export class AuditLogComponent implements OnInit {
                     let beforeMatch;
                     let afterMatch;
                     const lowerCaseKey = key.toLocaleLowerCase();
+                    /* tslint:disable */
                     if (lowerCaseKey.includes('networkobjectid')) {
                       beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.networkObjects);
                       beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
@@ -148,6 +172,7 @@ export class AuditLogComponent implements OnInit {
                       afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
                       entityAfter[key] = afterMatch;
                     }
+                    /* tslint:enable */
                   }
                   // so we create a string message listing the property that was changed and its "before" and "after" values
                   const message = { propertyName: key, before: entityBefore[key], after: entityAfter[key] };

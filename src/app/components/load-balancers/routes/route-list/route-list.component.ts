@@ -81,7 +81,9 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.loadRoutes(params);
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.loadRoutes(this.tableComponentDto);
         } else {
           this.loadRoutes();
         }
@@ -111,6 +113,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
         limit: this.tableComponentDto.perPage,
+        sort: ['name,ASC'],
       })
       .subscribe(
         (response: any) => {
@@ -182,7 +185,9 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadRoutes(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadRoutes(this.tableComponentDto);
       } else {
         this.loadRoutes();
       }
@@ -210,7 +215,9 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadRoutes(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadRoutes(this.tableComponentDto);
       } else {
         this.loadRoutes();
       }

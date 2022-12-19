@@ -83,7 +83,9 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.loadIRules(params);
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.loadIRules(this.tableComponentDto);
         } else {
           this.loadIRules();
         }
@@ -113,6 +115,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
         limit: this.tableComponentDto.perPage,
+        sort: ['name,ASC'],
       })
       .subscribe(
         response => {
@@ -182,7 +185,9 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadIRules(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadIRules(this.tableComponentDto);
       } else {
         this.loadIRules();
       }
@@ -210,7 +215,9 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.loadIRules(params);
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.loadIRules(this.tableComponentDto);
       } else {
         this.loadIRules();
       }

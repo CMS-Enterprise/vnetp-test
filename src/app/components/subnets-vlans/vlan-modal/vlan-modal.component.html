@@ -58,6 +58,16 @@
           <div *ngIf="f.vlanNumber.errors.max">VLAN Number must be less than or equal to 4094</div>
         </div>
       </div>
+
+      <div class="form-group">
+        <label for="vcdVlanType">VCD VLAN Type</label>
+        <select id="vcdVlanType" formControlName="vcdVlanType" class="form-control" aria-label="Type">
+          <option [ngValue]="null">None</option>
+          <option value="Dev">Dev</option>
+          <option value="Prod">Prod</option>
+          <option value="Both">Both</option>
+        </select>
+      </div>
     </div>
 
     <footer class="modal-footer">

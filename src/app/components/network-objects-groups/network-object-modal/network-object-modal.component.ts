@@ -66,11 +66,12 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
 
     modalNetworkObject.natService = this.form.value.natService;
 
-    if (modalNetworkObject.natService) {
+    if (modalNetworkObject.nat && modalNetworkObject.natService) {
       modalNetworkObject.natProtocol = this.form.value.natProtocol;
       modalNetworkObject.natSourcePort = this.form.value.natSourcePort;
       modalNetworkObject.natTranslatedPort = this.form.value.natTranslatedPort;
     } else {
+      modalNetworkObject.natService = false; // Set natService to false if nat is false.
       modalNetworkObject.natProtocol = null;
       modalNetworkObject.natSourcePort = null;
       modalNetworkObject.natTranslatedPort = null;
@@ -178,6 +179,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
         this.form.controls.natDirection.setValidators(Validators.compose([Validators.required]));
         this.form.controls.natType.setValidators(Validators.compose([Validators.required]));
       } else if (!natValue) {
+        this.form.controls.natService.setValue(false);
         this.form.controls.translatedIpAddress.setValue(null);
         this.form.controls.translatedIpAddress.setValidators(null);
         this.form.controls.natDirection.setValue(null);
@@ -186,6 +188,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
         this.form.controls.natType.setValidators(null);
       }
 
+      this.form.controls.natService.updateValueAndValidity();
       this.form.controls.translatedIpAddress.updateValueAndValidity();
       this.form.controls.natType.updateValueAndValidity();
       this.form.controls.natDirection.updateValueAndValidity();

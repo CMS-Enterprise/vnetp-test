@@ -32,6 +32,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { EntityService } from 'src/app/services/entity.service';
 import { SearchColumnConfig } from '../../../common/seach-bar/search-bar.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { TableContextService } from 'src/app/services/table-context.service';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -120,6 +121,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private datacenterService: DatacenterContextService,
+    private tableContextService: TableContextService,
   ) {}
 
   ngOnInit(): void {
@@ -180,7 +182,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     } else {
       this.tableComponentDto.perPage = this.perPage;
     }
-    console.log(this.tableComponentDto);
     this.firewallRuleService
       .getManyFirewallRule({
         filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`, eventParams],
@@ -292,14 +293,32 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       entityName: 'Firewall Rule',
       delete$: this.firewallRuleService.deleteOneFirewallRule({ id: firewallRule.id }),
       softDelete$: this.firewallRuleService.softDeleteOneFirewallRule({ id: firewallRule.id }),
-      onSuccess: () => this.getFirewallRules(),
+      onSuccess: () => {
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+        if (filteredResults) {
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.getFirewallRules(this.tableComponentDto);
+        } else {
+          this.getFirewallRules();
+        }
+      },
     });
   }
 
   restoreFirewallRule(firewallRule: FirewallRule): void {
     if (firewallRule.deletedAt) {
       this.firewallRuleService.restoreOneFirewallRule({ id: firewallRule.id }).subscribe(() => {
-        this.getFirewallRules();
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+        if (filteredResults) {
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.getFirewallRules(this.tableComponentDto);
+        } else {
+          this.getFirewallRules();
+        }
       });
     }
   }
