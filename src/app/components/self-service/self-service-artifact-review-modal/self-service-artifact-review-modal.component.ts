@@ -11,16 +11,12 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
   @Input() selfService;
   selectedObjects;
   navIndex = 0;
-  logIndex = 0;
   selectedLog;
 
   public loadingTabObjects = false;
 
-  public logValues = [{ name: 'Artifact-Logs' }, { name: 'Object-Logs' }];
   public tabs: Tab[] = [
     { name: 'LOGS' },
-    // { name: 'Subnets' },
-    // { name: 'VLANs' },
     { name: 'Network Objects' },
     { name: 'Service Objects' },
     { name: 'Network Object Groups' },
@@ -47,19 +43,11 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
 
   constructor(private ngx: NgxSmartModalService) {}
   ngOnInit(): void {
-    this.selectedLog = this.logValues[0].name;
+    this.navIndex = 0;
   }
 
   public onClose() {
-    this.selectedLog = this.logValues[0].name;
-    this.logIndex = 0;
-  }
-
-  public handleLogChange(val) {
-    if (this.logIndex === this.logValues.findIndex(l => l.name === val.name)) {
-      return;
-    }
-    this.logIndex = this.logValues.findIndex(l => l.name === val.name);
+    this.navIndex = 0;
   }
 
   public handleTabChange(tab) {
@@ -143,7 +131,5 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
         break;
     }
     this.loadingTabObjects = false;
-    console.log('this.selectedObjects', this.selectedObjects);
-    console.log('navIndex', this.navIndex);
   }
 }
