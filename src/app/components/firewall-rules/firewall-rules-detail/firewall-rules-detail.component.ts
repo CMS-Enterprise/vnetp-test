@@ -215,8 +215,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       limit: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
-      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
-      fields: ['id,name,deletedAt'],
+      filter: [`tierId||eq||${this.TierId}`],
+      fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
       limit: 50000,
