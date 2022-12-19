@@ -247,7 +247,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         this.getFirewallRules();
       },
     );
-    console.log(this.networkObjects);
   }
 
   createFirewallRule(): void {
