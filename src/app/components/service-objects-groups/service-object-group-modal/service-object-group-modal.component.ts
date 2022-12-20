@@ -151,7 +151,9 @@ export class ServiceObjectGroupModalComponent implements OnInit {
 
   private getTierServiceObjects() {
     this.tierService.getOneTier({ id: this.TierId, join: ['serviceObjects'] }).subscribe(data => {
-      this.tierServiceObjects = data.serviceObjects.filter(tierObj => !this.serviceObjects.some(groupObj => groupObj.id === tierObj.id));
+      this.tierServiceObjects = data.serviceObjects.filter(tierObj => {
+        return !this.serviceObjects.some(groupObj => groupObj.id === tierObj.id) && tierObj.deletedAt === null;
+      });
     });
   }
 
