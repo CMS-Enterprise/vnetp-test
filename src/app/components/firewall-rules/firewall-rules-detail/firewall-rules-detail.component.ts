@@ -208,8 +208,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   getObjects(): void {
     const tierRequest = this.tierService.getOneTier({ id: this.TierId });
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
-      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
-      fields: ['id,name,deletedAt'],
+      filter: [`tierId||eq||${this.TierId}`],
+      fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
       limit: 50000,
@@ -222,15 +222,15 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       limit: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
-      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
-      fields: ['id,name,deletedAt'],
+      filter: [`tierId||eq||${this.TierId}`],
+      fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
       limit: 50000,
     });
     const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
-      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
-      fields: ['id,name,deletedAt'],
+      filter: [`tierId||eq||${this.TierId}`],
+      fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
       limit: 50000,
