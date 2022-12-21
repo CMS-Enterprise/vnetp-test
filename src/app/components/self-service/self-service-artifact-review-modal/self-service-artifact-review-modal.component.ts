@@ -16,7 +16,7 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
   public loadingTabObjects = false;
 
   public tabs: Tab[] = [
-    { name: 'LOGS' },
+    { name: 'Config' },
     { name: 'Network Objects' },
     { name: 'Service Objects' },
     { name: 'Network Object Groups' },
@@ -51,7 +51,7 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
   }
 
   public handleTabChange(tab) {
-    this.loadingTabObjects = true;
+    // this.loadingTabObjects = true;
     if (this.navIndex === this.tabs.findIndex(t => t.name === tab.name)) {
       return;
     }

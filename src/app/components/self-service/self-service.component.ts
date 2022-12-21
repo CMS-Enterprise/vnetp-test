@@ -36,7 +36,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     ],
   };
 
-  constructor(private entityService: EntityService, private selfServiceService: V1SelfServiceService, private ngx: NgxSmartModalService) {}
+  constructor(private selfServiceService: V1SelfServiceService, private ngx: NgxSmartModalService) {}
 
   public getSelfServices() {
     this.loadingSelfServices = true;
@@ -44,7 +44,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
       data => {
         this.selfServices = data;
         this.selfServices.data.map(ss => {
-          // split the conversion status on capital letters for readability
+          // split the conversion and bulk upload status on capital letters for readability
           ss.conversionStatus = ss.conversionStatus?.split(/(?=[A-Z])/).join(' ');
           ss.bulkUploadStatus = ss.bulkUploadStatus?.split(/(?=[A-Z])/).join(' ');
         });
@@ -59,12 +59,12 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   }
 
   public importObjects(selfService) {
-    console.log('this.selfService', selfService);
+    this.selfServiceService.getSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(data => {
+      this.selectedSelfService = data;
+    });
     const modalDto = new YesNoModalDto('Import', `Are you sure you would like to bulk import the converted objects?`);
     const onConfirm = () => {
-      this.selfServiceService.bulkUploadSelfService({ selfService: selfService }).subscribe(data => {
-        console.log('data', data);
-      }),
+      this.selfServiceService.bulkUploadSelfService({ selfService: this.selectedSelfService }).subscribe(data => {}),
         () => {},
         () => {
           this.getSelfServices();
@@ -101,7 +101,9 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
 
   public openSelfServiceArtifactReviewModal(selfService) {
     this.subscribeToSelfServiceArtifactReviewModal();
-    this.selectedSelfService = selfService;
+    this.selfServiceService.getSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(data => {
+      this.selectedSelfService = data;
+    });
     this.ngx.getModal('selfServiceArtifactReviewModal').open();
   }
 
@@ -114,14 +116,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   }
 
   public deleteSelfService(selfService) {
-    console.log('selfService', selfService);
-    const dto = new YesNoModalDto(
-      `Delete Self Service`,
-      `Error(s): "${selfService.convertedConfig.artifact.error}"`,
-      // `${deleteDescription} ${entityName}`,
-      // 'Cancel',
-      // 'danger',
-    );
+    const dto = new YesNoModalDto(`Delete Self Service`, `Error(s): "${selfService.convertedConfig.artifact.error}"`);
     const onConfirm = () => {
       this.selfServiceService.deleteSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(() => {
         this.getSelfServices();
@@ -133,14 +128,8 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     };
     SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm, onClose);
   }
-  // public openBulkUploadModal(selfService) {
-  //   this.subscribeToBulkUploadModal();
-  //   this.selectedSelfService = selfService;
-  //   this.ngx.getModal('selfServiceBulkUploadModal').open();
-  // }
 
   ngOnInit(): void {
-    console.log('im initialized!');
     this.getSelfServices();
   }
 
