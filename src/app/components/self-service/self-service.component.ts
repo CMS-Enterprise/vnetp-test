@@ -103,8 +103,8 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     this.subscribeToSelfServiceArtifactReviewModal();
     this.selfServiceService.getSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(data => {
       this.selectedSelfService = data;
+      this.ngx.getModal('selfServiceArtifactReviewModal').open();
     });
-    this.ngx.getModal('selfServiceArtifactReviewModal').open();
   }
 
   public subscribeToBulkUploadModal() {
@@ -115,18 +115,21 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     });
   }
 
-  public deleteSelfService(selfService) {
-    const dto = new YesNoModalDto(`Delete Self Service`, `Error(s): "${selfService.convertedConfig.artifact.error}"`);
-    const onConfirm = () => {
-      this.selfServiceService.deleteSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(() => {
-        this.getSelfServices();
-      });
-    };
+  public async deleteSelfService(selfService) {
+    this.selfServiceService.getSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(data => {
+      this.selectedSelfService = data;
+      const dto = new YesNoModalDto(`Delete Self Service`, `Error(s): "${this.selectedSelfService.convertedConfig.artifact.error}"`);
+      const onConfirm = () => {
+        this.selfServiceService.deleteSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(() => {
+          this.getSelfServices();
+        });
+      };
 
-    const onClose = () => {
-      this.getSelfServices();
-    };
-    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm, onClose);
+      const onClose = () => {
+        this.getSelfServices();
+      };
+      SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm, onClose);
+    });
   }
 
   ngOnInit(): void {
