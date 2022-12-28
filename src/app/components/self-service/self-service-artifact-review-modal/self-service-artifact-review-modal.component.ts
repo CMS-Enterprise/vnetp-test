@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 
@@ -8,6 +8,7 @@ import { Tab } from 'src/app/common/tabs/tabs.component';
 })
 export class SelfServiceArtifactReviewModalComponent implements OnInit {
   @ViewChild('lineNumberTemplate') lineNumberTemplate: TemplateRef<any>;
+  @ViewChild('errorsTemplate') errorsTemplate: TemplateRef<any>;
   @Input() selfService;
   selectedObjects;
   navIndex = 0;
@@ -25,6 +26,8 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
     { name: 'External FW Rules' },
     { name: 'Intervrf NAT Rules' },
     { name: 'External NAT Rules' },
+    { name: 'Failed FW Rules' },
+    { name: 'Failed NAT Rules' },
   ];
 
   public config = {
@@ -38,6 +41,10 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
         name: 'Line Number (Original Config)',
         template: () => this.lineNumberTemplate,
       },
+      {
+        name: 'Errors',
+        template: () => this.errorsTemplate,
+      },
     ],
   };
 
@@ -47,16 +54,21 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
   }
 
   public onClose() {
-    this.navIndex = 0;
+    this.selfService = undefined;
   }
 
   public handleTabChange(tab) {
-    // this.loadingTabObjects = true;
-    if (this.navIndex === this.tabs.findIndex(t => t.name === tab.name)) {
-      return;
-    }
     this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
     switch (this.navIndex) {
+      case 0:
+        this.selectedObjects = {
+          data: this.selfService.convertedConfig.log,
+          page: 1,
+          pageCount: 1,
+          count: 1,
+          total: 1,
+        };
+        break;
       case 1:
         this.selectedObjects = {
           data: this.selfService.convertedConfig.artifact.networkObjects,
@@ -123,6 +135,24 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
       case 8:
         this.selectedObjects = {
           data: this.selfService.convertedConfig.artifact.externalNatRules,
+          page: 1,
+          pageCount: 1,
+          count: 1,
+          total: 1,
+        };
+        break;
+      case 9:
+        this.selectedObjects = {
+          data: this.selfService.convertedConfig.artifact.failedFirewallRules,
+          page: 1,
+          pageCount: 1,
+          count: 1,
+          total: 1,
+        };
+        break;
+      case 10:
+        this.selectedObjects = {
+          data: this.selfService.convertedConfig.artifact.failedNatRules,
           page: 1,
           pageCount: 1,
           count: 1,

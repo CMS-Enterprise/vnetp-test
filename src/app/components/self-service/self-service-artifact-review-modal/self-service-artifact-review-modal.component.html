@@ -2,11 +2,17 @@
     customClass="xlarge-modal" (onClose)="onClose()">
 
     <header class="modal-header">
-        <h4 class="modal-title">{{selfService?.id}} - Self Service Review</h4>
+        <h4 class="modal-title">{{selfService?.id}} - Managed Network Migration Review</h4>
     </header>
 
     <main class="modal-body">
-        <ng-container>
+        <app-import-export
+          [exportObject]="selfService"
+          exportFileName="selfService"
+          [disableCsv]="true"
+          [disableImport]="true"
+        ></app-import-export>
+        <ng-container *ngIf="selfService">
             <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
             <ng-container *ngIf="!loadingTabObjects; else loadingObjects">
                 <app-table [config]="config" [data]="selectedObjects"></app-table>
@@ -15,6 +21,7 @@
 
     </main>
 </ngx-smart-modal>
+
 <ng-template #lineNumberTemplate let-selectedObject="datum">
     <span>
         {{selectedObject?.info?.line_number }}
@@ -23,7 +30,21 @@
         {{selectedObject?.path }}
     </span>
 
+    <span *ngIf="!selectedObject.info && !selectedObject.path">
+        {{selectedObject }}
+    </span>
+
 </ng-template>
+
+<ng-template #errorsTemplate let-selectedObject="datum">
+    <ul>
+        <li *ngFor="let warning of selectedObject.warnings">
+            {{warning}}
+        </li>
+    </ul>
+</ng-template>
+
+
 <ng-template #loadingObjects>
     <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>
