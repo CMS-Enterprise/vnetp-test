@@ -79,38 +79,49 @@
     </div>
 
     <div *ngIf="submittedInitialForm && showSecondForm && !receivedConfig && !showSpinner">
-      <div>
-        <ul>
-          <li style="margin-bottom: inherit" *ngFor="let tier of selectedTiers">
-            <span>{{tier.hostname}} - Interfaces</span>
-            <div class="hostNeedsInsidePrefix" *ngIf="tier.tooManyInside">Only one interface may be inside for tier
-              "{{tier.hostname}}"</div>
-            <div class="hostNeedsInsidePrefix" *ngIf="tier.needsInsidePrefix">One interface must be inside for tier
-              "{{tier.hostname}}"</div>
-            <div>
-              <ul>
-                <li *ngFor="let interface of tier.interfaces">{{interface.interface}} -
-                  <input [(ngModel)]="interface.intervrf" type="checkbox" (click)="markInterfaceIntervrf(interface)">
-                  Intervrf
-                  <input [(ngModel)]="interface.external" type="checkbox" (click)="markInterfaceExternal(interface)">
-                  External
-                  <input [(ngModel)]="interface.inside" type="checkbox" (click)="markInterfaceInside(interface)"> Inside
-                  <div style="display: inline-block" *ngIf="interface.needsSelection">
-                    <div class="interfaceNeedsSelection">Make a selection</div>
-
-                  </div>
-                  
-                </li>
-              </ul>
+      <div class="form-row">
+        <div class="form-group col">
+          <ul>
+            <li style="margin-bottom: inherit" *ngFor="let tier of selectedTiers">
+              <span>{{tier.hostname}} - Interfaces</span>
+              <div class="hostNeedsInsidePrefix" *ngIf="tier.tooManyInside">Only one interface may be inside for tier
+                "{{tier.hostname}}"</div>
+              <div class="hostNeedsInsidePrefix" *ngIf="tier.needsInsidePrefix">One interface must be inside for tier
+                "{{tier.hostname}}"</div>
               <div>
-                <textarea placeholder="Namespace" [(ngModel)]="tier.namespace"></textarea>
+                <ul>
+                  <li *ngFor="let interface of tier.interfaces">{{interface.interface}} -
+                    <input [(ngModel)]="interface.intervrf" type="checkbox" (click)="markInterfaceIntervrf(interface)">
+                    Intervrf
+                    <input [(ngModel)]="interface.external" type="checkbox" (click)="markInterfaceExternal(interface)">
+                    External
+                    <input [(ngModel)]="interface.inside" type="checkbox" (click)="markInterfaceInside(interface)"> Inside
+                    <div style="display: inline-block" *ngIf="interface.needsSelection">
+                      <div class="interfaceNeedsSelection">Make a selection</div>
+  
+                    </div>
+                    
+                  </li>
+                </ul>
+                <div>
+                  <textarea placeholder="Namespace" [(ngModel)]="tier.namespace"></textarea>
+                </div>
+                <div class="hostNeedsNamespace" *ngIf="tier.needsNamespace">Please add a namespace to append to all objects coming into DCS from this host</div>
+                <div class="hostNeedsNamespace" *ngIf="tier.sameNamespace">Namespaces cannot be the same for different hosts</div>
               </div>
-              <div class="hostNeedsNamespace" *ngIf="tier.needsNamespace">Please add a namespace to append to all objects coming into DCS from this host</div>
-              <div class="hostNeedsNamespace" *ngIf="tier.sameNamespace">Namespaces cannot be the same for different hosts</div>
-            </div>
-          </li>
-        </ul>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="form-group col">
+          <h3> Interface Matrix Information</h3>
+          <span>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </span>
+        </div>
       </div>
+
+      
     </div>
 
 
