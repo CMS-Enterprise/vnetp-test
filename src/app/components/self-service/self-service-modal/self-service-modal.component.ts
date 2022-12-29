@@ -218,6 +218,11 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
           } else {
             selectedTier.sameNamespace = false;
           }
+          if (tier.namespace.length > 11) {
+            tier.namespaceTooLong = true;
+          } else {
+            tier.namespaceTooLong = false;
+          }
         }
       });
     }
@@ -225,7 +230,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     // does not contain a namespace when it should, or contains the same namespace as another host
     // that host/interface is marked as invalid
     this.selectedTiers.map(host => {
-      if (host.needsInsidePrefix || host.tooManyInside || host.needsNamespace || host.sameNamespace) {
+      if (host.needsInsidePrefix || host.tooManyInside || host.needsNamespace || host.sameNamespace || host.namespaceTooLong) {
         this.invalidInterface = true;
       }
     });

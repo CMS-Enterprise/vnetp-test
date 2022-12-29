@@ -80,7 +80,7 @@
 
     <div *ngIf="submittedInitialForm && showSecondForm && !receivedConfig && !showSpinner">
       <div class="form-row">
-        <div class="form-group col">
+        <div class="form-group col-7">
           <ul>
             <li style="margin-bottom: inherit" *ngFor="let tier of selectedTiers">
               <span>{{tier.hostname}} - Interfaces</span>
@@ -108,6 +108,7 @@
                 </div>
                 <div class="hostNeedsNamespace" *ngIf="tier.needsNamespace">Please add a namespace to append to all objects coming into DCS from this host</div>
                 <div class="hostNeedsNamespace" *ngIf="tier.sameNamespace">Namespaces cannot be the same for different hosts</div>
+                <div class="namespaceTooLong" *ngIf="tier.namespaceTooLong">Namespaces cannot be longer than 11 characters</div>
               </div>
             </li>
           </ul>
