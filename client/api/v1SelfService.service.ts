@@ -275,9 +275,9 @@ export class V1SelfServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getSelfServiceSelfService(requestParameters: GetSelfServiceSelfServiceRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<SelfService>>;
-    public getSelfServiceSelfService(requestParameters: GetSelfServiceSelfServiceRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<SelfService>>>;
-    public getSelfServiceSelfService(requestParameters: GetSelfServiceSelfServiceRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<SelfService>>>;
+    public getSelfServiceSelfService(requestParameters: GetSelfServiceSelfServiceRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<SelfService>;
+    public getSelfServiceSelfService(requestParameters: GetSelfServiceSelfServiceRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<SelfService>>;
+    public getSelfServiceSelfService(requestParameters: GetSelfServiceSelfServiceRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<SelfService>>;
     public getSelfServiceSelfService(requestParameters: GetSelfServiceSelfServiceRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const selfServiceId = requestParameters.selfServiceId;
         if (selfServiceId === null || selfServiceId === undefined) {
@@ -304,7 +304,7 @@ export class V1SelfServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<SelfService>>(`${this.configuration.basePath}/v1/self-service/${encodeURIComponent(String(selfServiceId))}`,
+        return this.httpClient.get<SelfService>(`${this.configuration.basePath}/v1/self-service/${encodeURIComponent(String(selfServiceId))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
