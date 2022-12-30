@@ -16,6 +16,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   private selfServiceArtifactReviewModalSubscription: Subscription;
   private selfServiceBulkUploadModalSubscription: Subscription;
   public loadingSelfServices: boolean;
+  public openingReviewModal: boolean = false;
   public selfServices;
   selectedSelfService;
 
@@ -100,9 +101,11 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   }
 
   public openSelfServiceArtifactReviewModal(selfService) {
+    this.openingReviewModal = true;
     this.subscribeToSelfServiceArtifactReviewModal();
     this.selfServiceService.getSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(data => {
       this.selectedSelfService = data;
+      this.openingReviewModal = false;
       this.ngx.getModal('selfServiceArtifactReviewModal').open();
     });
   }

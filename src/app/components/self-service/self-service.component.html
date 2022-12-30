@@ -7,7 +7,7 @@
         </button>
       </section>
     
-    <ng-container>
+    <ng-container *ngIf="!openingReviewModal; else openReviewModal">
         <app-table [config]="config" [data]="selfServices">
         </app-table>
     </ng-container>
@@ -40,6 +40,12 @@
 
 <ng-template #loading>
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<ng-template #openReviewModal>
+  <ngx-smart-modal #spinnerModal identifier="spinnerModal" customClass="xlarge-modal">
+    <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  </ngx-smart-modal>
 </ng-template>
 
 <app-self-service-modal></app-self-service-modal>

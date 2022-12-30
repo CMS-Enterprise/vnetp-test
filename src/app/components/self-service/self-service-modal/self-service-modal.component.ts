@@ -218,11 +218,11 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
           } else {
             selectedTier.sameNamespace = false;
           }
-          if (tier.namespace.length > 11) {
-            tier.namespaceTooLong = true;
-          } else {
-            tier.namespaceTooLong = false;
-          }
+        }
+        if (tier.namespace && tier.namespace.length > 11) {
+          tier.namespaceTooLong = true;
+        } else {
+          tier.namespaceTooLong = false;
         }
       });
     }
