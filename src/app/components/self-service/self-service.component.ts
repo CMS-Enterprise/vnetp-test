@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Datacenter } from 'client';
 import { V1SelfServiceService } from 'client/api/v1SelfService.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
@@ -15,8 +17,11 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   private selfServiceModalSubscription: Subscription;
   private selfServiceArtifactReviewModalSubscription: Subscription;
   private selfServiceBulkUploadModalSubscription: Subscription;
+  currentDatacenterSubscription: Subscription;
+  currentDatacenter: Datacenter;
+
   public loadingSelfServices: boolean;
-  public openingReviewModal: boolean = false;
+  public openingModal: boolean = false;
   public selfServices;
   selectedSelfService;
 
@@ -37,11 +42,15 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     ],
   };
 
-  constructor(private selfServiceService: V1SelfServiceService, private ngx: NgxSmartModalService) {}
+  constructor(
+    private datacenterContextService: DatacenterContextService,
+    private selfServiceService: V1SelfServiceService,
+    private ngx: NgxSmartModalService,
+  ) {}
 
   public getSelfServices() {
     this.loadingSelfServices = true;
-    this.selfServiceService.getSelfServicesSelfService().subscribe(
+    this.selfServiceService.getSelfServicesSelfService({ datacenterId: `${this.currentDatacenter.id}` }).subscribe(
       data => {
         this.selfServices = data;
         this.selfServices.data.map(ss => {
@@ -60,23 +69,24 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   }
 
   public importObjects(selfService) {
+    this.openingModal = true;
     this.selfServiceService.getSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(data => {
       this.selectedSelfService = data;
+      this.openingModal = false;
+      const modalDto = new YesNoModalDto('Import', `Are you sure you would like to bulk import the converted objects?`);
+      const onConfirm = () => {
+        this.selfServiceService.bulkUploadSelfService({ selfService: this.selectedSelfService }).subscribe(data => {}),
+          () => {},
+          () => {
+            this.getSelfServices();
+          };
+      };
+      const onClose = () => {
+        this.getSelfServices();
+      };
+
+      SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
     });
-    const modalDto = new YesNoModalDto('Import', `Are you sure you would like to bulk import the converted objects?`);
-    const onConfirm = () => {
-      this.selfServiceService.bulkUploadSelfService({ selfService: this.selectedSelfService }).subscribe(data => {}),
-        () => {},
-        () => {
-          this.getSelfServices();
-        };
-    };
-
-    const onClose = () => {
-      this.getSelfServices();
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
   public subscribeToSelfServiceModal() {
@@ -101,11 +111,11 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   }
 
   public openSelfServiceArtifactReviewModal(selfService) {
-    this.openingReviewModal = true;
+    this.openingModal = true;
     this.subscribeToSelfServiceArtifactReviewModal();
     this.selfServiceService.getSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(data => {
       this.selectedSelfService = data;
-      this.openingReviewModal = false;
+      this.openingModal = false;
       this.ngx.getModal('selfServiceArtifactReviewModal').open();
     });
   }
@@ -136,11 +146,17 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getSelfServices();
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.currentDatacenter = cd;
+        this.getSelfServices();
+      }
+    });
   }
 
   ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([
+      this.currentDatacenterSubscription,
       this.selfServiceModalSubscription,
       this.selfServiceBulkUploadModalSubscription,
       this.selfServiceArtifactReviewModalSubscription,

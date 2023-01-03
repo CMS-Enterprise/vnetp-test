@@ -48,6 +48,10 @@ export interface GetSelfServiceXMLSelfServiceRequestParams {
     selfServiceId: string;
 }
 
+export interface GetSelfServicesSelfServiceRequestParams {
+    datacenterId: string;
+}
+
 export interface ProcessAsaConfigSelfServiceRequestParams {
     selfService: SelfService;
 }
@@ -406,13 +410,24 @@ export class V1SelfServiceService {
     }
 
     /**
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getSelfServicesSelfService(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<SelfService>>;
-    public getSelfServicesSelfService(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<SelfService>>>;
-    public getSelfServicesSelfService(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<SelfService>>>;
-    public getSelfServicesSelfService(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getSelfServicesSelfService(requestParameters: GetSelfServicesSelfServiceRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<SelfService>>;
+    public getSelfServicesSelfService(requestParameters: GetSelfServicesSelfServiceRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<SelfService>>>;
+    public getSelfServicesSelfService(requestParameters: GetSelfServicesSelfServiceRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<SelfService>>>;
+    public getSelfServicesSelfService(requestParameters: GetSelfServicesSelfServiceRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const datacenterId = requestParameters.datacenterId;
+        if (datacenterId === null || datacenterId === undefined) {
+            throw new Error('Required parameter datacenterId was null or undefined when calling getSelfServicesSelfService.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (datacenterId !== undefined && datacenterId !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>datacenterId, 'datacenterId');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -436,6 +451,7 @@ export class V1SelfServiceService {
 
         return this.httpClient.get<Array<SelfService>>(`${this.configuration.basePath}/v1/self-service`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

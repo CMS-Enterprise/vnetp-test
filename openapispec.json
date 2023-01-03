@@ -25068,7 +25068,16 @@
         "operationId": "getSelfServicesSelfService",
         "summary": "",
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "datacenterId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
