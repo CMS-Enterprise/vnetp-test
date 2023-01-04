@@ -89,7 +89,6 @@ export class HttpConfigInterceptor {
         if (!isLogin) {
           switch (errorResponse.status) {
             case 400:
-              console.log('errorResponse?.error?.description', errorResponse);
               if (errorResponse?.error?.description) {
                 toastrMessage = `Bad Request - ${errorResponse?.error?.description}`;
               } else {
