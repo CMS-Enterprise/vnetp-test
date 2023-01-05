@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
     }
 
     // Attempt to extract the tenant parameter from the return URL.
-    const tenantRegex = /tenant=([a-z_]*)/g;
+    const tenantRegex = /tenant=([a-z0-9_-]*)/g;
     const tenantExec = tenantRegex.exec(this.returnUrl);
 
     if (tenantExec) {
@@ -135,6 +135,8 @@ export class LoginComponent implements OnInit {
     const { tenantQueryParameter } = tenant;
     this.toastr.success(`Welcome ${this.userpass.username}!`);
     this.authService.currentTenantValue = tenantQueryParameter;
+    console.log('tenantQueryParameter', tenantQueryParameter);
+    console.log('this.oldTenant', this.oldTenant);
     // if the user had a session expire, and they can choose from multiple tenants,
     // we pre-select their old tenant for them above if they stay with that same tenant,
     // we will apply the returnURL from that session, to redirect them back to whatever
