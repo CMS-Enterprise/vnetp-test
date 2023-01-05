@@ -103,8 +103,8 @@ export class TiersComponent implements OnInit, OnDestroy {
         sort: ['updatedAt,ASC'],
       })
       .subscribe(
-        data => {
-          this.exportTiers = data;
+        tiers => {
+          this.exportTiers = tiers;
           this.exportTiers = this.exportTiers.data;
           this.exportTiers.map(tier => {
             this.firewallRuleGroupService
@@ -112,8 +112,8 @@ export class TiersComponent implements OnInit, OnDestroy {
                 filter: [`tierId||eq||${tier.id}`],
                 join: ['firewallRules'],
               })
-              .subscribe(data => {
-                tier.firewallRuleGroups = data;
+              .subscribe(fwRuleGroups => {
+                tier.firewallRuleGroups = fwRuleGroups;
                 tier.firewallRuleGroups = tier.firewallRuleGroups.filter(group => {
                   return group.name !== 'Intravrf';
                 });
@@ -123,8 +123,8 @@ export class TiersComponent implements OnInit, OnDestroy {
                 filter: [`tierId||eq||${tier.id}`],
                 join: ['natRules'],
               })
-              .subscribe(data => {
-                tier.natRuleGroups = data;
+              .subscribe(natRuleGroups => {
+                tier.natRuleGroups = natRuleGroups;
               });
           });
         },
