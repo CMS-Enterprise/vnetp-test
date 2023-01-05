@@ -135,8 +135,6 @@ export class LoginComponent implements OnInit {
     const { tenantQueryParameter } = tenant;
     this.toastr.success(`Welcome ${this.userpass.username}!`);
     this.authService.currentTenantValue = tenantQueryParameter;
-    console.log('tenantQueryParameter', tenantQueryParameter);
-    console.log('this.oldTenant', this.oldTenant);
     // if the user had a session expire, and they can choose from multiple tenants,
     // we pre-select their old tenant for them above if they stay with that same tenant,
     // we will apply the returnURL from that session, to redirect them back to whatever
