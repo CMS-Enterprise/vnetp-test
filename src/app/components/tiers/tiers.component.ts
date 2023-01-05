@@ -7,7 +7,16 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
-import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup, GetManyTierResponseDto } from 'client';
+import {
+  V1TiersService,
+  Tier,
+  Datacenter,
+  V1TierGroupsService,
+  TierGroup,
+  GetManyTierResponseDto,
+  V1NetworkSecurityFirewallRuleGroupsService,
+  V1NetworkSecurityNatRuleGroupsService,
+} from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableConfig } from '../../common/table/table.component';
 import { TableComponentDto } from '../../models/other/table-component-dto';
@@ -26,6 +35,7 @@ export class TiersComponent implements OnInit, OnDestroy {
   public tierGroups: TierGroup[];
   public tiers = {} as GetManyTierResponseDto;
   public tableComponentDto = new TableComponentDto();
+  public exportTiers;
 
   private currentDatacenterSubscription: Subscription;
   private tierModalSubscription: Subscription;
@@ -58,6 +68,8 @@ export class TiersComponent implements OnInit, OnDestroy {
     private tierGroupService: V1TierGroupsService,
     private tierService: V1TiersService,
     private tableContextService: TableContextService,
+    private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
+    private natRuleGroupService: V1NetworkSecurityNatRuleGroupsService,
   ) {}
 
   public getTierGroups(loadTiers = false): void {
@@ -72,6 +84,57 @@ export class TiersComponent implements OnInit, OnDestroy {
           this.getTiers();
         }
       });
+  }
+
+  public getFirewallGroups() {
+    this.firewallRuleGroupService.getManyFirewallRuleGroup({
+      filter: [],
+    });
+  }
+
+  // gets all DCS objects belonging to every tier for ease of exporting
+  public getExportTiers() {
+    this.tierService
+      .getManyTier({
+        filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
+        join: ['subnets,vlans,networkObjects,networkObjectGroups,serviceObjects,serviceObjectGroups'],
+        page: this.tableComponentDto.page,
+        limit: this.tableComponentDto.perPage,
+        sort: ['updatedAt,ASC'],
+      })
+      .subscribe(
+        data => {
+          this.exportTiers = data;
+          this.exportTiers = this.exportTiers.data;
+          this.exportTiers.map(tier => {
+            this.firewallRuleGroupService
+              .getManyFirewallRuleGroup({
+                filter: [`tierId||eq||${tier.id}`],
+                join: ['firewallRules'],
+              })
+              .subscribe(data => {
+                tier.firewallRuleGroups = data;
+                tier.firewallRuleGroups = tier.firewallRuleGroups.filter(group => {
+                  return group.name !== 'Intravrf';
+                });
+              });
+            this.natRuleGroupService
+              .getManyNatRuleGroup({
+                filter: [`tierId||eq||${tier.id}`],
+                join: ['natRules'],
+              })
+              .subscribe(data => {
+                tier.natRuleGroups = data;
+              });
+          });
+        },
+        () => {
+          this.exportTiers = null;
+        },
+        () => {
+          this.isLoading = false;
+        },
+      );
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -233,6 +296,7 @@ export class TiersComponent implements OnInit, OnDestroy {
       if (cd) {
         this.currentDatacenter = cd;
         this.getTierGroups(true);
+        this.getExportTiers();
       }
     });
   }
