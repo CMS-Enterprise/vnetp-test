@@ -28,6 +28,7 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
     { name: 'External NAT Rules' },
     { name: 'Failed FW Rules' },
     { name: 'Failed NAT Rules' },
+    { name: 'Failed Objects' },
   ];
 
   public config = {
@@ -153,6 +154,15 @@ export class SelfServiceArtifactReviewModalComponent implements OnInit {
       case 10:
         this.selectedObjects = {
           data: this.selfService.convertedConfig.artifact.failedNatRules,
+          page: 1,
+          pageCount: 1,
+          count: 1,
+          total: 1,
+        };
+        break;
+      case 11:
+        this.selectedObjects = {
+          data: this.selfService.convertedConfig.artifact.failedObjects,
           page: 1,
           pageCount: 1,
           count: 1,

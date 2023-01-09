@@ -334,52 +334,6 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
           // add the vsys name to the list of tiers that were extracted from the device config
           this.tiersFromConfig.push(vsys.name);
         });
-
-        // BLOCK CODE COMMENT
-        // THIS WAS OLD CODE THAT WORKED BEFORE IMPLEMENTING A NEW SOLUTION
-        // USING AN XML -> JSON FUNCTION
-        // KEEP THIS AROUND IN CASE OF A NEED TO REVERT
-
-        // vsysArrayFromConfig.map(vsys => {
-        //   vsys.zones = [];
-        //   const numOfZones = vsys.zone.entry.length;
-
-        //   // close
-        //   // need to pop off elements as they move from one array to another
-        //   for (let i = 0; i < numOfZones; i++) {
-        //     vsys.zones.push(this.zoneHolderArray[i]);
-        //   }
-        // });
-        // const childNodes = parsed.childNodes[0];
-        // const devices = childNodes.childNodes[5];
-        // const entry = devices.childNodes[1];
-        // const vsys = entry.childNodes[5];
-        // const entries = vsys.childNodes;
-        // const entryArray = [];
-        // for (let i = 0; i < entries.length; i++) {
-        //   if (i % 2 === 0) {
-        //     continue;
-        //   } else {
-        //     entryArray.push(entries[i]);
-        //   }
-        // }
-        // const securityZones = [];
-        // const vsysValueArray = [];
-        // entryArray.map(entry => {
-        //   const zoneChildren = entry.childNodes[13].children;
-        // for (let i = 0; i < zoneChildren.length; i++) {
-        //   securityZones.push(zoneChildren[i].attributes[0].value)
-        // }
-        //   const vsysName = entry.attributes[0].value;
-        //   vsysValueArray.push(vsysName);
-        //   this.hostsWithInterfaces.push({ hostname: vsysName, interfaces: securityZones });
-        // });
-        // this.tiersFromConfig = vsysArrayFromConfig.map(vsys => {
-        //   return `${vsys.name}`;
-        // });
-        // vsysArrayFromConfig.map(vsys => {
-        //   this.hostsWithInterfaces.push({'hostname': vsys.name, 'interfaces': vsys.zones})
-        // })
       }
 
       // use regex to search for hostname for ASA configs
@@ -506,11 +460,9 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   public intervrfSubnetsFileChange(event): void {
     const reader = new FileReader();
     const file = event.target.files[0];
-    console.log('file', file);
     reader.readAsText(file);
     reader.onload = () => {
       const readableText = reader.result.toString();
-      console.log('readAbleText', readableText);
       const splitFileByLine = readableText.split('\n');
       this.f.intervrfSubnets.setValue(readableText);
     };
