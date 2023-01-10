@@ -82,8 +82,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             }
             const modalBody = `${data.type}: ${value}`;
             const dto = {
-              modalTitle: modalTitle,
-              modalBody: modalBody,
+              modalTitle,
+              modalBody,
             };
             this.subscribeToObjectInfoModal();
             this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
@@ -103,8 +103,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             const objectName = data.name;
             const modalTitle = `${property} : ${objectName}`;
             const dto = {
-              modalTitle: modalTitle,
-              modalBody: modalBody,
+              modalTitle,
+              modalBody,
             };
             this.subscribeToObjectInfoModal();
             this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
@@ -118,8 +118,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             const modalTitle = `${property} : ${objectName}`;
             const modalBody = `Protocol : ${data.protocol}, sourcePorts: ${data.sourcePorts}, destinationPorts: ${data.destinationPorts}`;
             const dto = {
-              modalTitle: modalTitle,
-              modalBody: modalBody,
+              modalTitle,
+              modalBody,
             };
             this.subscribeToObjectInfoModal();
             this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
@@ -139,8 +139,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             const objectName = data.name;
             const modalTitle = `${property} : ${objectName}`;
             const dto = {
-              modalTitle: modalTitle,
-              modalBody: modalBody,
+              modalTitle,
+              modalBody,
             };
             this.subscribeToObjectInfoModal();
             this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
