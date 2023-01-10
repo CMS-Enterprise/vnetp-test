@@ -29,5 +29,6 @@ const routes: Routes = [
     SharedModule,
   ],
   declarations: [ZosComponent],
+  exports: [ZosComponent],
 })
 export class ZosModule {}

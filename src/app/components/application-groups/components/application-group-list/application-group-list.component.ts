@@ -5,7 +5,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { ActifioApplicationGroupDto, ActifioSequenceOrderDto, V1ActifioRdcApplicationGroupsService } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { Subscription } from 'rxjs';
-import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 
 export interface ApplicationGroupView {
   id: string;

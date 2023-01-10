@@ -1,4 +1,4 @@
-import { SearchColumnConfig } from '../seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../search-bar/search-bar.component';
 import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef, Output, EventEmitter, AfterContentInit } from '@angular/core';
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';

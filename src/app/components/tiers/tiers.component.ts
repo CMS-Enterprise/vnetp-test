@@ -11,7 +11,7 @@ import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup, GetMa
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableConfig } from '../../common/table/table.component';
 import { TableComponentDto } from '../../models/other/table-component-dto';
-import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
 
 @Component({

@@ -17,6 +17,7 @@ import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { PriorityGroupListComponent } from './priority-group/priority-group-list/priority-group-list.component';
 import { PriorityGroupModalComponent } from './priority-group/priority-group-modal/priority-group-modal.component';
 import { ViewFieldModule } from 'src/app/common/view-field/view-field.module';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 
 const routes: Routes = [
   {
@@ -44,8 +45,18 @@ const routes: Routes = [
     SharedModule,
     TabsModule,
     ViewFieldModule,
+    YesNoModalModule,
   ],
   declarations: [
+    NetworkAdapterModalComponent,
+    PriorityGroupListComponent,
+    PriorityGroupModalComponent,
+    VirtualDiskModalComponent,
+    VirtualMachineModalComponent,
+    VmwareComponent,
+    VmwareDetailComponent,
+  ],
+  exports: [
     NetworkAdapterModalComponent,
     PriorityGroupListComponent,
     PriorityGroupModalComponent,

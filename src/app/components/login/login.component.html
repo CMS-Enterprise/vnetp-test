@@ -84,7 +84,7 @@
 
     <form
       name="tenantForm"
-      (ngSubmit)="secondform.form.valid && setTenantAndNavigate(selectedTenant)"
+      (ngSubmit)="secondform.form.valid && setTenantAndNavigate(selectedTenant, selectedMode)"
       #secondform="ngForm"
       novalidate
     >
@@ -110,6 +110,23 @@
         <div *ngIf="secondform.submitted && tenant.invalid" class="invalid-feedback">
           <div *ngIf="tenant.errors.required">Select Account</div>
         </div>
+      </div>
+
+      <div class="form-group">
+        <label for="mode">Mode</label>
+        <select
+          id="mode"
+          name="mode"
+          class="form-control"
+          #mode="ngModel"
+          [(ngModel)]="selectedMode"
+          aria-label="Mode"
+          [disabled]="!showTenantButton"
+          required
+        >
+          <option>Netcentric</option>
+          <option>Appcentric</option>
+        </select>
       </div>
 
       <button *ngIf="showTenantButton" class="btn btn-primary btn-lg" type="submit">

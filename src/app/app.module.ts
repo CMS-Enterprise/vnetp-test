@@ -38,10 +38,9 @@ import { AppComponent } from './app.component';
 import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
 import { ApiModule, Configuration, ConfigurationParameters } from 'client';
 import { environment } from 'src/environments/environment';
-import { NavbarModule } from './common/navbar/navbar.module';
-import { BreadcrumbsModule } from './common/breadcrumbs/breadcrumbs.module';
 import { AppInitService } from './app.init';
 import { APP_INITIALIZER } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -59,12 +58,11 @@ export function init_app(appLoadService: AppInitService) {
   imports: [
     ApiModule.forRoot(apiConfigFactory),
     AppRoutingModule,
-    BreadcrumbsModule,
     BrowserAnimationsModule,
     BrowserModule,
     FontAwesomeModule,
+    FormsModule,
     HttpClientModule,
-    NavbarModule,
     NgxMaskModule.forRoot(),
     NgxSmartModalModule.forRoot(),
     ToastrModule.forRoot({

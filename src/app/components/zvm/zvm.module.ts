@@ -29,5 +29,6 @@ const routes: Routes = [
     SharedModule,
   ],
   declarations: [ZvmComponent],
+  exports: [ZvmComponent],
 })
 export class ZvmModule {}

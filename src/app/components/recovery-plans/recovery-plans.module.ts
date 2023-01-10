@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SharedModule } from 'src/app/common/shared.module';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
@@ -10,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { RecoveryPlanListComponent } from './components/recovery-plan-list/recovery-plan-list.component';
 import { RecoveryPlanModalComponent } from './components/recovery-plan-modal/recovery-plan-modal.component';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 
 const routes: Routes = [
   {
@@ -28,9 +28,10 @@ const routes: Routes = [
     NgSelectModule,
     NgxSmartModalModule,
     RouterModule.forChild(routes),
-    SharedModule,
     TableModule,
+    YesNoModalModule,
   ],
   declarations: [RecoveryPlanListComponent, RecoveryPlanModalComponent],
+  exports: [RecoveryPlanListComponent, RecoveryPlanModalComponent],
 })
 export class RecoveryPlanModule {}

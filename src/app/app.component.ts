@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styles: ['.app { padding: 0 2rem }'],
+  styles: [''],
 })
 export class AppComponent implements OnInit {
   dcsVersion = '';

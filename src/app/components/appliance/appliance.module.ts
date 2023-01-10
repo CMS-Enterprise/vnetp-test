@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ViewFieldModule } from 'src/app/common/view-field/view-field.module';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 
 const routes: Routes = [
   {
@@ -36,7 +37,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     ViewFieldModule,
+    YesNoModalModule,
   ],
   declarations: [ApplianceComponent, ApplianceDetailComponent, ApplianceModalComponent],
+  exports: [ApplianceComponent, ApplianceDetailComponent, ApplianceModalComponent],
 })
 export class ApplianceModule {}

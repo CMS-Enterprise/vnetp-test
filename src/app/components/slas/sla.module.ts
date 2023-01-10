@@ -11,11 +11,11 @@ import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { SlaLandingComponent } from './components/sla-landing/sla-landing.component';
 import { TemplateModalComponent } from './components/template-modal/template-modal.component';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
-import { SharedModule } from 'src/app/common/shared.module';
 import { LogicalGroupListComponent } from './components/logical-group-list/logical-group-list.component';
 import { LogicalGroupViewModalComponent } from './components/logical-group-view-modal/logical-group-view-modal.component';
 import { LogicalGroupModalComponent } from './components/logical-group-modal/logical-group-modal.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 
 const routes: Routes = [
   {
@@ -34,11 +34,20 @@ const routes: Routes = [
     NgxSmartModalModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    SharedModule,
     TableModule,
     TabsModule,
+    YesNoModalModule,
   ],
   declarations: [
+    LogicalGroupListComponent,
+    LogicalGroupModalComponent,
+    LogicalGroupViewModalComponent,
+    ProfileListComponent,
+    SlaLandingComponent,
+    TemplateListComponent,
+    TemplateModalComponent,
+  ],
+  exports: [
     LogicalGroupListComponent,
     LogicalGroupModalComponent,
     LogicalGroupViewModalComponent,

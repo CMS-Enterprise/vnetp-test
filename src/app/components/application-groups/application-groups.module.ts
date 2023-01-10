@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SharedModule } from 'src/app/common/shared.module';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
@@ -10,7 +9,8 @@ import { ApplicationGroupModalComponent } from './components/application-group-m
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { SortPipe } from 'src/app/pipes/sort.pipe';
+import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 
 const routes: Routes = [
   {
@@ -29,9 +29,11 @@ const routes: Routes = [
     NgSelectModule,
     NgxSmartModalModule,
     RouterModule.forChild(routes),
-    SharedModule,
     TableModule,
+    ApplicationPipesModule,
+    YesNoModalModule,
   ],
-  declarations: [ApplicationGroupListComponent, ApplicationGroupModalComponent, SortPipe],
+  declarations: [ApplicationGroupListComponent, ApplicationGroupModalComponent],
+  exports: [ApplicationGroupListComponent, ApplicationGroupModalComponent],
 })
 export class ApplicationGroupModule {}

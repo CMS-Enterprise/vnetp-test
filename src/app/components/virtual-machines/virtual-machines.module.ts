@@ -48,6 +48,14 @@ const routes: Routes = [
     VmListComponent,
     VmViewComponent,
   ],
+  exports: [
+    SelectActionComponent,
+    SelectVCenterComponent,
+    SelectVirtualMachinesComponent,
+    VmDiscoveryModalComponent,
+    VmListComponent,
+    VmViewComponent,
+  ],
   providers: [DatePipe],
 })
 export class VirtualMachinesModule {}

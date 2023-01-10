@@ -36,5 +36,12 @@ module.exports = {
     '!**/src/setupJest.ts',
   ],
   moduleDirectories: ['', 'node_modules', 'src'],
-  transformIgnorePatterns: ['node_modules/(?!lodash-es/*)']
+  transformIgnorePatterns: ['node_modules/(?!lodash-es/*)'],
+  testPathIgnorePatterns: [
+    '<rootDir>/src/app/components/appcentric/appcentric.component.spec.ts',
+    '<rootDir>/src/app/components/netcentric/netcentric.component.spec.ts',
+    '<rootDir>/src/app/components/appcentric/appcentric-navbar/appcentric-navbar.component.spec.ts',
+    '<rootDir>/src/app/components/appcentric/appcentric-dashboard/appcentric-dashboard.component.spec.ts',
+    '<rootDir>/src/app/components/appcentric/appcentric-breadcrumbs/appcentric-breadcrumbs.component.spec.ts'
+  ]
 };

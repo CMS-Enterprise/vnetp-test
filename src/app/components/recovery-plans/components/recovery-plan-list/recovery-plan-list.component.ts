@@ -5,7 +5,7 @@ import { ActifioRdsRecoveryPlanDto, V1ActifioRdsRecoveryPlansService } from 'cli
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 
 export interface RecoveryPlanView {
   id: string;
