@@ -6,10 +6,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./appcentric-breadcrumbs.component.scss'],
 })
 export class AppcentricBreadcrumbsComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
-
   public breadcrumbs = [
     { url: '', label: 'appcentric breadcrumb 1' },
     { url: '', label: 'appcentric breadcrumb 2' },
@@ -17,4 +13,7 @@ export class AppcentricBreadcrumbsComponent implements OnInit {
   ];
 
   public render = true;
+  constructor() {}
+
+  ngOnInit(): void {}
 }
