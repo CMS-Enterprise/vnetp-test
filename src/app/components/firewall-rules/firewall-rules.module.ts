@@ -16,6 +16,7 @@ import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TableModule } from '../../common/table/table.module';
+import { FirewallRuleObjectInfoModalComponent } from './firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
 
 const routes: Routes = [
   {
@@ -47,6 +48,6 @@ const routes: Routes = [
     TabsModule,
     TooltipModule,
   ],
-  declarations: [FirewallRulesComponent, FirewallRulesDetailComponent, FirewallRuleModalComponent],
+  declarations: [FirewallRulesComponent, FirewallRulesDetailComponent, FirewallRuleModalComponent, FirewallRuleObjectInfoModalComponent],
 })
 export class FirewallRulesModule {}

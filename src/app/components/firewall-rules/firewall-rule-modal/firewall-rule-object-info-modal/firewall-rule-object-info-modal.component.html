@@ -1,0 +1,10 @@
+<ngx-smart-modal #firewallRuleObjectInfoModal (onOpenFinished)="getData()" identifier="firewallRuleObjectInfoModal" [dismissable]="false" customClass="large-modal">
+    <header class="modal-header">
+      <h4 class="modal-title">{{ modalTitle || 'Title' }}</h4>
+    </header>
+  
+    <div class="modal-body">
+      {{ modalBody | json }}
+    </div>
+  </ngx-smart-modal>
+  
