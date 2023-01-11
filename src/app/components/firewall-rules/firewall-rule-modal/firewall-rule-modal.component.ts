@@ -26,6 +26,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-firewall-rule-modal',
+  styleUrls: ['./firewall-rule-modal.component.scss'],
   templateUrl: './firewall-rule-modal.component.html',
 })
 export class FirewallRuleModalComponent implements OnInit, OnDestroy {
@@ -97,9 +98,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             const memberNames = members.map(member => {
               return member.name;
             });
-            const modalBody = {
-              'Group Members': memberNames,
-            };
+            const modalBody = `Group Members : ${memberNames}`;
             const objectName = data.name;
             const modalTitle = `${property} : ${objectName}`;
             const dto = {
@@ -133,9 +132,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             const memberNames = members.map(member => {
               return member.name;
             });
-            const modalBody = {
-              'Group Members': memberNames,
-            };
+            const modalBody = `Group Members : ${memberNames}`;
             const objectName = data.name;
             const modalTitle = `${property} : ${objectName}`;
             const dto = {

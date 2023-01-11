@@ -16,6 +16,7 @@ import { NatRulesComponent } from './nat-rules.component';
 import { PreviewModalModule } from '../../common/preview-modal/preview-modal.module';
 import { TableModule } from 'src/app/common/table/table.module';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NatRuleObjectInfoModalComponent } from './nat-rule-modal/nat-rule-object-info-modal/nat-rule-object-info-modal.component';
 
 const routes: Routes = [
   {
@@ -48,6 +49,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     NgSelectModule,
   ],
-  declarations: [NatRulesComponent, NatRuleModalComponent, NatRulesDetailComponent],
+  declarations: [NatRulesComponent, NatRuleModalComponent, NatRulesDetailComponent, NatRuleObjectInfoModalComponent],
 })
 export class NatRulesModule {}
