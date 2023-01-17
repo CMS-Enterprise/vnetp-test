@@ -24,7 +24,7 @@
         </div>
       </div>
 
-      <div class="form-group" *ngIf="!f.nat.value">
+      <div class="form-group">
         <label for="type">Type</label>
         <tooltip [message]="helpText.Type"></tooltip>
         <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors" aria-label="Type">
@@ -110,131 +110,6 @@
         <div *ngIf="submitted && f.fqdn.errors" class="invalid-feedback">
           <div *ngIf="f.fqdn.errors.required">FQDN is required</div>
           <div *ngIf="f.fqdn.errors.invalidFqdn">FQDN is invalid.</div>
-        </div>
-      </div>
-
-      <div class="form-group" *ngIf="f.type.value === 'IpAddress'">
-        <div class="form-check form-check-inline">
-          <input type="checkbox" name="nat" class="form-check-input" formControlName="nat" aria-label="NAT" />
-          <label class="form-check-label" for="nat">NAT</label>
-          <tooltip *ngIf="f.type.value == 'IpAddress'" [message]="helpText.Nat"></tooltip>
-        </div>
-      </div>
-
-      <div class="form-group" *ngIf="f.nat.value">
-        <label for="natType">NAT Type</label>
-        <tooltip *ngIf="f.nat.value" [message]="helpText.NatType"></tooltip>
-        <select
-          name="natType"
-          formControlName="natType"
-          class="form-control"
-          [class.is-invalid]="submitted && f.natType.errors"
-          aria-label="NAT Direction"
-        >
-          <option></option>
-          <option value="Intervrf">InterVRF</option>
-          <option value="External">External</option>
-        </select>
-        <div *ngIf="submitted && f.natType.errors" class="invalid-feedback">
-          <div *ngIf="f.natType.errors.required">NAT Type is required</div>
-        </div>
-      </div>
-
-      <div class="form-group" *ngIf="f.nat.value">
-        <label for="natDirection">NAT Direction</label>
-        <tooltip *ngIf="f.nat.value" [message]="helpText.NatDirection"></tooltip>
-        <select
-          name="natDirection"
-          formControlName="natDirection"
-          class="form-control"
-          [class.is-invalid]="submitted && f.natDirection.errors"
-          aria-label="NAT Direction"
-        >
-          <option></option>
-          <option value="In">In</option>
-          <option value="Out">Out</option>
-        </select>
-        <div *ngIf="submitted && f.natDirection.errors" class="invalid-feedback">
-          <div *ngIf="f.natDirection.errors.required">NAT Direction is required</div>
-        </div>
-      </div>
-
-      <div class="form-group" *ngIf="f.nat.value">
-        <label for="translatedIpAddress">Translated IP Address</label>
-        <tooltip *ngIf="f.nat.value" [message]="helpText.TranslatedIpAddress"></tooltip>
-        <input
-          type="text"
-          name="translatedIpAddress"
-          class="form-control"
-          formControlName="translatedIpAddress"
-          aria-label="Translated IP"
-          [class.is-invalid]="submitted && f.translatedIpAddress.errors"
-        />
-        <div *ngIf="submitted && f.translatedIpAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.translatedIpAddress.errors.required">Translated IP Address is required</div>
-        </div>
-      </div>
-
-      <div class="form-group" *ngIf="f.nat.value">
-        <div class="form-check form-check-inline">
-          <input type="checkbox" name="natService" class="form-check-input" formControlName="natService" aria-label="NAT Service" />
-          <label class="form-check-label" for="nat">NAT Service</label>
-          <tooltip *ngIf="f.nat.value" [message]="helpText.NatService"></tooltip>
-        </div>
-      </div>
-
-      <div class="form-group" *ngIf="f.natService.value">
-        <label for="type">NAT Protocol</label>
-        <tooltip *ngIf="f.natService.value" [message]="helpText.NatProtocol"></tooltip>
-        <select
-          name="natProtocol"
-          formControlName="natProtocol"
-          class="form-control"
-          [class.is-invalid]="submitted && f.natProtocol.errors"
-          aria-label="NAT Protocol Type"
-        >
-          <option></option>
-          <option value="TCP">TCP</option>
-          <option value="UDP">UDP</option>
-        </select>
-        <div *ngIf="submitted && f.natProtocol.errors" class="invalid-feedback">
-          <div *ngIf="f.natProtocol.errors.required">NAT Protocol is required</div>
-        </div>
-      </div>
-
-      <div class="form-row" *ngIf="f.natService.value">
-        <div class="form-group col-md-6">
-          <label for="natSourcePort">Source Port</label>
-          <tooltip *ngIf="f.natService.value" [message]="helpText.NatSourcePort"></tooltip>
-          <input
-            type="text"
-            name="natSourcePort"
-            class="form-control"
-            formControlName="natSourcePort"
-            [class.is-invalid]="submitted && f.natSourcePort.errors"
-            mask="09999"
-          />
-          <div *ngIf="submitted && f.natSourcePort.errors" class="invalid-feedback">
-            <div *ngIf="f.natSourcePort.errors.invalidPortNumber">Source Port/Range must be between 1-65535</div>
-            <div *ngIf="f.natSourcePort.errors.required">Source Port is required</div>
-          </div>
-        </div>
-
-        <div class="form-group col-md-6">
-          <label for="natTranslatedPort">Destination Port</label>
-          <tooltip *ngIf="f.natService.value" [message]="helpText.NatTranslatedPort"></tooltip>
-          <input
-            type="text"
-            name="natTranslatedPort"
-            class="form-control"
-            formControlName="natTranslatedPort"
-            [class.is-invalid]="submitted && f.natTranslatedPort.errors"
-            mask="09999"
-          />
-          <div *ngIf="submitted && f.natTranslatedPort.errors" class="invalid-feedback">
-            <div *ngIf="f.natTranslatedPort.errors.invalidPortNumber">Destination Port must be between 1-65535</div>
-            <div *ngIf="f.natTranslatedPort.errors.required">Destination Port is required</div>
-          </div>
         </div>
       </div>
     </div>
