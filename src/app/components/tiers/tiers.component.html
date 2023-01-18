@@ -12,7 +12,7 @@
   <app-table [config]="config" [data]="tiers" (clearResults)="getTiers($event)" (searchParams)="getTiers($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
   <section class="btn-toolbar" role="toolbar">
     <app-import-export
-      [exportObject]="tiers"
+      [exportObject]="exportTiers"
       exportFileName="tiers-{{ currentDatacenter?.name }}"
       [disableJson]="false"
       (import)="importTiersConfig($event)"
