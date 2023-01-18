@@ -133,17 +133,11 @@ export class TiersComponent implements OnInit, OnDestroy {
         const firewallRuleGroupRequest = this.firewallRuleGroupService.getManyFirewallRuleGroup({
           filter: [`tierId||eq||${tier.id}`],
           join: ['firewallRules'],
-          sort: ['ruleIndex,ASC'],
-          page: 1,
-          limit: 50000,
         });
 
         const natRuleGroupRequest = this.natRuleGroupService.getManyNatRuleGroup({
           filter: [`tierId||eq||${tier.id}`],
           join: ['natRules'],
-          sort: ['ruleIndex,ASC'],
-          page: 1,
-          limit: 50000,
         });
         forkJoin([
           networkObjectRequest,
