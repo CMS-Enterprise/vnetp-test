@@ -21,6 +21,10 @@ import {
   V1TierGroupsService,
   V1NetworkSecurityFirewallRuleGroupsService,
   V1NetworkSecurityNatRuleGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
 } from 'client';
 
 describe('TiersComponent', () => {
@@ -48,6 +52,10 @@ describe('TiersComponent', () => {
         MockProvider(V1TiersService, { getManyDatacenterTier: () => of([]) }),
         MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
         MockProvider(V1NetworkSecurityNatRuleGroupsService),
+        MockProvider(V1NetworkSecurityNetworkObjectsService),
+        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+        MockProvider(V1NetworkSecurityServiceObjectsService),
+        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
       ],
     }).compileComponents();
   }));

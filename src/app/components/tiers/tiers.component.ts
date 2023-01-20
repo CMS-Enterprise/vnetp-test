@@ -5,7 +5,7 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { EntityService } from 'src/app/services/entity.service';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
 import {
   V1TiersService,
@@ -16,6 +16,10 @@ import {
   GetManyTierResponseDto,
   V1NetworkSecurityFirewallRuleGroupsService,
   V1NetworkSecurityNatRuleGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableConfig } from '../../common/table/table.component';
@@ -35,7 +39,8 @@ export class TiersComponent implements OnInit, OnDestroy {
   public tierGroups: TierGroup[];
   public tiers = {} as GetManyTierResponseDto;
   public tableComponentDto = new TableComponentDto();
-  public exportTiers;
+  public exportTiers = [];
+  public exportTiersLoaded = false;
 
   private currentDatacenterSubscription: Subscription;
   private tierModalSubscription: Subscription;
@@ -70,6 +75,10 @@ export class TiersComponent implements OnInit, OnDestroy {
     private tableContextService: TableContextService,
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
     private natRuleGroupService: V1NetworkSecurityNatRuleGroupsService,
+    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
+    private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
+    private serviceObjectService: V1NetworkSecurityServiceObjectsService,
+    private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
   ) {}
 
   public getTierGroups(loadTiers = false): void {
@@ -93,48 +102,81 @@ export class TiersComponent implements OnInit, OnDestroy {
   }
 
   // gets all DCS objects belonging to every tier for ease of exporting
-  public getExportTiers() {
-    this.tierService
-      .getManyTier({
-        filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
-        join: ['subnets,vlans,networkObjects,networkObjectGroups,serviceObjects,serviceObjectGroups'],
-        page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
-        sort: ['updatedAt,ASC'],
-      })
-      .subscribe(
-        tiers => {
-          this.exportTiers = tiers;
-          this.exportTiers = this.exportTiers.data;
-          this.exportTiers.map(tier => {
-            this.firewallRuleGroupService
-              .getManyFirewallRuleGroup({
-                filter: [`tierId||eq||${tier.id}`],
-                join: ['firewallRules'],
-              })
-              .subscribe(fwRuleGroups => {
-                tier.firewallRuleGroups = fwRuleGroups;
-                tier.firewallRuleGroups = tier.firewallRuleGroups.filter(group => {
-                  return group.name !== 'Intravrf';
-                });
-              });
-            this.natRuleGroupService
-              .getManyNatRuleGroup({
-                filter: [`tierId||eq||${tier.id}`],
-                join: ['natRules'],
-              })
-              .subscribe(natRuleGroups => {
-                tier.natRuleGroups = natRuleGroups;
-              });
+  public getExportTiers(): void {
+    if (this.tiers.data) {
+      this.exportTiersLoaded = false;
+      this.tiers.data.map(tier => {
+        const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
+          filter: [`tierId||eq||${tier.id}`],
+          sort: ['updatedAt,ASC'],
+          page: 1,
+          limit: 50000,
+        });
+        const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
+          filter: [`tierId||eq||${tier.id}`],
+          sort: ['updatedAt,ASC'],
+          page: 1,
+          limit: 50000,
+        });
+        const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
+          filter: [`tierId||eq||${tier.id}`],
+          sort: ['updatedAt,ASC'],
+          page: 1,
+          limit: 50000,
+        });
+
+        const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
+          filter: [`tierId||eq||${tier.id}`],
+          sort: ['updatedAt,ASC'],
+          page: 1,
+          limit: 50000,
+        });
+
+        const firewallRuleGroupRequest = this.firewallRuleGroupService.getManyFirewallRuleGroup({
+          filter: [`tierId||eq||${tier.id}`],
+          join: ['firewallRules'],
+          page: 1,
+          limit: 50000,
+        });
+
+        const natRuleGroupRequest = this.natRuleGroupService.getManyNatRuleGroup({
+          filter: [`tierId||eq||${tier.id}`],
+          join: ['natRules'],
+          page: 1,
+          limit: 50000,
+        });
+        forkJoin([
+          networkObjectRequest,
+          networkObjectGroupRequest,
+          serviceObjectRequest,
+          serviceObjectGroupRequest,
+          firewallRuleGroupRequest,
+          natRuleGroupRequest,
+        ]).subscribe(result => {
+          const networkObjects = result[0].data;
+          const netObjGroups = result[1].data;
+          const serviceObjects = result[2].data;
+          const serviceObjectGroups = result[3].data;
+          const firewallRuleGroups = result[4].data;
+          const natRuleGroups = result[5].data;
+          const exportTier: any = tier;
+          firewallRuleGroups.map(group => {
+            group.firewallRules.sort((a, b) => a.ruleIndex - b.ruleIndex);
           });
-        },
-        () => {
-          this.exportTiers = null;
-        },
-        () => {
-          this.isLoading = false;
-        },
-      );
+          natRuleGroups.map(group => {
+            group.natRules.sort((a, b) => a.ruleIndex - b.ruleIndex);
+          });
+          exportTier.networkObjects = networkObjects;
+          exportTier.netObjGroups = netObjGroups;
+          exportTier.serviceObjects = serviceObjects;
+          exportTier.serviceObjectGroups = serviceObjectGroups;
+          exportTier.firewallRuleGroups = firewallRuleGroups;
+          exportTier.natRuleGroups = natRuleGroups;
+          this.exportTiers.push(exportTier);
+          this.exportTiersLoaded = true;
+        });
+      });
+    }
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -296,7 +338,7 @@ export class TiersComponent implements OnInit, OnDestroy {
       if (cd) {
         this.currentDatacenter = cd;
         this.getTierGroups(true);
-        this.getExportTiers();
+        // this.getExportTiers();
       }
     });
   }
