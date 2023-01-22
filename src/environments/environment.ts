@@ -15,7 +15,7 @@ class Environment extends DynamicEnvironment {
     ];
     this.apiBase = 'http://localhost:3000/api';
     this.wikiBase = 'http://wiki.draas.cdsvdc.lcl/index.php/UI';
-    this.dcsVersion = '1.14.3';
+    this.dcsVersion = '1.15.1';
   }
 }
 
