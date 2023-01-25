@@ -132,9 +132,6 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
     // create second form using the value from the union we created above
     this.selectedTiers = this.hostsWithInterfaces;
-    // this.continuedForm = this.formBuilder.group({
-    //   selectedTiers: [this.hostsWithInterfaces],
-    // });
   }
 
   // submits second form/locks the users interface selections
@@ -144,59 +141,63 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     if (this.selectedTiers.length > 1) {
       needsNamespace = true;
     }
+
+    // map through all selectedTiers
     this.selectedTiers.map(hostWithInterfaces => {
+      if (!hostWithInterfaces.insidePrefix) {
+        hostWithInterfaces.needsInsidePrefix = true;
+      } else {
+        hostWithInterfaces.needsInsidePrefix = false;
+      }
+
+      // if the selected host's insidePrefix value is too long, flip flag
+      if (hostWithInterfaces.insidePrefix && hostWithInterfaces.insidePrefix.length > 50) {
+        hostWithInterfaces.insidePrefixTooLong = true;
+      } else {
+        hostWithInterfaces.insidePrefixTooLong = false;
+      }
       // each host will have an interfaceMatrix
       const interfaceMatrix = { external: [], intervrf: [], insidePrefix: '' };
 
-      // we build the interfaceMatrix based on the users check box values in the continued form
+      // regex validation of the insidePrefix textbox
+      const textboxRgex = /^[A-Za-z0-9]*$/;
+      const insidePrefixResult = textboxRgex.test(hostWithInterfaces.insidePrefix);
+      if (insidePrefixResult) {
+        interfaceMatrix.insidePrefix = hostWithInterfaces.insidePrefix;
+        hostWithInterfaces.insidePrefixAlphanumericalFail = false;
+      } else {
+        hostWithInterfaces.insidePrefixAlphanumericalFail = true;
+      }
 
-      let oneInsidePrefix = false;
-      let multipleInsidePrefix = false;
-      hostWithInterfaces.interfaces.map(int => {
-        if (!int.inside && !int.outside) {
-          int.needsSelection = true;
+      // regex validation of the namespace textbox
+      if (hostWithInterfaces.namespace) {
+        const namespaceResult = textboxRgex.test(hostWithInterfaces.namespace);
+        if (namespaceResult) {
+          hostWithInterfaces.namespaceAlphanumericalFail = false;
+        } else {
+          hostWithInterfaces.namespaceAlphanumericalFail = true;
         }
-        // if the interface has the inside checkbox checked (inside: true)
-        if (int.inside) {
-          // if one interface is already marked as "inside" we flip a validation flag
-          // only one interface may be marked as "inside" per tier
-          if (oneInsidePrefix) {
-            multipleInsidePrefix = true;
-          }
-          oneInsidePrefix = true;
-          int.needsSelection = false;
-          interfaceMatrix.insidePrefix = int.interface;
+      }
+
+      // we build the interfaceMatrix based on the users check box values in the continued form
+      hostWithInterfaces.interfaces.map(int => {
+        if (!int.intervrf && !int.outside) {
+          int.needsSelection = true;
         }
         // if the interface has the external checkbox checked (external: true)
         if (int.external) {
           int.needsSelection = false;
           interfaceMatrix.external.push(int.interface);
 
-          // if the interface has the intervrf checkbox checked (external: true)
+          // if the interface has the intervrf checkbox checked (intervrf: true)
         } else if (int.intervrf) {
           int.needsSelection = false;
           interfaceMatrix.intervrf.push(int.interface);
         }
       });
-      // if none of the interfaces are selected as inside
-      // remove the inside prefix from the interface matrix and flip `needsInsidePrefix` flag for that tier
-      if (!oneInsidePrefix) {
-        hostWithInterfaces.needsInsidePrefix = true;
-        interfaceMatrix.insidePrefix = '';
-        this.invalidInterface = true;
-      } else {
-        this.invalidInterface = false;
-        hostWithInterfaces.needsInsidePrefix = false;
-      }
-      // if this tier has multiple inside prefixes, flip validation flag in tier properties
-      if (multipleInsidePrefix) {
-        hostWithInterfaces.tooManyInside = true;
-      } else {
-        hostWithInterfaces.tooManyInside = false;
-      }
       hostWithInterfaces.interfaceMatrix = interfaceMatrix;
 
-      // if there are multiple selectedTiers, we enforce the namespace property
+      // if there are multiple selectedTiers, we enforce the namespace property on each selectedTier
       if (needsNamespace) {
         if (hostWithInterfaces.namespace) {
           hostWithInterfaces.needsNamespace = false;
@@ -226,12 +227,22 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         }
       });
     }
-    // if any host needs an inside prefix, has too many "inside" interfaces,
-    // does not contain a namespace when it should, or contains the same namespace as another host
+    // if any host is missing an insidePrefix, fails the regex validation test for either insidePrefix or namespace, contains an insidePrefix that is too many characters,
+    // does not contain a namespace when it should, contains the same namespace as another host, contains a namespace that is too many characters,
     // that host/interface is marked as invalid
     this.selectedTiers.map(host => {
-      if (host.needsInsidePrefix || host.tooManyInside || host.needsNamespace || host.sameNamespace || host.namespaceTooLong) {
+      if (
+        host.needsInsidePrefix ||
+        host.insidePrefixAlphanumericalFail ||
+        host.namespaceAlphanumericalFail ||
+        host.insidePrefixTooLong ||
+        host.needsNamespace ||
+        host.sameNamespace ||
+        host.namespaceTooLong
+      ) {
         this.invalidInterface = true;
+      } else {
+        this.invalidInterface = false;
       }
     });
 
@@ -254,13 +265,6 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   public markInterfaceExternal(int): void {
     int.external = true;
     int.intervrf = false;
-    int.inside = false;
-  }
-
-  public markInterfaceInside(int): void {
-    int.intervrf = true;
-    int.inside = true;
-    int.external = false;
   }
 
   public deviceConfigFileChange(event): void {
