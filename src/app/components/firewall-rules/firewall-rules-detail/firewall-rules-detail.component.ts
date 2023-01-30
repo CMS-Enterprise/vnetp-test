@@ -60,6 +60,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   tiers: Tier[];
 
   firewallRuleModalSubscription: Subscription;
+  packetTracerSubscription: Subscription;
 
   scope: FirewallRuleScope;
   TierId: string;
@@ -403,5 +404,17 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       }
       previewImportSubscription.unsubscribe();
     });
+  }
+
+  subscribeToPacketTracer() {
+    this.packetTracerSubscription = this.ngx.getModal('firewallRulePacketTracer').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('firewallRulePacketTracer');
+      this.packetTracerSubscription.unsubscribe();
+    });
+  }
+
+  openPacketTracer() {
+    this.subscribeToPacketTracer();
+    this.ngx.getModal('firewallRulePacketTracer').open();
   }
 }

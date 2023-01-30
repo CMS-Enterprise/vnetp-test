@@ -17,6 +17,8 @@
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
+
+  <button (click)="openPacketTracer()">Trace Packets</button>
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
@@ -93,3 +95,5 @@
     {{ firewallRule?.serviceObjectGroupId | resolve: getServiceObjectGroupName }} (Object Group)
   </p>
 </ng-template>
+
+<app-firewall-rule-packet-tracer></app-firewall-rule-packet-tracer>
