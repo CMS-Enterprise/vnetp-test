@@ -26,6 +26,7 @@ import {
   V1NetworkSecurityServiceObjectsService,
   V1NetworkSecurityServiceObjectGroupsService,
 } from 'client';
+import { FirewallRulePacketTracerComponent } from '../firewall-rule-packet-tracer/firewall-rule-packet-tracer.component';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -46,6 +47,7 @@ describe('FirewallRulesDetailComponent', () => {
         PreviewModalComponent,
         ResolvePipe,
         YesNoModalComponent,
+        FirewallRulePacketTracerComponent,
       ],
       providers: [
         MockProvider(DatacenterContextService),
