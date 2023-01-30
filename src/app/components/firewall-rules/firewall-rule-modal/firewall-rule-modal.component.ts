@@ -81,7 +81,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             } else {
               value = data.ipAddress;
             }
-            const modalBody = `${data.type}: ${value}`;
+            const modalBody = [`${data.type}: ${value}`];
             const dto = {
               modalTitle,
               modalBody,
@@ -95,10 +95,16 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         case 'NetworkObjectGroup': {
           this.networkObjectGroupService.getOneNetworkObjectGroup({ id: objectId, join: ['networkObjects'] }).subscribe(data => {
             const members = data.networkObjects;
-            const memberNames = members.map(member => {
-              return member.name;
+            const memberDetails = members.map(member => {
+              let returnValue = `Name: ${member.name} --- `;
+
+              if (member.type == 'IpAddress') returnValue += `IP Address: ${member.ipAddress}`;
+              else if (member.type == 'Range') returnValue += `Range: ${member.startIpAddress}-${member.endIpAddress}`;
+              else if (member.type == 'Fqdn') returnValue += `FQDN: ${member.fqdn}`;
+
+              return returnValue;
             });
-            const modalBody = `Group Members : ${memberNames}`;
+            const modalBody = memberDetails;
             const objectName = data.name;
             const modalTitle = `${property} : ${objectName}`;
             const dto = {
@@ -115,7 +121,9 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           this.serviceObjectService.getOneServiceObject({ id: objectId }).subscribe(data => {
             const objectName = data.name;
             const modalTitle = `${property} : ${objectName}`;
-            const modalBody = `Protocol : ${data.protocol}, sourcePorts: ${data.sourcePorts}, destinationPorts: ${data.destinationPorts}`;
+            const modalBody = [
+              `Protocol : ${data.protocol}, Source Ports: ${data.sourcePorts}, Destination Ports: ${data.destinationPorts}`,
+            ];
             const dto = {
               modalTitle,
               modalBody,
@@ -129,10 +137,14 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         case 'ServiceObjectGroup': {
           this.serviceObjectGroupService.getOneServiceObjectGroup({ id: objectId, join: ['serviceObjects'] }).subscribe(data => {
             const members = data.serviceObjects;
-            const memberNames = members.map(member => {
-              return member.name;
+            const memberDetails = members.map(member => {
+              let returnValue = `Name: ${member.name} ---`;
+
+              returnValue += `Protocol: ${member.protocol}, Source Ports: ${member.sourcePorts}, Destination Ports: ${member.destinationPorts}`;
+
+              return returnValue;
             });
-            const modalBody = `Group Members : ${memberNames}`;
+            const modalBody = memberDetails;
             const objectName = data.name;
             const modalTitle = `${property} : ${objectName}`;
             const dto = {

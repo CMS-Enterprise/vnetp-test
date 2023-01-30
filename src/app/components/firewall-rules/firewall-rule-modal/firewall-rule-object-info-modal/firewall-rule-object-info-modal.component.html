@@ -4,7 +4,9 @@
     </header>
   
     <div class="modal-body">
-      {{ modalBody }}
+      <div *ngFor="let element of modalBody">
+        {{element}}
+      </div>
     </div>
   </ngx-smart-modal>
   
