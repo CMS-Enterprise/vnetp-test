@@ -35,5 +35,6 @@ export interface Datacenter {
     readonly tierGroups?: Array<TierGroup>;
     readonly jobs?: Array<Job>;
     readonly auditLogs?: Array<AuditLog>;
+    readonly selfServices?: Array<string>;
 }
 

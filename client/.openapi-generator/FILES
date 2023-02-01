@@ -48,6 +48,7 @@ api/v1NetworkSubnets.service.ts
 api/v1NetworkVlans.service.ts
 api/v1PhysicalServers.service.ts
 api/v1PriorityGroups.service.ts
+api/v1SelfService.service.ts
 api/v1TierGroups.service.ts
 api/v1Tiers.service.ts
 api/v1Vlans.service.ts
@@ -194,6 +195,9 @@ model/physicalServer.ts
 model/physicalServerNetworkPort.ts
 model/poolImportCollectionDto.ts
 model/priorityGroup.ts
+model/selfService.ts
+model/selfServiceConfig.ts
+model/selfServiceRawConfig.ts
 model/serviceObject.ts
 model/serviceObjectGroup.ts
 model/serviceObjectGroupRelationBulkImportCollectionDto.ts
