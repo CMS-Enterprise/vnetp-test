@@ -58,6 +58,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   serviceObjects: ServiceObject[];
   serviceObjectGroups: ServiceObjectGroup[];
   tiers: Tier[];
+  packetTracerObjects = { networkObjects: [], networkObjectGroups: [], firewallRules: [] };
 
   firewallRuleModalSubscription: Subscription;
   packetTracerSubscription: Subscription;
@@ -195,6 +196,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           // TODO: Review this approach, see if we can resolve
           // this in the generated client.
           this.firewallRules = response;
+          this.packetTracerObjects.firewallRules = this.firewallRules.data;
           // this.totalFirewallRules = result.total;
         },
         () => {
@@ -245,6 +247,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         this.serviceObjects = result[3].data;
         this.serviceObjectGroups = result[4].data;
 
+        this.packetTracerObjects.networkObjects = this.networkObjects;
+        this.packetTracerObjects.networkObjectGroups = this.networkObjectGroups;
         this.getFirewallRules();
       },
     );

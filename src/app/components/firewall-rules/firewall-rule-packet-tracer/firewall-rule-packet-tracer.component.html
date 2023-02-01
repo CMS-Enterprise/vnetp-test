@@ -1,9 +1,9 @@
-<ngx-smart-modal #firewallRulePacketTracer identifier="firewallRulePacketTracer" [dismissable]="false" customClass="medium-modal">
+<ngx-smart-modal #firewallRulePacketTracer identifier="firewallRulePacketTracer" (onOpen)="getData()" (onClose)="reset()" [dismissable]="false" customClass="medium-modal">
     <header class="modal-header">
       <h4 class="modal-title">Packet Tracer</h4>
     </header>
 
-    <form [formGroup]="form" (ngSubmit)="save()">
+    <form [formGroup]="form" (ngSubmit)="search()">
       <div class="modal-body">
   
         <div class="form-row">
@@ -15,7 +15,7 @@
               id="direction"
               formControlName="direction"
               class="form-control"
-              [class.is-invalid]="submitted && f.action.errors"
+              [class.is-invalid]="submitted && f.direction.errors"
               aria-label="Direction"
             >
               <option></option>
@@ -49,9 +49,9 @@
           </div>
 
   
-          <div class="form-group col-md-2">
+          <!-- <div class="form-group col-md-2">
             <label for="enabled">Enabled</label>
-            <!-- <tooltip [message]="helpText.Enabled"></tooltip> -->
+            <tooltip [message]="helpText.Enabled"></tooltip>
             <select
               id="enabled"
               formControlName="enabled"
@@ -63,7 +63,7 @@
               <option [ngValue]="false">False</option>
               <option [ngValue]="true">True</option>
             </select>
-          </div>
+          </div> -->
         </div>
   
         <hr />
