@@ -489,7 +489,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
   public getTiers(): void {
     this.tiersService
       .getManyDatacenterTier({
-        limit: 100,
+        limit: 1000,
         datacenterId: this.datacenterId,
         join: ['firewallRuleGroups', 'natRuleGroups'],
       })
