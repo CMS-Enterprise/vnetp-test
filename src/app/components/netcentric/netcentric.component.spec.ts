@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MockComponent } from 'src/test/mock-components';
 
 import { NetcentricComponent } from './netcentric.component';
 
@@ -8,7 +10,8 @@ describe('NetcentricComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [NetcentricComponent],
+      declarations: [NetcentricComponent, MockComponent('app-navbar'), MockComponent('app-breadcrumb')],
+      imports: [RouterTestingModule],
     }).compileComponents();
   }));
 
@@ -18,8 +21,7 @@ describe('NetcentricComponent', () => {
     fixture.detectChanges();
   });
 
-  const k = true;
   it('should create', () => {
-    expect(k).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 });

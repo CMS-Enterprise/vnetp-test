@@ -1,0 +1,236 @@
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NavigationEnd, Router } from '@angular/router';
+import { AppCentricSubnet, AppCentricSubnetPaginationResponse, V2AppCentricAppCentricSubnetsService } from 'client';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
+import { TableConfig } from 'src/app/common/table/table.component';
+import { BridgeDomainDto } from 'src/app/models/appcentric/bridge-domain-dto';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { TableContextService } from 'src/app/services/table-context.service';
+
+@Component({
+  selector: 'app-subnets-modal',
+  templateUrl: './subnets-modal.component.html',
+  styleUrls: ['./subnets-modal.component.css'],
+})
+export class SubnetsModalComponent implements OnInit {
+  public isLoading = false;
+  public modalMode: ModalMode;
+  public form: FormGroup;
+  public submitted: boolean;
+  public tenantId: string;
+  public bridgeDomainId: string;
+  public subnets: AppCentricSubnetPaginationResponse;
+  public tableComponentDto = new TableComponentDto();
+  public perPage = 20;
+
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+
+  public searchColumns: SearchColumnConfig[] = [];
+
+  public config: TableConfig<any> = {
+    description: 'Subnets',
+    columns: [
+      { name: 'Name', property: 'name' },
+      { name: 'Alias', property: 'alias' },
+      { name: 'Description', property: 'description' },
+      { name: '', template: () => this.actionsTemplate },
+    ],
+  };
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private ngx: NgxSmartModalService,
+    private subnetsService: V2AppCentricAppCentricSubnetsService,
+    private router: Router,
+    private tableContextService: TableContextService,
+  ) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
+        if (match) this.tenantId = match[1];
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.buildForm();
+  }
+
+  public onTableEvent(event: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.getSubnets(event);
+  }
+
+  get f() {
+    return this.form.controls;
+  }
+
+  public closeModal(): void {
+    this.ngx.close('subnetsModal');
+    this.reset();
+  }
+
+  public getData(): void {
+    const dto = Object.assign({}, this.ngx.getModalData('subnetsModal') as BridgeDomainDto);
+
+    this.modalMode = dto.modalMode;
+    this.bridgeDomainId = dto.bridgeDomain.id;
+
+    this.ngx.resetModalData('subnetsModal');
+
+    this.getSubnets();
+  }
+
+  public reset(): void {
+    this.submitted = false;
+    this.ngx.resetModalData('subnetsModal');
+    this.buildForm();
+  }
+
+  private buildForm(): void {
+    this.form = this.formBuilder.group({
+      name: ['', Validators.compose([Validators.required, Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+      alias: [null],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
+      gatewayIp: ['', Validators.required],
+      treatAsVirtualIpAddress: ['', Validators.required],
+      primaryIpAddress: ['', Validators.required],
+      advertisedExternally: ['', Validators.required],
+      preferred: ['', Validators.required],
+      sharedBetweenVrfs: ['', Validators.required],
+      ipDataPlaneLearning: ['', Validators.required],
+    });
+  }
+
+  private createSubnets(appCentricSubnet: AppCentricSubnet): void {
+    this.subnetsService.createAppCentricSubnet({ appCentricSubnet }).subscribe(
+      () => {
+        this.getSubnets();
+        this.reset();
+      },
+      () => {},
+    );
+  }
+
+  public save(): void {
+    this.submitted = true;
+    if (this.form.invalid) {
+      return;
+    }
+
+    const {
+      name,
+      description,
+      alias,
+      gatewayIp,
+      treatAsVirtualIpAddress,
+      primaryIpAddress,
+      advertisedExternally,
+      preferred,
+      sharedBetweenVrfs,
+      ipDataPlaneLearning,
+    } = this.form.value;
+
+    const tenantId = this.tenantId;
+
+    const subnet = {
+      name,
+      description,
+      alias,
+      tenantId,
+      gatewayIp,
+      treatAsVirtualIpAddress,
+      primaryIpAddress,
+      advertisedExternally,
+      preferred,
+      sharedBetweenVrfs,
+      ipDataPlaneLearning,
+    } as AppCentricSubnet;
+
+    subnet.bridgeDomainId = this.bridgeDomainId;
+
+    this.createSubnets(subnet);
+  }
+
+  public getSubnets(event?): void {
+    this.isLoading = true;
+    let eventParams;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
+    this.subnetsService
+      .findAllAppCentricSubnet({
+        filter: [`bridgeDomainId||eq||${this.bridgeDomainId}`, eventParams],
+      })
+      .subscribe(
+        data => (this.subnets = data),
+        () => (this.subnets = null),
+      );
+  }
+
+  public removeSubnet(subnet: AppCentricSubnet) {
+    if (subnet.deletedAt) {
+      this.subnetsService
+        .removeAppCentricSubnet({
+          uuid: subnet.id,
+        })
+        .subscribe(() => {
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
+          if (filteredResults) {
+            this.getSubnets(params);
+          } else {
+            this.getSubnets();
+          }
+        });
+    } else {
+      this.subnetsService
+        .updateAppCentricSubnet({
+          uuid: subnet.id,
+          appCentricSubnet: { deleted: true } as AppCentricSubnet,
+        })
+        .subscribe(() => {
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
+          if (filteredResults) {
+            this.getSubnets(params);
+          } else {
+            this.getSubnets();
+          }
+        });
+    }
+  }
+
+  public restoreSubnet(subnet: AppCentricSubnet): void {
+    if (!subnet.deletedAt) {
+      return;
+    }
+
+    this.subnetsService
+      .updateAppCentricSubnet({
+        uuid: subnet.id,
+        appCentricSubnet: { deleted: false } as AppCentricSubnet,
+      })
+      .subscribe(() => {
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getSubnets(params);
+        } else {
+          this.getSubnets();
+        }
+      });
+  }
+}

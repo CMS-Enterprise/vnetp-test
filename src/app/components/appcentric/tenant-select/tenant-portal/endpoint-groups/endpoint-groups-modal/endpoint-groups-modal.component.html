@@ -1,0 +1,115 @@
+<ngx-smart-modal #endpointGroupModal identifier="endpointGroupModal" (onOpen)="getData()" (onClose)="reset()">
+
+    <header class="modal-header">
+      <h4 class="modal-title">Endpoint Group</h4>
+    </header>
+    <app-tabs *ngIf="ModalMode === 'Edit'" #tabsRef [tabs]="tabs" [initialTabIndex]="initialTabIndex" (tabChange)="handleTabChange($event)"></app-tabs>
+
+    <div class="modal-body" *ngIf="initialTabIndex === 'Consumed Contracts'">
+      <app-consumed-contracts [endpointGroupId]="endpointGroupId" [tenantId]="tenantId"></app-consumed-contracts>
+    </div>
+    <div class="modal-body" *ngIf="initialTabIndex === 'Provided Contracts'">
+      <app-provided-contracts [endpointGroupId]="endpointGroupId" [tenantId]="tenantId"></app-provided-contracts>
+    </div>
+    <div *ngIf="initialTabIndex === 'Endpoint Group'">
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="form-control"
+              [class.is-invalid]="submitted && f.name.errors"
+              aria-label="Name"
+            />
+            <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+              <div *ngIf="f.name.errors.required">Name is required</div>
+              <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+              <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+              <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or '_'.</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="alias">Alias</label>
+            <input
+              type="text"
+              id="alias"
+              formControlName="alias"
+              class="form-control"
+              [class.is-invalid]="submitted && f.alias.errors"
+              aria-label="Alias"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input
+              type="text"
+              id="description"
+              formControlName="description"
+              class="form-control"
+              [class.is-invalid]="submitted && f.description.errors"
+              aria-label="Description"
+            />
+            <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+              <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
+              <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="intraEpgIsolation">Intra Epg Isolation</label>
+            <select
+              id="intraEpgIsolation"
+              formControlName="intraEpgIsolation"
+              class="form-control"
+              [class.is-invalid]="submitted && f.intraEpgIsolation.errors"
+              aria-label="Intra Epg Isolation"
+            >
+              <option></option>
+              <option value="true">Isolated</option>
+              <option value="false">Not Isolated</option>
+            </select>
+            <div *ngIf="submitted && f.intraEpgIsolation.errors" class="invalid-feedback">
+              <div *ngIf="f.intraEpgIsolation.errors.required">Intra Epg Isolation is required</div>
+            </div>
+          </div>
+          <app-table [config]="config" [data]="applicationProfiles" (clearResults)="getApplicationProfiles($event)" (searchParams)="getApplicationProfiles($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+
+        </div>
+
+        <footer class="modal-footer">
+          <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
+            Cancel
+          </button>
+          <button class="btn btn-success" data-dismiss="modal">
+            <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+            <span>Save</span>
+          </button>
+        </footer>
+      </form>
+    </div>
+</ngx-smart-modal>
+
+<ng-template #applicationProfileSelectTemplate let-applicationProfile="datum">
+    <section>
+      <div [formGroup]="form" class="custom-control custom-radio">
+        <input
+        type="radio"
+        formControlName="applicationProfileId"
+        name="applicationProfileId"
+        value="{{ applicationProfile.id }}"
+        aria-label="Application Profile"
+        class="custom-control-input"
+        id="radio-{{ applicationProfile.id }}"
+        />
+        <label class="custom-control-label" for="radio-{{ applicationProfile.id }}">
+          <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        </label>
+      </div>
+
+    </section>
+</ng-template>

@@ -1,0 +1,54 @@
+<h1>L3 Outs</h1>
+<ng-container>
+  <section class="btn-toolbar" role="toolbar">
+    <button type="button" class="btn btn-success" (click)="openL3OutsModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create L3 Out</span>
+    </button>
+  </section>
+
+  <ng-container *ngIf="!isLoading; else loading">
+    <app-table [config]="config" [data]="l3Outs" (clearResults)="getL3Outs($event)" (searchParams)="getL3Outs($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+    <section class="btn-toolbar" role="toolbar">
+      <app-import-export
+        [exportObject]="l3Outs"
+        exportFileName="l3Outs"
+        [disableJson]="false"
+        (import)="importL3OutsConfig($event)"
+      ></app-import-export>
+    </section>
+  </ng-container>
+</ng-container>
+
+<ng-template #actionsTemplate let-l3Out="datum">
+  <section class="table__actions">
+    <app-icon-button
+            *ngIf="!l3Out?.deletedAt"
+            icon="edit"
+            label="Edit L3 Out"
+            (handleClick)="openL3OutsModal(ModalMode.Edit, l3Out)"
+          ></app-icon-button>
+
+          <app-icon-button
+          *ngIf="l3Out?.deletedAt"
+          icon="undo"
+          label="Restore L3 Out"
+          type="success"
+          (handleClick)="restoreL3Out(l3Out)"
+        ></app-icon-button>
+
+        <app-icon-button
+        icon="delete"
+        label="Soft-Delete/Delete L3 Out"
+        [type]="l3Out?.deletedAt ? 'danger' : 'default'"
+        (handleClick)="deleteL3Out(l3Out)"
+      ></app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<app-l3-outs-modal [vrfs]="vrfs"></app-l3-outs-modal>
+<app-yes-no-modal></app-yes-no-modal>

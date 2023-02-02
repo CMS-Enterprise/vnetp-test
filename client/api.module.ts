@@ -54,6 +54,17 @@ import { V1VlansService } from './api/v1Vlans.service';
 import { V1VmwareNetworkAdapterService } from './api/v1VmwareNetworkAdapter.service';
 import { V1VmwareVirtualDisksService } from './api/v1VmwareVirtualDisks.service';
 import { V1VmwareVirtualMachinesService } from './api/v1VmwareVirtualMachines.service';
+import { V2AppCentricAppCentricSubnetsService } from './api/v2AppCentricAppCentricSubnets.service';
+import { V2AppCentricApplicationProfilesService } from './api/v2AppCentricApplicationProfiles.service';
+import { V2AppCentricBridgeDomainsService } from './api/v2AppCentricBridgeDomains.service';
+import { V2AppCentricContractsService } from './api/v2AppCentricContracts.service';
+import { V2AppCentricEndpointGroupsService } from './api/v2AppCentricEndpointGroups.service';
+import { V2AppCentricFilterEntriesService } from './api/v2AppCentricFilterEntries.service';
+import { V2AppCentricFiltersService } from './api/v2AppCentricFilters.service';
+import { V2AppCentricL3outsService } from './api/v2AppCentricL3outs.service';
+import { V2AppCentricSubjectsService } from './api/v2AppCentricSubjects.service';
+import { V2AppCentricTenantsService } from './api/v2AppCentricTenants.service';
+import { V2AppCentricVrfsService } from './api/v2AppCentricVrfs.service';
 
 @NgModule({
   imports:      [],

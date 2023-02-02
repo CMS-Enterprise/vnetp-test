@@ -1,0 +1,6 @@
+<h1>Tenant Portal</h1>
+
+<ng-container>
+  <app-tabs #tabsRef [tabs]="tabs" [initialTabIndex]="initialTabIndex" (tabChange)="handleTabChange($event)"></app-tabs>
+  <router-outlet name="tenant-portal"></router-outlet>
+</ng-container>

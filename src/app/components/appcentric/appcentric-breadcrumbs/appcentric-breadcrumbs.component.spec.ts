@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { AppcentricBreadcrumbsComponent } from './appcentric-breadcrumbs.component';
 
@@ -9,6 +11,7 @@ describe('AppcentricBreadcrumbsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AppcentricBreadcrumbsComponent],
+      imports: [RouterTestingModule.withRoutes([]), RouterModule],
     }).compileComponents();
   }));
 
@@ -18,8 +21,7 @@ describe('AppcentricBreadcrumbsComponent', () => {
     fixture.detectChanges();
   });
 
-  const k = true;
   it('should create', () => {
-    expect(k).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 });
