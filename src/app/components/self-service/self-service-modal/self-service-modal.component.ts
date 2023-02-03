@@ -163,9 +163,9 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       const textboxRgex = /^[A-Za-z0-9]*$/;
       const insidePrefixResult = textboxRgex.test(hostWithInterfaces.insidePrefix);
       if (!insidePrefixResult) {
-        interfaceMatrix.insidePrefix = hostWithInterfaces.insidePrefix;
         hostWithInterfaces.insidePrefixAlphanumericalFail = true;
       } else {
+        interfaceMatrix.insidePrefix = hostWithInterfaces.insidePrefix;
         hostWithInterfaces.insidePrefixAlphanumericalFail = false;
       }
 
