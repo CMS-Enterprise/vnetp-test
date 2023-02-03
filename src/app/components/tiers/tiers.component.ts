@@ -95,12 +95,6 @@ export class TiersComponent implements OnInit, OnDestroy {
       });
   }
 
-  public getFirewallGroups() {
-    this.firewallRuleGroupService.getManyFirewallRuleGroup({
-      filter: [],
-    });
-  }
-
   // gets all DCS objects belonging to every tier for ease of exporting
   public getExportTiers(): void {
     if (this.tiers.data) {
