@@ -241,8 +241,6 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         host.namespaceTooLong
       ) {
         this.invalidInterface = true;
-      } else {
-        this.invalidInterface = false;
       }
     });
 
