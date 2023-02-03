@@ -162,10 +162,11 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       // regex validation of the insidePrefix textbox
       const textboxRgex = /^[A-Za-z0-9]*$/;
       const insidePrefixResult = textboxRgex.test(hostWithInterfaces.insidePrefix);
+      console.log('insidePrefixResult', insidePrefixResult);
       if (!insidePrefixResult) {
-        interfaceMatrix.insidePrefix = hostWithInterfaces.insidePrefix;
         hostWithInterfaces.insidePrefixAlphanumericalFail = true;
       } else {
+        interfaceMatrix.insidePrefix = hostWithInterfaces.insidePrefix;
         hostWithInterfaces.insidePrefixAlphanumericalFail = false;
       }
 
