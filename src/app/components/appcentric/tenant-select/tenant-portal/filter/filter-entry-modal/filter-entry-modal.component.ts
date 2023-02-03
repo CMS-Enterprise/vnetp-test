@@ -63,7 +63,9 @@ export class FilterEntryModalComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
-        if (match) this.tenantId = match[1];
+        if (match) {
+          this.tenantId = match[1];
+        }
       }
     });
   }
@@ -181,7 +183,8 @@ export class FilterEntryModalComponent implements OnInit {
   }
 
   onTcpFlagSelected(selected: any[]) {
-    const tcpFlags = <FormArray>this.form.controls['tcpFlags'];
+    const tcpFlagControl = 'tcpFlags';
+    const tcpFlags = this.form.controls[tcpFlagControl] as FormArray;
     const selectedValues = selected.map(item => item.value);
     tcpFlags.setValue(selectedValues);
   }

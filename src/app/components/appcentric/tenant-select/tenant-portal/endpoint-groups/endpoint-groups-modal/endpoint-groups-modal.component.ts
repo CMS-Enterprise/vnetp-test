@@ -49,6 +49,10 @@ export class EndpointGroupsModalComponent implements OnInit {
     ],
   };
 
+  public tabs: Tab[] = tabs.map(t => {
+    return { name: t.name };
+  });
+
   constructor(
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
@@ -59,7 +63,9 @@ export class EndpointGroupsModalComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
-        if (match) this.tenantId = match[1];
+        if (match) {
+          this.tenantId = match[1];
+        }
       }
     });
   }
@@ -69,12 +75,10 @@ export class EndpointGroupsModalComponent implements OnInit {
     this.getApplicationProfiles();
   }
 
-  public tabs: Tab[] = tabs.map(t => {
-    return { name: t.name };
-  });
-
   public handleTabChange(tab: Tab): void {
-    if (tab) this.initialTabIndex = tab.name;
+    if (tab) {
+      this.initialTabIndex = tab.name;
+    }
   }
 
   public onTableEvent(event: TableComponentDto): void {

@@ -22,7 +22,7 @@ export class EndpointGroupsComponent implements OnInit {
   public endpointGroups = {} as EndpointGroupPaginationResponse;
   public tableComponentDto = new TableComponentDto();
   private endpointGroupModalSubscription: Subscription;
-  public tenantId: String;
+  public tenantId: string;
 
   public isLoading = false;
 
@@ -50,7 +50,9 @@ export class EndpointGroupsComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
-        if (match) this.tenantId = match[1];
+        if (match) {
+          this.tenantId = match[1];
+        }
       }
     });
   }

@@ -22,7 +22,7 @@ export class ContractComponent implements OnInit {
   public contracts = {} as ContractPaginationResponse;
   public tableComponentDto = new TableComponentDto();
   private contractModalSubscription: Subscription;
-  public tenantId: String;
+  public tenantId: string;
   private subjectModalSubscription: Subscription;
 
   public isLoading = false;
@@ -51,7 +51,9 @@ export class ContractComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
-        if (match) this.tenantId = match[1];
+        if (match) {
+          this.tenantId = match[1];
+        }
       }
     });
   }

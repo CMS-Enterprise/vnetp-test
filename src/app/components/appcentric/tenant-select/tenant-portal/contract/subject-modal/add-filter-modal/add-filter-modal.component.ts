@@ -53,7 +53,7 @@ export class AddFilterModalComponent implements OnInit {
     this.subjectId = dto.subject.id;
 
     this.ngx.resetModalData('addFilterModal');
-    this.getFiltertableData;
+    this.getFiltertableData();
   }
 
   public closeModal(): void {
@@ -105,7 +105,7 @@ export class AddFilterModalComponent implements OnInit {
       })
       .subscribe(
         data => {
-          let filterPagResponse = {} as FilterPaginationResponse;
+          const filterPagResponse = {} as FilterPaginationResponse;
           filterPagResponse.count = data.filters.length;
           filterPagResponse.page = 1;
           filterPagResponse.pageCount = 1;

@@ -57,7 +57,9 @@ export class BridgeDomainModalComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
-        if (match) this.tenantId = match[1];
+        if (match) {
+          this.tenantId = match[1];
+        }
       }
     });
   }
@@ -201,7 +203,7 @@ export class BridgeDomainModalComponent implements OnInit {
       })
       .subscribe(
         data => {
-          let l3PagResponse = {} as L3OutPaginationResponse;
+          const l3PagResponse = {} as L3OutPaginationResponse;
           l3PagResponse.count = data.l3outs.length;
           l3PagResponse.page = 1;
           l3PagResponse.pageCount = 1;

@@ -73,7 +73,7 @@ export class ConsumedContractsComponent implements OnInit {
         relations: 'consumedContracts',
       })
       .subscribe(data => {
-        let contractPagResponse = {} as ContractPaginationResponse;
+        const contractPagResponse = {} as ContractPaginationResponse;
         contractPagResponse.count = data.consumedContracts.length;
         contractPagResponse.page = 1;
         contractPagResponse.pageCount = 1;

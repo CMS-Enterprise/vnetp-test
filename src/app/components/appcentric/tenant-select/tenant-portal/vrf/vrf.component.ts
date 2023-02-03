@@ -22,7 +22,7 @@ export class VrfComponent implements OnInit {
   public vrfs = {} as VrfPaginationResponse;
   public tableComponentDto = new TableComponentDto();
   private vrfModalSubscription: Subscription;
-  public tenantId: String;
+  public tenantId: string;
 
   public isLoading = false;
 
@@ -51,7 +51,9 @@ export class VrfComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
-        if (match) this.tenantId = match[1];
+        if (match) {
+          this.tenantId = match[1];
+        }
       }
     });
   }
