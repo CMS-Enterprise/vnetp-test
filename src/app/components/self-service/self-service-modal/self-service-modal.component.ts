@@ -162,21 +162,23 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       // regex validation of the insidePrefix textbox
       const textboxRgex = /^[A-Za-z0-9]*$/;
       const insidePrefixResult = textboxRgex.test(hostWithInterfaces.insidePrefix);
-      if (insidePrefixResult) {
+      if (!insidePrefixResult) {
         interfaceMatrix.insidePrefix = hostWithInterfaces.insidePrefix;
-        hostWithInterfaces.insidePrefixAlphanumericalFail = false;
-      } else {
         hostWithInterfaces.insidePrefixAlphanumericalFail = true;
+      } else {
+        hostWithInterfaces.insidePrefixAlphanumericalFail = false;
       }
 
       // regex validation of the namespace textbox
       if (hostWithInterfaces.namespace) {
         const namespaceResult = textboxRgex.test(hostWithInterfaces.namespace);
-        if (namespaceResult) {
-          hostWithInterfaces.namespaceAlphanumericalFail = false;
-        } else {
+        if (!namespaceResult) {
           hostWithInterfaces.namespaceAlphanumericalFail = true;
+        } else {
+          hostWithInterfaces.namespaceAlphanumericalFail = false;
         }
+      } else {
+        hostWithInterfaces.namespaceAlphanumericalFail = false;
       }
 
       // we build the interfaceMatrix based on the users check box values in the continued form
@@ -194,7 +196,13 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
           int.needsSelection = false;
           interfaceMatrix.intervrf.push(int.interface);
         }
+        if (int.needsSelection) {
+          this.invalidInterface = true;
+        } else {
+          this.invalidInterface = false;
+        }
       });
+
       hostWithInterfaces.interfaceMatrix = interfaceMatrix;
 
       // if there are multiple selectedTiers, we enforce the namespace property on each selectedTier
@@ -204,6 +212,8 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         } else {
           hostWithInterfaces.needsNamespace = true;
         }
+      } else {
+        hostWithInterfaces.needsNamespace = false;
       }
     });
 
@@ -220,6 +230,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
             selectedTier.sameNamespace = false;
           }
         }
+        selectedTier.sameNamespace = false;
         if (tier.namespace && tier.namespace.length > 11) {
           tier.namespaceTooLong = true;
         } else {
