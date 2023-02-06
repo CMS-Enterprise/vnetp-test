@@ -89,7 +89,6 @@ export class ApEndpointGroupModalComponent implements OnInit {
   private buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
-
       alias: ['', Validators.compose([Validators.maxLength(100)])],
       description: ['', Validators.compose([Validators.maxLength(500)])],
       intraEpgIsolation: [null],

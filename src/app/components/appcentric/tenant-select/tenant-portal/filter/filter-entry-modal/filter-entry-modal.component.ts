@@ -118,7 +118,7 @@ export class FilterEntryModalComponent implements OnInit {
       sourceToPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
       destinationFromPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
       destinationToPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
-      tcpFlags: [],
+      tcpFlags: [null],
       stateful: [null],
     });
   }
