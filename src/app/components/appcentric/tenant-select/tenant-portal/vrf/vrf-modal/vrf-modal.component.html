@@ -32,6 +32,9 @@
           [class.is-invalid]="submitted && f.alias.errors"
           aria-label="Alias"
         />
+        <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
+          <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -45,7 +48,6 @@
           aria-label="Description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
@@ -64,9 +66,6 @@
           <option value="true">Enforced</option>
           <option value="false">Not Enforced</option>
         </select>
-        <div *ngIf="submitted && f.policyControlEnforced.errors" class="invalid-feedback">
-          <div *ngIf="f.policyControlEnforced.errors.required">Policy Control Enforced is required</div>
-        </div>
       </div>
       
       <div class="form-group">
@@ -82,9 +81,6 @@
           <option value="true">Enforced</option>
           <option value="false">Not Enforced</option>
         </select>
-        <div *ngIf="submitted && f.policyControlEnforcementIngress.errors" class="invalid-feedback">
-          <div *ngIf="f.policyControlEnforcementIngress.errors.required">Policy Control Enforcement Ingress is required</div>
-        </div>
       </div>
     </div>
 

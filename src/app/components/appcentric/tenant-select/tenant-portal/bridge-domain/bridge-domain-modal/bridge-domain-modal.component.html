@@ -32,6 +32,9 @@
           [class.is-invalid]="submitted && f.alias.errors"
           aria-label="Alias"
         />
+        <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
+          <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -45,7 +48,6 @@
           aria-label="Description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
@@ -63,9 +65,6 @@
           <option value="true">Enabled</option>
           <option value="false">Disabled</option>
         </select>
-        <div *ngIf="submitted && f.unicastRouting.errors" class="invalid-feedback">
-          <div *ngIf="f.unicastRouting.errors.required">Unicast Routing is required</div>
-        </div>
       </div>
 
       <div class="form-group">
@@ -81,13 +80,10 @@
           <option value="true">Enabled</option>
           <option value="false">Disabled</option>
         </select>
-        <div *ngIf="submitted && f.arpFlooding.errors" class="invalid-feedback">
-          <div *ngIf="f.arpFlooding.errors.required">Arp Flooding is required</div>
-        </div>
       </div>
 
       <div class="form-group">
-        <label for="bdMacAddress">BD Mac Address</label>
+        <label for="bdMacAddress">Bridge Domain Mac Address</label>
         <input
           type="text"
           id="bdMacAddress"
@@ -96,6 +92,9 @@
           [class.is-invalid]="submitted && f.bdMacAddress.errors"
           aria-label="BD Mac Address"
         />
+        <div *ngIf="submitted && f.bdMacAddress.errors" class="invalid-feedback">
+          <div *ngIf="f.bdMacAddress.errors.invalidMacAddress">Bridge Domain MAC Address Must be a Valid MAC Address</div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -111,9 +110,6 @@
           <option value="true">Enabled</option>
           <option value="false">Disabled</option>
         </select>
-        <div *ngIf="submitted && f.limitLocalIpLearning.errors" class="invalid-feedback">
-          <div *ngIf="f.limitLocalIpLearning.errors.required">Limit Local Ip Learning is required</div>
-        </div>
       </div>
 
       <div class="form-group">
@@ -129,9 +125,6 @@
           <option value="true">Enabled</option>
           <option value="false">Disabled</option>
         </select>
-        <div *ngIf="submitted && f.epMoveDetectionModeGarp.errors" class="invalid-feedback">
-          <div *ngIf="f.epMoveDetectionModeGarp.errors.required">Ep Move Detection Mode Garp is required</div>
-        </div>
       </div>
 
       <div class="form-group">
@@ -143,6 +136,9 @@
         bindValue="id"
         formControlName="vrfId"
         ></ng-select>
+        <div *ngIf="submitted && f.unicastRouting.errors" class="invalid-feedback">
+          <div *ngIf="f.unicastRouting.errors.required">VRF is required</div>
+        </div>
       </div>
 
       <div *ngIf="modalMode === 'Edit'">

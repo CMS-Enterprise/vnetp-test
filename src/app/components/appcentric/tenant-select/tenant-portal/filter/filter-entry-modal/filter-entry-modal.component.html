@@ -32,6 +32,9 @@
           [class.is-invalid]="submitted && f.alias.errors"
           aria-label="Alias"
         />
+        <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
+          <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -45,7 +48,6 @@
           aria-label="Description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
@@ -78,9 +80,6 @@
           <option value="true">Enabled</option>
           <option value="false">Disabled</option>
         </select>
-        <div *ngIf="submitted && f.matchOnlyFragments.errors" class="invalid-feedback">
-          <div *ngIf="f.matchOnlyFragments.errors.required">match Only Fragments is required</div>
-        </div>
       </div>
 
       <div class="form-group">
@@ -93,6 +92,10 @@
           [class.is-invalid]="submitted && f.sourceFromPort.errors"
           aria-label="Source From Port"
         />
+        <div *ngIf="submitted && f.sourceFromPort.errors" class="invalid-feedback">
+          <div *ngIf="f.sourceFromPort.errors.min">Source from port must be greater than or equal to 0.</div>
+          <div *ngIf="f.sourceFromPort.errors.min">Source from port must be less than or equal to 65535.</div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -105,6 +108,10 @@
           [class.is-invalid]="submitted && f.sourceToPort.errors"
           aria-label="Source To Port"
         />
+        <div *ngIf="submitted && f.sourceToPort.errors" class="invalid-feedback">
+          <div *ngIf="f.sourceToPort.errors.min">Source to port must be greater than or equal to 0.</div>
+          <div *ngIf="f.sourceToPort.errors.min">Source to port must be less than or equal to 65535.</div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -117,6 +124,10 @@
           [class.is-invalid]="submitted && f.destinationFromPort.errors"
           aria-label="Destination From Port"
         />
+        <div *ngIf="submitted && f.destinationFromPort.errors" class="invalid-feedback">
+          <div *ngIf="f.destinationFromPort.errors.min">Destination from port must be greater than or equal to 0.</div>
+          <div *ngIf="f.destinationFromPort.errors.min">Destination from port must be less than or equal to 65535.</div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -129,6 +140,10 @@
           [class.is-invalid]="submitted && f.destinationToPort.errors"
           aria-label="Destination To Port"
         />
+        <div *ngIf="submitted && f.destinationToPort.errors" class="invalid-feedback">
+          <div *ngIf="f.destinationToPort.errors.min">Destination to port must be greater than or equal to 0.</div>
+          <div *ngIf="f.destinationToPort.errors.min">Destination to port must be less than or equal to 65535.</div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -149,9 +164,6 @@
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
-        <div *ngIf="submitted && f.matchOnlyFragments.errors" class="invalid-feedback">
-          <div *ngIf="f.stateful.errors.required">Stateful is required</div>
-        </div>
       </div>
         
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="reset()">

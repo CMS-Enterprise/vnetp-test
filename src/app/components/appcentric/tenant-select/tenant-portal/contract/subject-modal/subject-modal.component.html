@@ -32,6 +32,9 @@
           [class.is-invalid]="submitted && f.alias.errors"
           aria-label="Alias"
         />
+        <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
+          <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -45,7 +48,6 @@
           aria-label="Description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
@@ -63,9 +65,6 @@
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
-        <div *ngIf="submitted && f.applyBothDirections.errors" class="invalid-feedback">
-          <div *ngIf="f.applyBothDirections.errors.required">Apply Both Directions is required</div>
-        </div>
       </div>
 
       <div class="form-group">
@@ -81,9 +80,6 @@
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
-        <div *ngIf="submitted && f.reverseFilterPorts.errors" class="invalid-feedback">
-          <div *ngIf="f.reverseFilterPorts.errors.required">Reverse Filter Ports is required</div>
-        </div>
       </div>
       
       <div class="form-group">
@@ -96,6 +92,9 @@
           [class.is-invalid]="submitted && f.globalAlias.errors"
           aria-label="globalAlias"
         />
+        <div *ngIf="submitted && f.globalAlias.errors" class="invalid-feedback">
+          <div *ngIf="f.globalAlias.errors.maxlength">Global Alias must be 100 characters or less.</div>
+        </div>
       </div>
 
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="reset()">

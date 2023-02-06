@@ -32,6 +32,9 @@
           [class.is-invalid]="submitted && f.alias.errors"
           aria-label="Alias"
         />
+        <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
+          <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -45,11 +48,9 @@
           aria-label="Description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
-      <!-- <div *ngIf="!dto?.l3Out?.vrfId else removeVrf"></div> -->
         <app-table *ngIf="!dto?.l3Out?.vrfId" [config]="config" [data]="vrfs" (clearResults)="getVrfs($event)" (searchParams)="getVrfs($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
     </div>
 

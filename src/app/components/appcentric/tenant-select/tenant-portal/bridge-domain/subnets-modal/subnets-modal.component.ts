@@ -9,6 +9,8 @@ import { BridgeDomainDto } from 'src/app/models/appcentric/bridge-domain-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { NameValidator } from 'src/app/validators/name-validator';
+import { IpAddressCidrValidator } from 'src/app/validators/network-form-validators';
 
 @Component({
   selector: 'app-subnets-modal',
@@ -94,16 +96,16 @@ export class SubnetsModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-      alias: [null],
-      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      gatewayIp: ['', Validators.required],
-      treatAsVirtualIpAddress: ['', Validators.required],
-      primaryIpAddress: ['', Validators.required],
-      advertisedExternally: ['', Validators.required],
-      preferred: ['', Validators.required],
-      sharedBetweenVrfs: ['', Validators.required],
-      ipDataPlaneLearning: ['', Validators.required],
+      name: ['', NameValidator()],
+      alias: ['', Validators.compose([Validators.maxLength(100)])],
+      description: ['', Validators.compose([Validators.maxLength(500)])],
+      gatewayIp: ['', Validators.compose([Validators.required, IpAddressCidrValidator])],
+      treatAsVirtualIpAddress: [null],
+      primaryIpAddress: [null],
+      advertisedExternally: [null],
+      preferred: [null],
+      sharedBetweenVrfs: [null],
+      ipDataPlaneLearning: [null],
     });
   }
 

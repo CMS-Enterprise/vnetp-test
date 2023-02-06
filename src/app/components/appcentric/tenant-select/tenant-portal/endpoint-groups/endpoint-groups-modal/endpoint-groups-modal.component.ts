@@ -15,6 +15,7 @@ import { Tab } from 'src/app/common/tabs/tabs.component';
 import { EndpointGroupModalDto } from 'src/app/models/appcentric/endpoint-group-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 const tabs = [{ name: 'Endpoint Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }];
 
@@ -113,6 +114,7 @@ export class EndpointGroupsModalComponent implements OnInit {
       this.form.controls.alias.setValue(endpointGroup.alias);
       this.form.controls.policyControlEnforced.setValue(endpointGroup.intraEpgIsolation);
       this.form.controls.applicationProfileId.setValue(endpointGroup.applicationProfileId);
+      this.form.controls.applicationProfileId.disable();
     }
     this.ngx.resetModalData('endpointGroupModal');
   }
@@ -125,10 +127,10 @@ export class EndpointGroupsModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-      alias: [null],
-      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      intraEpgIsolation: ['', Validators.required],
+      name: ['', NameValidator()],
+      alias: ['', Validators.compose([Validators.maxLength(100)])],
+      description: ['', Validators.compose([Validators.maxLength(500)])],
+      intraEpgIsolation: [null],
       applicationProfileId: ['', Validators.required],
     });
   }

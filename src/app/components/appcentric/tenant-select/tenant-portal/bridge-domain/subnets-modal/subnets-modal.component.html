@@ -32,6 +32,9 @@
           [class.is-invalid]="submitted && f.alias.errors"
           aria-label="Alias"
         />
+        <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
+          <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -45,7 +48,6 @@
           aria-label="Description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
@@ -60,6 +62,10 @@
           [class.is-invalid]="submitted && f.gatewayIp.errors"
           aria-label="Gateway Ip"
         />
+        <div *ngIf="submitted && f.gatewayIp.errors" class="invalid-feedback">
+          <div *ngIf="f.gatewayIp.errors.required">Treat As Virtual Ip Address is required</div>
+          <div *ngIf="f.gatewayIp.errors.invalidIpCidr">Invalid IP address, must be a valid IPv4/IPv6 CIDR.</div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -75,9 +81,6 @@
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
-        <div *ngIf="submitted && f.treatAsVirtualIpAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.treatAsVirtualIpAddress.errors.required">Treat As Virtual Ip Address is required</div>
-        </div>
       </div>
 
       <div class="form-group">
@@ -93,9 +96,6 @@
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
-        <div *ngIf="submitted && f.primaryIpAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.primaryIpAddress.errors.required">Primary Ip Address is required</div>
-        </div>
       </div>
       
       <div class="form-group">
@@ -111,9 +111,6 @@
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
-        <div *ngIf="submitted && f.advertisedExternally.errors" class="invalid-feedback">
-          <div *ngIf="f.advertisedExternally.errors.required">Advertised Externally is required</div>
-        </div>
       </div>
 
       <div class="form-group">
@@ -129,9 +126,6 @@
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
-        <div *ngIf="submitted && f.preferred.errors" class="invalid-feedback">
-          <div *ngIf="f.preferred.errors.required">Preferred is required</div>
-        </div>
       </div>
 
       <div class="form-group">
@@ -147,9 +141,6 @@
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
-        <div *ngIf="submitted && f.sharedBetweenVrfs.errors" class="invalid-feedback">
-          <div *ngIf="f.sharedBetweenVrfs.errors.required">Shared Between Vrfs is required</div>
-        </div>
       </div>
 
       <div class="form-group">
@@ -165,9 +156,6 @@
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
-        <div *ngIf="submitted && f.ipDataPlaneLearning.errors" class="invalid-feedback">
-          <div *ngIf="f.ipDataPlaneLearning.errors.required">Ip Data Plane Learning is required</div>
-        </div>
       </div>
 
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="reset()">

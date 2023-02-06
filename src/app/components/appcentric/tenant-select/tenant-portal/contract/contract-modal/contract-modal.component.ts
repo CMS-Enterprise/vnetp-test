@@ -5,6 +5,7 @@ import { V2AppCentricContractsService, Contract } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ContractModalDto } from 'src/app/models/appcentric/contract-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-contract-modal',
@@ -76,10 +77,10 @@ export class ContractModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-      alias: [null],
-      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      scope: ['', Validators.required],
+      name: ['', NameValidator()],
+      alias: ['', Validators.compose([Validators.maxLength(100)])],
+      description: ['', Validators.compose([Validators.maxLength(500)])],
+      scope: [null],
     });
   }
 

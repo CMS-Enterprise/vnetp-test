@@ -5,6 +5,7 @@ import { Filter, V2AppCentricFiltersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FilterModalDto } from 'src/app/models/appcentric/filter-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-filter-modal',
@@ -75,9 +76,9 @@ export class FilterModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-      alias: [null],
-      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
+      name: ['', NameValidator()],
+      alias: ['', Validators.compose([Validators.maxLength(100)])],
+      description: ['', Validators.compose([Validators.maxLength(500)])],
     });
   }
 

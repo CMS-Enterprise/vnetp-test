@@ -5,6 +5,7 @@ import { V2AppCentricVrfsService, Vrf } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { VrfModalDto } from 'src/app/models/appcentric/vrf-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-vrf-modal',
@@ -77,11 +78,11 @@ export class VrfModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-      alias: [null],
-      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      policyControlEnforced: ['', Validators.required],
-      policyControlEnforcementIngress: ['', Validators.required],
+      name: ['', NameValidator()],
+      alias: ['', Validators.compose([Validators.maxLength(100)])],
+      description: ['', Validators.compose([Validators.maxLength(500)])],
+      policyControlEnforced: [null],
+      policyControlEnforcementIngress: [null],
     });
   }
 

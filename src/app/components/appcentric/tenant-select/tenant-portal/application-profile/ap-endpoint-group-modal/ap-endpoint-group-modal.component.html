@@ -34,6 +34,9 @@
             [class.is-invalid]="submitted && f.alias.errors"
             aria-label="Alias"
           />
+          <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
+            <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+          </div>
         </div>
 
         <div class="form-group">
@@ -47,7 +50,6 @@
             aria-label="Description"
           />
           <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-            <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
             <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
           </div>
         </div>
@@ -64,9 +66,6 @@
             <option value="true">Isolated</option>
             <option value="false">Not Isolated</option>
           </select>
-          <div *ngIf="submitted && f.intraEpgIsolation.errors" class="invalid-feedback">
-            <div *ngIf="f.intraEpgIsolation.errors.required">Intra Epg Isolation is required</div>
-          </div>
         </div>
         <button class="btn btn-success" (click)="save()">
           <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>

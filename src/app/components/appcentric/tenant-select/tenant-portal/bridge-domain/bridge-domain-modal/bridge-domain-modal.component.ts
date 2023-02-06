@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
-import { V2AppCentricBridgeDomainsService, BridgeDomain, Vrf, L3OutPaginationResponse, L3Out, V2AppCentricL3outsService } from 'client';
+import { V2AppCentricBridgeDomainsService, BridgeDomain, Vrf, L3OutPaginationResponse, L3Out } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -9,6 +9,8 @@ import { BridgeDomainModalDto } from 'src/app/models/appcentric/bridge-domain-mo
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { NameValidator } from 'src/app/validators/name-validator';
+import { MacAddressValidator } from 'src/app/validators/network-form-validators';
 
 @Component({
   selector: 'app-bridge-domain-modal',
@@ -117,14 +119,14 @@ export class BridgeDomainModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-      alias: [null],
-      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      unicastRouting: ['', Validators.required],
-      arpFlooding: ['', Validators.required],
-      bdMacAddress: ['', Validators.required],
-      limitLocalIpLearning: ['', Validators.required],
-      epMoveDetectionModeGarp: ['', Validators.required],
+      name: ['', NameValidator()],
+      alias: ['', Validators.compose([Validators.maxLength(100)])],
+      description: ['', Validators.compose([Validators.maxLength(500)])],
+      unicastRouting: [null],
+      arpFlooding: [null],
+      bdMacAddress: ['', MacAddressValidator],
+      limitLocalIpLearning: [null],
+      epMoveDetectionModeGarp: [null],
       vrfId: ['', Validators.required],
     });
   }

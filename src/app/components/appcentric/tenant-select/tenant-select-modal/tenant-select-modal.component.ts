@@ -4,6 +4,7 @@ import { Tenant, V2AppCentricTenantsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-tenant-select-modal',
@@ -59,9 +60,9 @@ export class TenantSelectModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-      alias: [null],
-      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
+      name: ['', NameValidator()],
+      alias: ['', Validators.compose([Validators.maxLength(100)])],
+      description: ['', Validators.compose([Validators.maxLength(500)])],
     });
   }
 

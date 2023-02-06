@@ -17,6 +17,7 @@ import { FilterModalDto } from 'src/app/models/appcentric/filter-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-filter-entry-modal',
@@ -106,19 +107,19 @@ export class FilterEntryModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-      alias: [null],
-      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      etherType: ['', Validators.required],
-      arpFlag: ['', Validators.required],
-      ipProtocol: ['', Validators.required],
-      matchOnlyFragments: ['', Validators.required],
-      sourceFromPort: ['', Validators.required],
-      sourceToPort: ['', Validators.required],
-      destinationFromPort: ['', Validators.required],
-      destinationToPort: ['', Validators.required],
-      tcpFlags: ['', Validators.required],
-      stateful: ['', Validators.required],
+      name: ['', NameValidator()],
+      alias: ['', Validators.compose([Validators.maxLength(100)])],
+      description: ['', Validators.compose([Validators.maxLength(500)])],
+      etherType: [null],
+      arpFlag: [null],
+      ipProtocol: [null],
+      matchOnlyFragments: [null],
+      sourceFromPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
+      sourceToPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
+      destinationFromPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
+      destinationToPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
+      tcpFlags: [],
+      stateful: [null],
     });
   }
 
