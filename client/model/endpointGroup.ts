@@ -23,9 +23,7 @@ export interface EndpointGroup {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly deletedAt?: string;
-    deleted?: boolean;
     readonly provisionedAt?: string;
-    provisioned?: boolean;
     /**
      * Intra-EPG endpoint isolation policies provide full isolation for virtual or physical endpoints; no communication is allowed between endpoints in an EPG that is operating with isolation enforced.
      */

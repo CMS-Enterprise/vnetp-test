@@ -200,9 +200,8 @@ export class SubnetsModalComponent implements OnInit {
         });
     } else {
       this.subnetsService
-        .updateAppCentricSubnet({
+        .softDeleteAppCentricSubnet({
           uuid: subnet.id,
-          appCentricSubnet: { deleted: true } as AppCentricSubnet,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -222,9 +221,8 @@ export class SubnetsModalComponent implements OnInit {
     }
 
     this.subnetsService
-      .updateAppCentricSubnet({
+      .restoreAppCentricSubnet({
         uuid: subnet.id,
-        appCentricSubnet: { deleted: false } as AppCentricSubnet,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

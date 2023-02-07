@@ -21,9 +21,7 @@ export interface FilterEntry {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly deletedAt?: string;
-    deleted?: boolean;
     readonly provisionedAt?: string;
-    provisioned?: boolean;
     /**
      * The EtherType of the filter entry.
      */

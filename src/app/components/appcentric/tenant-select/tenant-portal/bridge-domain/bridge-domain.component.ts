@@ -132,9 +132,8 @@ export class BridgeDomainComponent implements OnInit {
       });
     } else {
       this.bridgeDomainService
-        .updateBridgeDomain({
+        .softDeleteBridgeDomain({
           uuid: bridgeDomain.id,
-          bridgeDomain: { deleted: true } as BridgeDomain,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -157,9 +156,8 @@ export class BridgeDomainComponent implements OnInit {
     }
 
     this.bridgeDomainService
-      .updateBridgeDomain({
+      .restoreBridgeDomain({
         uuid: bridgeDomain.id,
-        bridgeDomain: { deleted: false } as BridgeDomain,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

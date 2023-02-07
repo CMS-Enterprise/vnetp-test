@@ -113,9 +113,8 @@ export class FilterComponent implements OnInit {
       });
     } else {
       this.filterService
-        .updateFilter({
+        .softDeleteFilter({
           uuid: filter.id,
-          filter: { deleted: true } as Filter,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -138,9 +137,8 @@ export class FilterComponent implements OnInit {
     }
 
     this.filterService
-      .updateFilter({
+      .restoreFilter({
         uuid: filter.id,
-        filter: { deleted: false } as Filter,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

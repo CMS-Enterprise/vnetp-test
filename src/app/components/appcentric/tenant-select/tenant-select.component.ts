@@ -113,9 +113,8 @@ export class TenantSelectComponent implements OnInit {
       });
     } else {
       this.tenantService
-        .updateTenant({
+        .softDeleteTenant({
           uuid: tenant.id,
-          tenant: { deleted: true },
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -138,9 +137,8 @@ export class TenantSelectComponent implements OnInit {
     }
 
     this.tenantService
-      .updateTenant({
+      .restoreTenant({
         uuid: tenant.id,
-        tenant: { deleted: false },
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

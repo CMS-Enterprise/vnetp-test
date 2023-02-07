@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
-import { V2AppCentricBridgeDomainsService, BridgeDomain, Vrf, L3OutPaginationResponse, L3Out } from 'client';
+import { V2AppCentricBridgeDomainsService, BridgeDomain, Vrf, L3OutPaginationResponse, L3Out, V2AppCentricL3outsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -55,6 +55,7 @@ export class BridgeDomainModalComponent implements OnInit {
     private bridgeDomainService: V2AppCentricBridgeDomainsService,
     private router: Router,
     private tableContextService: TableContextService,
+    private l3OutService: V2AppCentricL3outsService,
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -238,5 +239,60 @@ export class BridgeDomainModalComponent implements OnInit {
       });
   }
 
-  public deleteL3Out(l3Out: L3Out): void {}
+  public deleteL3Out(l3Out: L3Out): void {
+    if (l3Out.deletedAt) {
+      this.l3OutService.removeL3Out({ uuid: l3Out.id }).subscribe(() => {
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if l3Outed results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getL3Outs(params);
+        } else {
+          this.getL3Outs();
+        }
+      });
+    } else {
+      this.l3OutService
+        .softDeleteL3Out({
+          uuid: l3Out.id,
+        })
+        .subscribe(() => {
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
+
+          // if l3Outed results boolean is true, apply search params in the
+          // subsequent get call
+          if (filteredResults) {
+            this.getL3Outs(params);
+          } else {
+            this.getL3Outs();
+          }
+        });
+    }
+  }
+
+  public restoreL3Out(l3Out: L3Out): void {
+    if (!l3Out.deletedAt) {
+      return;
+    }
+
+    this.l3OutService
+      .restoreL3Out({
+        uuid: l3Out.id,
+      })
+      .subscribe(() => {
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if l3Outed results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getL3Outs(params);
+        } else {
+          this.getL3Outs();
+        }
+      });
+  }
 }

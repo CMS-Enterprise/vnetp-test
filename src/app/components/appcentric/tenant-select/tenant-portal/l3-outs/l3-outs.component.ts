@@ -114,9 +114,8 @@ export class L3OutsComponent implements OnInit {
       });
     } else {
       this.l3OutService
-        .updateL3Out({
+        .softDeleteL3Out({
           uuid: l3Out.id,
-          l3Out: { deleted: true } as L3Out,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -139,9 +138,8 @@ export class L3OutsComponent implements OnInit {
     }
 
     this.l3OutService
-      .updateL3Out({
+      .restoreL3Out({
         uuid: l3Out.id,
-        l3Out: { deleted: false } as L3Out,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

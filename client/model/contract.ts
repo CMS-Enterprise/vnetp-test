@@ -22,13 +22,7 @@ export interface Contract {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly deletedAt?: string;
-    deleted?: boolean;
     readonly provisionedAt?: string;
-    provisioned?: boolean;
-    /**
-     * The scope of a contract between two or more EPGs.
-     */
-    scope: string;
     readonly tenant?: Tenant;
     tenantId: string;
     readonly consumingEndpointGroups?: Array<EndpointGroup>;

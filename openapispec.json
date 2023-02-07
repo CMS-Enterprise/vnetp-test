@@ -6604,16 +6604,10 @@
             "type": "string",
             "readOnly": true
           },
-          "deleted": {
-            "type": "boolean"
-          },
           "provisionedAt": {
             "format": "date-time",
             "type": "string",
             "readOnly": true
-          },
-          "provisioned": {
-            "type": "boolean"
           },
           "policyControlEnforced": {
             "type": "boolean",
@@ -6683,16 +6677,10 @@
             "type": "string",
             "readOnly": true
           },
-          "deleted": {
-            "type": "boolean"
-          },
           "provisionedAt": {
             "format": "date-time",
             "type": "string",
             "readOnly": true
-          },
-          "provisioned": {
-            "type": "boolean"
           },
           "gatewayIp": {
             "type": "string",
@@ -6792,16 +6780,10 @@
             "type": "string",
             "readOnly": true
           },
-          "deleted": {
-            "type": "boolean"
-          },
           "provisionedAt": {
             "format": "date-time",
             "type": "string",
             "readOnly": true
-          },
-          "provisioned": {
-            "type": "boolean"
           },
           "etherType": {
             "type": "string",
@@ -6938,16 +6920,10 @@
             "type": "string",
             "readOnly": true
           },
-          "deleted": {
-            "type": "boolean"
-          },
           "provisionedAt": {
             "format": "date-time",
             "type": "string",
             "readOnly": true
-          },
-          "provisioned": {
-            "type": "boolean"
           },
           "tenant": {
             "readOnly": true,
@@ -7014,16 +6990,10 @@
             "type": "string",
             "readOnly": true
           },
-          "deleted": {
-            "type": "boolean"
-          },
           "provisionedAt": {
             "format": "date-time",
             "type": "string",
             "readOnly": true
-          },
-          "provisioned": {
-            "type": "boolean"
           },
           "applyBothDirections": {
             "type": "boolean",
@@ -7110,20 +7080,10 @@
             "type": "string",
             "readOnly": true
           },
-          "deleted": {
-            "type": "boolean"
-          },
           "provisionedAt": {
             "format": "date-time",
             "type": "string",
             "readOnly": true
-          },
-          "provisioned": {
-            "type": "boolean"
-          },
-          "scope": {
-            "type": "string",
-            "description": "The scope of a contract between two or more EPGs."
           },
           "tenant": {
             "readOnly": true,
@@ -7159,7 +7119,6 @@
           }
         },
         "required": [
-          "scope",
           "tenantId"
         ]
       },
@@ -7198,16 +7157,10 @@
             "type": "string",
             "readOnly": true
           },
-          "deleted": {
-            "type": "boolean"
-          },
           "provisionedAt": {
             "format": "date-time",
             "type": "string",
             "readOnly": true
-          },
-          "provisioned": {
-            "type": "boolean"
           },
           "intraEpgIsolation": {
             "type": "boolean",
@@ -7302,16 +7255,10 @@
             "type": "string",
             "readOnly": true
           },
-          "deleted": {
-            "type": "boolean"
-          },
           "provisionedAt": {
             "format": "date-time",
             "type": "string",
             "readOnly": true
-          },
-          "provisioned": {
-            "type": "boolean"
           },
           "bridgeDomains": {
             "readOnly": true,
@@ -7383,16 +7330,10 @@
             "type": "string",
             "readOnly": true
           },
-          "deleted": {
-            "type": "boolean"
-          },
           "provisionedAt": {
             "format": "date-time",
             "type": "string",
             "readOnly": true
-          },
-          "provisioned": {
-            "type": "boolean"
           },
           "unicastRouting": {
             "type": "boolean",
@@ -7503,16 +7444,10 @@
             "type": "string",
             "readOnly": true
           },
-          "deleted": {
-            "type": "boolean"
-          },
           "provisionedAt": {
             "format": "date-time",
             "type": "string",
             "readOnly": true
-          },
-          "provisioned": {
-            "type": "boolean"
           },
           "applicationProfiles": {
             "readOnly": true,
@@ -7621,16 +7556,10 @@
             "type": "string",
             "readOnly": true
           },
-          "deleted": {
-            "type": "boolean"
-          },
           "provisionedAt": {
             "format": "date-time",
             "type": "string",
             "readOnly": true
-          },
-          "provisioned": {
-            "type": "boolean"
           },
           "tenant": {
             "readOnly": true,
@@ -26583,6 +26512,98 @@
         ]
       }
     },
+    "/v2/app-centric/tenants/{uuid}/restore": {
+      "patch": {
+        "operationId": "restoreTenant",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
+      }
+    },
+    "/v2/app-centric/tenants/{uuid}/soft": {
+      "delete": {
+        "operationId": "softDeleteTenant",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
+      }
+    },
+    "/v2/app-centric/tenants/{uuid}/provision": {
+      "put": {
+        "operationId": "provisionTenant",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
+      }
+    },
+    "/v2/app-centric/tenants/{uuid}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionTenant",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
+      }
+    },
     "/v2/app-centric/subjects": {
       "post": {
         "operationId": "createSubject",
@@ -26883,6 +26904,98 @@
         ]
       }
     },
+    "/v2/app-centric/subjects/{uuid}/restore": {
+      "patch": {
+        "operationId": "restoreSubject",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
+      }
+    },
+    "/v2/app-centric/subjects/{uuid}/soft": {
+      "delete": {
+        "operationId": "softDeleteSubject",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
+      }
+    },
+    "/v2/app-centric/subjects/{uuid}/provision": {
+      "put": {
+        "operationId": "provisionSubject",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
+      }
+    },
+    "/v2/app-centric/subjects/{uuid}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionSubject",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
+      }
+    },
     "/v2/app-centric/filters": {
       "post": {
         "operationId": "createFilter",
@@ -27098,6 +27211,98 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "v2/app-centric/filters"
+        ]
+      }
+    },
+    "/v2/app-centric/filters/{uuid}/restore": {
+      "patch": {
+        "operationId": "restoreFilter",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/filters"
+        ]
+      }
+    },
+    "/v2/app-centric/filters/{uuid}/soft": {
+      "delete": {
+        "operationId": "softDeleteFilter",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/filters"
+        ]
+      }
+    },
+    "/v2/app-centric/filters/{uuid}/provision": {
+      "put": {
+        "operationId": "provisionFilter",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/filters"
+        ]
+      }
+    },
+    "/v2/app-centric/filters/{uuid}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionFilter",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
           }
         },
         "tags": [
@@ -27327,6 +27532,98 @@
         ]
       }
     },
+    "/v2/app-centric/application-profiles/{uuid}/restore": {
+      "patch": {
+        "operationId": "restoreApplicationProfile",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
+      }
+    },
+    "/v2/app-centric/application-profiles/{uuid}/soft": {
+      "delete": {
+        "operationId": "softDeleteApplicationProfile",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
+      }
+    },
+    "/v2/app-centric/application-profiles/{uuid}/provision": {
+      "put": {
+        "operationId": "provisionApplicationProfile",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
+      }
+    },
+    "/v2/app-centric/application-profiles/{uuid}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionApplicationProfile",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
+      }
+    },
     "/v2/app-centric/vrfs": {
       "post": {
         "operationId": "createVrf",
@@ -27542,6 +27839,98 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
+      }
+    },
+    "/v2/app-centric/vrfs/{uuid}/restore": {
+      "patch": {
+        "operationId": "restoreVrf",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
+      }
+    },
+    "/v2/app-centric/vrfs/{uuid}/soft": {
+      "delete": {
+        "operationId": "softDeleteVrf",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
+      }
+    },
+    "/v2/app-centric/vrfs/{uuid}/provision": {
+      "put": {
+        "operationId": "provisionVrf",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
+      }
+    },
+    "/v2/app-centric/vrfs/{uuid}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionVrf",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
           }
         },
         "tags": [
@@ -27849,6 +28238,98 @@
         ]
       }
     },
+    "/v2/app-centric/bridge-domains/{uuid}/restore": {
+      "patch": {
+        "operationId": "restoreBridgeDomain",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
+      }
+    },
+    "/v2/app-centric/bridge-domains/{uuid}/soft": {
+      "delete": {
+        "operationId": "softDeleteBridgeDomain",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
+      }
+    },
+    "/v2/app-centric/bridge-domains/{uuid}/provision": {
+      "put": {
+        "operationId": "provisionBridgeDomain",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
+      }
+    },
+    "/v2/app-centric/bridge-domains/{uuid}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionBridgeDomain",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
+      }
+    },
     "/v2/app-centric/l3outs": {
       "post": {
         "operationId": "createL3Out",
@@ -28064,6 +28545,98 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
+      }
+    },
+    "/v2/app-centric/l3outs/{uuid}/restore": {
+      "patch": {
+        "operationId": "restoreL3Out",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
+      }
+    },
+    "/v2/app-centric/l3outs/{uuid}/soft": {
+      "delete": {
+        "operationId": "softDeleteL3Out",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
+      }
+    },
+    "/v2/app-centric/l3outs/{uuid}/provision": {
+      "put": {
+        "operationId": "provisionL3Out",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
+      }
+    },
+    "/v2/app-centric/l3outs/{uuid}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionL3Out",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
           }
         },
         "tags": [
@@ -28293,6 +28866,98 @@
         ]
       }
     },
+    "/v2/app-centric/contracts/{uuid}/restore": {
+      "patch": {
+        "operationId": "restoreContract",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      }
+    },
+    "/v2/app-centric/contracts/{uuid}/soft": {
+      "delete": {
+        "operationId": "softDeleteContract",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      }
+    },
+    "/v2/app-centric/contracts/{uuid}/provision": {
+      "put": {
+        "operationId": "provisionContract",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      }
+    },
+    "/v2/app-centric/contracts/{uuid}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionContract",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      }
+    },
     "/v2/app-centric/app-centric-subnets": {
       "post": {
         "operationId": "createAppCentricSubnet",
@@ -28508,6 +29173,98 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
+      }
+    },
+    "/v2/app-centric/app-centric-subnets/{uuid}/restore": {
+      "patch": {
+        "operationId": "restoreAppCentricSubnet",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
+      }
+    },
+    "/v2/app-centric/app-centric-subnets/{uuid}/soft": {
+      "delete": {
+        "operationId": "softDeleteAppCentricSubnet",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
+      }
+    },
+    "/v2/app-centric/app-centric-subnets/{uuid}/provision": {
+      "put": {
+        "operationId": "provisionAppCentricSubnet",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
+      }
+    },
+    "/v2/app-centric/app-centric-subnets/{uuid}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionAppCentricSubnet",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
           }
         },
         "tags": [
@@ -28894,6 +29651,98 @@
         ]
       }
     },
+    "/v2/app-centric/endpoint-groups/{uuid}/restore": {
+      "patch": {
+        "operationId": "restoreEndpointGroup",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/{uuid}/soft": {
+      "delete": {
+        "operationId": "softDeleteEndpointGroup",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/{uuid}/provision": {
+      "put": {
+        "operationId": "provisionEndpointGroup",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/{uuid}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionEndpointGroup",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
     "/v2/app-centric/filter-entries": {
       "post": {
         "operationId": "createFilterEntry",
@@ -29109,6 +29958,98 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
+      }
+    },
+    "/v2/app-centric/filter-entries/{uuid}/restore": {
+      "patch": {
+        "operationId": "restoreFilterEntry",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
+      }
+    },
+    "/v2/app-centric/filter-entries/{uuid}/soft": {
+      "delete": {
+        "operationId": "softDeleteFilterEntry",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
+      }
+    },
+    "/v2/app-centric/filter-entries/{uuid}/provision": {
+      "put": {
+        "operationId": "provisionFilterEntry",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
+      }
+    },
+    "/v2/app-centric/filter-entries/{uuid}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionFilterEntry",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
           }
         },
         "tags": [

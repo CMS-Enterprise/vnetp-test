@@ -114,9 +114,8 @@ export class VrfComponent implements OnInit {
       });
     } else {
       this.vrfService
-        .updateVrf({
+        .softDeleteVrf({
           uuid: vrf.id,
-          vrf: { deleted: true } as Vrf,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -139,9 +138,8 @@ export class VrfComponent implements OnInit {
     }
 
     this.vrfService
-      .updateVrf({
+      .restoreVrf({
         uuid: vrf.id,
-        vrf: { deleted: false } as Vrf,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

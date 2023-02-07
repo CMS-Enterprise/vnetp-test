@@ -64,7 +64,6 @@ export class ContractModalComponent implements OnInit {
       this.form.controls.name.disable();
       this.form.controls.description.setValue(contract.description);
       this.form.controls.alias.setValue(contract.alias);
-      this.form.controls.scope.setValue(contract.scope);
     }
     this.ngx.resetModalData('contractModal');
   }
@@ -80,7 +79,6 @@ export class ContractModalComponent implements OnInit {
       name: ['', NameValidator()],
       alias: ['', Validators.compose([Validators.maxLength(100)])],
       description: ['', Validators.compose([Validators.maxLength(500)])],
-      scope: [null],
     });
   }
 

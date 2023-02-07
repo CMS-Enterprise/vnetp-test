@@ -21,9 +21,7 @@ export interface ApplicationProfile {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly deletedAt?: string;
-    deleted?: boolean;
     readonly provisionedAt?: string;
-    provisioned?: boolean;
     readonly tenant?: Tenant;
     tenantId: string;
     readonly endpointGroups?: Array<EndpointGroup>;

@@ -114,9 +114,8 @@ export class ContractComponent implements OnInit {
       });
     } else {
       this.contractService
-        .updateContract({
+        .softDeleteContract({
           uuid: contract.id,
-          contract: { deleted: true } as Contract,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -139,9 +138,8 @@ export class ContractComponent implements OnInit {
     }
 
     this.contractService
-      .updateContract({
+      .restoreContract({
         uuid: contract.id,
-        contract: { deleted: false } as Contract,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

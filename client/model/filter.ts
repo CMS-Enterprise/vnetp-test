@@ -22,9 +22,7 @@ export interface Filter {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly deletedAt?: string;
-    deleted?: boolean;
     readonly provisionedAt?: string;
-    provisioned?: boolean;
     readonly tenant?: Tenant;
     tenantId: string;
     readonly filterEntries?: Array<FilterEntry>;

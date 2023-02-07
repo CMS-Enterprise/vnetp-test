@@ -51,18 +51,6 @@
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
-    
-      <div class="form-group">
-        <label for="scope">Scope</label>
-        <input
-          type="text"
-          id="scope"
-          formControlName="scope"
-          class="form-control"
-          [class.is-invalid]="submitted && f.scope.errors"
-          aria-label="Scope"
-        />
-      </div>
 
     </div>
 

@@ -182,9 +182,8 @@ export class SubjectModalComponent implements OnInit {
         });
     } else {
       this.subjectsService
-        .updateSubject({
+        .softDeleteSubject({
           uuid: subject.id,
-          subject: { deleted: true } as Subject,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -204,9 +203,8 @@ export class SubjectModalComponent implements OnInit {
     }
 
     this.subjectsService
-      .updateSubject({
+      .restoreSubject({
         uuid: subject.id,
-        subject: { deleted: false } as Subject,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

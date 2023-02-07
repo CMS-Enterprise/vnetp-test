@@ -113,9 +113,8 @@ export class EndpointGroupsComponent implements OnInit {
       });
     } else {
       this.endpointGroupService
-        .updateEndpointGroup({
+        .softDeleteEndpointGroup({
           uuid: endpointGroup.id,
-          endpointGroup: { deleted: true } as EndpointGroup,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -138,9 +137,8 @@ export class EndpointGroupsComponent implements OnInit {
     }
 
     this.endpointGroupService
-      .updateEndpointGroup({
+      .restoreEndpointGroup({
         uuid: endpointGroup.id,
-        endpointGroup: { deleted: false } as EndpointGroup,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

@@ -232,9 +232,8 @@ export class FilterEntryModalComponent implements OnInit {
         });
     } else {
       this.filterEntriesService
-        .updateFilterEntry({
+        .softDeleteFilterEntry({
           uuid: filterEntry.id,
-          filterEntry: { deleted: true } as FilterEntry,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -254,9 +253,8 @@ export class FilterEntryModalComponent implements OnInit {
     }
 
     this.filterEntriesService
-      .updateFilterEntry({
+      .restoreFilterEntry({
         uuid: filterEntry.id,
-        filterEntry: { deleted: false } as FilterEntry,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
