@@ -30,6 +30,7 @@ export class SubjectModalComponent implements OnInit {
   public perPage = 20;
 
   private addFilterModalSubscription: Subscription;
+  private subjectEditModalSubscription: Subscription;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -235,6 +236,30 @@ export class SubjectModalComponent implements OnInit {
     this.addFilterModalSubscription = this.ngx.getModal('addFilterModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('addFilterModal');
       this.addFilterModalSubscription.unsubscribe();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.getSubjects(params);
+      } else {
+        this.getSubjects();
+      }
+    });
+  }
+
+  public openSubjectEditModal(subject: Subject): void {
+    this.subscribeToSubjectEditModal();
+    this.ngx.setModalData(subject, 'subjectEditModal');
+    this.ngx.getModal('subjectEditModal').open();
+  }
+
+  private subscribeToSubjectEditModal(): void {
+    this.subjectEditModalSubscription = this.ngx.getModal('subjectEditModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('subjectEditModal');
+      this.subjectEditModalSubscription.unsubscribe();
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;

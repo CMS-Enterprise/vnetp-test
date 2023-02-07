@@ -20,7 +20,7 @@ describe('SubnetsModalComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
-        MockComponent({ selector: 'app-subnets-edit-modal', inputs: ['tenantId'] }),
+        MockComponent({ selector: 'app-subnets-edit-modal' }),
       ],
       imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule],
       providers: [MockProvider(NgxSmartModalService)],
@@ -91,12 +91,11 @@ describe('SubnetsModalComponent', () => {
   });
 
   it('should have correct required and optional fields by default', () => {
-    const requiredFields = ['name', 'gatewayIp'];
+    const requiredFields = ['name', 'gatewayIp', 'primaryIpAddress'];
     const optionalFields = [
       'alias',
       'description',
       'treatAsVirtualIpAddress',
-      'primaryIpAddress',
       'advertisedExternally',
       'preferred',
       'sharedBetweenVrfs',

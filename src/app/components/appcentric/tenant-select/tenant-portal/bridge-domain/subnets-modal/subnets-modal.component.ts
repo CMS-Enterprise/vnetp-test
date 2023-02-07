@@ -103,7 +103,7 @@ export class SubnetsModalComponent implements OnInit {
       description: ['', Validators.compose([Validators.maxLength(500)])],
       gatewayIp: ['', Validators.compose([Validators.required, IpAddressCidrValidator])],
       treatAsVirtualIpAddress: [null],
-      primaryIpAddress: [null],
+      primaryIpAddress: ['', Validators.required],
       advertisedExternally: [null],
       preferred: [null],
       sharedBetweenVrfs: [null],

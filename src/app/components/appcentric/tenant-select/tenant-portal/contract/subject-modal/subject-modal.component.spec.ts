@@ -21,6 +21,7 @@ describe('SubjectModalComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockIconButtonComponent,
         MockComponent({ selector: 'app-add-filter-modal', inputs: ['tenantId'] }),
+        MockComponent({ selector: 'app-subject-edit-modal', inputs: ['tenantId'] }),
       ],
       imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule],
       providers: [MockProvider(NgxSmartModalService)],

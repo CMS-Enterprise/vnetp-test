@@ -11,7 +11,6 @@ import { IpAddressCidrValidator } from 'src/app/validators/network-form-validato
   styleUrls: ['./subnets-edit-modal.component.css'],
 })
 export class SubnetsEditModalComponent implements OnInit {
-  @Input() tenantId: string;
   public subnetId: string;
   public form: FormGroup;
   public submitted: boolean;
@@ -38,6 +37,8 @@ export class SubnetsEditModalComponent implements OnInit {
   public getData(): void {
     const subnet = Object.assign({}, this.ngx.getModalData('subnetsEditModal') as AppCentricSubnet);
 
+    this.subnetId = subnet.id;
+
     if (subnet !== undefined) {
       this.form.controls.name.setValue(subnet.name);
       this.form.controls.name.disable();
@@ -51,12 +52,12 @@ export class SubnetsEditModalComponent implements OnInit {
       this.form.controls.sharedBetweenVrfs.setValue(subnet.sharedBetweenVrfs);
       this.form.controls.ipDataPlaneLearning.setValue(subnet.ipDataPlaneLearning);
     }
-    this.ngx.resetModalData('subnetEditModal');
+    this.ngx.resetModalData('subnetsEditModal');
   }
 
   public reset(): void {
     this.submitted = false;
-    this.ngx.resetModalData('subnetEditModal');
+    this.ngx.resetModalData('subnetsEditModal');
     this.buildForm();
   }
 
@@ -67,7 +68,7 @@ export class SubnetsEditModalComponent implements OnInit {
       description: ['', Validators.compose([Validators.maxLength(500)])],
       gatewayIp: ['', Validators.compose([Validators.required, IpAddressCidrValidator])],
       treatAsVirtualIpAddress: [null],
-      primaryIpAddress: [null],
+      primaryIpAddress: ['', Validators.required],
       advertisedExternally: [null],
       preferred: [null],
       sharedBetweenVrfs: [null],
@@ -77,6 +78,8 @@ export class SubnetsEditModalComponent implements OnInit {
 
   private editSubnet(appCentricSubnet: AppCentricSubnet): void {
     appCentricSubnet.name = null;
+    appCentricSubnet.gatewayIp = null;
+    appCentricSubnet.tenantId = null;
     this.subnetsService
       .updateAppCentricSubnet({
         uuid: this.subnetId,
@@ -107,7 +110,6 @@ export class SubnetsEditModalComponent implements OnInit {
       sharedBetweenVrfs,
       ipDataPlaneLearning,
     } = this.form.value;
-    const tenantId = this.tenantId;
     const subnet = {
       name,
       description,

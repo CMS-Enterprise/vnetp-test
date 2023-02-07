@@ -14,6 +14,7 @@ import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { ContractModalComponent } from './contract-modal/contract-modal.component';
 import { SubjectModalComponent } from './subject-modal/subject-modal.component';
 import { AddFilterModalComponent } from './subject-modal/add-filter-modal/add-filter-modal.component';
+import { SubjectEditModalComponent } from './subject-modal/subject-edit-modal/subject-edit-modal.component';
 
 const routes: Routes = [
   {
@@ -23,7 +24,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ContractComponent, ContractModalComponent, SubjectModalComponent, AddFilterModalComponent],
+  declarations: [ContractComponent, ContractModalComponent, SubjectModalComponent, AddFilterModalComponent, SubjectEditModalComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
