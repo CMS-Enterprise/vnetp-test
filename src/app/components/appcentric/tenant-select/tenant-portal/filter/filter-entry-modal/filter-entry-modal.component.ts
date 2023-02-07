@@ -11,6 +11,7 @@ import {
   FilterEntryTcpFlagsEnum,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { FilterModalDto } from 'src/app/models/appcentric/filter-modal-dto';
@@ -39,6 +40,8 @@ export class FilterEntryModalComponent implements OnInit {
   public arpFlagOptions = Object.keys(FilterEntryArpFlagEnum);
   public ipProtocolOptions = Object.keys(FilterEntryIpProtocolEnum);
   public tcpFlagsOptions = Object.keys(FilterEntryTcpFlagsEnum).map(key => ({ value: key, label: key }));
+
+  private filterEntryEditModalSubscription: Subscription;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -267,5 +270,29 @@ export class FilterEntryModalComponent implements OnInit {
           this.getFilterEntries();
         }
       });
+  }
+
+  public openFilterEntryEditModal(filterEnry: FilterEntry): void {
+    this.subscribeToFilterEntryEditModal();
+    this.ngx.setModalData(filterEnry, 'filterEntryEditModal');
+    this.ngx.getModal('filterEntryEditModal').open();
+  }
+
+  private subscribeToFilterEntryEditModal(): void {
+    this.filterEntryEditModalSubscription = this.ngx.getModal('filterEntryEditModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('filterEntryEditModal');
+      this.filterEntryEditModalSubscription.unsubscribe();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.getFilterEntries(params);
+      } else {
+        this.getFilterEntries();
+      }
+    });
   }
 }

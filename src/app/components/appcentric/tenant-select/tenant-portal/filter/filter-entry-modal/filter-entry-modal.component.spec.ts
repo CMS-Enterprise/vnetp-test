@@ -20,6 +20,7 @@ describe('FilterEntryModalComponent', () => {
         MockNgxSmartModalComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockComponent('app-filter-entry-edit-modal'),
         MockIconButtonComponent,
       ],
       imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule, NgSelectModule, FormsModule],
