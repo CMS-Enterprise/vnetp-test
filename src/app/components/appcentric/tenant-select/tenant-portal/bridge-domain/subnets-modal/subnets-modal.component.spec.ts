@@ -20,6 +20,7 @@ describe('SubnetsModalComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
+        MockComponent({ selector: 'app-subnets-edit-modal', inputs: ['tenantId'] }),
       ],
       imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule],
       providers: [MockProvider(NgxSmartModalService)],

@@ -1,6 +1,6 @@
-<ngx-smart-modal #subnetsModal identifier="subnetsModal" (onOpen)="getData()" (onClose)="reset()">
+<ngx-smart-modal #subnetsEditModal identifier="subnetsEditModal" (onOpen)="getData()" (onClose)="reset()">
   <header class="modal-header">
-    <h4 class="modal-title">Subnets</h4>
+    <h4 class="modal-title">Edit Subnet</h4>
   </header>
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
@@ -165,35 +165,6 @@
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>
-      <app-table [config]="config" [data]="subnets" (clearResults)="getSubnets($event)" (searchParams)="getSubnets($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
-
     </div>
   </form>
-
-  <app-subnets-edit-modal [tenantId]="tenantId"></app-subnets-edit-modal>
 </ngx-smart-modal>
-
-<ng-template #actionsTemplate let-subnet="datum">
-  <section>
-    <app-icon-button
-      *ngIf="!subnet?.deletedAt"
-      icon="edit"
-      label="Edit Subnet"
-      (handleClick)="openSubnetsEditModal(subnet)"
-    ></app-icon-button>
-    <app-icon-button
-      icon="delete"
-      label="Soft-Delete/Delete Bridge Domain"
-      [type]="subnet?.deletedAt ? 'danger' : 'default'"
-      (handleClick)="removeSubnet(subnet)"
-    ></app-icon-button>
-
-    <app-icon-button
-      *ngIf="subnet?.deletedAt"
-      icon="undo"
-      label="Restore Bridge Domain"
-      type="success"
-      (handleClick)="restoreSubnet(subnet)"
-    ></app-icon-button>
-  </section>
-</ng-template>

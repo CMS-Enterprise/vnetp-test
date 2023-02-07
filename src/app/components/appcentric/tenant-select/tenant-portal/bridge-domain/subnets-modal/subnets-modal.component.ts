@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { AppCentricSubnet, AppCentricSubnetPaginationResponse, V2AppCentricAppCentricSubnetsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { BridgeDomainDto } from 'src/app/models/appcentric/bridge-domain-dto';
@@ -27,6 +28,7 @@ export class SubnetsModalComponent implements OnInit {
   public subnets: AppCentricSubnetPaginationResponse;
   public tableComponentDto = new TableComponentDto();
   public perPage = 20;
+  private subnetsEditModalSubscription: Subscription;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -236,5 +238,29 @@ export class SubnetsModalComponent implements OnInit {
           this.getSubnets();
         }
       });
+  }
+
+  public openSubnetsEditModal(subnet: AppCentricSubnet): void {
+    this.subscribeToSubnetsEditModal();
+    this.ngx.setModalData(subnet, 'subnetsEditModal');
+    this.ngx.getModal('subnetsEditModal').open();
+  }
+
+  private subscribeToSubnetsEditModal(): void {
+    this.subnetsEditModalSubscription = this.ngx.getModal('subnetsEditModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('subnetsEditModal');
+      this.subnetsEditModalSubscription.unsubscribe();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.getSubnets(params);
+      } else {
+        this.getSubnets();
+      }
+    });
   }
 }

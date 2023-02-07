@@ -7,14 +7,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipModule } from '../../common/tooltip/tooltip.module';
 import { D3PieChartModule } from '../../common/d3-pie-chart/d3-pie-chart.module';
 import { AppcentricNavbarComponent } from './appcentric-navbar/appcentric-navbar.component';
-import { AppcentricBreadcrumbsComponent } from './appcentric-breadcrumbs/appcentric-breadcrumbs.component';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { AppcentricDashboardComponent } from './appcentric-dashboard/appcentric-dashboard.component';
-import { TenantSelectComponent } from './tenant-select/tenant-select.component';
-import { TenantPortalComponent } from './tenant-select/tenant-portal/tenant-portal.component';
-import { TabsModule } from 'src/app/common/tabs/tabs.module';
-import { TenantPortalModule } from './tenant-select/tenant-portal/tenant-portal.module';
 import { TenantSelectModule } from './tenant-select/tenant-select.module';
+import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module';
 
 const routes: Routes = [
   {
@@ -25,7 +21,7 @@ const routes: Routes = [
         path: 'dashboard',
         component: AppcentricDashboardComponent,
         canActivate: [AuthGuard],
-        data: { title: 'Automation - Dashboard' },
+        data: { breadcrumb: 'Dashboard', title: 'Automation - Dashboard' },
         loadChildren: () => import('./appcentric-dashboard/appcentric-dashboard.module').then(m => m.AppcentricDashboardModule),
       },
       {
@@ -39,7 +35,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AppcentricComponent, AppcentricNavbarComponent, AppcentricBreadcrumbsComponent, AppcentricDashboardComponent],
+  declarations: [AppcentricComponent, AppcentricNavbarComponent, AppcentricDashboardComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -48,6 +44,7 @@ const routes: Routes = [
     D3PieChartModule,
     NgxSmartModalModule,
     TenantSelectModule,
+    BreadcrumbsModule,
   ],
 })
 export class AppcentricModule {}

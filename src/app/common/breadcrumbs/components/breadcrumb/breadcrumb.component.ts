@@ -16,21 +16,41 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   private routesNotToRender = ['/unauthorized', '/logout', '/login'];
   private routeChanges: Subscription;
 
+  public currentMode = '';
+
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    const path = window.location.pathname;
+
+    if (path.split('/').some(c => c === 'appcentric')) {
+      this.currentMode = 'appcentric';
+    } else {
+      this.currentMode = 'netcentric';
+    }
+
     const dashboardBreadcrumb: Breadcrumb = {
       label: 'Dashboard',
-      url: '/dashboard',
+      url: `/${this.currentMode}/dashboard`,
     };
 
     this.routeChanges = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       const root: ActivatedRoute = this.route.root;
       const currentRoute = this.router.url.split('?')[0];
+
+      console.log(root);
+
       this.render = !this.routesNotToRender.some(r => r.includes(currentRoute));
 
+      console.log('breadcrumbs');
       const breadcrumbs = this.getBreadcrumbs(root);
+      console.log(breadcrumbs);
+      console.log('breadcrumbs');
+      console.log('new breadcrumbs');
+
       this.breadcrumbs = [dashboardBreadcrumb, ...breadcrumbs];
+      console.log(this.breadcrumbs);
+      console.log('new breadcrumbs');
     });
   }
 

@@ -13,6 +13,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { BridgeDomainModalComponent } from './bridge-domain-modal/bridge-domain-modal.component';
 import { SubnetsModalComponent } from './subnets-modal/subnets-modal.component';
+import { SubnetsEditModalComponent } from './subnets-modal/subnets-edit-modal/subnets-edit-modal.component';
 
 const routes: Routes = [
   {
@@ -22,7 +23,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [BridgeDomainComponent, BridgeDomainModalComponent, SubnetsModalComponent],
+  declarations: [BridgeDomainComponent, BridgeDomainModalComponent, SubnetsModalComponent, SubnetsEditModalComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
