@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   FilterEntry,
@@ -9,17 +9,24 @@ import {
   V2AppCentricFilterEntriesService,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
 import { NameValidator } from 'src/app/validators/name-validator';
+import SubscriptionUtil from '../../../../../../../utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-filter-entry-edit-modal',
   templateUrl: './filter-entry-edit-modal.component.html',
   styleUrls: ['./filter-entry-edit-modal.component.css'],
 })
-export class FilterEntryEditModalComponent implements OnInit {
+export class FilterEntryEditModalComponent implements OnInit, OnDestroy {
   public filterEntryId: string;
   public form: FormGroup;
   public submitted: boolean;
+
+  private etherTypeSubscription: Subscription;
+  private ipProtocolSubscription: Subscription;
+  private sourceFromPortSubscription: Subscription;
+  private destinationFromPortSubscription: Subscription;
 
   public etherTypeOptions = Object.keys(FilterEntryEtherTypeEnum);
   public arpFlagOptions = Object.keys(FilterEntryArpFlagEnum);
@@ -34,6 +41,7 @@ export class FilterEntryEditModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+    this.setFormValidators();
   }
 
   get f() {
@@ -46,25 +54,25 @@ export class FilterEntryEditModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const filterEnry = Object.assign({}, this.ngx.getModalData('filterEntryEditModal') as FilterEntry);
+    const filterEntry = Object.assign({}, this.ngx.getModalData('filterEntryEditModal') as FilterEntry);
 
-    this.filterEntryId = filterEnry.id;
+    this.filterEntryId = filterEntry.id;
 
-    if (filterEnry !== undefined) {
-      this.form.controls.name.setValue(filterEnry.name);
+    if (filterEntry !== undefined) {
+      this.form.controls.name.setValue(filterEntry.name);
       this.form.controls.name.disable();
-      this.form.controls.description.setValue(filterEnry.description);
-      this.form.controls.alias.setValue(filterEnry.alias);
-      this.form.controls.etherType.setValue(filterEnry.etherType);
-      this.form.controls.arpFlag.setValue(filterEnry.arpFlag);
-      this.form.controls.ipProtocol.setValue(filterEnry.ipProtocol);
-      this.form.controls.matchOnlyFragments.setValue(filterEnry.matchOnlyFragments);
-      this.form.controls.sourceFromPort.setValue(filterEnry.sourceFromPort);
-      this.form.controls.sourceToPort.setValue(filterEnry.sourceToPort);
-      this.form.controls.destinationFromPort.setValue(filterEnry.destinationFromPort);
-      this.form.controls.destinationToPort.setValue(filterEnry.destinationToPort);
-      this.form.controls.tcpFlags.setValue(filterEnry.tcpFlags);
-      this.form.controls.stateful.setValue(filterEnry.stateful);
+      this.form.controls.description.setValue(filterEntry.description);
+      this.form.controls.alias.setValue(filterEntry.alias);
+      this.form.controls.etherType.setValue(filterEntry.etherType);
+      this.form.controls.arpFlag.setValue(filterEntry.arpFlag);
+      this.form.controls.ipProtocol.setValue(filterEntry.ipProtocol);
+      this.form.controls.matchOnlyFragments.setValue(filterEntry.matchOnlyFragments);
+      this.form.controls.sourceFromPort.setValue(filterEntry.sourceFromPort);
+      this.form.controls.sourceToPort.setValue(filterEntry.sourceToPort);
+      this.form.controls.destinationFromPort.setValue(filterEntry.destinationFromPort);
+      this.form.controls.destinationToPort.setValue(filterEntry.destinationToPort);
+      this.form.controls.tcpFlags.setValue(filterEntry.tcpFlags);
+      this.form.controls.stateful.setValue(filterEntry.stateful);
     }
     this.ngx.resetModalData('filterEntryEditModal');
   }
@@ -90,6 +98,106 @@ export class FilterEntryEditModalComponent implements OnInit {
       destinationToPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
       tcpFlags: [null],
       stateful: [null],
+    });
+  }
+
+  public setFormValidators(): void {
+    const arpFlag = this.form.controls.arpFlag;
+    const etherType = this.form.controls.etherType;
+    const ipProtocol = this.form.controls.ipProtocol;
+    const matchOnlyFragments = this.form.controls.matchOnlyFragments;
+    const sourceFromPort = this.form.controls.sourceFromPort;
+    const sourceToPort = this.form.controls.sourceToPort;
+    const destinationFromPort = this.form.controls.destinationFromPort;
+    const destinationToPort = this.form.controls.destinationToPort;
+    const stateful = this.form.controls.stateful;
+    const tcpFlags = this.form.controls.tcpFlags;
+
+    this.etherTypeSubscription = etherType.valueChanges.subscribe(etherTypeValue => {
+      // ipProtocol and matchOnlyFragments are required when etherType is IP, IPv4 or IPv6
+      if (etherTypeValue === 'Ip' || etherTypeValue === 'Ipv4' || etherTypeValue === 'Ipv6') {
+        ipProtocol.setValidators(Validators.required);
+        ipProtocol.setValue(null);
+        matchOnlyFragments.setValidators(Validators.required);
+        matchOnlyFragments.setValue(null);
+      } else {
+        ipProtocol.setValidators(null);
+        ipProtocol.setValue(null);
+        matchOnlyFragments.setValidators(null);
+        matchOnlyFragments.setValue(null);
+      }
+
+      // ArpFlag must be set when etherType is ARP.
+      if (etherTypeValue === 'Arp') {
+        arpFlag.setValidators(Validators.required);
+        arpFlag.setValue(null);
+      } else {
+        arpFlag.setValidators(null);
+        arpFlag.setValue(null);
+      }
+
+      arpFlag.updateValueAndValidity();
+      matchOnlyFragments.updateValueAndValidity();
+      ipProtocol.updateValueAndValidity();
+    });
+
+    this.ipProtocolSubscription = ipProtocol.valueChanges.subscribe(ipProtocolValue => {
+      // When ipProtocol is Tcp or Udp, source and destination from/to ports must be set.
+      if (ipProtocolValue === 'Tcp' || ipProtocolValue === 'Udp') {
+        sourceFromPort.enable();
+        sourceToPort.enable();
+        destinationFromPort.enable();
+        destinationToPort.enable();
+        stateful.enable();
+        tcpFlags.enable();
+
+        sourceFromPort.setValidators(Validators.required);
+        sourceToPort.setValidators(Validators.required);
+        destinationFromPort.setValidators(Validators.required);
+        destinationToPort.setValidators(Validators.required);
+        if (ipProtocolValue === 'Tcp') {
+          stateful.setValidators(Validators.required);
+          tcpFlags.setValidators(Validators.required);
+        } else if (ipProtocolValue === 'Udp') {
+          stateful.setValidators(null);
+          tcpFlags.setValidators(null);
+        }
+      } else {
+        sourceFromPort.disable();
+        sourceToPort.disable();
+        destinationFromPort.disable();
+        destinationToPort.disable();
+        stateful.disable();
+        tcpFlags.disable();
+
+        sourceFromPort.setValidators(null);
+        sourceToPort.setValidators(null);
+        destinationFromPort.setValidators(null);
+        destinationToPort.setValidators(null);
+        stateful.setValidators(null);
+      }
+
+      sourceFromPort.setValue(null);
+      sourceToPort.setValue(null);
+      destinationFromPort.setValue(null);
+      destinationToPort.setValue(null);
+
+      sourceFromPort.updateValueAndValidity();
+      sourceToPort.updateValueAndValidity();
+      destinationFromPort.updateValueAndValidity();
+      destinationToPort.updateValueAndValidity();
+      stateful.updateValueAndValidity();
+      tcpFlags.updateValueAndValidity();
+    });
+
+    this.sourceFromPortSubscription = sourceFromPort.valueChanges.subscribe(sourceFromPortValue => {
+      sourceToPort.setValidators(Validators.compose([Validators.min(sourceFromPortValue), Validators.max(65535), Validators.required]));
+    });
+
+    this.destinationFromPortSubscription = destinationFromPort.valueChanges.subscribe(destinationFromPortValue => {
+      destinationToPort.setValidators(
+        Validators.compose([Validators.min(destinationFromPortValue), Validators.max(65535), Validators.required]),
+      );
     });
   }
 
@@ -153,5 +261,18 @@ export class FilterEntryEditModalComponent implements OnInit {
     const tcpFlags = this.form.controls[tcpFlagControl] as FormArray;
     const selectedValues = selected.map(item => item.value);
     tcpFlags.setValue(selectedValues);
+  }
+
+  ngOnDestroy() {
+    this.unsubAll();
+  }
+
+  private unsubAll() {
+    SubscriptionUtil.unsubscribe([
+      this.etherTypeSubscription,
+      this.ipProtocolSubscription,
+      this.sourceFromPortSubscription,
+      this.destinationFromPortSubscription,
+    ]);
   }
 }
