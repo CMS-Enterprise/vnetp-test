@@ -1,4 +1,4 @@
-<ngx-smart-modal #endpointGroupModal identifier="endpointGroupModal" (onOpen)="getData()" (onClose)="reset()">
+<ngx-smart-modal #apEndpointGroupEditModal identifier="apEndpointGroupEditModal" (onOpen)="getData()" (onClose)="reset()">
 
   <header class="modal-header">
     <h4 class="modal-title">Endpoint Group</h4>
@@ -71,36 +71,6 @@
           <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
           <span>Save Endpoint Group</span>
         </button>
-        <app-table [config]="config" [data]="endpointGroups" (clearResults)="getEndpointGroups($event)" (searchParams)="getEndpointGroups($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
-
       </div>
-
     </form>
-    <app-ap-endpoint-group-edit-modal></app-ap-endpoint-group-edit-modal>
   </ngx-smart-modal>
-
-<ng-template #actionsTemplate let-endpointGroup="datum">
-  <section class="table__actions">
-    <app-icon-button
-            *ngIf="!endpointGroup?.deletedAt"
-            icon="edit"
-            label="Edit Endpoint Group"
-            (handleClick)="openApEndpointGroupEditModal(endpointGroup)"
-          ></app-icon-button>
-
-          <app-icon-button
-          *ngIf="endpointGroup?.deletedAt"
-          icon="undo"
-          label="Restore Endpoint Group"
-          type="success"
-          (handleClick)="restoreEndpointGroup(endpointGroup)"
-        ></app-icon-button>
-
-        <app-icon-button
-        icon="delete"
-        label="Soft-Delete/Delete Endpoint Group"
-        [type]="endpointGroup?.deletedAt ? 'danger' : 'default'"
-        (handleClick)="deleteEndpointGroup(endpointGroup)"
-      ></app-icon-button>
-  </section>
-</ng-template>

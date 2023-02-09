@@ -3,10 +3,14 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { V2AppCentricEndpointGroupsService, EndpointGroup, EndpointGroupPaginationResponse } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { ApplicationProfileModalDto } from 'src/app/models/appcentric/application-profile-modal-dto';
+import { EndpointGroupModalDto } from 'src/app/models/appcentric/endpoint-group-modal-dto';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { TableContextService } from 'src/app/services/table-context.service';
 import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
@@ -27,6 +31,8 @@ export class ApEndpointGroupModalComponent implements OnInit {
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
+  private apEndpointGroupEditModalSubscription: Subscription;
+
   public config: TableConfig<any> = {
     description: 'Endpoint Groups',
     columns: [
@@ -42,6 +48,7 @@ export class ApEndpointGroupModalComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
     private router: Router,
+    private tableContextService: TableContextService,
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -157,5 +164,92 @@ export class ApEndpointGroupModalComponent implements OnInit {
           this.isLoading = false;
         },
       );
+  }
+
+  public deleteEndpointGroup(endpointGroup: EndpointGroup): void {
+    if (endpointGroup.deletedAt) {
+      this.endpointGroupService.removeEndpointGroup({ uuid: endpointGroup.id }).subscribe(() => {
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if endpointGrouped results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getEndpointGroups(params);
+        } else {
+          this.getEndpointGroups();
+        }
+      });
+    } else {
+      this.endpointGroupService
+        .softDeleteEndpointGroup({
+          uuid: endpointGroup.id,
+        })
+        .subscribe(() => {
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
+
+          // if endpointGrouped results boolean is true, apply search params in the
+          // subsequent get call
+          if (filteredResults) {
+            this.getEndpointGroups(params);
+          } else {
+            this.getEndpointGroups();
+          }
+        });
+    }
+  }
+
+  public restoreEndpointGroup(endpointGroup: EndpointGroup): void {
+    if (!endpointGroup.deletedAt) {
+      return;
+    }
+
+    this.endpointGroupService
+      .restoreEndpointGroup({
+        uuid: endpointGroup.id,
+      })
+      .subscribe(() => {
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if endpointGrouped results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getEndpointGroups(params);
+        } else {
+          this.getEndpointGroups();
+        }
+      });
+  }
+
+  public openApEndpointGroupEditModal(endpointGroup?: EndpointGroup): void {
+    const dto = new EndpointGroupModalDto();
+
+    dto.modalMode = ModalMode.Edit;
+
+    dto.endpointGroup = endpointGroup;
+
+    this.subscribeToApEndpointGroupEditModal();
+    this.ngx.setModalData(dto, 'apEndpointGroupEditModal');
+    this.ngx.getModal('apEndpointGroupEditModal').open();
+  }
+
+  private subscribeToApEndpointGroupEditModal(): void {
+    this.apEndpointGroupEditModalSubscription = this.ngx.getModal('apEndpointGroupEditModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('apEndpointGroupEditModal');
+      this.apEndpointGroupEditModalSubscription.unsubscribe();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if endpointGrouped results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.getEndpointGroups(params);
+      } else {
+        this.getEndpointGroups();
+      }
+    });
   }
 }

@@ -63,14 +63,11 @@ export class ApplicationProfileModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getEndpointGroupsTableData();
-    this.getEndpointGroups();
     this.buildForm();
   }
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getEndpointGroupsTableData(event);
   }
 
   get f() {
@@ -159,70 +156,5 @@ export class ApplicationProfileModalComponent implements OnInit {
     } else {
       this.editApplicationProfile(applicationProfile);
     }
-  }
-
-  public getEndpointGroupsTableData(event?): void {
-    this.isLoading = true;
-    let eventParams;
-    if (event) {
-      this.tableComponentDto.page = event.page ? event.page : 1;
-      this.tableComponentDto.perPage = event.perPage ? event.perPage : 5;
-      const { searchText } = event;
-      const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
-      }
-      this.endpointGroupService
-        .findAllEndpointGroup({
-          filter: [`applicationProfileId||eq||${this.applicationProfileId}`, eventParams],
-          page: this.tableComponentDto.page,
-          perPage: this.tableComponentDto.perPage,
-        })
-        .subscribe(
-          data => {
-            this.endpointGroupsTableData = data;
-          },
-          () => {
-            this.endpointGroupsTableData = null;
-          },
-          () => {
-            this.isLoading = false;
-          },
-        );
-    }
-  }
-
-  public getEndpointGroups(): void {
-    this.isLoading = true;
-    this.endpointGroupService
-      .findAllEndpointGroup({
-        filter: [`tenantId||eq||${this.tenantId}`],
-        page: this.tableComponentDto.page,
-        perPage: this.tableComponentDto.perPage,
-      })
-      .subscribe(
-        data => {
-          this.endpointGroups = data.data;
-        },
-        () => {
-          this.endpointGroupsTableData = null;
-        },
-        () => {
-          this.isLoading = false;
-        },
-      );
-  }
-
-  public addEndpointGroup(): void {
-    this.endpointGroupService
-      .updateEndpointGroup({
-        uuid: this.selectedEndpointGroup.id,
-        endpointGroup: { applicationProfileId: this.applicationProfileId } as EndpointGroup,
-      })
-      .subscribe(
-        data => {},
-        err => (this.endpointGroupsTableData = null),
-        () => this.getEndpointGroupsTableData(),
-      );
   }
 }

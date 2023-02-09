@@ -112,8 +112,7 @@ export class EndpointGroupsModalComponent implements OnInit {
       this.form.controls.name.disable();
       this.form.controls.description.setValue(endpointGroup.description);
       this.form.controls.alias.setValue(endpointGroup.alias);
-      this.form.controls.policyControlEnforced.setValue(endpointGroup.intraEpgIsolation);
-      this.form.controls.applicationProfileId.setValue(endpointGroup.applicationProfileId);
+      this.form.controls.intraEpgIsolation.setValue(endpointGroup.intraEpgIsolation);
       this.form.controls.applicationProfileId.disable();
     }
     this.ngx.resetModalData('endpointGroupModal');

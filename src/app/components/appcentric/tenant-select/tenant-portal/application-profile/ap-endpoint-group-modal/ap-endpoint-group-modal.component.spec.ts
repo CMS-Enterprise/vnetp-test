@@ -18,6 +18,7 @@ describe('ApEndpointGroupModalComponent', () => {
         ApEndpointGroupModalComponent,
         MockNgxSmartModalComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockComponent('app-ap-endpoint-group-edit-modal'),
         MockIconButtonComponent,
         MockFontAwesomeComponent,
       ],
