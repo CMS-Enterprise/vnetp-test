@@ -6,22 +6,22 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 
-import { FilterEntryEditModalComponent } from './filter-entry-edit-modal.component';
+import { FilterEntryModalComponent } from './filter-entry-modal.component';
 
-describe('FilterEntryEditModalComponent', () => {
-  let component: FilterEntryEditModalComponent;
-  let fixture: ComponentFixture<FilterEntryEditModalComponent>;
+describe('FilterEntryModalComponent', () => {
+  let component: FilterEntryModalComponent;
+  let fixture: ComponentFixture<FilterEntryModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FilterEntryEditModalComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent],
+      declarations: [FilterEntryModalComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent],
       imports: [HttpClientModule, ReactiveFormsModule, NgSelectModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FilterEntryEditModalComponent);
+    fixture = TestBed.createComponent(FilterEntryModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -38,16 +38,16 @@ describe('FilterEntryEditModalComponent', () => {
   });
 
   describe('etherType', () => {
-    it('Ip Protocol', () => {
+    it('ip Protocol', () => {
       const etherType = getFormControl('etherType');
 
-      etherType.setValue('Ip');
+      etherType.setValue('ip');
       expect(isRequired('ipProtocol')).toBe(true);
 
-      etherType.setValue('Ipv4');
+      etherType.setValue('ipv4');
       expect(isRequired('ipProtocol')).toBe(true);
 
-      etherType.setValue('Ipv6');
+      etherType.setValue('ipv6');
       expect(isRequired('ipProtocol')).toBe(true);
 
       etherType.setValue(null);
@@ -57,13 +57,13 @@ describe('FilterEntryEditModalComponent', () => {
     it('Match Only Fragments', () => {
       const etherType = getFormControl('etherType');
 
-      etherType.setValue('Ip');
+      etherType.setValue('ip');
       expect(isRequired('matchOnlyFragments')).toBe(true);
 
-      etherType.setValue('Ipv4');
+      etherType.setValue('ipv4');
       expect(isRequired('matchOnlyFragments')).toBe(true);
 
-      etherType.setValue('Ipv6');
+      etherType.setValue('ipv6');
       expect(isRequired('matchOnlyFragments')).toBe(true);
 
       etherType.setValue(null);
@@ -73,7 +73,7 @@ describe('FilterEntryEditModalComponent', () => {
     it('ARP Flags', () => {
       const etherType = getFormControl('etherType');
 
-      etherType.setValue('Arp');
+      etherType.setValue('arp');
       expect(isRequired('arpFlag')).toBe(true);
 
       etherType.setValue(null);
@@ -86,8 +86,8 @@ describe('FilterEntryEditModalComponent', () => {
       const etherType = getFormControl('etherType');
       const ipProtocol = getFormControl('ipProtocol');
 
-      etherType.setValue('Ip');
-      ipProtocol.setValue('Tcp');
+      etherType.setValue('ip');
+      ipProtocol.setValue('tcp');
 
       expect(isRequired('sourceFromPort')).toBe(true);
 
@@ -100,8 +100,8 @@ describe('FilterEntryEditModalComponent', () => {
       const etherType = getFormControl('etherType');
       const ipProtocol = getFormControl('ipProtocol');
 
-      etherType.setValue('Ip');
-      ipProtocol.setValue('Tcp');
+      etherType.setValue('ip');
+      ipProtocol.setValue('tcp');
 
       expect(isRequired('sourceToPort')).toBe(true);
 
@@ -114,8 +114,8 @@ describe('FilterEntryEditModalComponent', () => {
       const etherType = getFormControl('etherType');
       const ipProtocol = getFormControl('ipProtocol');
 
-      etherType.setValue('Ip');
-      ipProtocol.setValue('Tcp');
+      etherType.setValue('ip');
+      ipProtocol.setValue('tcp');
 
       expect(isRequired('destinationFromPort')).toBe(true);
 
@@ -128,8 +128,8 @@ describe('FilterEntryEditModalComponent', () => {
       const etherType = getFormControl('etherType');
       const ipProtocol = getFormControl('ipProtocol');
 
-      etherType.setValue('Ip');
-      ipProtocol.setValue('Tcp');
+      etherType.setValue('ip');
+      ipProtocol.setValue('tcp');
 
       expect(isRequired('destinationToPort')).toBe(true);
 
@@ -142,12 +142,12 @@ describe('FilterEntryEditModalComponent', () => {
       const etherType = getFormControl('etherType');
       const ipProtocol = getFormControl('ipProtocol');
 
-      etherType.setValue('Ip');
-      ipProtocol.setValue('Tcp');
+      etherType.setValue('ip');
+      ipProtocol.setValue('tcp');
 
       expect(isRequired('tcpFlags')).toBe(true);
 
-      ipProtocol.setValue('Udp');
+      ipProtocol.setValue('udp');
 
       expect(isRequired('tcpFlags')).toBe(false);
     });
@@ -156,12 +156,12 @@ describe('FilterEntryEditModalComponent', () => {
       const etherType = getFormControl('etherType');
       const ipProtocol = getFormControl('ipProtocol');
 
-      etherType.setValue('Ip');
-      ipProtocol.setValue('Tcp');
+      etherType.setValue('ip');
+      ipProtocol.setValue('tcp');
 
       expect(isRequired('stateful')).toBe(true);
 
-      ipProtocol.setValue('Udp');
+      ipProtocol.setValue('udp');
 
       expect(isRequired('stateful')).toBe(false);
     });
@@ -174,8 +174,8 @@ describe('FilterEntryEditModalComponent', () => {
       const sourceFromPort = getFormControl('sourceFromPort');
       const sourceToPort = getFormControl('sourceToPort');
 
-      etherType.setValue('Ip');
-      ipProtocol.setValue('Tcp');
+      etherType.setValue('ip');
+      ipProtocol.setValue('tcp');
       sourceFromPort.setValue(1234);
 
       sourceToPort.setValue(1233);
@@ -193,8 +193,8 @@ describe('FilterEntryEditModalComponent', () => {
       const destinationFromPort = getFormControl('destinationFromPort');
       const destinationToPort = getFormControl('destinationToPort');
 
-      etherType.setValue('Ip');
-      ipProtocol.setValue('Tcp');
+      etherType.setValue('ip');
+      ipProtocol.setValue('tcp');
       destinationFromPort.setValue(1234);
 
       destinationToPort.setValue(1233);

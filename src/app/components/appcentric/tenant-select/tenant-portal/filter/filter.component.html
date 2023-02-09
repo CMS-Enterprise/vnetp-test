@@ -1,7 +1,7 @@
 <h1>Filter</h1>
 <ng-container>
   <section class="btn-toolbar" role="toolbar">
-    <button type="button" class="btn btn-success" (click)="openFilterModal(ModalMode.Create)">
+    <button type="button" class="btn btn-success" (click)="openFilterEntryModal(null)">
       <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
       <span>Create Filter</span>
     </button>
@@ -22,11 +22,6 @@
 
 <ng-template #actionsTemplate let-filter="datum">
   <section class="table__actions">
-    <app-icon-button
-      icon="add"
-      label="Add Filter Entry"
-      (handleClick)="openFilterEntryModal(filter)"
-    ></app-icon-button>
     <app-icon-button
             *ngIf="!filter?.deletedAt"
             icon="edit"
@@ -55,6 +50,5 @@
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>
 
-<app-filter-entry-modal></app-filter-entry-modal>
 <app-filter-modal></app-filter-modal>
 <app-yes-no-modal></app-yes-no-modal>

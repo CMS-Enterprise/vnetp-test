@@ -14,11 +14,11 @@ import { NameValidator } from 'src/app/validators/name-validator';
 import SubscriptionUtil from '../../../../../../../utils/SubscriptionUtil';
 
 @Component({
-  selector: 'app-filter-entry-edit-modal',
-  templateUrl: './filter-entry-edit-modal.component.html',
-  styleUrls: ['./filter-entry-edit-modal.component.css'],
+  selector: 'app-filter-entry-modal',
+  templateUrl: './filter-entry-modal.component.html',
+  styleUrls: ['./filter-entry-modal.component.css'],
 })
-export class FilterEntryEditModalComponent implements OnInit, OnDestroy {
+export class FilterEntryModalComponent implements OnInit, OnDestroy {
   public filterEntryId: string;
   public form: FormGroup;
   public submitted: boolean;
@@ -28,10 +28,10 @@ export class FilterEntryEditModalComponent implements OnInit, OnDestroy {
   private sourceFromPortSubscription: Subscription;
   private destinationFromPortSubscription: Subscription;
 
-  public etherTypeOptions = Object.keys(FilterEntryEtherTypeEnum);
-  public arpFlagOptions = Object.keys(FilterEntryArpFlagEnum);
-  public ipProtocolOptions = Object.keys(FilterEntryIpProtocolEnum);
-  public tcpFlagsOptions = Object.keys(FilterEntryTcpFlagsEnum).map(key => ({ value: key, label: key }));
+  public etherTypeOptions = Object.values(FilterEntryEtherTypeEnum);
+  public arpFlagOptions = Object.values(FilterEntryArpFlagEnum);
+  public ipProtocolOptions = Object.values(FilterEntryIpProtocolEnum);
+  public tcpFlagsOptions = Object.values(FilterEntryTcpFlagsEnum).map(key => ({ value: key, label: key }));
 
   constructor(
     private formBuilder: FormBuilder,
@@ -49,12 +49,12 @@ export class FilterEntryEditModalComponent implements OnInit, OnDestroy {
   }
 
   public closeModal(): void {
-    this.ngx.close('filterEntryEditModal');
+    this.ngx.close('filterEntryModal');
     this.reset();
   }
 
   public getData(): void {
-    const filterEntry = Object.assign({}, this.ngx.getModalData('filterEntryEditModal') as FilterEntry);
+    const filterEntry = Object.assign({}, this.ngx.getModalData('filterEntryModal') as FilterEntry);
 
     this.filterEntryId = filterEntry.id;
 
@@ -74,12 +74,12 @@ export class FilterEntryEditModalComponent implements OnInit, OnDestroy {
       this.form.controls.tcpFlags.setValue(filterEntry.tcpFlags);
       this.form.controls.stateful.setValue(filterEntry.stateful);
     }
-    this.ngx.resetModalData('filterEntryEditModal');
+    this.ngx.resetModalData('filterEntryModal');
   }
 
   public reset(): void {
     this.submitted = false;
-    this.ngx.resetModalData('filterEntryEditModal');
+    this.ngx.resetModalData('filterEntryModal');
     this.buildForm();
   }
 
@@ -88,7 +88,7 @@ export class FilterEntryEditModalComponent implements OnInit, OnDestroy {
       name: ['', NameValidator()],
       alias: ['', Validators.compose([Validators.maxLength(100)])],
       description: ['', Validators.compose([Validators.maxLength(500)])],
-      etherType: [null],
+      etherType: [],
       arpFlag: [null],
       ipProtocol: [null],
       matchOnlyFragments: [null],
@@ -115,23 +115,29 @@ export class FilterEntryEditModalComponent implements OnInit, OnDestroy {
 
     this.etherTypeSubscription = etherType.valueChanges.subscribe(etherTypeValue => {
       // ipProtocol and matchOnlyFragments are required when etherType is IP, IPv4 or IPv6
-      if (etherTypeValue === 'Ip' || etherTypeValue === 'Ipv4' || etherTypeValue === 'Ipv6') {
+      if (etherTypeValue === 'ip' || etherTypeValue === 'ipv4' || etherTypeValue === 'ipv6') {
+        ipProtocol.enable();
         ipProtocol.setValidators(Validators.required);
         ipProtocol.setValue(null);
+        matchOnlyFragments.enable();
         matchOnlyFragments.setValidators(Validators.required);
         matchOnlyFragments.setValue(null);
       } else {
+        ipProtocol.disable();
         ipProtocol.setValidators(null);
         ipProtocol.setValue(null);
+        matchOnlyFragments.disable();
         matchOnlyFragments.setValidators(null);
         matchOnlyFragments.setValue(null);
       }
 
       // ArpFlag must be set when etherType is ARP.
-      if (etherTypeValue === 'Arp') {
+      if (etherTypeValue === 'arp') {
+        arpFlag.enable();
         arpFlag.setValidators(Validators.required);
         arpFlag.setValue(null);
       } else {
+        arpFlag.disable();
         arpFlag.setValidators(null);
         arpFlag.setValue(null);
       }
@@ -143,7 +149,7 @@ export class FilterEntryEditModalComponent implements OnInit, OnDestroy {
 
     this.ipProtocolSubscription = ipProtocol.valueChanges.subscribe(ipProtocolValue => {
       // When ipProtocol is Tcp or Udp, source and destination from/to ports must be set.
-      if (ipProtocolValue === 'Tcp' || ipProtocolValue === 'Udp') {
+      if (ipProtocolValue === 'tcp' || ipProtocolValue === 'udp') {
         sourceFromPort.enable();
         sourceToPort.enable();
         destinationFromPort.enable();
@@ -155,10 +161,10 @@ export class FilterEntryEditModalComponent implements OnInit, OnDestroy {
         sourceToPort.setValidators(Validators.required);
         destinationFromPort.setValidators(Validators.required);
         destinationToPort.setValidators(Validators.required);
-        if (ipProtocolValue === 'Tcp') {
+        if (ipProtocolValue === 'tcp') {
           stateful.setValidators(Validators.required);
           tcpFlags.setValidators(Validators.required);
-        } else if (ipProtocolValue === 'Udp') {
+        } else if (ipProtocolValue === 'udp') {
           stateful.setValidators(null);
           tcpFlags.setValidators(null);
         }
@@ -265,6 +271,7 @@ export class FilterEntryEditModalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.unsubAll();
+    this.reset();
   }
 
   private unsubAll() {

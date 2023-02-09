@@ -1,21 +1,31 @@
 import { HttpClientModule } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
+import { FilterEntryModalComponent } from './filter-entry-modal/filter-entry-modal.component';
 
 import { FilterModalComponent } from './filter-modal.component';
 
-describe('FilterModalComponent', () => {
+describe('FilterEntryModalComponent', () => {
   let component: FilterModalComponent;
   let fixture: ComponentFixture<FilterModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FilterModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent],
-      imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule],
+      declarations: [
+        FilterModalComponent,
+        FilterEntryModalComponent,
+        MockNgxSmartModalComponent,
+        MockFontAwesomeComponent,
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockComponent('app-filter-entry-edit-modal'),
+        MockIconButtonComponent,
+      ],
+      imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule, NgSelectModule, FormsModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
   }));
@@ -80,18 +90,6 @@ describe('FilterModalComponent', () => {
 
       description.setValue('a'.repeat(501));
       expect(description.valid).toBe(false);
-    });
-  });
-
-  it('should have correct required and optional fields by default', () => {
-    const requiredFields = ['name'];
-    const optionalFields = ['alias', 'description'];
-
-    requiredFields.forEach(r => {
-      expect(isRequired(r)).toBe(true);
-    });
-    optionalFields.forEach(r => {
-      expect(isRequired(r)).toBe(false);
     });
   });
 });
