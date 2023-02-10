@@ -19,10 +19,10 @@ import { of } from 'rxjs';
 describe('FirewallRulesPacketTracerComponent', () => {
   let component: FirewallRulePacketTracerComponent;
   let fixture: ComponentFixture<FirewallRulePacketTracerComponent>;
-  //   let netObjService: V1NetworkSecurityNetworkObjectsService;
-  //   let netObjGroupService: V1NetworkSecurityNetworkObjectGroupsService;
+  let netObjService: V1NetworkSecurityNetworkObjectsService;
+  let netObjGroupService: V1NetworkSecurityNetworkObjectGroupsService;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, NgxPaginationModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
@@ -40,9 +40,6 @@ describe('FirewallRulesPacketTracerComponent', () => {
         MockProvider(V1NetworkSecurityNetworkObjectsService),
       ],
     });
-  }));
-
-  beforeEach(() => {
     const firewallRules = [
       {
         id: '1',
@@ -62,24 +59,24 @@ describe('FirewallRulesPacketTracerComponent', () => {
         sourcePorts: '2',
         destinationPorts: '5',
       },
-      // {
-      //     "id": "2",
-      //     "name": "fw-rule2",
-      //     "description": null,
-      //     "direction": "In",
-      //     "action": "Deny",
-      //     "protocol": "IP",
-      //     "logging": false,
-      //     "enabled": true,
-      //     "ruleIndex": 2,
-      //     "sourceAddressType": "IpAddress",
-      //     "destinationAddressType": "IpAddress",
-      //     "serviceType": "Port",
-      //     "sourceIpAddress": "192.168.0.0/24",
-      //     "destinationIpAddress": "10.0.0.0/10",
-      //     "sourcePorts": "2",
-      //     "destinationPorts": "5",
-      // },
+      {
+        id: '2',
+        name: 'fw-rule2',
+        description: null,
+        direction: 'In',
+        action: 'Deny',
+        protocol: 'IP',
+        logging: false,
+        enabled: true,
+        ruleIndex: 2,
+        sourceAddressType: 'IpAddress',
+        destinationAddressType: 'IpAddress',
+        serviceType: 'Port',
+        sourceIpAddress: '192.168.0.0/24',
+        destinationIpAddress: '10.0.0.0/10',
+        sourcePorts: '2',
+        destinationPorts: '5',
+      },
       {
         id: '3',
         name: 'fw-rule3',
@@ -98,29 +95,31 @@ describe('FirewallRulesPacketTracerComponent', () => {
         sourcePorts: '2',
         destinationPorts: '5',
       },
-      // {
-      //     "id": "4",
-      //     "name": "fw-rule4",
-      //     "description": null,
-      //     "direction": "In",
-      //     "action": "Deny",
-      //     "protocol": "IP",
-      //     "logging": false,
-      //     "enabled": true,
-      //     "ruleIndex": 4,
-      //     "sourceAddressType": "NetworkObjectGroup",
-      //     "destinationAddressType": "IpAddress",
-      //     "serviceType": "Port",
-      //     "sourceNetworkObjectGroupId": "1",
-      //     "destinationIpAddress": "10.0.0.9",
-      //     "sourcePorts": "2",
-      //     "destinationPorts": "5",
-      // }
+      {
+        id: '4',
+        name: 'fw-rule4',
+        description: null,
+        direction: 'In',
+        action: 'Deny',
+        protocol: 'IP',
+        logging: false,
+        enabled: true,
+        ruleIndex: 4,
+        sourceAddressType: 'NetworkObjectGroup',
+        destinationAddressType: 'IpAddress',
+        serviceType: 'Port',
+        sourceNetworkObjectGroupId: '1',
+        destinationIpAddress: '10.0.0.9',
+        sourcePorts: '2',
+        destinationPorts: '5',
+      },
     ];
 
     fixture = TestBed.createComponent(FirewallRulePacketTracerComponent);
     component = fixture.componentInstance;
     component.objects = { firewallRules: firewallRules };
+    netObjService = TestBed.inject(V1NetworkSecurityNetworkObjectsService);
+    netObjGroupService = TestBed.inject(V1NetworkSecurityNetworkObjectGroupsService);
     fixture.detectChanges();
   });
 
@@ -143,21 +142,44 @@ describe('FirewallRulesPacketTracerComponent', () => {
   //     })
   //   });
 
-  //   it('should find a firewall rule match if all searched IPs/fields exist in the rule', () => {
+  it('should find a firewall rule match if all searched IPs/fields exist in the rule', () => {
+    console.log('test1');
+    component.form.setValue({
+      direction: 'In',
+      protocol: 'IP',
+      sourceIpAddress: '192.168.0.25',
+      destinationIpAddress: '10.0.0.9',
+      sourcePorts: '2',
+      destinationPorts: '5',
+    });
 
-  //     console.log('test1')
-  //     component.form.setValue({
-  //         direction: 'In',
-  //         protocol: 'IP',
-  //         sourceIpAddress: '192.168.0.25',
-  //         destinationIpAddress: '10.0.0.9',
-  //         sourcePorts: '2',
-  //         destinationPorts: '5'
-  //     });
+    jest.spyOn(netObjService, 'getOneNetworkObject').mockImplementation(() => {
+      return of({
+        name: 'net-obj-ip1',
+        type: 'IpAddress',
+        ipAddress: '192.168.0.25',
+        id: '1',
+      } as any);
+    });
 
-  //     // console.log('component.objects.firewallRules',component.objects);
-  //     const matchingRule = component.search();
-  //   });
+    jest.spyOn(netObjGroupService, 'getOneNetworkObjectGroup').mockImplementation(() => {
+      return of({
+        name: 'net-obj-group1',
+        id: '1',
+        networkObjects: [
+          {
+            name: 'net-obj-ip1',
+            type: 'IpAddress',
+            ipAddress: '192.168.0.25',
+            id: '1',
+          },
+        ],
+      } as any);
+    });
+
+    // console.log('component.objects.firewallRules',component.objects);
+    const matchingRule = component.search();
+  });
 
   //   it('should find a firewall rule match if a rules source contains the searched value', () => {
 
@@ -190,63 +212,62 @@ describe('FirewallRulesPacketTracerComponent', () => {
   //     const matchingRule = component.search();
   //   });
 
-  // it('should find a firewall rule match if the sourceNetworkObject has an IP address that matches the form value', () => {
+  //   it('should find a firewall rule match if the sourceNetworkObject has an IP address that matches the form value', () => {
 
-  //     console.log('test4')
+  //       console.log('test4')
+
+  //       component.form.setValue({
+  //           direction: 'In',
+  //           protocol: 'IP',
+  //           sourceIpAddress: '192.168.0.25',
+  //           destinationIpAddress: '10.0.0.9',
+  //           sourcePorts: '2',
+  //           destinationPorts: '5'
+  //       });
+
+  //       const spy = jest.spyOn(netObjService, 'getOneNetworkObject').mockImplementation(() => {
+  //           return of({
+  //               name: 'net-obj-ip1',
+  //               type: 'IpAddress',
+  //               ipAddress: '192.168.0.25',
+  //               id: '1'
+  //           } as any)
+  //       });
+  //       const matchingRules = component.search();
+  //       expect(spy).toHaveBeenCalledWith({id: "1"})
+  //       console.log('matchingRules (in test)', matchingRules)
+  //   })
+
+  //   it('should find a firewall rule match if the sourceNetworkObjectGroup contains any members whose IP addresses match the form value', () => {
+  //     console.log('test5');
 
   //     component.form.setValue({
-  //         direction: 'In',
-  //         protocol: 'IP',
-  //         sourceIpAddress: '192.168.0.25',
-  //         destinationIpAddress: '10.0.0.9',
-  //         sourcePorts: '2',
-  //         destinationPorts: '5'
+  //       direction: 'In',
+  //       protocol: 'IP',
+  //       sourceIpAddress: '192.168.0.25',
+  //       destinationIpAddress: '10.0.0.9',
+  //       sourcePorts: '2',
+  //       destinationPorts: '5',
   //     });
 
-  //     const netObjService = TestBed.inject(V1NetworkSecurityNetworkObjectsService);
+  //     const netObjGroupService = TestBed.inject(V1NetworkSecurityNetworkObjectGroupsService);
 
-  //     jest.spyOn(netObjService, 'getOneNetworkObject').mockImplementation(() => {
-  //         return of({
+  //     jest.spyOn(netObjGroupService, 'getOneNetworkObjectGroup').mockImplementation(() => {
+  //       return of({
+  //         name: 'net-obj-group1',
+  //         id: '1',
+  //         networkObjects: [
+  //           {
   //             name: 'net-obj-ip1',
   //             type: 'IpAddress',
   //             ipAddress: '192.168.0.25',
-  //             id: '1'
-  //         } as any)
+  //             id: '1',
+  //           },
+  //         ],
+  //       } as any);
   //     });
+
   //     const matchingRules = component.search();
-  //     console.log('matchingRules', matchingRules)
-  // })
-
-  it('should find a firewall rule match if the sourceNetworkObjectGroup contains any members whose IP addresses match the form value', () => {
-    console.log('test5');
-
-    component.form.setValue({
-      direction: 'In',
-      protocol: 'IP',
-      sourceIpAddress: '192.168.0.25',
-      destinationIpAddress: '10.0.0.9',
-      sourcePorts: '2',
-      destinationPorts: '5',
-    });
-
-    const netObjGroupService = TestBed.inject(V1NetworkSecurityNetworkObjectGroupsService);
-
-    jest.spyOn(netObjGroupService, 'getOneNetworkObjectGroup').mockImplementation(() => {
-      return of({
-        name: 'net-obj-group1',
-        id: '1',
-        networkObjects: [
-          {
-            name: 'net-obj-ip1',
-            type: 'IpAddress',
-            ipAddress: '192.168.0.25',
-            id: '1',
-          },
-        ],
-      } as any);
-    });
-
-    const matchingRules = component.search();
-    console.log('matchingRules', matchingRules);
-  });
+  //     console.log('matchingRules', matchingRules);
+  //   });
 });

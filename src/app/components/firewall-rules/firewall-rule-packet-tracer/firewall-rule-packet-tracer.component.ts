@@ -129,6 +129,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     // if (this.form.invalid) {
     //   return;
     // }
+    this.rulesHit = [];
     const searchDto = {
       directionLookup: this.form.controls.direction.value,
       protocolLookup: this.form.controls.protocol.value,
@@ -137,7 +138,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       sourcePortsLookup: this.form.controls.sourcePorts.value,
       destPortsLookup: this.form.controls.destinationPorts.value,
     };
-    this.objects.firewallRules.map(async rule => {
+    this.objects.firewallRules.map(rule => {
       const checkList = {
         sourceInRange: false,
         destInRange: false,
@@ -169,63 +170,18 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       }
 
       // if rule source is network object
-      if (rule.sourceAddressType === 'NetworkObject') {
+      else if (rule.sourceAddressType === 'NetworkObject') {
         // console.log(' rule.sourceNetworkObjectId',  rule.sourceNetworkObjectId )
-        const sourceNetworkObject = await this.networkObjectService.getOneNetworkObject({ id: rule.sourceNetworkObjectId }).toPromise();
-        // console.log('sourceNetworkObject', sourceNetworkObject);
-        // if networkObject is an IP/Subnet
-        if (sourceNetworkObject.type === 'IpAddress') {
-          // get networkObjectIP
-          const ruleSourceIp = sourceNetworkObject.ipAddress;
-          const split = ruleSourceIp.split('/');
-
-          // see if networkObjectIP is a subnet
-          if (split.length > 1) {
-            const sourceSubnetInfo = this.calculateSubnet(searchDto.sourceIpLookup, ruleSourceIp);
-            if (sourceSubnetInfo.inRange) {
-              checkList.sourceInRange = true;
-            }
-          }
-
-          // if networkObjectIP is an IP and not a subnet, just check for a complete match
-          else {
-            if (searchDto.sourceIpLookup === ruleSourceIp) {
-              checkList.sourceInRange = true;
-            }
-          }
-        }
-
-        // if networkObject is a range of IPs
-        else if (sourceNetworkObject.type === 'Range') {
-          // convert the start and end IPs to numbers
-          const startIpNum = this.dot2num(sourceNetworkObject.startIpAddress);
-          const endIpNum = this.dot2num(sourceNetworkObject.endIpAddress);
-
-          // convert the sourceIP to a number
-          const searchIpNum = this.dot2num(searchDto.sourceIpLookup);
-
-          // if the searchIpNum falls in between the startIpNum and endIpNum
-          // we know it is within the range provided
-          if (startIpNum <= searchIpNum && endIpNum >= searchIpNum) {
-            checkList.sourceInRange = true;
-          }
-        }
-      }
-
-      if (rule.sourceAddressType === 'NetworkObjectGroup') {
-        const sourceNetworkObjectGroup = await this.networkObjectGroupService
-          .getOneNetworkObjectGroup({ id: rule.sourceNetworkObjectGroupId, join: ['networkObjects'] })
-          .toPromise();
-        const networkObjectMembers = sourceNetworkObjectGroup.networkObjects;
-        networkObjectMembers.map(sourceMember => {
-          if (sourceMember.type === 'IpAddress') {
+        this.networkObjectService.getOneNetworkObject({ id: rule.sourceNetworkObjectId }).subscribe(sourceNetworkObject => {
+          // if networkObject is an IP/Subnet
+          if (sourceNetworkObject.type === 'IpAddress') {
             // get networkObjectIP
-            const sourceMemberIp = sourceMember.ipAddress;
-            const split = sourceMemberIp.split('/');
+            const ruleSourceIp = sourceNetworkObject.ipAddress;
+            const split = ruleSourceIp.split('/');
 
             // see if networkObjectIP is a subnet
             if (split.length > 1) {
-              const sourceSubnetInfo = this.calculateSubnet(searchDto.sourceIpLookup, sourceMemberIp);
+              const sourceSubnetInfo = this.calculateSubnet(searchDto.sourceIpLookup, ruleSourceIp);
               if (sourceSubnetInfo.inRange) {
                 checkList.sourceInRange = true;
               }
@@ -233,17 +189,17 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
             // if networkObjectIP is an IP and not a subnet, just check for a complete match
             else {
-              if (searchDto.sourceIpLookup === sourceMemberIp) {
+              if (searchDto.sourceIpLookup === ruleSourceIp) {
                 checkList.sourceInRange = true;
               }
             }
           }
 
           // if networkObject is a range of IPs
-          else if (sourceMember.type === 'Range') {
+          else if (sourceNetworkObject.type === 'Range') {
             // convert the start and end IPs to numbers
-            const startIpNum = this.dot2num(sourceMember.startIpAddress);
-            const endIpNum = this.dot2num(sourceMember.endIpAddress);
+            const startIpNum = this.dot2num(sourceNetworkObject.startIpAddress);
+            const endIpNum = this.dot2num(sourceNetworkObject.endIpAddress);
 
             // convert the sourceIP to a number
             const searchIpNum = this.dot2num(searchDto.sourceIpLookup);
@@ -255,6 +211,51 @@ export class FirewallRulePacketTracerComponent implements OnInit {
             }
           }
         });
+        // console.log('sourceNetworkObject', sourceNetworkObject);
+      } else if (rule.sourceAddressType === 'NetworkObjectGroup') {
+        this.networkObjectGroupService
+          .getOneNetworkObjectGroup({ id: rule.sourceNetworkObjectGroupId, join: ['networkObjects'] })
+          .subscribe(sourceNetworkObjectGroup => {
+            const networkObjectMembers = sourceNetworkObjectGroup.networkObjects;
+            networkObjectMembers.map(sourceMember => {
+              if (sourceMember.type === 'IpAddress') {
+                // get networkObjectIP
+                const sourceMemberIp = sourceMember.ipAddress;
+                const split = sourceMemberIp.split('/');
+
+                // see if networkObjectIP is a subnet
+                if (split.length > 1) {
+                  const sourceSubnetInfo = this.calculateSubnet(searchDto.sourceIpLookup, sourceMemberIp);
+                  if (sourceSubnetInfo.inRange) {
+                    checkList.sourceInRange = true;
+                  }
+                }
+
+                // if networkObjectIP is an IP and not a subnet, just check for a complete match
+                else {
+                  if (searchDto.sourceIpLookup === sourceMemberIp) {
+                    checkList.sourceInRange = true;
+                  }
+                }
+              }
+
+              // if networkObject is a range of IPs
+              else if (sourceMember.type === 'Range') {
+                // convert the start and end IPs to numbers
+                const startIpNum = this.dot2num(sourceMember.startIpAddress);
+                const endIpNum = this.dot2num(sourceMember.endIpAddress);
+
+                // convert the sourceIP to a number
+                const searchIpNum = this.dot2num(searchDto.sourceIpLookup);
+
+                // if the searchIpNum falls in between the startIpNum and endIpNum
+                // we know it is within the range provided
+                if (startIpNum <= searchIpNum && endIpNum >= searchIpNum) {
+                  checkList.sourceInRange = true;
+                }
+              }
+            });
+          });
       }
 
       // if rule destination is an IP/subnet
@@ -279,77 +280,34 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
       // if rule destination is a network object
       if (rule.destinationAddressType === 'NetworkObject') {
-        const destNetworkObject = await this.networkObjectService.getOneNetworkObject({ id: rule.destinationNetworkObjectId }).toPromise();
-        // if destNetworkObject is an IP/subnet
-        if (destNetworkObject.type === 'IpAddress') {
-          const ruleDestIp = destNetworkObject.ipAddress;
-          const split = ruleDestIp.split('/');
+        this.networkObjectService.getOneNetworkObject({ id: rule.destinationNetworkObjectId }).subscribe(destNetworkObject => {
+          // if destNetworkObject is an IP/subnet
+          if (destNetworkObject.type === 'IpAddress') {
+            const ruleDestIp = destNetworkObject.ipAddress;
+            const split = ruleDestIp.split('/');
 
-          // if it is a subnet, calculate the range and see if the destIpLookup falls within the subnet
-          if (split.length > 1) {
-            const destSubnetInfo = this.calculateSubnet(searchDto.destIpLookup, ruleDestIp);
-            if (destSubnetInfo.inRange) {
-              checkList.destInRange = true;
-            }
-          }
-          // if destNetworkObject is an IP and not a subnet, just check for a complete match
-          else {
-            if (searchDto.destIpLookup === ruleDestIp) {
-              checkList.destInRange = true;
-            }
-          }
-        }
-
-        // if networkObject is a range of IPs
-        else if (destNetworkObject.type === 'Range') {
-          // convert the start and end IPs to numbers
-          const startIpNum = this.dot2num(destNetworkObject.startIpAddress);
-          const endIpNum = this.dot2num(destNetworkObject.endIpAddress);
-
-          // convert the searchIpNum to a number
-          const searchIpNum = this.dot2num(searchDto.destIpLookup);
-
-          // if the searchIpNum falls in between the startIpNum and endIpNum
-          // we know it is within the range provided
-          if (startIpNum <= searchIpNum && endIpNum >= searchIpNum) {
-            checkList.destInRange = true;
-          }
-        }
-      }
-      if (rule.destinationAddressType === 'NetworkObjectGroup') {
-        const destNetworkObjectGroup = await this.networkObjectGroupService
-          .getOneNetworkObjectGroup({ id: rule.destinationNetworkObjectGroupId, join: ['networkObjects'] })
-          .toPromise();
-        const networkObjectMembers = destNetworkObjectGroup.networkObjects;
-        networkObjectMembers.map(destMember => {
-          if (destMember.type === 'IpAddress') {
-            // get networkObjectIP
-            const destMemberIp = destMember.ipAddress;
-            const split = destMemberIp.split('/');
-
-            // see if networkObjectIP is a subnet
+            // if it is a subnet, calculate the range and see if the destIpLookup falls within the subnet
             if (split.length > 1) {
-              const destSubnetInfo = this.calculateSubnet(searchDto.destIpLookup, destMemberIp);
+              const destSubnetInfo = this.calculateSubnet(searchDto.destIpLookup, ruleDestIp);
               if (destSubnetInfo.inRange) {
                 checkList.destInRange = true;
               }
             }
-
-            // if networkObjectIP is an IP and not a subnet, just check for a complete match
+            // if destNetworkObject is an IP and not a subnet, just check for a complete match
             else {
-              if (searchDto.destIpLookup === destMemberIp) {
+              if (searchDto.destIpLookup === ruleDestIp) {
                 checkList.destInRange = true;
               }
             }
           }
 
           // if networkObject is a range of IPs
-          else if (destMember.type === 'Range') {
+          else if (destNetworkObject.type === 'Range') {
             // convert the start and end IPs to numbers
-            const startIpNum = this.dot2num(destMember.startIpAddress);
-            const endIpNum = this.dot2num(destMember.endIpAddress);
+            const startIpNum = this.dot2num(destNetworkObject.startIpAddress);
+            const endIpNum = this.dot2num(destNetworkObject.endIpAddress);
 
-            // convert the sourceIP to a number
+            // convert the searchIpNum to a number
             const searchIpNum = this.dot2num(searchDto.destIpLookup);
 
             // if the searchIpNum falls in between the startIpNum and endIpNum
@@ -359,6 +317,51 @@ export class FirewallRulePacketTracerComponent implements OnInit {
             }
           }
         });
+      }
+      if (rule.destinationAddressType === 'NetworkObjectGroup') {
+        this.networkObjectGroupService
+          .getOneNetworkObjectGroup({ id: rule.destinationNetworkObjectGroupId, join: ['networkObjects'] })
+          .subscribe(destNetworkObjectGroup => {
+            const networkObjectMembers = destNetworkObjectGroup.networkObjects;
+            networkObjectMembers.map(destMember => {
+              if (destMember.type === 'IpAddress') {
+                // get networkObjectIP
+                const destMemberIp = destMember.ipAddress;
+                const split = destMemberIp.split('/');
+
+                // see if networkObjectIP is a subnet
+                if (split.length > 1) {
+                  const destSubnetInfo = this.calculateSubnet(searchDto.destIpLookup, destMemberIp);
+                  if (destSubnetInfo.inRange) {
+                    checkList.destInRange = true;
+                  }
+                }
+
+                // if networkObjectIP is an IP and not a subnet, just check for a complete match
+                else {
+                  if (searchDto.destIpLookup === destMemberIp) {
+                    checkList.destInRange = true;
+                  }
+                }
+              }
+
+              // if networkObject is a range of IPs
+              else if (destMember.type === 'Range') {
+                // convert the start and end IPs to numbers
+                const startIpNum = this.dot2num(destMember.startIpAddress);
+                const endIpNum = this.dot2num(destMember.endIpAddress);
+
+                // convert the sourceIP to a number
+                const searchIpNum = this.dot2num(searchDto.destIpLookup);
+
+                // if the searchIpNum falls in between the startIpNum and endIpNum
+                // we know it is within the range provided
+                if (startIpNum <= searchIpNum && endIpNum >= searchIpNum) {
+                  checkList.destInRange = true;
+                }
+              }
+            });
+          });
       }
 
       // if the source port contains a dash
@@ -404,12 +407,14 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         checkList.sourceInRange &&
         checkList.sourcePortMatch
       ) {
-        console.log('matching rule', rule);
+        console.log('matching rule (in function)', rule);
         this.rulesHit.push(rule);
         // return rule;
       }
     });
-
+    this.rulesHit = this.rulesHit.map(rule => {
+      return rule.name;
+    });
     console.log('this.rulesHit', this.rulesHit);
     return this.rulesHit;
   }

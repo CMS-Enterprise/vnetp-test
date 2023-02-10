@@ -64,6 +64,10 @@
               <option [ngValue]="true">True</option>
             </select>
           </div> -->
+
+          <div *ngIf="rulesHit.length > 0">
+            {{rulesHit }}
+          </div>
         </div>
   
         <hr />
