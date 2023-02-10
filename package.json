@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --disable-host-check",
     "analyze": "webpack-bundle-analyzer dist/automation-ui/stats-es2015.json",
     "build": "ng build",
     "build:stats": "ng build --stats-json",

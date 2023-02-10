@@ -1,0 +1,23 @@
+<ngx-smart-modal #selfServiceBulkUploadModal identifier="selfServiceBulkUploadModal" customClass="medium-modal">
+    <header class="modal-header">
+        <h4 class="modal-title">{{selfService?.id}} - Self Service Bulk Upload</h4>
+    </header>
+
+    <main class="modal-body">
+
+        <ng-container>
+            <span>Would you like to proceed with the Bulk Upload?</span>
+        </ng-container>
+
+        
+
+    </main>
+
+    <footer class="modal-footer">
+        <button (click)="importObjects()" class="btn btn-warning">
+            <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
+            <span>Import</span>
+        </button>
+    </footer>
+
+</ngx-smart-modal>

@@ -76,6 +76,9 @@ export class ImportExportComponent {
   }
 
   private Export(exportObject: any, exportType: string): SafeUrl {
+    if (exportObject.convertedConfig) {
+      exportObject = exportObject.convertedConfig;
+    }
     switch (exportType) {
       case 'csv':
         if (this.disableJson) {
