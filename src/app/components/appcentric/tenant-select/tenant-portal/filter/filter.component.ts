@@ -188,34 +188,6 @@ export class FilterComponent implements OnInit {
     });
   }
 
-  public openFilterEntryModal(filter: Filter): void {
-    const dto = new FilterModalDto();
-    dto.modalMode = ModalMode.Edit;
-    dto.filter = filter;
-
-    this.subscribeToFilterEntryModal();
-    this.ngx.setModalData(dto, 'filterEntryModal');
-    this.ngx.getModal('filterEntryModal').open();
-  }
-
-  private subscribeToFilterEntryModal(): void {
-    this.filterEntryModalSubscription = this.ngx.getModal('filterEntryModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('filterEntryModal');
-      this.filterEntryModalSubscription.unsubscribe();
-      // get search params from local storage
-      const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
-
-      // if filtered results boolean is true, apply search params in the
-      // subsequent get call
-      if (filteredResults) {
-        this.getFilters(params);
-      } else {
-        this.getFilters();
-      }
-    });
-  }
-
   public importFiltersConfig(filter: Filter[]): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(

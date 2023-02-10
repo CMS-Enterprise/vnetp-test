@@ -21,6 +21,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { NameValidator } from 'src/app/validators/name-validator';
+import { FilterEntryModalDto } from '../../../../../../models/appcentric/filter-entry-modal.dto';
 
 @Component({
   selector: 'app-filter-modal',
@@ -28,6 +29,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   styleUrls: ['./filter-modal.component.css'],
 })
 export class FilterModalComponent implements OnInit {
+  public ModalMode = ModalMode;
   public isLoading = false;
   public modalMode: ModalMode;
   public form: FormGroup;
@@ -72,6 +74,7 @@ export class FilterModalComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
+        console.log(match);
         if (match) {
           this.tenantId = match[1];
         }
@@ -104,21 +107,24 @@ export class FilterModalComponent implements OnInit {
 
     if (this.modalMode === ModalMode.Edit) {
       this.filterId = dto.filter.id;
+      this.form.controls.name.disable();
+      this.getFilterEntries();
     }
 
-    const filter = dto.filter;
+    const filter = dto?.filter;
 
-    this.form.controls.name.setValue(filter.name);
-    this.form.controls.description.setValue(filter.description);
-    this.form.controls.alias.setValue(filter.alias);
-
+    if (filter !== undefined) {
+      this.form.controls.name.setValue(filter.name);
+      this.form.controls.description.setValue(filter.description);
+      this.form.controls.alias.setValue(filter.alias);
+    }
     this.ngx.resetModalData('filterModal');
-    this.getFilterEntries();
   }
 
   public reset(): void {
     this.submitted = false;
     this.ngx.resetModalData('filterModal');
+    this.buildForm();
   }
 
   public getFilterEntries(event?): void {
@@ -200,9 +206,16 @@ export class FilterModalComponent implements OnInit {
       });
   }
 
-  public openFilterEntryModal(filterEnry: FilterEntry): void {
+  public openFilterEntryModal(modalMode: ModalMode, filterEntry?: FilterEntry): void {
+    const dto = new FilterEntryModalDto();
+    dto.modalMode = modalMode;
+
+    if (modalMode === ModalMode.Edit) {
+      dto.filterEntry = filterEntry;
+    }
+
     this.subscribeToFilterEntryModal();
-    this.ngx.setModalData(filterEnry, 'filterEntryModal');
+    this.ngx.setModalData(dto, 'filterEntryModal');
     this.ngx.getModal('filterEntryModal').open();
   }
 
@@ -274,6 +287,8 @@ export class FilterModalComponent implements OnInit {
     if (this.modalMode === ModalMode.Create) {
       this.createFilter(filter);
     } else {
+      delete filter.tenantId;
+      delete filter.name;
       this.editFilter(filter);
     }
   }

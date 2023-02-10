@@ -11,6 +11,8 @@ import {
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { NameValidator } from 'src/app/validators/name-validator';
+import { FilterEntryModalDto } from '../../../../../../../models/appcentric/filter-entry-modal.dto';
+import { ModalMode } from '../../../../../../../models/other/modal-mode';
 import SubscriptionUtil from '../../../../../../../utils/SubscriptionUtil';
 
 @Component({
@@ -22,6 +24,7 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
   public filterEntryId: string;
   public form: FormGroup;
   public submitted: boolean;
+  public modalMode: ModalMode;
 
   private etherTypeSubscription: Subscription;
   private ipProtocolSubscription: Subscription;
@@ -54,13 +57,20 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
   }
 
   public getData(): void {
-    const filterEntry = Object.assign({}, this.ngx.getModalData('filterEntryModal') as FilterEntry);
+    const dto = Object.assign({}, this.ngx.getModalData('filterEntryModal') as FilterEntryModalDto);
+    console.log();
 
-    this.filterEntryId = filterEntry.id;
+    this.modalMode = dto.modalMode;
+
+    if (this.modalMode === ModalMode.Edit) {
+      this.filterEntryId = dto.filterEntry.id;
+      this.form.controls.name.disable();
+    }
+
+    const filterEntry = dto?.filterEntry;
 
     if (filterEntry !== undefined) {
       this.form.controls.name.setValue(filterEntry.name);
-      this.form.controls.name.disable();
       this.form.controls.description.setValue(filterEntry.description);
       this.form.controls.alias.setValue(filterEntry.alias);
       this.form.controls.etherType.setValue(filterEntry.etherType);
