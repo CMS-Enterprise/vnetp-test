@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NavigationEnd, Router } from '@angular/router';
 import {
   FilterEntry,
   FilterEntryArpFlagEnum,
@@ -13,6 +14,7 @@ import { Subscription } from 'rxjs';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { FilterEntryModalDto } from '../../../../../../../models/appcentric/filter-entry-modal.dto';
 import { ModalMode } from '../../../../../../../models/other/modal-mode';
+import FormUtil from '../../../../../../../utils/FormUtil';
 import SubscriptionUtil from '../../../../../../../utils/SubscriptionUtil';
 
 @Component({
@@ -22,6 +24,8 @@ import SubscriptionUtil from '../../../../../../../utils/SubscriptionUtil';
 })
 export class FilterEntryModalComponent implements OnInit, OnDestroy {
   public filterEntryId: string;
+  public tenantId: string;
+  public filterId: string;
   public form: FormGroup;
   public submitted: boolean;
   public modalMode: ModalMode;
@@ -40,7 +44,17 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
     private filterEntriesService: V2AppCentricFilterEntriesService,
-  ) {}
+    private router: Router,
+  ) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
+        if (match) {
+          this.tenantId = match[1];
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.buildForm();
@@ -58,9 +72,9 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
 
   public getData(): void {
     const dto = Object.assign({}, this.ngx.getModalData('filterEntryModal') as FilterEntryModalDto);
-    console.log();
 
     this.modalMode = dto.modalMode;
+    this.filterId = dto.filterId;
 
     if (this.modalMode === ModalMode.Edit) {
       this.filterEntryId = dto.filterEntry.id;
@@ -217,6 +231,17 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
     });
   }
 
+  private createFilterEntry(filterEntry: FilterEntry): void {
+    filterEntry.filterId = this.filterId;
+    filterEntry.tenantId = this.tenantId;
+    this.filterEntriesService.createFilterEntry({ filterEntry }).subscribe(
+      () => {
+        this.closeModal();
+      },
+      () => {},
+    );
+  }
+
   private editFilterEntry(filterEntry: FilterEntry): void {
     filterEntry.name = null;
     filterEntry.tenantId = null;
@@ -235,8 +260,12 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
   public save(): void {
     this.submitted = true;
     if (this.form.invalid) {
+      console.log(FormUtil.findInvalidControls(this.form));
       return;
     }
+
+    const filterId = this.filterId;
+    const tenantId = this.tenantId;
 
     const {
       name,
@@ -267,9 +296,18 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
       destinationToPort,
       tcpFlags,
       stateful,
+      filterId,
+      tenantId,
     } as FilterEntry;
 
-    this.editFilterEntry(filterEntry);
+    if (this.modalMode === ModalMode.Create) {
+      this.createFilterEntry(filterEntry);
+    } else {
+      delete filterEntry.tenantId;
+      delete filterEntry.filterId;
+      delete filterEntry.name;
+      this.editFilterEntry(filterEntry);
+    }
   }
 
   onTcpFlagSelected(selected: any[]) {

@@ -74,7 +74,6 @@ export class FilterModalComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
-        console.log(match);
         if (match) {
           this.tenantId = match[1];
         }
@@ -209,6 +208,7 @@ export class FilterModalComponent implements OnInit {
   public openFilterEntryModal(modalMode: ModalMode, filterEntry?: FilterEntry): void {
     const dto = new FilterEntryModalDto();
     dto.modalMode = modalMode;
+    dto.filterId = this.filterId;
 
     if (modalMode === ModalMode.Edit) {
       dto.filterEntry = filterEntry;
