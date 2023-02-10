@@ -1,6 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
@@ -15,7 +16,7 @@ describe('FilterEntryModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [FilterEntryModalComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent],
-      imports: [HttpClientModule, ReactiveFormsModule, NgSelectModule],
+      imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule, NgSelectModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
   }));
