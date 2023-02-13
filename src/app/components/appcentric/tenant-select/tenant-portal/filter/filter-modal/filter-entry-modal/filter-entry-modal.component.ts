@@ -73,12 +73,15 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
   public getData(): void {
     const dto = Object.assign({}, this.ngx.getModalData('filterEntryModal') as FilterEntryModalDto);
 
+    console.log(dto);
     this.modalMode = dto.modalMode;
     this.filterId = dto.filterId;
 
     if (this.modalMode === ModalMode.Edit) {
       this.filterEntryId = dto.filterEntry.id;
       this.form.controls.name.disable();
+    } else {
+      this.form.controls.name.enable();
     }
 
     const filterEntry = dto?.filterEntry;
@@ -105,6 +108,7 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
     this.submitted = false;
     this.ngx.resetModalData('filterEntryModal');
     this.buildForm();
+    this.setFormValidators();
   }
 
   private buildForm(): void {
@@ -135,7 +139,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
     const destinationFromPort = this.form.controls.destinationFromPort;
     const destinationToPort = this.form.controls.destinationToPort;
     const stateful = this.form.controls.stateful;
-    const tcpFlags = this.form.controls.tcpFlags;
 
     this.etherTypeSubscription = etherType.valueChanges.subscribe(etherTypeValue => {
       // ipProtocol and matchOnlyFragments are required when etherType is IP, IPv4 or IPv6
@@ -179,7 +182,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
         destinationFromPort.enable();
         destinationToPort.enable();
         stateful.enable();
-        tcpFlags.enable();
 
         sourceFromPort.setValidators(Validators.required);
         sourceToPort.setValidators(Validators.required);
@@ -187,10 +189,8 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
         destinationToPort.setValidators(Validators.required);
         if (ipProtocolValue === 'tcp') {
           stateful.setValidators(Validators.required);
-          tcpFlags.setValidators(Validators.required);
         } else if (ipProtocolValue === 'udp') {
           stateful.setValidators(null);
-          tcpFlags.setValidators(null);
         }
       } else {
         sourceFromPort.disable();
@@ -198,7 +198,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
         destinationFromPort.disable();
         destinationToPort.disable();
         stateful.disable();
-        tcpFlags.disable();
 
         sourceFromPort.setValidators(null);
         sourceToPort.setValidators(null);
@@ -217,7 +216,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
       destinationFromPort.updateValueAndValidity();
       destinationToPort.updateValueAndValidity();
       stateful.updateValueAndValidity();
-      tcpFlags.updateValueAndValidity();
     });
 
     this.sourceFromPortSubscription = sourceFromPort.valueChanges.subscribe(sourceFromPortValue => {
@@ -308,13 +306,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
       delete filterEntry.name;
       this.editFilterEntry(filterEntry);
     }
-  }
-
-  onTcpFlagSelected(selected: any[]) {
-    const tcpFlagControl = 'tcpFlags';
-    const tcpFlags = this.form.controls[tcpFlagControl] as FormArray;
-    const selectedValues = selected.map(item => item.value);
-    tcpFlags.setValue(selectedValues);
   }
 
   ngOnDestroy() {

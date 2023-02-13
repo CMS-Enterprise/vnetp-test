@@ -139,20 +139,6 @@ describe('FilterEntryModalComponent', () => {
       expect(isRequired('destinationToPort')).toBe(false);
     });
 
-    it('TCP Flags', () => {
-      const etherType = getFormControl('etherType');
-      const ipProtocol = getFormControl('ipProtocol');
-
-      etherType.setValue('ip');
-      ipProtocol.setValue('tcp');
-
-      expect(isRequired('tcpFlags')).toBe(true);
-
-      ipProtocol.setValue('udp');
-
-      expect(isRequired('tcpFlags')).toBe(false);
-    });
-
     it('Stateful', () => {
       const etherType = getFormControl('etherType');
       const ipProtocol = getFormControl('ipProtocol');
