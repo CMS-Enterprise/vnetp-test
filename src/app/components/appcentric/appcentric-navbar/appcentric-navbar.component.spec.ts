@@ -1,8 +1,11 @@
+import { HttpClientModule } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of } from 'rxjs';
+import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { AuthService } from 'src/app/services/auth.service';
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
@@ -14,24 +17,21 @@ describe('AppcentricNavbarComponent', () => {
   let fixture: ComponentFixture<AppcentricNavbarComponent>;
 
   beforeEach(async(() => {
-    const authService = {
-      currentUser: of({
-        Username: 'UserName',
-      }),
-      logout: jest.fn(),
-    };
-
     TestBed.configureTestingModule({
-      declarations: [AppcentricNavbarComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      imports: [RouterModule, RouterTestingModule],
-      providers: [MockProvider(NgxSmartModalService), { provide: AuthService, useValue: authService }],
-    }).compileComponents();
+      imports: [RouterTestingModule, FormsModule, HttpClientModule],
+      declarations: [AppcentricNavbarComponent, FilterPipe, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      providers: [MockProvider(NgxSmartModalService), AuthService],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(AppcentricNavbarComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AppcentricNavbarComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {
