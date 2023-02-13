@@ -23,31 +23,30 @@
 <ng-template #actionsTemplate let-bridgeDomain="datum">
   <section class="table__actions">
     <app-icon-button
+      *ngIf="!bridgeDomain?.deletedAt"
       icon="add"
       label="Add Subnet"
       (handleClick)="openSubnetsModal(bridgeDomain)"
     ></app-icon-button>
     <app-icon-button
-            *ngIf="!bridgeDomain?.deletedAt"
-            icon="edit"
-            label="Edit Bridge Domain"
-            (handleClick)="openBridgeDomainModal(ModalMode.Edit, bridgeDomain)"
-          ></app-icon-button>
-
-          <app-icon-button
-          *ngIf="bridgeDomain?.deletedAt"
-          icon="undo"
-          label="Restore Bridge Domain"
-          type="success"
-          (handleClick)="restoreBridgeDomain(bridgeDomain)"
-        ></app-icon-button>
-
-        <app-icon-button
-        icon="delete"
-        label="Soft-Delete/Delete Bridge Domain"
-        [type]="bridgeDomain?.deletedAt ? 'danger' : 'default'"
-        (handleClick)="deleteBridgeDomain(bridgeDomain)"
-      ></app-icon-button>
+      *ngIf="!bridgeDomain?.deletedAt"
+      icon="edit"
+      label="Edit Bridge Domain"
+      (handleClick)="openBridgeDomainModal(ModalMode.Edit, bridgeDomain)"
+    ></app-icon-button>
+    <app-icon-button
+      *ngIf="bridgeDomain?.deletedAt"
+      icon="undo"
+      label="Restore Bridge Domain"
+      type="success"
+      (handleClick)="restoreBridgeDomain(bridgeDomain)"
+    ></app-icon-button>
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Bridge Domain"
+      [type]="bridgeDomain?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteBridgeDomain(bridgeDomain)"
+    ></app-icon-button>
   </section>
 </ng-template>
 

@@ -104,44 +104,33 @@
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>
-      <app-table [config]="config" [data]="subjects" (clearResults)="getSubjects($event)" (searchParams)="getSubjects($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
-
     </div>
   </form>
-  <app-add-filter-modal [tenantId]="tenantId"></app-add-filter-modal>
-  <app-subject-edit-modal></app-subject-edit-modal>
+  <ng-container *ngIf="modalMode === 'Edit'">
+    <header class="modal-header">
+      <h4 class="modal-title">Add Filter</h4>
+    </header>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="filters">Filters</label>
+        <ng-select [(ngModel)]="selectedFilter" [ngModelOptions]="{standalone: true}" [items]="filters" id="filters" bindLabel="name"></ng-select>
+      </div>
+        <button class="btn btn-success" (click)="addFilter()">
+          <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+          <span>Add Filter</span>
+        </button>
+      <app-table [config]="config" [data]="filterTableData" (clearResults)="getFiltertableData($event)" (searchParams)="getFiltertableData($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+    </div>
+  </ng-container>
 </ngx-smart-modal>
 
-
-<ng-template #actionsTemplate let-subject="datum">
+<ng-template #actionsTemplate let-filter="datum">
   <section>
     <app-icon-button
-      icon="add"
-      label="Add Filter"
-      (handleClick)="openAddFilterModal(subject)"
-    ></app-icon-button>
-
-    <app-icon-button
-      *ngIf="!subject?.deletedAt"
-      icon="edit"
-      label="Edit Subject"
-      (handleClick)="openSubjectEditModal(subject)"
-    ></app-icon-button>
-
-    <app-icon-button
       icon="delete"
-      label="Soft-Delete/Delete Bridge Domain"
-      [type]="subject?.deletedAt ? 'danger' : 'default'"
-      (handleClick)="removeSubject(subject)"
-    ></app-icon-button>
-
-    <app-icon-button
-      *ngIf="subject?.deletedAt"
-      icon="undo"
-      label="Restore Bridge Domain"
-      type="success"
-      (handleClick)="restoreSubject(subject)"
+      label="Soft-Delete/Delete Filter"
+      [type]="filter?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="removeFilter(filter)"
     ></app-icon-button>
   </section>
 </ng-template>
-

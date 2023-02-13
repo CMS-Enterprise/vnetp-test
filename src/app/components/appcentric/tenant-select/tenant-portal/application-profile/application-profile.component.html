@@ -24,31 +24,24 @@
 <ng-template #actionsTemplate let-applicationProfile="datum">
   <section class="table__actions">
     <app-icon-button
-      icon="add"
-      label="Add Endpoint Group"
-      (handleClick)="openEndpointGroupModal(applicationProfile)"
+      *ngIf="!applicationProfile?.deletedAt"
+      icon="edit"
+      label="Edit Application Profile"
+      (handleClick)="openApplicationProfileModal(ModalMode.Edit, applicationProfile)"
     ></app-icon-button>
     <app-icon-button
-            *ngIf="!applicationProfile?.deletedAt"
-            icon="edit"
-            label="Edit Application Profile"
-            (handleClick)="openApplicationProfileModal(ModalMode.Edit, applicationProfile)"
-          ></app-icon-button>
-
-          <app-icon-button
-          *ngIf="applicationProfile?.deletedAt"
-          icon="undo"
-          label="Restore Application Profile"
-          type="success"
-          (handleClick)="restoreApplicationProfile(applicationProfile)"
-        ></app-icon-button>
-
-        <app-icon-button
-        icon="delete"
-        label="Soft-Delete/Delete Application Profile"
-        [type]="applicationProfile?.deletedAt ? 'danger' : 'default'"
-        (handleClick)="deleteApplicationProfile(applicationProfile)"
-      ></app-icon-button>
+      *ngIf="applicationProfile?.deletedAt"
+      icon="undo"
+      label="Restore Application Profile"
+      type="success"
+      (handleClick)="restoreApplicationProfile(applicationProfile)"
+    ></app-icon-button>
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Application Profile"
+      [type]="applicationProfile?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteApplicationProfile(applicationProfile)"
+    ></app-icon-button>
   </section>
 </ng-template>
 
@@ -58,4 +51,3 @@
 
 <app-application-profile-modal></app-application-profile-modal>
 <app-yes-no-modal></app-yes-no-modal>
-<app-ap-endpoint-group-modal></app-ap-endpoint-group-modal>

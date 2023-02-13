@@ -4,31 +4,30 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { MockNgxSmartModalComponent, MockFontAwesomeComponent, MockComponent, MockIconButtonComponent } from 'src/test/mock-components';
+import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
+import { SubjectModalComponent } from './subject-modal.component';
 
-import { AddFilterModalComponent } from './add-filter-modal.component';
-
-describe('AddFilterModalComponent', () => {
-  let component: AddFilterModalComponent;
-  let fixture: ComponentFixture<AddFilterModalComponent>;
+describe('SubjectModalComponent', () => {
+  let component: SubjectModalComponent;
+  let fixture: ComponentFixture<SubjectModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AddFilterModalComponent,
+        SubjectModalComponent,
         MockNgxSmartModalComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockIconButtonComponent,
       ],
-      imports: [HttpClientModule, FormsModule, NgSelectModule],
+      imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule, NgSelectModule, FormsModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddFilterModalComponent);
+    fixture = TestBed.createComponent(SubjectModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

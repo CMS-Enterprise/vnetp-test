@@ -12,9 +12,7 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { ApEndpointGroupModalComponent } from './ap-endpoint-group-modal/ap-endpoint-group-modal.component';
-import { ApEndpointGroupEditModalComponent } from './ap-endpoint-group-modal/ap-endpoint-group-edit-modal/ap-endpoint-group-edit-modal.component';
-import { EndpointGroupsModule } from '../endpoint-groups/endpoint-groups.module';
+import { ApEndpointGroupModalComponent } from './application-profile-modal/ap-endpoint-group-modal/ap-endpoint-group-modal.component';
 
 const routes: Routes = [
   {
@@ -24,12 +22,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    ApplicationProfileComponent,
-    ApplicationProfileModalComponent,
-    ApEndpointGroupModalComponent,
-    ApEndpointGroupEditModalComponent,
-  ],
+  declarations: [ApplicationProfileComponent, ApplicationProfileModalComponent, ApEndpointGroupModalComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -43,7 +36,6 @@ const routes: Routes = [
     ReactiveFormsModule,
     TooltipModule,
     NgSelectModule,
-    EndpointGroupsModule,
   ],
   exports: [ApplicationProfileComponent, ApplicationProfileModalComponent],
 })

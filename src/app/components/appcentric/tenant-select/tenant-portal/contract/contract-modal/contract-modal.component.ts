@@ -1,10 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
-import { V2AppCentricContractsService, Contract } from 'client';
+import { V2AppCentricContractsService, Contract, V2AppCentricSubjectsService, SubjectPaginationResponse, Subject } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
+import { TableConfig } from 'src/app/common/table/table.component';
 import { ContractModalDto } from 'src/app/models/appcentric/contract-modal-dto';
+import { SubjectModalDto } from 'src/app/models/appcentric/subject-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { TableContextService } from 'src/app/services/table-context.service';
 import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
@@ -13,23 +19,46 @@ import { NameValidator } from 'src/app/validators/name-validator';
   styleUrls: ['./contract-modal.component.css'],
 })
 export class ContractModalComponent implements OnInit {
-  public modalMode: ModalMode;
+  public isLoading = false;
+  public ModalMode: ModalMode;
   public contractId: string;
   public form: FormGroup;
   public submitted: boolean;
   public tenantId: string;
+
+  public tableComponentDto = new TableComponentDto();
+  public subjects: SubjectPaginationResponse;
+  private subjectModalSubscription: Subscription;
+  public perPage = 20;
+
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+
+  public searchColumns: SearchColumnConfig[] = [];
+
+  public config: TableConfig<any> = {
+    description: 'Subjects',
+    columns: [
+      { name: 'Name', property: 'name' },
+      { name: 'Alias', property: 'alias' },
+      { name: 'Description', property: 'description' },
+      { name: '', template: () => this.actionsTemplate },
+    ],
+  };
 
   constructor(
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
     private contractService: V2AppCentricContractsService,
     private router: Router,
+    private subjectsService: V2AppCentricSubjectsService,
+    private tableContextService: TableContextService,
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
+        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
         if (match) {
-          this.tenantId = match[1];
+          const uuid = match[0].split('/')[2];
+          this.tenantId = uuid;
         }
       }
     });
@@ -37,6 +66,11 @@ export class ContractModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+  }
+
+  public onTableEvent(event: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.getSubjects(event);
   }
 
   get f() {
@@ -51,8 +85,8 @@ export class ContractModalComponent implements OnInit {
   public getData(): void {
     const dto = Object.assign({}, this.ngx.getModalData('contractModal') as ContractModalDto);
 
-    this.modalMode = dto.modalMode;
-    if (this.modalMode === ModalMode.Edit) {
+    this.ModalMode = dto.modalMode;
+    if (this.ModalMode === ModalMode.Edit) {
       this.contractId = dto.contract.id;
     } else {
       this.form.controls.name.enable();
@@ -65,6 +99,7 @@ export class ContractModalComponent implements OnInit {
       this.form.controls.description.setValue(contract.description);
       this.form.controls.alias.setValue(contract.alias);
     }
+    this.getSubjects();
     this.ngx.resetModalData('contractModal');
   }
 
@@ -121,10 +156,118 @@ export class ContractModalComponent implements OnInit {
       tenantId,
     } as Contract;
 
-    if (this.modalMode === ModalMode.Create) {
+    if (this.ModalMode === ModalMode.Create) {
       this.createContract(contract);
     } else {
       this.editContract(contract);
     }
+  }
+
+  public getSubjects(event?): void {
+    this.isLoading = true;
+    let eventParams;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
+    this.subjectsService
+      .findAllSubject({
+        filter: [`contractId||eq||${this.contractId}`, eventParams],
+      })
+      .subscribe(
+        data => (this.subjects = data),
+        () => (this.subjects = null),
+      );
+  }
+
+  public removeSubject(subject: Subject) {
+    if (subject.deletedAt) {
+      this.subjectsService
+        .removeSubject({
+          uuid: subject.id,
+        })
+        .subscribe(() => {
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
+          if (filteredResults) {
+            this.getSubjects(params);
+          } else {
+            this.getSubjects();
+          }
+        });
+    } else {
+      this.subjectsService
+        .softDeleteSubject({
+          uuid: subject.id,
+        })
+        .subscribe(() => {
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
+          if (filteredResults) {
+            this.getSubjects(params);
+          } else {
+            this.getSubjects();
+          }
+        });
+    }
+  }
+
+  public restoreSubject(subject: Subject): void {
+    if (!subject.deletedAt) {
+      return;
+    }
+
+    this.subjectsService
+      .restoreSubject({
+        uuid: subject.id,
+      })
+      .subscribe(() => {
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getSubjects(params);
+        } else {
+          this.getSubjects();
+        }
+      });
+  }
+
+  public openSubjectModal(modalMode: string, subject?: Subject): void {
+    const mode = modalMode === 'Edit' ? ModalMode.Edit : ModalMode.Create;
+    const dto = new SubjectModalDto();
+    dto.modalMode = mode;
+    if (dto.modalMode === ModalMode.Edit) {
+      dto.subject = subject;
+    }
+
+    this.subscribeToSubjectModal();
+    this.ngx.setModalData(dto, 'subjectModal');
+    this.ngx.getModal('subjectModal').open();
+  }
+
+  private subscribeToSubjectModal(): void {
+    this.subjectModalSubscription = this.ngx.getModal('subjectModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('subjectModal');
+      this.subjectModalSubscription.unsubscribe();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.getSubjects(params);
+      } else {
+        this.getSubjects();
+      }
+    });
   }
 }
