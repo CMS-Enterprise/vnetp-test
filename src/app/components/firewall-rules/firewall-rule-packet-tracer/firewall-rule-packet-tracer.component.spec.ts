@@ -143,7 +143,6 @@ describe('FirewallRulesPacketTracerComponent', () => {
   //   });
 
   it('should find a firewall rule match if all searched IPs/fields exist in the rule', () => {
-    console.log('test1');
     component.form.setValue({
       direction: 'In',
       protocol: 'IP',
