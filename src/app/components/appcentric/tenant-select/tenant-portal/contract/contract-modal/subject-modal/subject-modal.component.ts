@@ -150,7 +150,7 @@ export class SubjectModalComponent implements OnInit {
     this.subjectsService
       .updateSubject({
         uuid: this.subjectId,
-        subject: subject,
+        subject,
       })
       .subscribe(() => this.closeModal());
   }
