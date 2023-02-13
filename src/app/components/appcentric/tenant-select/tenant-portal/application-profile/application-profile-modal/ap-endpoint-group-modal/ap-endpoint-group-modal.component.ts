@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { EndpointGroup, V2AppCentricEndpointGroupsService } from 'client';
@@ -13,7 +13,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   templateUrl: './ap-endpoint-group-modal.component.html',
   // styleUrls: ['./ap-endpoint-group-modal.component.css'],
 })
-export class ApEndpointGroupModalComponent {
+export class ApEndpointGroupModalComponent implements OnInit {
   @Input() public applicationProfileId: string;
   public form: FormGroup;
   public submitted: boolean;
