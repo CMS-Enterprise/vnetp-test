@@ -1,11 +1,9 @@
 <ngx-smart-modal #apEndpointGroupModal identifier="apEndpointGroupModal" (onOpen)="getData()" (onClose)="reset()">
-
   <header class="modal-header">
     <h4 class="modal-title">Endpoint Group</h4>
   </header>
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
-
       <div class="form-group">
         <label for="name">Name</label>
         <input

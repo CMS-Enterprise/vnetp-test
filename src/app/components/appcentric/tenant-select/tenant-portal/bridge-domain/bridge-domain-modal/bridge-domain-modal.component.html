@@ -67,7 +67,7 @@
             <div *ngIf="f.bdMacAddress.errors.invalidMacAddress">Bridge Domain MAC Address Must be a Valid MAC Address</div>
           </div>
         </div>
-        
+
         <div class="form-group col-md-3">
           <label for="unicastRouting">Unicast Routing</label>
           <select
@@ -133,13 +133,7 @@
 
       <div class="form-group">
         <label for="vrfs">VRF</label>
-        <ng-select
-        id="vrfs"
-        [items]="vrfs"
-        bindLabel="name"
-        bindValue="id"
-        formControlName="vrfId"
-        ></ng-select>
+        <ng-select id="vrfs" [items]="vrfs" bindLabel="name" bindValue="id" formControlName="vrfId"></ng-select>
         <div *ngIf="submitted && f.unicastRouting.errors" class="invalid-feedback">
           <div *ngIf="f.unicastRouting.errors.required">VRF is required</div>
         </div>
@@ -148,17 +142,30 @@
       <div *ngIf="modalMode === 'Edit'">
         <div class="form-group">
           <label for="l3Outs">L3 Outs</label>
-          <ng-select [(ngModel)]="selectedL3Out" [ngModelOptions]="{standalone: true}" [items]="l3Outs" id="l3Outs" bindLabel="name"></ng-select>
+          <ng-select
+            [(ngModel)]="selectedL3Out"
+            [ngModelOptions]="{ standalone: true }"
+            [items]="l3Outs"
+            id="l3Outs"
+            bindLabel="name"
+          ></ng-select>
         </div>
 
         <button type="button" class="btn btn-info" (click)="addL3Out()" [disabled]="!selectedL3Out">
           <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
           <span>Add L3 Out</span>
         </button>
-      
-        <app-table [config]="config" [data]="l3OutsTableData" (clearResults)="getL3Outs($event)" (searchParams)="getL3Outs($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
-      </div>
 
+        <app-table
+          [config]="config"
+          [data]="l3OutsTableData"
+          (clearResults)="getL3Outs($event)"
+          (searchParams)="getL3Outs($event)"
+          [searchColumns]="searchColumns"
+          [(itemsPerPage)]="perPage"
+          (tableEvent)="onTableEvent($event)"
+        ></app-table>
+      </div>
     </div>
 
     <footer class="modal-footer">

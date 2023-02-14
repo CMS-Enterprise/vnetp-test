@@ -8,7 +8,15 @@
   </section>
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-table [config]="config" [data]="bridgeDomains" (clearResults)="getBridgeDomains($event)" (searchParams)="getBridgeDomains($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+    <app-table
+      [config]="config"
+      [data]="bridgeDomains"
+      (clearResults)="getBridgeDomains($event)"
+      (searchParams)="getBridgeDomains($event)"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
     <section class="btn-toolbar" role="toolbar">
       <app-import-export
         [exportObject]="bridgeDomains"

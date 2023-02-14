@@ -51,7 +51,7 @@
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
-      
+
       <div class="form-row">
         <div class="form-group col-md-5">
           <label for="gatewayIp">Gateway Ip</label>
@@ -99,7 +99,7 @@
           </select>
         </div>
       </div>
-        
+
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="advertisedExternally">Advertised Externally</label>
@@ -171,8 +171,15 @@
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>
-      <app-table [config]="config" [data]="subnets" (clearResults)="getSubnets($event)" (searchParams)="getSubnets($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
-
+      <app-table
+        [config]="config"
+        [data]="subnets"
+        (clearResults)="getSubnets($event)"
+        (searchParams)="getSubnets($event)"
+        [searchColumns]="searchColumns"
+        [(itemsPerPage)]="perPage"
+        (tableEvent)="onTableEvent($event)"
+      ></app-table>
     </div>
   </form>
 </ngx-smart-modal>

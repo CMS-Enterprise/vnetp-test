@@ -8,7 +8,15 @@
   </section>
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-table [config]="config" [data]="vrfs" (clearResults)="getVrfs($event)" (searchParams)="getVrfs($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+    <app-table
+      [config]="config"
+      [data]="vrfs"
+      (clearResults)="getVrfs($event)"
+      (searchParams)="getVrfs($event)"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
     <section class="btn-toolbar" role="toolbar">
       <app-import-export
         [exportObject]="vrfs"
@@ -23,26 +31,26 @@
 <ng-template #actionsTemplate let-vrf="datum">
   <section class="table__actions">
     <app-icon-button
-            *ngIf="!vrf?.deletedAt"
-            icon="edit"
-            label="Edit VRF"
-            (handleClick)="openVrfModal(ModalMode.Edit, vrf)"
-          ></app-icon-button>
+      *ngIf="!vrf?.deletedAt"
+      icon="edit"
+      label="Edit VRF"
+      (handleClick)="openVrfModal(ModalMode.Edit, vrf)"
+    ></app-icon-button>
 
-          <app-icon-button
-          *ngIf="vrf?.deletedAt"
-          icon="undo"
-          label="Restore VRF"
-          type="success"
-          (handleClick)="restoreVrf(vrf)"
-        ></app-icon-button>
+    <app-icon-button
+      *ngIf="vrf?.deletedAt"
+      icon="undo"
+      label="Restore VRF"
+      type="success"
+      (handleClick)="restoreVrf(vrf)"
+    ></app-icon-button>
 
-        <app-icon-button
-        icon="delete"
-        label="Soft-Delete/Delete VRF"
-        [type]="vrf?.deletedAt ? 'danger' : 'default'"
-        (handleClick)="deleteVrf(vrf)"
-      ></app-icon-button>
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete VRF"
+      [type]="vrf?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteVrf(vrf)"
+    ></app-icon-button>
   </section>
 </ng-template>
 

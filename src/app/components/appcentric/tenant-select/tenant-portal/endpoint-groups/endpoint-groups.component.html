@@ -8,7 +8,15 @@
   </section>
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-table [config]="config" [data]="endpointGroups" (clearResults)="getEndpointGroups($event)" (searchParams)="getEndpointGroups($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+    <app-table
+      [config]="config"
+      [data]="endpointGroups"
+      (clearResults)="getEndpointGroups($event)"
+      (searchParams)="getEndpointGroups($event)"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
     <section class="btn-toolbar" role="toolbar">
       <app-import-export
         [exportObject]="endpointGroups"
@@ -23,26 +31,26 @@
 <ng-template #actionsTemplate let-endpointGroup="datum">
   <section class="table__actions">
     <app-icon-button
-            *ngIf="!endpointGroup?.deletedAt"
-            icon="edit"
-            label="Edit Endpoint Group"
-            (handleClick)="openEndpointGroupModal(ModalMode.Edit, endpointGroup)"
-          ></app-icon-button>
+      *ngIf="!endpointGroup?.deletedAt"
+      icon="edit"
+      label="Edit Endpoint Group"
+      (handleClick)="openEndpointGroupModal(ModalMode.Edit, endpointGroup)"
+    ></app-icon-button>
 
-          <app-icon-button
-          *ngIf="endpointGroup?.deletedAt"
-          icon="undo"
-          label="Restore Endpoint Group"
-          type="success"
-          (handleClick)="restoreEndpointGroup(endpointGroup)"
-        ></app-icon-button>
+    <app-icon-button
+      *ngIf="endpointGroup?.deletedAt"
+      icon="undo"
+      label="Restore Endpoint Group"
+      type="success"
+      (handleClick)="restoreEndpointGroup(endpointGroup)"
+    ></app-icon-button>
 
-        <app-icon-button
-        icon="delete"
-        label="Soft-Delete/Delete Endpoint Group"
-        [type]="endpointGroup?.deletedAt ? 'danger' : 'default'"
-        (handleClick)="deleteEndpointGroup(endpointGroup)"
-      ></app-icon-button>
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Endpoint Group"
+      [type]="endpointGroup?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteEndpointGroup(endpointGroup)"
+    ></app-icon-button>
   </section>
 </ng-template>
 

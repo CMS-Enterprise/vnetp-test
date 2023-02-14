@@ -1,4 +1,10 @@
-<ngx-smart-modal #applicationProfileModal customClass="medium-modal" identifier="applicationProfileModal" (onOpen)="getData()" (onClose)="reset()">
+<ngx-smart-modal
+  #applicationProfileModal
+  customClass="medium-modal"
+  identifier="applicationProfileModal"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+>
   <header class="modal-header">
     <h4 class="modal-title">Application Profile</h4>
   </header>
@@ -69,7 +75,15 @@
       <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
       <span>Create Endpoint Group</span>
     </button>
-    <app-table [config]="config" [data]="endpointGroups" (clearResults)="getEndpointGroups($event)" (searchParams)="getEndpointGroups($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+    <app-table
+      [config]="config"
+      [data]="endpointGroups"
+      (clearResults)="getEndpointGroups($event)"
+      (searchParams)="getEndpointGroups($event)"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
   </ng-container>
 </ngx-smart-modal>
 

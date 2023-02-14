@@ -51,7 +51,16 @@
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
-        <app-table *ngIf="!dto?.l3Out?.vrfId" [config]="config" [data]="vrfs" (clearResults)="getVrfs($event)" (searchParams)="getVrfs($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+      <app-table
+        *ngIf="!dto?.l3Out?.vrfId"
+        [config]="config"
+        [data]="vrfs"
+        (clearResults)="getVrfs($event)"
+        (searchParams)="getVrfs($event)"
+        [searchColumns]="searchColumns"
+        [(itemsPerPage)]="perPage"
+        (tableEvent)="onTableEvent($event)"
+      ></app-table>
     </div>
 
     <footer class="modal-footer">
@@ -70,19 +79,18 @@
   <section>
     <div [formGroup]="form" class="custom-control custom-radio">
       <input
-      type="radio"
-      formControlName="vrfId"
-      name="vrfId"
-      value="{{ vrf.id }}"
-      aria-label="Vrf"
-      class="custom-control-input"
-      id="radio-{{ vrf.id }}"
+        type="radio"
+        formControlName="vrfId"
+        name="vrfId"
+        value="{{ vrf.id }}"
+        aria-label="Vrf"
+        class="custom-control-input"
+        id="radio-{{ vrf.id }}"
       />
       <label class="custom-control-label" for="radio-{{ vrf.id }}">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
       </label>
     </div>
-
   </section>
 </ng-template>
 

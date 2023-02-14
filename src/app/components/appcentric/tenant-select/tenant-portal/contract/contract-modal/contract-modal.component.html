@@ -51,7 +51,6 @@
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
-
     </div>
 
     <footer class="modal-footer">
@@ -69,7 +68,15 @@
       <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
       <span>Create Subject</span>
     </button>
-    <app-table [config]="config" [data]="subjects" (clearResults)="getSubjects($event)" (searchParams)="getSubjects($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+    <app-table
+      [config]="config"
+      [data]="subjects"
+      (clearResults)="getSubjects($event)"
+      (searchParams)="getSubjects($event)"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
   </ng-container>
 </ngx-smart-modal>
 

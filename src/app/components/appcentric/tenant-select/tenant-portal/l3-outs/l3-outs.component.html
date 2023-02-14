@@ -8,7 +8,15 @@
   </section>
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-table [config]="config" [data]="l3Outs" (clearResults)="getL3Outs($event)" (searchParams)="getL3Outs($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+    <app-table
+      [config]="config"
+      [data]="l3Outs"
+      (clearResults)="getL3Outs($event)"
+      (searchParams)="getL3Outs($event)"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
     <section class="btn-toolbar" role="toolbar">
       <app-import-export
         [exportObject]="l3Outs"
@@ -23,26 +31,26 @@
 <ng-template #actionsTemplate let-l3Out="datum">
   <section class="table__actions">
     <app-icon-button
-            *ngIf="!l3Out?.deletedAt"
-            icon="edit"
-            label="Edit L3 Out"
-            (handleClick)="openL3OutsModal(ModalMode.Edit, l3Out)"
-          ></app-icon-button>
+      *ngIf="!l3Out?.deletedAt"
+      icon="edit"
+      label="Edit L3 Out"
+      (handleClick)="openL3OutsModal(ModalMode.Edit, l3Out)"
+    ></app-icon-button>
 
-          <app-icon-button
-          *ngIf="l3Out?.deletedAt"
-          icon="undo"
-          label="Restore L3 Out"
-          type="success"
-          (handleClick)="restoreL3Out(l3Out)"
-        ></app-icon-button>
+    <app-icon-button
+      *ngIf="l3Out?.deletedAt"
+      icon="undo"
+      label="Restore L3 Out"
+      type="success"
+      (handleClick)="restoreL3Out(l3Out)"
+    ></app-icon-button>
 
-        <app-icon-button
-        icon="delete"
-        label="Soft-Delete/Delete L3 Out"
-        [type]="l3Out?.deletedAt ? 'danger' : 'default'"
-        (handleClick)="deleteL3Out(l3Out)"
-      ></app-icon-button>
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete L3 Out"
+      [type]="l3Out?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteL3Out(l3Out)"
+    ></app-icon-button>
   </section>
 </ng-template>
 

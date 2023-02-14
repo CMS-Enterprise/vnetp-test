@@ -9,7 +9,15 @@
   </section>
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-table [config]="config" [data]="applicationProfiles" (clearResults)="getApplicationProfiles($event)" (searchParams)="getApplicationProfiles($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+    <app-table
+      [config]="config"
+      [data]="applicationProfiles"
+      (clearResults)="getApplicationProfiles($event)"
+      (searchParams)="getApplicationProfiles($event)"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
     <section class="btn-toolbar" role="toolbar">
       <app-import-export
         [exportObject]="applicationProfiles"
