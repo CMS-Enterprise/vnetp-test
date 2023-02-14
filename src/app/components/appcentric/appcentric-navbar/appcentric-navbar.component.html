@@ -42,11 +42,6 @@
       </ul>
   
       <ul class="navbar-nav ml-auto align-items-lg-center">
-        <li class="nav-item">
-          <a class="nav-link" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
-            <span>Jobs</span>
-          </a>
-        </li>
         <li class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle"
@@ -61,12 +56,6 @@
           <div class="dropdown-menu dropdown-menu--reverse" aria-labelledby="userNavbarDropdown">
             <a class="dropdown-item" (click)="openLogoutModal()">Logout</a>
           </div>
-        </li>
-  
-        <li class="nav-item align-self-end align-self-lg-center">
-          <button class="btn btn-danger" routerLink="deploy" queryParamsHandling="merge">
-            Deploy
-          </button>
         </li>
       </ul>
     </div>
