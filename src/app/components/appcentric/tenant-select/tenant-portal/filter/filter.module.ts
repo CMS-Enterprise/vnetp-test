@@ -12,8 +12,7 @@ import { TableModule } from 'src/app/common/table/table.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { FilterModalComponent } from './filter-modal/filter-modal.component';
-import { FilterEntryModalComponent } from './filter-entry-modal/filter-entry-modal.component';
-import { FilterEntryEditModalComponent } from './filter-entry-modal/filter-entry-edit-modal/filter-entry-edit-modal.component';
+import { FilterEntryModalComponent } from './filter-modal/filter-entry-modal/filter-entry-modal.component';
 
 const routes: Routes = [
   {
@@ -23,7 +22,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [FilterComponent, FilterModalComponent, FilterEntryModalComponent, FilterEntryEditModalComponent],
+  declarations: [FilterComponent, FilterModalComponent, FilterEntryModalComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

@@ -1,0 +1,141 @@
+<ngx-smart-modal #filterEntryModal identifier="filterEntryModal" [dismissable]="false"
+(onOpen)="getData()" (onClose)="reset()">
+  <header class="modal-header">
+    <h4 class="modal-title">Filter Entry</h4>
+  </header>
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" formControlName="name" class="form-control"
+          [class.is-invalid]="submitted && f.name.errors" aria-label="Name" />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or '_'.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="alias">Alias</label>
+        <input type="text" id="alias" formControlName="alias" class="form-control"
+          [class.is-invalid]="submitted && f.alias.errors" aria-label="Alias" />
+        <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
+          <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" id="description" formControlName="description" class="form-control"
+          [class.is-invalid]="submitted && f.description.errors" aria-label="Description" />
+        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+          <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="form-row">
+
+        <div class="form-group col-md-6">
+          <label for="etherType">Ether Type</label>
+          <ng-select formControlName="etherType" [items]="etherTypeOptions" id="etherType"></ng-select>
+        </div>
+
+
+        <div class="form-group col-md-6">
+          <label for="ipProtocol">Ip Protocol</label>
+          <ng-select formControlName="ipProtocol" [items]="ipProtocolOptions" id="ipProtocol"></ng-select>
+        </div>
+
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="arpFlag">Arp Flag</label>
+          <ng-select formControlName="arpFlag" [items]="arpFlagOptions" id="arpFlag"></ng-select>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="matchOnlyFragments">Match Only Fragments</label>
+          <select id="matchOnlyFragments" formControlName="matchOnlyFragments" class="form-control"
+            [class.is-invalid]="submitted && f.matchOnlyFragments.errors" aria-label="Match Only Fragments">
+            <option></option>
+            <option [ngValue]="true">True</option>
+            <option [ngValue]="false">False</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="stateful">Stateful</label>
+          <select id="matchOnlyFragments" formControlName="stateful" class="form-control"
+            [class.is-invalid]="submitted && f.stateful.errors" aria-label="Stateful">
+            <option></option>
+            <option [ngValue]="true">True</option>
+            <option [ngValue]="false">False</option>
+          </select>
+        </div>
+
+      </div>
+
+      <hr />
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="sourceFromPort">Source From Port</label>
+          <input type="text" id="sourceFromPort" formControlName="sourceFromPort" class="form-control"
+            [class.is-invalid]="submitted && f.sourceFromPort.errors" aria-label="Source From Port" />
+          <div *ngIf="submitted && f.sourceFromPort.errors" class="invalid-feedback">
+            <div *ngIf="f.sourceFromPort.errors.min">Source from port must be greater than or equal to 0.</div>
+            <div *ngIf="f.sourceFromPort.errors.min">Source from port must be less than or equal to 65535.</div>
+          </div>
+        </div>
+
+
+        <div class="form-group col-md-6">
+          <label for="sourceToPort">Source To Port</label>
+          <input type="text" id="sourceToPort" formControlName="sourceToPort" class="form-control"
+            [class.is-invalid]="submitted && f.sourceToPort.errors" aria-label="Source To Port" />
+          <div *ngIf="submitted && f.sourceToPort.errors" class="invalid-feedback">
+            <div *ngIf="f.sourceToPort.errors.min">Source to port must be greater than or equal to 0.</div>
+            <div *ngIf="f.sourceToPort.errors.min">Source to port must be less than or equal to 65535.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="destinationFromPort">Destination From Port</label>
+          <input type="text" id="destinationFromPort" formControlName="destinationFromPort" class="form-control"
+            [class.is-invalid]="submitted && f.destinationFromPort.errors" aria-label="Destination From Port" />
+          <div *ngIf="submitted && f.destinationFromPort.errors" class="invalid-feedback">
+            <div *ngIf="f.destinationFromPort.errors.min">Destination from port must be greater than or equal to 0.
+            </div>
+            <div *ngIf="f.destinationFromPort.errors.min">Destination from port must be less than or equal to 65535.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="destinationToPort">Destination To Port</label>
+          <input type="text" id="destinationToPort" formControlName="destinationToPort" class="form-control"
+            [class.is-invalid]="submitted && f.destinationToPort.errors" aria-label="Destination To Port" />
+          <div *ngIf="submitted && f.destinationToPort.errors" class="invalid-feedback">
+            <div *ngIf="f.destinationToPort.errors.min">Destination to port must be greater than or equal to 0.</div>
+            <div *ngIf="f.destinationToPort.errors.min">Destination to port must be less than or equal to 65535.</div>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
+        Cancel
+      </button>
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save</span>
+      </button>
+    </div>
+  </form>
+</ngx-smart-modal>
