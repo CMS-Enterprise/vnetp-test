@@ -50,9 +50,10 @@ export class L3OutsComponent implements OnInit {
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
+        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
         if (match) {
-          this.tenantId = match[1];
+          const uuid = match[0].split('/')[2];
+          this.tenantId = uuid;
         }
       }
     });
@@ -114,9 +115,8 @@ export class L3OutsComponent implements OnInit {
       });
     } else {
       this.l3OutService
-        .updateL3Out({
+        .softDeleteL3Out({
           uuid: l3Out.id,
-          l3Out: { deleted: true } as L3Out,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -139,9 +139,8 @@ export class L3OutsComponent implements OnInit {
     }
 
     this.l3OutService
-      .updateL3Out({
+      .restoreL3Out({
         uuid: l3Out.id,
-        l3Out: { deleted: false } as L3Out,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

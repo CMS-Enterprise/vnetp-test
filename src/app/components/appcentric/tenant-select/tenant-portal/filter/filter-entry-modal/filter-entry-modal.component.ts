@@ -4,13 +4,11 @@ import { Router, NavigationEnd } from '@angular/router';
 import {
   FilterEntryPaginationResponse,
   FilterEntry,
-  Filter,
   V2AppCentricFilterEntriesService,
   FilterEntryEtherTypeEnum,
   FilterEntryArpFlagEnum,
   FilterEntryIpProtocolEnum,
   FilterEntryTcpFlagsEnum,
-  V2AppCentricFiltersService,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -21,15 +19,13 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { NameValidator } from 'src/app/validators/name-validator';
-import { FilterEntryModalDto } from '../../../../../../models/appcentric/filter-entry-modal.dto';
 
 @Component({
-  selector: 'app-filter-modal',
-  templateUrl: './filter-modal.component.html',
-  styleUrls: ['./filter-modal.component.css'],
+  selector: 'app-filter-entry-modal',
+  templateUrl: './filter-entry-modal.component.html',
+  styleUrls: ['./filter-entry-modal.component.css'],
 })
-export class FilterModalComponent implements OnInit {
-  public ModalMode = ModalMode;
+export class FilterEntryModalComponent implements OnInit {
   public isLoading = false;
   public modalMode: ModalMode;
   public form: FormGroup;
@@ -44,8 +40,6 @@ export class FilterModalComponent implements OnInit {
   public arpFlagOptions = Object.keys(FilterEntryArpFlagEnum);
   public ipProtocolOptions = Object.keys(FilterEntryIpProtocolEnum);
   public tcpFlagsOptions = Object.keys(FilterEntryTcpFlagsEnum).map(key => ({ value: key, label: key }));
-
-  public filter: Filter;
 
   private filterEntryEditModalSubscription: Subscription;
 
@@ -66,7 +60,6 @@ export class FilterModalComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
-    private filterService: V2AppCentricFiltersService,
     private filterEntriesService: V2AppCentricFilterEntriesService,
     private router: Router,
     private tableContextService: TableContextService,
@@ -96,35 +89,109 @@ export class FilterModalComponent implements OnInit {
   }
 
   public closeModal(): void {
-    this.ngx.close('filterModal');
+    this.ngx.close('filterEntriesModal');
     this.reset();
   }
 
   public getData(): void {
-    const dto = Object.assign({}, this.ngx.getModalData('filterModal') as FilterModalDto);
+    const dto = Object.assign({}, this.ngx.getModalData('filterEntryModal') as FilterModalDto);
 
     this.modalMode = dto.modalMode;
+    this.filterId = dto.filter.id;
 
-    if (this.modalMode === ModalMode.Edit) {
-      this.filterId = dto.filter.id;
-      this.form.controls.name.disable();
-      this.getFilterEntries();
-    }
-
-    const filter = dto?.filter;
-
-    if (filter !== undefined) {
-      this.form.controls.name.setValue(filter.name);
-      this.form.controls.description.setValue(filter.description);
-      this.form.controls.alias.setValue(filter.alias);
-    }
-    this.ngx.resetModalData('filterModal');
+    this.ngx.resetModalData('filterEntriesModal');
+    this.getFilterEntries();
   }
 
   public reset(): void {
     this.submitted = false;
-    this.ngx.resetModalData('filterModal');
+    this.ngx.resetModalData('filterEntriesModal');
     this.buildForm();
+  }
+
+  private buildForm(): void {
+    this.form = this.formBuilder.group({
+      name: ['', NameValidator()],
+      alias: ['', Validators.compose([Validators.maxLength(100)])],
+      description: ['', Validators.compose([Validators.maxLength(500)])],
+      etherType: [null],
+      arpFlag: [null],
+      ipProtocol: [null],
+      matchOnlyFragments: [null],
+      sourceFromPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
+      sourceToPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
+      destinationFromPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
+      destinationToPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
+      tcpFlags: [null],
+      stateful: [null],
+    });
+  }
+
+  private createFilterEntries(filterEntry: FilterEntry): void {
+    this.filterEntriesService.createFilterEntry({ filterEntry }).subscribe(
+      () => {
+        this.getFilterEntries();
+        this.reset();
+      },
+      () => {},
+    );
+  }
+
+  public save(): void {
+    this.submitted = true;
+    if (this.form.invalid) {
+      return;
+    }
+
+    const {
+      name,
+      description,
+      alias,
+      etherType,
+      arpFlag,
+      ipProtocol,
+      sourceFromPort,
+      sourceToPort,
+      destinationFromPort,
+      destinationToPort,
+      stateful,
+    } = this.form.value;
+
+    let { matchOnlyFragments } = this.form.value;
+
+    matchOnlyFragments = matchOnlyFragments === 'true';
+
+    const tenantId = this.tenantId;
+    const filterId = this.filterId;
+
+    const filterEntry = {
+      name,
+      description,
+      alias,
+      tenantId,
+      matchOnlyFragments,
+      sourceFromPort,
+      sourceToPort,
+      destinationFromPort,
+      destinationToPort,
+      filterId,
+      stateful,
+    } as FilterEntry;
+
+    filterEntry.etherType = FilterEntryEtherTypeEnum[etherType];
+    filterEntry.arpFlag = FilterEntryArpFlagEnum[arpFlag];
+    filterEntry.ipProtocol = FilterEntryIpProtocolEnum[ipProtocol];
+
+    filterEntry.tcpFlags = this.form.get('tcpFlags').value;
+
+    this.createFilterEntries(filterEntry);
+  }
+
+  onTcpFlagSelected(selected: any[]) {
+    const tcpFlagControl = 'tcpFlags';
+    const tcpFlags = this.form.controls[tcpFlagControl] as FormArray;
+    const selectedValues = selected.map(item => item.value);
+    tcpFlags.setValue(selectedValues);
   }
 
   public getFilterEntries(event?): void {
@@ -166,9 +233,8 @@ export class FilterModalComponent implements OnInit {
         });
     } else {
       this.filterEntriesService
-        .updateFilterEntry({
+        .softDeleteFilterEntry({
           uuid: filterEntry.id,
-          filterEntry: { deleted: true } as FilterEntry,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -188,9 +254,8 @@ export class FilterModalComponent implements OnInit {
     }
 
     this.filterEntriesService
-      .updateFilterEntry({
+      .restoreFilterEntry({
         uuid: filterEntry.id,
-        filterEntry: { deleted: false } as FilterEntry,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
@@ -206,23 +271,15 @@ export class FilterModalComponent implements OnInit {
       });
   }
 
-  public openFilterEntryModal(modalMode: ModalMode, filterEntry?: FilterEntry): void {
-    const dto = new FilterEntryModalDto();
-    dto.modalMode = modalMode;
-    dto.filterId = this.filterId;
-
-    if (modalMode === ModalMode.Edit) {
-      dto.filterEntry = filterEntry;
-    }
-
-    this.subscribeToFilterEntryModal();
-    this.ngx.setModalData(dto, 'filterEntryModal');
-    this.ngx.getModal('filterEntryModal').open();
+  public openFilterEntryEditModal(filterEnry: FilterEntry): void {
+    this.subscribeToFilterEntryEditModal();
+    this.ngx.setModalData(filterEnry, 'filterEntryEditModal');
+    this.ngx.getModal('filterEntryEditModal').open();
   }
 
-  private subscribeToFilterEntryModal(): void {
-    this.filterEntryEditModalSubscription = this.ngx.getModal('filterEntryModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('filterEntryModal');
+  private subscribeToFilterEntryEditModal(): void {
+    this.filterEntryEditModalSubscription = this.ngx.getModal('filterEntryEditModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('filterEntryEditModal');
       this.filterEntryEditModalSubscription.unsubscribe();
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
@@ -236,61 +293,5 @@ export class FilterModalComponent implements OnInit {
         this.getFilterEntries();
       }
     });
-  }
-
-  private buildForm(): void {
-    this.form = this.formBuilder.group({
-      name: ['', NameValidator()],
-      alias: ['', Validators.compose([Validators.maxLength(100)])],
-      description: ['', Validators.compose([Validators.maxLength(500)])],
-    });
-  }
-
-  private createFilter(filter: Filter): void {
-    this.filterService.createFilter({ filter }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
-  }
-
-  private editFilter(filter: Filter): void {
-    filter.name = null;
-    this.filterService
-      .updateFilter({
-        uuid: this.filterId,
-        filter,
-      })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
-  }
-
-  public save(): void {
-    this.submitted = true;
-    if (this.form.invalid) {
-      return;
-    }
-
-    const { name, description, alias } = this.form.value;
-    const tenantId = this.tenantId;
-    const filter = {
-      name,
-      description,
-      alias,
-      tenantId,
-    } as Filter;
-
-    if (this.modalMode === ModalMode.Create) {
-      this.createFilter(filter);
-    } else {
-      delete filter.tenantId;
-      delete filter.name;
-      this.editFilter(filter);
-    }
   }
 }

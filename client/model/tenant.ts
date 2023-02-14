@@ -29,9 +29,7 @@ export interface Tenant {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly deletedAt?: string;
-    deleted?: boolean;
     readonly provisionedAt?: string;
-    provisioned?: boolean;
     readonly applicationProfiles?: Array<ApplicationProfile>;
     readonly bridgeDomains?: Array<BridgeDomain>;
     readonly contracts?: Array<Contract>;

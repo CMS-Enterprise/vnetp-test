@@ -22,9 +22,7 @@ export interface Subject {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly deletedAt?: string;
-    deleted?: boolean;
     readonly provisionedAt?: string;
-    provisioned?: boolean;
     /**
      * Sets the contract filter to apply on both ingress and egress traffic directions.
      */

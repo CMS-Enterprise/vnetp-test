@@ -51,20 +51,6 @@
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
-
-    <!-- <tooltip [message]="helpText.NetworkObjects"></tooltip> -->
-      <div *ngIf="ModalMode === 'Edit'">
-        <div class="form-group">
-          <label for="endpointGroups">Endpoint Groups</label>
-          <ng-select [(ngModel)]="selectedEndpointGroup" [ngModelOptions]="{standalone: true}" [items]="endpointGroups" id="endpointGroups" bindLabel="name"></ng-select>
-        </div>
-
-        <button type="button" class="btn btn-info" (click)="addEndpointGroup()" [disabled]="!selectedEndpointGroup">
-          <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-          <span>Add Endpoint Group</span>
-        </button>
-        <app-table [config]="config" [data]="endpointGroupsTableData" (clearResults)="getEndpointGroupsTableData($event)" (searchParams)="getEndpointGroupsTableData($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
-      </div>
     </div>
 
     <footer class="modal-footer">
@@ -77,4 +63,40 @@
       </button>
     </footer>
   </form>
+
+  <ng-container *ngIf="ModalMode === 'Edit'">
+    <button class="btn btn-success" (click)="openApEndpointGroupModal('Create')">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Endpoint Group</span>
+    </button>
+    <app-table [config]="config" [data]="endpointGroups" (clearResults)="getEndpointGroups($event)" (searchParams)="getEndpointGroups($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+  </ng-container>
 </ngx-smart-modal>
+
+<app-ap-endpoint-group-modal [applicationProfileId]="applicationProfileId"></app-ap-endpoint-group-modal>
+
+<ng-template #actionsTemplate let-endpointGroup="datum">
+  <section>
+    <app-icon-button
+      *ngIf="!endpointGroup?.deletedAt"
+      icon="edit"
+      label="Edit Endpoint Group"
+      (handleClick)="openApEndpointGroupModal('Edit', endpointGroup)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Endpoint Group"
+      [type]="endpointGroup?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteEndpointGroup(endpointGroup)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="endpointGroup?.deletedAt"
+      icon="undo"
+      label="Restore Endpoint Group"
+      type="success"
+      (handleClick)="restoreEndpointGroup(endpointGroup)"
+    ></app-icon-button>
+  </section>
+</ng-template>

@@ -12,7 +12,7 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { ApEndpointGroupModalComponent } from './ap-endpoint-group-modal/ap-endpoint-group-modal.component';
+import { ApEndpointGroupModalComponent } from './application-profile-modal/ap-endpoint-group-modal/ap-endpoint-group-modal.component';
 
 const routes: Routes = [
   {

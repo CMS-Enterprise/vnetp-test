@@ -63,9 +63,10 @@ export class EndpointGroupsModalComponent implements OnInit {
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
+        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
         if (match) {
-          this.tenantId = match[1];
+          const uuid = match[0].split('/')[2];
+          this.tenantId = uuid;
         }
       }
     });
@@ -112,8 +113,7 @@ export class EndpointGroupsModalComponent implements OnInit {
       this.form.controls.name.disable();
       this.form.controls.description.setValue(endpointGroup.description);
       this.form.controls.alias.setValue(endpointGroup.alias);
-      this.form.controls.policyControlEnforced.setValue(endpointGroup.intraEpgIsolation);
-      this.form.controls.applicationProfileId.setValue(endpointGroup.applicationProfileId);
+      this.form.controls.intraEpgIsolation.setValue(endpointGroup.intraEpgIsolation);
       this.form.controls.applicationProfileId.disable();
     }
     this.ngx.resetModalData('endpointGroupModal');
@@ -214,6 +214,4 @@ export class EndpointGroupsModalComponent implements OnInit {
         },
       );
   }
-
-  public addApplicationProfile(applicationProfile: ApplicationProfile) {}
 }

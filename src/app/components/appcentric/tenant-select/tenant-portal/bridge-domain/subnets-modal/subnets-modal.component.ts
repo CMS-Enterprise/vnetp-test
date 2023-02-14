@@ -53,9 +53,10 @@ export class SubnetsModalComponent implements OnInit {
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
+        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
         if (match) {
-          this.tenantId = match[1];
+          const uuid = match[0].split('/')[2];
+          this.tenantId = uuid;
         }
       }
     });
@@ -200,9 +201,8 @@ export class SubnetsModalComponent implements OnInit {
         });
     } else {
       this.subnetsService
-        .updateAppCentricSubnet({
+        .softDeleteAppCentricSubnet({
           uuid: subnet.id,
-          appCentricSubnet: { deleted: true } as AppCentricSubnet,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -222,9 +222,8 @@ export class SubnetsModalComponent implements OnInit {
     }
 
     this.subnetsService
-      .updateAppCentricSubnet({
+      .restoreAppCentricSubnet({
         uuid: subnet.id,
-        appCentricSubnet: { deleted: false } as AppCentricSubnet,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

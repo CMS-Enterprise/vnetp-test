@@ -50,9 +50,10 @@ export class ContractComponent implements OnInit {
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
+        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
         if (match) {
-          this.tenantId = match[1];
+          const uuid = match[0].split('/')[2];
+          this.tenantId = uuid;
         }
       }
     });
@@ -114,9 +115,8 @@ export class ContractComponent implements OnInit {
       });
     } else {
       this.contractService
-        .updateContract({
+        .softDeleteContract({
           uuid: contract.id,
-          contract: { deleted: true } as Contract,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -139,9 +139,8 @@ export class ContractComponent implements OnInit {
     }
 
     this.contractService
-      .updateContract({
+      .restoreContract({
         uuid: contract.id,
-        contract: { deleted: false } as Contract,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
@@ -175,34 +174,6 @@ export class ContractComponent implements OnInit {
     this.contractModalSubscription = this.ngx.getModal('contractModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('contractModal');
       this.contractModalSubscription.unsubscribe();
-      // get search params from local storage
-      const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
-
-      // if filtered results boolean is true, apply search params in the
-      // subsequent get call
-      if (filteredResults) {
-        this.getContracts(params);
-      } else {
-        this.getContracts();
-      }
-    });
-  }
-
-  public openSubjectModal(contract: Contract): void {
-    const dto = new ContractModalDto();
-    dto.modalMode = ModalMode.Edit;
-    dto.contract = contract;
-
-    this.subscribeToSubjectModal();
-    this.ngx.setModalData(dto, 'subjectModal');
-    this.ngx.getModal('subjectModal').open();
-  }
-
-  private subscribeToSubjectModal(): void {
-    this.subjectModalSubscription = this.ngx.getModal('subjectModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('subjectModal');
-      this.subjectModalSubscription.unsubscribe();
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;

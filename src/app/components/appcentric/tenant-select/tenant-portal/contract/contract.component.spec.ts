@@ -28,7 +28,6 @@ describe('ContractComponent', () => {
         MockImportExportComponent,
         MockIconButtonComponent,
         MockYesNoModalComponent,
-        MockComponent('app-subject-modal'),
         MockComponent('app-contract-modal'),
       ],
       imports: [RouterTestingModule, HttpClientModule],

@@ -21,9 +21,7 @@ export interface Vrf {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly deletedAt?: string;
-    deleted?: boolean;
     readonly provisionedAt?: string;
-    provisioned?: boolean;
     /**
      * Default True, Security rules (contracts) will be enforced.
      */

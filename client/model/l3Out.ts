@@ -22,9 +22,7 @@ export interface L3Out {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly deletedAt?: string;
-    deleted?: boolean;
     readonly provisionedAt?: string;
-    provisioned?: boolean;
     readonly bridgeDomains?: Array<BridgeDomain>;
     readonly vrf?: Vrf;
     vrfId: string;
