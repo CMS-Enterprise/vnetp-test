@@ -27,7 +27,7 @@ export class ConsumedContractsComponent implements OnInit {
   public searchColumns: SearchColumnConfig[] = [];
 
   public config: TableConfig<any> = {
-    description: 'L3 Outs',
+    description: 'Consumed Contracts',
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Alias', property: 'alias' },

@@ -1,4 +1,4 @@
-<ngx-smart-modal #subjectModal identifier="subjectModal" (onOpen)="getData()" (onClose)="reset()">
+<ngx-smart-modal #subjectModal customClass="medium-modal" identifier="subjectModal" (onOpen)="getData()" (onClose)="reset()">
   <header class="modal-header">
     <h4 class="modal-title">Subject</h4>
   </header>
@@ -52,48 +52,50 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="applyBothDirections">Apply Both Directions</label>
-        <select
-          id="applyBothDirections"
-          formControlName="applyBothDirections"
-          class="form-control"
-          [class.is-invalid]="submitted && f.applyBothDirections.errors"
-          aria-label="Apply Both Directions"
-        >
-          <option></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
-      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="globalAlias">Global Alias</label>
+          <input
+            type="text"
+            id="globalAlias"
+            formControlName="globalAlias"
+            class="form-control"
+            [class.is-invalid]="submitted && f.globalAlias.errors"
+            aria-label="globalAlias"
+          />
+          <div *ngIf="submitted && f.globalAlias.errors" class="invalid-feedback">
+            <div *ngIf="f.globalAlias.errors.maxlength">Global Alias must be 100 characters or less.</div>
+          </div>
+        </div>
 
-      <div class="form-group">
-        <label for="reverseFilterPorts">Reverse Filter Ports</label>
-        <select
-          id="reverseFilterPorts"
-          formControlName="reverseFilterPorts"
-          class="form-control"
-          [class.is-invalid]="submitted && f.reverseFilterPorts.errors"
-          aria-label="Reverse Filter Ports"
-        >
-          <option></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
-      </div>
-      
-      <div class="form-group">
-        <label for="globalAlias">Global Alias</label>
-        <input
-          type="text"
-          id="globalAlias"
-          formControlName="globalAlias"
-          class="form-control"
-          [class.is-invalid]="submitted && f.globalAlias.errors"
-          aria-label="globalAlias"
-        />
-        <div *ngIf="submitted && f.globalAlias.errors" class="invalid-feedback">
-          <div *ngIf="f.globalAlias.errors.maxlength">Global Alias must be 100 characters or less.</div>
+        <div class="form-group col-md-3">
+          <label for="applyBothDirections">Apply Both Directions</label>
+          <select
+            id="applyBothDirections"
+            formControlName="applyBothDirections"
+            class="form-control"
+            [class.is-invalid]="submitted && f.applyBothDirections.errors"
+            aria-label="Apply Both Directions"
+          >
+            <option></option>
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="reverseFilterPorts">Reverse Filter Ports</label>
+          <select
+            id="reverseFilterPorts"
+            formControlName="reverseFilterPorts"
+            class="form-control"
+            [class.is-invalid]="submitted && f.reverseFilterPorts.errors"
+            aria-label="Reverse Filter Ports"
+          >
+            <option></option>
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
         </div>
       </div>
 

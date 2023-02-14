@@ -2,7 +2,7 @@
 <ng-select [(ngModel)]="selectedContract" [ngModelOptions]="{standalone: true}" [items]="contracts" id="contracts" bindLabel="name"></ng-select>
 <button type="button" class="btn btn-info" (click)="addContract()" [disabled]="!selectedContract">
   <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-  <span>Add Contract</span>
+  <span>Add Consumed Contract</span>
 </button>
 <app-table [config]="config" [data]="contractTableData" (clearResults)="getConsumedContracts($event)" (searchParams)="getConsumedContracts($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
 
