@@ -98,6 +98,7 @@ export class FilterModalComponent implements OnInit {
   public closeModal(): void {
     this.ngx.close('filterModal');
     this.reset();
+    this.buildForm();
   }
 
   public getData(): void {
@@ -109,6 +110,8 @@ export class FilterModalComponent implements OnInit {
       this.filterId = dto.filter.id;
       this.form.controls.name.disable();
       this.getFilterEntries();
+    } else {
+      this.form.controls.name.enable();
     }
 
     const filter = dto?.filter;
@@ -150,60 +153,58 @@ export class FilterModalComponent implements OnInit {
   }
 
   public removeFilterEntry(filterEntry: FilterEntry) {
-    if (filterEntry.deletedAt) {
-      this.filterEntriesService
-        .removeFilterEntry({
-          uuid: filterEntry.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-          if (filteredResults) {
-            this.getFilterEntries(params);
-          } else {
-            this.getFilterEntries();
-          }
-        });
-    } else {
-      this.filterEntriesService
-        .updateFilterEntry({
-          uuid: filterEntry.id,
-          filterEntry: { deleted: true } as FilterEntry,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-          if (filteredResults) {
-            this.getFilterEntries(params);
-          } else {
-            this.getFilterEntries();
-          }
-        });
-    }
+    // if (filterEntry.deletedAt) {
+    //   this.filterEntriesService
+    //     .removeFilterEntry({
+    //       uuid: filterEntry.id,
+    //     })
+    //     .subscribe(() => {
+    //       const params = this.tableContextService.getSearchLocalStorage();
+    //       const { filteredResults } = params;
+    //       if (filteredResults) {
+    //         this.getFilterEntries(params);
+    //       } else {
+    //         this.getFilterEntries();
+    //       }
+    //     });
+    // } else {
+    //   this.filterEntriesService
+    //     .updateFilterEntry({
+    //       uuid: filterEntry.id,
+    //       filterEntry: { deleted: true } as FilterEntry,
+    //     })
+    //     .subscribe(() => {
+    //       const params = this.tableContextService.getSearchLocalStorage();
+    //       const { filteredResults } = params;
+    //       if (filteredResults) {
+    //         this.getFilterEntries(params);
+    //       } else {
+    //         this.getFilterEntries();
+    //       }
+    //     });
+    // }
   }
 
   public restoreFilterEntry(filterEntry: FilterEntry): void {
-    if (!filterEntry.deletedAt) {
-      return;
-    }
-
-    this.filterEntriesService
-      .updateFilterEntry({
-        uuid: filterEntry.id,
-        filterEntry: { deleted: false } as FilterEntry,
-      })
-      .subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getFilterEntries(params);
-        } else {
-          this.getFilterEntries();
-        }
-      });
+    // if (!filterEntry.deletedAt) {
+    //   return;
+    // }
+    // this.filterEntriesService
+    //   .updateFilterEntry({
+    //     uuid: filterEntry.id,
+    //     filterEntry: { deleted: false } as FilterEntry,
+    //   })
+    //   .subscribe(() => {
+    //     const params = this.tableContextService.getSearchLocalStorage();
+    //     const { filteredResults } = params;
+    //     // if filtered results boolean is true, apply search params in the
+    //     // subsequent get call
+    //     if (filteredResults) {
+    //       this.getFilterEntries(params);
+    //     } else {
+    //       this.getFilterEntries();
+    //     }
+    //   });
   }
 
   public openFilterEntryModal(modalMode: ModalMode, filterEntry?: FilterEntry): void {

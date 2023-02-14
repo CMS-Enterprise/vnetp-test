@@ -1,4 +1,5 @@
-<ngx-smart-modal #filterEntryModal identifier="filterEntryModal" (onOpen)="getData()" (onClose)="reset()">
+<ngx-smart-modal #filterEntryModal identifier="filterEntryModal" [dismissable]="false"
+(onOpen)="getData()" (onClose)="reset()">
   <header class="modal-header">
     <h4 class="modal-title">Filter Entry</h4>
   </header>

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   FilterEntry,
@@ -73,9 +73,17 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
   public getData(): void {
     const dto = Object.assign({}, this.ngx.getModalData('filterEntryModal') as FilterEntryModalDto);
 
-    console.log(dto);
     this.modalMode = dto.modalMode;
     this.filterId = dto.filterId;
+
+    this.form.controls.arpFlag.disable();
+    this.form.controls.ipProtocol.disable();
+    this.form.controls.matchOnlyFragments.disable();
+    this.form.controls.sourceFromPort.disable();
+    this.form.controls.sourceToPort.disable();
+    this.form.controls.destinationFromPort.disable();
+    this.form.controls.destinationToPort.disable();
+    this.form.controls.stateful.disable();
 
     if (this.modalMode === ModalMode.Edit) {
       this.filterEntryId = dto.filterEntry.id;
