@@ -70,8 +70,8 @@
     </footer>
   </form>
 
-  <ng-container *ngIf="ModalMode === 'Edit'">
-    <button class="btn btn-success" (click)="openApEndpointGroupModal('Create')">
+  <ng-container *ngIf="modalMode === 'Edit'">
+    <button class="btn btn-success" (click)="openApEndpointGroupModal(ModalMode.Create)">
       <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
       <span>Create Endpoint Group</span>
     </button>
@@ -95,7 +95,7 @@
       *ngIf="!endpointGroup?.deletedAt"
       icon="edit"
       label="Edit Endpoint Group"
-      (handleClick)="openApEndpointGroupModal('Edit', endpointGroup)"
+      (handleClick)="openApEndpointGroupModal(ModalMode.Edit, endpointGroup)"
     ></app-icon-button>
 
     <app-icon-button

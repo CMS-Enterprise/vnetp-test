@@ -63,8 +63,8 @@
       </button>
     </footer>
   </form>
-  <ng-container *ngIf="ModalMode === 'Edit'">
-    <button class="btn btn-success" (click)="openSubjectModal('Create')">
+  <ng-container *ngIf="modalMode === 'Edit'">
+    <button class="btn btn-success" (click)="openSubjectModal(ModalMode.Create)">
       <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
       <span>Create Subject</span>
     </button>
@@ -88,7 +88,7 @@
       *ngIf="!subject?.deletedAt"
       icon="edit"
       label="Edit Subject"
-      (handleClick)="openSubjectModal('Edit', subject)"
+      (handleClick)="openSubjectModal(ModalMode.Edit, subject)"
     ></app-icon-button>
 
     <app-icon-button

@@ -20,7 +20,8 @@ import { NameValidator } from 'src/app/validators/name-validator';
 })
 export class ContractModalComponent implements OnInit {
   public isLoading = false;
-  public ModalMode: ModalMode;
+  public ModalMode = ModalMode;
+  public modalMode: ModalMode;
   public contractId: string;
   public form: FormGroup;
   public submitted: boolean;
@@ -85,8 +86,8 @@ export class ContractModalComponent implements OnInit {
   public getData(): void {
     const dto = Object.assign({}, this.ngx.getModalData('contractModal') as ContractModalDto);
 
-    this.ModalMode = dto.modalMode;
-    if (this.ModalMode === ModalMode.Edit) {
+    this.modalMode = dto.modalMode;
+    if (this.modalMode === ModalMode.Edit) {
       this.contractId = dto.contract.id;
     } else {
       this.form.controls.name.enable();
@@ -156,7 +157,7 @@ export class ContractModalComponent implements OnInit {
       tenantId,
     } as Contract;
 
-    if (this.ModalMode === ModalMode.Create) {
+    if (this.modalMode === ModalMode.Create) {
       this.createContract(contract);
     } else {
       this.editContract(contract);
@@ -240,10 +241,9 @@ export class ContractModalComponent implements OnInit {
       });
   }
 
-  public openSubjectModal(modalMode: string, subject?: Subject): void {
-    const mode = modalMode === 'Edit' ? ModalMode.Edit : ModalMode.Create;
+  public openSubjectModal(modalMode: ModalMode, subject?: Subject): void {
     const dto = new SubjectModalDto();
-    dto.modalMode = mode;
+    dto.modalMode = modalMode;
     if (dto.modalMode === ModalMode.Edit) {
       dto.subject = subject;
     }

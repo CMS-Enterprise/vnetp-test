@@ -25,7 +25,8 @@ import { NameValidator } from 'src/app/validators/name-validator';
   styleUrls: ['./application-profile-modal.component.css'],
 })
 export class ApplicationProfileModalComponent implements OnInit {
-  public ModalMode: ModalMode;
+  public modalMode: ModalMode;
+  public ModalMode = ModalMode;
   public applicationProfileId: string;
   public form: FormGroup;
   public submitted: boolean;
@@ -89,8 +90,8 @@ export class ApplicationProfileModalComponent implements OnInit {
 
   public getData(): void {
     const dto = Object.assign({}, this.ngx.getModalData('applicationProfileModal') as ApplicationProfileModalDto);
-    this.ModalMode = dto.ModalMode;
-    if (this.ModalMode === ModalMode.Edit) {
+    this.modalMode = dto.ModalMode;
+    if (this.modalMode === ModalMode.Edit) {
       this.applicationProfileId = dto.ApplicationProfile.id;
       this.getEndpointGroups();
     } else {
@@ -160,7 +161,7 @@ export class ApplicationProfileModalComponent implements OnInit {
       tenantId,
     } as ApplicationProfile;
 
-    if (this.ModalMode === ModalMode.Create) {
+    if (this.modalMode === ModalMode.Create) {
       this.createApplicationProfile(applicationProfile);
     } else {
       this.editApplicationProfile(applicationProfile);
@@ -255,12 +256,10 @@ export class ApplicationProfileModalComponent implements OnInit {
       });
   }
 
-  public openApEndpointGroupModal(modalMode: string, endpointGroup?: EndpointGroup): void {
+  public openApEndpointGroupModal(modalMode: ModalMode, endpointGroup?: EndpointGroup): void {
     const dto = new EndpointGroupModalDto();
 
-    const mode = modalMode === 'Edit' ? ModalMode.Edit : ModalMode.Create;
-
-    dto.modalMode = mode;
+    dto.modalMode = modalMode;
 
     dto.endpointGroup = endpointGroup;
 
