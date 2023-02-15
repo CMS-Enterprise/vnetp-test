@@ -142,7 +142,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
   //     })
   //   });
 
-  it('should find a firewall rule match if all searched IPs/fields exist in the rule', () => {
+  it('should find a firewall rule match if all searched IPs/fields exist in the rule', async () => {
     component.form.setValue({
       direction: 'In',
       protocol: 'IP',
@@ -177,7 +177,9 @@ describe('FirewallRulesPacketTracerComponent', () => {
     });
 
     // console.log('component.objects.firewallRules',component.objects);
-    const matchingRule = component.search();
+    const matchingRules = await component.search();
+    console.log('matchingRules', matchingRules);
+    expect(matchingRules).toEqual(['fw-rule1', 'fw-rule2', 'fw-rule3', 'fw-rule4']);
   });
 
   //   it('should find a firewall rule match if a rules source contains the searched value', () => {

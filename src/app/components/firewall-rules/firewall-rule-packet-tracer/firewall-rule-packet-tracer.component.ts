@@ -16,6 +16,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   modalTitle;
 
   rulesHit = [];
+  partialMatches = [];
+  showPartials = false;
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
@@ -397,13 +399,19 @@ export class FirewallRulePacketTracerComponent implements OnInit {
           checkList.sourceInRange &&
           checkList.sourcePortMatch
         ) {
-          this.rulesHit.push(rule);
+          this.rulesHit.push(rule.name);
+        } else if (
+          checkList.destInRange ||
+          checkList.destPortMatch ||
+          checkList.directionMatch ||
+          checkList.protocolMatch ||
+          checkList.sourceInRange ||
+          checkList.sourcePortMatch
+        ) {
+          this.partialMatches.push({ checkList: checkList, name: rule.name });
         }
       }),
     );
-    this.rulesHit = this.rulesHit.map(rule => {
-      return rule.name;
-    });
     return this.rulesHit;
   }
 
