@@ -10,7 +10,9 @@ import { ContractModalDto } from 'src/app/models/appcentric/contract-modal-dto';
 import { SubjectModalDto } from 'src/app/models/appcentric/subject-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
@@ -188,33 +190,41 @@ export class ContractModalComponent implements OnInit {
 
   public removeSubject(subject: Subject) {
     if (subject.deletedAt) {
-      this.subjectsService
-        .removeSubject({
-          uuid: subject.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-          if (filteredResults) {
-            this.getSubjects(params);
-          } else {
-            this.getSubjects();
-          }
-        });
+      const modalDto = new YesNoModalDto('Delete Subject', `Are you sure you want to permanently delete this subject ${subject.name}?`);
+      const onConfirm = () => {
+        this.subjectsService
+          .removeSubject({
+            uuid: subject.id,
+          })
+          .subscribe(() => {
+            const params = this.tableContextService.getSearchLocalStorage();
+            const { filteredResults } = params;
+            if (filteredResults) {
+              this.getSubjects(params);
+            } else {
+              this.getSubjects();
+            }
+          });
+      };
+      SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
     } else {
-      this.subjectsService
-        .softDeleteSubject({
-          uuid: subject.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-          if (filteredResults) {
-            this.getSubjects(params);
-          } else {
-            this.getSubjects();
-          }
-        });
+      const modalDto = new YesNoModalDto('Delete Subject', `Are you sure you want to soft delete this subject ${subject.name}?`);
+      const onConfirm = () => {
+        this.subjectsService
+          .softDeleteSubject({
+            uuid: subject.id,
+          })
+          .subscribe(() => {
+            const params = this.tableContextService.getSearchLocalStorage();
+            const { filteredResults } = params;
+            if (filteredResults) {
+              this.getSubjects(params);
+            } else {
+              this.getSubjects();
+            }
+          });
+      };
+      SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
     }
   }
 

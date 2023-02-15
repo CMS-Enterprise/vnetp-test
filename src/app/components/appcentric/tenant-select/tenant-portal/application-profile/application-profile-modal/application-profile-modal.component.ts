@@ -16,7 +16,9 @@ import { ApplicationProfileModalDto } from 'src/app/models/appcentric/applicatio
 import { EndpointGroupModalDto } from 'src/app/models/appcentric/endpoint-group-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
@@ -201,24 +203,12 @@ export class ApplicationProfileModalComponent implements OnInit {
 
   public deleteEndpointGroup(endpointGroup: EndpointGroup): void {
     if (endpointGroup.deletedAt) {
-      this.endpointGroupService.removeEndpointGroup({ uuid: endpointGroup.id }).subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        // if endpointGrouped results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getEndpointGroups(params);
-        } else {
-          this.getEndpointGroups();
-        }
-      });
-    } else {
-      this.endpointGroupService
-        .softDeleteEndpointGroup({
-          uuid: endpointGroup.id,
-        })
-        .subscribe(() => {
+      const modalDto = new YesNoModalDto(
+        'Delete Endpoint Group',
+        `Are you sure you want to permanently delete this endpoint group ${endpointGroup.name}?`,
+      );
+      const onConfirm = () => {
+        this.endpointGroupService.removeEndpointGroup({ uuid: endpointGroup.id }).subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
           const { filteredResults } = params;
 
@@ -230,6 +220,32 @@ export class ApplicationProfileModalComponent implements OnInit {
             this.getEndpointGroups();
           }
         });
+      };
+      SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+    } else {
+      const modalDto = new YesNoModalDto(
+        'Delete Endpoint Group',
+        `Are you sure you want to soft delete this endpoint group ${endpointGroup.name}?`,
+      );
+      const onConfirm = () => {
+        this.endpointGroupService
+          .softDeleteEndpointGroup({
+            uuid: endpointGroup.id,
+          })
+          .subscribe(() => {
+            const params = this.tableContextService.getSearchLocalStorage();
+            const { filteredResults } = params;
+
+            // if endpointGrouped results boolean is true, apply search params in the
+            // subsequent get call
+            if (filteredResults) {
+              this.getEndpointGroups(params);
+            } else {
+              this.getEndpointGroups();
+            }
+          });
+      };
+      SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
     }
   }
 

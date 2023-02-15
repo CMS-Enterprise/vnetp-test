@@ -1,8 +1,11 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ContractPaginationResponse, Contract, V2AppCentricEndpointGroupsService, V2AppCentricContractsService } from 'client';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-provided-contracts',
@@ -34,7 +37,11 @@ export class ProvidedContractsComponent implements OnInit {
     ],
   };
 
-  constructor(private endpointGroupsService: V2AppCentricEndpointGroupsService, private contractsService: V2AppCentricContractsService) {}
+  constructor(
+    private endpointGroupsService: V2AppCentricEndpointGroupsService,
+    private contractsService: V2AppCentricContractsService,
+    private ngx: NgxSmartModalService,
+  ) {}
 
   ngOnInit(): void {
     this.getContracts();
@@ -56,12 +63,16 @@ export class ProvidedContractsComponent implements OnInit {
   }
 
   public removeContract(contract: Contract): void {
-    this.endpointGroupsService
-      .removeProvidedContractToEndpointGroupEndpointGroup({
-        endpointGroupId: this.endpointGroupId,
-        contractId: contract.id,
-      })
-      .subscribe(data => this.getProvidedContracts());
+    const modalDto = new YesNoModalDto('Remove Contract', `Are you sure you want to remove provided contract ${contract.name}?`);
+    const onConfirm = () => {
+      this.endpointGroupsService
+        .removeProvidedContractToEndpointGroupEndpointGroup({
+          endpointGroupId: this.endpointGroupId,
+          contractId: contract.id,
+        })
+        .subscribe(data => this.getProvidedContracts());
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   public getProvidedContracts(event?): void {

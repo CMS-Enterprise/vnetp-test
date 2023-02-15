@@ -19,7 +19,9 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { FilterModalDto } from 'src/app/models/appcentric/filter-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { FilterEntryModalDto } from '../../../../../../models/appcentric/filter-entry-modal.dto';
 
@@ -153,58 +155,70 @@ export class FilterModalComponent implements OnInit {
   }
 
   public removeFilterEntry(filterEntry: FilterEntry) {
-    // if (filterEntry.deletedAt) {
-    //   this.filterEntriesService
-    //     .removeFilterEntry({
-    //       uuid: filterEntry.id,
-    //     })
-    //     .subscribe(() => {
-    //       const params = this.tableContextService.getSearchLocalStorage();
-    //       const { filteredResults } = params;
-    //       if (filteredResults) {
-    //         this.getFilterEntries(params);
-    //       } else {
-    //         this.getFilterEntries();
-    //       }
-    //     });
-    // } else {
-    //   this.filterEntriesService
-    //     .updateFilterEntry({
-    //       uuid: filterEntry.id,
-    //       filterEntry: { deleted: true } as FilterEntry,
-    //     })
-    //     .subscribe(() => {
-    //       const params = this.tableContextService.getSearchLocalStorage();
-    //       const { filteredResults } = params;
-    //       if (filteredResults) {
-    //         this.getFilterEntries(params);
-    //       } else {
-    //         this.getFilterEntries();
-    //       }
-    //     });
-    // }
+    if (filterEntry.deletedAt) {
+      const modalDto = new YesNoModalDto(
+        'Delete Filter Entry',
+        `Are you sure you want to permanently delete this filter entry ${filterEntry.name}?`,
+      );
+      const onConfirm = () => {
+        this.filterEntriesService
+          .removeFilterEntry({
+            uuid: filterEntry.id,
+          })
+          .subscribe(() => {
+            const params = this.tableContextService.getSearchLocalStorage();
+            const { filteredResults } = params;
+            if (filteredResults) {
+              this.getFilterEntries(params);
+            } else {
+              this.getFilterEntries();
+            }
+          });
+      };
+      SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+    } else {
+      const modalDto = new YesNoModalDto(
+        'Delete Filter Entry',
+        `Are you sure you want to permanently delete this filter entry ${filterEntry.name}?`,
+      );
+      const onConfirm = () => {
+        this.filterEntriesService
+          .softDeleteFilterEntry({
+            uuid: filterEntry.id,
+          })
+          .subscribe(() => {
+            const params = this.tableContextService.getSearchLocalStorage();
+            const { filteredResults } = params;
+            if (filteredResults) {
+              this.getFilterEntries(params);
+            } else {
+              this.getFilterEntries();
+            }
+          });
+      };
+      SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+    }
   }
 
   public restoreFilterEntry(filterEntry: FilterEntry): void {
-    // if (!filterEntry.deletedAt) {
-    //   return;
-    // }
-    // this.filterEntriesService
-    //   .updateFilterEntry({
-    //     uuid: filterEntry.id,
-    //     filterEntry: { deleted: false } as FilterEntry,
-    //   })
-    //   .subscribe(() => {
-    //     const params = this.tableContextService.getSearchLocalStorage();
-    //     const { filteredResults } = params;
-    //     // if filtered results boolean is true, apply search params in the
-    //     // subsequent get call
-    //     if (filteredResults) {
-    //       this.getFilterEntries(params);
-    //     } else {
-    //       this.getFilterEntries();
-    //     }
-    //   });
+    if (!filterEntry.deletedAt) {
+      return;
+    }
+    this.filterEntriesService
+      .restoreFilterEntry({
+        uuid: filterEntry.id,
+      })
+      .subscribe(() => {
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getFilterEntries(params);
+        } else {
+          this.getFilterEntries();
+        }
+      });
   }
 
   public openFilterEntryModal(modalMode: ModalMode, filterEntry?: FilterEntry): void {

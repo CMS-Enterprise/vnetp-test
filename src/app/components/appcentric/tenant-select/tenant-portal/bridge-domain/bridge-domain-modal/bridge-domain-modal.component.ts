@@ -8,7 +8,9 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { BridgeDomainModalDto } from 'src/app/models/appcentric/bridge-domain-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { MacAddressValidator } from 'src/app/validators/network-form-validators';
 
@@ -241,22 +243,26 @@ export class BridgeDomainModalComponent implements OnInit {
   }
 
   public removeL3Out(l3Out: L3Out): void {
-    this.bridgeDomainService
-      .removeL3OutFromBridgeDomainBridgeDomain({
-        bridgeDomainId: this.bridgeDomainId,
-        l3OutId: l3Out.id,
-      })
-      .subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+    const modalDto = new YesNoModalDto('Remove L3Out', `Are you sure you want to remove L3Out ${l3Out.name}?`);
+    const onConfirm = () => {
+      this.bridgeDomainService
+        .removeL3OutFromBridgeDomainBridgeDomain({
+          bridgeDomainId: this.bridgeDomainId,
+          l3OutId: l3Out.id,
+        })
+        .subscribe(() => {
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
 
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getL3Outs(params);
-        } else {
-          this.getL3Outs();
-        }
-      });
+          // if filtered results boolean is true, apply search params in the
+          // subsequent get call
+          if (filteredResults) {
+            this.getL3Outs(params);
+          } else {
+            this.getL3Outs();
+          }
+        });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 }

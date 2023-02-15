@@ -1,10 +1,13 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Contract, ContractPaginationResponse, V2AppCentricContractsService, V2AppCentricEndpointGroupsService } from 'client';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-consumed-contracts',
@@ -36,7 +39,11 @@ export class ConsumedContractsComponent implements OnInit {
     ],
   };
 
-  constructor(private endpointGroupsService: V2AppCentricEndpointGroupsService, private contractsService: V2AppCentricContractsService) {}
+  constructor(
+    private endpointGroupsService: V2AppCentricEndpointGroupsService,
+    private contractsService: V2AppCentricContractsService,
+    private ngx: NgxSmartModalService,
+  ) {}
 
   ngOnInit(): void {
     this.getContracts();
@@ -58,12 +65,16 @@ export class ConsumedContractsComponent implements OnInit {
   }
 
   public removeContract(contract: Contract): void {
-    this.endpointGroupsService
-      .removeConsumedContractToEndpointGroupEndpointGroup({
-        endpointGroupId: this.endpointGroupId,
-        contractId: contract.id,
-      })
-      .subscribe(data => this.getConsumedContracts());
+    const modalDto = new YesNoModalDto('Remove Contract', `Are you sure you want to remove consumed contract ${contract.name}?`);
+    const onConfirm = () => {
+      this.endpointGroupsService
+        .removeConsumedContractToEndpointGroupEndpointGroup({
+          endpointGroupId: this.endpointGroupId,
+          contractId: contract.id,
+        })
+        .subscribe(data => this.getConsumedContracts());
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   public getConsumedContracts(event?): void {

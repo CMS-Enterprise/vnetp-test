@@ -2,7 +2,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockIconButtonComponent, MockFontAwesomeComponent, MockComponent } from 'src/test/mock-components';
+import { MockProvider } from 'src/test/mock-providers';
 
 import { ProvidedContractsComponent } from './provided-contracts.component';
 
@@ -19,6 +21,7 @@ describe('ProvidedContractsComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
       ],
       imports: [HttpClientModule, NgSelectModule, FormsModule],
+      providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
   }));
 
