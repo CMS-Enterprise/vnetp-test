@@ -6,6 +6,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { AppcentricSubnetDto } from 'src/app/models/appcentric/appcentric-subnet-dto';
 import { BridgeDomainDto } from 'src/app/models/appcentric/bridge-domain-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
@@ -20,6 +21,7 @@ import { IpAddressCidrValidator } from 'src/app/validators/network-form-validato
 })
 export class SubnetsModalComponent implements OnInit {
   public isLoading = false;
+  public ModalMode = ModalMode;
   public modalMode: ModalMode;
   public form: FormGroup;
   public submitted: boolean;
@@ -112,56 +114,6 @@ export class SubnetsModalComponent implements OnInit {
     });
   }
 
-  private createSubnets(appCentricSubnet: AppCentricSubnet): void {
-    this.subnetsService.createAppCentricSubnet({ appCentricSubnet }).subscribe(
-      () => {
-        this.getSubnets();
-        this.reset();
-      },
-      () => {},
-    );
-  }
-
-  public save(): void {
-    this.submitted = true;
-    if (this.form.invalid) {
-      return;
-    }
-
-    const {
-      name,
-      description,
-      alias,
-      gatewayIp,
-      treatAsVirtualIpAddress,
-      primaryIpAddress,
-      advertisedExternally,
-      preferred,
-      sharedBetweenVrfs,
-      ipDataPlaneLearning,
-    } = this.form.value;
-
-    const tenantId = this.tenantId;
-
-    const subnet = {
-      name,
-      description,
-      alias,
-      tenantId,
-      gatewayIp,
-      treatAsVirtualIpAddress,
-      primaryIpAddress,
-      advertisedExternally,
-      preferred,
-      sharedBetweenVrfs,
-      ipDataPlaneLearning,
-    } as AppCentricSubnet;
-
-    subnet.bridgeDomainId = this.bridgeDomainId;
-
-    this.createSubnets(subnet);
-  }
-
   public getSubnets(event?): void {
     this.isLoading = true;
     let eventParams;
@@ -239,9 +191,13 @@ export class SubnetsModalComponent implements OnInit {
       });
   }
 
-  public openSubnetsEditModal(subnet: AppCentricSubnet): void {
+  public openSubnetsEditModal(modalMode: ModalMode, subnet?: AppCentricSubnet): void {
+    const dto = new AppcentricSubnetDto();
+    dto.modalMode = modalMode;
+    dto.subnet = subnet;
+
     this.subscribeToSubnetsEditModal();
-    this.ngx.setModalData(subnet, 'subnetsEditModal');
+    this.ngx.setModalData(dto, 'subnetsEditModal');
     this.ngx.getModal('subnetsEditModal').open();
   }
 

@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppCentricSubnet, V2AppCentricAppCentricSubnetsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { AppcentricSubnetDto } from 'src/app/models/appcentric/appcentric-subnet-dto';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { IpAddressCidrValidator } from 'src/app/validators/network-form-validators';
 
@@ -14,6 +16,9 @@ export class SubnetsEditModalComponent implements OnInit {
   public subnetId: string;
   public form: FormGroup;
   public submitted: boolean;
+  public modalMode: ModalMode;
+  @Input() public bridgeDomainId: string;
+  @Input() public tenantId: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,14 +35,21 @@ export class SubnetsEditModalComponent implements OnInit {
   }
 
   public closeModal(): void {
-    this.ngx.close('vrfModal');
+    this.ngx.close('subnetsEditModal');
     this.reset();
   }
 
   public getData(): void {
-    const subnet = Object.assign({}, this.ngx.getModalData('subnetsEditModal') as AppCentricSubnet);
+    const dto = Object.assign({}, this.ngx.getModalData('subnetsEditModal') as AppcentricSubnetDto);
+    const subnet = dto.subnet;
 
-    this.subnetId = subnet.id;
+    this.modalMode = dto.modalMode;
+
+    if (this.modalMode === ModalMode.Edit) {
+      this.subnetId = dto.subnet.id;
+    } else {
+      this.form.controls.name.enable();
+    }
 
     if (subnet !== undefined) {
       this.form.controls.name.setValue(subnet.name);
@@ -76,10 +88,19 @@ export class SubnetsEditModalComponent implements OnInit {
     });
   }
 
+  private createSubnets(appCentricSubnet: AppCentricSubnet): void {
+    this.subnetsService.createAppCentricSubnet({ appCentricSubnet }).subscribe(
+      () => {},
+      () => {},
+      () => this.closeModal(),
+    );
+  }
+
   private editSubnet(appCentricSubnet: AppCentricSubnet): void {
     appCentricSubnet.name = null;
     appCentricSubnet.gatewayIp = null;
     appCentricSubnet.tenantId = null;
+    appCentricSubnet.bridgeDomainId = null;
     this.subnetsService
       .updateAppCentricSubnet({
         uuid: this.subnetId,
@@ -110,6 +131,10 @@ export class SubnetsEditModalComponent implements OnInit {
       sharedBetweenVrfs,
       ipDataPlaneLearning,
     } = this.form.value;
+
+    const bridgeDomainId = this.bridgeDomainId;
+    const tenantId = this.tenantId;
+
     const subnet = {
       name,
       description,
@@ -121,8 +146,14 @@ export class SubnetsEditModalComponent implements OnInit {
       preferred,
       sharedBetweenVrfs,
       ipDataPlaneLearning,
+      bridgeDomainId,
+      tenantId,
     } as AppCentricSubnet;
 
-    this.editSubnet(subnet);
+    if (this.modalMode === ModalMode.Create) {
+      this.createSubnets(subnet);
+    } else {
+      this.editSubnet(subnet);
+    }
   }
 }
