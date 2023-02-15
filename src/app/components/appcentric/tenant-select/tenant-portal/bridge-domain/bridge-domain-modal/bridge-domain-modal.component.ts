@@ -29,7 +29,7 @@ export class BridgeDomainModalComponent implements OnInit {
 
   public tableComponentDto = new TableComponentDto();
 
-  @Input() public l3Outs: L3Out[];
+  public l3Outs: L3Out[];
   @Input() public vrfs: Vrf[];
   public l3OutsTableData: L3OutPaginationResponse;
 
@@ -76,7 +76,7 @@ export class BridgeDomainModalComponent implements OnInit {
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getL3Outs(event);
+    this.getL3OutsTableData(event);
   }
 
   get f() {
@@ -94,9 +94,11 @@ export class BridgeDomainModalComponent implements OnInit {
     this.modalMode = dto.modalMode;
     if (this.modalMode === ModalMode.Edit) {
       this.bridgeDomainId = dto.bridgeDomain.id;
+      this.getL3OutsTableData();
       this.getL3Outs();
     } else {
       this.form.controls.name.enable();
+      this.form.controls.gatewayIp.enable();
     }
 
     const bridgeDomain = dto.bridgeDomain;
@@ -200,7 +202,7 @@ export class BridgeDomainModalComponent implements OnInit {
     }
   }
 
-  public getL3Outs(event?): void {
+  public getL3OutsTableData(event?): void {
     this.isLoading = true;
     this.bridgeDomainService
       .findOneBridgeDomain({
@@ -222,6 +224,26 @@ export class BridgeDomainModalComponent implements OnInit {
       );
   }
 
+  public getL3Outs(): void {
+    this.isLoading = true;
+    this.l3OutService
+      .findAllL3Out({
+        filter: [`tenantId||eq||${this.tenantId}`],
+        page: this.tableComponentDto.page,
+        perPage: this.tableComponentDto.perPage,
+      })
+      .subscribe(
+        data => {
+          const allL3Outs = data.data;
+          const usedL3Outs = this.l3OutsTableData.data;
+          const usedL3OutIds = usedL3Outs.map(l3Out => l3Out.id);
+          this.l3Outs = allL3Outs.filter(l3Out => !usedL3OutIds.includes(l3Out.id));
+        },
+        () => (this.l3Outs = null),
+        () => (this.isLoading = false),
+      );
+  }
+
   public addL3Out(): void {
     this.bridgeDomainService
       .addL3OutToBridgeDomainBridgeDomain({
@@ -235,10 +257,12 @@ export class BridgeDomainModalComponent implements OnInit {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getL3Outs(params);
+          this.getL3OutsTableData(params);
         } else {
-          this.getL3Outs();
+          this.getL3OutsTableData();
         }
+        this.getL3Outs();
+        this.selectedL3Out = null;
       });
   }
 
@@ -250,18 +274,22 @@ export class BridgeDomainModalComponent implements OnInit {
           bridgeDomainId: this.bridgeDomainId,
           l3OutId: l3Out.id,
         })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
+        .subscribe(
+          () => {
+            const params = this.tableContextService.getSearchLocalStorage();
+            const { filteredResults } = params;
 
-          // if filtered results boolean is true, apply search params in the
-          // subsequent get call
-          if (filteredResults) {
-            this.getL3Outs(params);
-          } else {
-            this.getL3Outs();
-          }
-        });
+            // if filtered results boolean is true, apply search params in the
+            // subsequent get call
+            if (filteredResults) {
+              this.getL3OutsTableData(params);
+            } else {
+              this.getL3OutsTableData();
+            }
+          },
+          () => {},
+          () => this.getL3Outs(),
+        );
     };
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }

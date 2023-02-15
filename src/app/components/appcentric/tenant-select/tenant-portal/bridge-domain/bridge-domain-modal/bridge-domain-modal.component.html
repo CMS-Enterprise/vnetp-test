@@ -159,8 +159,8 @@
         <app-table
           [config]="config"
           [data]="l3OutsTableData"
-          (clearResults)="getL3Outs($event)"
-          (searchParams)="getL3Outs($event)"
+          (clearResults)="getL3OutsTableData($event)"
+          (searchParams)="getL3OutsTableData($event)"
           [searchColumns]="searchColumns"
           [(itemsPerPage)]="perPage"
           (tableEvent)="onTableEvent($event)"

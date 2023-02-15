@@ -17,7 +17,9 @@ import { ContractModalDto } from 'src/app/models/appcentric/contract-modal-dto';
 import { SubjectModalDto } from 'src/app/models/appcentric/subject-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
@@ -79,7 +81,6 @@ export class SubjectModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-    this.getFilters();
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -101,7 +102,13 @@ export class SubjectModalComponent implements OnInit {
     const subject = dto.subject;
 
     this.modalMode = dto.modalMode;
-    this.subjectId = subject.id;
+    if (this.modalMode === ModalMode.Edit) {
+      this.subjectId = subject.id;
+      this.getFiltertableData();
+      this.getFilters();
+    } else {
+      this.form.controls.name.enable();
+    }
 
     if (subject !== undefined) {
       this.form.controls.name.setValue(subject.name);
@@ -112,8 +119,6 @@ export class SubjectModalComponent implements OnInit {
       this.form.controls.reverseFilterPorts.setValue(subject.reverseFilterPorts);
       this.form.controls.globalAlias.setValue(subject.globalAlias);
     }
-
-    this.getFiltertableData();
     this.ngx.resetModalData('subjectModal');
   }
 
@@ -194,7 +199,10 @@ export class SubjectModalComponent implements OnInit {
       })
       .subscribe(
         data => {
-          this.filters = data.data;
+          const allFilters = data.data;
+          const usedFilters = this.filterTableData.data;
+          const usedFilterIds = usedFilters.map(filter => filter.id);
+          this.filters = allFilters.filter(filter => !usedFilterIds.includes(filter.id));
         },
         () => {
           this.filters = null;
@@ -254,21 +262,30 @@ export class SubjectModalComponent implements OnInit {
         () => {
           this.isLoading = false;
           this.getFiltertableData();
+          this.getFilters();
+          this.selectedFilter = undefined;
         },
       );
   }
 
   public removeFilter(filter: Filter) {
     this.isLoading = true;
-    this.subjectsService
-      .removeFilterFromSubjectSubject({
-        subjectId: this.subjectId,
-        filterId: filter.id,
-      })
-      .subscribe(
-        () => this.getFiltertableData(),
-        () => (this.filterTableData = null),
-        () => (this.isLoading = false),
-      );
+    const modalDto = new YesNoModalDto('Remove filter', `Are you sure you want to remove filter ${filter.name}?`);
+    const onConfirm = () => {
+      this.subjectsService
+        .removeFilterFromSubjectSubject({
+          subjectId: this.subjectId,
+          filterId: filter.id,
+        })
+        .subscribe(
+          () => this.getFiltertableData(),
+          () => (this.filterTableData = null),
+          () => {
+            this.isLoading = false;
+            this.getFilters();
+          },
+        );
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 }
