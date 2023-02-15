@@ -240,54 +240,17 @@ export class BridgeDomainModalComponent implements OnInit {
       });
   }
 
-  public deleteL3Out(l3Out: L3Out): void {
-    if (l3Out.deletedAt) {
-      this.l3OutService.removeL3Out({ uuid: l3Out.id }).subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        // if l3Outed results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getL3Outs(params);
-        } else {
-          this.getL3Outs();
-        }
-      });
-    } else {
-      this.l3OutService
-        .softDeleteL3Out({
-          uuid: l3Out.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-
-          // if l3Outed results boolean is true, apply search params in the
-          // subsequent get call
-          if (filteredResults) {
-            this.getL3Outs(params);
-          } else {
-            this.getL3Outs();
-          }
-        });
-    }
-  }
-
-  public restoreL3Out(l3Out: L3Out): void {
-    if (!l3Out.deletedAt) {
-      return;
-    }
-
-    this.l3OutService
-      .restoreL3Out({
-        uuid: l3Out.id,
+  public removeL3Out(l3Out: L3Out): void {
+    this.bridgeDomainService
+      .removeL3OutFromBridgeDomainBridgeDomain({
+        bridgeDomainId: this.bridgeDomainId,
+        l3OutId: l3Out.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
-        // if l3Outed results boolean is true, apply search params in the
+        // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
           this.getL3Outs(params);
