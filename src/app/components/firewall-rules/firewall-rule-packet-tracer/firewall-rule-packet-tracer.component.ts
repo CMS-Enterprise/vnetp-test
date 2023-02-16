@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { V1NetworkSecurityNetworkObjectGroupsService, V1NetworkSecurityNetworkObjectsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
 import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
 
 @Component({
@@ -18,6 +19,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   rulesHit = [];
   partialMatches = [];
   showPartials = false;
+  protocolSubscription: Subscription;
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
@@ -27,6 +29,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+    this.setFormValidators();
   }
 
   // takes an ipAddress to search for and another IP Subnet and determines if the ip to search
@@ -98,12 +101,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     var d = dot.split('.');
     return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3];
   }
-
-  getData() {
-    console.log('this.objects', this.objects);
-    // this.calculateSubnet('192.168.0.0')
-  }
-
   // TO DO : IPv6
   convertIpv6(ipv6): void {
     // const ipv6Subnet = '2001:db8:0:0:8d3::/64';
@@ -127,19 +124,26 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   // TO DO : IPv6 Searches
   async search() {
-    this.submitted = true;
-    // if (this.form.invalid) {
-    //   return;
-    // }
+    this.partialMatches = [];
     this.rulesHit = [];
+    this.showPartials = false;
+    this.submitted = true;
+    let portsRequired = false;
+    if (this.form.invalid) {
+      return;
+    }
     const searchDto = {
       directionLookup: this.form.controls.direction.value,
       protocolLookup: this.form.controls.protocol.value,
+      enabledLookup: this.form.controls.enabled.value,
       sourceIpLookup: this.form.controls.sourceIpAddress.value,
       destIpLookup: this.form.controls.destinationIpAddress.value,
       sourcePortsLookup: this.form.controls.sourcePorts.value,
       destPortsLookup: this.form.controls.destinationPorts.value,
     };
+    if (searchDto.protocolLookup === 'TCP' || searchDto.protocolLookup === 'UDP') {
+      portsRequired = true;
+    }
     await Promise.all(
       this.objects.firewallRules.map(async rule => {
         const checkList = {
@@ -149,6 +153,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
           destPortMatch: false,
           directionMatch: false,
           protocolMatch: false,
+          enabledMatch: false,
         };
         // if rule source is ip address
         if (rule.sourceAddressType === 'IpAddress') {
@@ -389,26 +394,40 @@ export class FirewallRulePacketTracerComponent implements OnInit {
           checkList.protocolMatch = true;
         }
 
+        if (searchDto.enabledLookup === rule.enabled) {
+          checkList.enabledMatch = true;
+        }
+
         // final check list
         // if all conditions are true, the rule is a hit
-        if (
-          checkList.destInRange &&
-          checkList.destPortMatch &&
-          checkList.directionMatch &&
-          checkList.protocolMatch &&
-          checkList.sourceInRange &&
-          checkList.sourcePortMatch
-        ) {
-          this.rulesHit.push(rule.name);
-        } else if (
-          checkList.destInRange ||
-          checkList.destPortMatch ||
-          checkList.directionMatch ||
-          checkList.protocolMatch ||
-          checkList.sourceInRange ||
-          checkList.sourcePortMatch
-        ) {
-          this.partialMatches.push({ checkList: checkList, name: rule.name });
+        if (portsRequired) {
+          if (
+            checkList.destInRange &&
+            checkList.destPortMatch &&
+            checkList.directionMatch &&
+            checkList.protocolMatch &&
+            checkList.sourceInRange &&
+            checkList.sourcePortMatch
+          ) {
+            this.rulesHit.push(rule.name);
+          } else if (
+            checkList.destInRange ||
+            checkList.destPortMatch ||
+            checkList.directionMatch ||
+            checkList.protocolMatch ||
+            checkList.sourceInRange ||
+            checkList.sourcePortMatch
+          ) {
+            this.partialMatches.push({ checkList: checkList, name: rule.name });
+          }
+        } else {
+          delete checkList.destPortMatch;
+          delete checkList.sourcePortMatch;
+          if (checkList.destInRange && checkList.directionMatch && checkList.protocolMatch && checkList.sourceInRange) {
+            this.rulesHit.push(rule.name);
+          } else if (checkList.destInRange || checkList.directionMatch || checkList.protocolMatch || checkList.sourceInRange) {
+            this.partialMatches.push({ checkList: checkList, name: rule.name });
+          }
         }
       }),
     );
@@ -431,6 +450,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.form = this.formBuilder.group({
       direction: ['', Validators.required],
       protocol: ['', Validators.required],
+      enabled: [true, Validators.required],
       sourceIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
       destinationIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
 
@@ -439,16 +459,34 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     });
   }
 
+  setFormValidators() {
+    this.protocolSubscription = this.form.controls.protocol.valueChanges.subscribe(protocol => {
+      if (protocol === 'IP' || protocol === 'ICMP') {
+        this.form.controls.sourcePorts.setValidators(null);
+        this.form.controls.destinationPorts.setValidators(null);
+      } else {
+        this.form.controls.sourcePorts.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
+        this.form.controls.destinationPorts.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
+      }
+
+      this.form.controls.sourcePorts.updateValueAndValidity();
+      this.form.controls.destinationPorts.updateValueAndValidity();
+    });
+  }
+
   reset(): void {
     this.submitted = false;
     this.rulesHit = [];
+    this.partialMatches = [];
     this.form.reset();
     this.ngx.resetModalData('firewallRulePacketTracer');
+    this.protocolSubscription.unsubscribe();
+    this.setFormValidators();
     this.buildForm();
   }
 
   close(): void {
-    this.ngx.close('firewallRulePacketTracer');
     this.reset();
+    this.ngx.close('firewallRulePacketTracer');
   }
 }
