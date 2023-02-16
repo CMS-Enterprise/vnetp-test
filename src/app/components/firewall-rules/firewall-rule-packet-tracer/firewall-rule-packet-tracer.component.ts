@@ -400,6 +400,9 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
         // final check list
         // if all conditions are true, the rule is a hit
+
+        // if TCP or UDP has been selected for the protocolLookup
+        // we must check source and destPort to get total rule matches
         if (portsRequired) {
           if (
             checkList.destInRange &&
@@ -421,6 +424,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
             this.partialMatches.push({ checkList: checkList, name: rule.name });
           }
         } else {
+          // since the source and destPorts are not required
+          // we can delete them from the checkList
           delete checkList.destPortMatch;
           delete checkList.sourcePortMatch;
           if (checkList.destInRange && checkList.directionMatch && checkList.protocolMatch && checkList.sourceInRange) {

@@ -150,6 +150,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
       destinationIpAddress: '10.0.0.9',
       sourcePorts: '2',
       destinationPorts: '5',
+      enabled: true,
     });
 
     jest.spyOn(netObjService, 'getOneNetworkObject').mockImplementation(() => {
