@@ -103,7 +103,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
         action: 'Deny',
         protocol: 'IP',
         logging: false,
-        enabled: true,
+        enabled: false,
         ruleIndex: 4,
         sourceAddressType: 'NetworkObjectGroup',
         destinationAddressType: 'IpAddress',
@@ -135,12 +135,20 @@ describe('FirewallRulesPacketTracerComponent', () => {
     // console.log('component', component)
   });
 
-  //   it('should have all fields required by default', () => {
-  //     const requiredFields = ['direction', 'protocol', 'sourceIpAddress', 'destinationIpAddress', 'sourcePorts', 'destinationPorts'];
-  //     requiredFields.forEach(field => {
-  //         expect(isRequired(field)).toBe(true);
-  //     })
-  //   });
+  it('should have all fields required by default', () => {
+    const requiredFields = [
+      'direction',
+      'protocol',
+      'sourceIpAddress',
+      'destinationIpAddress',
+      'sourcePorts',
+      'destinationPorts',
+      'enabled',
+    ];
+    requiredFields.forEach(field => {
+      expect(isRequired(field)).toBe(true);
+    });
+  });
 
   it('should find a firewall rule match if all searched IPs/fields exist in the rule', async () => {
     component.form.setValue({
@@ -177,99 +185,22 @@ describe('FirewallRulesPacketTracerComponent', () => {
       } as any);
     });
 
-    // console.log('component.objects.firewallRules',component.objects);
-    const matchingRules = await component.search();
-    console.log('matchingRules', matchingRules);
-    expect(matchingRules).toEqual(['fw-rule1', 'fw-rule2', 'fw-rule3', 'fw-rule4']);
+    await component.search();
+    const matchingRules = component.rulesHit;
+    const partialMatches = component.partialMatches;
+    expect(matchingRules).toEqual(['fw-rule1', 'fw-rule2', 'fw-rule3']);
+    expect(partialMatches).toEqual([
+      {
+        checkList: {
+          sourceInRange: true,
+          destInRange: true,
+          directionMatch: true,
+          protocolMatch: true,
+          enabledMatch: false,
+        },
+        name: 'fw-rule4',
+      },
+    ]);
+    console.log('partialMatches', partialMatches);
   });
-
-  //   it('should find a firewall rule match if a rules source contains the searched value', () => {
-
-  //     console.log('test2')
-  //     component.form.setValue({
-  //         direction: 'In',
-  //         protocol: 'IP',
-  //         sourceIpAddress: '192.168.1.25',
-  //         destinationIpAddress: '10.0.0.9',
-  //         sourcePorts: '2',
-  //         destinationPorts: '5'
-  //     });
-
-  //     // console.log('component.objects.firewallRules',component.objects);
-  //     const matchingRule = component.search();
-  //   });
-
-  //   it('should find a firewall rule match if all the souce/dest subnet of a rule contains the IP in the form field', () => {
-
-  //     console.log('test3')
-  //     component.form.setValue({
-  //         direction: 'In',
-  //         protocol: 'IP',
-  //         sourceIpAddress: '192.168.1.25',
-  //         destinationIpAddress: '10.0.1.9',
-  //         sourcePorts: '2',
-  //         destinationPorts: '5'
-  //     });
-
-  //     const matchingRule = component.search();
-  //   });
-
-  //   it('should find a firewall rule match if the sourceNetworkObject has an IP address that matches the form value', () => {
-
-  //       console.log('test4')
-
-  //       component.form.setValue({
-  //           direction: 'In',
-  //           protocol: 'IP',
-  //           sourceIpAddress: '192.168.0.25',
-  //           destinationIpAddress: '10.0.0.9',
-  //           sourcePorts: '2',
-  //           destinationPorts: '5'
-  //       });
-
-  //       const spy = jest.spyOn(netObjService, 'getOneNetworkObject').mockImplementation(() => {
-  //           return of({
-  //               name: 'net-obj-ip1',
-  //               type: 'IpAddress',
-  //               ipAddress: '192.168.0.25',
-  //               id: '1'
-  //           } as any)
-  //       });
-  //       const matchingRules = component.search();
-  //       expect(spy).toHaveBeenCalledWith({id: "1"})
-  //       console.log('matchingRules (in test)', matchingRules)
-  //   })
-
-  //   it('should find a firewall rule match if the sourceNetworkObjectGroup contains any members whose IP addresses match the form value', () => {
-  //     console.log('test5');
-
-  //     component.form.setValue({
-  //       direction: 'In',
-  //       protocol: 'IP',
-  //       sourceIpAddress: '192.168.0.25',
-  //       destinationIpAddress: '10.0.0.9',
-  //       sourcePorts: '2',
-  //       destinationPorts: '5',
-  //     });
-
-  //     const netObjGroupService = TestBed.inject(V1NetworkSecurityNetworkObjectGroupsService);
-
-  //     jest.spyOn(netObjGroupService, 'getOneNetworkObjectGroup').mockImplementation(() => {
-  //       return of({
-  //         name: 'net-obj-group1',
-  //         id: '1',
-  //         networkObjects: [
-  //           {
-  //             name: 'net-obj-ip1',
-  //             type: 'IpAddress',
-  //             ipAddress: '192.168.0.25',
-  //             id: '1',
-  //           },
-  //         ],
-  //       } as any);
-  //     });
-
-  //     const matchingRules = component.search();
-  //     console.log('matchingRules', matchingRules);
-  //   });
 });

@@ -101,6 +101,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     var d = dot.split('.');
     return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3];
   }
+
   // TO DO : IPv6
   convertIpv6(ipv6): void {
     // const ipv6Subnet = '2001:db8:0:0:8d3::/64';
@@ -410,7 +411,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
             checkList.directionMatch &&
             checkList.protocolMatch &&
             checkList.sourceInRange &&
-            checkList.sourcePortMatch
+            checkList.sourcePortMatch &&
+            checkList.enabledMatch
           ) {
             this.rulesHit.push(rule.name);
           } else if (
@@ -421,6 +423,13 @@ export class FirewallRulePacketTracerComponent implements OnInit {
             checkList.sourceInRange ||
             checkList.sourcePortMatch
           ) {
+            // const keyValues = await this.getFalseValue(checkList);
+            // const falseProperties = []
+            // for (const [key, value] of Object.entries(checkList)) {
+            //   if (value == false) {
+            //     falseProperties.push({key: value})
+            //   }
+            // }
             this.partialMatches.push({ checkList: checkList, name: rule.name });
           }
         } else {
@@ -428,7 +437,13 @@ export class FirewallRulePacketTracerComponent implements OnInit {
           // we can delete them from the checkList
           delete checkList.destPortMatch;
           delete checkList.sourcePortMatch;
-          if (checkList.destInRange && checkList.directionMatch && checkList.protocolMatch && checkList.sourceInRange) {
+          if (
+            checkList.destInRange &&
+            checkList.directionMatch &&
+            checkList.protocolMatch &&
+            checkList.sourceInRange &&
+            checkList.enabledMatch
+          ) {
             this.rulesHit.push(rule.name);
           } else if (checkList.destInRange || checkList.directionMatch || checkList.protocolMatch || checkList.sourceInRange) {
             this.partialMatches.push({ checkList: checkList, name: rule.name });
@@ -443,11 +458,11 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     return this.form.controls;
   }
 
-  getNetworkObjectInfo(networkObjectId) {
+  async getNetworkObjectInfo(networkObjectId) {
     return this.networkObjectService.getOneNetworkObject({ id: networkObjectId }).toPromise();
   }
 
-  getNetworkObjectGroupInfo(networkObjectGroupId) {
+  async getNetworkObjectGroupInfo(networkObjectGroupId) {
     return this.networkObjectGroupService.getOneNetworkObjectGroup({ id: networkObjectGroupId, join: ['networkObjects'] }).toPromise();
   }
 
