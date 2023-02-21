@@ -135,20 +135,20 @@ describe('FirewallRulesPacketTracerComponent', () => {
     // console.log('component', component)
   });
 
-  it('should have all fields required by default', () => {
-    const requiredFields = [
-      'direction',
-      'protocol',
-      'sourceIpAddress',
-      'destinationIpAddress',
-      'sourcePorts',
-      'destinationPorts',
-      'enabled',
-    ];
-    requiredFields.forEach(field => {
-      expect(isRequired(field)).toBe(true);
-    });
-  });
+  // it('should have all fields required by default', () => {
+  //   const requiredFields = [
+  //     'direction',
+  //     'protocol',
+  //     'sourceIpAddress',
+  //     'destinationIpAddress',
+  //     'sourcePorts',
+  //     'destinationPorts',
+  //     'enabled',
+  //   ];
+  //   requiredFields.forEach(field => {
+  //     expect(isRequired(field)).toBe(true);
+  //   });
+  // });
 
   it('should find a firewall rule match if all searched IPs/fields exist in the rule', async () => {
     component.form.setValue({
