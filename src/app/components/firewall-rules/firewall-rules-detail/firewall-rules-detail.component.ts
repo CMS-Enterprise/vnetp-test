@@ -208,6 +208,18 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       );
   }
 
+  getAllRules() {
+    this.firewallRuleService
+      .getManyFirewallRule({
+        filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`],
+        limit: 50000,
+        sort: ['ruleIndex,ASC'],
+      })
+      .subscribe(response => {
+        this.packetTracerObjects.firewallRules = response.data;
+      });
+  }
+
   getObjects(): void {
     const tierRequest = this.tierService.getOneTier({ id: this.TierId });
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
@@ -419,6 +431,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   openPacketTracer() {
+    this.getAllRules();
     this.subscribeToPacketTracer();
     this.ngx.getModal('firewallRulePacketTracer').open();
   }

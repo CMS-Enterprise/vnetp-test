@@ -29,7 +29,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-    this.setFormValidators();
+    // this.setFormValidators();
   }
 
   // takes an ipAddress to search for and another IP Subnet and determines if the ip to search
@@ -125,6 +125,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   // TO DO : IPv6 Searches
   async search() {
+    // this.setFormValidators();
     this.partialMatches = [];
     this.rulesHit = [];
     this.showPartials = false;
@@ -468,31 +469,31 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      direction: ['', Validators.required],
-      protocol: ['', Validators.required],
-      enabled: [true, Validators.required],
-      sourceIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
-      destinationIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
+      direction: [''],
+      protocol: [''],
+      enabled: [true],
+      sourceIpAddress: ['', IpAddressAnyValidator],
+      destinationIpAddress: ['', IpAddressAnyValidator],
 
-      sourcePorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
-      destinationPorts: ['', Validators.compose([Validators.required, ValidatePortRange])],
+      sourcePorts: ['', ValidatePortRange],
+      destinationPorts: ['', ValidatePortRange],
     });
   }
 
-  setFormValidators() {
-    this.protocolSubscription = this.form.controls.protocol.valueChanges.subscribe(protocol => {
-      if (protocol === 'IP' || protocol === 'ICMP') {
-        this.form.controls.sourcePorts.setValidators(null);
-        this.form.controls.destinationPorts.setValidators(null);
-      } else {
-        this.form.controls.sourcePorts.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
-        this.form.controls.destinationPorts.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
-      }
+  // setFormValidators() {
+  //   this.protocolSubscription = this.form.controls.protocol.valueChanges.subscribe(protocol => {
+  //     if (protocol === 'IP' || protocol === 'ICMP') {
+  //       this.form.controls.sourcePorts.setValidators(null);
+  //       this.form.controls.destinationPorts.setValidators(null);
+  //     } else {
+  //       this.form.controls.sourcePorts.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
+  //       this.form.controls.destinationPorts.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
+  //     }
 
-      this.form.controls.sourcePorts.updateValueAndValidity();
-      this.form.controls.destinationPorts.updateValueAndValidity();
-    });
-  }
+  //     this.form.controls.sourcePorts.updateValueAndValidity();
+  //     this.form.controls.destinationPorts.updateValueAndValidity();
+  //   });
+  // }
 
   reset(): void {
     this.submitted = false;
@@ -500,8 +501,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.partialMatches = [];
     this.form.reset();
     this.ngx.resetModalData('firewallRulePacketTracer');
-    this.protocolSubscription.unsubscribe();
-    this.setFormValidators();
+    // this.protocolSubscription.unsubscribe();
+    // this.setFormValidators();
     this.buildForm();
   }
 
