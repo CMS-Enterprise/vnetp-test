@@ -48,7 +48,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   ModalMode = ModalMode;
   public currentTier: Tier;
 
-  natRuleGroup: NatRuleGroup;
+  // natRuleGroup: NatRuleGroup;
   natRules = {} as GetManyNatRuleResponseDto;
   perPage = 50;
 
@@ -59,6 +59,8 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   tiers: Tier[];
 
   natRuleModalSubscription: Subscription;
+  packetTracerSubscription: Subscription;
+  packetTracerObjects = { networkObjects: [], networkObjectGroups: [], serviceObjects: [], natRules: [] };
 
   TierId: string;
   NatRuleGroup: NatRuleGroup;
@@ -213,6 +215,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       this.networkObjectGroups = result[2].data;
       this.serviceObjects = result[3].data;
 
+      this.packetTracerObjects.networkObjects = this.networkObjects;
+      this.packetTracerObjects.networkObjectGroups = this.networkObjectGroups;
+      this.packetTracerObjects.serviceObjects = this.serviceObjects;
       this.getNatRules();
     });
   }
@@ -372,5 +377,33 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       }
       previewImportSubscription.unsubscribe();
     });
+  }
+
+  subscribeToPacketTracer() {
+    this.packetTracerSubscription = this.ngx.getModal('natRulePacketTracer').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('natRulePacketTracer');
+      this.getNatRuleGroup();
+      this.packetTracerSubscription.unsubscribe();
+    });
+  }
+
+  openPacketTracer() {
+    this.getAllRules();
+    this.subscribeToPacketTracer();
+    this.ngx.getModal('natRulePacketTracer').open();
+  }
+
+  getAllRules() {
+    console.log('this.natRuleGroup', this.NatRuleGroup);
+    this.natRuleService
+      .getManyNatRule({
+        filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],
+        limit: 50000,
+        sort: ['ruleIndex,ASC'],
+      })
+      .subscribe(response => {
+        console.log('response', response);
+        this.packetTracerObjects.natRules = response as any;
+      });
   }
 }

@@ -17,6 +17,8 @@
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
+
+  <button (click)="openPacketTracer()">Advanced Search</button>
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
@@ -135,3 +137,6 @@
     (Object Group)
   </p>
 </ng-template>
+
+
+<app-nat-rule-packet-tracer [objects]="packetTracerObjects"></app-nat-rule-packet-tracer>
