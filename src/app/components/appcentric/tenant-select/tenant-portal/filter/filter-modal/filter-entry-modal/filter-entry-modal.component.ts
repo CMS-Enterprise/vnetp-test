@@ -152,14 +152,12 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
       // ipProtocol and matchOnlyFragments are required when etherType is IP, IPv4 or IPv6
       if (etherTypeValue === 'ip' || etherTypeValue === 'ipv4' || etherTypeValue === 'ipv6') {
         ipProtocol.enable();
-        ipProtocol.setValidators(Validators.required);
         ipProtocol.setValue(null);
         matchOnlyFragments.enable();
         matchOnlyFragments.setValidators(Validators.required);
-        matchOnlyFragments.setValue(null);
+        matchOnlyFragments.setValue(false);
       } else {
         ipProtocol.disable();
-        ipProtocol.setValidators(null);
         ipProtocol.setValue(null);
         matchOnlyFragments.disable();
         matchOnlyFragments.setValidators(null);
@@ -189,15 +187,18 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
         sourceToPort.enable();
         destinationFromPort.enable();
         destinationToPort.enable();
-        stateful.enable();
 
         sourceFromPort.setValidators(Validators.required);
         sourceToPort.setValidators(Validators.required);
         destinationFromPort.setValidators(Validators.required);
         destinationToPort.setValidators(Validators.required);
         if (ipProtocolValue === 'tcp') {
+          stateful.enable();
+          stateful.setValue(false);
           stateful.setValidators(Validators.required);
         } else if (ipProtocolValue === 'udp') {
+          stateful.disable();
+          stateful.setValue(null);
           stateful.setValidators(null);
         }
       } else {
