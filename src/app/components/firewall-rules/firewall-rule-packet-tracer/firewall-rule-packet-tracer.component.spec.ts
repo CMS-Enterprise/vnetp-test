@@ -201,6 +201,5 @@ describe('FirewallRulesPacketTracerComponent', () => {
         name: 'fw-rule4',
       },
     ]);
-    console.log('partialMatches', partialMatches);
   });
 });

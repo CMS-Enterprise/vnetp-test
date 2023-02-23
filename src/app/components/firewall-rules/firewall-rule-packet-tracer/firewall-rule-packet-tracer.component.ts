@@ -472,8 +472,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       direction: [''],
       protocol: [''],
       enabled: [true],
-      sourceIpAddress: ['', IpAddressAnyValidator],
-      destinationIpAddress: ['', IpAddressAnyValidator],
+      sourceIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
+      destinationIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
 
       sourcePorts: ['', ValidatePortRange],
       destinationPorts: ['', ValidatePortRange],

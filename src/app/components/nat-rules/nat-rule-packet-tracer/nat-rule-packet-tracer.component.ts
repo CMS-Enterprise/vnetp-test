@@ -594,15 +594,15 @@ export class natRulePacketTracerComponent implements OnInit {
       biDirectional: [''],
       enabled: [true],
 
-      originalSourceIp: ['', IpAddressAnyValidator],
-      originalDestinationIp: ['', IpAddressAnyValidator],
+      originalSourceIp: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
+      originalDestinationIp: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
       originalPort: ['', ValidatePortRange],
 
       translatedSourceIp: ['', IpAddressAnyValidator],
       translatedDestinationIp: ['', IpAddressAnyValidator],
       translatedPort: ['', ValidatePortRange],
 
-      translationType: [''],
+      //   translationType: [''],
     });
   }
 

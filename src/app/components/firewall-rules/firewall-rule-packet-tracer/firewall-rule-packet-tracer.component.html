@@ -13,10 +13,79 @@
     <a style="color: blue; cursor: pointer;" (click)="showPartials = !showPartials">Show Partials</a>
   </div>
   <div *ngIf="showPartials">
-    <div *ngFor="let partialMatch of partialMatches">
+    <table class="table table-striped">
+
+      <thead>
+
+        <th>Rule Name</th>
+        <th>Source In Range</th>
+        <th>Dest In Range</th>
+        <th>Direction Match</th>
+        <th>Protocol Match</th>
+        <th>Source Port Match</th>
+        <th>Dest Port Match</th>
+        <th>Enabled Match</th>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let partial of partialMatches">
+          <!-- Name : {{partial.name}} -->
+
+          <td>
+            {{partial.name}}
+          </td>
+          <td>
+            {{partial.checkList.sourceInRange}}
+          </td>
+
+          <td>
+
+            {{partial.checkList.destInRange}}
+
+          </td>
+
+          <td>
+            {{partial.checkList.directionMatch}}
+
+          </td>
+
+          <td>
+            {{partial.checkList.protocolMatch}}
+
+          </td>
+
+          <td>
+            {{partial.checkList.enabledMatch}}
+
+          </td>
+
+          <td>
+            {{partial.checkList.sourcePortMatch}}
+
+          </td>
+
+          <td>
+            {{partial.checkList.destPortMatch}}
+
+          </td>
+
+        </tr>
+      </tbody>
+      <tfoot>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tfoot>
+    </table>
+    <!-- <div *ngFor="let partialMatch of partialMatches">
       <div>Rule name: {{partialMatch.name}}</div>
       <div>Checklist: {{partialMatch.checkList | json}}</div>
-    </div>
+    </div> -->
   </div>
 
 

@@ -394,7 +394,6 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   getAllRules() {
-    console.log('this.natRuleGroup', this.NatRuleGroup);
     this.natRuleService
       .getManyNatRule({
         filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],

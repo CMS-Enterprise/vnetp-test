@@ -196,7 +196,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           // TODO: Review this approach, see if we can resolve
           // this in the generated client.
           this.firewallRules = response;
-          this.packetTracerObjects.firewallRules = this.firewallRules.data;
+          // this.packetTracerObjects.firewallRules = this.firewallRules.data;
           // this.totalFirewallRules = result.total;
         },
         () => {
@@ -216,7 +216,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         sort: ['ruleIndex,ASC'],
       })
       .subscribe(response => {
-        this.packetTracerObjects.firewallRules = response.data;
+        this.packetTracerObjects.firewallRules = response as any;
       });
   }
 
