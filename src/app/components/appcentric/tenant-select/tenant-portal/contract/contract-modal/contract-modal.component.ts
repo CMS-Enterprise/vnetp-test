@@ -91,6 +91,7 @@ export class ContractModalComponent implements OnInit {
     this.modalMode = dto.modalMode;
     if (this.modalMode === ModalMode.Edit) {
       this.contractId = dto.contract.id;
+      this.getSubjects();
     } else {
       this.form.controls.name.enable();
     }
@@ -102,7 +103,6 @@ export class ContractModalComponent implements OnInit {
       this.form.controls.description.setValue(contract.description);
       this.form.controls.alias.setValue(contract.alias);
     }
-    this.getSubjects();
     this.ngx.resetModalData('contractModal');
   }
 
