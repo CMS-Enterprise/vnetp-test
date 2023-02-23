@@ -179,7 +179,7 @@ export class FilterModalComponent implements OnInit {
     } else {
       const modalDto = new YesNoModalDto(
         'Delete Filter Entry',
-        `Are you sure you want to permanently delete this filter entry ${filterEntry.name}?`,
+        `Are you sure you want to soft delete this filter entry ${filterEntry.name}?`,
       );
       const onConfirm = () => {
         this.filterEntriesService

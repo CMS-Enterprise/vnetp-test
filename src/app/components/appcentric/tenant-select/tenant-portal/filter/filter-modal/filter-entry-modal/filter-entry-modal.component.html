@@ -1,4 +1,11 @@
-<ngx-smart-modal #filterEntryModal identifier="filterEntryModal" [dismissable]="false" (onOpen)="getData()" (onClose)="reset()">
+<ngx-smart-modal
+  #filterEntryModal
+  customClass="large-modal"
+  identifier="filterEntryModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+>
   <header class="modal-header">
     <h4 class="modal-title">Filter Entry</h4>
   </header>
@@ -62,7 +69,12 @@
 
         <div class="form-group col-md-6">
           <label for="ipProtocol">Ip Protocol</label>
-          <ng-select formControlName="ipProtocol" [items]="ipProtocolOptions" id="ipProtocol"></ng-select>
+          <ng-select
+            formControlName="ipProtocol"
+            [class.is-invalid]="submitted && f.ipProtocol.errors"
+            [items]="ipProtocolOptions"
+            id="ipProtocol"
+          ></ng-select>
         </div>
       </div>
 

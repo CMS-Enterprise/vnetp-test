@@ -1,4 +1,10 @@
-<ngx-smart-modal #bridgeDomainModal customClass="medium-modal" identifier="bridgeDomainModal" (onOpen)="getData()" (onClose)="reset()">
+<ngx-smart-modal
+  #bridgeDomainModal
+  customClass="large-modal"
+  identifier="bridgeDomainModal"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+>
   <header class="modal-header">
     <h4 class="modal-title">Bridge Domain</h4>
   </header>
@@ -182,10 +188,6 @@
 
 <ng-template #actionsTemplate let-l3Out="datum">
   <section class="table__actions">
-    <app-icon-button
-      icon="delete"
-      label="Remove L3 Out"
-      (handleClick)="removeL3Out(l3Out)"
-    ></app-icon-button>
+    <app-icon-button icon="delete" label="Remove L3 Out" (handleClick)="removeL3Out(l3Out)"></app-icon-button>
   </section>
 </ng-template>
