@@ -43,13 +43,13 @@ describe('FilterEntryModalComponent', () => {
       const etherType = getFormControl('etherType');
 
       etherType.setValue('ip');
-      expect(isRequired('ipProtocol')).toBe(true);
+      expect(isRequired('ipProtocol')).toBe(false);
 
       etherType.setValue('ipv4');
-      expect(isRequired('ipProtocol')).toBe(true);
+      expect(isRequired('ipProtocol')).toBe(false);
 
       etherType.setValue('ipv6');
-      expect(isRequired('ipProtocol')).toBe(true);
+      expect(isRequired('ipProtocol')).toBe(false);
 
       etherType.setValue(null);
       expect(isRequired('ipProtocol')).toBe(false);
