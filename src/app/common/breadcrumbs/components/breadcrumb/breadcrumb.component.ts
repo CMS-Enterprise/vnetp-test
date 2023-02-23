@@ -34,23 +34,17 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
       url: `/${this.currentMode}/dashboard`,
     };
 
+    this.breadcrumbs.push(dashboardBreadcrumb);
+
     this.routeChanges = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       const root: ActivatedRoute = this.route.root;
       const currentRoute = this.router.url.split('?')[0];
 
-      console.log(root);
-
       this.render = !this.routesNotToRender.some(r => r.includes(currentRoute));
 
-      console.log('breadcrumbs');
       const breadcrumbs = this.getBreadcrumbs(root);
-      console.log(breadcrumbs);
-      console.log('breadcrumbs');
-      console.log('new breadcrumbs');
 
       this.breadcrumbs = [dashboardBreadcrumb, ...breadcrumbs];
-      console.log(this.breadcrumbs);
-      console.log('new breadcrumbs');
     });
   }
 
@@ -67,7 +61,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     }
 
     for (const child of children) {
-      if (child.outlet !== PRIMARY_OUTLET || child.snapshot.url.length === 0) {
+      if (child.outlet !== PRIMARY_OUTLET) {
         continue;
       }
 
@@ -77,7 +71,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
       const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
 
-      url += `/${routeURL}`;
+      url += `/${this.currentMode}/${routeURL}`;
 
       const breadcrumb: Breadcrumb = {
         label: child.snapshot.data[ROUTE_DATA_BREADCRUMB],

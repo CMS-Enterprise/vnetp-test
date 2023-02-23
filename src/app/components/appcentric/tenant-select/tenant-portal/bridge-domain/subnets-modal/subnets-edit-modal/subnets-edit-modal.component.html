@@ -1,4 +1,4 @@
-<ngx-smart-modal #subnetsEditModal identifier="subnetsEditModal" (onOpen)="getData()" (onClose)="reset()">
+<ngx-smart-modal #subnetsEditModal customClass="medium-modal" identifier="subnetsEditModal" (onOpen)="getData()" (onClose)="reset()">
   <header class="modal-header">
     <h4 class="modal-title">Edit Subnet</h4>
   </header>
@@ -68,94 +68,98 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="treatAsVirtualIpAddress">Treat As Virtual Ip Address</label>
-        <select
-          id="treatAsVirtualIpAddress"
-          formControlName="treatAsVirtualIpAddress"
-          class="form-control"
-          [class.is-invalid]="submitted && f.treatAsVirtualIpAddress.errors"
-          aria-label="Treat As Virtual Ip Address"
-        >
-          <option></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="treatAsVirtualIpAddress">Treat As Virtual Ip Address</label>
+          <select
+            id="treatAsVirtualIpAddress"
+            formControlName="treatAsVirtualIpAddress"
+            class="form-control"
+            [class.is-invalid]="submitted && f.treatAsVirtualIpAddress.errors"
+            aria-label="Treat As Virtual Ip Address"
+          >
+            <option></option>
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="primaryIpAddress">Primary Ip Address</label>
+          <select
+            id="primaryIpAddress"
+            formControlName="primaryIpAddress"
+            class="form-control"
+            [class.is-invalid]="submitted && f.primaryIpAddress.errors"
+            aria-label="Primary Ip Address"
+          >
+            <option></option>
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="advertisedExternally">Advertised Externally</label>
+          <select
+            id="advertisedExternally"
+            formControlName="advertisedExternally"
+            class="form-control"
+            [class.is-invalid]="submitted && f.advertisedExternally.errors"
+            aria-label="Advertised Externally"
+          >
+            <option></option>
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="primaryIpAddress">Primary Ip Address</label>
-        <select
-          id="primaryIpAddress"
-          formControlName="primaryIpAddress"
-          class="form-control"
-          [class.is-invalid]="submitted && f.primaryIpAddress.errors"
-          aria-label="Primary Ip Address"
-        >
-          <option></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
-      </div>
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="preferred">Preferred</label>
+          <select
+            id="preferred"
+            formControlName="preferred"
+            class="form-control"
+            [class.is-invalid]="submitted && f.preferred.errors"
+            aria-label="Preferred"
+          >
+            <option></option>
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label for="advertisedExternally">Advertised Externally</label>
-        <select
-          id="advertisedExternally"
-          formControlName="advertisedExternally"
-          class="form-control"
-          [class.is-invalid]="submitted && f.advertisedExternally.errors"
-          aria-label="Advertised Externally"
-        >
-          <option></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
-      </div>
+        <div class="form-group col-md-4">
+          <label for="sharedBetweenVrfs">Shared Between Vrfs</label>
+          <select
+            id="sharedBetweenVrfs"
+            formControlName="sharedBetweenVrfs"
+            class="form-control"
+            [class.is-invalid]="submitted && f.sharedBetweenVrfs.errors"
+            aria-label="Shared Between Vrfs"
+          >
+            <option></option>
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label for="preferred">Preferred</label>
-        <select
-          id="preferred"
-          formControlName="preferred"
-          class="form-control"
-          [class.is-invalid]="submitted && f.preferred.errors"
-          aria-label="Preferred"
-        >
-          <option></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="sharedBetweenVrfs">Shared Between Vrfs</label>
-        <select
-          id="sharedBetweenVrfs"
-          formControlName="sharedBetweenVrfs"
-          class="form-control"
-          [class.is-invalid]="submitted && f.sharedBetweenVrfs.errors"
-          aria-label="Shared Between Vrfs"
-        >
-          <option></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="ipDataPlaneLearning">Ip Data Plane Learning</label>
-        <select
-          id="ipDataPlaneLearning"
-          formControlName="ipDataPlaneLearning"
-          class="form-control"
-          [class.is-invalid]="submitted && f.ipDataPlaneLearning.errors"
-          aria-label="Ip Data Plane Learning"
-        >
-          <option></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
+        <div class="form-group col-md-4">
+          <label for="ipDataPlaneLearning">Ip Data Plane Learning</label>
+          <select
+            id="ipDataPlaneLearning"
+            formControlName="ipDataPlaneLearning"
+            class="form-control"
+            [class.is-invalid]="submitted && f.ipDataPlaneLearning.errors"
+            aria-label="Ip Data Plane Learning"
+          >
+            <option></option>
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </div>
       </div>
 
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">

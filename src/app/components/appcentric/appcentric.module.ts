@@ -21,7 +21,6 @@ const routes: Routes = [
         path: 'dashboard',
         component: AppcentricDashboardComponent,
         canActivate: [AuthGuard],
-        data: { breadcrumb: 'Dashboard', title: 'Automation - Dashboard' },
         loadChildren: () => import('./appcentric-dashboard/appcentric-dashboard.module').then(m => m.AppcentricDashboardModule),
       },
       {
