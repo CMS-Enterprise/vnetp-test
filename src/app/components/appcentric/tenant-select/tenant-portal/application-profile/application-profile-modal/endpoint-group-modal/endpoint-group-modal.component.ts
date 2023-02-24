@@ -1,30 +1,21 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
-import {
-  V2AppCentricEndpointGroupsService,
-  EndpointGroup,
-  ApplicationProfile,
-  V2AppCentricApplicationProfilesService,
-  ApplicationProfilePaginationResponse,
-} from 'client';
+import { V2AppCentricEndpointGroupsService, EndpointGroup } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
-import { TableConfig } from 'src/app/common/table/table.component';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import { EndpointGroupModalDto } from 'src/app/models/appcentric/endpoint-group-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
 
 const tabs = [{ name: 'Endpoint Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }];
 
 @Component({
-  selector: 'app-endpoint-groups-modal',
-  templateUrl: './endpoint-groups-modal.component.html',
-  styleUrls: ['./endpoint-groups-modal.component.css'],
+  selector: 'app-endpoint-group-modal',
+  templateUrl: './endpoint-group-modal.component.html',
+  // styleUrls: ['./endpoint-group-modal.component.css'],
 })
-export class EndpointGroupsModalComponent implements OnInit {
+export class EndpointGroupModalComponent implements OnInit {
   public initialTabIndex = 'Endpoint Group';
 
   public ModalMode: ModalMode;
@@ -32,23 +23,9 @@ export class EndpointGroupsModalComponent implements OnInit {
   public form: FormGroup;
   public submitted: boolean;
   public tenantId: string;
-  public tableComponentDto = new TableComponentDto();
-  public searchColumns: SearchColumnConfig[] = [];
   public perPage = 5;
   public isLoading = false;
-  public applicationProfiles = {} as ApplicationProfilePaginationResponse;
-
-  @ViewChild('applicationProfileSelectTemplate') applicationProfileSelectTemplate: TemplateRef<any>;
-
-  public config: TableConfig<any> = {
-    description: 'Application Profiles',
-    columns: [
-      { name: 'Name', property: 'name' },
-      { name: 'Alias', property: 'alias' },
-      { name: 'Description', property: 'description' },
-      { name: '', template: () => this.applicationProfileSelectTemplate },
-    ],
-  };
+  @Input() public applicationProfileId;
 
   public tabs: Tab[] = tabs.map(t => {
     return { name: t.name };
@@ -59,7 +36,6 @@ export class EndpointGroupsModalComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
     private router: Router,
-    private applicationProfileService: V2AppCentricApplicationProfilesService,
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -74,18 +50,12 @@ export class EndpointGroupsModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-    this.getApplicationProfiles();
   }
 
   public handleTabChange(tab: Tab): void {
     if (tab) {
       this.initialTabIndex = tab.name;
     }
-  }
-
-  public onTableEvent(event: TableComponentDto): void {
-    this.tableComponentDto = event;
-    this.getApplicationProfiles(event);
   }
 
   get f() {
@@ -114,7 +84,6 @@ export class EndpointGroupsModalComponent implements OnInit {
       this.form.controls.description.setValue(endpointGroup.description);
       this.form.controls.alias.setValue(endpointGroup.alias);
       this.form.controls.intraEpgIsolation.setValue(endpointGroup.intraEpgIsolation);
-      this.form.controls.applicationProfileId.disable();
     }
     this.ngx.resetModalData('endpointGroupModal');
   }
@@ -131,7 +100,6 @@ export class EndpointGroupsModalComponent implements OnInit {
       alias: ['', Validators.compose([Validators.maxLength(100)])],
       description: ['', Validators.compose([Validators.maxLength(500)])],
       intraEpgIsolation: [null],
-      applicationProfileId: ['', Validators.required],
     });
   }
 
@@ -146,6 +114,8 @@ export class EndpointGroupsModalComponent implements OnInit {
 
   private editEndpointGroup(endpointGroup: EndpointGroup): void {
     endpointGroup.name = null;
+    endpointGroup.tenantId = null;
+    endpointGroup.applicationProfileId = null;
     this.endpointGroupService
       .updateEndpointGroup({
         uuid: this.endpointGroupId,
@@ -165,8 +135,9 @@ export class EndpointGroupsModalComponent implements OnInit {
       return;
     }
 
-    const { name, description, alias, intraEpgIsolation, applicationProfileId } = this.form.value;
+    const { name, description, alias, intraEpgIsolation } = this.form.value;
     const tenantId = this.tenantId;
+    const applicationProfileId = this.applicationProfileId;
     const endpointGroup = {
       name,
       description,
@@ -182,36 +153,5 @@ export class EndpointGroupsModalComponent implements OnInit {
     } else {
       this.editEndpointGroup(endpointGroup);
     }
-  }
-
-  public getApplicationProfiles(event?): void {
-    this.isLoading = true;
-    let eventParams;
-    if (event) {
-      this.tableComponentDto.page = event.page ? event.page : 1;
-      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
-      const { searchText } = event;
-      const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
-      }
-    }
-    this.applicationProfileService
-      .findAllApplicationProfile({
-        filter: [`tenantId||eq||${this.tenantId}`, eventParams],
-        page: this.tableComponentDto.page,
-        perPage: this.tableComponentDto.perPage,
-      })
-      .subscribe(
-        data => {
-          this.applicationProfiles = data;
-        },
-        () => {
-          this.applicationProfiles = null;
-        },
-        () => {
-          this.isLoading = false;
-        },
-      );
   }
 }

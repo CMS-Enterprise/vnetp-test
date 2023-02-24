@@ -131,6 +131,7 @@ export class ContractModalComponent implements OnInit {
 
   private editContract(contract: Contract): void {
     contract.name = null;
+    contract.tenantId = null;
     this.contractService
       .updateContract({
         uuid: this.contractId,

@@ -148,6 +148,8 @@ export class BridgeDomainModalComponent implements OnInit {
 
   private editBridgeDomain(bridgeDomain: BridgeDomain): void {
     bridgeDomain.name = null;
+    bridgeDomain.tenantId = null;
+    bridgeDomain.vrfId = null;
     this.bridgeDomainService
       .updateBridgeDomain({
         uuid: this.bridgeDomainId,

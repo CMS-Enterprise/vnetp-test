@@ -34,12 +34,6 @@ const routes: Routes = [
       },
       {
         outlet,
-        path: 'endpoint-groups',
-        data: { breadcrumb: 'Endpoint Groups', title: 'Tenant Portal - Endpoint Groups' },
-        loadChildren: () => import('./endpoint-groups/endpoint-groups.module').then(m => m.EndpointGroupsModule),
-      },
-      {
-        outlet,
         path: 'vrf',
         data: { breadcrumb: 'VRF', title: 'Tenant Portal - VRF' },
         loadChildren: () => import('./vrf/vrf.module').then(m => m.VrfModule),

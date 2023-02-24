@@ -98,6 +98,7 @@ export class VrfModalComponent implements OnInit {
 
   private editVrf(vrf: Vrf): void {
     vrf.name = null;
+    vrf.tenantId = null;
     this.vrfService
       .updateVrf({
         uuid: this.vrfId,

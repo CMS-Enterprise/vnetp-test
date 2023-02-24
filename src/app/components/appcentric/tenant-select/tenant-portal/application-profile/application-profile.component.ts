@@ -64,7 +64,6 @@ export class ApplicationProfileComponent implements OnInit {
         if (match) {
           const uuid = match[0].split('/')[2];
           this.tenantId = uuid;
-          console.log(this.tenantId);
         }
       }
     });

@@ -135,6 +135,8 @@ export class ApplicationProfileModalComponent implements OnInit {
 
   private editApplicationProfile(applicationProfile: ApplicationProfile): void {
     applicationProfile.name = null;
+    applicationProfile.tenantId = null;
+
     this.applicationProfileService
       .updateApplicationProfile({
         uuid: this.applicationProfileId,
@@ -280,13 +282,13 @@ export class ApplicationProfileModalComponent implements OnInit {
     dto.endpointGroup = endpointGroup;
 
     this.subscribeToApEndpointGroupModal();
-    this.ngx.setModalData(dto, 'apEndpointGroupModal');
-    this.ngx.getModal('apEndpointGroupModal').open();
+    this.ngx.setModalData(dto, 'endpointGroupModal');
+    this.ngx.getModal('endpointGroupModal').open();
   }
 
   private subscribeToApEndpointGroupModal(): void {
-    this.apEndpointGroupModalSubscription = this.ngx.getModal('apEndpointGroupModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('apEndpointGroupModal');
+    this.apEndpointGroupModalSubscription = this.ngx.getModal('endpointGroupModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('endpointGroupModal');
       this.apEndpointGroupModalSubscription.unsubscribe();
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();

@@ -6,7 +6,6 @@ const tabs = [
   { name: 'Application Profile', route: ['application-profile'] },
   { name: 'Bridge Domain', route: ['bridge-domain'] },
   { name: 'Contract', route: ['contract'] },
-  { name: 'Endpoint Groups', route: ['endpoint-groups'] },
   { name: 'Filter', route: ['filter'] },
   { name: 'L3 Outs', route: ['l3-outs'] },
   { name: 'VRF', route: ['vrf'] },

@@ -1,21 +1,20 @@
 import { HttpClientModule } from '@angular/common/http';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { MockIconButtonComponent, MockFontAwesomeComponent, MockComponent } from 'src/test/mock-components';
+import { MockNgxSmartModalComponent, MockFontAwesomeComponent, MockComponent, MockIconButtonComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
+import { ConsumedContractComponent } from './consumed-contract.component';
 
-import { ProvidedContractsComponent } from './provided-contracts.component';
-
-describe('ProvidedContractsComponent', () => {
-  let component: ProvidedContractsComponent;
-  let fixture: ComponentFixture<ProvidedContractsComponent>;
+describe('ConsumedContractsComponent', () => {
+  let component: ConsumedContractComponent;
+  let fixture: ComponentFixture<ConsumedContractComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        ProvidedContractsComponent,
+        ConsumedContractComponent,
         MockIconButtonComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
@@ -26,7 +25,7 @@ describe('ProvidedContractsComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProvidedContractsComponent);
+    fixture = TestBed.createComponent(ConsumedContractComponent);
     component = fixture.componentInstance;
     component.endpointGroupId = 'uuid';
     fixture.detectChanges();

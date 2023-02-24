@@ -128,6 +128,7 @@ export class L3OutsModalComponent implements OnInit {
 
   private editL3Out(l3Out: L3Out): void {
     l3Out.name = null;
+    l3Out.tenantId = null;
     this.l3OutsService
       .updateL3Out({
         uuid: this.l3OutId,

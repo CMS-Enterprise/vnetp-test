@@ -21,7 +21,7 @@ describe('ApplicationProfileModalComponent', () => {
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockIconButtonComponent,
-        MockComponent({ selector: 'app-ap-endpoint-group-modal', inputs: ['applicationProfileId'] }),
+        MockComponent({ selector: 'app-endpoint-group-modal', inputs: ['applicationProfileId'] }),
       ],
       imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, NgSelectModule, HttpClientModule],
       providers: [MockProvider(NgxSmartModalService)],
