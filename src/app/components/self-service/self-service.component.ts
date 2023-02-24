@@ -21,7 +21,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   currentDatacenter: Datacenter;
 
   public loadingSelfServices: boolean;
-  public openingModal: boolean = false;
+  public openingModal = false;
   public selfServices;
   selectedSelfService;
 
@@ -70,12 +70,14 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
 
   public importObjects(selfService) {
     this.openingModal = true;
-    this.selfServiceService.getSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(data => {
-      this.selectedSelfService = data;
+    this.selfServiceService.getSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(response => {
+      this.selectedSelfService = response;
       this.openingModal = false;
       const modalDto = new YesNoModalDto('Import', `Are you sure you would like to bulk import the converted objects?`);
       const onConfirm = () => {
-        this.selfServiceService.bulkUploadSelfService({ selfService: this.selectedSelfService }).subscribe(data => {}),
+        this.selfServiceService.bulkUploadSelfService({ selfService: this.selectedSelfService }).subscribe(data => {
+          return data;
+        }),
           () => {},
           () => {
             this.getSelfServices();
