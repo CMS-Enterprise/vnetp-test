@@ -7,7 +7,7 @@ import {
   V2AppCentricContractsService,
 } from 'client';
 import { Subscription } from 'rxjs';
-import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
+import { AppcentricDashboardHelpText, DashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { AuthService } from 'src/app/services/auth.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
@@ -23,12 +23,12 @@ export class AppcentricDashboardComponent implements OnInit, OnDestroy {
   private currentUserSubscription: Subscription;
 
   constructor(
-    public helpText: DashboardHelpText,
     private auth: AuthService,
     private tenantsService: V2AppCentricTenantsService,
     private vrfsService: V2AppCentricVrfsService,
     private bridgeDomainsService: V2AppCentricBridgeDomainsService,
     private contractsService: V2AppCentricContractsService,
+    public helpText: AppcentricDashboardHelpText,
   ) {}
 
   public tenants: number;

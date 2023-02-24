@@ -12,8 +12,10 @@ import {
   V2AppCentricVrfsService,
 } from 'client';
 import { of } from 'rxjs';
+import { AppcentricDashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { AuthService } from 'src/app/services/auth.service';
 import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
+import { MockProvider } from 'src/test/mock-providers';
 
 import { AppcentricDashboardComponent } from './appcentric-dashboard.component';
 
@@ -51,6 +53,7 @@ describe('AppcentricDashboardComponent', () => {
         { provide: V2AppCentricBridgeDomainsService, useValue: bridgeDomainsService },
         { provide: V2AppCentricContractsService, useValue: contractsService },
         { provide: AuthService, useValue: authService },
+        MockProvider(AppcentricDashboardHelpText),
       ],
     }).compileComponents();
   }));
