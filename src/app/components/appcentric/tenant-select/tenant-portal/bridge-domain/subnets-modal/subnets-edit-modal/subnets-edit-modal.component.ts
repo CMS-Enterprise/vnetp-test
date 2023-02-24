@@ -69,6 +69,7 @@ export class SubnetsEditModalComponent implements OnInit {
       this.form.controls.preferred.setValue(subnet.preferred);
       this.form.controls.sharedBetweenVrfs.setValue(subnet.sharedBetweenVrfs);
       this.form.controls.ipDataPlaneLearning.setValue(subnet.ipDataPlaneLearning);
+      this.form.controls.primaryIpAddress.setValue(subnet.primaryIpAddress);
     }
     this.ngx.resetModalData('subnetsEditModal');
   }

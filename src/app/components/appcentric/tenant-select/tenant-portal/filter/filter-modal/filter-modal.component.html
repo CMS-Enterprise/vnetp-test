@@ -116,4 +116,15 @@
   </section>
 </ng-template>
 
+<ng-template #sourcePortTemplate let-filterEntry="datum">
+  <section>
+    <span *ngIf="filterEntry.sourceFromPort && filterEntry.sourceToPort">{{ filterEntry?.sourceFromPort }} - {{ filterEntry?.sourceToPort }}</span>
+  </section>
+</ng-template>
+
+<ng-template #destinationPortTemplate let-filterEntry="datum">
+  <section>
+    <span *ngIf="filterEntry.destinationFromPort && filterEntry.destinationToPort">{{ filterEntry?.destinationFromPort }} - {{ filterEntry?.destinationToPort }}</span>
+  </section>
+</ng-template>
 <app-filter-entry-modal></app-filter-entry-modal>

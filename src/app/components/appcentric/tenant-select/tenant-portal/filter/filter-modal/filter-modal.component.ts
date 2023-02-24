@@ -52,6 +52,8 @@ export class FilterModalComponent implements OnInit {
   private filterEntryEditModalSubscription: Subscription;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+  @ViewChild('sourcePortTemplate') sourcePortTemplate: TemplateRef<any>;
+  @ViewChild('destinationPortTemplate') destinationPortTemplate: TemplateRef<any>;
 
   public searchColumns: SearchColumnConfig[] = [];
 
@@ -60,7 +62,11 @@ export class FilterModalComponent implements OnInit {
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Alias', property: 'alias' },
-      { name: 'Description', property: 'description' },
+      { name: 'Ether Type', property: 'etherType' },
+      { name: 'Ip Protocol', property: 'ipProtocol' },
+      { name: 'Stateful', property: 'stateful' },
+      { name: 'Source Port Range', template: () => this.sourcePortTemplate },
+      { name: 'Destination Port Range', template: () => this.destinationPortTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
