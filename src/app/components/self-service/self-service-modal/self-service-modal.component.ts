@@ -220,6 +220,8 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     // this for loop performs a check that loops through each selected tier
     // if the namespace for a selected tier matches another host, we fail the form submission
     // and tell the user to change one of the namespaces
+
+    // tslint:disable-next-line
     for (let i = 0; i < this.selectedTiers.length; i++) {
       const tier = this.selectedTiers[i];
       this.selectedTiers.map(selectedTier => {
@@ -378,6 +380,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
             // strip whitespace from hostname
             hostname = hostname.split(' ')[1];
             // add newly mapped hostname to hostnameIndexes array
+            // tslint:disable-next-line
             hostnameIndexes.push({ hostname: hostname, hostnameIndex: hostnameIndex });
             // add the hostname to the list of tiers extracted from the device config
             this.tiersFromConfig.push(hostname);
@@ -417,16 +420,20 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     // if we've already encountered an interface match, we use the offset
     // which is the index of that interface match to give us our starting point
     if (offset) {
+      // tslint:disable-next-line
       const index = file.indexOf(' ' + val + '\r', offset + 1);
       if (index !== -1) {
+        // tslint:disable-next-line
         this.asaInterfacesWithIndex.push({ interface: val, index: index });
         this.recursivelyGetIndexes(val, file, index);
       } else {
         return;
       }
     } else {
+      // tslint:disable-next-line
       const index = file.indexOf(' ' + val + '\r');
       if (index !== -1) {
+        // tslint:disable-next-line
         this.asaInterfacesWithIndex.push({ interface: val, index: index });
         this.recursivelyGetIndexes(val, file, index);
       } else {

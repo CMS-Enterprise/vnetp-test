@@ -8,7 +8,6 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-
 @Component({
   selector: 'app-self-service',
   templateUrl: './self-service.component.html',
@@ -78,7 +77,9 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
         this.selfServiceService.bulkUploadSelfService({ selfService: this.selectedSelfService }).subscribe(data => {
           return data;
         }),
+          // tslint:disable-next-line
           () => {},
+          // tslint:disable-next-line
           () => {
             this.getSelfServices();
           };
