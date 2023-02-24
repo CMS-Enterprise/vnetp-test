@@ -49,6 +49,12 @@ export class SubnetsEditModalComponent implements OnInit {
       this.subnetId = dto.subnet.id;
     } else {
       this.form.controls.name.enable();
+      this.form.controls.treatAsVirtualIpAddress.setValue(true);
+      this.form.controls.primaryIpAddress.setValue(false);
+      this.form.controls.advertisedExternally.setValue(false);
+      this.form.controls.preferred.setValue(false);
+      this.form.controls.sharedBetweenVrfs.setValue(false);
+      this.form.controls.ipDataPlaneLearning.setValue(true);
     }
 
     if (subnet !== undefined) {

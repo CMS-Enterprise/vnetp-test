@@ -57,6 +57,8 @@ export class VrfModalComponent implements OnInit {
       this.vrfId = dto.vrf.id;
     } else {
       this.form.controls.name.enable();
+      this.form.controls.policyControlEnforced.setValue(true);
+      this.form.controls.policyControlEnforcementIngress.setValue(true);
     }
 
     const vrf = dto.vrf;

@@ -101,7 +101,7 @@ export class ProvidedContractComponent implements OnInit {
         data => {
           const allContracts = data.data;
           const usedFilters = this.contractTableData?.data.map(contract => contract.id);
-          this.contracts = allContracts.filter(contract => !usedFilters.includes(contract.id));
+          this.contracts = allContracts.filter(contract => !usedFilters?.includes(contract.id));
         },
         err => (this.contracts = null),
       );

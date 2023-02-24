@@ -75,6 +75,7 @@ export class EndpointGroupModalComponent implements OnInit {
       this.endpointGroupId = dto.endpointGroup.id;
     } else {
       this.form.controls.name.enable();
+      this.form.controls.intraEpgIsolation.setValue('false');
     }
 
     const endpointGroup = dto.endpointGroup;

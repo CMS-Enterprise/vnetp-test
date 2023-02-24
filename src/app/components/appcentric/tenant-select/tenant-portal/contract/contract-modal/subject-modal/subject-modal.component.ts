@@ -108,6 +108,8 @@ export class SubjectModalComponent implements OnInit {
       this.getFilters();
     } else {
       this.form.controls.name.enable();
+      this.form.controls.applyBothDirections.setValue(true);
+      this.form.controls.reverseFilterPorts.setValue(true);
     }
 
     if (subject !== undefined) {

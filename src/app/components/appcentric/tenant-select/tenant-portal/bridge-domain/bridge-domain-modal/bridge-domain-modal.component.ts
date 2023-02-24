@@ -98,7 +98,10 @@ export class BridgeDomainModalComponent implements OnInit {
       this.getL3Outs();
     } else {
       this.form.controls.name.enable();
-      this.form.controls.gatewayIp.enable();
+      this.form.controls.unicastRouting.setValue(true);
+      this.form.controls.arpFlooding.setValue(true);
+      this.form.controls.limitLocalIpLearning.setValue(true);
+      this.form.controls.epMoveDetectionModeGarp.setValue(false);
     }
 
     const bridgeDomain = dto.bridgeDomain;
@@ -114,6 +117,7 @@ export class BridgeDomainModalComponent implements OnInit {
       this.form.controls.epMoveDetectionModeGarp.setValue(bridgeDomain.epMoveDetectionModeGarp);
       this.form.controls.vrfId.setValue(bridgeDomain.vrfId);
     }
+
     this.ngx.resetModalData('bridgeDomainModal');
   }
 
