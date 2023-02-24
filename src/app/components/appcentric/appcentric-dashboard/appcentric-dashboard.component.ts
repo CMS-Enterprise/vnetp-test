@@ -1,7 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { V1DatacentersService, V1TiersService, V1VmwareVirtualMachinesService, V1LoadBalancerVirtualServersService, UserDto } from 'client';
+import {
+  UserDto,
+  V2AppCentricTenantsService,
+  V2AppCentricVrfsService,
+  V2AppCentricBridgeDomainsService,
+  V2AppCentricContractsService,
+} from 'client';
 import { Subscription } from 'rxjs';
-import { PieChartData } from 'src/app/common/d3-pie-chart/d3-pie-chart.component';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { AuthService } from 'src/app/services/auth.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -18,38 +23,28 @@ export class AppcentricDashboardComponent implements OnInit, OnDestroy {
   private currentUserSubscription: Subscription;
 
   constructor(
-    private datacenterService: V1DatacentersService,
-    private tierService: V1TiersService,
-    private vmwareService: V1VmwareVirtualMachinesService,
     public helpText: DashboardHelpText,
-    private loadBalancerService: V1LoadBalancerVirtualServersService,
     private auth: AuthService,
+    private tenantsService: V2AppCentricTenantsService,
+    private vrfsService: V2AppCentricVrfsService,
+    private bridgeDomainsService: V2AppCentricBridgeDomainsService,
+    private contractsService: V2AppCentricContractsService,
   ) {}
 
-  datacenters: number;
-  tiers: number;
-  vmwareVirtualMachines: number;
-  loadBalancerVirtualServers: number;
+  public tenants: number;
+  public vrfs: number;
+  public bridgeDomains: number;
+  public contracts: number;
 
   public status = [
-    { name: 'Appcentric User Interface', status: 'green' },
-    { name: 'Appcentric API', status: 'green' },
-    { name: 'Appcentric Infrastructure', status: 'green' },
+    { name: 'User Interface', status: 'green' },
+    { name: 'API', status: 'green' },
+    { name: 'Infrastructure', status: 'green' },
   ];
-
-  jobs: any;
-  failedJobs = 0;
-  successfulJobs = 0;
-  pendingJobs = 0;
-  cancelledJobs = 0;
-  runningJobs = 0;
-  pieChartData: Array<PieChartData>;
 
   dashboardPoller: any;
 
   ngOnInit() {
-    this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
-
     if (this.auth.currentUser) {
       this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
         this.user = user;
@@ -67,48 +62,38 @@ export class AppcentricDashboardComponent implements OnInit, OnDestroy {
 
   // only fetch the dashboard entities that the user has the correct permissions to view
   private loadDashboard(roles?: string[]): void {
-    this.getDatacenters();
-    this.getTiers();
-    if (roles && roles.includes('admin')) {
-      this.getVmwareVirtualMachines();
-      this.getLoadBalancerVirtualServers();
-    }
-    if (roles && (roles.includes('x86_admin') || roles.includes('x86_ro'))) {
-      this.getVmwareVirtualMachines();
-    }
-    if (roles && (roles.includes('loadbalancer_admin') || roles.includes('loadbalancer_ro'))) {
-      this.getLoadBalancerVirtualServers();
-    }
+    this.getTenantCount();
+    this.getVrfCount();
+    this.getBridgeDomainCount();
+    this.getContractCount();
   }
 
-  private getDatacenters(): void {
-    this.datacenterService.getManyDatacenters({ page: 1, limit: 1 }).subscribe(data => {
-      const paged: any = data;
-      this.datacenters = paged.total;
-      try {
-        this.status[1].status = 'green';
-      } catch {}
+  private getTenantCount(): void {
+    this.tenantsService
+      .findAllTenant({
+        page: 1,
+        perPage: 1,
+      })
+      .subscribe(data => {
+        this.tenants = data.total;
+      });
+  }
+
+  private getVrfCount(): void {
+    this.vrfsService.findAllVrf({ page: 1, perPage: 1 }).subscribe(data => {
+      this.vrfs = data.total;
     });
   }
 
-  private getTiers(): void {
-    this.tierService.getManyTier({ page: 1, limit: 1 }).subscribe(data => {
-      const paged: any = data;
-      this.tiers = paged.total;
+  private getBridgeDomainCount(): void {
+    this.bridgeDomainsService.findAllBridgeDomain({ page: 1, perPage: 1 }).subscribe(data => {
+      this.bridgeDomains = data.total;
     });
   }
 
-  private getVmwareVirtualMachines(): void {
-    this.vmwareService.getManyVmwareVirtualMachine({ page: 1, limit: 1 }).subscribe(data => {
-      const paged = data as any;
-      this.vmwareVirtualMachines = paged.total;
-    });
-  }
-
-  private getLoadBalancerVirtualServers(): void {
-    this.loadBalancerService.getManyLoadBalancerVirtualServer({ page: 1, limit: 1 }).subscribe(data => {
-      const paged = data as any;
-      this.loadBalancerVirtualServers = paged.total;
+  private getContractCount(): void {
+    this.contractsService.findAllContract({ page: 1, perPage: 1 }).subscribe(data => {
+      this.contracts = data.total;
     });
   }
 }

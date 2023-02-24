@@ -34,12 +34,7 @@ describe('AppcentricDashboardComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [
-        AppcentricDashboardComponent,
-        MockComponent({ selector: 'app-d3-pie-chart', inputs: ['data', 'width', 'height', 'radius'] }),
-        MockTooltipComponent,
-        MockFontAwesomeComponent,
-      ],
+      declarations: [AppcentricDashboardComponent, MockTooltipComponent, MockFontAwesomeComponent],
       imports: [RouterModule, RouterTestingModule],
       providers: [
         { provide: V1DatacentersService, useValue: datacenterService },

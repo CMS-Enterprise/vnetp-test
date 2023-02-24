@@ -40,7 +40,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     FontAwesomeModule,
     TooltipModule,
-    D3PieChartModule,
     NgxSmartModalModule,
     TenantSelectModule,
     BreadcrumbsModule,
