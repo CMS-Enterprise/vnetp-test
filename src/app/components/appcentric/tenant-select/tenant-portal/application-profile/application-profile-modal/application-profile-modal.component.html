@@ -1,6 +1,7 @@
 <ngx-smart-modal
   #applicationProfileModal
   customClass="large-modal"
+  [dismissable]="false"
   identifier="applicationProfileModal"
   (onOpen)="getData()"
   (onClose)="reset()"

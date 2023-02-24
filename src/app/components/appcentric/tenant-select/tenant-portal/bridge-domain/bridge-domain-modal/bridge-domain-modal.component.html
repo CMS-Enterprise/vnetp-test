@@ -1,6 +1,8 @@
 <ngx-smart-modal
   #bridgeDomainModal
   customClass="large-modal"
+    [dismissable]="false"
+
   identifier="bridgeDomainModal"
   (onOpen)="getData()"
   (onClose)="reset()"

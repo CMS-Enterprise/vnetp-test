@@ -1,4 +1,11 @@
-<ngx-smart-modal #tenantModal customClass="large-modal" identifier="tenantModal" (onOpen)="getData()" (onClose)="reset()">
+<ngx-smart-modal
+  #tenantModal
+  [dismissable]="false"
+  customClass="large-modal"
+  identifier="tenantModal"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+>
   <header class="modal-header">
     <h4 class="modal-title">Tenant</h4>
   </header>

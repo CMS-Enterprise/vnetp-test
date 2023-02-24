@@ -1,4 +1,11 @@
-<ngx-smart-modal #l3OutsModal customClass="large-modal" identifier="l3OutsModal" (onOpen)="getData()" (onClose)="reset()">
+<ngx-smart-modal
+  #l3OutsModal
+  [dismissable]="false"
+  customClass="large-modal"
+  identifier="l3OutsModal"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+>
   <header class="modal-header">
     <h4 class="modal-title">L3 Outs</h4>
   </header>

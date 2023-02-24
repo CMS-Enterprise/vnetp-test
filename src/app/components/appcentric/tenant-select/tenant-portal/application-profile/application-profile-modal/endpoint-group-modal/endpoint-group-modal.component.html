@@ -1,4 +1,11 @@
-<ngx-smart-modal #endpointGroupModal customClass="medium-modal" identifier="endpointGroupModal" (onOpen)="getData()" (onClose)="reset()">
+<ngx-smart-modal
+  #endpointGroupModal
+  [dismissable]="false"
+  customClass="medium-modal"
+  identifier="endpointGroupModal"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+>
   <header class="modal-header">
     <h4 class="modal-title">Endpoint Group</h4>
   </header>
