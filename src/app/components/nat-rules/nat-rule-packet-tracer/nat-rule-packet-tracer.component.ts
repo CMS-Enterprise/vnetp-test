@@ -13,7 +13,7 @@ import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/net
   selector: 'app-nat-rule-packet-tracer',
   templateUrl: './nat-rule-packet-tracer.component.html',
 })
-export class natRulePacketTracerComponent implements OnInit {
+export class NatRulePacketTracerComponent implements OnInit {
   @Input() objects;
   form: FormGroup;
   submitted: boolean;
@@ -510,7 +510,7 @@ export class natRulePacketTracerComponent implements OnInit {
           this.form.controls.destinationPorts.setErrors({ portRangeNotAllowed: true });
         }
 
-        console.log('rule', rule);
+        // console.log('rule', rule);
 
         if (rule.originalServiceType === 'ServiceObject') {
           const originalServiceObject = await this.getServiceObjectInfo(rule.originalServiceObjectId);
@@ -526,9 +526,9 @@ export class natRulePacketTracerComponent implements OnInit {
           }
         }
 
-        console.log('searchDto', searchDto);
-        console.log('checklist', checkList);
-        console.log('rule', rule);
+        // console.log('searchDto', searchDto);
+        // console.log('checklist', checkList);
+        // console.log('rule', rule);
 
         // evaluate if direction matches
         if (searchDto.directionLookup === rule.direction) {
