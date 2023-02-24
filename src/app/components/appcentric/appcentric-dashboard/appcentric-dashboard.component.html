@@ -18,7 +18,6 @@
       <li>
         <span>
           Tenants
-          <tooltip [message]="helpText.Datacenters"></tooltip>
         </span>
         <span class="inline-block ml-auto">
           {{ tenants || 0 }}
@@ -27,7 +26,6 @@
       <li class="dash-card__item">
         <span>
           Vrfs
-          <tooltip [message]="helpText.Tiers"></tooltip>
         </span>
         <span class="inline-block ml-auto">
           {{ vrfs || 0 }}
@@ -36,7 +34,6 @@
       <li class="dash-card__item">
         <span>
           Bridge Domains
-          <tooltip [message]="helpText.LbVirtualServers"></tooltip>
         </span>
         <span class="inline-block ml-auto">
           {{ bridgeDomains || 0 }}
@@ -45,7 +42,6 @@
       <li class="dash-card__item">
         <span>
           Contracts
-          <tooltip [message]="helpText.VMwareVms"></tooltip
         ></span>
         <span class="inline-block ml-auto">
           {{ contracts || 0 }}
