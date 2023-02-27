@@ -145,7 +145,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       portsRequired = true;
     }
     await Promise.all(
-      this.objects.firewallRules.forEach(async rule => {
+      this.objects.firewallRules.map(async rule => {
         const checkList = {
           sourceInRange: false,
           destInRange: false,
