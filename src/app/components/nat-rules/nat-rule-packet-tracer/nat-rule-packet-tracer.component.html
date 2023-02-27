@@ -17,22 +17,20 @@
 
         <thead>
   
-          <th>Rule Name</th>
-          <th>Original Source In Range</th>
-          <th>Original Dest In Range</th>
-          <th>Translated Source In Range</th>
-          <th>Translated Dest In Range</th>
-          <th>Direction Match</th>
-          <th>biDirectional Match</th>
-          <th>Original Port Match</th>
-          <th>Translated Port Match</th>
-          <th>Enabled Match</th>
+          <th scope="col">Rule Name</th>
+          <th scope="col">Original Source In Range</th>
+          <th scope="col">Original Dest In Range</th>
+          <th scope="col">Translated Source In Range</th>
+          <th scope="col">Translated Dest In Range</th>
+          <th scope="col">Direction Match</th>
+          <th scope="col">biDirectional Match</th>
+          <th scope="col">Original Port Match</th>
+          <th scope="col">Translated Port Match</th>
+          <th scope="col">Enabled Match</th>
         </thead>
   
         <tbody>
-          <tr *ngFor="let partial of partialMatches">
-            <!-- Name : {{partial.name}} -->
-  
+          <tr *ngFor="let partial of partialMatches">  
             <td>
               {{partial.name}}
             </td>
@@ -149,24 +147,6 @@
             </div>
           </div>
 
-          <!-- <div class="form-group">
-            <label for="translationType">Translation Type</label>
-            <select
-              id="translationType"
-              formControlName="translationType"
-              class="form-control"
-              [class.is-invalid]="submitted && f.translationType.errors"
-            >
-              <option value="Static">Static</option>
-              <option value="DynamicIp">Dynamic IP</option>
-              <option value="DynamicIpAndPort">Dynamic IP and Port</option>
-              <option value="any">Any</option>
-            </select>
-            <div *ngIf="submitted && f.translationType.errors" class="invalid-feedback">
-              <div *ngIf="f.translationType.errors.required">Translation Type is required</div>
-            </div>
-          </div> -->
-
       </div>
 
       <hr />
@@ -174,7 +154,6 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="originalSourceIp">Original Source IP</label>
-          <!-- <tooltip *ngIf="f.sourceNetworkType.value === 'IpAddress'" [message]="helpText.IpNetworkType"></tooltip> -->
           <input type="text" formControlName="originalSourceIp" id="originalSourceIp" class="form-control"
             [class.is-invalid]="submitted && f.originalSourceIp.errors" aria-label="Source IP" />
           <div *ngIf="submitted && f.originalSourceIp.errors" class="invalid-feedback">
@@ -189,7 +168,6 @@
 
         <div class="form-group col-md-6">
           <label for="originalDestinationIp">Original Destination IP</label>
-          <!-- <tooltip *ngIf="f.destinationNetworkType.value === 'IpAddress'" [message]="helpText.IpNetworkType"></tooltip> -->
           <input type="text" id="originalDestinationIp" formControlName="originalDestinationIp" class="form-control"
             [class.is-invalid]="submitted && f.originalDestinationIp.errors" aria-label="Destination IP" />
           <div *ngIf="submitted && f.originalDestinationIp.errors" class="invalid-feedback">

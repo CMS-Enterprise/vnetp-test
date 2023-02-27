@@ -189,8 +189,6 @@ describe('FirewallRulesPacketTracerComponent', () => {
           directionMatch: true,
           protocolMatch: true,
           enabledMatch: false,
-          destPortMatch: true,
-          sourcePortMatch: true,
         },
         name: 'fw-rule4',
       },

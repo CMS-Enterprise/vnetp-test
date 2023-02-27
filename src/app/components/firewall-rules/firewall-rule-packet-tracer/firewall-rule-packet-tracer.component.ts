@@ -43,15 +43,13 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     const ipToSearchNum = this.dot2num(ipToSearch);
 
     // sends all parameters to function that determins the range of IPs
-    const ipToRange = this.ipToRange(ipToSearchNum, ipNumber, cidr);
+    return this.ipToRange(ipToSearchNum, ipNumber, cidr);
 
     // if we ever want to display all subnets
     // const subnets = [];
     // for (let i = 32; i >= 0; i--) {
     //   subnets.push(this.num2dot(2 ** 32 - 2 ** i));
     // }
-
-    return ipToRange;
   }
 
   cidrSize(cidrSlash): number {
@@ -433,8 +431,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         } else {
           // since the source and destPorts are not required
           // we can delete them from the checkList
-          // delete checkList.destPortMatch;
-          // delete checkList.sourcePortMatch;
+          delete checkList.destPortMatch;
+          delete checkList.sourcePortMatch;
           if (
             checkList.destInRange &&
             checkList.directionMatch &&
@@ -499,8 +497,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.showPartials = false;
     this.form.reset();
     this.ngx.resetModalData('firewallRulePacketTracer');
-    // this.protocolSubscription.unsubscribe();
-    // this.setFormValidators();
     this.buildForm();
   }
 

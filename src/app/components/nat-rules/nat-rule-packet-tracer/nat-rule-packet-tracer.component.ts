@@ -48,15 +48,15 @@ export class NatRulePacketTracerComponent implements OnInit {
     const ipToSearchNum = this.dot2num(ipToSearch);
 
     // sends all parameters to function that determins the range of IPs
-    const ipToRange = this.ipToRange(ipToSearchNum, ipNumber, cidr);
+    return this.ipToRange(ipToSearchNum, ipNumber, cidr);
 
-    // if we ever want to display all subnets
-    const subnets = [];
-    for (let i = 32; i >= 0; i--) {
-      subnets.push(this.num2dot(2 ** 32 - 2 ** i));
-    }
+    // // if we ever want to display all subnets
+    // const subnets = [];
+    // for (let i = 32; i >= 0; i--) {
+    //   subnets.push(this.num2dot(2 ** 32 - 2 ** i));
+    // }
 
-    return ipToRange;
+    // return ipToRange;
   }
 
   cidrSize(cidrSlash): number {
@@ -129,7 +129,6 @@ export class NatRulePacketTracerComponent implements OnInit {
 
   // TO DO : IPv6 Searches
   async search() {
-    // this.setFormValidators();
     this.partialMatches = [];
     this.rulesHit = [];
     this.showPartials = false;

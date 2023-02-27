@@ -196,8 +196,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           // TODO: Review this approach, see if we can resolve
           // this in the generated client.
           this.firewallRules = response;
-          // this.packetTracerObjects.firewallRules = this.firewallRules.data;
-          // this.totalFirewallRules = result.total;
         },
         () => {
           this.firewallRules = null;
