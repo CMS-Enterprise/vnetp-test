@@ -29,7 +29,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-    // this.setFormValidators();
   }
 
   // takes an ipAddress to search for and another IP Subnet and determines if the ip to search
@@ -47,10 +46,10 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     const ipToRange = this.ipToRange(ipToSearchNum, ipNumber, cidr);
 
     // if we ever want to display all subnets
-    const subnets = [];
-    for (let i = 32; i >= 0; i--) {
-      subnets.push(this.num2dot(2 ** 32 - 2 ** i));
-    }
+    // const subnets = [];
+    // for (let i = 32; i >= 0; i--) {
+    //   subnets.push(this.num2dot(2 ** 32 - 2 ** i));
+    // }
 
     return ipToRange;
   }
@@ -102,30 +101,29 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3];
   }
 
-  // TO DO : IPv6
-  convertIpv6(ipv6): void {
-    // const ipv6Subnet = '2001:db8:0:0:8d3::/64';
-    // simulate your address.binaryZeroPad(); method
-    var parts = [];
-    ipv6.split(':').forEach(function(it) {
-      var bin = parseInt(it, 16).toString(2);
-      while (bin.length < 16) {
-        bin = '0' + bin;
-      }
-      parts.push(bin);
-    });
-    var bin = parts.join('');
+  // // TO DO : IPv6
+  // convertIpv6(ipv6): void {
+  //   // const ipv6Subnet = '2001:db8:0:0:8d3::/64';
+  //   // simulate your address.binaryZeroPad(); method
+  //   var parts = [];
+  //   ipv6.split(':').forEach(function(it) {
+  //     var bin = parseInt(it, 16).toString(2);
+  //     while (bin.length < 16) {
+  //       bin = '0' + bin;
+  //     }
+  //     parts.push(bin);
+  //   });
+  //   var bin = parts.join('');
 
-    // Use BigInteger library
-    // var dec = BigInt(bin).toString()
-    // var dec2 = parseInt(dec, 2)
-    // var dec3 = BigInt(dec2)
-    console.log(bin);
-  }
+  //   // Use BigInteger library
+  //   // var dec = BigInt(bin).toString()
+  //   // var dec2 = parseInt(dec, 2)
+  //   // var dec3 = BigInt(dec2)
+  //   console.log(bin);
+  // }
 
   // TO DO : IPv6 Searches
   async search() {
-    // this.setFormValidators();
     this.partialMatches = [];
     this.rulesHit = [];
     this.showPartials = false;
@@ -147,7 +145,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       portsRequired = true;
     }
     await Promise.all(
-      this.objects.firewallRules.map(async rule => {
+      this.objects.firewallRules.forEach(async rule => {
         const checkList = {
           sourceInRange: false,
           destInRange: false,
@@ -221,7 +219,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         } else if (rule.sourceAddressType === 'NetworkObjectGroup') {
           const sourceNetworkObjectGroup = await this.getNetworkObjectGroupInfo(rule.sourceNetworkObjectGroupId);
           const networkObjectMembers = sourceNetworkObjectGroup.networkObjects;
-          networkObjectMembers.map(sourceMember => {
+          networkObjectMembers.forEach(sourceMember => {
             if (sourceMember.type === 'IpAddress') {
               // get networkObjectIP
               const sourceMemberIp = sourceMember.ipAddress;
@@ -323,7 +321,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         if (rule.destinationAddressType === 'NetworkObjectGroup') {
           const destNetworkObjectGroup = await this.getNetworkObjectGroupInfo(rule.destinationNetworkObjectGroupId);
           const networkObjectMembers = destNetworkObjectGroup.networkObjects;
-          networkObjectMembers.map(destMember => {
+          networkObjectMembers.forEach(destMember => {
             if (destMember.type === 'IpAddress') {
               // get networkObjectIP
               const destMemberIp = destMember.ipAddress;

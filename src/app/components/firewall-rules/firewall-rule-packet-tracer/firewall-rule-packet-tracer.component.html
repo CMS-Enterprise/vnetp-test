@@ -80,10 +80,6 @@
         <td></td>
       </tfoot>
     </table>
-    <!-- <div *ngFor="let partialMatch of partialMatches">
-      <div>Rule name: {{partialMatch.name}}</div>
-      <div>Checklist: {{partialMatch.checkList | json}}</div>
-    </div> -->
   </div>
 
 
@@ -94,7 +90,6 @@
 
         <div class="form-group col-md-2">
           <label for="direction">Direction</label>
-          <!-- <tooltip [message]="helpText.Direction"></tooltip> -->
           <select id="direction" formControlName="direction" class="form-control"
             [class.is-invalid]="submitted && f.direction.errors" aria-label="Direction">
             <option></option>
@@ -108,7 +103,6 @@
 
         <div class="form-group col-md-2">
           <label for="protocol">Protocol</label>
-          <!-- <tooltip [message]="helpText.Protocol"></tooltip> -->
           <select id="protocol" formControlName="protocol" class="form-control"
             [class.is-invalid]="submitted && f.protocol.errors" aria-label="Protocol">
             <option></option>
@@ -125,7 +119,6 @@
 
         <div class="form-group col-md-2">
             <label for="enabled">Enabled</label>
-            <!-- <tooltip [message]="helpText.Enabled"></tooltip> -->
             <select
               id="enabled"
               formControlName="enabled"
@@ -150,7 +143,6 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="sourceIpAddress">Source IP</label>
-          <!-- <tooltip *ngIf="f.sourceNetworkType.value === 'IpAddress'" [message]="helpText.IpNetworkType"></tooltip> -->
           <input type="text" formControlName="sourceIpAddress" id="sourceIpAddress" class="form-control"
             [class.is-invalid]="submitted && f.sourceIpAddress.errors" aria-label="Source IP" />
           <div *ngIf="submitted && f.sourceIpAddress.errors" class="invalid-feedback">
@@ -165,7 +157,6 @@
 
         <div class="form-group col-md-6">
           <label for="destinationIpAddress">Destination IP</label>
-          <!-- <tooltip *ngIf="f.destinationNetworkType.value === 'IpAddress'" [message]="helpText.IpNetworkType"></tooltip> -->
           <input type="text" id="destinationIpAddress" formControlName="destinationIpAddress" class="form-control"
             [class.is-invalid]="submitted && f.destinationIpAddress.errors" aria-label="Destination IP" />
           <div *ngIf="submitted && f.destinationIpAddress.errors" class="invalid-feedback">
@@ -180,7 +171,6 @@
         <div *ngIf="f.protocol.value === 'TCP' || f.protocol.value === 'UDP'" class="form-row">
           <div class="form-group col-md-6">
             <label for="sourcePorts">Source Port</label>
-            <!-- <tooltip *ngIf="f.serviceType.value === 'Port'" [message]="helpText.PortServiceType"></tooltip> -->
             <input type="text" id="sourcePorts" formControlName="sourcePorts" class="form-control"
               [class.is-invalid]="submitted && f.sourcePorts.errors" aria-label="Source Ports" />
             <div *ngIf="submitted && f.sourcePorts.errors" class="invalid-feedback">
@@ -191,7 +181,6 @@
   
           <div class="form-group col-md-6">
             <label for="destinationPorts">Destination Port</label>
-            <!-- <tooltip [message]="helpText.PortServiceType"></tooltip> -->
             <input type="text" id="destinationPorts" formControlName="destinationPorts" class="form-control"
               [class.is-invalid]="submitted && f.destinationPorts.errors" aria-label="Destination Ports" />
             <div *ngIf="submitted && f.destinationPorts.errors" class="invalid-feedback">
