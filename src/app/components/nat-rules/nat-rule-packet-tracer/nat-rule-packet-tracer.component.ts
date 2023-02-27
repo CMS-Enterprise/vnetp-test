@@ -510,8 +510,6 @@ export class NatRulePacketTracerComponent implements OnInit {
           this.form.controls.destinationPorts.setErrors({ portRangeNotAllowed: true });
         }
 
-        // console.log('rule', rule);
-
         if (rule.originalServiceType === 'ServiceObject') {
           const originalServiceObject = await this.getServiceObjectInfo(rule.originalServiceObjectId);
           if (originalServiceObject.sourcePorts === searchDto.originalPortLookup) {
@@ -525,10 +523,6 @@ export class NatRulePacketTracerComponent implements OnInit {
             checkList.translatedPortMatch = true;
           }
         }
-
-        // console.log('searchDto', searchDto);
-        // console.log('checklist', checkList);
-        // console.log('rule', rule);
 
         // evaluate if direction matches
         if (searchDto.directionLookup === rule.direction) {
@@ -610,6 +604,7 @@ export class NatRulePacketTracerComponent implements OnInit {
     this.submitted = false;
     this.rulesHit = [];
     this.partialMatches = [];
+    this.showPartials = false;
     this.form.reset();
     this.ngx.resetModalData('natRulePacketTracer');
     this.buildForm();

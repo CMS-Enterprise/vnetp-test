@@ -165,7 +165,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
           // if it is a subnet, calculate the range and see if the sourceIpLookup falls within the subnet
           if (split.length > 1) {
             const sourceSubnetInfo = this.calculateSubnet(searchDto.sourceIpLookup, rule.sourceIpAddress);
-            // console.log('sourceSubnetInfo', sourceSubnetInfo)
             if (sourceSubnetInfo.inRange) {
               checkList.sourceInRange = true;
             }
@@ -436,8 +435,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         } else {
           // since the source and destPorts are not required
           // we can delete them from the checkList
-          delete checkList.destPortMatch;
-          delete checkList.sourcePortMatch;
+          // delete checkList.destPortMatch;
+          // delete checkList.sourcePortMatch;
           if (
             checkList.destInRange &&
             checkList.directionMatch &&
@@ -499,6 +498,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.submitted = false;
     this.rulesHit = [];
     this.partialMatches = [];
+    this.showPartials = false;
     this.form.reset();
     this.ngx.resetModalData('firewallRulePacketTracer');
     // this.protocolSubscription.unsubscribe();

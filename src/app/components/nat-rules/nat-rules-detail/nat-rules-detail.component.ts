@@ -401,7 +401,6 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
         sort: ['ruleIndex,ASC'],
       })
       .subscribe(response => {
-        console.log('response', response);
         this.packetTracerObjects.natRules = response as any;
       });
   }

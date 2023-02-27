@@ -5,7 +5,7 @@
   </header>
 
   <div *ngIf="rulesHit.length > 0">
-    Total matches : {{rulesHit | json}}
+    Total matches : {{rulesHit}}
   </div>
   <br>
 
@@ -22,15 +22,13 @@
         <th>Dest In Range</th>
         <th>Direction Match</th>
         <th>Protocol Match</th>
+        <th>Enabled Match</th>
         <th>Source Port Match</th>
         <th>Dest Port Match</th>
-        <th>Enabled Match</th>
       </thead>
 
       <tbody>
         <tr *ngFor="let partial of partialMatches">
-          <!-- Name : {{partial.name}} -->
-
           <td>
             {{partial.name}}
           </td>
