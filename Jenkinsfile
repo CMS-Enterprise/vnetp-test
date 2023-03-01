@@ -57,6 +57,7 @@ pipeline {
             def readContent = readFile "sonar-project.properties"
             writeFile file: "sonar-project.properties", text: "$readContent \nsonar.branch.name=$BRANCH_NAME\n"
             docker.image("${sonarImage}").withRun('-u 1000:993 -v "$PWD:/usr/src"') { c ->
+              sh 'if [ -d ./.scannerwork ]; then rm -Rf ./.scannerwork; fi'
               sh 'while [ ! -f ./.scannerwork/report-task.txt ]; do sleep 5; done'
             }
           }
