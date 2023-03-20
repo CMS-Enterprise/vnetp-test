@@ -1,6 +1,8 @@
 <app-tier-select></app-tier-select>
 
-<h1>Subnets & VLANs</h1>
+<h1 *ngIf="navIndex === 0">Subnets ({{subnets?.total}} items)</h1>
+
+<h1 *ngIf="navIndex === 1">Vlans ({{vlans?.total}} items)</h1>
 <ng-container *ngIf="currentTier; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
