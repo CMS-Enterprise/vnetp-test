@@ -75,6 +75,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
       const modalDto = new YesNoModalDto('Import', `Are you sure you would like to bulk import the converted objects?`);
       const onConfirm = () => {
         this.selfServiceService.bulkUploadSelfService({ selfService: this.selectedSelfService }).subscribe(data => {
+          this.getSelfServices();
           return data;
         }),
           // tslint:disable-next-line
