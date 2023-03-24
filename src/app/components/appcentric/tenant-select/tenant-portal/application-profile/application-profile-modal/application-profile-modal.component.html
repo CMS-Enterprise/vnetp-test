@@ -72,19 +72,24 @@
   </form>
 
   <ng-container *ngIf="modalMode === 'Edit'">
-    <button class="btn btn-success" (click)="openApEndpointGroupModal(ModalMode.Create)">
-      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-      <span>Create Endpoint Group</span>
-    </button>
-    <app-table
-      [config]="config"
-      [data]="endpointGroups"
-      (clearResults)="getEndpointGroups($event)"
-      (searchParams)="getEndpointGroups($event)"
-      [searchColumns]="searchColumns"
-      [(itemsPerPage)]="perPage"
-      (tableEvent)="onTableEvent($event)"
-    ></app-table>
+    <div class="modal-body">
+      <hr />
+      <section class="btn-toolbar" role="toolbar">
+        <button class="btn btn-success" (click)="openApEndpointGroupModal(ModalMode.Create)">
+          <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+          <span>Create Endpoint Group</span>
+        </button>
+      </section>
+      <app-table
+        [config]="config"
+        [data]="endpointGroups"
+        (clearResults)="getEndpointGroups($event)"
+        (searchParams)="getEndpointGroups($event)"
+        [searchColumns]="searchColumns"
+        [(itemsPerPage)]="perPage"
+        (tableEvent)="onTableEvent($event)"
+      ></app-table>
+    </div>
   </ng-container>
 </ngx-smart-modal>
 

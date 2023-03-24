@@ -1,8 +1,7 @@
 <ngx-smart-modal
   #bridgeDomainModal
   customClass="large-modal"
-    [dismissable]="false"
-
+  [dismissable]="false"
   identifier="bridgeDomainModal"
   (onOpen)="getData()"
   (onClose)="reset()"
@@ -157,12 +156,11 @@
             id="l3Outs"
             bindLabel="name"
           ></ng-select>
+          <button type="button" class="btn btn-info" (click)="addL3Out()" [disabled]="!selectedL3Out">
+            <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+            <span>Add L3 Out</span>
+          </button>
         </div>
-
-        <button type="button" class="btn btn-info" (click)="addL3Out()" [disabled]="!selectedL3Out">
-          <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-          <span>Add L3 Out</span>
-        </button>
 
         <app-table
           [config]="config"

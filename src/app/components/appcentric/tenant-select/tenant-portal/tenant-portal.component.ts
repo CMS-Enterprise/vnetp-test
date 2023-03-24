@@ -17,6 +17,7 @@ const tabs = [
 })
 export class TenantPortalComponent implements OnInit {
   public initialTabIndex = 0;
+  public currentTab: string;
 
   public tabs: Tab[] = tabs.map(t => {
     return { name: t.name };
@@ -25,6 +26,7 @@ export class TenantPortalComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
 
   public async handleTabChange(tab: Tab): Promise<any> {
+    this.currentTab = tab.name;
     const tabRoute = tabs.find(t => t.name === tab.name);
     this.router.navigate([{ outlets: { 'tenant-portal': tabRoute.route } }], {
       queryParamsHandling: 'merge',
@@ -46,6 +48,7 @@ export class TenantPortalComponent implements OnInit {
     const tab = tabs.find(t => {
       return t.route.join('') === page[1];
     });
+    this.currentTab = tab.name;
     return this.tabs.findIndex(t => t.name === tab.name);
   }
 }

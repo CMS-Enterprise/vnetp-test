@@ -65,7 +65,7 @@ export class TableComponent<T> implements AfterViewInit {
   ngAfterViewInit(): void {
     this.show = true;
     this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
-
+    console.log(this.uniqueTableId);
     // list of components that should have the search bar hidden when a user navigates to them
     const badList = [
       'import-preview',
@@ -74,6 +74,13 @@ export class TableComponent<T> implements AfterViewInit {
       'static-routes-for-the-currently-selected-tier',
       'audit-log',
       'detailed-audit-log-entry',
+      'endpoint-groups',
+      'consumed-contracts',
+      'provided-contracts',
+      'l3-outs',
+      'subnets',
+      'subjects',
+      'filterentries',
     ];
 
     const hidePagination = ['import-preview', 'audit-log', 'detailed-audit-log-entry'];
