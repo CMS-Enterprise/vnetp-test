@@ -301,6 +301,12 @@
 
       <hr />
 
+      <div *ngIf="f.protocol.value === 'IP' || f.protocol.value === 'ICMP'" class="dcs-modal-warning">
+        <div>When protocol type is set to IP or ICMP, the values entered in the service section are required but will not be deployed.
+          <br />Please change the service type to TCP or UDP if the rule should only allow traffic between specific source/dest ports.
+        </div>
+      </div>
+
       <div class="form-row">
         <div class="form-group col-md-12">
           <label for="serviceType">Service Type</label>
