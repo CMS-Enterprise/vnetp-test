@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +9,6 @@ import { environment } from 'src/environments/environment';
   styles: ['.app { padding: 0 2rem }'],
 })
 export class AppComponent implements OnInit {
-  dcsVersion = '';
-
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private title: Title) {}
 
   ngOnInit(): void {
@@ -31,7 +28,5 @@ export class AppComponent implements OnInit {
       .subscribe(event => {
         this.title.setTitle(event.title || 'Automation');
       });
-
-    this.dcsVersion = environment?.environment?.dcsVersion;
   }
 }

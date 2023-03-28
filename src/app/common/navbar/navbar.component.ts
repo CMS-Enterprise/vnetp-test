@@ -4,6 +4,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { UserDto } from '../../../../client';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -17,6 +18,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public tenantAccountNumber: string;
   private currentUserSubscription: Subscription;
   private currentTenantSubscription: Subscription;
+  public dcsVersion: string = environment?.environment?.dcsVersion;
 
   constructor(private ngx: NgxSmartModalService, private auth: AuthService) {}
 
