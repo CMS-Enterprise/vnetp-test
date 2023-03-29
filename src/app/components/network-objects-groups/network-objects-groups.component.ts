@@ -17,6 +17,7 @@ import {
   GetManyNetworkObjectResponseDto,
   GetManyNetworkObjectGroupResponseDto,
   V1NetworkSecurityFirewallRulesService,
+  V1NetworkSecurityNatRulesService,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TierContextService } from 'src/app/services/tier-context.service';
@@ -36,6 +37,7 @@ import { TableContextService } from 'src/app/services/table-context.service';
 export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   firewallRules;
+  natRules;
   allNetworkObjects;
   allNetworkObjectGroups;
   usedObjects = { networkObjects: [], networkObjectGroups: [] };
@@ -110,6 +112,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     public helpText: NetworkObjectsGroupsHelpText,
     private tableContextService: TableContextService,
     private firewallRuleService: V1NetworkSecurityFirewallRulesService,
+    private natRuleService: V1NetworkSecurityNatRulesService,
   ) {}
 
   public getFirewallRules() {
@@ -147,6 +150,44 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         console.log('netObjSet', netObjSet);
         console.log('unusedObjectGroups', unusedObjectGroups);
         console.log('unusedObjects', unusedObjects);
+      });
+    this.getNatRules();
+  }
+
+  public getNatRules() {
+    this.getAllNetworkObjectsAndGroups();
+    this.natRuleService
+      .getManyNatRule({
+        limit: 50000,
+      })
+      .subscribe(data => {
+        this.natRules = data;
+        console.log('this.natRules', this.natRules);
+        console.log('this.allNetworkObjects', this.allNetworkObjects);
+        console.log('this.allNetworkObjectGroups', this.allNetworkObjectGroups);
+        this.natRules.forEach(rule => {
+          this.allNetworkObjects.forEach(netObj => {
+            const exists = Object.values(rule).includes(netObj.id);
+            if (exists) {
+              const matchingRule = rule;
+              this.usedObjects.networkObjects.push(netObj.id);
+            }
+          });
+          this.allNetworkObjectGroups.forEach(netObjGrp => {
+            const exists = Object.values(rule).includes(netObjGrp.id);
+            if (exists) {
+              this.usedObjects.networkObjectGroups.push(netObjGrp.id);
+            }
+          });
+        });
+        const netObjGroupSet = [...new Set(this.usedObjects.networkObjectGroups)];
+        const netObjSet = [...new Set(this.usedObjects.networkObjects)];
+        const unusedObjectGroups = this.allNetworkObjectGroups.filter(netObjGrp => !netObjGroupSet.includes(netObjGrp.id));
+        const unusedObjects = this.allNetworkObjects.filter(netObj => !netObjSet.includes(netObj.id));
+        console.log('netObjGroupSetForNATS', netObjGroupSet);
+        console.log('netObjSetForNATS', netObjSet);
+        console.log('unusedObjectGroupsForNATS', unusedObjectGroups);
+        console.log('unusedObjectsForNATS', unusedObjects);
       });
   }
 
