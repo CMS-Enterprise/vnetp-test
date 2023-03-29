@@ -17,7 +17,12 @@ import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.co
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { ToastrService } from 'ngx-toastr';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { V1NetworkSecurityNetworkObjectGroupsService, V1NetworkSecurityNetworkObjectsService, V1TiersService } from 'client';
+import {
+  V1NetworkSecurityFirewallRulesService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  V1TiersService,
+} from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { FilterPipe } from '../../pipes/filter.pipe';
 
@@ -52,6 +57,7 @@ describe('NetworkObjectsGroupsComponent', () => {
         MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
         MockProvider(V1NetworkSecurityNetworkObjectsService),
         MockProvider(V1TiersService),
+        MockProvider(V1NetworkSecurityFirewallRulesService),
       ],
     });
   }));
