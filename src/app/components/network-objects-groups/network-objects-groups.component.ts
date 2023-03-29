@@ -126,24 +126,17 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         console.log('this.allNetworkObjectGroups', this.allNetworkObjectGroups);
         this.firewallRules.forEach(rule => {
           this.allNetworkObjects.forEach(netObj => {
-            let exists = Object.values(rule).includes(netObj.id);
+            const exists = Object.values(rule).includes(netObj.id);
             if (exists) {
               const matchingRule = rule;
               this.usedObjects.networkObjects.push(netObj.id);
-              console.log('matchingRule', matchingRule);
             }
           });
           this.allNetworkObjectGroups.forEach(netObjGrp => {
-            let exists = Object.values(rule).includes(netObjGrp.id);
+            const exists = Object.values(rule).includes(netObjGrp.id);
             if (exists) {
-              const matchingRule = rule;
               this.usedObjects.networkObjectGroups.push(netObjGrp.id);
-              // console.log('matchingRule', matchingRule)
             }
-            // const searchId = netObjGrp.id;
-            // console.log('searchId', searchId);
-
-            // console.log('exists', exists);
           });
         });
         const netObjGroupSet = [...new Set(this.usedObjects.networkObjectGroups)];
