@@ -16,6 +16,7 @@ import {
   NetworkObjectGroupRelationBulkImportCollectionDto,
   GetManyNetworkObjectResponseDto,
   GetManyNetworkObjectGroupResponseDto,
+  V1NetworkSecurityFirewallRulesService,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TierContextService } from 'src/app/services/tier-context.service';
@@ -34,6 +35,10 @@ import { TableContextService } from 'src/app/services/table-context.service';
 })
 export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
+  firewallRules;
+  allNetworkObjects;
+  allNetworkObjectGroups;
+  usedObjects = { networkObjects: [], networkObjectGroups: [] };
   currentTier: Tier;
   perPage = 20;
   ModalMode = ModalMode;
@@ -104,7 +109,73 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     private tierService: V1TiersService,
     public helpText: NetworkObjectsGroupsHelpText,
     private tableContextService: TableContextService,
+    private firewallRuleService: V1NetworkSecurityFirewallRulesService,
   ) {}
+
+  public getFirewallRules() {
+    this.getAllNetworkObjectsAndGroups();
+    this.firewallRuleService
+      .getManyFirewallRule({
+        sort: ['ruleIndex,ASC'],
+        limit: 50000,
+      })
+      .subscribe(data => {
+        this.firewallRules = data;
+        console.log('firewallRules', this.firewallRules);
+        console.log('this.allNetworkObjects', this.allNetworkObjects);
+        console.log('this.allNetworkObjectGroups', this.allNetworkObjectGroups);
+        this.firewallRules.forEach(rule => {
+          this.allNetworkObjects.forEach(netObj => {
+            let exists = Object.values(rule).includes(netObj.id);
+            if (exists) {
+              const matchingRule = rule;
+              this.usedObjects.networkObjects.push(netObj.id);
+              console.log('matchingRule', matchingRule);
+            }
+          });
+          this.allNetworkObjectGroups.forEach(netObjGrp => {
+            let exists = Object.values(rule).includes(netObjGrp.id);
+            if (exists) {
+              const matchingRule = rule;
+              this.usedObjects.networkObjectGroups.push(netObjGrp.id);
+              // console.log('matchingRule', matchingRule)
+            }
+            // const searchId = netObjGrp.id;
+            // console.log('searchId', searchId);
+
+            // console.log('exists', exists);
+          });
+        });
+        const netObjGroupSet = [...new Set(this.usedObjects.networkObjectGroups)];
+        const netObjSet = [...new Set(this.usedObjects.networkObjects)];
+        const unusedObjectGroups = this.allNetworkObjectGroups.filter(netObjGrp => !netObjGroupSet.includes(netObjGrp.id));
+        const unusedObjects = this.allNetworkObjects.filter(netObj => !netObjSet.includes(netObj.id));
+        console.log('netObjGroupSet', netObjGroupSet);
+        console.log('netObjSet', netObjSet);
+        console.log('unusedObjectGroups', unusedObjectGroups);
+        console.log('unusedObjects', unusedObjects);
+      });
+  }
+
+  public getAllNetworkObjectsAndGroups() {
+    this.networkObjectService
+      .getManyNetworkObject({
+        filter: [`tierId||eq||${this.currentTier.id}`, `deletedAt||isnull`],
+        limit: 50000,
+      })
+      .subscribe(data => {
+        this.allNetworkObjects = data;
+      });
+
+    this.networkObjectGroupService
+      .getManyNetworkObjectGroup({
+        filter: [`tierId||eq||${this.currentTier.id}`, `deletedAt||isnull`],
+        limit: 50000,
+      })
+      .subscribe(data => {
+        this.allNetworkObjectGroups = data;
+      });
+  }
 
   public onNetObjTableEvent(event: TableComponentDto): void {
     this.netObjTableComponentDto = event;
