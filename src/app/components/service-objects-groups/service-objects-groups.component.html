@@ -10,6 +10,10 @@
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Service Object</span>
       </button>
+      <button type="button" class="btn btn-success" (click)="getFirewallRules()">
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Scan Objects</span>
+      </button>
     </section>
 
     <ng-container *ngIf="!isLoadingObjects; else loading">

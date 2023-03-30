@@ -18,6 +18,8 @@ import {
   GetManyNetworkObjectGroupResponseDto,
   V1NetworkSecurityFirewallRulesService,
   V1NetworkSecurityNatRulesService,
+  V1NetworkSecurityFirewallRuleGroupsService,
+  V1NetworkSecurityNatRuleGroupsService,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TierContextService } from 'src/app/services/tier-context.service';
@@ -36,6 +38,8 @@ import { TableContextService } from 'src/app/services/table-context.service';
 })
 export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
+  FWRuleGroups;
+  natRuleGroups;
   firewallRules;
   natRules;
   allNetworkObjects;
@@ -112,21 +116,41 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     public helpText: NetworkObjectsGroupsHelpText,
     private tableContextService: TableContextService,
     private firewallRuleService: V1NetworkSecurityFirewallRulesService,
+    private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
+    private natRuleGroupService: V1NetworkSecurityNatRuleGroupsService,
     private natRuleService: V1NetworkSecurityNatRulesService,
   ) {}
 
   public getFirewallRules() {
+    this.firewallRuleGroupService
+      .getManyFirewallRuleGroup({
+        filter: [`tierId||eq||${this.currentTier.id}`],
+      })
+      .subscribe(data => {
+        this.FWRuleGroups = data;
+      });
+
     this.getAllNetworkObjectsAndGroups();
+    const externalId = this.FWRuleGroups.find(group => {
+      if (group.name === 'External') {
+        return group;
+      }
+    }).id;
+
+    const intervrfId = this.FWRuleGroups.find(group => {
+      if (group.name === 'Intervrf') {
+        return group;
+      }
+    }).id;
     this.firewallRuleService
       .getManyFirewallRule({
+        filter: [`firewallRuleGroupId||eq||${externalId}`],
+        or: [`firewallRuleGroupId||eq||${intervrfId}`],
         sort: ['ruleIndex,ASC'],
         limit: 50000,
       })
       .subscribe(data => {
         this.firewallRules = data;
-        console.log('firewallRules', this.firewallRules);
-        console.log('this.allNetworkObjects', this.allNetworkObjects);
-        console.log('this.allNetworkObjectGroups', this.allNetworkObjectGroups);
         this.firewallRules.forEach(rule => {
           this.allNetworkObjects.forEach(netObj => {
             const exists = Object.values(rule).includes(netObj.id);
@@ -142,6 +166,11 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
             }
           });
         });
+        this.allNetworkObjectGroups.forEach(netObjGrp => {
+          netObjGrp.networkObjects.forEach(netObj => {
+            this.usedObjects.networkObjects.push(netObj.id);
+          });
+        });
         const netObjGroupSet = [...new Set(this.usedObjects.networkObjectGroups)];
         const netObjSet = [...new Set(this.usedObjects.networkObjects)];
         const unusedObjectGroups = this.allNetworkObjectGroups.filter(netObjGrp => !netObjGroupSet.includes(netObjGrp.id));
@@ -155,16 +184,34 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   public getNatRules() {
+    this.natRuleGroupService
+      .getManyNatRuleGroup({
+        filter: [`tierId||eq||${this.currentTier.id}`],
+      })
+      .subscribe(data => {
+        this.natRuleGroups = data;
+      });
+
     this.getAllNetworkObjectsAndGroups();
+    const externalId = this.natRuleGroups.find(group => {
+      if (group.name === 'External') {
+        return group;
+      }
+    }).id;
+
+    const intervrfId = this.natRuleGroups.find(group => {
+      if (group.name === 'Intervrf') {
+        return group;
+      }
+    }).id;
     this.natRuleService
       .getManyNatRule({
+        filter: [`natRuleGroupId||eq||${externalId}`],
+        or: [`natRuleGroupId||eq||${intervrfId}`],
         limit: 50000,
       })
       .subscribe(data => {
         this.natRules = data;
-        console.log('this.natRules', this.natRules);
-        console.log('this.allNetworkObjects', this.allNetworkObjects);
-        console.log('this.allNetworkObjectGroups', this.allNetworkObjectGroups);
         this.natRules.forEach(rule => {
           this.allNetworkObjects.forEach(netObj => {
             const exists = Object.values(rule).includes(netObj.id);
@@ -204,6 +251,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.networkObjectGroupService
       .getManyNetworkObjectGroup({
         filter: [`tierId||eq||${this.currentTier.id}`, `deletedAt||isnull`],
+        join: ['networkObjects'],
         limit: 50000,
       })
       .subscribe(data => {

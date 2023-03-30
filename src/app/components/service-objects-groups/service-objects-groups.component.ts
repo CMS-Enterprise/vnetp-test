@@ -13,6 +13,8 @@ import {
   ServiceObjectGroupRelationBulkImportCollectionDto,
   GetManyServiceObjectResponseDto,
   GetManyServiceObjectGroupResponseDto,
+  V1NetworkSecurityFirewallRulesService,
+  V1NetworkSecurityNatRulesService,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
@@ -33,6 +35,11 @@ import { TableContextService } from 'src/app/services/table-context.service';
 })
 export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
+  firewallRules;
+  natRules;
+  allServiceObjects;
+  allServiceObjectGroups;
+  usedObjects = { serviceObjects: [], serviceObjectGroups: [] };
   currentTier: Tier;
   public perPage = 20;
   ModalMode = ModalMode;
@@ -96,7 +103,111 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private tierContextService: TierContextService,
     private tierService: V1TiersService,
     private tableContextService: TableContextService,
+    private firewallRuleService: V1NetworkSecurityFirewallRulesService,
+    private natRuleService: V1NetworkSecurityNatRulesService,
   ) {}
+
+  public getFirewallRules() {
+    this.getAllServiceObjectsAndGroups();
+    this.firewallRuleService
+      .getManyFirewallRule({
+        sort: ['ruleIndex,ASC'],
+        limit: 50000,
+      })
+      .subscribe(data => {
+        this.firewallRules = data;
+        console.log('firewallRules', this.firewallRules);
+        console.log('this.allServiceObjects', this.allServiceObjects);
+        console.log('this.allServiceObjectGroups', this.allServiceObjectGroups);
+        this.firewallRules.forEach(rule => {
+          this.allServiceObjects.forEach(serObj => {
+            const exists = Object.values(rule).includes(serObj.id);
+            if (exists) {
+              const matchingRule = rule;
+              this.usedObjects.serviceObjects.push(serObj.id);
+            }
+          });
+          this.allServiceObjectGroups.forEach(serObjGrp => {
+            const exists = Object.values(rule).includes(serObjGrp.id);
+            if (exists) {
+              this.usedObjects.serviceObjectGroups.push(serObjGrp.id);
+            }
+          });
+        });
+        this.allServiceObjectGroups.forEach(serObjGrp => {
+          serObjGrp.serviceObjects.forEach(serObj => {
+            this.usedObjects.serviceObjects.push(serObj.id);
+          });
+        });
+        const serObjGroupSet = [...new Set(this.usedObjects.serviceObjectGroups)];
+        const serObjSet = [...new Set(this.usedObjects.serviceObjects)];
+        const unusedObjectGroups = this.allServiceObjectGroups.filter(serObjGrp => !serObjGroupSet.includes(serObjGrp.id));
+        const unusedObjects = this.allServiceObjects.filter(serObj => !serObjSet.includes(serObj.id));
+        console.log('serObjGroupSet', serObjGroupSet);
+        console.log('serObjSet', serObjSet);
+        console.log('unusedObjectGroups', unusedObjectGroups);
+        console.log('unusedObjects', unusedObjects);
+      });
+    // this.getNatRules();
+  }
+
+  // public getNatRules() {
+  //   this.getAllNetworkObjectsAndGroups();
+  //   this.natRuleService
+  //     .getManyNatRule({
+  //       limit: 50000,
+  //     })
+  //     .subscribe(data => {
+  //       this.natRules = data;
+  //       console.log('this.natRules', this.natRules);
+  //       console.log('this.allNetworkObjects', this.allNetworkObjects);
+  //       console.log('this.allNetworkObjectGroups', this.allNetworkObjectGroups);
+  //       this.natRules.forEach(rule => {
+  //         this.allNetworkObjects.forEach(netObj => {
+  //           const exists = Object.values(rule).includes(netObj.id);
+  //           if (exists) {
+  //             const matchingRule = rule;
+  //             this.usedObjects.networkObjects.push(netObj.id);
+  //           }
+  //         });
+  //         this.allNetworkObjectGroups.forEach(netObjGrp => {
+  //           const exists = Object.values(rule).includes(netObjGrp.id);
+  //           if (exists) {
+  //             this.usedObjects.networkObjectGroups.push(netObjGrp.id);
+  //           }
+  //         });
+  //       });
+  //       const netObjGroupSet = [...new Set(this.usedObjects.networkObjectGroups)];
+  //       const netObjSet = [...new Set(this.usedObjects.networkObjects)];
+  //       const unusedObjectGroups = this.allNetworkObjectGroups.filter(netObjGrp => !netObjGroupSet.includes(netObjGrp.id));
+  //       const unusedObjects = this.allNetworkObjects.filter(netObj => !netObjSet.includes(netObj.id));
+  //       console.log('netObjGroupSetForNATS', netObjGroupSet);
+  //       console.log('netObjSetForNATS', netObjSet);
+  //       console.log('unusedObjectGroupsForNATS', unusedObjectGroups);
+  //       console.log('unusedObjectsForNATS', unusedObjects);
+  //     });
+  // }
+
+  public getAllServiceObjectsAndGroups() {
+    this.serviceObjectService
+      .getManyServiceObject({
+        filter: [`tierId||eq||${this.currentTier.id}`, `deletedAt||isnull`],
+        limit: 50000,
+      })
+      .subscribe(data => {
+        this.allServiceObjects = data;
+      });
+
+    this.serviceObjectGroupService
+      .getManyServiceObjectGroup({
+        filter: [`tierId||eq||${this.currentTier.id}`, `deletedAt||isnull`],
+        join: ['serviceObjects'],
+        limit: 50000,
+      })
+      .subscribe(data => {
+        this.allServiceObjectGroups = data;
+      });
+  }
 
   public onSvcObjTableEvent(event: TableComponentDto): void {
     this.svcObjTableComponentDto = event;
