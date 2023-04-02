@@ -86,6 +86,7 @@ export class DeployComponent implements OnInit {
         datacenterId: this.currentDatacenter.id,
         page: 1,
         limit: 1000,
+        filter: [`deletedAt||isnull`],
       })
       .subscribe(response => {
         this.tiers = response.data.map(tier => new TableRowWrapper(tier));

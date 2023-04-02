@@ -88,7 +88,12 @@ describe('DeployComponent', () => {
 
     datacenterSubject.next(testData.datacenter);
 
-    expect(tiersService.getManyDatacenterTier).toHaveBeenCalledWith({ datacenterId: '1', page: 1, limit: 1000 });
+    expect(tiersService.getManyDatacenterTier).toHaveBeenCalledWith({
+      datacenterId: '1',
+      page: 1,
+      limit: 1000,
+      filter: [`deletedAt||isnull`],
+    });
     expect(tierGroupService.getManyTierGroup).toHaveBeenCalledWith({ filter: ['datacenterId||eq||1'], page: 1, limit: 1000 });
     expect(component.tiers.length).toBe(1);
   });
