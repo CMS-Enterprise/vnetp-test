@@ -16,7 +16,13 @@ import { MockProvider } from 'src/test/mock-providers';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { V1NetworkSecurityServiceObjectGroupsService, V1NetworkSecurityServiceObjectsService, V1TiersService } from 'client';
+import {
+  V1NetworkSecurityFirewallRulesService,
+  V1NetworkSecurityNatRulesService,
+  V1NetworkSecurityServiceObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+  V1TiersService,
+} from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { FilterPipe } from '../../pipes/filter.pipe';
 
@@ -49,6 +55,8 @@ describe('ServicesObjectsGroupsComponent', () => {
         MockProvider(V1NetworkSecurityServiceObjectsService),
         MockProvider(TierContextService),
         MockProvider(V1TiersService),
+        MockProvider(V1NetworkSecurityFirewallRulesService),
+        MockProvider(V1NetworkSecurityNatRulesService),
       ],
     }).compileComponents();
   }));

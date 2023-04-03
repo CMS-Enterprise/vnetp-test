@@ -18,7 +18,9 @@ import { ImportExportComponent } from 'src/app/common/import-export/import-expor
 import { ToastrService } from 'ngx-toastr';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import {
+  V1NetworkSecurityFirewallRuleGroupsService,
   V1NetworkSecurityFirewallRulesService,
+  V1NetworkSecurityNatRuleGroupsService,
   V1NetworkSecurityNatRulesService,
   V1NetworkSecurityNetworkObjectGroupsService,
   V1NetworkSecurityNetworkObjectsService,
@@ -60,6 +62,8 @@ describe('NetworkObjectsGroupsComponent', () => {
         MockProvider(V1TiersService),
         MockProvider(V1NetworkSecurityFirewallRulesService),
         MockProvider(V1NetworkSecurityNatRulesService),
+        MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
+        MockProvider(V1NetworkSecurityNatRuleGroupsService),
       ],
     });
   }));
