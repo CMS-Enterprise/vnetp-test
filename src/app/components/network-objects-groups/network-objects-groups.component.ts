@@ -219,6 +219,13 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   public getNatRules() {
+    // this.usedObjects.networkObjects = [];
+    // this.usedObjects.networkObjectGroups = [];
+    // this.unusedObjects.fwRuleNetworkObjectGroups = [];
+    // this.unusedObjects.fwRuleNetworkObjects = [];
+    // this.unusedObjects.natRuleNetworkObjects = [];
+    // this.unusedObjects.natRuleNetworkObjectGroups = [];
+
     const externalId = this.natRuleGroups.find(group => {
       if (group.name === 'External') {
         return group;
@@ -266,9 +273,20 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         );
         this.unusedObjects.natRuleNetworkObjects = unusedObjSet;
         this.unusedObjects.natRuleNetworkObjectGroups = unusedObjGroupSet;
+
         console.log('this.usedObjects', this.usedObjects);
         console.log('this.unusedObjects', this.unusedObjects);
+        // this.getDelta();
       });
+  }
+
+  private getDelta() {
+    this.usedObjects.networkObjects.map(netObj => {
+      console.log('netObj', netObj);
+      if (this.unusedObjects.fwRuleNetworkObjects.includes(netObj)) {
+        console.log('netObj.id', netObj.id);
+      }
+    });
   }
 
   public async getAllNetworkObjectsAndGroups() {
