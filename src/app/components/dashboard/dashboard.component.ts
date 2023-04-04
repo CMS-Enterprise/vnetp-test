@@ -1,10 +1,28 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { V1DatacentersService, V1TiersService, V1VmwareVirtualMachinesService, V1LoadBalancerVirtualServersService, UserDto } from 'client';
+import {
+  V1DatacentersService,
+  V1TiersService,
+  V1VmwareVirtualMachinesService,
+  V1LoadBalancerVirtualServersService,
+  UserDto,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
+  V1NetworkSubnetsService,
+  V1NetworkVlansService,
+  V1NetworkSecurityFirewallRulesService,
+  V1NetworkSecurityNatRulesService,
+  V1AuditLogService,
+  Datacenter,
+} from 'client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { PieChartData } from 'src/app/common/d3-pie-chart/d3-pie-chart.component';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from '../../utils/SubscriptionUtil';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { TableConfig } from 'src/app/common/table/table.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +35,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private currentUserSubscription: Subscription;
 
+  currentDatacenter: Datacenter;
+  private currentDatacenterSubscription: Subscription;
+
   constructor(
     private datacenterService: V1DatacentersService,
     private tierService: V1TiersService,
@@ -24,12 +45,43 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public helpText: DashboardHelpText,
     private loadBalancerService: V1LoadBalancerVirtualServersService,
     private auth: AuthService,
+    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
+    private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
+    private serviceObjectService: V1NetworkSecurityServiceObjectsService,
+    private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
+    private subnetService: V1NetworkSubnetsService,
+    private vlanService: V1NetworkVlansService,
+    private firewallRuleService: V1NetworkSecurityFirewallRulesService,
+    private natRuleService: V1NetworkSecurityNatRulesService,
+    private auditLogService: V1AuditLogService,
+    private datacenterContextService: DatacenterContextService,
   ) {}
 
   datacenters: number;
   tiers: number;
   vmwareVirtualMachines: number;
   loadBalancerVirtualServers: number;
+  networkObjectCount: number;
+  networkObjectGroupCount: number;
+  serviceObjectCount: number;
+  serviceObjectGroupCount: number;
+  subnetCount: number;
+  vlanCount: number;
+  firewallRuleCount: number;
+  natRuleCount: number;
+  auditLogs;
+
+  public config: TableConfig<any> = {
+    description: 'Audit Log',
+    columns: [
+      { name: 'Action', property: 'actionType' },
+      { name: 'Object Type', property: 'entityType' },
+      { name: 'Tier Name', property: 'tierName' },
+      // { name: 'Object Name', template: () => this.entityAfterTemplate },
+      { name: 'User', property: 'changedBy' },
+      { name: 'Timestamp', property: 'timestamp' },
+    ],
+  };
 
   status = [
     { name: 'User Interface', status: 'green' },
@@ -48,6 +100,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
+
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+      // console.log('cd',cd);
+      if (cd) {
+        this.currentDatacenter = cd;
+        this.getAuditLogEntries();
+      }
+    });
 
     if (this.auth.currentUser) {
       this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
@@ -69,6 +129,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getDatacenters();
     this.getTiers();
     if (roles && roles.includes('admin')) {
+      this.getNetworkObjects();
+      this.getNetworkObjectGroups();
+      this.getServiceObjects();
+      this.getServiceObjectGroups();
+      this.getSubnets();
+      this.getVlans();
+      // this.getFWRules();
       this.getVmwareVirtualMachines();
       this.getLoadBalancerVirtualServers();
     }
@@ -95,6 +162,91 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const paged: any = data;
       this.tiers = paged.total;
     });
+  }
+
+  private getAuditLogEntries() {
+    // console.log('this.currentDatacenter', this.currentDatacenter)
+    this.auditLogService
+      .getAuditLogAuditLog({
+        datacenterId: `${this.currentDatacenter.id}`,
+      })
+      .subscribe(data => {
+        this.auditLogs = data;
+        this.auditLogs = this.auditLogs.data;
+        // console.log('this.auditLogs', this.auditLogs)
+      });
+  }
+
+  // private getFWRules() {
+  //   this.tierService.getManyTier({page: 1, limit: 1, join: ['firewallRuleGroups']}).subscribe(data => {
+  //     data.data.map(tier => {
+  //       tier.firewallRuleGroups.map(group => {
+  //         this.firewallRuleService.getManyFirewallRule({
+  //           filter: [`firewallRuleGroupId||eq||${group.id}`]
+  //         }).subscribe(data => {
+  //           console.log('data', data);
+  //           this.firewallRuleCount+= data.total;
+  //           console.log('this.firewallRuleCount', this.firewallRuleCount)
+  //         })
+  //       })
+  //     })
+  //   })
+  // }
+
+  private getSubnets() {
+    this.subnetService.getManySubnet({ page: 1, limit: 1 }).subscribe(data => {
+      this.subnetCount = data.total;
+    });
+  }
+
+  private getVlans() {
+    this.vlanService.getManyVlan({ page: 1, limit: 1 }).subscribe(data => {
+      this.vlanCount = data.total;
+    });
+  }
+
+  private getNetworkObjects() {
+    this.networkObjectService
+      .getManyNetworkObject({
+        page: 1,
+        limit: 1,
+      })
+      .subscribe(data => {
+        this.networkObjectCount = data.total;
+      });
+  }
+
+  private getNetworkObjectGroups() {
+    this.networkObjectGroupService
+      .getManyNetworkObjectGroup({
+        page: 1,
+        limit: 1,
+      })
+      .subscribe(data => {
+        this.networkObjectGroupCount = data.total;
+      });
+  }
+
+  private getServiceObjects() {
+    this.serviceObjectService
+      .getManyServiceObject({
+        page: 1,
+        limit: 1,
+      })
+      .subscribe(data => {
+        this.serviceObjectCount = data.total;
+      });
+  }
+
+  private getServiceObjectGroups() {
+    this.serviceObjectGroupService
+      .getManyServiceObjectGroup({
+        page: 1,
+        limit: 1,
+      })
+      .subscribe(data => {
+        this.serviceObjectGroupCount = data.total;
+      });
   }
 
   private getVmwareVirtualMachines(): void {

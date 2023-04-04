@@ -1,9 +1,27 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockComponent } from 'src/test/mock-components';
-import { V1DatacentersService, V1TiersService, V1LoadBalancerVirtualServersService, V1VmwareVirtualMachinesService } from 'client';
+import {
+  V1DatacentersService,
+  V1TiersService,
+  V1LoadBalancerVirtualServersService,
+  V1VmwareVirtualMachinesService,
+  V1NetworkSecurityFirewallRuleGroupsService,
+  V1NetworkSecurityFirewallRulesService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+  V1AuditLogService,
+  V1NetworkSecurityNatRuleGroupsService,
+  V1NetworkSecurityNatRulesService,
+  V1NetworkSubnetsService,
+  V1NetworkVlansService,
+} from 'client';
 import { of } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { MockProvider } from 'src/test/mock-providers';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -36,6 +54,7 @@ describe('DashboardComponent', () => {
         MockComponent({ selector: 'app-d3-pie-chart', inputs: ['data', 'width', 'height', 'radius'] }),
         MockTooltipComponent,
         MockFontAwesomeComponent,
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
       ],
       providers: [
         { provide: V1DatacentersService, useValue: datacenterService },
@@ -43,6 +62,17 @@ describe('DashboardComponent', () => {
         { provide: V1VmwareVirtualMachinesService, useValue: vmwareService },
         { provide: V1LoadBalancerVirtualServersService, useValue: loadBalancerService },
         { provide: AuthService, useValue: authService },
+        MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
+        MockProvider(V1NetworkSecurityFirewallRulesService),
+        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+        MockProvider(V1NetworkSecurityNetworkObjectsService),
+        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+        MockProvider(V1NetworkSecurityServiceObjectsService),
+        MockProvider(V1AuditLogService),
+        MockProvider(V1NetworkSecurityNatRulesService),
+        MockProvider(V1NetworkSubnetsService),
+        MockProvider(V1NetworkVlansService),
+        MockProvider(DatacenterContextService),
       ],
     })
       .compileComponents()
