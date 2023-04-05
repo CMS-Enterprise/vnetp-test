@@ -129,21 +129,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getDatacenters();
     this.getTiers();
     if (roles && roles.includes('admin')) {
+      this.getFWRules();
+      this.getNatRules();
       this.getNetworkObjects();
       this.getNetworkObjectGroups();
       this.getServiceObjects();
       this.getServiceObjectGroups();
       this.getSubnets();
       this.getVlans();
-      // this.getFWRules();
-      this.getVmwareVirtualMachines();
-      this.getLoadBalancerVirtualServers();
-    }
-    if (roles && (roles.includes('x86_admin') || roles.includes('x86_ro'))) {
-      this.getVmwareVirtualMachines();
-    }
-    if (roles && (roles.includes('loadbalancer_admin') || roles.includes('loadbalancer_ro'))) {
-      this.getLoadBalancerVirtualServers();
     }
   }
 
@@ -165,7 +158,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getAuditLogEntries() {
-    // console.log('this.currentDatacenter', this.currentDatacenter)
     this.auditLogService
       .getAuditLogAuditLog({
         datacenterId: `${this.currentDatacenter.id}`,
@@ -173,39 +165,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.auditLogs = data;
         this.auditLogs = this.auditLogs.data;
-        // console.log('this.auditLogs', this.auditLogs)
       });
   }
 
-  // private getFWRules() {
-  //   this.tierService.getManyTier({page: 1, limit: 1, join: ['firewallRuleGroups']}).subscribe(data => {
-  //     data.data.map(tier => {
-  //       tier.firewallRuleGroups.map(group => {
-  //         this.firewallRuleService.getManyFirewallRule({
-  //           filter: [`firewallRuleGroupId||eq||${group.id}`]
-  //         }).subscribe(data => {
-  //           console.log('data', data);
-  //           this.firewallRuleCount+= data.total;
-  //           console.log('this.firewallRuleCount', this.firewallRuleCount)
-  //         })
-  //       })
-  //     })
-  //   })
-  // }
+  private getFWRules(): void {
+    this.firewallRuleService.getManyFirewallRule({ page: 1, limit: 1 }).subscribe(data => {
+      this.firewallRuleCount = data.total;
+    });
+  }
 
-  private getSubnets() {
+  private getNatRules(): void {
+    this.natRuleService.getManyNatRule({ page: 1, limit: 1 }).subscribe(data => {
+      this.natRuleCount = data.total;
+    });
+  }
+
+  private getSubnets(): void {
     this.subnetService.getManySubnet({ page: 1, limit: 1 }).subscribe(data => {
       this.subnetCount = data.total;
     });
   }
 
-  private getVlans() {
+  private getVlans(): void {
     this.vlanService.getManyVlan({ page: 1, limit: 1 }).subscribe(data => {
       this.vlanCount = data.total;
     });
   }
 
-  private getNetworkObjects() {
+  private getNetworkObjects(): void {
     this.networkObjectService
       .getManyNetworkObject({
         page: 1,
@@ -216,7 +203,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-  private getNetworkObjectGroups() {
+  private getNetworkObjectGroups(): void {
     this.networkObjectGroupService
       .getManyNetworkObjectGroup({
         page: 1,
@@ -227,7 +214,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-  private getServiceObjects() {
+  private getServiceObjects(): void {
     this.serviceObjectService
       .getManyServiceObject({
         page: 1,
@@ -238,7 +225,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-  private getServiceObjectGroups() {
+  private getServiceObjectGroups(): void {
     this.serviceObjectGroupService
       .getManyServiceObjectGroup({
         page: 1,
@@ -247,19 +234,5 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.serviceObjectGroupCount = data.total;
       });
-  }
-
-  private getVmwareVirtualMachines(): void {
-    this.vmwareService.getManyVmwareVirtualMachine({ page: 1, limit: 1 }).subscribe(data => {
-      const paged = data as any;
-      this.vmwareVirtualMachines = paged.total;
-    });
-  }
-
-  private getLoadBalancerVirtualServers(): void {
-    this.loadBalancerService.getManyLoadBalancerVirtualServer({ page: 1, limit: 1 }).subscribe(data => {
-      const paged = data as any;
-      this.loadBalancerVirtualServers = paged.total;
-    });
   }
 }
