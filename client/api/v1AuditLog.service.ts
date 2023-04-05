@@ -25,6 +25,8 @@ import { Configuration }                                     from '../configurat
 
 export interface GetAuditLogAuditLogRequestParams {
     datacenterId: string;
+    page: number;
+    perPage: number;
     entityType?: string;
     actionType?: string;
     tenant?: string;
@@ -105,6 +107,14 @@ export class V1AuditLogService {
         if (datacenterId === null || datacenterId === undefined) {
             throw new Error('Required parameter datacenterId was null or undefined when calling getAuditLogAuditLog.');
         }
+        const page = requestParameters.page;
+        if (page === null || page === undefined) {
+            throw new Error('Required parameter page was null or undefined when calling getAuditLogAuditLog.');
+        }
+        const perPage = requestParameters.perPage;
+        if (perPage === null || perPage === undefined) {
+            throw new Error('Required parameter perPage was null or undefined when calling getAuditLogAuditLog.');
+        }
         const entityType = requestParameters.entityType;
         const actionType = requestParameters.actionType;
         const tenant = requestParameters.tenant;
@@ -125,6 +135,14 @@ export class V1AuditLogService {
         if (tenant !== undefined && tenant !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>tenant, 'tenant');
+        }
+        if (page !== undefined && page !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
+        }
+        if (perPage !== undefined && perPage !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>perPage, 'perPage');
         }
 
         let headers = this.defaultHeaders;
