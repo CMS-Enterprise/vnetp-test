@@ -15,6 +15,8 @@ import {
   GetManyServiceObjectGroupResponseDto,
   V1NetworkSecurityFirewallRulesService,
   V1NetworkSecurityNatRulesService,
+  V1NetworkSecurityFirewallRuleGroupsService,
+  V1NetworkSecurityNatRuleGroupsService,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
@@ -35,11 +37,14 @@ import { TableContextService } from 'src/app/services/table-context.service';
 })
 export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
+  FWRuleGroups;
+  natRuleGroups;
   firewallRules;
   natRules;
   allServiceObjects;
   allServiceObjectGroups;
   usedObjects = { serviceObjects: [], serviceObjectGroups: [] };
+  unusedObjects = { fwRuleServiceObjects: [], fwRuleServiceObjectGroups: [], natRuleServiceObjects: [], natRuleServiceObjectGroups: [] };
   currentTier: Tier;
   public perPage = 20;
   ModalMode = ModalMode;
@@ -104,13 +109,55 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private tierService: V1TiersService,
     private tableContextService: TableContextService,
     private firewallRuleService: V1NetworkSecurityFirewallRulesService,
+    private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
+    private natRuleGroupService: V1NetworkSecurityNatRuleGroupsService,
     private natRuleService: V1NetworkSecurityNatRulesService,
   ) {}
 
+  public getFirewallRuleGroups() {
+    this.firewallRuleGroupService
+      .getManyFirewallRuleGroup({
+        filter: [`tierId||eq||${this.currentTier.id}`],
+      })
+      .subscribe(data => {
+        this.FWRuleGroups = data;
+      });
+  }
+
+  public getNatRuleGroups() {
+    this.natRuleGroupService
+      .getManyNatRuleGroup({
+        filter: [`tierId||eq||${this.currentTier.id}`],
+      })
+      .subscribe(data => {
+        this.natRuleGroups = data;
+      });
+  }
+
   public getFirewallRules() {
-    this.getAllServiceObjectsAndGroups();
+    this.usedObjects.serviceObjects = [];
+    this.usedObjects.serviceObjectGroups = [];
+    this.unusedObjects.fwRuleServiceObjects = [];
+    this.unusedObjects.fwRuleServiceObjectGroups = [];
+    this.unusedObjects.natRuleServiceObjects = [];
+    this.unusedObjects.natRuleServiceObjectGroups = [];
+
+    const externalId = this.FWRuleGroups.find(group => {
+      if (group.name === 'External') {
+        return group;
+      }
+    }).id;
+
+    const intervrfId = this.FWRuleGroups.find(group => {
+      if (group.name === 'Intervrf') {
+        return group;
+      }
+    }).id;
+
     this.firewallRuleService
       .getManyFirewallRule({
+        filter: [`firewallRuleGroupId||eq||${externalId}`],
+        or: [`firewallRuleGroupId||eq||${intervrfId}`],
         sort: ['ruleIndex,ASC'],
         limit: 50000,
       })
@@ -598,6 +645,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       if (ct) {
         this.currentTier = ct;
         this.getObjectsForNavIndex();
+        this.getAllServiceObjectsAndGroups();
+        this.getFirewallRuleGroups();
       }
     });
   }
