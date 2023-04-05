@@ -85,7 +85,7 @@ pipeline {
                     "files": [
                       {
                         "pattern": "builds/$GIT_COMMIT/dist.tar.gz",
-                        "target": "cicd-test/dcs-ui-test/",
+                        "target": "dcs-ui",
                         "recursive": "true",
                         "flat" : "false"
                       }
