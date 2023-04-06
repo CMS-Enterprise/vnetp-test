@@ -45,7 +45,14 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   allNetworkObjects;
   allNetworkObjectGroups;
   usedObjects = { networkObjects: [], networkObjectGroups: [] };
-  unusedObjects = { fwRuleNetworkObjects: [], fwRuleNetworkObjectGroups: [], natRuleNetworkObjects: [], natRuleNetworkObjectGroups: [] };
+  unusedObjects = {
+    fwRuleNetworkObjects: [],
+    fwRuleNetworkObjectGroups: [],
+    natRuleNetworkObjects: [],
+    natRuleNetworkObjectGroups: [],
+    globalUnusedObjects: [],
+    globalUnusedObjectGroups: [],
+  };
   currentTier: Tier;
   perPage = 20;
   ModalMode = ModalMode;
@@ -219,13 +226,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   public getNatRules() {
-    // this.usedObjects.networkObjects = [];
-    // this.usedObjects.networkObjectGroups = [];
-    // this.unusedObjects.fwRuleNetworkObjectGroups = [];
-    // this.unusedObjects.fwRuleNetworkObjects = [];
-    // this.unusedObjects.natRuleNetworkObjects = [];
-    // this.unusedObjects.natRuleNetworkObjectGroups = [];
-
     const externalId = this.natRuleGroups.find(group => {
       if (group.name === 'External') {
         return group;
@@ -273,20 +273,45 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         );
         this.unusedObjects.natRuleNetworkObjects = unusedObjSet;
         this.unusedObjects.natRuleNetworkObjectGroups = unusedObjGroupSet;
-
-        console.log('this.usedObjects', this.usedObjects);
         console.log('this.unusedObjects', this.unusedObjects);
-        // this.getDelta();
+        this.getDelta();
       });
   }
 
   private getDelta() {
-    this.usedObjects.networkObjects.map(netObj => {
-      console.log('netObj', netObj);
-      if (this.unusedObjects.fwRuleNetworkObjects.includes(netObj)) {
-        console.log('netObj.id', netObj.id);
+    let objectsToRemove = [];
+    let objectGroupsToRemove = [];
+    this.unusedObjects.fwRuleNetworkObjects.map(unusedObj => {
+      if (this.usedObjects.networkObjects.includes(unusedObj.id)) {
+        objectsToRemove.push(unusedObj);
       }
     });
+    this.unusedObjects.fwRuleNetworkObjectGroups.map(unusedObjGrp => {
+      if (this.usedObjects.networkObjectGroups.includes(unusedObjGrp.id)) {
+        objectGroupsToRemove.push(unusedObjGrp);
+      }
+    });
+    objectsToRemove.map(obj => {
+      this.unusedObjects.fwRuleNetworkObjects.splice(this.unusedObjects.fwRuleNetworkObjects.indexOf(obj), 1);
+    });
+    objectGroupsToRemove.map(objGrp => {
+      this.unusedObjects.fwRuleNetworkObjectGroups.splice(this.unusedObjects.fwRuleNetworkObjectGroups.indexOf(objGrp), 1);
+    });
+
+    this.unusedObjects.globalUnusedObjects.push(...this.unusedObjects.fwRuleNetworkObjects);
+    this.unusedObjects.globalUnusedObjects.push(...this.unusedObjects.natRuleNetworkObjects);
+    this.unusedObjects.globalUnusedObjectGroups.push(...this.unusedObjects.fwRuleNetworkObjectGroups);
+    this.unusedObjects.globalUnusedObjectGroups.push(...this.unusedObjects.natRuleNetworkObjectGroups);
+    const netObjSet = [...new Set(this.unusedObjects.globalUnusedObjects)];
+    const netObjGroupSet = [...new Set(this.unusedObjects.globalUnusedObjectGroups)];
+    this.unusedObjects.globalUnusedObjects = netObjSet;
+    this.unusedObjects.globalUnusedObjectGroups = netObjGroupSet;
+    console.log('this.unusedObjects', this.unusedObjects);
+    delete this.unusedObjects.fwRuleNetworkObjects;
+    delete this.unusedObjects.fwRuleNetworkObjectGroups;
+    delete this.unusedObjects.natRuleNetworkObjects;
+    delete this.unusedObjects.natRuleNetworkObjectGroups;
+    console.log('this.unusedObjects', this.unusedObjects);
   }
 
   public async getAllNetworkObjectsAndGroups() {
