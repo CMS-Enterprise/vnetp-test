@@ -44,7 +44,14 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   allServiceObjects;
   allServiceObjectGroups;
   usedObjects = { serviceObjects: [], serviceObjectGroups: [] };
-  unusedObjects = { fwRuleServiceObjects: [], fwRuleServiceObjectGroups: [], natRuleServiceObjects: [], natRuleServiceObjectGroups: [] };
+  unusedObjects = {
+    fwRuleServiceObjects: [],
+    fwRuleServiceObjectGroups: [],
+    natRuleServiceObjects: [],
+    natRuleServiceObjectGroups: [],
+    globalUnusedObjects: [],
+    globalUnusedObjectGroups: [],
+  };
   currentTier: Tier;
   public perPage = 20;
   ModalMode = ModalMode;
@@ -288,6 +295,20 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     objectGroupsToRemove.map(objGrp => {
       this.unusedObjects.fwRuleServiceObjectGroups.splice(this.unusedObjects.fwRuleServiceObjectGroups.indexOf(objGrp), 1);
     });
+
+    this.unusedObjects.globalUnusedObjects.push(...this.unusedObjects.fwRuleServiceObjects);
+    this.unusedObjects.globalUnusedObjects.push(...this.unusedObjects.natRuleServiceObjects);
+    this.unusedObjects.globalUnusedObjectGroups.push(...this.unusedObjects.fwRuleServiceObjectGroups);
+    this.unusedObjects.globalUnusedObjectGroups.push(...this.unusedObjects.natRuleServiceObjectGroups);
+    const serObjSet = [...new Set(this.unusedObjects.globalUnusedObjects)];
+    const serObjGroupSet = [...new Set(this.unusedObjects.globalUnusedObjectGroups)];
+    this.unusedObjects.globalUnusedObjects = serObjSet;
+    this.unusedObjects.globalUnusedObjectGroups = serObjGroupSet;
+    console.log('this.unusedObjects', this.unusedObjects);
+    delete this.unusedObjects.fwRuleServiceObjects;
+    delete this.unusedObjects.fwRuleServiceObjectGroups;
+    delete this.unusedObjects.natRuleServiceObjects;
+    delete this.unusedObjects.natRuleServiceObjectGroups;
     console.log('this.unusedObjects', this.unusedObjects);
   }
 
