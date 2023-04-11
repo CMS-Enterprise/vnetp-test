@@ -15,7 +15,7 @@ export class NatRulesComponent implements OnInit, OnDestroy {
   public DatacenterId: string;
   public currentNatRulePage = 1;
   public currentTier: Tier;
-  public perPage = 20;
+  public perPage = 50;
   public ModalMode = ModalMode;
   public natRules: NatRule[] = [];
   public natRuleGroups: NatRuleGroup[] = [];
