@@ -10,8 +10,7 @@
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Network Object</span>
       </button>
-      <button type="button" class="btn btn-success" (click)="getFirewallRules()">
-        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <button type="button" class="btn btn-primary" (click)="getFirewallRules()">
         <span>Scan Objects</span>
       </button>
     </section>
@@ -157,6 +156,7 @@
 </ng-container>
 <app-network-object-group-modal></app-network-object-group-modal>
 <app-network-object-modal></app-network-object-modal>
+<app-unused-objects-modal [unusedObjectsInput]="unusedObjects"></app-unused-objects-modal>
 <app-yes-no-modal [allowEmptyTier]="showRadio"></app-yes-no-modal>
 <ng-template #warningMessage>
   <p>Select a Tier to display Network Objects & Groups details</p>

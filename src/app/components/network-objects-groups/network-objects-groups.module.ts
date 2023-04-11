@@ -14,6 +14,7 @@ import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TableModule } from '../../common/table/table.module';
+import { UnusedObjectsModalComponent } from './unused-objects-modal/unused-objects-modal.component';
 
 const routes: Routes = [
   {
@@ -38,6 +39,6 @@ const routes: Routes = [
     TabsModule,
     TooltipModule,
   ],
-  declarations: [NetworkObjectsGroupsComponent, NetworkObjectGroupModalComponent, NetworkObjectModalComponent],
+  declarations: [NetworkObjectsGroupsComponent, NetworkObjectGroupModalComponent, NetworkObjectModalComponent, UnusedObjectsModalComponent],
 })
 export class NetworkObjectsGroupsModule {}

@@ -68,7 +68,7 @@ export class TableComponent<T> implements AfterViewInit {
     // list of components that should have the search bar hidden when a user navigates to them
     const badList = [
       'managed-network',
-      'selected-objects',
+      'unused-network-objects/groups',
       'import-preview',
       'pools-in-the-currently-selected-tier',
       'static-routes-listed-by-tier',
@@ -78,7 +78,7 @@ export class TableComponent<T> implements AfterViewInit {
       'self-services',
     ];
 
-    const hidePagination = ['import-preview', 'audit-log', 'detailed-audit-log-entry'];
+    const hidePagination = ['import-preview', 'audit-log', 'detailed-audit-log-entry', 'unused-network-objects/groups'];
 
     // if tableId is a badList ID, we hide the search bar
     if (badList.includes(this.uniqueTableId)) {

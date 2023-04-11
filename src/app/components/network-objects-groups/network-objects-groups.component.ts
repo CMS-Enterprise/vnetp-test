@@ -52,6 +52,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     natRuleNetworkObjectGroups: [],
     globalUnusedObjects: [],
     globalUnusedObjectGroups: [],
+    data: [],
   };
   currentTier: Tier;
   perPage = 20;
@@ -72,6 +73,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   private currentTierSubscription: Subscription;
   private networkObjectGroupModalSubscription: Subscription;
   private networkObjectModalSubscription: Subscription;
+  private unusedObjectsModalSubscription: Subscription;
 
   public isLoadingObjects = false;
   public isLoadingGroups = false;
@@ -129,7 +131,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     private natRuleService: V1NetworkSecurityNatRulesService,
   ) {}
 
-  public getFirewallRuleGroups() {
+  public getFirewallRuleGroups(): void {
     this.firewallRuleGroupService
       .getManyFirewallRuleGroup({
         filter: [`tierId||eq||${this.currentTier.id}`],
@@ -139,7 +141,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       });
   }
 
-  public getNatRuleGroups() {
+  public getNatRuleGroups(): void {
     this.natRuleGroupService
       .getManyNatRuleGroup({
         filter: [`tierId||eq||${this.currentTier.id}`],
@@ -149,7 +151,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       });
   }
 
-  public checkGroupMembership() {
+  public checkGroupMembership(): void {
     this.allNetworkObjectGroups.forEach(netObjGrp => {
       netObjGrp.networkObjects.forEach(netObj => {
         this.usedObjects.networkObjects.push(netObj.id);
@@ -157,7 +159,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     });
   }
 
-  public getFirewallRules() {
+  public getFirewallRules(): void {
     this.usedObjects.networkObjects = [];
     this.usedObjects.networkObjectGroups = [];
     this.unusedObjects.fwRuleNetworkObjectGroups = [];
@@ -225,7 +227,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.getNatRules();
   }
 
-  public getNatRules() {
+  public getNatRules(): void {
     const externalId = this.natRuleGroups.find(group => {
       if (group.name === 'External') {
         return group;
@@ -278,7 +280,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       });
   }
 
-  private getDelta() {
+  private getDelta(): void {
     let objectsToRemove = [];
     let objectGroupsToRemove = [];
     this.unusedObjects.fwRuleNetworkObjects.map(unusedObj => {
@@ -306,15 +308,14 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     const netObjGroupSet = [...new Set(this.unusedObjects.globalUnusedObjectGroups)];
     this.unusedObjects.globalUnusedObjects = netObjSet;
     this.unusedObjects.globalUnusedObjectGroups = netObjGroupSet;
-    console.log('this.unusedObjects', this.unusedObjects);
     delete this.unusedObjects.fwRuleNetworkObjects;
     delete this.unusedObjects.fwRuleNetworkObjectGroups;
     delete this.unusedObjects.natRuleNetworkObjects;
     delete this.unusedObjects.natRuleNetworkObjectGroups;
-    console.log('this.unusedObjects', this.unusedObjects);
+    this.openUnusedObjectsModal();
   }
 
-  public async getAllNetworkObjectsAndGroups() {
+  public getAllNetworkObjectsAndGroups(): void {
     this.networkObjectService
       .getManyNetworkObject({
         filter: [`tierId||eq||${this.currentTier.id}`, `deletedAt||isnull`],
@@ -333,6 +334,36 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.allNetworkObjectGroups = data;
       });
+  }
+
+  public subscribeToUnusedObjectsModal(): void {
+    this.unusedObjectsModalSubscription = this.ngx.getModal('unusedObjectsModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('unusedObjectsModal');
+      console.log('unsubing!');
+      this.unusedObjects.fwRuleNetworkObjects = [];
+      this.unusedObjects.fwRuleNetworkObjectGroups = [];
+      this.unusedObjects.natRuleNetworkObjects = [];
+      this.unusedObjects.natRuleNetworkObjectGroups = [];
+      this.unusedObjects.globalUnusedObjects = [];
+      this.unusedObjects.globalUnusedObjectGroups = [];
+      this.unusedObjects.data = [];
+      this.getNetworkObjects();
+      this.getAllNetworkObjectsAndGroups();
+      this.unusedObjectsModalSubscription.unsubscribe();
+    });
+  }
+
+  public openUnusedObjectsModal(): void {
+    this.unusedObjects.globalUnusedObjects.map(obj => {
+      obj.type = 'Network Object';
+    });
+    this.unusedObjects.globalUnusedObjectGroups.map(obj => {
+      obj.type = 'Network Object Group';
+    });
+    this.unusedObjects.data.push(...this.unusedObjects.globalUnusedObjects);
+    this.unusedObjects.data.push(...this.unusedObjects.globalUnusedObjectGroups);
+    this.subscribeToUnusedObjectsModal();
+    this.ngx.getModal('unusedObjectsModal').open();
   }
 
   public onNetObjTableEvent(event: TableComponentDto): void {
@@ -541,6 +572,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         } else {
           this.getNetworkObjects();
         }
+        this.getAllNetworkObjectsAndGroups();
       });
     }
   }
