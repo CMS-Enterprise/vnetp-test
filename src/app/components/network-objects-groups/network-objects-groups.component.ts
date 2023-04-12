@@ -195,7 +195,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
           this.allNetworkObjects.forEach(netObj => {
             const exists = Object.values(rule).includes(netObj.id);
             if (exists) {
-              const matchingRule = rule;
               this.usedObjects.networkObjects.push(netObj.id);
             }
           });
@@ -504,8 +503,8 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.getNetworkObjects(this.netObjTableComponentDto);
       } else {
         this.getNetworkObjects();
-        this.getAllNetworkObjectsAndGroups();
       }
+      this.getAllNetworkObjectsAndGroups();
       this.ngx.resetModalData('networkObjectModal');
       this.datacenterContextService.unlockDatacenter();
     });
@@ -524,10 +523,9 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.netObjGrpTableComponentDto.searchText = params.searchText;
         this.getNetworkObjectGroups(this.netObjGrpTableComponentDto);
       } else {
-        console.log('herr');
         this.getNetworkObjectGroups();
-        this.getAllNetworkObjectsAndGroups();
       }
+      this.getAllNetworkObjectsAndGroups();
       this.ngx.resetModalData('networkObjectGroupModal');
       this.datacenterContextService.unlockDatacenter();
     });

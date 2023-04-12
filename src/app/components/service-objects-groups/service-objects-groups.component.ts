@@ -51,6 +51,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     natRuleServiceObjectGroups: [],
     globalUnusedObjects: [],
     globalUnusedObjectGroups: [],
+    data: [],
   };
   currentTier: Tier;
   public perPage = 20;
@@ -74,6 +75,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   private serviceObjectGroupModalSubscription: Subscription;
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
+  private unusedObjectsModalSubscription: Subscription;
 
   public isLoadingObjects = false;
   public isLoadingGroups = false;
@@ -184,7 +186,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
           this.allServiceObjects.forEach(serObj => {
             const exists = Object.values(rule).includes(serObj.id);
             if (exists) {
-              const matchingRule = rule;
               this.usedObjects.serviceObjects.push(serObj.id);
             }
           });
@@ -214,7 +215,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         );
         this.unusedObjects.fwRuleServiceObjects = unusedObjSet;
         this.unusedObjects.fwRuleServiceObjectGroups = unusedObjGroupSet;
-        console.log('this.unusedObjects', this.unusedObjects);
       });
     this.getNatRules();
   }
@@ -267,7 +267,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         );
         this.unusedObjects.natRuleServiceObjects = unusedObjSet;
         this.unusedObjects.natRuleServiceObjectGroups = unusedObjGroupSet;
-        console.log('this.unusedObjects', this.unusedObjects);
         this.getDelta();
       });
   }
@@ -277,15 +276,11 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     let objectGroupsToRemove = [];
     this.unusedObjects.fwRuleServiceObjects.map(unusedObj => {
       if (this.usedObjects.serviceObjects.includes(unusedObj.id)) {
-        console.log('this.usedObjects', this.usedObjects);
-        console.log('unusedObj', unusedObj);
         objectsToRemove.push(unusedObj);
       }
     });
     this.unusedObjects.fwRuleServiceObjectGroups.map(unusedObjGrp => {
       if (this.usedObjects.serviceObjectGroups.includes(unusedObjGrp.id)) {
-        console.log('this.usedObjects', this.usedObjects);
-        console.log('unusedObjGrp', unusedObjGrp);
         objectGroupsToRemove.push(unusedObjGrp);
       }
     });
@@ -304,12 +299,41 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     const serObjGroupSet = [...new Set(this.unusedObjects.globalUnusedObjectGroups)];
     this.unusedObjects.globalUnusedObjects = serObjSet;
     this.unusedObjects.globalUnusedObjectGroups = serObjGroupSet;
-    console.log('this.unusedObjects', this.unusedObjects);
     delete this.unusedObjects.fwRuleServiceObjects;
     delete this.unusedObjects.fwRuleServiceObjectGroups;
     delete this.unusedObjects.natRuleServiceObjects;
     delete this.unusedObjects.natRuleServiceObjectGroups;
-    console.log('this.unusedObjects', this.unusedObjects);
+    this.openUnusedObjectsModal();
+  }
+
+  public subscribeToUnusedObjectsModal(): void {
+    this.unusedObjectsModalSubscription = this.ngx.getModal('unusedObjectsModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('unusedObjectsModal');
+      console.log('unsubing!');
+      this.unusedObjects.fwRuleServiceObjects = [];
+      this.unusedObjects.fwRuleServiceObjectGroups = [];
+      this.unusedObjects.natRuleServiceObjects = [];
+      this.unusedObjects.natRuleServiceObjectGroups = [];
+      this.unusedObjects.globalUnusedObjects = [];
+      this.unusedObjects.globalUnusedObjectGroups = [];
+      this.unusedObjects.data = [];
+      this.getServiceObjects();
+      this.getAllServiceObjectsAndGroups();
+      this.unusedObjectsModalSubscription.unsubscribe();
+    });
+  }
+
+  public openUnusedObjectsModal(): void {
+    this.unusedObjects.globalUnusedObjects.map(obj => {
+      obj.type = 'Service Object';
+    });
+    this.unusedObjects.globalUnusedObjectGroups.map(obj => {
+      obj.type = 'Service Object Group';
+    });
+    this.unusedObjects.data.push(...this.unusedObjects.globalUnusedObjects);
+    this.unusedObjects.data.push(...this.unusedObjects.globalUnusedObjectGroups);
+    this.subscribeToUnusedObjectsModal();
+    this.ngx.getModal('unusedObjectsModal').open();
   }
 
   public getAllServiceObjectsAndGroups() {
@@ -492,8 +516,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         this.getServiceObjectGroups(this.svcObjGrpTableComponentDto);
       } else {
         this.getServiceObjectGroups();
-        this.getAllServiceObjectsAndGroups();
       }
+      this.getAllServiceObjectsAndGroups();
       this.ngx.resetModalData('serviceObjectGroupModal');
       this.datacenterContextService.unlockDatacenter();
     });

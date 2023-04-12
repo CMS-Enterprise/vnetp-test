@@ -1,5 +1,10 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { V1NetworkSecurityNetworkObjectGroupsService, V1NetworkSecurityNetworkObjectsService } from 'client';
+import {
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
@@ -29,14 +34,15 @@ export class UnusedObjectsModalComponent implements OnInit {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
-    private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
+    private serviceObjectsService: V1NetworkSecurityServiceObjectsService,
+    private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
   ) {}
+
   public softDeleteNetworkObject(objToDelete) {
-    if (objToDelete.type === 'Network Object') {
+    if (objToDelete.type === 'Service Object') {
       const modalDto = new YesNoModalDto('Soft Delete', `Are you sure you would like to soft delete this network object?`);
       const onConfirm = () => {
-        this.networkObjectService.softDeleteOneNetworkObject({ id: objToDelete.id }).subscribe(data => {
+        this.serviceObjectsService.softDeleteOneServiceObject({ id: objToDelete.id }).subscribe(data => {
           this.unusedObjectsInput.data = this.unusedObjectsInput.data.filter(obj => {
             if (obj.id !== objToDelete.id) {
               return obj;
@@ -52,7 +58,7 @@ export class UnusedObjectsModalComponent implements OnInit {
     } else {
       const modalDto = new YesNoModalDto('Soft Delete', `Are you sure you would like to soft delete this network object group?`);
       const onConfirm = () => {
-        this.networkObjectGroupService.softDeleteOneNetworkObjectGroup({ id: objToDelete.id }).subscribe(data => {
+        this.serviceObjectGroupService.softDeleteOneServiceObjectGroup({ id: objToDelete.id }).subscribe(data => {
           this.unusedObjectsInput.data = this.unusedObjectsInput.data.filter(obj => {
             if (obj.id !== objToDelete.id) {
               return obj;

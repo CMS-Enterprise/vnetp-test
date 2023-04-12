@@ -27,6 +27,7 @@ import {
 } from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { FilterPipe } from '../../pipes/filter.pipe';
+import { UnusedObjectsModalComponent } from './unused-objects-modal/unused-objects-modal.component';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
@@ -48,6 +49,7 @@ describe('ServicesObjectsGroupsComponent', () => {
         MockTabsComponent,
         MockTooltipComponent,
         ServiceObjectsGroupsComponent,
+        UnusedObjectsModalComponent,
         YesNoModalComponent,
       ],
       providers: [
