@@ -272,8 +272,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   private getDelta() {
-    let objectsToRemove = [];
-    let objectGroupsToRemove = [];
+    const objectsToRemove = [];
+    const objectGroupsToRemove = [];
     this.unusedObjects.fwRuleServiceObjects.map(unusedObj => {
       if (this.usedObjects.serviceObjects.includes(unusedObj.id)) {
         objectsToRemove.push(unusedObj);
@@ -309,7 +309,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   public subscribeToUnusedObjectsModal(): void {
     this.unusedObjectsModalSubscription = this.ngx.getModal('unusedObjectsModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('unusedObjectsModal');
-      console.log('unsubing!');
       this.unusedObjects.fwRuleServiceObjects = [];
       this.unusedObjects.fwRuleServiceObjectGroups = [];
       this.unusedObjects.natRuleServiceObjects = [];

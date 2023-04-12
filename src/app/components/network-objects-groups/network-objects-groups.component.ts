@@ -221,7 +221,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         );
         this.unusedObjects.fwRuleNetworkObjects = unusedObjSet;
         this.unusedObjects.fwRuleNetworkObjectGroups = unusedObjGroupSet;
-        console.log('this.unusedObjects', this.unusedObjects);
       });
     this.getNatRules();
   }
@@ -274,14 +273,13 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         );
         this.unusedObjects.natRuleNetworkObjects = unusedObjSet;
         this.unusedObjects.natRuleNetworkObjectGroups = unusedObjGroupSet;
-        console.log('this.unusedObjects', this.unusedObjects);
         this.getDelta();
       });
   }
 
   private getDelta(): void {
-    let objectsToRemove = [];
-    let objectGroupsToRemove = [];
+    const objectsToRemove = [];
+    const objectGroupsToRemove = [];
     this.unusedObjects.fwRuleNetworkObjects.map(unusedObj => {
       if (this.usedObjects.networkObjects.includes(unusedObj.id)) {
         objectsToRemove.push(unusedObj);
@@ -338,7 +336,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   public subscribeToUnusedObjectsModal(): void {
     this.unusedObjectsModalSubscription = this.ngx.getModal('unusedObjectsModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('unusedObjectsModal');
-      console.log('unsubing!');
       this.unusedObjects.fwRuleNetworkObjects = [];
       this.unusedObjects.fwRuleNetworkObjectGroups = [];
       this.unusedObjects.natRuleNetworkObjects = [];

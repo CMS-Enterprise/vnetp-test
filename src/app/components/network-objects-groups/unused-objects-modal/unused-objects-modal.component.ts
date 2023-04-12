@@ -8,7 +8,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   selector: 'app-unused-objects-modal',
   templateUrl: './unused-objects-modal.component.html',
 })
-export class UnusedObjectsModalComponent implements OnInit {
+export class UnusedObjectsModalComponent {
   @Input() unusedObjectsInput;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
@@ -66,13 +66,5 @@ export class UnusedObjectsModalComponent implements OnInit {
 
       SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
     }
-  }
-
-  onClose() {
-    console.log('closing!!!');
-  }
-
-  ngOnInit(): void {
-    console.log('initialized');
   }
 }

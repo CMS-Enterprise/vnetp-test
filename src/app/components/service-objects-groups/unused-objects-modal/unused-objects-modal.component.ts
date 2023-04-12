@@ -13,12 +13,12 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   selector: 'app-unused-objects-modal',
   templateUrl: './unused-objects-modal.component.html',
 })
-export class UnusedObjectsModalComponent implements OnInit {
+export class UnusedObjectsModalComponent {
   @Input() unusedObjectsInput;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   public config = {
-    description: 'Unused Network Objects/Groups',
+    description: 'Unused Service Objects/Groups',
     columns: [
       {
         name: 'Name',
@@ -38,7 +38,7 @@ export class UnusedObjectsModalComponent implements OnInit {
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
   ) {}
 
-  public softDeleteNetworkObject(objToDelete) {
+  public softDeleteServiceObject(objToDelete) {
     if (objToDelete.type === 'Service Object') {
       const modalDto = new YesNoModalDto('Soft Delete', `Are you sure you would like to soft delete this network object?`);
       const onConfirm = () => {
@@ -72,13 +72,5 @@ export class UnusedObjectsModalComponent implements OnInit {
 
       SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
     }
-  }
-
-  onClose() {
-    console.log('closing!!!');
-  }
-
-  ngOnInit(): void {
-    console.log('initialized');
   }
 }

@@ -1,8 +1,8 @@
 <ngx-smart-modal [dismissable]="false" #unusedObjectsModal identifier="unusedObjectsModal"
-    customClass="large-modal" (onClose)="onClose()">
+    customClass="large-modal">
 
     <header class="modal-header">
-        <h4>Unused Network Objects/Groups</h4>
+        <h4>Unused Service Objects/Groups</h4>
     </header>
 
     <main class="modal-body">
@@ -13,13 +13,13 @@
     </main>
 </ngx-smart-modal>
 
-<ng-template #actionsTemplate let-netObj="datum">
+<ng-template #actionsTemplate let-serObj="datum">
     <section class="table__actions">
             <app-icon-button
               icon="delete"
-              label="Soft-Delete/Delete Network Object"
-              [type]="netObj?.deletedAt ? 'danger' : 'default'"
-              (handleClick)="softDeleteNetworkObject(netObj)"
+              label="Soft-Delete Service Object"
+              [type]="serObj?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="softDeleteServiceObject(serObj)"
             ></app-icon-button>
 
       </section>
