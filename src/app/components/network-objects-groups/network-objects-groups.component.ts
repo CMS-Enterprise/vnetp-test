@@ -20,6 +20,10 @@ import {
   V1NetworkSecurityNatRulesService,
   V1NetworkSecurityFirewallRuleGroupsService,
   V1NetworkSecurityNatRuleGroupsService,
+  FirewallRuleGroup,
+  FirewallRule,
+  NatRuleGroup,
+  NatRule,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TierContextService } from 'src/app/services/tier-context.service';
@@ -38,12 +42,12 @@ import { TableContextService } from 'src/app/services/table-context.service';
 })
 export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
-  FWRuleGroups;
-  natRuleGroups;
-  firewallRules;
-  natRules;
-  allNetworkObjects;
-  allNetworkObjectGroups;
+  FWRuleGroups: FirewallRuleGroup[];
+  natRuleGroups: NatRuleGroup[];
+  firewallRules: FirewallRule[];
+  natRules: NatRule[];
+  allNetworkObjects: NetworkObject[];
+  allNetworkObjectGroups: NetworkObjectGroup[];
   usedObjects = { networkObjects: [], networkObjectGroups: [] };
   unusedObjects = {
     fwRuleNetworkObjects: [],
@@ -131,27 +135,29 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     private natRuleService: V1NetworkSecurityNatRulesService,
   ) {}
 
-  public getFirewallRuleGroups(): void {
+  private getFirewallRuleGroups(): void {
     this.firewallRuleGroupService
       .getManyFirewallRuleGroup({
         filter: [`tierId||eq||${this.currentTier.id}`],
       })
       .subscribe(data => {
-        this.FWRuleGroups = data;
+        this.FWRuleGroups = data as any;
       });
   }
 
-  public getNatRuleGroups(): void {
+  private getNatRuleGroups(): void {
     this.natRuleGroupService
       .getManyNatRuleGroup({
         filter: [`tierId||eq||${this.currentTier.id}`],
       })
       .subscribe(data => {
-        this.natRuleGroups = data;
+        this.natRuleGroups = data as any;
       });
   }
 
-  public checkGroupMembership(): void {
+  // loops through all net obj groups and adds every object member
+  // from every group into the usedObjects.networkObjects array
+  private checkGroupMembership(): void {
     this.allNetworkObjectGroups.forEach(netObjGrp => {
       netObjGrp.networkObjects.forEach(netObj => {
         this.usedObjects.networkObjects.push(netObj.id);
@@ -160,6 +166,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   public getFirewallRules(): void {
+    // clear all arrays
     this.usedObjects.networkObjects = [];
     this.usedObjects.networkObjectGroups = [];
     this.unusedObjects.fwRuleNetworkObjectGroups = [];
@@ -167,18 +174,21 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.unusedObjects.natRuleNetworkObjects = [];
     this.unusedObjects.natRuleNetworkObjectGroups = [];
 
+    // get external FWGroup ID
     const externalId = this.FWRuleGroups.find(group => {
       if (group.name === 'External') {
         return group;
       }
     }).id;
 
+    // get intervrf FWGroup ID
     const intervrfId = this.FWRuleGroups.find(group => {
       if (group.name === 'Intervrf') {
         return group;
       }
     }).id;
 
+    // run through object group membership check
     this.checkGroupMembership();
 
     this.firewallRuleService
@@ -189,49 +199,71 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         limit: 50000,
       })
       .subscribe(data => {
-        this.firewallRules = data;
+        this.firewallRules = data as any;
 
+        // loop through each FW rule
         this.firewallRules.forEach(rule => {
+          // loop through each network object
           this.allNetworkObjects.forEach(netObj => {
+            // if any network object is referenced in a FW rule
             const exists = Object.values(rule).includes(netObj.id);
+            // add that network object to the usedObjects.networkObjects array
             if (exists) {
               this.usedObjects.networkObjects.push(netObj.id);
             }
           });
 
+          // loop through each network object group
           this.allNetworkObjectGroups.forEach(netObjGrp => {
+            // if any network object group is referenced in a FW rule
             const exists = Object.values(rule).includes(netObjGrp.id);
             if (exists) {
+              // add that network object group to the usedObjects.networkObjectGroups array
               this.usedObjects.networkObjectGroups.push(netObjGrp.id);
             }
           });
         });
 
+        // since any object can belong to multiple groups
+        // and any object / group can be referenced by multiple rules
+
+        // we create a unique set of both arrays of USED objects and groups
         const netObjGroupSet = [...new Set(this.usedObjects.networkObjectGroups)];
         const netObjSet = [...new Set(this.usedObjects.networkObjects)];
+
+        // if an object / group is not included in the unique sets we created above
+        // we know that constitutes an unused object / group
         const unusedObjectGroups = this.allNetworkObjectGroups.filter(netObjGrp => !netObjGroupSet.includes(netObjGrp.id));
         const unusedObjects = this.allNetworkObjects.filter(netObj => !netObjSet.includes(netObj.id));
+
+        // add unusedObjectsArray to unusedObjects.fwRuleNetworkObjects/groups arrays
         this.unusedObjects.fwRuleNetworkObjects.push(...unusedObjects);
         this.unusedObjects.fwRuleNetworkObjectGroups.push(...unusedObjectGroups);
+
+        // again we need to create a unique object / group set for all UNUSED Objects / groups
         const unusedObjSet = Array.from(new Set(this.unusedObjects.fwRuleNetworkObjects)).filter(
           (v, i, a) => a.findIndex(v2 => v2.id === v.id) === i,
         );
         const unusedObjGroupSet = Array.from(new Set(this.unusedObjects.fwRuleNetworkObjectGroups)).filter(
           (v, i, a) => a.findIndex(v2 => v2.id === v.id) === i,
         );
+
+        // reassign unusedObjects.fwRuleNetworkObjects/groups array to the unique unusedObject/group Sets we created above
         this.unusedObjects.fwRuleNetworkObjects = unusedObjSet;
         this.unusedObjects.fwRuleNetworkObjectGroups = unusedObjGroupSet;
       });
     this.getNatRules();
   }
 
-  public getNatRules(): void {
+  private getNatRules(): void {
+    // get external NatRuleGroup ID
     const externalId = this.natRuleGroups.find(group => {
       if (group.name === 'External') {
         return group;
       }
     }).id;
 
+    // get intervrf NatRuleGroup ID
     const intervrfId = this.natRuleGroups.find(group => {
       if (group.name === 'Intervrf') {
         return group;
@@ -244,82 +276,119 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         limit: 50000,
       })
       .subscribe(data => {
-        this.natRules = data;
+        this.natRules = data as any;
+
+        // loop through each nat rule
         this.natRules.forEach(rule => {
+          // loop through each network object
           this.allNetworkObjects.forEach(netObj => {
+            // if any network object is referenced in a NAT rule
             const exists = Object.values(rule).includes(netObj.id);
             if (exists) {
+              // add that network object to the usedObjects.networkObjects array
               this.usedObjects.networkObjects.push(netObj.id);
             }
           });
+          // loop through each network object group
           this.allNetworkObjectGroups.forEach(netObjGrp => {
+            // if any network object group is referenced in a NAT rule
             const exists = Object.values(rule).includes(netObjGrp.id);
             if (exists) {
+              // add that network object group to the usedObjects.networkObjectGroups array
               this.usedObjects.networkObjectGroups.push(netObjGrp.id);
             }
           });
         });
+
+        // since any object can belong to multiple groups
+        // and any object / group can be referenced by multiple rules
+
+        // we create a unique set of both arrays of used objects and groups
         const netObjGroupSet = [...new Set(this.usedObjects.networkObjectGroups)];
         const netObjSet = [...new Set(this.usedObjects.networkObjects)];
+
+        // if an object / group is not included in the unique sets we created above
+        // we know that constitutes an unused object / group
         const unusedObjectGroups = this.allNetworkObjectGroups.filter(netObjGrp => !netObjGroupSet.includes(netObjGrp.id));
         const unusedObjects = this.allNetworkObjects.filter(netObj => !netObjSet.includes(netObj.id));
+
+        // add unusedObjectsArray to unusedObjects.fwRuleNetworkObjects/groups arrays
         this.unusedObjects.natRuleNetworkObjects.push(...unusedObjects);
         this.unusedObjects.natRuleNetworkObjectGroups.push(...unusedObjectGroups);
+
+        // again we need to create a unique object / group set for all UNUSEDObjects / groups
         const unusedObjSet = Array.from(new Set(this.unusedObjects.natRuleNetworkObjects)).filter(
           (v, i, a) => a.findIndex(v2 => v2.id === v.id) === i,
         );
         const unusedObjGroupSet = Array.from(new Set(this.unusedObjects.natRuleNetworkObjectGroups)).filter(
           (v, i, a) => a.findIndex(v2 => v2.id === v.id) === i,
         );
+
+        // reassign unusedObjects.fwRuleNetworkObjects/groups array to the unique unusedObject/group Sets we created above
         this.unusedObjects.natRuleNetworkObjects = unusedObjSet;
         this.unusedObjects.natRuleNetworkObjectGroups = unusedObjGroupSet;
         this.getDelta();
       });
   }
 
+  // since we split up objects based on whether they were referenced in FW or NAT rules
+  // we need to compare both sets of arrays and consolidate all objects / groups
+  // into globally unusedObjects/Groups
   private getDelta(): void {
     const objectsToRemove = [];
     const objectGroupsToRemove = [];
+    // loop through all unusedFWNetworkObjects
     this.unusedObjects.fwRuleNetworkObjects.map(unusedObj => {
+      // if the unusedFWNetworkObject exists in the usedObjects.networkObjects array
+      // we know we need to remove that object from the UNUSED fwRuleNetworkObjects array
       if (this.usedObjects.networkObjects.includes(unusedObj.id)) {
         objectsToRemove.push(unusedObj);
       }
     });
+    // loop through all unusedFWNetworkObjects
     this.unusedObjects.fwRuleNetworkObjectGroups.map(unusedObjGrp => {
+      // if the unusedFWNetworkObjectGroup exists in the usedObjects.networkObjectGroups array
+      // we know we need to remove that object from the UNUSED fwRuleNetworkObjectGroups array
       if (this.usedObjects.networkObjectGroups.includes(unusedObjGrp.id)) {
         objectGroupsToRemove.push(unusedObjGrp);
       }
     });
+
+    // loop through objectsToRemove array and remove each entry from the UNUSED.fwRuleNetworkObjects array
     objectsToRemove.map(obj => {
       this.unusedObjects.fwRuleNetworkObjects.splice(this.unusedObjects.fwRuleNetworkObjects.indexOf(obj), 1);
     });
+    // loop through objectsToRemove array and remove each entry from the UNUSED.fwRuleNetworkObjectGroups array
     objectGroupsToRemove.map(objGrp => {
       this.unusedObjects.fwRuleNetworkObjectGroups.splice(this.unusedObjects.fwRuleNetworkObjectGroups.indexOf(objGrp), 1);
     });
 
+    // add unusedFWNetworkObjects and unusedNATRuleNetworkObjects to globalUnusedObjects array
     this.unusedObjects.globalUnusedObjects.push(...this.unusedObjects.fwRuleNetworkObjects);
     this.unusedObjects.globalUnusedObjects.push(...this.unusedObjects.natRuleNetworkObjects);
+    // add unusedFWNetworkObjectGroups and unusedNATRuleNetworkObjectGroups to globalUnusedObjects array
     this.unusedObjects.globalUnusedObjectGroups.push(...this.unusedObjects.fwRuleNetworkObjectGroups);
     this.unusedObjects.globalUnusedObjectGroups.push(...this.unusedObjects.natRuleNetworkObjectGroups);
+
+    // create a unique set of globalUnusedObjects and globalUnusedObjectGroups
     const netObjSet = [...new Set(this.unusedObjects.globalUnusedObjects)];
     const netObjGroupSet = [...new Set(this.unusedObjects.globalUnusedObjectGroups)];
+
+    // assign unique set to appropriate properties
     this.unusedObjects.globalUnusedObjects = netObjSet;
     this.unusedObjects.globalUnusedObjectGroups = netObjGroupSet;
-    delete this.unusedObjects.fwRuleNetworkObjects;
-    delete this.unusedObjects.fwRuleNetworkObjectGroups;
-    delete this.unusedObjects.natRuleNetworkObjects;
-    delete this.unusedObjects.natRuleNetworkObjectGroups;
     this.openUnusedObjectsModal();
   }
 
-  public getAllNetworkObjectsAndGroups(): void {
+  // gets ALL network objects and groups that belong to a tier without pagination
+  private getAllNetworkObjectsAndGroups(): void {
     this.networkObjectService
       .getManyNetworkObject({
         filter: [`tierId||eq||${this.currentTier.id}`, `deletedAt||isnull`],
         limit: 50000,
       })
       .subscribe(data => {
-        this.allNetworkObjects = data;
+        this.allNetworkObjects = data as any;
       });
 
     this.networkObjectGroupService
@@ -329,13 +398,14 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         limit: 50000,
       })
       .subscribe(data => {
-        this.allNetworkObjectGroups = data;
+        this.allNetworkObjectGroups = data as any;
       });
   }
 
-  public subscribeToUnusedObjectsModal(): void {
+  private subscribeToUnusedObjectsModal(): void {
     this.unusedObjectsModalSubscription = this.ngx.getModal('unusedObjectsModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('unusedObjectsModal');
+      // clear all arrays to avoid duplicates if the object scan is run multiple times
       this.unusedObjects.fwRuleNetworkObjects = [];
       this.unusedObjects.fwRuleNetworkObjectGroups = [];
       this.unusedObjects.natRuleNetworkObjects = [];
@@ -349,13 +419,15 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     });
   }
 
-  public openUnusedObjectsModal(): void {
+  private openUnusedObjectsModal(): void {
+    // dynamically add a new object type property to each unused object / group
     this.unusedObjects.globalUnusedObjects.map(obj => {
       obj.type = 'Network Object';
     });
     this.unusedObjects.globalUnusedObjectGroups.map(obj => {
       obj.type = 'Network Object Group';
     });
+    // table template expects `data.data` to display table entries
     this.unusedObjects.data.push(...this.unusedObjects.globalUnusedObjects);
     this.unusedObjects.data.push(...this.unusedObjects.globalUnusedObjectGroups);
     this.subscribeToUnusedObjectsModal();
