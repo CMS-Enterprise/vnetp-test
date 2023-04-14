@@ -429,7 +429,7 @@
             <div *ngIf="submitted && f.translatedSourceNetworkObjectGroup.errors" class="invalid-feedback">
               <div *ngIf="f.translatedSourceNetworkObjectGroup.errors.required">Translated Source Network Object Group is required</div>
             </div>
-            <span *ngIf="f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObjectGroup" (click)="getObjectInfo('Translated Source Address Object Group', f.NatRuleTranslatedSourceAddressType.value, f.translatedSourceNetworkObjectGroup.value)">(object info)</span>
+            <span *ngIf="f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObjectGroup" (click)="getObjectInfo('Translated Source Address Object Group', f.translatedSourceAddressType.value, f.translatedSourceNetworkObjectGroup.value)">(object info)</span>
           </div>
         </div>
 

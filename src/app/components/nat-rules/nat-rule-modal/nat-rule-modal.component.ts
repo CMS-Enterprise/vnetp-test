@@ -570,9 +570,13 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
             const memberDetails = members.map(member => {
               let returnValue = `Name: ${member.name} --- `;
 
-              if (member.type == 'IpAddress') returnValue += `IP Address: ${member.ipAddress}`;
-              else if (member.type == 'Range') returnValue += `Range: ${member.startIpAddress}-${member.endIpAddress}`;
-              else if (member.type == 'Fqdn') returnValue += `FQDN: ${member.fqdn}`;
+              if (member.type === 'IpAddress') {
+                returnValue += `IP Address: ${member.ipAddress}`;
+              } else if (member.type === 'Range') {
+                returnValue += `Range: ${member.startIpAddress}-${member.endIpAddress}`;
+              } else if (member.type === 'Fqdn') {
+                returnValue += `FQDN: ${member.fqdn}`;
+              }
 
               return returnValue;
             });
