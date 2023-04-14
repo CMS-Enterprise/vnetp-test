@@ -1,7 +1,7 @@
 <ngx-smart-modal #natRulePacketTracer identifier="natRulePacketTracer"
   (onClose)="reset()" [dismissable]="false" customClass="large-modal">
   <header class="modal-header">
-    <h4 class="modal-title">Packet Tracer</h4>
+    <h4 class="modal-title">Nat Rule Advanced Search</h4>
   </header>
 
   <div *ngIf="rulesHit.length > 0">
@@ -35,45 +35,101 @@
               {{partial.name}}
             </td>
             <td>
-              {{partial.checkList.originalSourceInRange}}
+              <span *ngIf="partial.checkList.originalSourceInRange === false">
+                <b>{{partial.checkList.originalSourceInRange}}</b>
+              </span>
+
+              <span *ngIf="partial.checkList.originalSourceInRange === true">
+                {{partial.checkList.originalSourceInRange}}
+              </span>
+              
             </td>
   
             <td>
-  
-              {{partial.checkList.originalDestInRange}}
-  
-            </td>
-  
-            <td>
-              {{partial.checkList.translatedSourceInRange}}
-  
-            </td>
-  
-            <td>
-              {{partial.checkList.translatedDestInRange}}
+              
+              <span *ngIf="partial.checkList.originalDestInRange === false">
+                <b>{{partial.checkList.originalDestInRange}}</b>
+              </span>
+
+              <span *ngIf="partial.checkList.originalDestInRange === true">
+                {{partial.checkList.originalDestInRange}}
+              </span>
   
             </td>
   
             <td>
-              {{partial.checkList.directionMatch}}
+              <span *ngIf="partial.checkList.translatedSourceInRange === false">
+                <b>{{partial.checkList.translatedSourceInRange}}</b>
+              </span>
+
+              <span *ngIf="partial.checkList.translatedSourceInRange === true">
+                {{partial.checkList.translatedSourceInRange}}
+              </span>  
+            </td>
+  
+            <td>
+              <span *ngIf="partial.checkList.translatedDestInRange === false">
+                <b>{{partial.checkList.translatedDestInRange}}</b>
+              </span>
+
+              <span *ngIf="partial.checkList.translatedDestInRange === true">
+                {{partial.checkList.translatedDestInRange}}
+              </span>
+  
+            </td>
+  
+            <td>
+              <span *ngIf="partial.checkList.directionMatch === false">
+                <b>{{partial.checkList.directionMatch}}</b>
+              </span>
+
+              <span *ngIf="partial.checkList.directionMatch === true">
+                {{partial.checkList.directionMatch}}
+              </span>
   
             </td>
 
             <td>
+              <span *ngIf="partial.checkList.biDirectionalMatch === false">
+                <b>{{partial.checkList.biDirectionalMatch}}</b>
+              </span>
+
+              <span *ngIf="partial.checkList.biDirectionalMatch === true">
                 {{partial.checkList.biDirectionalMatch}}
+              </span>
             </td>
   
             <td>
-              {{partial.checkList.originalPortMatch}}
+              <span *ngIf="partial.checkList.originalPortMatch === false">
+                <b>{{partial.checkList.originalPortMatch}}</b>
+              </span>
+
+              <span *ngIf="partial.checkList.originalPortMatch === true">
+                {{partial.checkList.originalPortMatch}}
+              </span>
   
             </td>
   
             <td>
-              {{partial.checkList.translatedPortMatch}}
-  
+              <span *ngIf="partial.checkList.translatedPortMatch === false">
+                <b>{{partial.checkList.translatedPortMatch}}</b>
+              </span>
+
+              <span *ngIf="partial.checkList.translatedPortMatch === true">
+                {{partial.checkList.translatedPortMatch}}
+              </span>  
             </td>
 
-            <td>{{partial.checkList.enabledMatch}}</td>
+            <td>
+              
+              <span *ngIf="partial.checkList.enabledMatch === false">
+                <b>{{partial.checkList.enabledMatch}}</b>
+              </span>
+
+              <span *ngIf="partial.checkList.enabledMatch === true">
+                {{partial.checkList.enabledMatch}}
+              </span>              
+            </td>
   
           </tr>
         </tbody>

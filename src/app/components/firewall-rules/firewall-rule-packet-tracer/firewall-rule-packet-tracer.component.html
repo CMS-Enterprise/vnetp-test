@@ -1,12 +1,14 @@
 <ngx-smart-modal #firewallRulePacketTracer identifier="firewallRulePacketTracer"
   (onClose)="reset()" [dismissable]="false" customClass="medium-modal">
   <header class="modal-header">
-    <h4 class="modal-title">Packet Tracer</h4>
+    <h4 class="modal-title">Firewall Rule Advanced Search</h4>
   </header>
 
-  <div *ngIf="rulesHit.length > 0">
-    Total matches : {{rulesHit}}
-  </div>
+  <ng-container>
+    <div class="modal-body" *ngIf="rulesHit.length > 0">
+      <b>Total matches : {{rulesHit}}</b>
+    </div>
+  </ng-container>
   <br>
 
   <div *ngIf="partialMatches.length > 0">
@@ -33,38 +35,73 @@
             {{partial.name}}
           </td>
           <td>
-            {{partial.checkList.sourceInRange}}
+            <span *ngIf="partial.checkList.sourceInRange === false">
+              <b>{{partial.checkList.sourceInRange}}</b>
+            </span>
+            <span *ngIf="partial.checkList.sourceInRange === true">
+              {{partial.checkList.sourceInRange}}
+            </span>
           </td>
 
           <td>
+            <span *ngIf="partial.checkList.destInRange === false">
+              <b>{{partial.checkList.destInRange}}</b>
+            </span>
 
-            {{partial.checkList.destInRange}}
+            <span *ngIf="partial.checkList.destInRange === true">
+              {{partial.checkList.destInRange}}
+            </span>
+          </td>
+
+          <td>
+            <span *ngIf="partial.checkList.directionMatch === false">
+              <b>{{partial.checkList.directionMatch}}</b>
+            </span>
+
+            <span *ngIf="partial.checkList.directionMatch === true">
+              {{partial.checkList.directionMatch}}
+            </span>
 
           </td>
 
           <td>
-            {{partial.checkList.directionMatch}}
+            <span *ngIf="partial.checkList.protocolMatch === false">
+              <b>{{partial.checkList.protocolMatch}}</b>
+            </span>
+            <span *ngIf="partial.checkList.protocolMatch === true">
+              {{partial.checkList.protocolMatch}}
+            </span>
 
           </td>
 
           <td>
-            {{partial.checkList.protocolMatch}}
+            <span *ngIf="partial.checkList.enabledMatch === false">
+              <b>{{partial.checkList.enabledMatch}}</b>
+            </span>
 
+            <span *ngIf="partial.checkList.enabledMatch === true">
+              {{partial.checkList.enabledMatch}}
+            </span>
           </td>
 
           <td>
-            {{partial.checkList.enabledMatch}}
+            <span *ngIf="partial.checkList.sourcePortMatch === false">
+              <b>{{partial.checkList.sourcePortMatch}}</b>
+            </span>
 
+            <span *ngIf="partial.checkList.sourcePortMatch === true">
+              {{partial.checkList.sourcePortMatch}}
+            </span>
           </td>
 
           <td>
-            {{partial.checkList.sourcePortMatch}}
+            <span *ngIf="partial.checkList.sourcePortMatch === false">
+              <b>{{partial.checkList.sourcePortMatch}}</b>
+            </span>
 
-          </td>
-
-          <td>
-            {{partial.checkList.destPortMatch}}
-
+            <span *ngIf="partial.checkList.sourcePortMatch === true">
+              {{partial.checkList.sourcePortMatch}}
+            </span>
           </td>
 
         </tr>
