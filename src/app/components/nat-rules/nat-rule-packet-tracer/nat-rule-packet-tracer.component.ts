@@ -93,7 +93,7 @@ export class NatRulePacketTracerComponent implements OnInit {
   // converts decimal IPs back to octect format
   num2dot(num) {
     let d: any = num % 256;
-    for (var i = 3; i > 0; i--) {
+    for (let i = 3; i > 0; i--) {
       num = Math.floor(num / 256);
       d = (num % 256) + '.' + d;
     }
@@ -102,7 +102,7 @@ export class NatRulePacketTracerComponent implements OnInit {
 
   // converts octect IPs to decimals
   dot2num(dot): number {
-    var d = dot.split('.');
+    const d = dot.split('.');
     return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3];
   }
 
@@ -110,15 +110,15 @@ export class NatRulePacketTracerComponent implements OnInit {
   convertIpv6(ipv6): void {
     // const ipv6Subnet = '2001:db8:0:0:8d3::/64';
     // simulate your address.binaryZeroPad(); method
-    var parts = [];
-    ipv6.split(':').forEach(function(it) {
-      var bin = parseInt(it, 16).toString(2);
+    const parts = [];
+    ipv6.split(':').forEach(it => {
+      let bin = parseInt(it, 16).toString(2);
       while (bin.length < 16) {
         bin = '0' + bin;
       }
       parts.push(bin);
     });
-    var bin = parts.join('');
+    const bin = parts.join('');
 
     // Use BigInteger library
     // var dec = BigInt(bin).toString()
@@ -558,7 +558,7 @@ export class NatRulePacketTracerComponent implements OnInit {
           checkList.translatedDestInRange ||
           checkList.translatedPortMatch
         ) {
-          this.partialMatches.push({ checkList: checkList, name: rule.name });
+          this.partialMatches.push({ checkList, name: rule.name });
         }
       }),
     );

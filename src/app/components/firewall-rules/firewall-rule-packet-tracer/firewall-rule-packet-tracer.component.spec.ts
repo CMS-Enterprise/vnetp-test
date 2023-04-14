@@ -117,7 +117,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
 
     fixture = TestBed.createComponent(FirewallRulePacketTracerComponent);
     component = fixture.componentInstance;
-    component.objects = { firewallRules: firewallRules };
+    component.objects = { firewallRules };
     netObjService = TestBed.inject(V1NetworkSecurityNetworkObjectsService);
     netObjGroupService = TestBed.inject(V1NetworkSecurityNetworkObjectGroupsService);
     fixture.detectChanges();

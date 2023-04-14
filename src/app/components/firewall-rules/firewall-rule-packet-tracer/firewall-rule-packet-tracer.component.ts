@@ -86,7 +86,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   // converts decimal IPs back to octect format
   num2dot(num) {
     let d: any = num % 256;
-    for (var i = 3; i > 0; i--) {
+    for (let i = 3; i > 0; i--) {
       num = Math.floor(num / 256);
       d = (num % 256) + '.' + d;
     }
@@ -95,7 +95,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   // converts octect IPs to decimals
   dot2num(dot): number {
-    var d = dot.split('.');
+    const d = dot.split('.');
     return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3];
   }
 
@@ -426,7 +426,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
             //     falseProperties.push({key: value})
             //   }
             // }
-            this.partialMatches.push({ checkList: checkList, name: rule.name });
+            this.partialMatches.push({ checkList, name: rule.name });
           }
         } else {
           // since the source and destPorts are not required
@@ -442,7 +442,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
           ) {
             this.rulesHit.push(rule.name);
           } else if (checkList.destInRange || checkList.directionMatch || checkList.protocolMatch || checkList.sourceInRange) {
-            this.partialMatches.push({ checkList: checkList, name: rule.name });
+            this.partialMatches.push({ checkList, name: rule.name });
           }
         }
       }),
