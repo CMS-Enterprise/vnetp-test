@@ -79,12 +79,6 @@ const routes: Routes = [
     loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule),
   },
   {
-    path: 'slas',
-    canActivate: [AuthGuard],
-    data: { breadcrumb: 'SLAs', title: 'Automation - SLAs' },
-    loadChildren: () => import('./components/slas/sla.module').then(m => m.SlaModule),
-  },
-  {
     path: 'nat-rules',
     canActivate: [AuthGuard],
     data: { breadcrumb: 'NAT Rules' },
