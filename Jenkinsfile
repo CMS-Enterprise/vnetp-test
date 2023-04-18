@@ -97,8 +97,7 @@ pipeline {
           }
         }
     }
-
-  
+ 
   post {
     always {
       sh 'cp coverage/cobertura-coverage.xml cobertura-coverage.xml'
