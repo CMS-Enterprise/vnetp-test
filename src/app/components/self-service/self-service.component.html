@@ -35,6 +35,7 @@
             ></app-icon-button>
     <app-icon-button *ngIf="selfService.conversionStatus === 'Ready For Import' || selfService.conversionStatus === 'Finished'" icon="edit" label="Open Self Service" (handleClick)="openSelfServiceArtifactReviewModal(selfService)"></app-icon-button>
     <app-icon-button *ngIf="selfService.conversionStatus === 'Ready For Import' && selfService.bulkUploadStatus !== 'Finished'" icon="execute" label="Begin Bulk Uploading" (handleClick)="importObjects(selfService)"></app-icon-button>
+    
   </section>
 </ng-template>
 
