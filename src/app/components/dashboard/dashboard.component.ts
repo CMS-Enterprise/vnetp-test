@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { V1DatacentersService, V1TiersService, V1VmwareVirtualMachinesService, V1LoadBalancerVirtualServersService, UserDto } from 'client';
+import { V1DatacentersService, V1TiersService, V1LoadBalancerVirtualServersService, UserDto } from 'client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { PieChartData } from 'src/app/common/d3-pie-chart/d3-pie-chart.component';
 import { AuthService } from '../../services/auth.service';
