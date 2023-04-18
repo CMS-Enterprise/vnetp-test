@@ -20,7 +20,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private datacenterService: V1DatacentersService,
     private tierService: V1TiersService,
-    private vmwareService: V1VmwareVirtualMachinesService,
     public helpText: DashboardHelpText,
     private loadBalancerService: V1LoadBalancerVirtualServersService,
     private auth: AuthService,
@@ -69,11 +68,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getDatacenters();
     this.getTiers();
     if (roles && roles.includes('admin')) {
-      this.getVmwareVirtualMachines();
       this.getLoadBalancerVirtualServers();
-    }
-    if (roles && (roles.includes('x86_admin') || roles.includes('x86_ro'))) {
-      this.getVmwareVirtualMachines();
     }
     if (roles && (roles.includes('loadbalancer_admin') || roles.includes('loadbalancer_ro'))) {
       this.getLoadBalancerVirtualServers();
@@ -94,13 +89,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.tierService.getManyTier({ page: 1, limit: 1 }).subscribe(data => {
       const paged: any = data;
       this.tiers = paged.total;
-    });
-  }
-
-  private getVmwareVirtualMachines(): void {
-    this.vmwareService.getManyVmwareVirtualMachine({ page: 1, limit: 1 }).subscribe(data => {
-      const paged = data as any;
-      this.vmwareVirtualMachines = paged.total;
     });
   }
 
