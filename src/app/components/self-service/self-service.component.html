@@ -27,11 +27,6 @@
 
 <ng-template #actionsTemplate let-selfService="datum">
   <section class="table__actions">
-    <!-- <app-icon-button
-      icon="add"
-      label="Copy Entry"
-      (handleClick)="copyManagedNetworkEntry(selfService.id)"
-    ></app-icon-button> -->
     <app-icon-button *ngIf="selfService.conversionStatus === 'Failed'" 
               icon="delete"
               label="Soft-Delete/Delete"

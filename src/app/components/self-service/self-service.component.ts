@@ -149,28 +149,6 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     });
   }
 
-  public copyManagedNetworkEntry(entryId) {
-    this.selfServiceService.getSelfServiceSelfService({ selfServiceId: entryId }).subscribe(data => {
-      const dto = new YesNoModalDto(`Copy Managed Network Entry`, `Id:"${data.id}"`);
-      delete data.id;
-      const onConfirm = () => {
-        if (data.deviceType === 'ASA') {
-          this.selfServiceService.processAsaConfigSelfService({ selfService: data }).subscribe(returnedAsaEntry => {
-            this.getSelfServices();
-          });
-        } else if (data.deviceType === 'PA') {
-          this.selfServiceService.processPAConfigSelfService({ selfService: data }).subscribe(returnedPAEntry => {
-            this.getSelfServices();
-          });
-        }
-      };
-      const onClose = () => {
-        this.getSelfServices();
-      };
-      SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm, onClose);
-    });
-  }
-
   ngOnInit(): void {
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
