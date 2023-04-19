@@ -16,7 +16,7 @@
 
   <ng-template #changedTemplate let-auditLog="datum">
     <div *ngIf="auditLog.changedProperties">
-      <table class="table table-striped table-sm">
+      <table class="table table-striped table-sm table-bordered">
         <thead>
           <tr>
             <th scope="col" *ngFor="let prop of changedPropsConfig.columns">{{ prop.name }}</th>
