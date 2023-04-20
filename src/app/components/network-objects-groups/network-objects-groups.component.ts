@@ -64,9 +64,14 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   @ViewChild('objStateTemplate') objStateTemplate: TemplateRef<any>;
   @ViewChild('groupStateTemplate') groupStateTemplate: TemplateRef<any>;
 
-  public objectSearchColumns: SearchColumnConfig[] = [];
+  public objectSearchColumns: SearchColumnConfig[] = [
+    { displayName: 'IpAddress', propertyName: 'ipAddress' },
+    { displayName: 'FQDN', propertyName: 'fqdn' },
+    { displayName: 'Start IP', propertyName: 'startIpAddress' },
+    { displayName: 'End IP', propertyName: 'endIpAddress' },
+  ];
 
-  public groupSearchColumns: SearchColumnConfig[] = [];
+  public groupSearchColumns: SearchColumnConfig[] = [{ displayName: 'Member', propertyName: 'networkObjects' }];
 
   public networkObjectConfig: TableConfig<any> = {
     description: 'Network Objects can consist of a single host (with NAT/PAT), range or subnet',
@@ -133,7 +138,9 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       this.netObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'ipAddress' || propertyName === 'startIpAddress' || propertyName === 'endIpAddress') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -150,6 +157,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         },
         () => {
           this.networkObjects = null;
+          this.getNetworkObjects();
         },
         () => {
           this.isLoadingObjects = false;
@@ -183,6 +191,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         },
         () => {
           this.networkObjectGroups = null;
+          this.getNetworkObjectGroups();
         },
         () => {
           this.isLoadingGroups = false;

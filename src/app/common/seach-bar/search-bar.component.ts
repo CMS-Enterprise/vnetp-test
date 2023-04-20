@@ -31,7 +31,7 @@ export class SearchBarComponent implements OnInit {
 
   @Output() searchBarClearResults = new EventEmitter<any>();
 
-  public searchText = '';
+  public searchText;
   public searchColumn: string;
   public filteredResults = false;
   public searchError = false;

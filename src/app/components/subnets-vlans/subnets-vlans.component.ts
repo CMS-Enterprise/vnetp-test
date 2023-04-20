@@ -42,8 +42,15 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
 
   subnets = {} as GetManySubnetResponseDto;
   vlans = {} as GetManyVlanResponseDto;
-  public subnetSearchColumns: SearchColumnConfig[] = [];
-  public vlanSearchColumns: SearchColumnConfig[] = [];
+  public subnetSearchColumns: SearchColumnConfig[] = [
+    { displayName: 'Vlan', propertyName: 'vlanId' },
+    { displayName: 'Network', propertyName: 'network' },
+    { displayName: 'Gateway', propertyName: 'gateway' },
+  ];
+  public vlanSearchColumns: SearchColumnConfig[] = [
+    { displayName: 'Vlan Number', propertyName: 'vlanNumber' },
+    { displayName: 'VCD/Vlan Type', propertyName: 'vcdVlanType' },
+  ];
 
   navIndex = 0;
   showRadio = false;
@@ -378,7 +385,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       this.subnetTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'network' || propertyName === 'gateway') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -399,6 +408,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         },
         () => {
           this.subnets = null;
+          this.getSubnets();
         },
         () => {
           this.isLoadingSubnets = false;
@@ -414,7 +424,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       this.vlanTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'vlanNumber' || propertyName === 'vcdVlanType') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -438,6 +450,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         },
         () => {
           this.vlans = null;
+          this.getVlans();
         },
         () => {
           this.isLoadingVlans = false;
