@@ -14,7 +14,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 export class FirewallRulesComponent implements OnInit, OnDestroy {
   public currentFirewallRulePage = 1;
   public firewallRuleGroups: FirewallRuleGroup[] = [];
-  public perPage = 20;
+  public perPage = 50;
   public currentTier: Tier;
 
   private currentTierSubscription: Subscription;
