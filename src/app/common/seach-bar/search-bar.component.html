@@ -2,14 +2,14 @@
   <span [hidden]="!searchError">Please choose correct search criteria</span>
 </div>
 <div (keyup.enter)="searchThis()" id="main">
-  <select id="searchColumn" [(ngModel)]="searchColumn" placeholder="Column">
+  <select aria-label="searchColumn" id="searchColumn" [(ngModel)]="searchColumn" placeholder="Column">
     <option [ngValue]="defaultSearch.propertyName" selected> {{ defaultSearch.displayName }} </option>
     <option *ngFor="let column of columns" [ngValue]="column.propertyName">
       {{ column.displayName }}
     </option>
   </select>
-  <input type="search" [(ngModel)]="searchText" placeholder="Search" />
-  <a (click)="searchThis()">
+  <input aria-label="searchText" type="search" [(ngModel)]="searchText" placeholder="Search" />
+  <a aria-label="searchButton" (click)="searchThis()">
     <fa-icon class="icon" [icon]="['fas', 'search']"></fa-icon>
   </a>
   <span id="clear" *ngIf="filteredResults" (click)="clearFilteredResults()">clear</span>
