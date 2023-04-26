@@ -1,7 +1,7 @@
 <h1>Audit Log</h1>
 <ng-container *ngIf="currentDatacenter; else warningMessage">
     <ng-container *ngIf="!isLoading; else loading">
-        <app-table [config]="config" [data]="auditLogs">
+        <app-table [config]="config" [data]="auditLogs" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)">
         </app-table>
     </ng-container>
 
