@@ -35,6 +35,7 @@ api/v1LoadBalancerRoutes.service.ts
 api/v1LoadBalancerSelfIps.service.ts
 api/v1LoadBalancerVirtualServers.service.ts
 api/v1LoadBalancerVlans.service.ts
+api/v1NetworkScopeFormsWanForm.service.ts
 api/v1NetworkSecurityFirewallRuleGroups.service.ts
 api/v1NetworkSecurityFirewallRules.service.ts
 api/v1NetworkSecurityNatRuleGroups.service.ts
@@ -130,6 +131,9 @@ model/createManyVmwareVirtualMachineDto.ts
 model/createPriorityGroupDto.ts
 model/datacenter.ts
 model/dcsPermissions.ts
+model/externalRoute.ts
+model/externalRouteDto.ts
+model/externalRoutePaginationResponse.ts
 model/firewallRule.ts
 model/firewallRuleGroup.ts
 model/firewallRuleImport.ts
@@ -216,4 +220,7 @@ model/vlan.ts
 model/vmwareNetworkAdapter.ts
 model/vmwareVirtualDisk.ts
 model/vmwareVirtualMachine.ts
+model/wanForm.ts
+model/wanFormDto.ts
+model/wanFormPaginationResponse.ts
 variables.ts

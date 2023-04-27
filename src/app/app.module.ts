@@ -10,6 +10,7 @@ import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import {
   faBars,
   faBolt,
+  faCheck,
   faChevronDown,
   faChevronLeft,
   faChevronRight,
@@ -24,6 +25,7 @@ import {
   faSpinner,
   faSyncAlt,
   faTable,
+  faTimes,
   faTrash,
   faUndo,
   faUpload,
@@ -114,6 +116,8 @@ export class AppModule {
       faTrash,
       faUndo,
       faUpload,
+      faCheck,
+      faTimes,
     );
   }
 }

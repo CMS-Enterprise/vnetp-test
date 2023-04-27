@@ -139,6 +139,12 @@ const routes: Routes = [
     loadChildren: () => import('./components/nat-rules/nat-rules.module').then(m => m.NatRulesModule),
   },
   {
+    path: 'wan-form',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'WAN Form', title: 'Automation - WAN Form' },
+    loadChildren: () => import('./components/network-scope-forms/wan-form/wan-form.module').then(m => m.WanFormModule),
+  },
+  {
     path: 'unauthorized',
     loadChildren: () => import('./components/unauthorized/unauthorized.module').then(m => m.UnauthorizedModule),
   },

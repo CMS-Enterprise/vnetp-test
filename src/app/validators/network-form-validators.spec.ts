@@ -5,6 +5,7 @@ import {
   IpAddressAnyValidator,
   FqdnValidator,
   MacAddressValidator,
+  IpAddressHostNetworkCidrValidator,
 } from './network-form-validators';
 import { FormControl } from '@angular/forms';
 
@@ -140,6 +141,42 @@ describe('NetworkFormValidators', () => {
       expect(validate('one')).toEqual({ invalidPortNumber: true });
       expect(validate('one-twenty')).toEqual({ invalidPortNumber: true });
       expect(validate(' any ')).toEqual({ invalidPortNumber: true });
+    });
+  });
+
+  describe('IpAddressHostNetworkCidrValidator', () => {
+    it('should return null when given a valid CIDR', () => {
+      const control = { value: '192.168.0.0/16' } as FormControl;
+      const result = IpAddressHostNetworkCidrValidator(control);
+      expect(result).toBeNull();
+    });
+
+    it('should return { invalidHost: true } when given an invalid CIDR', () => {
+      const control = { value: '10.10.10.10/16' } as FormControl;
+      const result = IpAddressHostNetworkCidrValidator(control);
+      expect(result).toEqual({ invalidHost: true });
+    });
+
+    it('should return null when given null or undefined control', () => {
+      let control: FormControl = null;
+      let result = IpAddressHostNetworkCidrValidator(control);
+      expect(result).toBeNull();
+
+      control = undefined;
+      result = IpAddressHostNetworkCidrValidator(control);
+      expect(result).toBeNull();
+    });
+
+    it('should return { invalidHost: true } when given a valid IPv4 address without a CIDR', () => {
+      const control = { value: '192.168.0.1' } as FormControl;
+      const result = IpAddressHostNetworkCidrValidator(control);
+      expect(result).toEqual({ invalidHost: true });
+    });
+
+    it('should return { invalidHost: true } when given an invalid IPv4 address without a CIDR', () => {
+      const control = { value: '10.10.10.256' } as FormControl;
+      const result = IpAddressHostNetworkCidrValidator(control);
+      expect(result).toEqual({ invalidHost: true });
     });
   });
 });

@@ -15,6 +15,8 @@ import { Tier } from './tier';
 import { TierGroup } from './tierGroup';
 import { PhysicalServer } from './physicalServer';
 import { PriorityGroup } from './priorityGroup';
+import { SelfService } from './selfService';
+import { WanForm } from './wanForm';
 import { Job } from './job';
 import { AuditLog } from './auditLog';
 
@@ -35,6 +37,7 @@ export interface Datacenter {
     readonly tierGroups?: Array<TierGroup>;
     readonly jobs?: Array<Job>;
     readonly auditLogs?: Array<AuditLog>;
-    readonly selfServices?: Array<string>;
+    readonly selfServices?: SelfService;
+    readonly wanForms?: Array<WanForm>;
 }
 

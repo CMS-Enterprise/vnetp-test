@@ -22,6 +22,20 @@ export function IpAddressAnyValidator(control: FormControl): { invalidIpAny: boo
   return { invalidIpAny: true };
 }
 
+export function validateWanFormExternalRouteIp(control: FormControl): { invalidExternalRouteIp: boolean } {
+  if (!control || !control.value) {
+    return null;
+  }
+
+  const octets = control.value.split('.');
+
+  if (octets[0] === '10' || (octets[0] === '158' && octets[1] === '73') || (octets[0] === '192' && octets[1] === '168')) {
+    return null;
+  }
+
+  return { invalidExternalRouteIp: true };
+}
+
 export function IpAddressCidrValidator(control: FormControl): { invalidIpCidr: boolean } {
   if (!control || !control.value) {
     return null;
@@ -38,6 +52,18 @@ export function IpAddressCidrValidator(control: FormControl): { invalidIpCidr: b
     return null;
   }
   return { invalidIpCidr: true };
+}
+
+export function IpAddressHostNetworkCidrValidator(control: FormControl): { invalidHost: true } {
+  if (!control || !control.value) {
+    return null;
+  }
+
+  if (isCidrValid(control.value)) {
+    return null;
+  }
+
+  return { invalidHost: true };
 }
 
 export function IpAddressIpValidator(control: FormControl): { invalidIpAddress: boolean } {
@@ -158,4 +184,29 @@ function ValidateNetMask(netMask: number, ipVersion: number): boolean {
     return netMask <= 32;
   }
   return netMask <= 128;
+}
+
+function isCidrValid(cidr: string): boolean {
+  const [ipAddress, mask] = cidr.split('/');
+  const maskValue = parseInt(mask);
+
+  if (maskValue < 0 || maskValue > 32) {
+    return false; // invalid mask value
+  }
+
+  const octets = ipAddress.split('.').map(octet => parseInt(octet));
+  if (octets.some(octet => octet < 0 || octet > 255)) {
+    return false; // invalid IP address octet
+  }
+
+  const binaryIp = octets.map(octet => octet.toString(2).padStart(8, '0')).join('');
+
+  const networkBits = binaryIp.slice(0, maskValue);
+  const hostBits = binaryIp.slice(maskValue);
+
+  if (hostBits !== '0'.repeat(32 - maskValue)) {
+    return false; // invalid host bits
+  }
+
+  return true;
 }

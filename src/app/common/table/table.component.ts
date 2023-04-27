@@ -76,6 +76,7 @@ export class TableComponent<T> implements AfterViewInit {
       'audit-log',
       'detailed-audit-log-entry',
       'self-services',
+      'external-routes',
     ];
 
     const hidePagination = ['import-preview', 'audit-log', 'detailed-audit-log-entry'];
