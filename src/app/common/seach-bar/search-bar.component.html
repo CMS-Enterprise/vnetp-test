@@ -9,7 +9,7 @@
     </option>
   </select>
   <input aria-label="searchText" type="search" [(ngModel)]="searchText" placeholder="Search" />
-  <a aria-label="searchButton" (click)="searchThis()">
+  <a id="searchButton" aria-label="searchButton" (click)="searchThis()">
     <fa-icon class="icon" [icon]="['fas', 'search']"></fa-icon>
   </a>
   <span id="clear" *ngIf="filteredResults" (click)="clearFilteredResults()">clear</span>
