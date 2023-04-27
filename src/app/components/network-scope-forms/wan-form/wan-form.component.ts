@@ -20,7 +20,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   styleUrls: ['./wan-form.component.scss'],
 })
 export class WanFormComponent implements OnInit, OnDestroy {
-  public isLoading: boolean = false;
+  public isLoading = false;
   public wanForms: WanFormPaginationResponse;
   public perPage = 20;
   public searchColumns: SearchColumnConfig[] = [];

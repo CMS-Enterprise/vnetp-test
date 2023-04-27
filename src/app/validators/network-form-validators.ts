@@ -188,13 +188,13 @@ function ValidateNetMask(netMask: number, ipVersion: number): boolean {
 
 function isCidrValid(cidr: string): boolean {
   const [ipAddress, mask] = cidr.split('/');
-  const maskValue = parseInt(mask);
+  const maskValue = parseInt(mask, 10);
 
   if (maskValue < 0 || maskValue > 32) {
     return false; // invalid mask value
   }
 
-  const octets = ipAddress.split('.').map(octet => parseInt(octet));
+  const octets = ipAddress.split('.').map(octet => parseInt(octet, 10));
   if (octets.some(octet => octet < 0 || octet > 255)) {
     return false; // invalid IP address octet
   }

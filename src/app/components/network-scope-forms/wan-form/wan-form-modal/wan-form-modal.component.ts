@@ -118,14 +118,14 @@ export class WanFormModalComponent implements OnInit, OnDestroy {
   }
 
   public createWanForm(wanForm: WanForm): void {
-    const wanFormDto: WanFormDto = {
+    const dto: WanFormDto = {
       name: wanForm.name,
       description: wanForm.description,
       datacenterId: wanForm.datacenterId,
     };
     this.wanFormService
       .createWanFormWanForm({
-        wanFormDto: wanFormDto,
+        wanFormDto: dto,
       })
       .subscribe(() => {
         this.closeModal();

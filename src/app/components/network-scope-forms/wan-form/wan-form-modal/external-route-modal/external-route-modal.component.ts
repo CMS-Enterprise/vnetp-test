@@ -112,23 +112,23 @@ export class ExternalRouteModalComponent implements OnInit {
     const externalRouteDtoVrf = externalRouteVrfToDtoVrf[externalRoute.vrf];
     const externalRouteDtoEnvironment = externalRouteEnvironmnetToDtoEnvironment[externalRoute.environment];
 
-    const externalRouteDto: ExternalRouteDto = {
+    const dto: ExternalRouteDto = {
       externalRouteIp: externalRoute.externalRouteIp,
       description: externalRoute.description,
       vrf: externalRouteDtoVrf,
       environment: externalRouteDtoEnvironment,
     };
-    this.wanFormService.createExternalRouteWanForm({ wanFormId: this.wanFormId, externalRouteDto: externalRouteDto }).subscribe(() => {
+    this.wanFormService.createExternalRouteWanForm({ wanFormId: this.wanFormId, externalRouteDto: dto }).subscribe(() => {
       this.closeModal();
     });
   }
 
-  private editExternalRoute(externalRoute: ExternalRoute): void {
+  private editExternalRoute(externalRouteToEdit: ExternalRoute): void {
     this.wanFormService
       .updateExternalRouteWanForm({
         externalRouteId: this.externalRouteId,
         wanFormId: this.wanFormId,
-        externalRoute: externalRoute,
+        externalRoute: externalRouteToEdit,
       })
       .subscribe(() => {
         this.closeModal();
