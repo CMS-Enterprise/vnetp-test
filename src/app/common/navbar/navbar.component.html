@@ -70,9 +70,9 @@
           <a id="audit-log-link" *ngIf="userRoles?.includes('admin')" class="dropdown-item" routerLink="audit-log" queryParamsHandling="merge">Audit Log</a>
           <a id="ticket-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://jiraent.cms.gov/">Ticketing System</a>
           <a id="documentation-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="http://wiki.draas.cdsvdc.lcl/">Documentation</a>
-          <a id="logout-link" class="dropdown-item" (click)="openLogoutModal()">Logout</a>
+          <a name="logout-link" class="dropdown-item" (click)="openLogoutModal()">Logout</a>
           <div class="dropdown-divider" *ngIf="dcsVersion"></div>
-          <a id="version" class="dropdown-item" target="_blank" rel="noopener noreferrer" *ngIf="dcsVersion">v{{ dcsVersion }}</a>
+          <a name="version" class="dropdown-item" target="_blank" rel="noopener noreferrer" *ngIf="dcsVersion">v{{ dcsVersion }}</a>
         </div>
       </li>
 
