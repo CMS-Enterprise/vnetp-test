@@ -32,4 +32,4 @@
   <span>Export CSV</span>
 </a>
 
-<input hidden type="file" #uploader (change)="importFile($event)" [(ngModel)]="fileInput" />
+<input aria-label="File" hidden type="file" #uploader (change)="importFile($event)" [(ngModel)]="fileInput" />
