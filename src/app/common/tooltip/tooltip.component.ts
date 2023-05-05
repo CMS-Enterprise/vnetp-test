@@ -8,7 +8,7 @@ import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 })
 export class TooltipComponent {
   @Input() message: string;
-  @ViewChild('tooltip', { static: true }) private tooltip: ElementRef;
+  @ViewChild('tooltip', { static: true }) public tooltip: ElementRef;
 
   public tooltipMsgStyle: Partial<CSSStyleDeclaration>;
   public isShowTooltip = false;
