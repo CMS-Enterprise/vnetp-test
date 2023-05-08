@@ -86,13 +86,10 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     const { natRule } = dto;
     if (dto.modalMode === ModalMode.Edit) {
       this.natRuleId = natRule.id;
-    } else {
-      this.f.name.enable();
     }
     if (natRule !== undefined) {
       this.modalPropertyChecker(natRule);
       this.form.patchValue(natRule);
-      this.f.name.disable();
     }
     this.networkObjects = dto.NetworkObjects;
     this.networkObjectGroups = dto.NetworkObjectGroups;
@@ -570,9 +567,13 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
             const memberDetails = members.map(member => {
               let returnValue = `Name: ${member.name} --- `;
 
-              if (member.type == 'IpAddress') returnValue += `IP Address: ${member.ipAddress}`;
-              else if (member.type == 'Range') returnValue += `Range: ${member.startIpAddress}-${member.endIpAddress}`;
-              else if (member.type == 'Fqdn') returnValue += `FQDN: ${member.fqdn}`;
+              if (member.type === 'IpAddress') {
+                returnValue += `IP Address: ${member.ipAddress}`;
+              } else if (member.type === 'Range') {
+                returnValue += `Range: ${member.startIpAddress}-${member.endIpAddress}`;
+              } else if (member.type === 'Fqdn') {
+                returnValue += `FQDN: ${member.fqdn}`;
+              }
 
               return returnValue;
             });

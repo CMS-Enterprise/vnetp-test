@@ -2,19 +2,15 @@ def nodeImage = 'node:16.3.0'
 def sonarImage = 'sonarsource/sonar-scanner-cli'
 
 pipeline {
-  agent any
-
-  environment {
-    npm_config_cache = 'npm-cache'
-  }
-
+  agent { label 'prod' }
+  environment { npm_config_cache = 'npm-cache' }
   stages {
     stage ('Artifactory Configuration') {
       steps {
         rtServer(
           id: "artifactory_dev",
           url: "http://10.151.14.53/artifactory",
-          credentialsId: "artifactory"
+          credentialsId: "svccicdartifactory"
         )
         rtNpmResolver(
           id: "NPM_RESOLVER",
@@ -29,41 +25,51 @@ pipeline {
       }
     }
     stage('Build') {
-      steps {
-        script {
-          docker.image("${nodeImage}").inside("--user node") {
-            //sh 'npm config set registry http://10.151.14.53/artifactory/api/npm/npm-remote/'
-            sh 'npm i'
-            sh 'npm run build:prod'
-          }
+      agent {
+        docker {
+          image "${nodeImage}"
+          args '-u node'
+          args '-e HOME=/tmp/home'
+          reuseNode true
         }
       }
+      steps {
+        sh 'npm --version'
+        sh 'npm i'
+        sh 'npm run build:prod'
+      }
     }
-
     stage('Tests') {
-      steps {
-        script {
-          docker.image("${nodeImage}").inside("--user node") {
-            sh 'npm run test:ci'
-          }
+      agent {
+        docker {
+          image "${nodeImage}"
+          args '-u node'
+          args '-e HOME=/tmp/home'
+          reuseNode true
         }
       }
+      steps {
+        sh 'npm --version'
+        sh 'npm run test:ci'
+      }
     }
-
     stage("SonarQube - Static Analysis") {
       steps {
-        withSonarQubeEnv('dc01') {
+        withSonarQubeEnv('CB2Sonar') {
           script {
             def readContent = readFile "sonar-project.properties"
             writeFile file: "sonar-project.properties", text: "$readContent \nsonar.branch.name=$BRANCH_NAME\n"
-            docker.image("${sonarImage}").withRun('-u 1000:993 -v "$PWD:/usr/src"') { c ->
-              sh 'while [ ! -f ./.scannerwork/report-task.txt ]; do sleep 5; done'
+            docker.image("${sonarImage}").withRun('-u 0:993 -v "$PWD:/usr/src"') { c ->
+            
+            // NEED THIS LINE TO WORK!
+            // sh 'if [ -d ./.scannerwork ]; then rm -Rf ./.scannerwork; fi'
+            sh 'while [ ! -f ./.scannerwork/report-task.txt ]; do sleep 5; done'
             }
           }
         }
       }
     }
-    stage ('Publish') {
+    stage('Publish') {
       steps {
         script {
           sh 'mkdir -p builds/$GIT_COMMIT'
@@ -75,22 +81,21 @@ pipeline {
           rtUpload (
             serverId: 'artifactory_dev',
             spec: '''{
-                "files": [
-                  {
-                    "pattern": "builds/$GIT_COMMIT/dist.tar.gz",
-                    "target": "dcs-ui",
-                    "recursive": "true",
-                    "flat" : "false"
-                  }
-                ]}'''
-          )
-
-          rtPublishBuildInfo ( serverId: "artifactory_dev" )
+              "files": [
+                {
+                  "pattern": "builds/$GIT_COMMIT/dist.tar.gz",
+                  "target": "dcs-ui",
+                  "recursive": "true",
+                  "flat" : "false"
+                }
+              ]}'''
+            )
+            rtPublishBuildInfo ( serverId: "artifactory_dev" )
         }
       }
     }
   }
-
+ 
   post {
     always {
       sh 'cp coverage/cobertura-coverage.xml cobertura-coverage.xml'

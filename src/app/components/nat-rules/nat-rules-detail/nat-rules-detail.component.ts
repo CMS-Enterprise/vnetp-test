@@ -50,6 +50,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
 
   natRuleGroup: NatRuleGroup;
   natRules = {} as GetManyNatRuleResponseDto;
+  latestRuleIndex;
   perPage = 50;
 
   // Relations
@@ -146,6 +147,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
         this.TierId = data.tierId;
 
         this.getObjects();
+        this.getNatRuleLastIndex();
       });
   }
 
@@ -181,6 +183,23 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
       );
+  }
+
+  getNatRuleLastIndex(): void {
+    this.natRuleService
+      .getManyNatRule({
+        filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],
+        page: 1,
+        limit: 1,
+        sort: ['ruleIndex,DESC'],
+      })
+      .subscribe(response => {
+        // TODO: Review this approach, see if we can resolve
+        // this in the generated client.
+        if (response.data[0]) {
+          this.latestRuleIndex = response.data[0].ruleIndex;
+        }
+      });
   }
 
   getObjects(): void {
@@ -236,6 +255,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
 
     if (modalMode === ModalMode.Edit) {
       dto.natRule = natRule;
+    } else {
+      dto.natRule = {} as NatRule;
+      dto.natRule.ruleIndex = this.latestRuleIndex + 1;
     }
     this.subscribeToNatRuleModal();
     this.ngx.setModalData(dto, 'natRuleModal');

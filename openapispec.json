@@ -1391,9 +1391,100 @@
           },
           "tierId": {
             "type": "string"
+          },
+          "networkObjectGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NetworkObjectGroup"
+            }
           }
         },
         "required": ["name", "tierId"]
+      },
+      "GetManyServiceObjectResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceObject"
+            }
+          },
+          "count": {
+            "type": "number"
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "pageCount": {
+            "type": "number"
+          }
+        },
+        "required": ["data", "count", "total", "page", "pageCount"]
+      },
+      "GetManyServiceObjectGroupResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "networkObjects": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NetworkObject"
+            }
+          },
+          "tierId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "tierId"
+        ]
       },
       "NetworkObject": {
         "type": "object",
@@ -1500,7 +1591,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ServiceObject"
+              "$ref": "#/components/schemas/ServiceObjectGroup"
             }
           },
           "count": {
@@ -1587,6 +1678,7 @@
             "maxLength": 500
           },
           "type": {
+          "type": {
             "type": "string",
             "enum": ["TCP", "UDP", "TCPUDP"]
           },
@@ -1648,6 +1740,7 @@
             "maxLength": 500
           },
           "protocol": {
+          "protocol": {
             "type": "string",
             "enum": ["IP", "ICMP", "TCP", "UDP"]
           },
@@ -1661,9 +1754,20 @@
             "type": "string"
           },
           "serviceObjectGroups": {
+          "sourcePorts": {
+            "type": "string"
+          },
+          "destinationPorts": {
+            "type": "string"
+          },
+          "tierId": {
+            "type": "string"
+          },
+          "serviceObjectGroups": {
             "readOnly": true,
             "type": "array",
             "items": {
+              "$ref": "#/components/schemas/ServiceObjectGroup"
               "$ref": "#/components/schemas/ServiceObjectGroup"
             }
           }
@@ -3551,94 +3655,6 @@
           "datacenterId"
         ]
       },
-      "ExternalRoute": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "externalRouteIp": {
-            "type": "string"
-          },
-          "vrf": {
-            "type": "string",
-            "enum": ["appprod", "appdev", "dataprod", "datadev", "edcmgmt", "transport"]
-          },
-          "environment": {
-            "type": "string",
-            "enum": ["prod", "dev", "val", "imp"]
-          },
-          "wanFormId": {
-            "type": "string"
-          }
-        },
-        "required": ["externalRouteIp", "vrf", "environment", "wanFormId"]
-      },
-      "WanForm": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 28
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "datacenterId": {
-            "type": "string"
-          },
-          "active": {
-            "type": "string"
-          },
-          "externalRoutes": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExternalRoute"
-            }
-          }
-        },
-        "required": ["name", "datacenterId"]
-      },
       "Datacenter": {
         "type": "object",
         "properties": {
@@ -3742,7 +3758,7 @@
             "readOnly": true,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/WanForm"
+              "type": "string"
             }
           }
         },
@@ -5926,88 +5942,113 @@
         },
         "required": ["ipAddress", "id"]
       },
-      "SelfServiceRawConfig": {
+      "SelfServiceConfig": {
         "type": "object",
         "properties": {
-          "type": {
+          "artifact": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "artifact"
+        ]
+      },
+      "SelfService": {
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "string"
+          },
+          "rawConfigFileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dcsTier": {
+            "type": "string",
+            "nullable": true
+          },
+          "dcsTierUUID": {
+            "type": "string",
+            "nullable": true
+          },
+          "fwRuleGroupInfo": {
+            "type": "object",
+            "nullable": true
+          },
+          "natRuleGroupInfo": {
+            "type": "object",
+            "nullable": true
+          },
+          "rawConfigType": {
+            "type": "string",
+            "nullable": true
           },
           "rawXMLConfig": {
-            "type": "object"
+            "type": "object",
+            "nullable": true
           },
           "rawTextConfig": {
-            "type": "object"
+            "type": "string",
+            "nullable": true
           },
           "rawJsonConfig": {
-            "type": "object"
-          }
-        },
-        "required": ["type"]
-      },
-      "WanFormPaginationResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "object",
+            "nullable": true
           },
-          "page": {
-            "type": "number"
+          "mappedObjects": {
+            "type": "object",
+            "nullable": true
           },
-          "pageCount": {
-            "type": "number"
+          "intervrfSubnets": {
+            "type": "string",
+            "nullable": true
           },
-          "count": {
-            "type": "number"
+          "convertedConfig": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SelfServiceConfig"
+              }
+            ]
           },
-          "total": {
-            "type": "number"
-          }
-        },
-        "required": ["data", "page", "pageCount", "count", "total"]
-      },
-      "WanFormDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
+          "conversionStatus": {
+            "type": "string",
+            "nullable": true
           },
-          "description": {
-            "type": "string"
+          "deviceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "bulkUploadStatus": {
+            "type": "string",
+            "nullable": true
           },
           "datacenterId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
-        "required": ["name", "datacenterId"]
+        "required": [
+          "id",
+          "rawConfigFileName",
+          "dcsTier",
+          "dcsTierUUID",
+          "fwRuleGroupInfo",
+          "natRuleGroupInfo",
+          "rawConfigType",
+          "rawXMLConfig",
+          "rawTextConfig",
+          "rawJsonConfig",
+          "mappedObjects",
+          "intervrfSubnets",
+          "convertedConfig",
+          "conversionStatus",
+          "deviceType",
+          "bulkUploadStatus",
+          "datacenterId"
+        ]
       },
-      "ExternalRoutePaginationResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          }
-        },
-        "required": ["data", "page", "pageCount", "count", "total"]
-      },
-      "ExternalRouteDto": {
+      "SelfServiceRawConfig": {
         "type": "object",
         "properties": {
           "description": {
@@ -23536,6 +23577,22 @@
             "in": "query",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
             }
           }
         ],

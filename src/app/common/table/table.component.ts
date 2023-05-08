@@ -79,7 +79,7 @@ export class TableComponent<T> implements AfterViewInit {
       'external-routes',
     ];
 
-    const hidePagination = ['import-preview', 'audit-log', 'detailed-audit-log-entry'];
+    const hidePagination = ['import-preview', 'detailed-audit-log-entry'];
 
     // if tableId is a badList ID, we hide the search bar
     if (badList.includes(this.uniqueTableId)) {
@@ -103,7 +103,7 @@ export class TableComponent<T> implements AfterViewInit {
   // the itemsPerPage and the currentPage back to its default values, and then emits the event to the parent component,
   // where the appropriate function is called to re-populate the table
   public clearTableResults(): void {
-    this.itemsPerPage = 20;
+    this.itemsPerPage = 50;
     this.currentPage = 1;
     this.clearResults.emit(new TableComponentDto(+this.itemsPerPage, this.currentPage));
   }
