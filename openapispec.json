@@ -1479,6 +1479,96 @@
           "pageCount"
         ]
       },
+      "GetManyNetworkObjectGroupResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NetworkObjectGroup"
+            }
+          },
+          "count": {
+            "type": "number"
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "pageCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "data",
+          "count",
+          "total",
+          "page",
+          "pageCount"
+        ]
+      },
+      "NetworkObjectGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "networkObjects": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NetworkObject"
+            }
+          },
+          "tierId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "tierId"
+        ]
+      },
       "NetworkObject": {
         "type": "object",
         "properties": {
@@ -1582,101 +1672,18 @@
           },
           "tierId": {
             "type": "string"
+          },
+          "networkObjectGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NetworkObjectGroup"
+            }
           }
         },
         "required": [
           "name",
           "type",
-          "tierId"
-        ]
-      },
-      "GetManyNetworkObjectGroupResponseDto": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NetworkObjectGroup"
-            }
-          },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "data",
-          "count",
-          "total",
-          "page",
-          "pageCount"
-        ]
-      },
-      "NetworkObjectGroup": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "networkObjects": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NetworkObject"
-            }
-          },
-          "tierId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
           "tierId"
         ]
       },
@@ -1708,77 +1715,6 @@
           "total",
           "page",
           "pageCount"
-        ]
-      },
-      "ServiceObject": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "protocol": {
-            "type": "string",
-            "enum": [
-              "IP",
-              "ICMP",
-              "TCP",
-              "UDP"
-            ]
-          },
-          "sourcePorts": {
-            "type": "string"
-          },
-          "destinationPorts": {
-            "type": "string"
-          },
-          "tierId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "protocol",
-          "sourcePorts",
-          "destinationPorts",
-          "tierId"
         ]
       },
       "GetManyServiceObjectGroupResponseDto": {
@@ -1877,6 +1813,84 @@
         "required": [
           "name",
           "type",
+          "tierId"
+        ]
+      },
+      "ServiceObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "IP",
+              "ICMP",
+              "TCP",
+              "UDP"
+            ]
+          },
+          "sourcePorts": {
+            "type": "string"
+          },
+          "destinationPorts": {
+            "type": "string"
+          },
+          "tierId": {
+            "type": "string"
+          },
+          "serviceObjectGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceObjectGroup"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "protocol",
+          "sourcePorts",
+          "destinationPorts",
           "tierId"
         ]
       },
@@ -3941,6 +3955,112 @@
           "tenantId"
         ]
       },
+      "SelfServiceConfig": {
+        "type": "object",
+        "properties": {
+          "artifact": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "artifact"
+        ]
+      },
+      "SelfService": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "rawConfigFileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dcsTier": {
+            "type": "string",
+            "nullable": true
+          },
+          "dcsTierUUID": {
+            "type": "string",
+            "nullable": true
+          },
+          "fwRuleGroupInfo": {
+            "type": "object",
+            "nullable": true
+          },
+          "natRuleGroupInfo": {
+            "type": "object",
+            "nullable": true
+          },
+          "rawConfigType": {
+            "type": "string",
+            "nullable": true
+          },
+          "rawXMLConfig": {
+            "type": "object",
+            "nullable": true
+          },
+          "rawTextConfig": {
+            "type": "string",
+            "nullable": true
+          },
+          "rawJsonConfig": {
+            "type": "object",
+            "nullable": true
+          },
+          "mappedObjects": {
+            "type": "object",
+            "nullable": true
+          },
+          "intervrfSubnets": {
+            "type": "string",
+            "nullable": true
+          },
+          "convertedConfig": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SelfServiceConfig"
+              }
+            ]
+          },
+          "conversionStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "bulkUploadStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "datacenterId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "rawConfigFileName",
+          "dcsTier",
+          "dcsTierUUID",
+          "fwRuleGroupInfo",
+          "natRuleGroupInfo",
+          "rawConfigType",
+          "rawXMLConfig",
+          "rawTextConfig",
+          "rawJsonConfig",
+          "mappedObjects",
+          "intervrfSubnets",
+          "convertedConfig",
+          "conversionStatus",
+          "deviceType",
+          "bulkUploadStatus",
+          "datacenterId"
+        ]
+      },
       "Datacenter": {
         "type": "object",
         "properties": {
@@ -4031,6 +4151,14 @@
             "items": {
               "$ref": "#/components/schemas/AuditLog"
             }
+          },
+          "selfServices": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SelfService"
+              }
+            ]
           }
         },
         "required": [
@@ -6569,1349 +6697,24 @@
           "id"
         ]
       },
-      "Vrf": {
+      "SelfServiceRawConfig": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "policyControlEnforced": {
-            "type": "boolean",
-            "description": "Default True, Security rules (contracts) will be enforced."
-          },
-          "policyControlEnforcementIngress": {
-            "type": "boolean",
-            "description": "Default True, If this is set to False, policy is enforced on egress traffic. If this is set to True, policy is enforced on ingress traffic."
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
+          "type": {
             "type": "string"
           },
-          "bridgeDomains": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
+          "rawXMLConfig": {
+            "type": "object"
+          },
+          "rawTextConfig": {
+            "type": "object"
+          },
+          "rawJsonConfig": {
+            "type": "object"
           }
         },
         "required": [
-          "policyControlEnforced",
-          "policyControlEnforcementIngress",
-          "tenantId"
-        ]
-      },
-      "AppCentricSubnet": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "gatewayIp": {
-            "type": "string",
-            "description": "The IP address and mask of the default gateway."
-          },
-          "treatAsVirtualIpAddress": {
-            "type": "boolean",
-            "description": "Indicates whether the subnet is a virtual IP address configured for the associated bridge domain."
-          },
-          "primaryIpAddress": {
-            "type": "boolean",
-            "description": "Indicates if the subnet is preferred (primary) over the available alternatives. Only one preferred subnet is allowed.\n      Affects DHCP Relay only."
-          },
-          "advertisedExternally": {
-            "type": "boolean",
-            "description": "The subnet can be exported to a routed connection."
-          },
-          "preferred": {
-            "type": "boolean",
-            "description": "The subnet is preferred over other subnets associated to its parent BD."
-          },
-          "sharedBetweenVrfs": {
-            "type": "boolean",
-            "description": "The subnet can be shared with and exported to multiple contexts (VRFs) in the same tenant or across tenants as part of a shared service."
-          },
-          "ipDataPlaneLearning": {
-            "type": "boolean",
-            "description": "Choose whether to enable or disable IP address learning for this subnet."
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "bridgeDomain": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BridgeDomain"
-              }
-            ]
-          },
-          "bridgeDomainId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "gatewayIp",
-          "treatAsVirtualIpAddress",
-          "primaryIpAddress",
-          "advertisedExternally",
-          "preferred",
-          "sharedBetweenVrfs",
-          "ipDataPlaneLearning",
-          "tenantId",
-          "bridgeDomainId"
-        ]
-      },
-      "FilterEntry": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "etherType": {
-            "type": "string",
-            "description": "The EtherType of the filter entry.",
-            "enum": [
-              "ip",
-              "ipv6",
-              "ipv4",
-              "mplsunicast",
-              "trill",
-              "arp",
-              "fcoe",
-              "macsecurity"
-            ]
-          },
-          "arpFlag": {
-            "type": "string",
-            "description": "The Address Resolution Protocol flag for a filter entry. The filter entry is a combination of network traffic classification properties.",
-            "enum": [
-              "arpreply",
-              "arprequest"
-            ]
-          },
-          "ipProtocol": {
-            "type": "string",
-            "description": "The IP protocol for a filter entry. The filter entry is a combination of network traffic classification properties.",
-            "enum": [
-              "eigrp",
-              "egp",
-              "icmp",
-              "icmpv6",
-              "igmp",
-              "igp",
-              "l2tp",
-              "ospfigp",
-              "pim",
-              "tcp",
-              "udp"
-            ]
-          },
-          "matchOnlyFragments": {
-            "type": "boolean",
-            "description": "Match only packet fragments. When enabled, the rule applies to any IP fragment with an offset that is greater than 0 (all IP fragments except the first). When disabled, the rule will not apply to IP fragments with an offset greater than 0 because TCP/UDP port information can only be checked in initial fragments."
-          },
-          "sourceFromPort": {
-            "type": "number"
-          },
-          "sourceToPort": {
-            "type": "number"
-          },
-          "destinationFromPort": {
-            "type": "number"
-          },
-          "destinationToPort": {
-            "type": "number"
-          },
-          "tcpFlags": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "Synchronize",
-                "Established",
-                "Acknowledgement",
-                "Reset",
-                "Finish"
-              ]
-            }
-          },
-          "stateful": {
-            "type": "boolean"
-          },
-          "filter": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Filter"
-              }
-            ]
-          },
-          "filterId": {
-            "type": "string"
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "etherType",
-          "filterId",
-          "tenantId"
-        ]
-      },
-      "Filter": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "filterEntries": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FilterEntry"
-            }
-          },
-          "subjects": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Subject"
-            }
-          }
-        },
-        "required": [
-          "tenantId"
-        ]
-      },
-      "Subject": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "applyBothDirections": {
-            "type": "boolean",
-            "description": "Sets the contract filter to apply on both ingress and egress traffic directions."
-          },
-          "reverseFilterPorts": {
-            "type": "boolean",
-            "description": "Enables the filter to apply on both ingress and egress traffic."
-          },
-          "globalAlias": {
-            "type": "string",
-            "description": "The scope of a contract between two or more EPGs."
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "contract": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Contract"
-              }
-            ]
-          },
-          "contractId": {
-            "type": "string"
-          },
-          "filters": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          }
-        },
-        "required": [
-          "applyBothDirections",
-          "reverseFilterPorts",
-          "globalAlias",
-          "tenantId",
-          "contractId"
-        ]
-      },
-      "Contract": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "consumingEndpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "providingEndpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "subjects": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Subject"
-            }
-          }
-        },
-        "required": [
-          "tenantId"
-        ]
-      },
-      "EndpointGroup": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "intraEpgIsolation": {
-            "type": "boolean",
-            "description": "Intra-EPG endpoint isolation policies provide full isolation for virtual or physical endpoints; no communication is allowed between endpoints in an EPG that is operating with isolation enforced."
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "bridgeDomain": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BridgeDomain"
-              }
-            ]
-          },
-          "bridgeDomainId": {
-            "type": "string"
-          },
-          "applicationProfile": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ApplicationProfile"
-              }
-            ]
-          },
-          "applicationProfileId": {
-            "type": "string"
-          },
-          "consumedContracts": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Contract"
-            }
-          },
-          "providedContracts": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Contract"
-            }
-          }
-        },
-        "required": [
-          "intraEpgIsolation",
-          "tenantId",
-          "applicationProfileId"
-        ]
-      },
-      "L3Out": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "bridgeDomains": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
-          },
-          "vrf": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Vrf"
-              }
-            ]
-          },
-          "vrfId": {
-            "type": "string"
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "vrfId",
-          "tenantId"
-        ]
-      },
-      "BridgeDomain": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "unicastRouting": {
-            "type": "boolean",
-            "description": "Unicast routing enabled, default: true."
-          },
-          "arpFlooding": {
-            "type": "boolean",
-            "description": "ARP Flooding enabled, default: true."
-          },
-          "bdMacAddress": {
-            "type": "string",
-            "description": "Bridge Domain MAC address, default: null."
-          },
-          "limitLocalIpLearning": {
-            "type": "boolean",
-            "description": "Limit Local IP Learning to BD/EPG Subnets, default: true."
-          },
-          "epMoveDetectionModeGarp": {
-            "type": "boolean",
-            "description": "GARP-based endpoint move detection, default: false."
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "vrf": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Vrf"
-              }
-            ]
-          },
-          "vrfId": {
-            "type": "string"
-          },
-          "subnets": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AppCentricSubnet"
-            }
-          },
-          "endpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "l3outs": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/L3Out"
-            }
-          }
-        },
-        "required": [
-          "unicastRouting",
-          "arpFlooding",
-          "bdMacAddress",
-          "limitLocalIpLearning",
-          "epMoveDetectionModeGarp",
-          "tenantId",
-          "vrfId"
-        ]
-      },
-      "Tenant": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "applicationProfiles": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApplicationProfile"
-            }
-          },
-          "bridgeDomains": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
-          },
-          "contracts": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Contract"
-            }
-          },
-          "vrfs": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Vrf"
-            }
-          },
-          "filters": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          },
-          "endpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "appCentricSubnets": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AppCentricSubnet"
-            }
-          },
-          "subjects": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Subject"
-            }
-          },
-          "filterEntries": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FilterEntry"
-            }
-          },
-          "auditLogs": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AuditLog"
-            }
-          }
-        }
-      },
-      "ApplicationProfile": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "endpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          }
-        },
-        "required": [
-          "tenantId"
-        ]
-      },
-      "TenantPaginationResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Tenant"
-            }
-          },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "data",
-          "count",
-          "total",
-          "page",
-          "pageCount"
-        ]
-      },
-      "SubjectPaginationResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Subject"
-            }
-          },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "data",
-          "count",
-          "total",
-          "page",
-          "pageCount"
-        ]
-      },
-      "FilterPaginationResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "data",
-          "count",
-          "total",
-          "page",
-          "pageCount"
-        ]
-      },
-      "ApplicationProfilePaginationResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApplicationProfile"
-            }
-          },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "data",
-          "count",
-          "total",
-          "page",
-          "pageCount"
-        ]
-      },
-      "VrfPaginationResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Vrf"
-            }
-          },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "data",
-          "count",
-          "total",
-          "page",
-          "pageCount"
-        ]
-      },
-      "BridgeDomainPaginationResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
-          },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "data",
-          "count",
-          "total",
-          "page",
-          "pageCount"
-        ]
-      },
-      "L3OutPaginationResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/L3Out"
-            }
-          },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "data",
-          "count",
-          "total",
-          "page",
-          "pageCount"
-        ]
-      },
-      "ContractPaginationResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Contract"
-            }
-          },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "data",
-          "count",
-          "total",
-          "page",
-          "pageCount"
-        ]
-      },
-      "AppCentricSubnetPaginationResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AppCentricSubnet"
-            }
-          },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "data",
-          "count",
-          "total",
-          "page",
-          "pageCount"
-        ]
-      },
-      "EndpointGroupPaginationResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "data",
-          "count",
-          "total",
-          "page",
-          "pageCount"
-        ]
-      },
-      "FilterEntryPaginationResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FilterEntry"
-            }
-          },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "data",
-          "count",
-          "total",
-          "page",
-          "pageCount"
+          "type"
         ]
       }
     }
@@ -26268,6 +25071,22 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
           }
         ],
         "responses": {
@@ -26290,3263 +25109,81 @@
         ]
       }
     },
-    "/v2/app-centric/tenants": {
-      "post": {
-        "operationId": "createTenant",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Tenant"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/tenants"
-        ]
-      },
+    "/v1/self-service": {
       "get": {
-        "operationId": "findAllTenant",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page of entities to return based on the perPage value and total number of entities in the database.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "select",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantPaginationResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/tenants"
-        ]
-      }
-    },
-    "/v2/app-centric/tenants/{uuid}": {
-      "get": {
-        "operationId": "findOneTenant",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Tenant"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/tenants"
-        ]
-      },
-      "put": {
-        "operationId": "updateTenant",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Tenant"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/tenants"
-        ]
-      },
-      "delete": {
-        "operationId": "removeTenant",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Tenant"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/tenants"
-        ]
-      }
-    },
-    "/v2/app-centric/tenants/{uuid}/restore": {
-      "patch": {
-        "operationId": "restoreTenant",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/tenants"
-        ]
-      }
-    },
-    "/v2/app-centric/tenants/{uuid}/soft": {
-      "delete": {
-        "operationId": "softDeleteTenant",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/tenants"
-        ]
-      }
-    },
-    "/v2/app-centric/tenants/{uuid}/provision": {
-      "put": {
-        "operationId": "provisionTenant",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/tenants"
-        ]
-      }
-    },
-    "/v2/app-centric/tenants/{uuid}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionTenant",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/tenants"
-        ]
-      }
-    },
-    "/v2/app-centric/subjects": {
-      "post": {
-        "operationId": "createSubject",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Subject"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Subject"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/subjects"
-        ]
-      },
-      "get": {
-        "operationId": "findAllSubject",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page of entities to return based on the perPage value and total number of entities in the database.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "select",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubjectPaginationResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/subjects"
-        ]
-      }
-    },
-    "/v2/app-centric/subjects/{uuid}": {
-      "get": {
-        "operationId": "findOneSubject",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Subject"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/subjects"
-        ]
-      },
-      "put": {
-        "operationId": "updateSubject",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Subject"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Subject"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/subjects"
-        ]
-      },
-      "delete": {
-        "operationId": "removeSubject",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Subject"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/subjects"
-        ]
-      }
-    },
-    "/v2/app-centric/subjects/{subjectId}/filters/{filterId}": {
-      "post": {
-        "operationId": "addFilterToSubjectSubject",
-        "parameters": [
-          {
-            "name": "subjectId",
-            "required": true,
-            "in": "path",
-            "description": "Subject that the Filter is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filterId",
-            "required": true,
-            "in": "path",
-            "description": "Filter that is being added to/removed from the Subject.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Subject"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/subjects"
-        ]
-      },
-      "delete": {
-        "operationId": "removeFilterFromSubjectSubject",
-        "parameters": [
-          {
-            "name": "subjectId",
-            "required": true,
-            "in": "path",
-            "description": "Subject that the Filter is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filterId",
-            "required": true,
-            "in": "path",
-            "description": "Filter that is being added to/removed from the Subject.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Subject"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/subjects"
-        ]
-      }
-    },
-    "/v2/app-centric/subjects/{uuid}/restore": {
-      "patch": {
-        "operationId": "restoreSubject",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/subjects"
-        ]
-      }
-    },
-    "/v2/app-centric/subjects/{uuid}/soft": {
-      "delete": {
-        "operationId": "softDeleteSubject",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/subjects"
-        ]
-      }
-    },
-    "/v2/app-centric/subjects/{uuid}/provision": {
-      "put": {
-        "operationId": "provisionSubject",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/subjects"
-        ]
-      }
-    },
-    "/v2/app-centric/subjects/{uuid}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionSubject",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/subjects"
-        ]
-      }
-    },
-    "/v2/app-centric/filters": {
-      "post": {
-        "operationId": "createFilter",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Filter"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Filter"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/filters"
-        ]
-      },
-      "get": {
-        "operationId": "findAllFilter",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page of entities to return based on the perPage value and total number of entities in the database.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "select",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FilterPaginationResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/filters"
-        ]
-      }
-    },
-    "/v2/app-centric/filters/{uuid}": {
-      "get": {
-        "operationId": "findOneFilter",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Filter"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/filters"
-        ]
-      },
-      "put": {
-        "operationId": "updateFilter",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Filter"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Filter"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/filters"
-        ]
-      },
-      "delete": {
-        "operationId": "removeFilter",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Filter"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/filters"
-        ]
-      }
-    },
-    "/v2/app-centric/filters/{uuid}/restore": {
-      "patch": {
-        "operationId": "restoreFilter",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/filters"
-        ]
-      }
-    },
-    "/v2/app-centric/filters/{uuid}/soft": {
-      "delete": {
-        "operationId": "softDeleteFilter",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/filters"
-        ]
-      }
-    },
-    "/v2/app-centric/filters/{uuid}/provision": {
-      "put": {
-        "operationId": "provisionFilter",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/filters"
-        ]
-      }
-    },
-    "/v2/app-centric/filters/{uuid}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionFilter",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/filters"
-        ]
-      }
-    },
-    "/v2/app-centric/application-profiles": {
-      "post": {
-        "operationId": "createApplicationProfile",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationProfile"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApplicationProfile"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/application-profiles"
-        ]
-      },
-      "get": {
-        "operationId": "findAllApplicationProfile",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page of entities to return based on the perPage value and total number of entities in the database.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "select",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApplicationProfilePaginationResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/application-profiles"
-        ]
-      }
-    },
-    "/v2/app-centric/application-profiles/{uuid}": {
-      "get": {
-        "operationId": "findOneApplicationProfile",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApplicationProfile"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/application-profiles"
-        ]
-      },
-      "put": {
-        "operationId": "updateApplicationProfile",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationProfile"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApplicationProfile"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/application-profiles"
-        ]
-      },
-      "delete": {
-        "operationId": "removeApplicationProfile",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApplicationProfile"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/application-profiles"
-        ]
-      }
-    },
-    "/v2/app-centric/application-profiles/{uuid}/restore": {
-      "patch": {
-        "operationId": "restoreApplicationProfile",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/application-profiles"
-        ]
-      }
-    },
-    "/v2/app-centric/application-profiles/{uuid}/soft": {
-      "delete": {
-        "operationId": "softDeleteApplicationProfile",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/application-profiles"
-        ]
-      }
-    },
-    "/v2/app-centric/application-profiles/{uuid}/provision": {
-      "put": {
-        "operationId": "provisionApplicationProfile",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/application-profiles"
-        ]
-      }
-    },
-    "/v2/app-centric/application-profiles/{uuid}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionApplicationProfile",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/application-profiles"
-        ]
-      }
-    },
-    "/v2/app-centric/vrfs": {
-      "post": {
-        "operationId": "createVrf",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Vrf"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Vrf"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/vrfs"
-        ]
-      },
-      "get": {
-        "operationId": "findAllVrf",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page of entities to return based on the perPage value and total number of entities in the database.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "select",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VrfPaginationResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/vrfs"
-        ]
-      }
-    },
-    "/v2/app-centric/vrfs/{uuid}": {
-      "get": {
-        "operationId": "findOneVrf",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Vrf"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/vrfs"
-        ]
-      },
-      "put": {
-        "operationId": "updateVrf",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Vrf"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Vrf"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/vrfs"
-        ]
-      },
-      "delete": {
-        "operationId": "removeVrf",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Vrf"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/vrfs"
-        ]
-      }
-    },
-    "/v2/app-centric/vrfs/{uuid}/restore": {
-      "patch": {
-        "operationId": "restoreVrf",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/vrfs"
-        ]
-      }
-    },
-    "/v2/app-centric/vrfs/{uuid}/soft": {
-      "delete": {
-        "operationId": "softDeleteVrf",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/vrfs"
-        ]
-      }
-    },
-    "/v2/app-centric/vrfs/{uuid}/provision": {
-      "put": {
-        "operationId": "provisionVrf",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/vrfs"
-        ]
-      }
-    },
-    "/v2/app-centric/vrfs/{uuid}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionVrf",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/vrfs"
-        ]
-      }
-    },
-    "/v2/app-centric/bridge-domains": {
-      "post": {
-        "operationId": "createBridgeDomain",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BridgeDomain"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BridgeDomain"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/bridge-domains"
-        ]
-      },
-      "get": {
-        "operationId": "findAllBridgeDomain",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page of entities to return based on the perPage value and total number of entities in the database.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "select",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BridgeDomainPaginationResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/bridge-domains"
-        ]
-      }
-    },
-    "/v2/app-centric/bridge-domains/{uuid}": {
-      "get": {
-        "operationId": "findOneBridgeDomain",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BridgeDomain"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/bridge-domains"
-        ]
-      },
-      "put": {
-        "operationId": "updateBridgeDomain",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BridgeDomain"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BridgeDomain"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/bridge-domains"
-        ]
-      },
-      "delete": {
-        "operationId": "removeBridgeDomain",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BridgeDomain"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/bridge-domains"
-        ]
-      }
-    },
-    "/v2/app-centric/bridge-domains/{bridgeDomainId}/l3outs/{l3OutId}": {
-      "post": {
-        "operationId": "addL3OutToBridgeDomainBridgeDomain",
-        "parameters": [
-          {
-            "name": "bridgeDomainId",
-            "required": true,
-            "in": "path",
-            "description": "Bridge Domain that the L3Out is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "l3OutId",
-            "required": true,
-            "in": "path",
-            "description": "L3Out that is being added/removed from the Bridge Domain.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BridgeDomain"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/bridge-domains"
-        ]
-      },
-      "delete": {
-        "operationId": "removeL3OutFromBridgeDomainBridgeDomain",
-        "parameters": [
-          {
-            "name": "bridgeDomainId",
-            "required": true,
-            "in": "path",
-            "description": "Bridge Domain that the L3Out is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "l3OutId",
-            "required": true,
-            "in": "path",
-            "description": "L3Out that is being added/removed from the Bridge Domain.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BridgeDomain"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/bridge-domains"
-        ]
-      }
-    },
-    "/v2/app-centric/bridge-domains/{uuid}/restore": {
-      "patch": {
-        "operationId": "restoreBridgeDomain",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/bridge-domains"
-        ]
-      }
-    },
-    "/v2/app-centric/bridge-domains/{uuid}/soft": {
-      "delete": {
-        "operationId": "softDeleteBridgeDomain",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/bridge-domains"
-        ]
-      }
-    },
-    "/v2/app-centric/bridge-domains/{uuid}/provision": {
-      "put": {
-        "operationId": "provisionBridgeDomain",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/bridge-domains"
-        ]
-      }
-    },
-    "/v2/app-centric/bridge-domains/{uuid}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionBridgeDomain",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/bridge-domains"
-        ]
-      }
-    },
-    "/v2/app-centric/l3outs": {
-      "post": {
-        "operationId": "createL3Out",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/L3Out"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/L3Out"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/l3outs"
-        ]
-      },
-      "get": {
-        "operationId": "findAllL3Out",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page of entities to return based on the perPage value and total number of entities in the database.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "select",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/L3OutPaginationResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/l3outs"
-        ]
-      }
-    },
-    "/v2/app-centric/l3outs/{uuid}": {
-      "get": {
-        "operationId": "findOneL3Out",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/L3Out"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/l3outs"
-        ]
-      },
-      "put": {
-        "operationId": "updateL3Out",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/L3Out"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/L3Out"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/l3outs"
-        ]
-      },
-      "delete": {
-        "operationId": "removeL3Out",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/L3Out"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/l3outs"
-        ]
-      }
-    },
-    "/v2/app-centric/l3outs/{uuid}/restore": {
-      "patch": {
-        "operationId": "restoreL3Out",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/l3outs"
-        ]
-      }
-    },
-    "/v2/app-centric/l3outs/{uuid}/soft": {
-      "delete": {
-        "operationId": "softDeleteL3Out",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/l3outs"
-        ]
-      }
-    },
-    "/v2/app-centric/l3outs/{uuid}/provision": {
-      "put": {
-        "operationId": "provisionL3Out",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/l3outs"
-        ]
-      }
-    },
-    "/v2/app-centric/l3outs/{uuid}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionL3Out",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/l3outs"
-        ]
-      }
-    },
-    "/v2/app-centric/contracts": {
-      "post": {
-        "operationId": "createContract",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Contract"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Contract"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      },
-      "get": {
-        "operationId": "findAllContract",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page of entities to return based on the perPage value and total number of entities in the database.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "select",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ContractPaginationResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      }
-    },
-    "/v2/app-centric/contracts/{uuid}": {
-      "get": {
-        "operationId": "findOneContract",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Contract"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      },
-      "put": {
-        "operationId": "updateContract",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Contract"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Contract"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      },
-      "delete": {
-        "operationId": "removeContract",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Contract"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      }
-    },
-    "/v2/app-centric/contracts/{uuid}/restore": {
-      "patch": {
-        "operationId": "restoreContract",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      }
-    },
-    "/v2/app-centric/contracts/{uuid}/soft": {
-      "delete": {
-        "operationId": "softDeleteContract",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      }
-    },
-    "/v2/app-centric/contracts/{uuid}/provision": {
-      "put": {
-        "operationId": "provisionContract",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      }
-    },
-    "/v2/app-centric/contracts/{uuid}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionContract",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      }
-    },
-    "/v2/app-centric/app-centric-subnets": {
-      "post": {
-        "operationId": "createAppCentricSubnet",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AppCentricSubnet"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AppCentricSubnet"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/app-centric-subnets"
-        ]
-      },
-      "get": {
-        "operationId": "findAllAppCentricSubnet",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page of entities to return based on the perPage value and total number of entities in the database.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "select",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AppCentricSubnetPaginationResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/app-centric-subnets"
-        ]
-      }
-    },
-    "/v2/app-centric/app-centric-subnets/{uuid}": {
-      "get": {
-        "operationId": "findOneAppCentricSubnet",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AppCentricSubnet"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/app-centric-subnets"
-        ]
-      },
-      "put": {
-        "operationId": "updateAppCentricSubnet",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AppCentricSubnet"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AppCentricSubnet"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/app-centric-subnets"
-        ]
-      },
-      "delete": {
-        "operationId": "removeAppCentricSubnet",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AppCentricSubnet"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/app-centric-subnets"
-        ]
-      }
-    },
-    "/v2/app-centric/app-centric-subnets/{uuid}/restore": {
-      "patch": {
-        "operationId": "restoreAppCentricSubnet",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/app-centric-subnets"
-        ]
-      }
-    },
-    "/v2/app-centric/app-centric-subnets/{uuid}/soft": {
-      "delete": {
-        "operationId": "softDeleteAppCentricSubnet",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/app-centric-subnets"
-        ]
-      }
-    },
-    "/v2/app-centric/app-centric-subnets/{uuid}/provision": {
-      "put": {
-        "operationId": "provisionAppCentricSubnet",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/app-centric-subnets"
-        ]
-      }
-    },
-    "/v2/app-centric/app-centric-subnets/{uuid}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionAppCentricSubnet",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/app-centric-subnets"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups": {
-      "post": {
-        "operationId": "createEndpointGroup",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EndpointGroup"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      },
-      "get": {
-        "operationId": "findAllEndpointGroup",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page of entities to return based on the perPage value and total number of entities in the database.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "select",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroupPaginationResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/{uuid}": {
-      "get": {
-        "operationId": "findOneEndpointGroup",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      },
-      "put": {
-        "operationId": "updateEndpointGroup",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EndpointGroup"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      },
-      "delete": {
-        "operationId": "removeEndpointGroup",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/{endpointGroupId}/consumed-contracts/{contractId}": {
-      "post": {
-        "operationId": "addConsumedContractToEndpointGroupEndpointGroup",
+        "operationId": "getSelfServicesSelfService",
         "summary": "",
-        "description": "Add Consumed Contract to Endpoint Group",
+        "description": "get list of self-services by datacenterId",
         "parameters": [
           {
-            "name": "endpointGroupId",
+            "name": "datacenterId",
             "required": true,
-            "in": "path",
-            "description": "Endpoint Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the Endpoint Group.",
+            "in": "query",
             "schema": {
               "type": "string"
             }
           }
         ],
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SelfService"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
-          "v2/app-centric/endpoint-groups"
+          "v1/self-service"
+        ]
+      }
+    },
+    "/v1/self-service/{selfServiceId}": {
+      "get": {
+        "operationId": "getSelfServiceSelfService",
+        "summary": "",
+        "description": "get one self-service by ID",
+        "parameters": [
+          {
+            "name": "selfServiceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelfService"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/self-service"
         ]
       },
       "delete": {
-        "operationId": "removeConsumedContractToEndpointGroupEndpointGroup",
+        "operationId": "deleteSelfServiceSelfService",
         "summary": "",
-        "description": "Remove Consumed Contract to Endpoint Group",
+        "description": "",
         "parameters": [
           {
-            "name": "endpointGroupId",
+            "name": "selfServiceId",
             "required": true,
             "in": "path",
-            "description": "Endpoint Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the Endpoint Group.",
             "schema": {
               "type": "string"
             }
@@ -29554,355 +25191,149 @@
         ],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
-          "v2/app-centric/endpoint-groups"
+          "v1/self-service"
         ]
       }
     },
-    "/v2/app-centric/endpoint-groups/{endpointGroupId}/provided-contracts/{contractId}": {
+    "/v1/self-service/{selfServiceId}/raw/xml": {
+      "get": {
+        "operationId": "getSelfServiceXMLSelfService",
+        "summary": "",
+        "description": "get self service entity xml config",
+        "parameters": [
+          {
+            "name": "selfServiceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
+      }
+    },
+    "/v1/self-service/{selfServiceId}/raw/text": {
+      "get": {
+        "operationId": "getSelfServiceTextSelfService",
+        "summary": "",
+        "description": "get self service entity text config",
+        "parameters": [
+          {
+            "name": "selfServiceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
+      }
+    },
+    "/v1/self-service/{selfServiceId}/raw/json": {
+      "get": {
+        "operationId": "getSelfServiceJsonSelfService",
+        "summary": "",
+        "description": "get self service entity json config",
+        "parameters": [
+          {
+            "name": "selfServiceId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/self-service"
+        ]
+      }
+    },
+    "/v1/self-service/asa": {
       "post": {
-        "operationId": "addProvidedContractToEndpointGroupEndpointGroup",
+        "operationId": "processAsaConfigSelfService",
         "summary": "",
-        "description": "Add Provided Contract to Endpoint Group",
-        "parameters": [
-          {
-            "name": "endpointGroupId",
-            "required": true,
-            "in": "path",
-            "description": "Endpoint Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the Endpoint Group.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      },
-      "delete": {
-        "operationId": "removeProvidedContractToEndpointGroupEndpointGroup",
-        "summary": "",
-        "description": "Remove Consumed Contract to Endpoint Group",
-        "parameters": [
-          {
-            "name": "endpointGroupId",
-            "required": true,
-            "in": "path",
-            "description": "Endpoint Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the Endpoint Group.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/{uuid}/restore": {
-      "patch": {
-        "operationId": "restoreEndpointGroup",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/{uuid}/soft": {
-      "delete": {
-        "operationId": "softDeleteEndpointGroup",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/{uuid}/provision": {
-      "put": {
-        "operationId": "provisionEndpointGroup",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/{uuid}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionEndpointGroup",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/filter-entries": {
-      "post": {
-        "operationId": "createFilterEntry",
+        "description": "process asa config",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FilterEntry"
+                "$ref": "#/components/schemas/SelfService"
               }
             }
           }
         },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FilterEntry"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/filter-entries"
-        ]
-      },
-      "get": {
-        "operationId": "findAllFilterEntry",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Page of entities to return based on the perPage value and total number of entities in the database.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "select",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FilterEntryPaginationResponse"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
-          "v2/app-centric/filter-entries"
+          "v1/self-service"
         ]
       }
     },
-    "/v2/app-centric/filter-entries/{uuid}": {
-      "get": {
-        "operationId": "findOneFilterEntry",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FilterEntry"
-                }
+    "/v1/self-service/pa": {
+      "post": {
+        "operationId": "processPAConfigSelfService",
+        "summary": "",
+        "description": "process PA config",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelfService"
               }
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
         "tags": [
-          "v2/app-centric/filter-entries"
+          "v1/self-service"
         ]
-      },
+      }
+    },
+    "/v1/self-service/{selfServiceId}/replace-config": {
       "put": {
-        "operationId": "updateFilterEntry",
+        "operationId": "replaceExistingRawConfigSelfService",
+        "summary": "",
+        "description": "replace the currently existing raw config for the self service entity",
         "parameters": [
           {
-            "name": "uuid",
+            "name": "selfServiceId",
             "required": true,
             "in": "path",
             "schema": {
@@ -29915,108 +25346,29 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FilterEntry"
+                "$ref": "#/components/schemas/SelfServiceRawConfig"
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FilterEntry"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/filter-entries"
-        ]
-      },
-      "delete": {
-        "operationId": "removeFilterEntry",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FilterEntry"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/filter-entries"
-        ]
-      }
-    },
-    "/v2/app-centric/filter-entries/{uuid}/restore": {
-      "patch": {
-        "operationId": "restoreFilterEntry",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": ""
           }
         },
         "tags": [
-          "v2/app-centric/filter-entries"
+          "v1/self-service"
         ]
       }
     },
-    "/v2/app-centric/filter-entries/{uuid}/soft": {
-      "delete": {
-        "operationId": "softDeleteFilterEntry",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/filter-entries"
-        ]
-      }
-    },
-    "/v2/app-centric/filter-entries/{uuid}/provision": {
+    "/v1/self-service/{selfServiceId}/converted-artifacts": {
       "put": {
-        "operationId": "provisionFilterEntry",
+        "operationId": "updateConversionArtifactsSelfService",
+        "summary": "",
+        "description": "apply converted objects to entity",
         "parameters": [
           {
-            "name": "uuid",
+            "name": "selfServiceId",
             "required": true,
             "in": "path",
             "schema": {
@@ -30030,30 +25382,33 @@
           }
         },
         "tags": [
-          "v2/app-centric/filter-entries"
+          "v1/self-service"
         ]
       }
     },
-    "/v2/app-centric/filter-entries/{uuid}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionFilterEntry",
-        "parameters": [
-          {
-            "name": "uuid",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
+    "/v1/self-service/bulkupload": {
+      "post": {
+        "operationId": "bulkUploadSelfService",
+        "summary": "",
+        "description": "Bulk Upload",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelfService"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": ""
           }
         },
         "tags": [
-          "v2/app-centric/filter-entries"
+          "v1/self-service"
         ]
       }
     }

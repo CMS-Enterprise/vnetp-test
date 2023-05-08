@@ -21,8 +21,14 @@ import {
   NatRuleTranslatedServiceTypeEnum,
   NatRuleTranslatedSourceAddressTypeEnum,
   NatRuleTranslationTypeEnum,
+  V1NetworkSecurityFirewallRulesService,
   V1NetworkSecurityNatRulesService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
 } from 'client';
+import { NatRuleObjectInfoModalComponent } from './nat-rule-object-info-modal/nat-rule-object-info-modal.component';
 
 describe('NatRuleModalComponent', () => {
   let component: NatRuleModalComponent;
@@ -38,8 +44,18 @@ describe('NatRuleModalComponent', () => {
         MockNgxSmartModalComponent,
         MockFontAwesomeComponent,
         MockNgSelectComponent,
+        NatRuleObjectInfoModalComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityNatRulesService), MockProvider(TierContextService)],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1NetworkSecurityNatRulesService),
+        MockProvider(TierContextService),
+        MockProvider(V1NetworkSecurityFirewallRulesService),
+        MockProvider(V1NetworkSecurityNetworkObjectsService),
+        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+        MockProvider(V1NetworkSecurityServiceObjectsService),
+        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+      ],
     })
       .compileComponents()
       .then(() => {

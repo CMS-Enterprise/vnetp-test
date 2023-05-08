@@ -7,7 +7,13 @@ const routes: Routes = [
     loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule),
   },
   {
-    path: 'appcentric',
+    path: 'self-service',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Managed Network', title: 'Automation - Managed Network' },
+    loadChildren: () => import('./components/self-service/self-service.module').then(m => m.SelfServiceModule),
+  },
+  {
+    path: 'subnets-vlans',
     canActivate: [AuthGuard],
     loadChildren: () => import('./components/appcentric/appcentric.module').then(m => m.AppcentricModule),
   },

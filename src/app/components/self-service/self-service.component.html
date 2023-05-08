@@ -1,0 +1,55 @@
+<h1>Managed Network</h1>
+<ng-container *ngIf="!loadingSelfServices; else loading">
+    <section class="btn-toolbar" role="toolbar">
+        <button type="button" class="btn btn-success" (click)="openSelfServiceModal()">
+          <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+          <span>Import Config</span>
+        </button>
+      </section>
+    
+    <ng-container *ngIf="!openingModal; else openReviewModal">
+        <app-table [config]="config" [data]="selfServices">
+        </app-table>
+    </ng-container>
+
+</ng-container>
+
+<ng-template #mappedObjects let-selfService="datum">
+  <div *ngFor="let mappedObj of selfService.mappedObjects">
+    <ul>
+      <li>Hostname: {{mappedObj.hostname}}</li>
+      <li>Interface Matrix : External : {{mappedObj.interfaceMatrix.external | json }}, Intervrf: {{mappedObj.interfaceMatrix.intervrf | json }}</li>
+      <li>InsidePrefix : "{{mappedObj.interfaceMatrix.insidePrefix}}"</li>
+      <li>Namespace: "{{mappedObj.namespace}}"</li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #actionsTemplate let-selfService="datum">
+  <section class="table__actions">
+    <app-icon-button *ngIf="selfService.conversionStatus === 'Failed'" 
+              icon="delete"
+              label="Soft-Delete/Delete"
+              [type]="selfService?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="deleteSelfService(selfService)"
+            ></app-icon-button>
+    <app-icon-button *ngIf="selfService.conversionStatus === 'Ready For Import' || selfService.conversionStatus === 'Finished'" icon="edit" label="Open Self Service" (handleClick)="openSelfServiceArtifactReviewModal(selfService)"></app-icon-button>
+    <app-icon-button *ngIf="selfService.conversionStatus === 'Ready For Import' && selfService.bulkUploadStatus !== 'Finished'" icon="execute" label="Begin Bulk Uploading" (handleClick)="importObjects(selfService)"></app-icon-button>
+    
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<ng-template #openReviewModal>
+  <ngx-smart-modal #spinnerModal identifier="spinnerModal" customClass="xlarge-modal">
+    <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  </ngx-smart-modal>
+</ng-template>
+
+<app-self-service-modal></app-self-service-modal>
+<app-self-service-bulk-upload-modal [selfService]="selectedSelfService"></app-self-service-bulk-upload-modal>
+<app-self-service-artifact-review-modal [selfService]="selectedSelfService"></app-self-service-artifact-review-modal>
+<app-yes-no-modal></app-yes-no-modal>

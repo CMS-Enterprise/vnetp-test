@@ -192,6 +192,7 @@
           <div *ngIf="submitted && f.sourceNetworkObject.errors" class="invalid-feedback">
             <div *ngIf="f.sourceNetworkObject.errors.required">Source Network Object is required</div>
           </div>
+          <span *ngIf="f.sourceNetworkType.value === 'NetworkObject'" (click)="getObjectInfo('Source NetworkObject', f.sourceNetworkType.value, f.sourceNetworkObject.value)" style="color:blue;cursor: pointer;">(object info)</span>
 
           <label for="sourceNetworkObjectGroup" *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'"
             >Source Network Object Group</label
@@ -213,6 +214,7 @@
           <div *ngIf="submitted && f.sourceNetworkObjectGroup.errors" class="invalid-feedback">
             <div *ngIf="f.sourceNetworkObjectGroup.errors.required">Source Network Object Group is required</div>
           </div>
+          <span *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'" (click)="getObjectInfo('Source NetworkObjectGroup', f.sourceNetworkType.value, f.sourceNetworkObjectGroup.value)" style="color:blue;cursor: pointer;">(object info)</span>
         </div>
       </div>
 
@@ -270,6 +272,8 @@
           <div *ngIf="submitted && f.destinationNetworkObject.errors" class="invalid-feedback">
             <div *ngIf="f.destinationNetworkObject.errors.required">Destination Network Object is required</div>
           </div>
+          <span *ngIf="f.destinationNetworkType.value === 'NetworkObject'" (click)="getObjectInfo('Destination NetworkObject', f.destinationNetworkType.value, f.destinationNetworkObject.value)" style="color:blue;cursor: pointer;">(object info)</span>
+          
 
           <label for="destinationNetworkObjectGroup" *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'"
             >Destination Network Object Group</label
@@ -291,10 +295,17 @@
           <div *ngIf="submitted && f.destinationNetworkObjectGroup.errors" class="invalid-feedback">
             <div *ngIf="f.destinationNetworkObjectGroup.errors.required">Destination Network Object Group is required</div>
           </div>
+          <span *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'" (click)="getObjectInfo('Destination NetworkObjectGroup', f.destinationNetworkType.value, f.destinationNetworkObjectGroup.value)" style="color:blue;cursor: pointer;">(object info)</span>
         </div>
       </div>
 
       <hr />
+
+      <div *ngIf="f.protocol.value === 'IP' || f.protocol.value === 'ICMP'" class="dcs-modal-warning">
+        <div>When protocol type is set to IP or ICMP, the values entered in the service section are required but will not be deployed.
+          <br />Please change the service type to TCP or UDP if the rule should only allow traffic between specific source/dest ports.
+        </div>
+      </div>
 
       <div class="form-row">
         <div class="form-group col-md-12">
@@ -363,6 +374,7 @@
           <div *ngIf="submitted && f.serviceObject.errors" class="invalid-feedback">
             <div *ngIf="f.serviceObject.errors.required">Service Object is required</div>
           </div>
+          <span *ngIf="f.serviceType.value === 'ServiceObject'" (click)="getObjectInfo('Service Object', f.serviceType.value, f.serviceObject.value)" style="color:blue;cursor: pointer;">(object info)</span>
 
           <label for="serviceObjectGroup" *ngIf="f.serviceType.value === 'ServiceObjectGroup'">Service Object Group</label>
           <tooltip *ngIf="f.serviceType.value === 'ServiceObjectGroup'" [message]="helpText.ServiceObjectGroupType"></tooltip>
@@ -382,6 +394,7 @@
           <div *ngIf="submitted && f.serviceObjectGroup.errors" class="invalid-feedback">
             <div *ngIf="f.serviceObjectGroup.errors.required">Service Object Group is required</div>
           </div>
+          <span *ngIf="f.serviceType.value === 'ServiceObjectGroup'" (click)="getObjectInfo('Service Object Group', f.serviceType.value, f.serviceObjectGroup.value)" style="color:blue;cursor: pointer;">(object info)</span>
         </div>
       </div>
     </div>
@@ -398,3 +411,5 @@
     </footer>
   </form>
 </ngx-smart-modal>
+
+<app-firewall-rule-object-info-modal></app-firewall-rule-object-info-modal>

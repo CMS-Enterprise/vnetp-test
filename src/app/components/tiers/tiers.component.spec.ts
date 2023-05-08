@@ -16,7 +16,16 @@ import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { MockProvider } from 'src/test/mock-providers';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { of } from 'rxjs';
-import { V1TiersService, V1TierGroupsService } from 'client';
+import {
+  V1TiersService,
+  V1TierGroupsService,
+  V1NetworkSecurityFirewallRuleGroupsService,
+  V1NetworkSecurityNatRuleGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
+} from 'client';
 
 describe('TiersComponent', () => {
   let component: TiersComponent;
@@ -41,6 +50,12 @@ describe('TiersComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(V1TierGroupsService, { getManyTierGroup: () => of([]) }),
         MockProvider(V1TiersService, { getManyDatacenterTier: () => of([]) }),
+        MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
+        MockProvider(V1NetworkSecurityNatRuleGroupsService),
+        MockProvider(V1NetworkSecurityNetworkObjectsService),
+        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+        MockProvider(V1NetworkSecurityServiceObjectsService),
+        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
       ],
     }).compileComponents();
   }));

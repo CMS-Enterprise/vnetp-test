@@ -90,6 +90,8 @@ export * from './v1PhysicalServers.service';
 import { V1PhysicalServersService } from './v1PhysicalServers.service';
 export * from './v1PriorityGroups.service';
 import { V1PriorityGroupsService } from './v1PriorityGroups.service';
+export * from './v1SelfService.service';
+import { V1SelfServiceService } from './v1SelfService.service';
 export * from './v1TierGroups.service';
 import { V1TierGroupsService } from './v1TierGroups.service';
 export * from './v1Tiers.service';

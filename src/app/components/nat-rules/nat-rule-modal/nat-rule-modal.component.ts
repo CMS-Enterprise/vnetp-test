@@ -17,6 +17,10 @@ import {
   NetworkObjectGroup,
   ServiceObject,
   V1NetworkSecurityNatRulesService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
 } from 'client';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { NatRuleModalDto } from '../../../models/nat/nat-rule-modal-dto';
@@ -25,6 +29,7 @@ import { NatRuleModalHelpText } from '../../../helptext/help-text-networking';
 
 @Component({
   selector: 'app-nat-rule-modal',
+  styleUrls: ['./nat-rule-modal.component.scss'],
   templateUrl: './nat-rule-modal.component.html',
 })
 export class NatRuleModalComponent implements OnInit, OnDestroy {
@@ -50,12 +55,17 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   public NatRuleTranslatedServiceType = NatRuleTranslatedServiceTypeEnum;
 
   private subscriptions: Subscription[] = [];
+  private objectInfoSubscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
     private natRuleService: V1NetworkSecurityNatRulesService,
     public helpText: NatRuleModalHelpText,
+    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
+    private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
+    private serviceObjectService: V1NetworkSecurityServiceObjectsService,
+    private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
   ) {}
 
   get f() {
@@ -76,13 +86,10 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     const { natRule } = dto;
     if (dto.modalMode === ModalMode.Edit) {
       this.natRuleId = natRule.id;
-    } else {
-      this.f.name.enable();
     }
     if (natRule !== undefined) {
       this.modalPropertyChecker(natRule);
       this.form.patchValue(natRule);
-      this.f.name.disable();
     }
     this.networkObjects = dto.NetworkObjects;
     this.networkObjectGroups = dto.NetworkObjectGroups;
@@ -520,5 +527,110 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     }
 
     return modalNatRule;
+  }
+
+  subscribeToObjectInfoModal() {
+    this.objectInfoSubscription = this.ngx.getModal('natRuleObjectInfoModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('natRuleObjectInfoModal');
+    });
+  }
+
+  getObjectInfo(property, objectType, objectId) {
+    if (objectId) {
+      switch (objectType) {
+        case 'NetworkObject': {
+          this.networkObjectService.getOneNetworkObject({ id: objectId }).subscribe(data => {
+            const objectName = data.name;
+            const modalTitle = `${property} : ${objectName}`;
+            let value;
+            if (data.type === 'Fqdn') {
+              value = data.fqdn;
+            } else if (data.type === 'Range') {
+              value = `${data.startIpAddress} - ${data.endIpAddress}`;
+            } else {
+              value = data.ipAddress;
+            }
+            const modalBody = [`${data.type}: ${value}`];
+            const dto = {
+              modalTitle,
+              modalBody,
+            };
+            this.subscribeToObjectInfoModal();
+            this.ngx.setModalData(dto, 'natRuleObjectInfoModal');
+            this.ngx.getModal('natRuleObjectInfoModal').open();
+          });
+          break;
+        }
+        case 'NetworkObjectGroup': {
+          this.networkObjectGroupService.getOneNetworkObjectGroup({ id: objectId, join: ['networkObjects'] }).subscribe(data => {
+            const members = data.networkObjects;
+            const memberDetails = members.map(member => {
+              let returnValue = `Name: ${member.name} --- `;
+
+              if (member.type === 'IpAddress') {
+                returnValue += `IP Address: ${member.ipAddress}`;
+              } else if (member.type === 'Range') {
+                returnValue += `Range: ${member.startIpAddress}-${member.endIpAddress}`;
+              } else if (member.type === 'Fqdn') {
+                returnValue += `FQDN: ${member.fqdn}`;
+              }
+
+              return returnValue;
+            });
+            const modalBody = memberDetails;
+            const objectName = data.name;
+            const modalTitle = `${property} : ${objectName}`;
+            const dto = {
+              modalTitle,
+              modalBody,
+            };
+            this.subscribeToObjectInfoModal();
+            this.ngx.setModalData(dto, 'natRuleObjectInfoModal');
+            this.ngx.getModal('natRuleObjectInfoModal').open();
+          });
+          break;
+        }
+        case 'ServiceObject': {
+          this.serviceObjectService.getOneServiceObject({ id: objectId }).subscribe(data => {
+            const objectName = data.name;
+            const modalTitle = `${property} : ${objectName}`;
+            const modalBody = [
+              `Protocol : ${data.protocol}, Source Ports: ${data.sourcePorts}, Destination Ports: ${data.destinationPorts}`,
+            ];
+            const dto = {
+              modalTitle,
+              modalBody,
+            };
+            this.subscribeToObjectInfoModal();
+            this.ngx.setModalData(dto, 'natRuleObjectInfoModal');
+            this.ngx.getModal('natRuleObjectInfoModal').open();
+          });
+          break;
+        }
+        case 'ServiceObjectGroup': {
+          this.serviceObjectGroupService.getOneServiceObjectGroup({ id: objectId, join: ['serviceObjects'] }).subscribe(data => {
+            const members = data.serviceObjects;
+            const memberDetails = members.map(member => {
+              let returnValue = `Name: ${member.name} ---`;
+
+              returnValue += `Protocol: ${member.protocol}, Source Ports: ${member.sourcePorts}, Destination Ports: ${member.destinationPorts}`;
+
+              return returnValue;
+            });
+            const modalBody = memberDetails;
+            const objectName = data.name;
+            const modalTitle = `${property} : ${objectName}`;
+            const dto = {
+              modalTitle,
+              modalBody,
+            };
+            this.subscribeToObjectInfoModal();
+            this.ngx.setModalData(dto, 'natRuleObjectInfoModal');
+            this.ngx.getModal('natRuleObjectInfoModal').open();
+          });
+          break;
+        }
+      }
+    }
   }
 }

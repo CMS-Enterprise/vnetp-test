@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
     }
 
     // Attempt to extract the tenant parameter from the return URL.
-    const tenantRegex = /tenant=([a-z_]*)/g;
+    const tenantRegex = /tenant=([a-z0-9_-]*)/g;
     const tenantExec = tenantRegex.exec(this.returnUrl);
 
     if (tenantExec) {

@@ -18,6 +18,7 @@ import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FirewallRuleModalComponent } from './firewall-rule-modal/firewall-rule-modal.component';
 import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.module';
+import { FirewallRuleObjectInfoModalComponent } from './firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
 
 const routes: Routes = [
   {
@@ -52,7 +53,6 @@ const routes: Routes = [
     NgSelectModule,
     PreviewModalModule,
   ],
-  declarations: [FirewallRulesComponent, FirewallRulesDetailComponent, FirewallRuleModalComponent],
-  exports: [FirewallRulesComponent, FirewallRulesDetailComponent, FirewallRuleModalComponent],
+  declarations: [FirewallRulesComponent, FirewallRulesDetailComponent, FirewallRuleModalComponent, FirewallRuleObjectInfoModalComponent],
 })
 export class FirewallRulesModule {}

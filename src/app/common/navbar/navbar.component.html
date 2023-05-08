@@ -29,6 +29,7 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
           <a class="dropdown-item" routerLink="tiers" queryParamsHandling="merge">Tiers</a>
+          <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="self-service" queryParamsHandling="merge">Managed Network</a>
           <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="subnets-vlans" queryParamsHandling="merge">Subnets & VLANs</a>
           <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="firewall-rules" queryParamsHandling="merge">Firewall Rule Groups</a>
           <a *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="nat-rules" queryParamsHandling="merge">NAT Rule Groups</a>
@@ -70,6 +71,8 @@
           <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://jiraent.cms.gov/">Ticketing System</a>
           <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="http://wiki.draas.cdsvdc.lcl/">Documentation</a>
           <a class="dropdown-item" (click)="openLogoutModal()">Logout</a>
+          <div class="dropdown-divider" *ngIf="dcsVersion"></div>
+          <a class="dropdown-item" target="_blank" rel="noopener noreferrer" *ngIf="dcsVersion">v{{ dcsVersion }}</a>
         </div>
       </li>
 

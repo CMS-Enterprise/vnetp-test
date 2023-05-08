@@ -9,7 +9,14 @@ import {
   MockNgSelectComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1NetworkSecurityFirewallRulesService } from 'client';
+import {
+  V1NetworkSecurityFirewallRulesService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+} from 'client';
+import { FirewallRuleObjectInfoModalComponent } from './firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
 
 describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
@@ -24,8 +31,16 @@ describe('FirewallRuleModalComponent', () => {
         MockFontAwesomeComponent,
         MockNgxSmartModalComponent,
         MockNgSelectComponent,
+        FirewallRuleObjectInfoModalComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityFirewallRulesService)],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1NetworkSecurityFirewallRulesService),
+        MockProvider(V1NetworkSecurityNetworkObjectsService),
+        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+        MockProvider(V1NetworkSecurityServiceObjectsService),
+        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+      ],
     })
       .compileComponents()
       .then(() => {

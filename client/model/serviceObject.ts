@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ServiceObjectGroup } from './serviceObjectGroup';
 
 
 export interface ServiceObject { 
@@ -25,6 +26,7 @@ export interface ServiceObject {
     sourcePorts: string;
     destinationPorts: string;
     tierId: string;
+    readonly serviceObjectGroups?: Array<ServiceObjectGroup>;
 }
 export enum ServiceObjectProtocolEnum {
     Ip = 'IP',

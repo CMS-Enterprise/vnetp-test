@@ -75,7 +75,7 @@
         <!-- Rule Index -->
         <div class="form-group col-md-3">
           <label for="ruleIndex">Rule Index</label>
-          <tooltip [message]="helpText.Bidirectional"></tooltip>
+          <tooltip [message]="helpText.RuleIndex"></tooltip>
           <input
             id="ruleIndex"
             type="number"
@@ -152,6 +152,7 @@
               Original Service Object is required
             </div>
           </div>
+          <span *ngIf="f.originalServiceType.value === 'ServiceObject'" (click)="getObjectInfo('Original Service Type Object', f.originalServiceType.value, f.originalServiceObject.value)">(object info)</span>
         </div>
       </div>
 
@@ -198,6 +199,7 @@
           <div *ngIf="submitted && f.originalSourceNetworkObject.errors" class="invalid-feedback">
             <div *ngIf="f.originalSourceNetworkObject.errors.required">Original Source Network Object is required</div>
           </div>
+          <span *ngIf="f.originalSourceAddressType.value === NatRuleOriginalSourceAddressType.NetworkObject" (click)="getObjectInfo('Original Source Address Object', f.originalSourceAddressType.value, f.originalSourceNetworkObject.value)">(object info)</span>
         </div>
 
         <!-- Original Source Network Object Group -->
@@ -219,6 +221,7 @@
           <div *ngIf="submitted && f.originalSourceNetworkObjectGroup.errors" class="invalid-feedback">
             <div *ngIf="f.originalSourceNetworkObjectGroup.errors.required">Original Source Network Object Group is required</div>
           </div>
+          <span *ngIf="f.originalSourceAddressType.value === NatRuleOriginalSourceAddressType.NetworkObjectGroup" (click)="getObjectInfo('Original Source Address Object Group', f.originalSourceAddressType.value, f.originalSourceNetworkObjectGroup.value)">(object info)</span>
         </div>
       </div>
 
@@ -268,6 +271,7 @@
           <div *ngIf="submitted && f.originalDestinationNetworkObject.errors" class="invalid-feedback">
             <div *ngIf="f.originalDestinationNetworkObject.errors.required">Original Destination Network Object is required</div>
           </div>
+          <span *ngIf="f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObject" (click)="getObjectInfo('Original Destination Address Object', f.originalDestinationAddressType.value, f.originalDestinationNetworkObject.value)">(object info)</span>
         </div>
 
         <!-- Original Destination Network Object Group -->
@@ -290,6 +294,7 @@
           <div *ngIf="submitted && f.originalDestinationNetworkObjectGroup.errors" class="invalid-feedback">
             <div *ngIf="f.originalDestinationNetworkObjectGroup.errors.required">Original Destination Network Object Group is required</div>
           </div>
+          <span *ngIf="f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObjectGroup" (click)="getObjectInfo('Original Destination Address Object Group', f.originalDestinationAddressType.value, f.originalDestinationNetworkObjectGroup.value)">(object info)</span>
         </div>
       </div>
 
@@ -355,6 +360,7 @@
                 Translated Service Object is required
               </div>
             </div>
+            <span *ngIf="f.translatedServiceType.value === NatRuleTranslatedServiceType.ServiceObject" (click)="getObjectInfo('Translated Service Object', f.translatedServiceType.value, f.translatedServiceObject.value)">(object info)</span>
           </div>
         </div>
         <div class="form-row">
@@ -400,6 +406,7 @@
             <div *ngIf="submitted && f.translatedSourceNetworkObject.errors" class="invalid-feedback">
               <div *ngIf="f.translatedSourceNetworkObject.errors.required">Translated Source Network Object is required</div>
             </div>
+            <span *ngIf="f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObject" (click)="getObjectInfo('Translated Source Address Object', f.translatedSourceAddressType.value, f.translatedSourceNetworkObject.value)">(object info)</span>
           </div>
 
           <!-- Translated Source Network Object Group -->
@@ -422,6 +429,7 @@
             <div *ngIf="submitted && f.translatedSourceNetworkObjectGroup.errors" class="invalid-feedback">
               <div *ngIf="f.translatedSourceNetworkObjectGroup.errors.required">Translated Source Network Object Group is required</div>
             </div>
+            <span *ngIf="f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObjectGroup" (click)="getObjectInfo('Translated Source Address Object Group', f.translatedSourceAddressType.value, f.translatedSourceNetworkObjectGroup.value)">(object info)</span>
           </div>
         </div>
 
@@ -469,6 +477,7 @@
             <div *ngIf="submitted && f.translatedDestinationNetworkObject.errors" class="invalid-feedback">
               <div *ngIf="f.translatedDestinationNetworkObject.errors.required">Translated Destination Network Object is required</div>
             </div>
+            <span *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObject" (click)="getObjectInfo('Translated Destination Address Object', f.translatedDestinationAddressType.value, f.translatedDestinationNetworkObject.value)">(object info)</span>
           </div>
 
           <!-- Translated Destination Network Object Group -->
@@ -493,6 +502,7 @@
                 Translated Destination Network Object Group is required
               </div>
             </div>
+            <span *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObjectGroup" (click)="getObjectInfo('Translated Destination Address Object Group', f.translatedDestinationAddressType.value, f.translatedDestinationNetworkObjectGroup.value)">(object info)</span>
           </div>
         </div>
       </div>
@@ -510,3 +520,5 @@
     </div>
   </form>
 </ngx-smart-modal>
+
+<app-nat-rule-object-info-modal></app-nat-rule-object-info-modal>
