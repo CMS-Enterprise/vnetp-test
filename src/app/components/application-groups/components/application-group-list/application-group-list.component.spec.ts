@@ -1,11 +1,10 @@
+/* tslint:disable:no-string-literal */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of } from 'rxjs';
-import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { ActifioApplicationGroupDto, ActifioSequenceOrderDto, V1ActifioRdcApplicationGroupsService } from 'client';
+import { ActifioApplicationGroupDto, V1ActifioRdcApplicationGroupsService } from 'client';
 import { ApplicationGroupListComponent, ApplicationGroupView } from './application-group-list.component';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { MockComponent, MockFontAwesomeComponent } from 'src/test/mock-components';
 
 describe('ApplicationGroupListComponent', () => {

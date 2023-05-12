@@ -1,3 +1,4 @@
+/* tslint:disable:no-string-literal */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FirewallRulesDetailComponent } from './firewall-rules-detail.component';
 import {

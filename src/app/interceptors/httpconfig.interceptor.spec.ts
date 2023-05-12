@@ -1,21 +1,11 @@
 import { HttpConfigInterceptor } from './httpconfig.interceptor';
 import { AuthService } from '../services/auth.service';
-import { DefaultGlobalConfig, ToastrModule, ToastrService, ToastrConfig } from 'ngx-toastr';
-import {
-  HttpRequest,
-  HttpResponse,
-  HttpErrorResponse,
-  HttpHeaders,
-  HttpEvent,
-  HttpEventType,
-  HttpHandler,
-  HttpParams,
-} from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { HttpRequest, HttpResponse, HttpErrorResponse, HttpEvent, HttpHandler, HttpParams } from '@angular/common/http';
+import { of, throwError } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { map } from 'rxjs/operators';
 
 // TODO: this returns a bunch of errors that need to be supressed
 describe('HttpConfigInterceptor', () => {
@@ -52,7 +42,6 @@ describe('HttpConfigInterceptor', () => {
     });
 
     interceptor = TestBed.inject(HttpConfigInterceptor);
-    // mockAuthService = TestBed.inject(mockAuthService);
   });
 
   describe('processSuccessRequest ', () => {
@@ -109,7 +98,6 @@ describe('HttpConfigInterceptor', () => {
       const request = new HttpRequest('GET', 'http://test-api.com/data');
       interceptor.intercept(request, mockHttpHandler);
 
-      (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
       expect(mockAuthService.logout).toHaveBeenCalled();
     });
 

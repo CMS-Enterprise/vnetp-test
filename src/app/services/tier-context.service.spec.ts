@@ -1,11 +1,7 @@
+/* tslint:disable:no-string-literal */
 import { TierContextService } from './tier-context.service';
-import { V1DatacentersService } from 'client';
-import { DatacenterContextService } from './datacenter-context.service';
-import { Message, MessageService } from './message.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Tier } from 'client';
+import { Message } from './message.service';
 import { BehaviorSubject, of } from 'rxjs';
-import { fakeAsync, tick } from '@angular/core/testing';
 
 describe('TierContextService', () => {
   let service: TierContextService;

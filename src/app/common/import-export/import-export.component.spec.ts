@@ -1,8 +1,8 @@
+/* tslint:disable:no-string-literal */
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ImportExportComponent } from './import-export.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Papa } from 'ngx-papaparse';
-import { EventEmitter } from '@angular/core';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { FormsModule } from '@angular/forms';
 

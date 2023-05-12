@@ -1,3 +1,4 @@
+/* tslint:disable:no-string-literal */
 import { TestBed } from '@angular/core/testing';
 import { DatacenterContextService } from './datacenter-context.service';
 import { RouterTestingModule } from '@angular/router/testing';

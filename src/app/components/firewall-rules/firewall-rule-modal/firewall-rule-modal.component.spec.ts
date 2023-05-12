@@ -1,3 +1,4 @@
+/* tslint:disable:no-string-literal */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
@@ -302,14 +303,12 @@ describe('FirewallRuleModalComponent', () => {
       const setModalDataSpy = jest.spyOn(ngxSmartModalService, 'setModalData');
       const getSpy = jest.spyOn(ngxSmartModalService, 'getModal');
 
-      jest
-        .spyOn(component['serviceObjectGroupService'], 'getOneServiceObjectGroup')
-        .mockReturnValue(
-          of({
-            name: 'test-name',
-            serviceObjects: [{ name: 'test-object-name', protocol: 'TCP', sourcePorts: '80', destinationPorts: '8080' }],
-          } as any),
-        );
+      jest.spyOn(component['serviceObjectGroupService'], 'getOneServiceObjectGroup').mockReturnValue(
+        of({
+          name: 'test-name',
+          serviceObjects: [{ name: 'test-object-name', protocol: 'TCP', sourcePorts: '80', destinationPorts: '8080' }],
+        } as any),
+      );
 
       component.getObjectInfo(property, 'ServiceObjectGroup', objectId);
 
