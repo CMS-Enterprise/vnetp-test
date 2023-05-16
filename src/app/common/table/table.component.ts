@@ -69,6 +69,7 @@ export class TableComponent<T> implements AfterViewInit {
     const badList = [
       'managed-network',
       'unused-network-objects/groups',
+      'unused-service-objects/groups',
       'import-preview',
       'pools-in-the-currently-selected-tier',
       'static-routes-listed-by-tier',
@@ -78,7 +79,13 @@ export class TableComponent<T> implements AfterViewInit {
       'self-services',
     ];
 
-    const hidePagination = ['import-preview', 'audit-log', 'detailed-audit-log-entry', 'unused-network-objects/groups'];
+    const hidePagination = [
+      'import-preview',
+      'audit-log',
+      'detailed-audit-log-entry',
+      'unused-network-objects/groups',
+      'unused-service-objects/groups',
+    ];
 
     // if tableId is a badList ID, we hide the search bar
     if (badList.includes(this.uniqueTableId)) {
