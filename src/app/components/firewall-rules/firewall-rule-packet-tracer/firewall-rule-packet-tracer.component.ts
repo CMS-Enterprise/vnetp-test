@@ -123,6 +123,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   // TO DO : IPv6 Searches
   async search() {
+    this.doneSearching = false;
     this.partialMatches = [];
     this.rulesHit = [];
     this.showPartials = false;
