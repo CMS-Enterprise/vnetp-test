@@ -541,12 +541,10 @@ export class NatRulePacketTracerComponent implements OnInit {
         // if all conditions are true, the rule is a hit
         if (
           checkList.originalDestInRange &&
-          checkList.originalPortMatch &&
           checkList.directionMatch &&
           checkList.originalSourceInRange &&
           checkList.translatedSourceInRange &&
           checkList.translatedDestInRange &&
-          checkList.translatedPortMatch &&
           checkList.biDirectionalMatch
         ) {
           this.rulesHit.push(rule.name);

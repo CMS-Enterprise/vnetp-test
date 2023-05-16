@@ -5,7 +5,7 @@
   </header>
 
   <ng-container>
-    <div class="modal-body" *ngIf="rulesHit.length > 0">
+    <div class="modal-body" *ngIf="rulesHit.length > 0 && doneSearching">
       <b>Total matches : {{rulesHit}}</b>
     </div>
   </ng-container>

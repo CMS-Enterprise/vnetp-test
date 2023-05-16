@@ -19,6 +19,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   rulesHit = [];
   partialMatches = [];
   showPartials = false;
+  doneSearching = false;
   protocolSubscription: Subscription;
   constructor(
     private ngx: NgxSmartModalService,
@@ -447,18 +448,19 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         }
       }),
     );
-    return this.rulesHit;
+    this.doneSearching = true;
+    // return this.rulesHit;
   }
 
   get f() {
     return this.form.controls;
   }
 
-  async getNetworkObjectInfo(networkObjectId) {
+  getNetworkObjectInfo(networkObjectId) {
     return this.networkObjectService.getOneNetworkObject({ id: networkObjectId }).toPromise();
   }
 
-  async getNetworkObjectGroupInfo(networkObjectGroupId) {
+  getNetworkObjectGroupInfo(networkObjectGroupId) {
     return this.networkObjectGroupService.getOneNetworkObjectGroup({ id: networkObjectGroupId, join: ['networkObjects'] }).toPromise();
   }
 

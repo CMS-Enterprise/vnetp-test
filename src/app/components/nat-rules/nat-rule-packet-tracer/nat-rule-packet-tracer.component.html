@@ -5,7 +5,7 @@
   </header>
 
   <div *ngIf="rulesHit.length > 0">
-    Total matches : {{rulesHit | json}}
+    <b>Total matches : {{rulesHit}}</b>
   </div>
   <br>
 
@@ -14,7 +14,7 @@
   </div>
   <div *ngIf="showPartials">
     <table class="table table-striped">
-
+      <caption>Partial Matches</caption>
         <thead>
   
           <th scope="col">Rule Name</th>
@@ -266,7 +266,7 @@
 
       <hr />
 
-      <div class="form-row">
+      <!-- <div class="form-row">
           <div class="form-group col-md-6">
             <label for="originalPort">Original Port</label>
             <input type="text" id="originalPort" formControlName="originalPort" class="form-control"
@@ -288,7 +288,7 @@
             </div>
           </div>
   
-      </div>
+      </div> -->
 
       
     </div>
