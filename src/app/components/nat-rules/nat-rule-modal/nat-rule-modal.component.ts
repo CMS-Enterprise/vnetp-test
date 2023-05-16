@@ -86,13 +86,10 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     const { natRule } = dto;
     if (dto.modalMode === ModalMode.Edit) {
       this.natRuleId = natRule.id;
-    } else {
-      this.f.name.enable();
     }
     if (natRule !== undefined) {
       this.modalPropertyChecker(natRule);
       this.form.patchValue(natRule);
-      this.f.name.disable();
     }
     this.networkObjects = dto.NetworkObjects;
     this.networkObjectGroups = dto.NetworkObjectGroups;

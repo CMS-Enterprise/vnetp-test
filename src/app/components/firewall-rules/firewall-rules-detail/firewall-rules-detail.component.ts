@@ -47,6 +47,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   firewallRuleGroup: FirewallRuleGroup;
   firewallRules = {} as GetManyFirewallRuleResponseDto;
+  latestRuleIndex;
 
   // Pagination
   perPage = 50;
@@ -167,6 +168,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         this.TierId = data.tierId;
 
         this.getObjects();
+        this.getFirewallRuleLastIndex();
       });
   }
 
@@ -205,7 +207,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         },
       );
   }
-
   getAllRules() {
     this.firewallRuleService
       .getManyFirewallRule({
@@ -215,6 +216,23 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       })
       .subscribe(response => {
         this.packetTracerObjects.firewallRules = response as any;
+      });
+  }
+
+  getFirewallRuleLastIndex(): void {
+    this.firewallRuleService
+      .getManyFirewallRule({
+        filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`],
+        page: 1,
+        limit: 1,
+        sort: ['ruleIndex,DESC'],
+      })
+      .subscribe(response => {
+        // TODO: Review this approach, see if we can resolve
+        // this in the generated client.
+        if (response.data[0]) {
+          this.latestRuleIndex = response.data[0].ruleIndex;
+        }
       });
   }
 
@@ -284,6 +302,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
     if (modalMode === ModalMode.Edit) {
       dto.FirewallRule = firewallRule;
+    } else {
+      dto.FirewallRule = {} as FirewallRule;
+      dto.FirewallRule.ruleIndex = this.latestRuleIndex + 1;
     }
 
     this.subscribeToFirewallRuleModal();

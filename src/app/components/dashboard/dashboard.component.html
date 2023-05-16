@@ -92,18 +92,6 @@
           <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
         </a>
       </li>
-      <li class="dash-card__item">
-        <a routerLink="/vmware" queryParamsHandling="merge">
-          <span>
-            VMware Virtual Machines
-            <tooltip [message]="helpText.VMwareVms"></tooltip
-          ></span>
-          <span class="inline-block ml-auto">
-            {{ vmwareVirtualMachines || 0 }}
-          </span>
-          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-        </a>
-      </li>
     </ul>
   </aside>
 </main>

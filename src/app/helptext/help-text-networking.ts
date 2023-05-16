@@ -94,7 +94,8 @@ export class FirewallRuleModalHelpText {
   PortServiceType = `Single port (80), Range of ports (22-23) or 'any' to match any Port.`;
   ServiceObjectType = `Service Object created under IPAM. <a href="${this.wikiBase}/ipam#Service_Groups">wiki</a>`;
   ServiceObjectGroupType = `Service Object Group created under IPAM.`;
-  RuleIndex = `Index of the rule relative to other rules in the ruleset. Rules with a lower index will be applied first.`;
+  RuleIndex = `<p>Index of the rule relative to other rules in the ruleset. Rules with a lower index will be applied first.</p>
+  <p>We auto-suggest the next available Rule Index in the rule list, please ensure this auto-suggestion does not place this rule behind any deny rules that may exist at the end of an ACL</p>`;
 }
 
 @Injectable({
@@ -132,7 +133,8 @@ export class NatRuleModalHelpText {
   <p>Constraints:</p>
   <p>When translation type is dynamicIp or dynamicIpAndPort translatedSourceAddress MUST NOT be 'None'</p>`;
   TranslatedDestinationAddressType = `Type of Translated Destination Address (None, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
-  RuleIndex = `Index of the rule relative to other rules in the ruleset. Rules with a lower index will be applied first.`;
+  RuleIndex = `<p>Index of the rule relative to other rules in the ruleset. Rules with a lower index will be applied first.</p>
+  <p>We auto-suggest the next available Rule Index in the rule list, please ensure this auto-suggestion does not place this rule behind any deny rules that may exist at the end of an ACL</p>`;
 }
 
 @Injectable({
