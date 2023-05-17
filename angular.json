@@ -13,6 +13,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "validator",
+              "papaparse/papaparse.min.js"
+           ],
             "aot": true,
             "outputPath": "dist/automation-ui",
             "index": "src/index.html",
