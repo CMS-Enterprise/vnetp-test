@@ -33,7 +33,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.13.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@ng-select/ng-select": "^4.0.4",
-    "@swimlane/ngx-charts": "^13.0.2",
+    "@swimlane/ngx-charts": "^16.0.0",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.5.0",
     "core-js": "^2.5.4",
