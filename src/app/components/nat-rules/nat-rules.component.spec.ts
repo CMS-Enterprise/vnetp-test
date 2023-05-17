@@ -1,6 +1,6 @@
 // TODO: Re-enable this test file.
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {
   MockFontAwesomeComponent,
@@ -23,33 +23,35 @@ describe('NatRuleComponent', () => {
   let component: NatRulesComponent;
   let fixture: ComponentFixture<NatRulesComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule, NgxPaginationModule],
-      declarations: [
-        FilterPipe,
-        NatRulesComponent,
-        MockComponent('app-nat-rule-modal'),
-        MockComponent('app-tier-select'),
-        MockFontAwesomeComponent,
-        MockNgxSmartModalComponent,
-        MockTabsComponent,
-        MockYesNoModalComponent,
-      ],
-      providers: [
-        MockProvider(NgxSmartModalService),
-        MockProvider(TierContextService),
-        MockProvider(DatacenterContextService),
-        MockProvider(V1TiersService),
-      ],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(NatRulesComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [FormsModule, ReactiveFormsModule, RouterTestingModule, NgxPaginationModule],
+        declarations: [
+          FilterPipe,
+          NatRulesComponent,
+          MockComponent('app-nat-rule-modal'),
+          MockComponent('app-tier-select'),
+          MockFontAwesomeComponent,
+          MockNgxSmartModalComponent,
+          MockTabsComponent,
+          MockYesNoModalComponent,
+        ],
+        providers: [
+          MockProvider(NgxSmartModalService),
+          MockProvider(TierContextService),
+          MockProvider(DatacenterContextService),
+          MockProvider(V1TiersService),
+        ],
+      })
+        .compileComponents()
+        .then(() => {
+          fixture = TestBed.createComponent(NatRulesComponent);
+          component = fixture.componentInstance;
+          fixture.detectChanges();
+        });
+    }),
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

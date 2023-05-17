@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TierSelectComponent } from './tier-select.component';
 import { FormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -17,30 +17,32 @@ describe('TierSelectComponent', () => {
   let component: TierSelectComponent;
   let fixture: ComponentFixture<TierSelectComponent>;
 
-  beforeEach(async(() => {
-    const authService = {
-      currentUser: of({}),
-    };
+  beforeEach(
+    waitForAsync(() => {
+      const authService = {
+        currentUser: of({}),
+      };
 
-    TestBed.configureTestingModule({
-      imports: [FormsModule, NgSelectModule],
-      declarations: [TierSelectComponent, MockNgxSmartModalComponent],
-      providers: [
-        MockProvider(DatacenterContextService),
-        MockProvider(NgxSmartModalService),
-        MockProvider(TierContextService),
-        MockProvider(ToastrService),
-        MockProvider(V1DatacentersService),
-        { provide: AuthService, useValue: authService },
-      ],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(TierSelectComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
-  }));
+      TestBed.configureTestingModule({
+        imports: [FormsModule, NgSelectModule],
+        declarations: [TierSelectComponent, MockNgxSmartModalComponent],
+        providers: [
+          MockProvider(DatacenterContextService),
+          MockProvider(NgxSmartModalService),
+          MockProvider(TierContextService),
+          MockProvider(ToastrService),
+          MockProvider(V1DatacentersService),
+          { provide: AuthService, useValue: authService },
+        ],
+      })
+        .compileComponents()
+        .then(() => {
+          fixture = TestBed.createComponent(TierSelectComponent);
+          component = fixture.componentInstance;
+          fixture.detectChanges();
+        });
+    }),
+  );
 
   it('should create', () => {
     // const datacenterService = TestBed.inject(V1DatacentersService);

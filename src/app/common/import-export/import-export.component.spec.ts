@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImportExportComponent } from './import-export.component';
 import { FormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';

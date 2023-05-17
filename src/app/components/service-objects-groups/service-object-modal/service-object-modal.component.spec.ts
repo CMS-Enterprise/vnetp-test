@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
@@ -14,21 +14,23 @@ describe('ServiceObjectModalComponent', () => {
   let component: ServiceObjectModalComponent;
   let fixture: ComponentFixture<ServiceObjectModalComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [ServiceObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityServiceObjectsService)],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(ServiceObjectModalComponent);
-        component = fixture.componentInstance;
-        component.TierId = '1';
-        component.ServiceObjectId = '2';
-        fixture.detectChanges();
-      });
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [FormsModule, ReactiveFormsModule],
+        declarations: [ServiceObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+        providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityServiceObjectsService)],
+      })
+        .compileComponents()
+        .then(() => {
+          fixture = TestBed.createComponent(ServiceObjectModalComponent);
+          component = fixture.componentInstance;
+          component.TierId = '1';
+          component.ServiceObjectId = '2';
+          fixture.detectChanges();
+        });
+    }),
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

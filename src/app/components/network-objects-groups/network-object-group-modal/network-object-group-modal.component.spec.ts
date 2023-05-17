@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NetworkObjectGroupModalComponent } from './network-object-group-modal.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,24 +16,26 @@ describe('NetworkObjectGroupModalComponent', () => {
   let component: NetworkObjectGroupModalComponent;
   let fixture: ComponentFixture<NetworkObjectGroupModalComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [
-        NetworkObjectGroupModalComponent,
-        MockNgxSmartModalComponent,
-        MockTooltipComponent,
-        MockFontAwesomeComponent,
-        MockIconButtonComponent,
-        MockNgSelectComponent,
-      ],
-      providers: [
-        MockProvider(NgxSmartModalService),
-        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
-        MockProvider(V1TiersService),
-      ],
-    });
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [FormsModule, ReactiveFormsModule],
+        declarations: [
+          NetworkObjectGroupModalComponent,
+          MockNgxSmartModalComponent,
+          MockTooltipComponent,
+          MockFontAwesomeComponent,
+          MockIconButtonComponent,
+          MockNgSelectComponent,
+        ],
+        providers: [
+          MockProvider(NgxSmartModalService),
+          MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+          MockProvider(V1TiersService),
+        ],
+      });
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NetworkObjectGroupModalComponent);

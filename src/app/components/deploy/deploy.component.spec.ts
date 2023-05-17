@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { DeployComponent } from './deploy.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -50,33 +50,35 @@ describe('DeployComponent', () => {
 
   const datacenterSubject = new Subject();
 
-  beforeEach(async(() => {
-    const datacenterService = {
-      currentDatacenter: datacenterSubject.asObservable(),
-    };
+  beforeEach(
+    waitForAsync(() => {
+      const datacenterService = {
+        currentDatacenter: datacenterSubject.asObservable(),
+      };
 
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
-      declarations: [DeployComponent, ResolvePipe, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockYesNoModalComponent],
-      providers: [
-        MockProvider(NgxSmartModalService),
-        MockProvider(V1JobsService),
-        MockProvider(V1TierGroupsService),
-        MockProvider(V1TiersService, { getManyDatacenterTier: of(testData.getManyDatacenterTierResponse) }),
-        { provide: DatacenterContextService, useValue: datacenterService },
-      ],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(DeployComponent);
-        component = fixture.componentInstance;
-        component.currentDatacenter = {
-          id: '1',
-          name: 'Datacenter1',
-        };
-        fixture.detectChanges();
-      });
-  }));
+      TestBed.configureTestingModule({
+        imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+        declarations: [DeployComponent, ResolvePipe, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockYesNoModalComponent],
+        providers: [
+          MockProvider(NgxSmartModalService),
+          MockProvider(V1JobsService),
+          MockProvider(V1TierGroupsService),
+          MockProvider(V1TiersService, { getManyDatacenterTier: of(testData.getManyDatacenterTierResponse) }),
+          { provide: DatacenterContextService, useValue: datacenterService },
+        ],
+      })
+        .compileComponents()
+        .then(() => {
+          fixture = TestBed.createComponent(DeployComponent);
+          component = fixture.componentInstance;
+          component.currentDatacenter = {
+            id: '1',
+            name: 'Datacenter1',
+          };
+          fixture.detectChanges();
+        });
+    }),
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

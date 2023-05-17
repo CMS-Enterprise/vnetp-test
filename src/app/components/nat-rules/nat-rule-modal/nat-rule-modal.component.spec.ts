@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import {
   MockComponent,
@@ -34,36 +34,38 @@ describe('NatRuleModalComponent', () => {
   let component: NatRuleModalComponent;
   let fixture: ComponentFixture<NatRuleModalComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
-      declarations: [
-        MockComponent('app-nat-rule-modal'),
-        NatRuleModalComponent,
-        MockTooltipComponent,
-        MockNgxSmartModalComponent,
-        MockFontAwesomeComponent,
-        MockNgSelectComponent,
-        NatRuleObjectInfoModalComponent,
-      ],
-      providers: [
-        MockProvider(NgxSmartModalService),
-        MockProvider(V1NetworkSecurityNatRulesService),
-        MockProvider(TierContextService),
-        MockProvider(V1NetworkSecurityFirewallRulesService),
-        MockProvider(V1NetworkSecurityNetworkObjectsService),
-        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
-        MockProvider(V1NetworkSecurityServiceObjectsService),
-        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
-      ],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(NatRuleModalComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+        declarations: [
+          MockComponent('app-nat-rule-modal'),
+          NatRuleModalComponent,
+          MockTooltipComponent,
+          MockNgxSmartModalComponent,
+          MockFontAwesomeComponent,
+          MockNgSelectComponent,
+          NatRuleObjectInfoModalComponent,
+        ],
+        providers: [
+          MockProvider(NgxSmartModalService),
+          MockProvider(V1NetworkSecurityNatRulesService),
+          MockProvider(TierContextService),
+          MockProvider(V1NetworkSecurityFirewallRulesService),
+          MockProvider(V1NetworkSecurityNetworkObjectsService),
+          MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+          MockProvider(V1NetworkSecurityServiceObjectsService),
+          MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+        ],
+      })
+        .compileComponents()
+        .then(() => {
+          fixture = TestBed.createComponent(NatRuleModalComponent);
+          component = fixture.componentInstance;
+          fixture.detectChanges();
+        });
+    }),
+  );
 
   const getFormControl = (name: string) => component.f[name];
   const testRequiredFields = (options: {

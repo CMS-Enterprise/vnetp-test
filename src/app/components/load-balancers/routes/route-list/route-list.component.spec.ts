@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   MockComponent,
@@ -22,35 +22,37 @@ describe('RouteListComponent', () => {
   let fixture: ComponentFixture<RouteListComponent>;
   let service: V1LoadBalancerRoutesService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([])],
-      declarations: [
-        RouteListComponent,
-        MockComponent('app-route-modal'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
-        MockFontAwesomeComponent,
-        MockIconButtonComponent,
-        MockImportExportComponent,
-        MockYesNoModalComponent,
-      ],
-      providers: [
-        MockProvider(DatacenterContextService),
-        MockProvider(EntityService),
-        MockProvider(NgxSmartModalService),
-        MockProvider(TierContextService),
-        MockProvider(V1LoadBalancerRoutesService),
-      ],
-    });
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [RouterTestingModule.withRoutes([])],
+        declarations: [
+          RouteListComponent,
+          MockComponent('app-route-modal'),
+          MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+          MockFontAwesomeComponent,
+          MockIconButtonComponent,
+          MockImportExportComponent,
+          MockYesNoModalComponent,
+        ],
+        providers: [
+          MockProvider(DatacenterContextService),
+          MockProvider(EntityService),
+          MockProvider(NgxSmartModalService),
+          MockProvider(TierContextService),
+          MockProvider(V1LoadBalancerRoutesService),
+        ],
+      });
 
-    fixture = TestBed.createComponent(RouteListComponent);
-    component = fixture.componentInstance;
-    component.currentTier = { id: '1', name: 'Tier1' } as Tier;
-    component.tiers = [component.currentTier];
-    fixture.detectChanges();
+      fixture = TestBed.createComponent(RouteListComponent);
+      component = fixture.componentInstance;
+      component.currentTier = { id: '1', name: 'Tier1' } as Tier;
+      component.tiers = [component.currentTier];
+      fixture.detectChanges();
 
-    service = TestBed.inject(V1LoadBalancerRoutesService);
-  }));
+      service = TestBed.inject(V1LoadBalancerRoutesService);
+    }),
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

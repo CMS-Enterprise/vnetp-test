@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ServiceObjectsGroupsComponent } from './service-objects-groups.component';
 import {
   MockFontAwesomeComponent,
@@ -24,34 +24,36 @@ describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
   let fixture: ComponentFixture<ServiceObjectsGroupsComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
-      declarations: [
-        FilterPipe,
-        ImportExportComponent,
-        MockComponent('app-service-object-group-modal'),
-        MockComponent('app-service-object-modal'),
-        MockComponent('app-tier-select'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
-        MockFontAwesomeComponent,
-        MockIconButtonComponent,
-        MockNgxSmartModalComponent,
-        MockTabsComponent,
-        MockTooltipComponent,
-        ServiceObjectsGroupsComponent,
-        YesNoModalComponent,
-      ],
-      providers: [
-        MockProvider(DatacenterContextService),
-        MockProvider(NgxSmartModalService),
-        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
-        MockProvider(V1NetworkSecurityServiceObjectsService),
-        MockProvider(TierContextService),
-        MockProvider(V1TiersService),
-      ],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+        declarations: [
+          FilterPipe,
+          ImportExportComponent,
+          MockComponent('app-service-object-group-modal'),
+          MockComponent('app-service-object-modal'),
+          MockComponent('app-tier-select'),
+          MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+          MockFontAwesomeComponent,
+          MockIconButtonComponent,
+          MockNgxSmartModalComponent,
+          MockTabsComponent,
+          MockTooltipComponent,
+          ServiceObjectsGroupsComponent,
+          YesNoModalComponent,
+        ],
+        providers: [
+          MockProvider(DatacenterContextService),
+          MockProvider(NgxSmartModalService),
+          MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+          MockProvider(V1NetworkSecurityServiceObjectsService),
+          MockProvider(TierContextService),
+          MockProvider(V1TiersService),
+        ],
+      }).compileComponents();
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ServiceObjectsGroupsComponent);

@@ -1,12 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  MockFontAwesomeComponent,
-  MockTooltipComponent,
-  MockNgxSmartModalComponent,
-  MockNgSelectComponent,
-} from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { SubnetModalComponent } from './subnet-modal.component';
 import TestUtil from 'src/test/TestUtil';
@@ -20,21 +15,23 @@ describe('SubnetModalComponent', () => {
   let component: SubnetModalComponent;
   let fixture: ComponentFixture<SubnetModalComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, NgSelectModule],
-      declarations: [SubnetModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSubnetsService), MockProvider(V1NetworkVlansService)],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(SubnetModalComponent);
-        component = fixture.componentInstance;
-        component.TierId = '1';
-        component.SubnetId = '2';
-        fixture.detectChanges();
-      });
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [FormsModule, ReactiveFormsModule, NgSelectModule],
+        declarations: [SubnetModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+        providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSubnetsService), MockProvider(V1NetworkVlansService)],
+      })
+        .compileComponents()
+        .then(() => {
+          fixture = TestBed.createComponent(SubnetModalComponent);
+          component = fixture.componentInstance;
+          component.TierId = '1';
+          component.SubnetId = '2';
+          fixture.detectChanges();
+        });
+    }),
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

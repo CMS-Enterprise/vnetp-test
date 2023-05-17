@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
@@ -10,19 +10,21 @@ describe('StaticRouteModalComponent', () => {
   let component: StaticRouteModalComponent;
   let fixture: ComponentFixture<StaticRouteModalComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [StaticRouteModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkStaticRoutesService)],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(StaticRouteModalComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [FormsModule, ReactiveFormsModule],
+        declarations: [StaticRouteModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+        providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkStaticRoutesService)],
+      })
+        .compileComponents()
+        .then(() => {
+          fixture = TestBed.createComponent(StaticRouteModalComponent);
+          component = fixture.componentInstance;
+          fixture.detectChanges();
+        });
+    }),
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

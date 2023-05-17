@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {
   MockFontAwesomeComponent,
   MockTooltipComponent,
@@ -25,35 +25,37 @@ describe('SubnetsVlansComponent', () => {
   let component: SubnetsVlansComponent;
   let fixture: ComponentFixture<SubnetsVlansComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
-      declarations: [
-        ImportExportComponent,
-        MockComponent('app-subnet-modal'),
-        MockComponent('app-tier-select'),
-        MockComponent('app-vlan-modal'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
-        MockFontAwesomeComponent,
-        MockIconButtonComponent,
-        MockNgxSmartModalComponent,
-        MockTabsComponent,
-        MockTooltipComponent,
-        ResolvePipe,
-        SubnetsVlansComponent,
-        YesNoModalComponent,
-      ],
-      providers: [
-        MockProvider(DatacenterContextService),
-        MockProvider(NgxSmartModalService),
-        MockProvider(SubnetsVlansHelpText),
-        MockProvider(TierContextService),
-        MockProvider(V1NetworkSubnetsService),
-        MockProvider(V1NetworkVlansService),
-        MockProvider(V1TiersService),
-      ],
-    });
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+        declarations: [
+          ImportExportComponent,
+          MockComponent('app-subnet-modal'),
+          MockComponent('app-tier-select'),
+          MockComponent('app-vlan-modal'),
+          MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+          MockFontAwesomeComponent,
+          MockIconButtonComponent,
+          MockNgxSmartModalComponent,
+          MockTabsComponent,
+          MockTooltipComponent,
+          ResolvePipe,
+          SubnetsVlansComponent,
+          YesNoModalComponent,
+        ],
+        providers: [
+          MockProvider(DatacenterContextService),
+          MockProvider(NgxSmartModalService),
+          MockProvider(SubnetsVlansHelpText),
+          MockProvider(TierContextService),
+          MockProvider(V1NetworkSubnetsService),
+          MockProvider(V1NetworkVlansService),
+          MockProvider(V1TiersService),
+        ],
+      });
+    }),
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubnetsVlansComponent);

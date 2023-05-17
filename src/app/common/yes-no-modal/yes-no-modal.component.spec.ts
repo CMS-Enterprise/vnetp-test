@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -10,19 +10,21 @@ describe('YesNoModalComponent', () => {
   let component: YesNoModalComponent;
   let fixture: ComponentFixture<YesNoModalComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [YesNoModalComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(NgxSmartModalService)],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(YesNoModalComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [FormsModule, ReactiveFormsModule],
+        declarations: [YesNoModalComponent, MockNgxSmartModalComponent],
+        providers: [MockProvider(NgxSmartModalService)],
+      })
+        .compileComponents()
+        .then(() => {
+          fixture = TestBed.createComponent(YesNoModalComponent);
+          component = fixture.componentInstance;
+          fixture.detectChanges();
+        });
+    }),
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

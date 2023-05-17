@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
@@ -14,21 +14,23 @@ describe('VlanModalComponent', () => {
   let component: VlanModalComponent;
   let fixture: ComponentFixture<VlanModalComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [VlanModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkVlansService)],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(VlanModalComponent);
-        component = fixture.componentInstance;
-        component.TierId = '1';
-        component.VlanId = '2';
-        fixture.detectChanges();
-      });
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [FormsModule, ReactiveFormsModule],
+        declarations: [VlanModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+        providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkVlansService)],
+      })
+        .compileComponents()
+        .then(() => {
+          fixture = TestBed.createComponent(VlanModalComponent);
+          component = fixture.componentInstance;
+          component.TierId = '1';
+          component.VlanId = '2';
+          fixture.detectChanges();
+        });
+    }),
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

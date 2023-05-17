@@ -1,4 +1,4 @@
-import { TestBed, async, ComponentFixture } from '@angular/core/testing';
+import { TestBed, async, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { MockComponent } from 'src/test/mock-components';
@@ -12,33 +12,35 @@ describe('AppComponent', () => {
 
   const routerEvents = new Subject<Event>();
 
-  beforeEach(async(() => {
-    const activatedRoute = { data: of({ title: 'test' }), outlet: 'primary' };
+  beforeEach(
+    waitForAsync(() => {
+      const activatedRoute = { data: of({ title: 'test' }), outlet: 'primary' };
 
-    const router = {
-      events: routerEvents.asObservable(),
-    };
+      const router = {
+        events: routerEvents.asObservable(),
+      };
 
-    const title = {
-      setTitle: jest.fn(),
-    };
+      const title = {
+        setTitle: jest.fn(),
+      };
 
-    TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      declarations: [AppComponent, MockComponent('app-breadcrumb'), MockComponent('app-navbar')],
-      providers: [
-        { provide: ActivatedRoute, useValue: activatedRoute },
-        { provide: Router, useValue: router },
-        { provide: Title, useValue: title },
-      ],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(AppComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
-  }));
+      TestBed.configureTestingModule({
+        imports: [RouterTestingModule],
+        declarations: [AppComponent, MockComponent('app-breadcrumb'), MockComponent('app-navbar')],
+        providers: [
+          { provide: ActivatedRoute, useValue: activatedRoute },
+          { provide: Router, useValue: router },
+          { provide: Title, useValue: title },
+        ],
+      })
+        .compileComponents()
+        .then(() => {
+          fixture = TestBed.createComponent(AppComponent);
+          component = fixture.componentInstance;
+          fixture.detectChanges();
+        });
+    }),
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();
