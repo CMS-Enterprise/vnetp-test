@@ -41,6 +41,8 @@ import { environment } from 'src/environments/environment';
 import { AppInitService } from './app.init';
 import { APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NavbarModule } from './common/navbar/navbar.module';
+import { BreadcrumbsModule } from './common/breadcrumbs/breadcrumbs.module';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -71,6 +73,8 @@ export function init_app(appLoadService: AppInitService) {
       closeButton: true,
       preventDuplicates: true,
     }),
+    NavbarModule,
+    BreadcrumbsModule,
   ],
   providers: [
     AppInitService,

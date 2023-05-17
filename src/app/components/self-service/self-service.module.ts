@@ -13,6 +13,8 @@ import { SelfServiceArtifactReviewModalComponent } from './self-service-artifact
 import { SelfServiceBulkUploadModalComponent } from './self-service-bulk-upload-modal/self-service-bulk-upload-modal.component';
 import { SelfServiceModalComponent } from './self-service-modal/self-service-modal.component';
 import { SelfServiceComponent } from './self-service.component';
+import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 
 const routes: Routes = [
   {
@@ -34,6 +36,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     NgxSmartModalModule,
     TabsModule,
+    ImportExportModule,
+    YesNoModalModule,
   ],
   declarations: [
     SelfServiceComponent,
