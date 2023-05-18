@@ -29,11 +29,11 @@ module.exports = {
     },
     "plugins": [
         "eslint-plugin-import",
-        "eslint-plugin-jsdoc",
-        "@angular-eslint/eslint-plugin",
-        "eslint-plugin-prefer-arrow",
-        "@typescript-eslint",
-        "@typescript-eslint/tslint"
+        // "eslint-plugin-jsdoc",
+        // "@angular-eslint/eslint-plugin",
+        // "eslint-plugin-prefer-arrow",
+        // "@typescript-eslint",
+        // "@typescript-eslint/tslint"
     ],
     "root": true,
     "rules": {

@@ -12,7 +12,7 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "jest --no-cache --runInBand",
     "test:ci": "jest --ci --no-cache --runInBand --coverage --verbose --silent",
-    "lint": "ng lint",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "sonar": "sonar-scanner",
     "generate-client": "TS_POST_PROCESS_FILE=./node_modules/.bin/prettier openapi-generator-cli generate"
   },
@@ -68,6 +68,8 @@
     "@typescript-eslint/parser": "^5.59.6",
     "codelyzer": "^6.0.0",
     "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
     "husky": "^3.1.0",
     "jest": "^26.3.0",
     "jest-preset-angular": "8.2.0",
