@@ -5,19 +5,17 @@ describe('D3PieChartComponent', () => {
   let component: D3PieChartComponent;
   let fixture: ComponentFixture<D3PieChartComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [D3PieChartComponent],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(D3PieChartComponent);
-          component = fixture.componentInstance;
-          fixture.detectChanges();
-        });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [D3PieChartComponent],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(D3PieChartComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

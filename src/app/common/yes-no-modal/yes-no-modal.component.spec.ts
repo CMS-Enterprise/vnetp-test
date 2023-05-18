@@ -10,21 +10,19 @@ describe('YesNoModalComponent', () => {
   let component: YesNoModalComponent;
   let fixture: ComponentFixture<YesNoModalComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [FormsModule, ReactiveFormsModule],
-        declarations: [YesNoModalComponent, MockNgxSmartModalComponent],
-        providers: [MockProvider(NgxSmartModalService)],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(YesNoModalComponent);
-          component = fixture.componentInstance;
-          fixture.detectChanges();
-        });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [YesNoModalComponent, MockNgxSmartModalComponent],
+      providers: [MockProvider(NgxSmartModalService)],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(YesNoModalComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

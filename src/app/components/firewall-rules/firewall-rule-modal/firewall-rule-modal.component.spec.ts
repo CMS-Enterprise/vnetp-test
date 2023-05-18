@@ -22,35 +22,33 @@ describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
   let fixture: ComponentFixture<FirewallRuleModalComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [FormsModule, ReactiveFormsModule],
-        declarations: [
-          FirewallRuleModalComponent,
-          MockTooltipComponent,
-          MockFontAwesomeComponent,
-          MockNgxSmartModalComponent,
-          MockNgSelectComponent,
-          FirewallRuleObjectInfoModalComponent,
-        ],
-        providers: [
-          MockProvider(NgxSmartModalService),
-          MockProvider(V1NetworkSecurityFirewallRulesService),
-          MockProvider(V1NetworkSecurityNetworkObjectsService),
-          MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
-          MockProvider(V1NetworkSecurityServiceObjectsService),
-          MockProvider(V1NetworkSecurityServiceObjectGroupsService),
-        ],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(FirewallRuleModalComponent);
-          component = fixture.componentInstance;
-          fixture.detectChanges();
-        });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [
+        FirewallRuleModalComponent,
+        MockTooltipComponent,
+        MockFontAwesomeComponent,
+        MockNgxSmartModalComponent,
+        MockNgSelectComponent,
+        FirewallRuleObjectInfoModalComponent,
+      ],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1NetworkSecurityFirewallRulesService),
+        MockProvider(V1NetworkSecurityNetworkObjectsService),
+        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+        MockProvider(V1NetworkSecurityServiceObjectsService),
+        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+      ],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(FirewallRuleModalComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
+  }));
 
   const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
   const isRequired = (prop: string): boolean => {

@@ -206,9 +206,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   private isUnencryptedPrivateKey(result: string): boolean {
     try {
       const isKey = result.toUpperCase().includes('KEY');
-      const base64IsKey = atob(result)
-        .toUpperCase()
-        .includes('KEY');
+      const base64IsKey = atob(result).toUpperCase().includes('KEY');
       return isKey || base64IsKey;
     } catch {
       return false;

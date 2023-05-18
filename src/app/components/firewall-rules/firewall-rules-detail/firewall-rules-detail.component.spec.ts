@@ -31,37 +31,35 @@ describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
   let fixture: ComponentFixture<FirewallRulesDetailComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [FormsModule, NgxPaginationModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
-        declarations: [
-          FirewallRulesDetailComponent,
-          ImportExportComponent,
-          MockComponent('app-firewall-rule-modal'),
-          MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
-          MockFontAwesomeComponent,
-          MockIconButtonComponent,
-          MockNgxSmartModalComponent,
-          MockTooltipComponent,
-          PreviewModalComponent,
-          ResolvePipe,
-          YesNoModalComponent,
-        ],
-        providers: [
-          MockProvider(DatacenterContextService),
-          MockProvider(NgxSmartModalService),
-          MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
-          MockProvider(V1NetworkSecurityFirewallRulesService),
-          MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
-          MockProvider(V1NetworkSecurityNetworkObjectsService),
-          MockProvider(V1NetworkSecurityServiceObjectGroupsService),
-          MockProvider(V1NetworkSecurityServiceObjectsService),
-          MockProvider(V1TiersService),
-        ],
-      });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, NgxPaginationModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+      declarations: [
+        FirewallRulesDetailComponent,
+        ImportExportComponent,
+        MockComponent('app-firewall-rule-modal'),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockNgxSmartModalComponent,
+        MockTooltipComponent,
+        PreviewModalComponent,
+        ResolvePipe,
+        YesNoModalComponent,
+      ],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
+        MockProvider(V1NetworkSecurityFirewallRulesService),
+        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+        MockProvider(V1NetworkSecurityNetworkObjectsService),
+        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+        MockProvider(V1NetworkSecurityServiceObjectsService),
+        MockProvider(V1TiersService),
+      ],
+    });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FirewallRulesDetailComponent);

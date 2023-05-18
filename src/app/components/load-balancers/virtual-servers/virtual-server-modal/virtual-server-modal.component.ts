@@ -179,16 +179,8 @@ export class VirtualServerModalComponent implements OnInit {
       return;
     }
 
-    const {
-      defaultPoolId,
-      description,
-      destinationIpAddress,
-      name,
-      servicePort,
-      sourceAddressTranslation,
-      sourceIpAddress,
-      type,
-    } = this.form.value;
+    const { defaultPoolId, description, destinationIpAddress, name, servicePort, sourceAddressTranslation, sourceIpAddress, type } =
+      this.form.value;
 
     const virtualServer: LoadBalancerVirtualServer = {
       tierId: this.tierId,

@@ -50,35 +50,33 @@ describe('DeployComponent', () => {
 
   const datacenterSubject = new Subject();
 
-  beforeEach(
-    waitForAsync(() => {
-      const datacenterService = {
-        currentDatacenter: datacenterSubject.asObservable(),
-      };
+  beforeEach(waitForAsync(() => {
+    const datacenterService = {
+      currentDatacenter: datacenterSubject.asObservable(),
+    };
 
-      TestBed.configureTestingModule({
-        imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
-        declarations: [DeployComponent, ResolvePipe, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockYesNoModalComponent],
-        providers: [
-          MockProvider(NgxSmartModalService),
-          MockProvider(V1JobsService),
-          MockProvider(V1TierGroupsService),
-          MockProvider(V1TiersService, { getManyDatacenterTier: of(testData.getManyDatacenterTierResponse) }),
-          { provide: DatacenterContextService, useValue: datacenterService },
-        ],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(DeployComponent);
-          component = fixture.componentInstance;
-          component.currentDatacenter = {
-            id: '1',
-            name: 'Datacenter1',
-          };
-          fixture.detectChanges();
-        });
-    }),
-  );
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+      declarations: [DeployComponent, ResolvePipe, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockYesNoModalComponent],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1JobsService),
+        MockProvider(V1TierGroupsService),
+        MockProvider(V1TiersService, { getManyDatacenterTier: of(testData.getManyDatacenterTierResponse) }),
+        { provide: DatacenterContextService, useValue: datacenterService },
+      ],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(DeployComponent);
+        component = fixture.componentInstance;
+        component.currentDatacenter = {
+          id: '1',
+          name: 'Datacenter1',
+        };
+        fixture.detectChanges();
+      });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

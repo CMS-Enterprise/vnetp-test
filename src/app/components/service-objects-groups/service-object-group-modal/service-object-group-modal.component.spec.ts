@@ -16,32 +16,30 @@ describe('ServiceObjectGroupModalComponent', () => {
   let component: ServiceObjectGroupModalComponent;
   let fixture: ComponentFixture<ServiceObjectGroupModalComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [FormsModule, ReactiveFormsModule],
-        declarations: [
-          ServiceObjectGroupModalComponent,
-          MockTooltipComponent,
-          MockFontAwesomeComponent,
-          MockNgxSmartModalComponent,
-          MockIconButtonComponent,
-          MockNgSelectComponent,
-        ],
-        providers: [
-          MockProvider(NgxSmartModalService),
-          MockProvider(V1NetworkSecurityServiceObjectGroupsService),
-          MockProvider(V1TiersService),
-        ],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(ServiceObjectGroupModalComponent);
-          component = fixture.componentInstance;
-          fixture.detectChanges();
-        });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [
+        ServiceObjectGroupModalComponent,
+        MockTooltipComponent,
+        MockFontAwesomeComponent,
+        MockNgxSmartModalComponent,
+        MockIconButtonComponent,
+        MockNgSelectComponent,
+      ],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+        MockProvider(V1TiersService),
+      ],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(ServiceObjectGroupModalComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -14,36 +14,34 @@ describe('StaticRouteDetailComponent', () => {
   let component: StaticRouteDetailComponent;
   let fixture: ComponentFixture<StaticRouteDetailComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [FormsModule, RouterTestingModule.withRoutes([]), ReactiveFormsModule],
-        declarations: [
-          StaticRouteDetailComponent,
-          YesNoModalComponent,
-          MockComponent('app-static-route-modal'),
-          MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
-          MockFontAwesomeComponent,
-          MockIconButtonComponent,
-          MockNgxSmartModalComponent,
-        ],
-        providers: [
-          MockProvider(DatacenterContextService),
-          MockProvider(NgxSmartModalService),
-          MockProvider(V1NetworkStaticRoutesService),
-          MockProvider(V1TiersService),
-          {
-            provide: ActivatedRoute,
-            useValue: {
-              snapshot: {
-                paramMap: convertToParamMap({ id: '1' }),
-              },
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, RouterTestingModule.withRoutes([]), ReactiveFormsModule],
+      declarations: [
+        StaticRouteDetailComponent,
+        YesNoModalComponent,
+        MockComponent('app-static-route-modal'),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockNgxSmartModalComponent,
+      ],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1NetworkStaticRoutesService),
+        MockProvider(V1TiersService),
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: convertToParamMap({ id: '1' }),
             },
           },
-        ],
-      }).compileComponents();
-    }),
-  );
+        },
+      ],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StaticRouteDetailComponent);

@@ -10,21 +10,19 @@ describe('StaticRouteModalComponent', () => {
   let component: StaticRouteModalComponent;
   let fixture: ComponentFixture<StaticRouteModalComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [FormsModule, ReactiveFormsModule],
-        declarations: [StaticRouteModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-        providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkStaticRoutesService)],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(StaticRouteModalComponent);
-          component = fixture.componentInstance;
-          fixture.detectChanges();
-        });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [StaticRouteModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkStaticRoutesService)],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(StaticRouteModalComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

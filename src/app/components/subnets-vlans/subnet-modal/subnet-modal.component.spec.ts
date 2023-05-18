@@ -15,23 +15,21 @@ describe('SubnetModalComponent', () => {
   let component: SubnetModalComponent;
   let fixture: ComponentFixture<SubnetModalComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [FormsModule, ReactiveFormsModule, NgSelectModule],
-        declarations: [SubnetModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-        providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSubnetsService), MockProvider(V1NetworkVlansService)],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(SubnetModalComponent);
-          component = fixture.componentInstance;
-          component.TierId = '1';
-          component.SubnetId = '2';
-          fixture.detectChanges();
-        });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule, NgSelectModule],
+      declarations: [SubnetModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSubnetsService), MockProvider(V1NetworkVlansService)],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(SubnetModalComponent);
+        component = fixture.componentInstance;
+        component.TierId = '1';
+        component.SubnetId = '2';
+        fixture.detectChanges();
+      });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -6,17 +6,15 @@ describe('NotFoundComponent', () => {
   let component: NotFoundComponent;
   let fixture: ComponentFixture<NotFoundComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [NotFoundComponent],
-      });
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [NotFoundComponent],
+    });
 
-      fixture = TestBed.createComponent(NotFoundComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    }),
-  );
+    fixture = TestBed.createComponent(NotFoundComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -7,20 +7,18 @@ describe('TabsComponent', () => {
   let component: TabsComponent;
   let fixture: ComponentFixture<TabsComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [TabsComponent, MockTooltipComponent],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(TabsComponent);
-          component = fixture.componentInstance;
-          component.tabs = [{ name: '1' }, { name: '2' }];
-          fixture.detectChanges();
-        });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [TabsComponent, MockTooltipComponent],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(TabsComponent);
+        component = fixture.componentInstance;
+        component.tabs = [{ name: '1' }, { name: '2' }];
+        fixture.detectChanges();
+      });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

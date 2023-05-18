@@ -9,15 +9,13 @@ describe('JobsComponent', () => {
   let component: JobsComponent;
   let fixture: ComponentFixture<JobsComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [NgxPaginationModule],
-        declarations: [JobsComponent, MockFontAwesomeComponent],
-        providers: [MockProvider(V1JobsService)],
-      });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [NgxPaginationModule],
+      declarations: [JobsComponent, MockFontAwesomeComponent],
+      providers: [MockProvider(V1JobsService)],
+    });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(JobsComponent);

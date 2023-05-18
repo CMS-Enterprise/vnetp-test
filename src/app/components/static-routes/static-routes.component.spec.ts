@@ -10,19 +10,13 @@ describe('StaticRoutesComponent', () => {
   let component: StaticRoutesComponent;
   let fixture: ComponentFixture<StaticRoutesComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [RouterTestingModule.withRoutes([])],
-        declarations: [
-          StaticRoutesComponent,
-          MockFontAwesomeComponent,
-          MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
-        ],
-        providers: [MockProvider(DatacenterContextService), MockProvider(V1TiersService)],
-      });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([])],
+      declarations: [StaticRoutesComponent, MockFontAwesomeComponent, MockComponent({ selector: 'app-table', inputs: ['config', 'data'] })],
+      providers: [MockProvider(DatacenterContextService), MockProvider(V1TiersService)],
+    });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StaticRoutesComponent);

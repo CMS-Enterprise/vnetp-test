@@ -23,39 +23,37 @@ describe('FirewallRulesComponent', () => {
   let component: FirewallRulesComponent;
   let fixture: ComponentFixture<FirewallRulesComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [FormsModule, ReactiveFormsModule, RouterTestingModule, NgxPaginationModule],
-        declarations: [
-          FilterPipe,
-          FirewallRulesComponent,
-          MockComponent('app-firewall-rule-modal'),
-          MockComponent('app-tier-select'),
-          MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
-          MockImportExportComponent,
-          MockFontAwesomeComponent,
-          MockNgxSmartModalComponent,
-          MockTabsComponent,
-          MockTooltipComponent,
-          MockYesNoModalComponent,
-        ],
-        providers: [
-          MockProvider(NgxSmartModalService),
-          MockProvider(DatacenterContextService),
-          MockProvider(TierContextService),
-          MockProvider(V1TiersService),
-          MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
-        ],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(FirewallRulesComponent);
-          component = fixture.componentInstance;
-          fixture.detectChanges();
-        });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule, NgxPaginationModule],
+      declarations: [
+        FilterPipe,
+        FirewallRulesComponent,
+        MockComponent('app-firewall-rule-modal'),
+        MockComponent('app-tier-select'),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockImportExportComponent,
+        MockFontAwesomeComponent,
+        MockNgxSmartModalComponent,
+        MockTabsComponent,
+        MockTooltipComponent,
+        MockYesNoModalComponent,
+      ],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(DatacenterContextService),
+        MockProvider(TierContextService),
+        MockProvider(V1TiersService),
+        MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
+      ],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(FirewallRulesComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

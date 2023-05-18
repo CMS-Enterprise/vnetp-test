@@ -25,38 +25,36 @@ describe('NetworkObjectsGroupsComponent', () => {
   let component: NetworkObjectsGroupsComponent;
   let fixture: ComponentFixture<NetworkObjectsGroupsComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
-        declarations: [
-          FilterPipe,
-          ImportExportComponent,
-          MockComponent('app-network-object-group-modal'),
-          MockComponent('app-network-object-modal'),
-          MockComponent('app-tier-select'),
-          MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
-          MockFontAwesomeComponent,
-          MockIconButtonComponent,
-          MockNgxSmartModalComponent,
-          MockTabsComponent,
-          MockTooltipComponent,
-          NetworkObjectsGroupsComponent,
-          YesNoModalComponent,
-        ],
-        providers: [
-          MockProvider(DatacenterContextService),
-          MockProvider(NgxSmartModalService),
-          MockProvider(NgxSmartModalService),
-          MockProvider(TierContextService),
-          MockProvider(ToastrService),
-          MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
-          MockProvider(V1NetworkSecurityNetworkObjectsService),
-          MockProvider(V1TiersService),
-        ],
-      });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+      declarations: [
+        FilterPipe,
+        ImportExportComponent,
+        MockComponent('app-network-object-group-modal'),
+        MockComponent('app-network-object-modal'),
+        MockComponent('app-tier-select'),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockNgxSmartModalComponent,
+        MockTabsComponent,
+        MockTooltipComponent,
+        NetworkObjectsGroupsComponent,
+        YesNoModalComponent,
+      ],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(TierContextService),
+        MockProvider(ToastrService),
+        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+        MockProvider(V1NetworkSecurityNetworkObjectsService),
+        MockProvider(V1TiersService),
+      ],
+    });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NetworkObjectsGroupsComponent);

@@ -334,13 +334,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   // when the translation type is updated, update the appropriate form controls
   private subscribeToTranslationTypeChanges(): Subscription {
-    const {
-      biDirectional,
-      originalSourceAddressType,
-      translatedDestinationAddressType,
-      translatedSourceAddressType,
-      translationType,
-    } = this.form.controls;
+    const { biDirectional, originalSourceAddressType, translatedDestinationAddressType, translatedSourceAddressType, translationType } =
+      this.form.controls;
 
     const requireTranslatedFields = () => {
       if (translatedSourceAddressType.value === NatRuleTranslatedSourceAddressTypeEnum.NetworkObjectGroup) {
@@ -414,12 +409,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   // when the translated service type is updated, update the appropriate form controls
   private subscribeToTranslatedSourceAddressTypeChanges(): Subscription {
-    const {
-      translatedSourceAddressType,
-      originalSourceAddressType,
-      translatedSourceNetworkObject,
-      translatedSourceNetworkObjectGroup,
-    } = this.form.controls;
+    const { translatedSourceAddressType, originalSourceAddressType, translatedSourceNetworkObject, translatedSourceNetworkObjectGroup } =
+      this.form.controls;
 
     const handler: Record<NatRuleTranslatedSourceAddressTypeEnum, () => void> = {
       [NatRuleTranslatedSourceAddressTypeEnum.None]: () => {

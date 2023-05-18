@@ -10,21 +10,19 @@ describe('NetworkObjectModalComponent', () => {
   let component: NetworkObjectModalComponent;
   let fixture: ComponentFixture<NetworkObjectModalComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [FormsModule, ReactiveFormsModule],
-        declarations: [NetworkObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-        providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityNetworkObjectsService)],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(NetworkObjectModalComponent);
-          component = fixture.componentInstance;
-          fixture.detectChanges();
-        });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [NetworkObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityNetworkObjectsService)],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(NetworkObjectModalComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
+  }));
 
   const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
   const isRequired = (prop: string): boolean => {

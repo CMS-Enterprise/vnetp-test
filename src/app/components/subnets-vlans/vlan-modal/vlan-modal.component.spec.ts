@@ -14,23 +14,21 @@ describe('VlanModalComponent', () => {
   let component: VlanModalComponent;
   let fixture: ComponentFixture<VlanModalComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [FormsModule, ReactiveFormsModule],
-        declarations: [VlanModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-        providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkVlansService)],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(VlanModalComponent);
-          component = fixture.componentInstance;
-          component.TierId = '1';
-          component.VlanId = '2';
-          fixture.detectChanges();
-        });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [VlanModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkVlansService)],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(VlanModalComponent);
+        component = fixture.componentInstance;
+        component.TierId = '1';
+        component.VlanId = '2';
+        fixture.detectChanges();
+      });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

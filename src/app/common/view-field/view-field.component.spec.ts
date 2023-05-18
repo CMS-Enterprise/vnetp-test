@@ -6,19 +6,17 @@ describe('ViewFieldComponent', () => {
   let component: ViewFieldComponent;
   let fixture: ComponentFixture<ViewFieldComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ViewFieldComponent],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(ViewFieldComponent);
-          component = fixture.componentInstance;
-          fixture.detectChanges();
-        });
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ViewFieldComponent],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(ViewFieldComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

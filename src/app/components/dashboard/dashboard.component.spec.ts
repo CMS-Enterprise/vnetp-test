@@ -9,50 +9,48 @@ describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      const datacenterService = {
-        getManyDatacenters: jest.fn(() => of({ total: 1 })),
-      };
+  beforeEach(waitForAsync(() => {
+    const datacenterService = {
+      getManyDatacenters: jest.fn(() => of({ total: 1 })),
+    };
 
-      const tierService = {
-        getManyTier: jest.fn(() => of({ total: 1 })),
-      };
+    const tierService = {
+      getManyTier: jest.fn(() => of({ total: 1 })),
+    };
 
-      const vmwareService = {
-        getManyVmwareVirtualMachine: jest.fn(() => of({ total: 1 })),
-      };
+    const vmwareService = {
+      getManyVmwareVirtualMachine: jest.fn(() => of({ total: 1 })),
+    };
 
-      const loadBalancerService = {
-        getManyLoadBalancerVirtualServer: jest.fn(() => of({ total: 1 })),
-      };
+    const loadBalancerService = {
+      getManyLoadBalancerVirtualServer: jest.fn(() => of({ total: 1 })),
+    };
 
-      const authService = {
-        completeAuthentication: jest.fn(),
-      };
+    const authService = {
+      completeAuthentication: jest.fn(),
+    };
 
-      TestBed.configureTestingModule({
-        declarations: [
-          DashboardComponent,
-          MockComponent({ selector: 'app-d3-pie-chart', inputs: ['data', 'width', 'height', 'radius'] }),
-          MockTooltipComponent,
-          MockFontAwesomeComponent,
-        ],
-        providers: [
-          { provide: V1DatacentersService, useValue: datacenterService },
-          { provide: V1TiersService, useValue: tierService },
-          { provide: V1LoadBalancerVirtualServersService, useValue: loadBalancerService },
-          { provide: AuthService, useValue: authService },
-        ],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(DashboardComponent);
-          component = fixture.componentInstance;
-          fixture.detectChanges();
-        });
-    }),
-  );
+    TestBed.configureTestingModule({
+      declarations: [
+        DashboardComponent,
+        MockComponent({ selector: 'app-d3-pie-chart', inputs: ['data', 'width', 'height', 'radius'] }),
+        MockTooltipComponent,
+        MockFontAwesomeComponent,
+      ],
+      providers: [
+        { provide: V1DatacentersService, useValue: datacenterService },
+        { provide: V1TiersService, useValue: tierService },
+        { provide: V1LoadBalancerVirtualServersService, useValue: loadBalancerService },
+        { provide: AuthService, useValue: authService },
+      ],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(DashboardComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

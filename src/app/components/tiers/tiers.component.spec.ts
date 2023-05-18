@@ -31,36 +31,34 @@ describe('TiersComponent', () => {
   let component: TiersComponent;
   let fixture: ComponentFixture<TiersComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [NgxSmartModalModule, NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
-        declarations: [
-          MockComponent('app-tier-modal'),
-          MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
-          MockFontAwesomeComponent,
-          MockIconButtonComponent,
-          MockImportExportComponent,
-          MockTooltipComponent,
-          MockYesNoModalComponent,
-          ResolvePipe,
-          TiersComponent,
-        ],
-        providers: [
-          MockProvider(DatacenterContextService),
-          MockProvider(NgxSmartModalService),
-          MockProvider(V1TierGroupsService, { getManyTierGroup: () => of([]) }),
-          MockProvider(V1TiersService, { getManyDatacenterTier: () => of([]) }),
-          MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
-          MockProvider(V1NetworkSecurityNatRuleGroupsService),
-          MockProvider(V1NetworkSecurityNetworkObjectsService),
-          MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
-          MockProvider(V1NetworkSecurityServiceObjectsService),
-          MockProvider(V1NetworkSecurityServiceObjectGroupsService),
-        ],
-      }).compileComponents();
-    }),
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [NgxSmartModalModule, NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+      declarations: [
+        MockComponent('app-tier-modal'),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockImportExportComponent,
+        MockTooltipComponent,
+        MockYesNoModalComponent,
+        ResolvePipe,
+        TiersComponent,
+      ],
+      providers: [
+        MockProvider(DatacenterContextService),
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1TierGroupsService, { getManyTierGroup: () => of([]) }),
+        MockProvider(V1TiersService, { getManyDatacenterTier: () => of([]) }),
+        MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
+        MockProvider(V1NetworkSecurityNatRuleGroupsService),
+        MockProvider(V1NetworkSecurityNetworkObjectsService),
+        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+        MockProvider(V1NetworkSecurityServiceObjectsService),
+        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+      ],
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TiersComponent);

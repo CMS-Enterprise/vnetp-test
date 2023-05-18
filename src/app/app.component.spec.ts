@@ -12,35 +12,33 @@ describe('AppComponent', () => {
 
   const routerEvents = new Subject<Event>();
 
-  beforeEach(
-    waitForAsync(() => {
-      const activatedRoute = { data: of({ title: 'test' }), outlet: 'primary' };
+  beforeEach(waitForAsync(() => {
+    const activatedRoute = { data: of({ title: 'test' }), outlet: 'primary' };
 
-      const router = {
-        events: routerEvents.asObservable(),
-      };
+    const router = {
+      events: routerEvents.asObservable(),
+    };
 
-      const title = {
-        setTitle: jest.fn(),
-      };
+    const title = {
+      setTitle: jest.fn(),
+    };
 
-      TestBed.configureTestingModule({
-        imports: [RouterTestingModule],
-        declarations: [AppComponent, MockComponent('app-breadcrumb'), MockComponent('app-navbar')],
-        providers: [
-          { provide: ActivatedRoute, useValue: activatedRoute },
-          { provide: Router, useValue: router },
-          { provide: Title, useValue: title },
-        ],
-      })
-        .compileComponents()
-        .then(() => {
-          fixture = TestBed.createComponent(AppComponent);
-          component = fixture.componentInstance;
-          fixture.detectChanges();
-        });
-    }),
-  );
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
+      declarations: [AppComponent, MockComponent('app-breadcrumb'), MockComponent('app-navbar')],
+      providers: [
+        { provide: ActivatedRoute, useValue: activatedRoute },
+        { provide: Router, useValue: router },
+        { provide: Title, useValue: title },
+      ],
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(AppComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+      });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
