@@ -221,7 +221,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     // if the namespace for a selected tier matches another host, we fail the form submission
     // and tell the user to change one of the namespaces
 
-    // eslint:disable-next-line
+    // eslint-disable-next-line
     for (let i = 0; i < this.selectedTiers.length; i++) {
       const tier = this.selectedTiers[i];
       this.selectedTiers.map(selectedTier => {

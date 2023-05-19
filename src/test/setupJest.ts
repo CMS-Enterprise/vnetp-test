@@ -1,3 +1,4 @@
+// eslint-disable
 import 'jest-preset-angular';
 
 /* global mocks for jsdom */

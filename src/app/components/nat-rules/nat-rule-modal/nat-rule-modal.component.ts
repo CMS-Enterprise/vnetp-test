@@ -604,6 +604,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
             const memberDetails = members.map(member => {
               let returnValue = `Name: ${member.name} ---`;
 
+              // eslint-disable-next-line
               returnValue += `Protocol: ${member.protocol}, Source Ports: ${member.sourcePorts}, Destination Ports: ${member.destinationPorts}`;
 
               return returnValue;
