@@ -1,4 +1,4 @@
-// eslint:disable
+/* eslint-disable */
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
@@ -81,6 +81,7 @@ export class FirewallRuleModalHelpText {
   Name = 'Name of the Firewall Rule.';
   Action = 'Action that the firewall will take on traffic that matches this rule.';
   Direction =
+    // eslint-disable-next-line
     "Direction that this traffic flow will take. 'In' represents traffic entering the VRF from external/intervrf and 'Out' represents traffic leaving the VRF to external/intervrf.";
   Protocol = 'Layer 4 Protocol that matching traffic uses.';
   Enabled = 'Indicates whether the firewall rule is enabled.';
