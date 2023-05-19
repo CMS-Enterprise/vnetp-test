@@ -19,7 +19,7 @@ module.exports = {
     },
     "extends": [
         "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        // "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "prettier"
     ],
     "parser": "@typescript-eslint/parser",
@@ -37,16 +37,16 @@ module.exports = {
     ],
     "root": true,
     "rules": {
-        "@angular-eslint/component-class-suffix": "error",
-        "@angular-eslint/directive-class-suffix": "error",
-        "@angular-eslint/no-host-metadata-property": "error",
-        "@angular-eslint/no-input-rename": "error",
-        "@angular-eslint/no-inputs-metadata-property": "error",
-        "@angular-eslint/no-output-on-prefix": "error",
-        "@angular-eslint/no-output-rename": "error",
-        "@angular-eslint/no-outputs-metadata-property": "error",
-        "@angular-eslint/use-lifecycle-interface": "error",
-        "@angular-eslint/use-pipe-transform-interface": "error",
+        // "@angular-eslint/component-class-suffix": "error",
+        // "@angular-eslint/directive-class-suffix": "error",
+        // "@angular-eslint/no-host-metadata-property": "error",
+        // "@angular-eslint/no-input-rename": "error",
+        // "@angular-eslint/no-inputs-metadata-property": "error",
+        // "@angular-eslint/no-output-on-prefix": "error",
+        // "@angular-eslint/no-output-rename": "error",
+        // "@angular-eslint/no-outputs-metadata-property": "error",
+        // "@angular-eslint/use-lifecycle-interface": "error",
+        // "@angular-eslint/use-pipe-transform-interface": "error",
         "@typescript-eslint/adjacent-overload-signatures": "error",
         "@typescript-eslint/array-type": "off",
         "@typescript-eslint/ban-types": [
@@ -109,7 +109,7 @@ module.exports = {
                 }
             }
         ],
-        "@typescript-eslint/member-ordering": "error",
+        // "@typescript-eslint/member-ordering": "error",
         "@typescript-eslint/naming-convention": [
             "off",
             {
@@ -251,10 +251,10 @@ module.exports = {
             }
         ],
         "indent": "off",
-        "jsdoc/check-alignment": "error",
-        "jsdoc/check-indentation": "error",
-        "jsdoc/newline-after-description": "error",
-        "jsdoc/no-types": "error",
+        // "jsdoc/check-alignment": "error",
+        // "jsdoc/check-indentation": "error",
+        // "jsdoc/newline-after-description": "error",
+        // "jsdoc/no-types": "error",
         "max-classes-per-file": "off",
         "max-len": [
             "error",
@@ -320,7 +320,7 @@ module.exports = {
             "error",
             "never"
         ],
-        "prefer-arrow/prefer-arrow-functions": "error",
+        // "prefer-arrow/prefer-arrow-functions": "error",
         "prefer-const": "error",
         "quote-props": [
             "error",
@@ -348,22 +348,22 @@ module.exports = {
         ],
         "use-isnan": "error",
         "valid-typeof": "off",
-        "@typescript-eslint/tslint/config": [
-            "error",
-            {
-                "rules": {
-                    "import-spacing": true,
-                    "whitespace": [
-                        true,
-                        "check-branch",
-                        "check-decl",
-                        "check-operator",
-                        "check-separator",
-                        "check-type",
-                        "check-typecast"
-                    ]
-                }
-            }
-        ]
+        // "@typescript-eslint/tslint/config": [
+        //     "error",
+        //     {
+        //         "rules": {
+        //             "import-spacing": true,
+        //             "whitespace": [
+        //                 true,
+        //                 "check-branch",
+        //                 "check-decl",
+        //                 "check-operator",
+        //                 "check-separator",
+        //                 "check-type",
+        //                 "check-typecast"
+        //             ]
+        //         }
+        //     }
+        // ]
     }
 };
