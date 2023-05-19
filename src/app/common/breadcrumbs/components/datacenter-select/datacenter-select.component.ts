@@ -58,7 +58,6 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
     );
 
     this.routeChangesSubscription = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
-      const root: ActivatedRoute = this.activedRoute.root;
       const currentRoute = this.router.url.split('?')[0];
       this.disableSelect = !currentRoute.includes('/dashboard');
     });

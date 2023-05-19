@@ -1,6 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
-  AuditLog,
   AuditLogActionTypeEnum,
   Datacenter,
   NetworkObject,
@@ -17,7 +16,7 @@ import {
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { forkJoin, Subscription } from 'rxjs';
-import { audit, first } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';

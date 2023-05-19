@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { EntityService } from 'src/app/services/entity.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 @Component({
   selector: 'app-self-service',
@@ -75,6 +74,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
       const modalDto = new YesNoModalDto('Import', 'Are you sure you would like to bulk import the converted objects?');
       const onConfirm = () => {
         this.selfServiceService.bulkUploadSelfService({ selfService: this.selectedSelfService }).subscribe(data => {
+          // eslint:disable-next-line
           this.getSelfServices();
           return data;
         }),

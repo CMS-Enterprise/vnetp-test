@@ -142,8 +142,6 @@ export class DatacenterContextService {
       return false;
     }
 
-    const oldDatacenterId = this.currentDatacenterValue ? this.currentDatacenterValue.id : null;
-
     this.currentDatacenterSubject.next(datacenter);
     this.ignoreNextQueryParamEvent = true;
     this.router.navigate([], {

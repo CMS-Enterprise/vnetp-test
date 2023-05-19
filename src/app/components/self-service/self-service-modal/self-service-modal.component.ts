@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Tier, V1DatacentersService, V1SelfServiceService, V1TiersService } from 'client';
+import { Tier, V1SelfServiceService, V1TiersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -221,7 +221,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     // if the namespace for a selected tier matches another host, we fail the form submission
     // and tell the user to change one of the namespaces
 
-    // tslint:disable-next-line
+    // eslint:disable-next-line
     for (let i = 0; i < this.selectedTiers.length; i++) {
       const tier = this.selectedTiers[i];
       this.selectedTiers.map(selectedTier => {
@@ -486,7 +486,6 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     reader.readAsText(file);
     reader.onload = () => {
       const readableText = reader.result.toString();
-      const splitFileByLine = readableText.split('\n');
       this.f.intervrfSubnets.setValue(readableText);
     };
   }
@@ -605,7 +604,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     this.showFooter = false;
     if (this.f.deviceType.value === 'ASA') {
       this.selfServiceService.processAsaConfigSelfService({ selfService: configDto }).subscribe(
-        returnedSelfServiceEntity => {
+        () => {
           this.showSpinner = false;
           this.receivedConfig = true;
           this.onClose();
@@ -615,7 +614,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     } else if (this.f.deviceType.value === 'PA') {
       configDto.intervrfSubnets = this.f.intervrfSubnets.value;
       this.selfServiceService.processPAConfigSelfService({ selfService: configDto }).subscribe(
-        returnedSelfServiceEntity => {
+        () => {
           this.showSpinner = false;
           this.receivedConfig = true;
           this.onClose();

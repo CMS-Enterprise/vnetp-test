@@ -1,14 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {
-  LoadBalancerSelfIp,
-  LoadBalancerVlan,
-  Tier,
-  V1LoadBalancerSelfIpsService,
-  V1LoadBalancerVlansService,
-  V1TiersService,
-} from 'client';
+import { LoadBalancerSelfIp, LoadBalancerVlan, V1LoadBalancerSelfIpsService, V1LoadBalancerVlansService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { SelfIpModalDto } from './self-ip-modal.dto';
@@ -32,7 +25,6 @@ export class SelfIpModalComponent implements OnInit {
     private formBuilder: FormBuilder,
     private selfIpService: V1LoadBalancerSelfIpsService,
     private vlansService: V1LoadBalancerVlansService,
-    private tiersService: V1TiersService,
   ) {}
 
   ngOnInit(): void {

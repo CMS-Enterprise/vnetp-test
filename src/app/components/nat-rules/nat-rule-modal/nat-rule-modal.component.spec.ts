@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {
   MockComponent,
   MockFontAwesomeComponent,
@@ -163,7 +163,7 @@ describe('NatRuleModalComponent', () => {
       expect(TestUtil.isFormControlRequired(originalDestinationAddressType)).toBe(true);
     });
 
-    // tslint:disable-next-line:max-line-length
+    // eslint:disable-next-line
     it('should not require "Original Destination Network Object" and "Original Destination Network Object Group" when set to "None"', () => {
       testRequiredFields({
         field: 'originalDestinationAddressType',

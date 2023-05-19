@@ -135,7 +135,7 @@ describe('DeployComponent', () => {
     });
 
     it('should call to deploys tiers after confirming', () => {
-      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn, closeFn) => {
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn) => {
         confirmFn();
         return of().subscribe();
       });

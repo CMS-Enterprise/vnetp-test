@@ -10,8 +10,6 @@ import {
   LoadBalancerPoolDefaultHealthMonitorsEnum,
   LoadBalancerPoolLoadBalancingMethodEnum,
   Tier,
-  V1LoadBalancerHealthMonitorsService,
-  V1LoadBalancerNodesService,
   V1LoadBalancerPoolsService,
   V1TiersService,
 } from 'client';

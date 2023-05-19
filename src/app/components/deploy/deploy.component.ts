@@ -1,15 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  V1TiersService,
-  Tier,
-  Datacenter,
-  V1TierGroupsService,
-  TierGroup,
-  V1JobsService,
-  Job,
-  FirewallRuleGroupTypeEnum,
-  NatRuleGroupTypeEnum,
-} from 'client';
+import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup, V1JobsService, Job } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Subscription } from 'rxjs';
 import { TableRowWrapper } from 'src/app/models/other/table-row-wrapper';

@@ -9,7 +9,6 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import {
-  GetManyLoadBalancerPolicyRequestParams,
   GetManyLoadBalancerPolicyResponseDto,
   LoadBalancerPolicy,
   LoadBalancerPolicyTypeEnum,

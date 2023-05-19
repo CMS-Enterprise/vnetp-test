@@ -63,7 +63,7 @@ describe('VirtualServerListComponent', () => {
 
   it('should map virtual servers', () => {
     const virtualServerService = TestBed.inject(V1LoadBalancerVirtualServersService);
-    const spy = jest.spyOn(virtualServerService, 'getManyLoadBalancerVirtualServer').mockImplementation(() =>
+    jest.spyOn(virtualServerService, 'getManyLoadBalancerVirtualServer').mockImplementation(() =>
       of({
         data: [
           { id: '1', name: 'VirtualServer1', provisionedAt: {}, defaultPool: { name: 'Pool1' } },

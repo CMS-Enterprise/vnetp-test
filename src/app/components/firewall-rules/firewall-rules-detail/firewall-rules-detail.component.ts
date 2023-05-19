@@ -385,7 +385,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   private createPreview(data: FirewallRulePreview, firewallRules: FirewallRuleImport[]): void {
-    const { firewallRulesToBeUploaded, firewallRulesToBeDeleted } = data;
+    const { firewallRulesToBeUploaded } = data;
     const fwData = { data: firewallRulesToBeUploaded };
     const tableConfig: TableConfig<FirewallRule> = {
       description: 'Firewall Rules Import Preview',
