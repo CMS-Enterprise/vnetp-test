@@ -117,13 +117,11 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(
         response => {
           this.vlans = response;
-          this.vlans.data = (this.vlans.data as VlanView[]).map(v => {
-            return {
-              ...v,
-              nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
-              state: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-            };
-          });
+          this.vlans.data = (this.vlans.data as VlanView[]).map(v => ({
+            ...v,
+            nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
+            state: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+          }));
         },
         () => {
           this.vlans = null;

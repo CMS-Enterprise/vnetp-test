@@ -56,8 +56,8 @@ describe('HealthMonitorListComponent', () => {
   });
 
   it('should map health monitors', () => {
-    jest.spyOn(service, 'getManyLoadBalancerHealthMonitor').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerHealthMonitor').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'HealthMonitor1', provisionedAt: {} },
           { id: '2', name: 'HealthMonitor2' },
@@ -66,8 +66,8 @@ describe('HealthMonitorListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

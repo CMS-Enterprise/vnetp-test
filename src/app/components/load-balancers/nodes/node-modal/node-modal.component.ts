@@ -22,9 +22,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
 
   public NodeType = LoadBalancerNodeTypeEnum;
   public nodeTypeLookup = nodeTypeLookup;
-  public nodeTypes: LoadBalancerNodeTypeEnum[] = Object.keys(LoadBalancerNodeTypeEnum).map(k => {
-    return LoadBalancerNodeTypeEnum[k];
-  });
+  public nodeTypes: LoadBalancerNodeTypeEnum[] = Object.keys(LoadBalancerNodeTypeEnum).map(k => LoadBalancerNodeTypeEnum[k]);
 
   private nodeId: string;
   private modalMode: ModalMode;

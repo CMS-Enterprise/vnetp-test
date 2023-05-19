@@ -148,20 +148,18 @@ describe('ServiceObjectModalComponent', () => {
   });
 
   describe('getData', () => {
-    const createServiceObjectModalDto = (): ServiceObjectModalDto => {
-      return {
-        TierId: '1',
-        ServiceObject: {
-          tierId: '1',
-          id: '2',
-          name: 'ServiceObject',
-          protocol: ServiceObjectProtocolEnum.Ip,
-          destinationPorts: 'any',
-          sourcePorts: 'any',
-        },
-        ModalMode: ModalMode.Edit,
-      };
-    };
+    const createServiceObjectModalDto = (): ServiceObjectModalDto => ({
+      TierId: '1',
+      ServiceObject: {
+        tierId: '1',
+        id: '2',
+        name: 'ServiceObject',
+        protocol: ServiceObjectProtocolEnum.Ip,
+        destinationPorts: 'any',
+        sourcePorts: 'any',
+      },
+      ModalMode: ModalMode.Edit,
+    });
 
     it('should enable the name, protocol, source ports and destination ports when creating a new service object', () => {
       const ngx = TestBed.inject(NgxSmartModalService);

@@ -157,20 +157,18 @@ describe('VlanModalComponent', () => {
   });
 
   describe('getData', () => {
-    const createDto = (): VlanModalDto => {
-      return {
-        TierId: '1',
-        Vlan: {
-          tierId: '1',
-          id: '2',
-          name: 'Vlan',
-          vlanNumber: 400,
-          vcdVlanType: VlanVcdVlanTypeEnum.Dev,
-          description: 'Optional!',
-        },
-        ModalMode: ModalMode.Edit,
-      };
-    };
+    const createDto = (): VlanModalDto => ({
+      TierId: '1',
+      Vlan: {
+        tierId: '1',
+        id: '2',
+        name: 'Vlan',
+        vlanNumber: 400,
+        vcdVlanType: VlanVcdVlanTypeEnum.Dev,
+        description: 'Optional!',
+      },
+      ModalMode: ModalMode.Edit,
+    });
 
     it('should enable the name and vlan number when creating a new vlan', () => {
       const service = TestBed.inject(NgxSmartModalService);

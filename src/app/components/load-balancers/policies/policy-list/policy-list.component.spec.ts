@@ -63,8 +63,8 @@ describe('PolicyListComponent', () => {
   });
 
   it('should map policies', () => {
-    jest.spyOn(service, 'getManyLoadBalancerPolicy').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerPolicy').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'Policy1', provisionedAt: {}, type: LoadBalancerPolicyTypeEnum.Apm },
           { id: '2', name: 'Policy2' },
@@ -73,8 +73,8 @@ describe('PolicyListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

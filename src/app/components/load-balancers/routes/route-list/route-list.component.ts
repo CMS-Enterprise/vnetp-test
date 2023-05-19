@@ -126,13 +126,11 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
           }
           this.routes = response;
-          this.routes.data = (this.routes.data as RouteView[]).map(r => {
-            return {
-              ...r,
-              nameView: r.name.length >= 20 ? r.name.slice(0, 19) + '...' : r.name,
-              state: r.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-            };
-          });
+          this.routes.data = (this.routes.data as RouteView[]).map(r => ({
+            ...r,
+            nameView: r.name.length >= 20 ? r.name.slice(0, 19) + '...' : r.name,
+            state: r.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+          }));
         },
         () => {
           this.routes = null;

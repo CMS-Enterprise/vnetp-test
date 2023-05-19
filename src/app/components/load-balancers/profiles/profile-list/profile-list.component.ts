@@ -119,18 +119,16 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(
         response => {
           this.profiles = response;
-          this.profiles.data = (this.profiles.data as ProfileView[]).map(p => {
-            return {
-              ...p,
-              nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
-              state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-              reverseProxyView: p.reverseProxy
-                ? p.reverseProxy.length >= 20
-                  ? p.reverseProxy.slice(0, 19) + '...'
-                  : p.reverseProxy
-                : undefined,
-            };
-          });
+          this.profiles.data = (this.profiles.data as ProfileView[]).map(p => ({
+            ...p,
+            nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
+            state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+            reverseProxyView: p.reverseProxy
+              ? p.reverseProxy.length >= 20
+                ? p.reverseProxy.slice(0, 19) + '...'
+                : p.reverseProxy
+              : undefined,
+          }));
         },
         () => {
           this.profiles = null;

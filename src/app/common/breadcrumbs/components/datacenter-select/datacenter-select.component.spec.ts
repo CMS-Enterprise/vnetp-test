@@ -32,11 +32,9 @@ describe('DatacenterSelectComponent', () => {
   it('should call to open the datacenter switch modal on click', () => {
     const ngx = TestBed.inject(NgxSmartModalService) as any;
     const openSpy = jest.fn();
-    jest.spyOn(ngx, 'getModal').mockImplementation(() => {
-      return {
-        open: openSpy,
-      };
-    });
+    jest.spyOn(ngx, 'getModal').mockImplementation(() => ({
+      open: openSpy,
+    }));
 
     const openButton = fixture.debugElement.query(By.css('.btn.btn-primary'));
     openButton.nativeElement.click();

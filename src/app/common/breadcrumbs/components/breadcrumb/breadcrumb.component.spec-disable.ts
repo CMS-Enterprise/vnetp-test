@@ -44,18 +44,16 @@ describe('BreadcrumbComponent', () => {
       });
   }));
 
-  const createRoute = (breadcrumb: string, url: { path: string }[]): any => {
-    return {
-      children: [],
-      outlet: PRIMARY_OUTLET,
-      snapshot: {
-        data: {
-          breadcrumb,
-        },
-        url,
+  const createRoute = (breadcrumb: string, url: { path: string }[]): any => ({
+    children: [],
+    outlet: PRIMARY_OUTLET,
+    snapshot: {
+      data: {
+        breadcrumb,
       },
-    };
-  };
+      url,
+    },
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

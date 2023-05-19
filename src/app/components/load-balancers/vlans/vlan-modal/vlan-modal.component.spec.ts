@@ -29,14 +29,12 @@ describe('VlanModalComponent', () => {
     ngx = TestBed.inject(NgxSmartModalService);
   });
 
-  const createVlan = (): LoadBalancerVlan => {
-    return {
-      tierId: '1',
-      id: '2',
-      tag: 3,
-      name: 'Vlan2',
-    };
-  };
+  const createVlan = (): LoadBalancerVlan => ({
+    tierId: '1',
+    id: '2',
+    tag: 3,
+    name: 'Vlan2',
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -56,8 +56,8 @@ describe('IRuleListComponent', () => {
   });
 
   it('should map iRules', () => {
-    jest.spyOn(service, 'getManyLoadBalancerIrule').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerIrule').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'iRule1', provisionedAt: {} },
           { id: '2', name: 'iRule2', description: 'Description' },
@@ -66,8 +66,8 @@ describe('IRuleListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

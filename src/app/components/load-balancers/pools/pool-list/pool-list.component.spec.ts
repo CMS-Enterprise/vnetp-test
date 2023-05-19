@@ -61,8 +61,8 @@ describe('PoolListComponent', () => {
   });
 
   it('should map pools', () => {
-    jest.spyOn(service, 'getPoolsLoadBalancerPool').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getPoolsLoadBalancerPool').mockImplementation(() =>
+      of({
         data: [
           {
             id: '1',
@@ -79,8 +79,8 @@ describe('PoolListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

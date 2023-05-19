@@ -56,8 +56,8 @@ describe('NodeListComponent', () => {
   });
 
   it('should map nodes', () => {
-    jest.spyOn(service, 'getManyLoadBalancerNode').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerNode').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'Node1', provisionedAt: {}, autoPopulate: true, fqdn: 'www.google.com' },
           { id: '2', name: 'Node2', ipAddress: '192.168.1.1' },
@@ -66,8 +66,8 @@ describe('NodeListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

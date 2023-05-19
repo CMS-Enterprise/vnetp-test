@@ -120,19 +120,13 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(
         response => {
           this.iRules = response;
-          this.iRules.data = (this.iRules.data as IRuleView[]).map(i => {
-            return {
-              ...i,
-              nameView: i.name.length >= 20 ? i.name.slice(0, 19) + '...' : i.name,
-              descriptionView: i.description
-                ? i.description.length >= 20
-                  ? i.description.slice(0, 19) + '...'
-                  : i.description
-                : undefined,
-              state: i.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-              contentView: i.content ? (i.content.length >= 20 ? i.content.slice(0, 19) + '...' : i.content) : undefined,
-            };
-          });
+          this.iRules.data = (this.iRules.data as IRuleView[]).map(i => ({
+            ...i,
+            nameView: i.name.length >= 20 ? i.name.slice(0, 19) + '...' : i.name,
+            descriptionView: i.description ? (i.description.length >= 20 ? i.description.slice(0, 19) + '...' : i.description) : undefined,
+            state: i.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+            contentView: i.content ? (i.content.length >= 20 ? i.content.slice(0, 19) + '...' : i.content) : undefined,
+          }));
         },
         () => {
           this.iRules = null;

@@ -129,18 +129,16 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
       .subscribe(
         response => {
           this.virtualServers = response;
-          this.virtualServers.data = (this.virtualServers.data as VirtualServerView[]).map(v => {
-            return {
-              ...v,
-              nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
-              defaultPoolName: v.defaultPool
-                ? v.defaultPool.name.length >= 20
-                  ? v.defaultPool.name.slice(0, 19) + '...'
-                  : v.defaultPool.name
-                : undefined,
-              state: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-            };
-          });
+          this.virtualServers.data = (this.virtualServers.data as VirtualServerView[]).map(v => ({
+            ...v,
+            nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
+            defaultPoolName: v.defaultPool
+              ? v.defaultPool.name.length >= 20
+                ? v.defaultPool.name.slice(0, 19) + '...'
+                : v.defaultPool.name
+              : undefined,
+            state: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+          }));
         },
         () => {
           this.virtualServers = null;

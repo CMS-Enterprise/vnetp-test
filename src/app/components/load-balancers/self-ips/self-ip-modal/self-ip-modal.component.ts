@@ -108,7 +108,7 @@ export class SelfIpModalComponent implements OnInit {
         page: 1,
       })
       .subscribe(response => {
-        this.availableVlans = response.data as LoadBalancerVlan[];
+        this.availableVlans = response.data;
       });
   }
 

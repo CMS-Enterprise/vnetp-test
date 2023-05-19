@@ -124,22 +124,14 @@ export class AuditLogComponent implements OnInit {
                         return;
                       }
                       if (entityBefore[key]) {
-                        beforeList = entityBefore[key].map(obj => {
-                          return obj.loadBalancerNode.name;
-                        });
+                        beforeList = entityBefore[key].map(obj => obj.loadBalancerNode.name);
                       }
                       if (entityAfter[key]) {
-                        afterList = entityAfter[key].map(obj => {
-                          return obj.loadBalancerNode.name;
-                        });
+                        afterList = entityAfter[key].map(obj => obj.loadBalancerNode.name);
                       }
                     } else {
-                      beforeList = entityBefore[key].map(obj => {
-                        return obj.name;
-                      });
-                      afterList = entityAfter[key].map(obj => {
-                        return obj.name;
-                      });
+                      beforeList = entityBefore[key].map(obj => obj.name);
+                      afterList = entityAfter[key].map(obj => obj.name);
                     }
 
                     if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {

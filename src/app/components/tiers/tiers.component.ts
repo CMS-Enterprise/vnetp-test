@@ -87,7 +87,7 @@ export class TiersComponent implements OnInit, OnDestroy {
         filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
       })
       .subscribe(response => {
-        this.tierGroups = response.data as TierGroup[];
+        this.tierGroups = response.data;
 
         if (loadTiers) {
           this.getTiers();

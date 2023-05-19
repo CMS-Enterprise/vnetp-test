@@ -92,7 +92,7 @@ describe('DeployComponent', () => {
       datacenterId: '1',
       page: 1,
       limit: 1000,
-      filter: [`deletedAt||isnull`],
+      filter: ['deletedAt||isnull'],
     });
     expect(tierGroupService.getManyTierGroup).toHaveBeenCalledWith({ filter: ['datacenterId||eq||1'], page: 1, limit: 1000 });
     expect(component.tiers.length).toBe(1);

@@ -63,8 +63,8 @@ describe('SelfIpListComponent', () => {
   });
 
   it('should map self ips', () => {
-    jest.spyOn(service, 'getManyLoadBalancerSelfIp').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerSelfIp').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'SelfIp1', provisionedAt: {}, loadBalancerVlan: { name: 'VLAN' } },
           { id: '2', name: 'SelfIp2' },
@@ -73,8 +73,8 @@ describe('SelfIpListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

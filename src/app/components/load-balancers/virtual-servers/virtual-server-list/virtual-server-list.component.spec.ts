@@ -63,8 +63,8 @@ describe('VirtualServerListComponent', () => {
 
   it('should map virtual servers', () => {
     const virtualServerService = TestBed.inject(V1LoadBalancerVirtualServersService);
-    const spy = jest.spyOn(virtualServerService, 'getManyLoadBalancerVirtualServer').mockImplementation(() => {
-      return of({
+    const spy = jest.spyOn(virtualServerService, 'getManyLoadBalancerVirtualServer').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'VirtualServer1', provisionedAt: {}, defaultPool: { name: 'Pool1' } },
           { id: '2', name: 'VirtualServer2' },
@@ -73,8 +73,8 @@ describe('VirtualServerListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

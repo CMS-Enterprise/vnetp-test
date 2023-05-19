@@ -19,9 +19,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   public submitted: boolean;
   public ProfileType = LoadBalancerProfileTypeEnum;
 
-  public reverseProxyTypes: ProfileReverseProxyType[] = Object.keys(ProfileReverseProxyType).map(k => {
-    return ProfileReverseProxyType[k];
-  });
+  public reverseProxyTypes: ProfileReverseProxyType[] = Object.keys(ProfileReverseProxyType).map(k => ProfileReverseProxyType[k]);
   public privateKeyCipher: string;
 
   private profileId: string;

@@ -57,8 +57,8 @@ describe('RouteListComponent', () => {
   });
 
   it('should map routes', () => {
-    jest.spyOn(service, 'getManyLoadBalancerRoute').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerRoute').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'Route1', provisionedAt: {} },
           { id: '2', name: 'Route2' },
@@ -67,8 +67,8 @@ describe('RouteListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

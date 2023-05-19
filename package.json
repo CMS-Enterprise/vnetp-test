@@ -12,7 +12,7 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "jest --no-cache --runInBand",
     "test:ci": "jest --ci --no-cache --runInBand --coverage --verbose --silent",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "sonar": "sonar-scanner",
     "generate-client": "TS_POST_PROCESS_FILE=./node_modules/.bin/prettier openapi-generator-cli generate"
   },

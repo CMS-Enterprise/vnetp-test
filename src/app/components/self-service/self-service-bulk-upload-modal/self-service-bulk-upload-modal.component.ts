@@ -46,7 +46,7 @@ export class SelfServiceBulkUploadModalComponent {
   }
 
   public importObjects() {
-    const modalDto = new YesNoModalDto('Import', `Are you sure you would like to import objects?`);
+    const modalDto = new YesNoModalDto('Import', 'Are you sure you would like to import objects?');
     const onConfirm = () => {
       this.selfServiceService.bulkUploadSelfService({ selfService: this.selfService }).subscribe(data => {});
     };

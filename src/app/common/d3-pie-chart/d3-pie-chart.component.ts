@@ -42,13 +42,11 @@ export class D3PieChartComponent implements OnChanges {
 
     const x: PieArcDatum<InternalPieChartData>[] = pieChartDataGenerator(this.data);
 
-    this.chartdata = x.map(element => {
-      return {
-        ...element,
-        innerRadius: this.radius - 40,
-        outerRadius: this.radius,
-      };
-    });
+    this.chartdata = x.map(element => ({
+      ...element,
+      innerRadius: this.radius - 40,
+      outerRadius: this.radius,
+    }));
 
     this.chartdata.forEach(d => {
       d.data.path = svgPathGenerator(d);

@@ -56,8 +56,8 @@ describe('VlanListComponent', () => {
   });
 
   it('should map vlans', () => {
-    jest.spyOn(service, 'getManyLoadBalancerVlan').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerVlan').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'VLAN1', provisionedAt: {} },
           { id: '2', name: 'VLAN2' },
@@ -66,8 +66,8 @@ describe('VlanListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

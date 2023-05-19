@@ -49,9 +49,7 @@ export class PoolModalComponent implements OnInit {
     LoadBalancerPoolDefaultHealthMonitorsEnum.Udp,
   ];
   public methods: LoadBalancerPoolLoadBalancingMethodEnum[] = Object.keys(LoadBalancerPoolLoadBalancingMethodEnum)
-    .map(k => {
-      return LoadBalancerPoolLoadBalancingMethodEnum[k];
-    })
+    .map(k => LoadBalancerPoolLoadBalancingMethodEnum[k])
     .sort();
   public methodsLookup = methodsLookup;
 

@@ -58,19 +58,17 @@ describe('VirtualServerModalComponent', () => {
     ngx = TestBed.inject(NgxSmartModalService);
   });
 
-  const createVirtualServer = (): LoadBalancerVirtualServer => {
-    return {
-      tierId: '1',
-      id: '2',
-      destinationIpAddress: '192.168.1.2',
-      defaultPoolId: '10bc339d-1ede-7e84-d129-259ef7f0f',
-      name: 'VirtualServer2',
-      servicePort: 5,
-      sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslationEnum.AutoMap,
-      sourceIpAddress: '192.168.1.1/11',
-      type: LoadBalancerVirtualServerTypeEnum.Standard,
-    };
-  };
+  const createVirtualServer = (): LoadBalancerVirtualServer => ({
+    tierId: '1',
+    id: '2',
+    destinationIpAddress: '192.168.1.2',
+    defaultPoolId: '10bc339d-1ede-7e84-d129-259ef7f0f',
+    name: 'VirtualServer2',
+    servicePort: 5,
+    sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslationEnum.AutoMap,
+    sourceIpAddress: '192.168.1.1/11',
+    type: LoadBalancerVirtualServerTypeEnum.Standard,
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

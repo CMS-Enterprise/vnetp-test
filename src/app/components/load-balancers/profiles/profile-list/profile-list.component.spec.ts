@@ -56,8 +56,8 @@ describe('ProfileListComponent', () => {
   });
 
   it('should map profiles', () => {
-    jest.spyOn(service, 'getManyLoadBalancerProfile').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerProfile').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'Profile1', provisionedAt: {}, reverseProxy: 'Explicit' },
           { id: '2', name: 'Profile2' },
@@ -66,8 +66,8 @@ describe('ProfileListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

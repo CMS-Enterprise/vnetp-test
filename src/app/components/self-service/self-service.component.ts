@@ -72,7 +72,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     this.selfServiceService.getSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(response => {
       this.selectedSelfService = response;
       this.openingModal = false;
-      const modalDto = new YesNoModalDto('Import', `Are you sure you would like to bulk import the converted objects?`);
+      const modalDto = new YesNoModalDto('Import', 'Are you sure you would like to bulk import the converted objects?');
       const onConfirm = () => {
         this.selfServiceService.bulkUploadSelfService({ selfService: this.selectedSelfService }).subscribe(data => {
           this.getSelfServices();
@@ -135,7 +135,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   public async deleteSelfService(selfService) {
     this.selfServiceService.getSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(data => {
       this.selectedSelfService = data;
-      const dto = new YesNoModalDto(`Delete Self Service`, `Error(s): "${this.selectedSelfService.convertedConfig.artifact.error}"`);
+      const dto = new YesNoModalDto('Delete Self Service', `Error(s): "${this.selectedSelfService.convertedConfig.artifact.error}"`);
       const onConfirm = () => {
         this.selfServiceService.deleteSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(() => {
           this.getSelfServices();

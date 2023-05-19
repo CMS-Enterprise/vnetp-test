@@ -144,9 +144,9 @@ export class NetworkObjectGroupModalComponent implements OnInit {
 
   private getTierNetworkObjects() {
     this.tierService.getOneTier({ id: this.TierId, join: ['networkObjects'] }).subscribe(data => {
-      this.tierNetworkObjects = data.networkObjects.filter(tierObj => {
-        return !this.networkObjects.some(groupObj => groupObj.id === tierObj.id) && tierObj.deletedAt === null;
-      });
+      this.tierNetworkObjects = data.networkObjects.filter(
+        tierObj => !this.networkObjects.some(groupObj => groupObj.id === tierObj.id) && tierObj.deletedAt === null,
+      );
     });
   }
 

@@ -17,6 +17,5 @@ function ValidateName(control: FormControl, regex) {
   return { invalidName: true };
 }
 
-export const NameValidator = (minLength = 3, maxLength = 100) => {
-  return Validators.compose([Validators.required, Validators.minLength(minLength), Validators.maxLength(maxLength), ValidName]);
-};
+export const NameValidator = (minLength = 3, maxLength = 100) =>
+  Validators.compose([Validators.required, Validators.minLength(minLength), Validators.maxLength(maxLength), ValidName]);

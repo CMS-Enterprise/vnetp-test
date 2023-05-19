@@ -381,7 +381,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
             hostname = hostname.split(' ')[1];
             // add newly mapped hostname to hostnameIndexes array
             // tslint:disable-next-line
-            hostnameIndexes.push({ hostname: hostname, hostnameIndex: hostnameIndex });
+            hostnameIndexes.push({ hostname, hostnameIndex });
             // add the hostname to the list of tiers extracted from the device config
             this.tiersFromConfig.push(hostname);
           }
@@ -424,7 +424,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       const index = file.indexOf(' ' + val + '\r', offset + 1);
       if (index !== -1) {
         // tslint:disable-next-line
-        this.asaInterfacesWithIndex.push({ interface: val, index: index });
+        this.asaInterfacesWithIndex.push({ interface: val, index });
         this.recursivelyGetIndexes(val, file, index);
       } else {
         return;
@@ -434,7 +434,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
       const index = file.indexOf(' ' + val + '\r');
       if (index !== -1) {
         // tslint:disable-next-line
-        this.asaInterfacesWithIndex.push({ interface: val, index: index });
+        this.asaInterfacesWithIndex.push({ interface: val, index });
         this.recursivelyGetIndexes(val, file, index);
       } else {
         return;
@@ -532,9 +532,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         type: natRuleGroup.type,
       };
     });
-    this.natRuleGroupData = this.natRuleGroupData.filter(natRuleGroup => {
-      return natRuleGroup !== undefined;
-    });
+    this.natRuleGroupData = this.natRuleGroupData.filter(natRuleGroup => natRuleGroup !== undefined);
     return this.natRuleGroupData;
   }
 
@@ -553,9 +551,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         type: fwRuleGroup.type,
       };
     });
-    this.firewallRuleGroupData = this.firewallRuleGroupData.filter(fwRuleGroup => {
-      return fwRuleGroup !== undefined;
-    });
+    this.firewallRuleGroupData = this.firewallRuleGroupData.filter(fwRuleGroup => fwRuleGroup !== undefined);
     return this.firewallRuleGroupData;
   }
 
@@ -563,9 +559,11 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
     // `this.selectedTiers` holds all of the mapped objects that we want to use in the conversion script
     const mappedObjects = this.selectedTiers;
     // make object types the same regardless of device type for reusability
-    const filteredMappedObjects = mappedObjects.map(obj => {
-      return { hostname: obj.hostname, interfaceMatrix: obj.interfaceMatrix, namespace: obj.namespace ? obj.namespace : null };
-    });
+    const filteredMappedObjects = mappedObjects.map(obj => ({
+      hostname: obj.hostname,
+      interfaceMatrix: obj.interfaceMatrix,
+      namespace: obj.namespace ? obj.namespace : null,
+    }));
     // create configDto
     const configDto = {
       datacenterId: '',

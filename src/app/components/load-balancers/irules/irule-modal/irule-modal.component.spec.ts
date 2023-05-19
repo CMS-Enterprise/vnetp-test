@@ -29,15 +29,13 @@ describe('IRuleModalComponent', () => {
     ngx = TestBed.inject(NgxSmartModalService);
   });
 
-  const createIRule = (): LoadBalancerIrule => {
-    return {
-      id: '2',
-      name: 'iRule2',
-      content: 'Content',
-      description: 'Description',
-      tierId: '1',
-    };
-  };
+  const createIRule = (): LoadBalancerIrule => ({
+    id: '2',
+    name: 'iRule2',
+    content: 'Content',
+    description: 'Description',
+    tierId: '1',
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
