@@ -338,6 +338,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
 
       // eslint-disable-next-line
       e.tierId = this.getTierId(e['vrfName']);
+      //test
     });
     const onConfirm = () => {
       this.vlanService.createManyVlan({ createManyVlanDto: { bulk: event } }).subscribe(() => {
