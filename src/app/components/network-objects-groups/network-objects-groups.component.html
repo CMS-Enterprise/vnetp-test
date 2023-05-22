@@ -1,8 +1,17 @@
 <app-tier-select></app-tier-select>
 
-<h1 *ngIf="navIndex === 0">Network Objects ({{networkObjects?.total}} items)</h1>
+<tooltip *ngIf="navIndex === 0 && netObjTableComponentDto.searchText" [message]="filteredHelpText?.FilteredResults"></tooltip>
 
-<h1 *ngIf="navIndex === 1">Network Object Groups ({{networkObjectGroups?.total}} items)</h1>
+<h1 *ngIf="navIndex === 0 && netObjTableComponentDto.searchText">Network Objects ({{networkObjects?.total}} matching items)</h1>
+
+<h1 *ngIf="navIndex === 0 && !netObjTableComponentDto.searchText">Network Objects ({{networkObjects?.total}} items)</h1>
+
+<tooltip *ngIf="navIndex === 1 && netObjGrpTableComponentDto.searchText" [message]="filteredHelpText?.FilteredResults"></tooltip>
+
+<h1 *ngIf="navIndex === 1 && netObjGrpTableComponentDto.searchText">Network Object Groups ({{networkObjectGroups?.total}} matching items)</h1>
+
+<h1 *ngIf="navIndex === 1 && !netObjGrpTableComponentDto.searchText">Network Object Groups ({{networkObjectGroups?.total}} items)</h1>
+
 
 <ng-container *ngIf="currentTier; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>

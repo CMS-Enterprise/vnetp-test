@@ -4,7 +4,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
-import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
+import { FilteredCount, NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Tier } from 'client/model/tier';
 import {
@@ -108,6 +108,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     private tierContextService: TierContextService,
     private tierService: V1TiersService,
     public helpText: NetworkObjectsGroupsHelpText,
+    public filteredHelpText: FilteredCount,
     private tableContextService: TableContextService,
   ) {}
 
@@ -138,11 +139,14 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       this.netObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
+      this.netObjTableComponentDto.searchText = searchText;
       if (propertyName === 'ipAddress' || propertyName === 'startIpAddress' || propertyName === 'endIpAddress') {
         eventParams = `${propertyName}||eq||${searchText}`;
       } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
+    } else {
+      this.netObjTableComponentDto.searchText = undefined;
     }
     this.networkObjectService
       .getManyNetworkObject({
@@ -172,10 +176,13 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       this.netObjGrpTableComponentDto.page = event.page ? event.page : 1;
       this.netObjGrpTableComponentDto.perPage = event.perPage ? event.perPage : 50;
       const { searchText } = event;
+      this.netObjGrpTableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
       if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
+    } else {
+      this.netObjGrpTableComponentDto.searchText = undefined;
     }
     this.networkObjectGroupService
       .getManyNetworkObjectGroup({

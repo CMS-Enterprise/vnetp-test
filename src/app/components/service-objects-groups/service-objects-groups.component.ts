@@ -26,6 +26,7 @@ import { TableConfig } from '../../common/table/table.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -47,9 +48,18 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   showRadio = false;
 
   public tabs: Tab[] = [{ name: 'Service Objects' }, { name: 'Service Object Groups' }, { name: 'Service Object Group Relations' }];
-  public objectSearchColumns: SearchColumnConfig[] = [];
+  public objectSearchColumns: SearchColumnConfig[] = [
+    { displayName: 'Type', propertyName: 'protocol' },
+    { displayName: 'Source Port', propertyName: 'sourcePorts' },
+    { displayName: 'Destination Port', propertyName: 'destinationPorts' },
+  ];
 
-  public groupSearchColumns: SearchColumnConfig[] = [];
+  public groupSearchColumns: SearchColumnConfig[] = [
+    {
+      displayName: 'Type',
+      propertyName: 'type',
+    },
+  ];
 
   private serviceObjectModalSubscription: Subscription;
   private serviceObjectGroupModalSubscription: Subscription;
@@ -96,6 +106,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private tierContextService: TierContextService,
     private tierService: V1TiersService,
     private tableContextService: TableContextService,
+    public filteredHelpText: FilteredCount,
   ) {}
 
   public onSvcObjTableEvent(event: TableComponentDto): void {
@@ -124,10 +135,15 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       this.svcObjTableComponentDto.page = event.page ? event.page : 1;
       this.svcObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.svcObjTableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'protocol') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
+    } else {
+      this.svcObjTableComponentDto.searchText = undefined;
     }
     this.serviceObjectService
       .getManyServiceObject({
@@ -142,6 +158,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         },
         () => {
           this.serviceObjects = null;
+          this.getServiceObjects();
         },
         () => {
           this.isLoadingObjects = false;
@@ -156,10 +173,15 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       this.svcObjGrpTableComponentDto.page = event.page ? event.page : 1;
       this.svcObjGrpTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.svcObjGrpTableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'type') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
+    } else {
+      this.svcObjGrpTableComponentDto.searchText = undefined;
     }
     this.serviceObjectGroupService
       .getManyServiceObjectGroup({
@@ -175,6 +197,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         },
         () => {
           this.serviceObjectGroups = null;
+          this.getServiceObjectGroups();
         },
         () => {
           this.isLoadingGroups = false;

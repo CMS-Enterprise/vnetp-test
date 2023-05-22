@@ -18,7 +18,7 @@ import {
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
-import { SubnetsVlansHelpText } from 'src/app/helptext/help-text-networking';
+import { FilteredCount, SubnetsVlansHelpText } from 'src/app/helptext/help-text-networking';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Tab } from 'src/app/common/tabs/tabs.component';
@@ -108,6 +108,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     public datacenterService: DatacenterContextService,
     public tierContextService: TierContextService,
     public helpText: SubnetsVlansHelpText,
+    public filteredHelpText: FilteredCount,
     private tierService: V1TiersService,
     private vlanService: V1NetworkVlansService,
     private subnetService: V1NetworkSubnetsService,
@@ -384,6 +385,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       this.subnetTableComponentDto.page = event.page ? event.page : 1;
       this.subnetTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.subnetTableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
       if (propertyName === 'network' || propertyName === 'gateway') {
         eventParams = `${propertyName}||eq||${searchText}`;
@@ -423,6 +425,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       this.vlanTableComponentDto.page = event.page ? event.page : 1;
       this.vlanTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.vlanTableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
       if (propertyName === 'vlanNumber' || propertyName === 'vcdVlanType') {
         eventParams = `${propertyName}||eq||${searchText}`;

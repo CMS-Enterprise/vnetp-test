@@ -32,7 +32,10 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
   public currentTier: Tier;
   public datacenterId: string;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Destination Address', propertyName: 'destinationIpAddress' },
+    { displayName: 'Service Port', propertyName: 'servicePort' },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('defaultPoolTemplate') defaultPoolTemplate: TemplateRef<any>;
@@ -114,7 +117,9 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'destinationIpAddress' || propertyName === 'servicePort') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -144,6 +149,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
         },
         () => {
           this.virtualServers = null;
+          this.loadVirtualServers();
         },
         () => {
           this.isLoading = false;

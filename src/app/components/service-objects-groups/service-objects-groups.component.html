@@ -1,8 +1,16 @@
 <app-tier-select></app-tier-select>
 
-<h1 *ngIf="navIndex === 0">Service Objects ({{serviceObjects?.total}} items)</h1>
+<tooltip *ngIf="navIndex === 0 && svcObjTableComponentDto.searchText" [message]="filteredHelpText?.FilteredResults"></tooltip>
 
-<h1 *ngIf="navIndex === 1">Service Object Groups ({{serviceObjectGroups?.total}} items)</h1>
+<h1 *ngIf="navIndex === 0 && svcObjTableComponentDto.searchText">Service Objects ({{serviceObjects?.total}} matching items)</h1>
+
+<h1 *ngIf="navIndex === 0 && !svcObjTableComponentDto.searchText">Service Objects ({{serviceObjects?.total}} items)</h1>
+
+<tooltip *ngIf="navIndex === 1 && svcObjGrpTableComponentDto.searchText" [message]="filteredHelpText?.FilteredResults"></tooltip>
+
+<h1 *ngIf="navIndex === 1 && svcObjGrpTableComponentDto.searchText">Service Object Groups ({{serviceObjectGroups?.total}} matching items)</h1>
+
+<h1 *ngIf="navIndex === 1 && !svcObjGrpTableComponentDto.searchText">Service Object Groups ({{serviceObjectGroups?.total}} items)</h1>
 
 <ng-container *ngIf="currentTier; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
