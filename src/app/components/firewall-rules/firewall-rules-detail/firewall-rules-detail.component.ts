@@ -218,7 +218,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         // TODO: Review this approach, see if we can resolve
         // this in the generated client.
-        this.latestRuleIndex = response.data[0].ruleIndex;
+        if (response.data[0]) {
+          this.latestRuleIndex = response.data[0].ruleIndex;
+        }
       });
   }
 

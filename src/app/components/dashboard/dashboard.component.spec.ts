@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockComponent } from 'src/test/mock-components';
-import { V1DatacentersService, V1TiersService, V1LoadBalancerVirtualServersService, V1VmwareVirtualMachinesService } from 'client';
+import { V1DatacentersService, V1TiersService, V1LoadBalancerVirtualServersService } from 'client';
 import { of } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -40,7 +40,6 @@ describe('DashboardComponent', () => {
       providers: [
         { provide: V1DatacentersService, useValue: datacenterService },
         { provide: V1TiersService, useValue: tierService },
-        { provide: V1VmwareVirtualMachinesService, useValue: vmwareService },
         { provide: V1LoadBalancerVirtualServersService, useValue: loadBalancerService },
         { provide: AuthService, useValue: authService },
       ],
@@ -60,7 +59,6 @@ describe('DashboardComponent', () => {
   it('should load data on init', () => {
     const datacenterService = TestBed.inject(V1DatacentersService);
     const tierService = TestBed.inject(V1TiersService);
-    const vmwareService = TestBed.inject(V1VmwareVirtualMachinesService);
     const loadBalancerService = TestBed.inject(V1LoadBalancerVirtualServersService);
 
     component.ngOnInit();

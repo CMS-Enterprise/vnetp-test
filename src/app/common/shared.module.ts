@@ -6,7 +6,6 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ImportExportComponent } from './import-export/import-export.component';
 import { TierSelectComponent } from './tier-select/tier-select.component';
-import { ZosZvmRequestModalComponent } from './zos-zvm-request-modal/zos-zvm-request-modal.component';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -25,23 +24,7 @@ import { SearchBarComponent } from './seach-bar/search-bar.component';
     NgSelectModule,
     NgxPaginationModule,
   ],
-  declarations: [
-    SearchBarComponent,
-    ImportExportComponent,
-    ResolvePipe,
-    FilterPipe,
-    TierSelectComponent,
-    YesNoModalComponent,
-    ZosZvmRequestModalComponent,
-  ],
-  exports: [
-    SearchBarComponent,
-    ImportExportComponent,
-    ResolvePipe,
-    FilterPipe,
-    TierSelectComponent,
-    YesNoModalComponent,
-    ZosZvmRequestModalComponent,
-  ],
+  declarations: [SearchBarComponent, ImportExportComponent, ResolvePipe, FilterPipe, TierSelectComponent, YesNoModalComponent],
+  exports: [SearchBarComponent, ImportExportComponent, ResolvePipe, FilterPipe, TierSelectComponent, YesNoModalComponent],
 })
 export class SharedModule {}
