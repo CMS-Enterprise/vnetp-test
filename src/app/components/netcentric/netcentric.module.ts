@@ -95,22 +95,10 @@ const routes: Routes = [
         loadChildren: () => import('../../components/static-routes/static-routes.module').then(m => m.StaticRoutesModule),
       },
       {
-        path: 'application-groups',
+        path: 'self-service',
         canActivate: [AuthGuard],
-        data: { breadcrumb: 'Application Groups', title: 'Automation - Application Groups' },
-        loadChildren: () => import('../../components/application-groups/application-groups.module').then(m => m.ApplicationGroupModule),
-      },
-      {
-        path: 'slas',
-        canActivate: [AuthGuard],
-        data: { breadcrumb: 'SLAs', title: 'Automation - SLAs' },
-        loadChildren: () => import('../../components/slas/sla.module').then(m => m.SlaModule),
-      },
-      {
-        path: 'recovery-plans',
-        canActivate: [AuthGuard],
-        data: { breadcrumb: 'Recovery Plans', title: 'Automation - Recovery Plans' },
-        loadChildren: () => import('../../components/recovery-plans/recovery-plans.module').then(m => m.RecoveryPlanModule),
+        data: { breadcrumb: 'Managed Network', title: 'Automation - Managed Network' },
+        loadChildren: () => import('../../components/self-service/self-service.module').then(m => m.SelfServiceModule),
       },
       {
         path: 'logout',
