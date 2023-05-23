@@ -18,6 +18,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
 import { SelfIpModalDto } from '../self-ip-modal/self-ip-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
 
 export interface SelfIpView extends LoadBalancerSelfIp {
   nameView: string;
@@ -32,7 +33,10 @@ export interface SelfIpView extends LoadBalancerSelfIp {
 export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'IpAddress', propertyName: 'ipAddress' },
+    { displayName: 'Vlan', propertyName: 'loadBalancerVlan.name' },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -63,6 +67,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
     private vlansService: V1LoadBalancerVlansService,
+    public filteredHelpText: FilteredCount,
   ) {}
 
   ngOnInit(): void {
@@ -122,8 +127,11 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'ipAddress') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -155,6 +163,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
         },
         () => {
           this.selfIps = null;
+          this.loadSelfIps();
         },
         () => {
           this.isLoading = false;

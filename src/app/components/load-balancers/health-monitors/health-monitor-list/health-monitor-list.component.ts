@@ -12,6 +12,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
 import { HealthMonitorModalDto } from '../health-monitor-modal/health-monitor-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
 
 export interface HealthMonitorView extends LoadBalancerHealthMonitor {
   nameView: string;
@@ -25,7 +26,12 @@ export interface HealthMonitorView extends LoadBalancerHealthMonitor {
 export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Type', propertyName: 'type' },
+    { displayName: 'Service Port', propertyName: 'servicePort' },
+    { displayName: 'Interval', propertyName: 'interval' },
+    { displayName: 'Timeout', propertyName: 'timeout' },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -56,6 +62,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
+    public filteredHelpText: FilteredCount,
   ) {}
 
   ngOnInit() {
@@ -105,8 +112,11 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'type' || propertyName === 'servicePort' || propertyName === 'interval' || propertyName === 'timeout') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -130,6 +140,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
         },
         () => {
           this.healthMonitors = null;
+          this.loadHealthMonitors();
         },
         () => {
           this.isLoading = false;

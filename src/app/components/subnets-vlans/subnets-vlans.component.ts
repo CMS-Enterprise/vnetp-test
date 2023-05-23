@@ -43,7 +43,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   subnets = {} as GetManySubnetResponseDto;
   vlans = {} as GetManyVlanResponseDto;
   public subnetSearchColumns: SearchColumnConfig[] = [
-    { displayName: 'Vlan', propertyName: 'vlanId' },
+    { displayName: 'Vlan', propertyName: 'vlan.name' },
     { displayName: 'Network', propertyName: 'network' },
     { displayName: 'Gateway', propertyName: 'gateway' },
   ];

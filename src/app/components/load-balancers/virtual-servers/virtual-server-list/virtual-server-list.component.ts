@@ -17,6 +17,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
 import { VirtualServerModalDto } from '../virtual-server-modal/virtual-server-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
 
 export interface VirtualServerView extends LoadBalancerVirtualServer {
   nameView: string;
@@ -67,6 +68,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
+    public filteredHelpText: FilteredCount,
   ) {}
 
   ngOnInit(): void {
@@ -116,6 +118,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
       if (propertyName === 'destinationIpAddress' || propertyName === 'servicePort') {
         eventParams = `${propertyName}||eq||${searchText}`;
