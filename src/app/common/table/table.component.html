@@ -1,5 +1,6 @@
 <ng-container *ngIf="show">
   <tooltip *ngIf="showSearchBar" [message]="helpText?.CaseSensitive"></tooltip>
+  <fa-icon (click)="openAdvancedSearch($event)" class="icon" [icon]="['fas', 'plus']"></fa-icon>
   <app-search-bar *ngIf="showSearchBar" (searchBarClearResults)="clearTableResults()" [columns]="searchColumns" (searchCriteria)="getObjectsAndFilter($event)"></app-search-bar>
   <table class="table table-striped table-sm table-bordered">
     <caption>
@@ -42,3 +43,5 @@
     </div>
   </section>
 </ng-container>
+
+<app-advanced-search-modal [formInputs]="searchColumns"></app-advanced-search-modal>

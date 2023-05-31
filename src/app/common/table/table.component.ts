@@ -3,6 +3,8 @@ import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef, Output
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { SearchBarHelpText } from 'src/app/helptext/help-text-networking';
+import { Subscription } from 'rxjs';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 export interface TableColumn<T> {
   name: string;
@@ -50,6 +52,7 @@ export class TableComponent<T> implements AfterViewInit {
   @Input() searchColumns: SearchColumnConfig[];
   @Output() clearResults = new EventEmitter<any>();
   @Output() searchParams = new EventEmitter<any>();
+  advancedSearchSubscription: Subscription;
 
   public searchText = '';
 
@@ -60,7 +63,12 @@ export class TableComponent<T> implements AfterViewInit {
   public showSearchBar = true;
   public paginationControlsOn = true;
 
-  constructor(private changeRef: ChangeDetectorRef, private tableContextService: TableContextService, public helpText: SearchBarHelpText) {}
+  constructor(
+    private changeRef: ChangeDetectorRef,
+    private tableContextService: TableContextService,
+    public helpText: SearchBarHelpText,
+    private ngx: NgxSmartModalService,
+  ) {}
 
   ngAfterViewInit(): void {
     this.show = true;
@@ -115,5 +123,17 @@ export class TableComponent<T> implements AfterViewInit {
     const { searchColumn, searchText } = searchParams;
     this.tableEvent.emit(new TableComponentDto(+this.itemsPerPage, this.currentPage, searchColumn, searchText));
     this.itemsPerPageChange.emit(this.itemsPerPage);
+  }
+
+  subscribeToAdvancedSearch() {
+    this.advancedSearchSubscription = this.ngx.getModal('advancedSearch').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('advancedSearch');
+      this.advancedSearchSubscription.unsubscribe();
+    });
+  }
+
+  openAdvancedSearch(event?) {
+    this.subscribeToAdvancedSearch();
+    this.ngx.getModal('advancedSearch').open();
   }
 }
