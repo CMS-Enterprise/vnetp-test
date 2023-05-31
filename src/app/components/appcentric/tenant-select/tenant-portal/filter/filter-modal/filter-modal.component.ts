@@ -9,7 +9,6 @@ import {
   FilterEntryEtherTypeEnum,
   FilterEntryArpFlagEnum,
   FilterEntryIpProtocolEnum,
-  FilterEntryTcpFlagsEnum,
   V2AppCentricFiltersService,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -45,7 +44,6 @@ export class FilterModalComponent implements OnInit {
   public etherTypeOptions = Object.keys(FilterEntryEtherTypeEnum);
   public arpFlagOptions = Object.keys(FilterEntryArpFlagEnum);
   public ipProtocolOptions = Object.keys(FilterEntryIpProtocolEnum);
-  public tcpFlagsOptions = Object.keys(FilterEntryTcpFlagsEnum).map(key => ({ value: key, label: key }));
 
   public filter: Filter;
 

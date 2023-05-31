@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { Message, MessageService } from './message.service';
 import { Tier, V1DatacentersService } from 'client';
 import { DatacenterContextService } from './datacenter-context.service';
 
@@ -34,7 +33,6 @@ export class TierContextService {
   constructor(
     private DatacenterService: V1DatacentersService,
     private datacenterContextService: DatacenterContextService,
-    private messageService: MessageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
@@ -116,7 +114,6 @@ export class TierContextService {
 
   public switchTier(tierId: string): boolean {
     if (this.lockCurrentTierSubject.value) {
-      this.messageService.sendMessage(new Message(null, null, 'Current tier locked'));
       return false;
     }
 
@@ -128,7 +125,6 @@ export class TierContextService {
 
     const isSameTier = this.currentTierValue && tier.id === this.currentTierValue.id;
     if (isSameTier) {
-      this.messageService.sendMessage(new Message(null, null, 'Tier already selected'));
       return false;
     }
 
@@ -140,7 +136,6 @@ export class TierContextService {
       queryParams: { tier: tier.id },
       queryParamsHandling: 'merge',
     });
-    this.messageService.sendMessage(new Message(oldTierId, tierId, 'Tier Switched'));
     return true;
   }
 

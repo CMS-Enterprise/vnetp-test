@@ -1,6 +1,6 @@
 <ngx-smart-modal #networkObjectModal identifier="networkObjectModal" [dismissable]="false" (onOpen)="getData()" (onClose)="reset()">
   <header class="modal-header">
-    <h4 class="modal-title">Network Object</h4>
+    <h2 class="modal-title">Network Object</h2>
   </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">

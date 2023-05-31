@@ -42,7 +42,6 @@ export interface FilterEntry {
     sourceToPort?: number;
     destinationFromPort?: number;
     destinationToPort?: number;
-    tcpFlags?: Array<FilterEntryTcpFlagsEnum>;
     stateful?: boolean;
     readonly filter?: Filter;
     filterId: string;
@@ -75,13 +74,6 @@ export enum FilterEntryIpProtocolEnum {
     Pim = 'pim',
     Tcp = 'tcp',
     Udp = 'udp'
-};
-export enum FilterEntryTcpFlagsEnum {
-    Synchronize = 'Synchronize',
-    Established = 'Established',
-    Acknowledgement = 'Acknowledgement',
-    Reset = 'Reset',
-    Finish = 'Finish'
 };
 
 
