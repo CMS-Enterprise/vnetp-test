@@ -39,8 +39,6 @@ export class AdvancedSearchComponent implements OnInit {
   public test() {
     console.log('test?');
     console.log(this.formInputs);
-    const input = document.getElementsByClassName('form-control');
-    console.log('input', input);
     this.formInputs.map(input => {
       const formControl = new FormControl(input.displayName);
       this.form.addControl(input.displayName, formControl);
