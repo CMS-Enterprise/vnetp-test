@@ -3,13 +3,16 @@
 </div>
 <div (keyup.enter)="searchThis()" id="main">
   <select aria-label="searchColumn" id="searchColumn" [(ngModel)]="searchColumn" placeholder="Column">
-    <option [ngValue]="defaultSearch.propertyName" selected> {{ defaultSearch.displayName }} </option>
-    <option *ngFor="let column of columns" [ngValue]="column.propertyName">
-      {{ column.displayName }}
-    </option>
+    <optgroup aria-label="search-properties">
+      <option [ngValue]="defaultSearch.propertyName" selected> {{ defaultSearch.displayName }} </option>
+      <option *ngFor="let column of columns" [ngValue]="column.propertyName">
+        {{ column.displayName }}
+      </option>
+    </optgroup>
+
   </select>
   <input aria-label="searchText" type="search" [(ngModel)]="searchText" placeholder="Search" />
-  <a aria-label="searchButton" (click)="searchThis()">
+  <a id="search-button" aria-label="searchButton" (click)="searchThis()">
     <fa-icon class="icon" [icon]="['fas', 'search']"></fa-icon>
   </a>
   <span id="clear" *ngIf="filteredResults" (click)="clearFilteredResults()">clear</span>

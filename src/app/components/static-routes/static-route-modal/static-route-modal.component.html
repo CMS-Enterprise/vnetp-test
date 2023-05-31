@@ -1,6 +1,6 @@
 <ngx-smart-modal #staticRouteModal identifier="staticRouteModal" [dismissable]="false" (onOpen)="getData()" (onClose)="reset()">
   <header class="modal-header">
-    <h4 class="modal-title">Static Route</h4>
+    <h2 class="modal-title">Static Route</h2>
   </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -33,10 +33,10 @@
       </div>
 
       <div class="form-group">
-        <label for="name">Next Hop</label>
+        <label for="nextHop">Next Hop</label>
         <input
           type="text"
-          name="name"
+          name="nextHop"
           formControlName="nextHop"
           class="form-control"
           [class.is-invalid]="submitted && f.nextHop.errors"
@@ -49,10 +49,10 @@
       </div>
 
       <div class="form-group">
-        <label for="name">Metric</label>
+        <label for="metric">Metric</label>
         <input
           type="number"
-          name="name"
+          name="metric"
           formControlName="metric"
           class="form-control"
           [class.is-invalid]="submitted && f.metric.errors"
