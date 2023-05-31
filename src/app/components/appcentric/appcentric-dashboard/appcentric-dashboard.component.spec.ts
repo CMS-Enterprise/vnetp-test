@@ -5,7 +5,6 @@ import {
   V1DatacentersService,
   V1LoadBalancerVirtualServersService,
   V1TiersService,
-  V1VmwareVirtualMachinesService,
   V2AppCentricBridgeDomainsService,
   V2AppCentricContractsService,
   V2AppCentricTenantsService,
