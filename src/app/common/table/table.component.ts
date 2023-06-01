@@ -103,7 +103,21 @@ export class TableComponent<T> implements AfterViewInit {
   // user has registered search parameters, we take these parameters and emit them forward
   // so the parent component has them for the subsequent "get" call
   public getObjectsAndFilter(searchInformation): void {
+    console.log('searchInformation', searchInformation);
     this.searchParams.emit(searchInformation);
+  }
+
+  public searchThis(event?) {
+    const newQueryParams = [];
+    Object.entries(event).map(input => {
+      const queryObject = { searchColumn: input[0], searchText: input[1] };
+      newQueryParams.push(queryObject);
+      console.log('input', input);
+    });
+    console.log('emit registered in table');
+    console.log('newly created query params array', newQueryParams);
+    this.getObjectsAndFilter(newQueryParams);
+    // console.log('event',event);
   }
 
   // we do a double emit here, the search bar emits the event to the table component, the table component then resets

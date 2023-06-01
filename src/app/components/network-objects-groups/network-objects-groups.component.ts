@@ -113,6 +113,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   ) {}
 
   public onNetObjTableEvent(event: TableComponentDto): void {
+    console.log('netObjTable', event);
     this.netObjTableComponentDto = event;
     this.getNetworkObjects(event);
   }
@@ -132,9 +133,59 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getNetworkObjects(event?): void {
+    let callMade = false;
+    console.log('netObjsEvent in get call', event);
     let eventParams;
+    let eventParamsArray = [];
     this.isLoadingObjects = true;
-    if (event) {
+    if (Array.isArray(event)) {
+      event.map(param => {
+        let eventString;
+        console.log('param', param);
+        const { searchText } = param;
+        if (searchText !== '') {
+          let propertyName = param.searchColumn;
+          if (propertyName === 'IpAddress') {
+            propertyName = 'ipAddress';
+            eventString = `"${propertyName}": {"$eq": "${searchText}"}`;
+          }
+          if (propertyName === 'Start IP') {
+            propertyName = 'startIpAddress';
+            eventString = `"${propertyName}": {"$eq": "${searchText}"}`;
+          }
+          if (propertyName === 'End IP') {
+            propertyName = 'endIpAddress';
+            eventString = `"${propertyName}": {"$eq": "${searchText}"}`;
+          }
+
+          if (propertyName === 'FQDN') {
+            propertyName = 'fqdn';
+            eventString = `"${propertyName}": {"$cont": "${searchText}"}`;
+          }
+        }
+        console.log('eventString', eventString);
+        eventParamsArray.push(eventString);
+      });
+
+      callMade = true;
+
+      this.networkObjectService
+        .getManyNetworkObject({
+          s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [{${eventParamsArray[0]}}, {${eventParamsArray[1]}}, {${eventParamsArray[2]}}, {${eventParamsArray[3]}}]}`,
+          page: this.netObjTableComponentDto.page,
+          limit: this.netObjTableComponentDto.perPage,
+          sort: ['name,ASC'],
+        })
+        .subscribe(data => {
+          this.networkObjects = data;
+          this.isLoadingObjects = false;
+        }),
+        () => {},
+        () => {
+          this.isLoadingObjects = false;
+        };
+    } else if (event) {
+      console.log('in else if');
       this.netObjTableComponentDto.page = event.page ? event.page : 1;
       this.netObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
@@ -148,9 +199,15 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     } else {
       this.netObjTableComponentDto.searchText = undefined;
     }
+    console.log('before original get call', eventParams);
+    if (callMade) {
+      console.log('how to skip the next get call??');
+      return;
+    }
     this.networkObjectService
       .getManyNetworkObject({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
+        // s: `{"tierId": {"$eq": "${this.currentTier.id}"}}`,
         page: this.netObjTableComponentDto.page,
         limit: this.netObjTableComponentDto.perPage,
         sort: ['name,ASC'],

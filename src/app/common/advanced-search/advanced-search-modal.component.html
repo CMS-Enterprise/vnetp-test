@@ -6,7 +6,7 @@
 
   
 
-  <form [formGroup]="form">
+  <form [formGroup]="form" (ngSubmit)="searchThis($event)">
     <div class="modal-body">
 
       <div class="form-row">
@@ -24,7 +24,7 @@
 
     <footer class="modal-footer">
 
-      <button class="btn btn-success">
+      <button type="submit" class="btn btn-success">
         <!-- <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon> -->
         <span (click)="searchThis($event)">Search</span>
       </button>

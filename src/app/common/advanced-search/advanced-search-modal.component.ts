@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { V1NetworkSecurityNetworkObjectsService, V1NetworkSecurityNetworkObjectGroupsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -10,16 +10,13 @@ import { Subscription } from 'rxjs';
 })
 export class AdvancedSearchComponent implements OnInit {
   @Input() formInputs;
+  @Output() searchCriteria = new EventEmitter<any>();
   form: FormGroup;
   submitted: boolean;
   modalBody;
   modalTitle;
 
-  rulesHit = [];
-  partialMatches = [];
-  showPartials = false;
   doneSearching = false;
-  protocolSubscription: Subscription;
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
@@ -37,33 +34,35 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   public test() {
-    console.log('test?');
-    console.log(this.formInputs);
     this.formInputs.map(input => {
       const formControl = new FormControl(input.displayName);
       this.form.addControl(input.displayName, formControl);
       this.form.controls[input.displayName].setValue('');
     });
-    console.log('form', this.form);
   }
 
   public searchThis(event?) {
     const inputs = document.getElementsByClassName('form-control');
-    console.log('inputs', inputs);
     const elements: any = Array.from(inputs);
-    console.log('elements', elements);
     const valueArray = [];
     elements.map(e => {
       const value = e.value;
-      console.log('value', value);
       valueArray.push(value);
     });
-    console.log('valueArray', valueArray);
-    this.formInputs.map(input => {
-      // const formControl = new FormControl(input.displayName);
-      // this.form.addControl(input.displayName, formControl)
-      this.form.controls[input.displayName].updateValueAndValidity();
-    });
+    let i = 0;
+    for (const field in this.form.controls) {
+      // 'field' is a string
+      const control = this.form.get(field); // 'control' is a FormControl
+      const value = valueArray[i];
+      control.setValue(value);
+      i = i + 1;
+    }
+
+    /// LOOK AT CONSOLIDATING LOGIC FOR BUILDING QUERY STRING INTO THIS COMPONENT
+    ///
+
+    console.log('emiting now');
+    this.searchCriteria.emit(this.form.value);
     console.log('form', this.form);
   }
 

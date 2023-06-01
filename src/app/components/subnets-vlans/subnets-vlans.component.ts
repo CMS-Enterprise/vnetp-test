@@ -126,6 +126,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   }
 
   public onSubnetTableEvent(event: TableComponentDto): void {
+    console.log('subnetTableEvent', event);
     this.subnetTableComponentDto = event;
     this.getSubnets(event);
   }
@@ -379,6 +380,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   }
 
   public getSubnets(event?): void {
+    console.log('subnetTableEvent', event);
     this.isLoadingSubnets = true;
     let eventParams;
     if (event) {
