@@ -108,15 +108,27 @@ export class TableComponent<T> implements AfterViewInit {
   }
 
   public searchThis(event?) {
+    console.log('event', event);
+    Object.entries(event).map(([k, v]) => {
+      console.log('k,v', k, v);
+
+      if (v === '') {
+        delete event[k];
+      }
+    });
     const newQueryParams = [];
+
+    console.log('event', event);
     Object.entries(event).map(input => {
       const queryObject = { searchColumn: input[0], searchText: input[1] };
       newQueryParams.push(queryObject);
-      console.log('input', input);
     });
     console.log('emit registered in table');
     console.log('newly created query params array', newQueryParams);
-    this.getObjectsAndFilter(newQueryParams);
+    this.tableContextService.addFilteredResultsLocalStorage();
+    const finalString = this.advancedSearchNetObjForm(newQueryParams);
+    console.log('finalString', finalString);
+    this.getObjectsAndFilter(finalString);
     // console.log('event',event);
   }
 
@@ -149,5 +161,36 @@ export class TableComponent<T> implements AfterViewInit {
   openAdvancedSearch(event?) {
     this.subscribeToAdvancedSearch();
     this.ngx.getModal('advancedSearch').open();
+  }
+
+  private advancedSearchNetObjForm(newQueryParams) {
+    let eventParamsArray = [];
+    newQueryParams.map(param => {
+      let eventString;
+      const { searchText } = param;
+      if (searchText !== '') {
+        let propertyName = param.searchColumn;
+        if (propertyName === 'IpAddress') {
+          propertyName = 'ipAddress';
+          eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
+        }
+        if (propertyName === 'Start IP') {
+          propertyName = 'startIpAddress';
+          eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
+        }
+        if (propertyName === 'End IP') {
+          propertyName = 'endIpAddress';
+          eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
+        }
+
+        if (propertyName === 'FQDN') {
+          propertyName = 'fqdn';
+          eventString = `{"${propertyName}": {"$cont": "${searchText}"}}`;
+        }
+      }
+      eventParamsArray.push(eventString);
+    });
+    const finalString = eventParamsArray.concat().toString();
+    return finalString;
   }
 }
