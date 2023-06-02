@@ -9,12 +9,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { VmwareVirtualMachine } from './vmwareVirtualMachine';
-import { Appliance } from './appliance';
 import { Tier } from './tier';
 import { TierGroup } from './tierGroup';
-import { PhysicalServer } from './physicalServer';
-import { PriorityGroup } from './priorityGroup';
 import { SelfService } from './selfService';
 import { Job } from './job';
 import { AuditLog } from './auditLog';
@@ -28,10 +24,6 @@ export interface Datacenter {
     readonly deletedAt?: string;
     name: string;
     description?: string;
-    readonly appliances?: Array<Appliance>;
-    readonly physicalServers?: Array<PhysicalServer>;
-    readonly vmwareVirtualMachines?: Array<VmwareVirtualMachine>;
-    readonly priorityGroups?: Array<PriorityGroup>;
     readonly tiers?: Array<Tier>;
     readonly tierGroups?: Array<TierGroup>;
     readonly jobs?: Array<Job>;
