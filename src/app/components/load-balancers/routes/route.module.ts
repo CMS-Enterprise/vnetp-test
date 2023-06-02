@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from 'src/app/common/shared.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -10,6 +9,8 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { RouteListComponent } from './route-list/route-list.component';
 import { RouteModalComponent } from './route-modal/route-modal.component';
 import { RouterModule, Routes } from '@angular/router';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
+import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
 
 const routes: Routes = [
   {
@@ -27,9 +28,10 @@ const routes: Routes = [
     NgxSmartModalModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    SharedModule,
     TableModule,
     TooltipModule,
+    YesNoModalModule,
+    ImportExportModule,
   ],
   declarations: [RouteListComponent, RouteModalComponent],
 })

@@ -1,0 +1,61 @@
+<ng-container>
+  <section class="btn-toolbar" role="toolbar">
+    <button type="button" class="btn btn-success" (click)="openVrfModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create VRF</span>
+    </button>
+  </section>
+
+  <ng-container *ngIf="!isLoading; else loading">
+    <app-table
+      [config]="config"
+      [data]="vrfs"
+      (clearResults)="getVrfs($event)"
+      (searchParams)="getVrfs($event)"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
+    <section class="btn-toolbar" role="toolbar">
+      <app-import-export
+        [exportObject]="vrfs"
+        exportFileName="vrfs"
+        [disableJson]="false"
+        (import)="importVrfsConfig($event)"
+      ></app-import-export>
+    </section>
+  </ng-container>
+</ng-container>
+
+<ng-template #actionsTemplate let-vrf="datum">
+  <section class="table__actions">
+    <app-icon-button
+      *ngIf="!vrf?.deletedAt"
+      icon="edit"
+      label="Edit VRF"
+      (handleClick)="openVrfModal(ModalMode.Edit, vrf)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="vrf?.deletedAt"
+      icon="undo"
+      label="Restore VRF"
+      type="success"
+      (handleClick)="restoreVrf(vrf)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete VRF"
+      [type]="vrf?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteVrf(vrf)"
+    ></app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<app-vrf-modal></app-vrf-modal>
+<app-yes-no-modal></app-yes-no-modal>
