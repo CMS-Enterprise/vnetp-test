@@ -9,7 +9,7 @@ import { StaticRouteModalDto } from 'src/app/models/network/static-route-modal-d
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { EntityService } from 'src/app/services/entity.service';
 import { TableConfig } from '../../../common/table/table.component';
-import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 
 @Component({

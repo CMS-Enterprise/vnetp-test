@@ -1,0 +1,159 @@
+<ngx-smart-modal
+  #subjectModal
+  [dismissable]="false"
+  customClass="medium-modal"
+  identifier="subjectModal"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+>
+  <header class="modal-header">
+    <h4 class="modal-title">Subject</h4>
+  </header>
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="form-control"
+          [class.is-invalid]="submitted && f.name.errors"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or '_'.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="alias">Alias</label>
+        <input
+          type="text"
+          id="alias"
+          formControlName="alias"
+          class="form-control"
+          [class.is-invalid]="submitted && f.alias.errors"
+          aria-label="Alias"
+        />
+        <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
+          <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input
+          type="text"
+          id="description"
+          formControlName="description"
+          class="form-control"
+          [class.is-invalid]="submitted && f.description.errors"
+          aria-label="Description"
+        />
+        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+          <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="globalAlias">Global Alias</label>
+          <input
+            type="text"
+            id="globalAlias"
+            formControlName="globalAlias"
+            class="form-control"
+            [class.is-invalid]="submitted && f.globalAlias.errors"
+            aria-label="globalAlias"
+          />
+          <div *ngIf="submitted && f.globalAlias.errors" class="invalid-feedback">
+            <div *ngIf="f.globalAlias.errors.maxlength">Global Alias must be 100 characters or less.</div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="applyBothDirections">Apply Both Directions</label>
+          <select
+            id="applyBothDirections"
+            formControlName="applyBothDirections"
+            class="form-control"
+            [class.is-invalid]="submitted && f.applyBothDirections.errors"
+            aria-label="Apply Both Directions"
+          >
+            <option></option>
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="reverseFilterPorts">Reverse Filter Ports</label>
+          <select
+            id="reverseFilterPorts"
+            formControlName="reverseFilterPorts"
+            class="form-control"
+            [class.is-invalid]="submitted && f.reverseFilterPorts.errors"
+            aria-label="Reverse Filter Ports"
+          >
+            <option></option>
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="reset()">
+        Cancel
+      </button>
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save</span>
+      </button>
+    </div>
+  </form>
+  <ng-container *ngIf="modalMode === 'Edit'">
+    <header class="modal-header">
+      <h4 class="modal-title">Add Filter</h4>
+    </header>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="filters">Filters</label>
+        <ng-select
+          [(ngModel)]="selectedFilter"
+          [ngModelOptions]="{ standalone: true }"
+          [items]="filters"
+          id="filters"
+          bindLabel="name"
+        ></ng-select>
+      </div>
+      <button class="btn btn-success" (click)="addFilter()">
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Add Filter</span>
+      </button>
+      <app-table
+        [config]="config"
+        [data]="filterTableData"
+        (clearResults)="getFiltertableData($event)"
+        (searchParams)="getFiltertableData($event)"
+        [searchColumns]="searchColumns"
+        [(itemsPerPage)]="perPage"
+        (tableEvent)="onTableEvent($event)"
+      ></app-table>
+    </div>
+  </ng-container>
+</ngx-smart-modal>
+
+<ng-template #actionsTemplate let-filter="datum">
+  <section>
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Filter"
+      [type]="filter?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="removeFilter(filter)"
+    ></app-icon-button>
+  </section>
+</ng-template>
