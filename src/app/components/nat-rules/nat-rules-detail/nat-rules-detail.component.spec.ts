@@ -7,8 +7,10 @@ import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { of } from 'rxjs';
+import { of, Subject, Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { NatRule, NatRuleImport, NatRulePreview } from 'client';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 describe('NatRulesDetailComponent', () => {
   let component: NatRulesDetailComponent;
@@ -17,6 +19,7 @@ describe('NatRulesDetailComponent', () => {
     currentDatacenter: jest.fn().mockReturnValue(of({ tiers: {} })),
     lockDatacenter: jest.fn(),
     currentTiersValue: 'id',
+    currentDatacenterValue: { id: 'id' },
   };
   const mockActivatedRoute = {
     snapshot: {
@@ -141,68 +144,231 @@ describe('NatRulesDetailComponent', () => {
   });
 
   describe('openNatRuleModal', () => {
-    it('should throw an error if modalMode is Edit and natRule is undefined', () => {
-      expect(() => component.openNatRuleModal(ModalMode.Edit)).toThrow(new Error('Nat Rule Required'));
+    beforeEach(() => {
+      component.TierId = 'testTierId';
+      component.Id = 'testGroupId';
+      component.networkObjectGroups = [];
+      component.networkObjects = [];
+      component.serviceObjects = [];
+      component.latestRuleIndex = 1;
+      spyOn(component, 'subscribeToNatRuleModal');
+      spyOn(component['ngx'], 'setModalData');
+      const onCloseFinished = new Subject<void>();
+      spyOn(component['ngx'], 'getModal').and.returnValue({ open: jest.fn(), onCloseFinished });
     });
 
-    // it('should set dto and open modal with new Nat Rule if modalMode is Create', () => {
-    //   const modalMode = ModalMode.Create;
-    //   spyOn(component, 'subscribeToNatRuleModal');
-    //   spyOn(component['ngx'], 'setModalData');
-    //   spyOn(component['ngx'], 'getModal').and.returnValue({ open: () => {} });
+    it('should throw an error if Edit mode is called without a nat rule', () => {
+      const modalMode = ModalMode.Edit;
+      expect(() => component.openNatRuleModal(modalMode)).toThrowError('Nat Rule Required');
+    });
 
-    //   component.latestRuleIndex = 0;
-    //   component.networkObjectGroups = ['networkObjectGroup1'] as any;
-    //   component.networkObjects = ['networkObject1'] as any;
-    //   component.serviceObjects = ['serviceObject1'] as any;
-    //   component.Id = 'natRuleGroupId';
-    //   component.TierId = 'tierId';
+    it('should open Nat Rule modal with correct data in Create mode', () => {
+      const modalMode = ModalMode.Create;
 
-    //   component.openNatRuleModal(modalMode);
+      component.openNatRuleModal(modalMode);
 
-    //   const expectedDto = new NatRuleModalDto();
-    //   expectedDto.tierId = component.TierId;
-    //   expectedDto.natRuleGroupId = component.Id;
-    //   expectedDto.modalMode = modalMode;
-    //   expectedDto.NetworkObjectGroups = component.networkObjectGroups;
-    //   expectedDto.NetworkObjects = component.networkObjects;
-    //   expectedDto.ServiceObjects = component.serviceObjects;
-    //   expectedDto.natRule = {} as any;
-    //   expectedDto.natRule.ruleIndex = component.latestRuleIndex + 1;
+      const expectedDto = {
+        tierId: component.TierId,
+        natRuleGroupId: component.Id,
+        modalMode: modalMode,
+        NetworkObjectGroups: component.networkObjectGroups,
+        NetworkObjects: component.networkObjects,
+        ServiceObjects: component.serviceObjects,
+        natRule: { ruleIndex: component.latestRuleIndex + 1 },
+      };
 
-    //   expect(component.subscribeToNatRuleModal).toHaveBeenCalled();
-    //   expect(component['ngx'].setModalData).toHaveBeenCalledWith(expectedDto, 'natRuleModal');
-    //   expect(component['ngx'].getModal('natRuleModal').open).toHaveBeenCalled();
-    // });
+      expect(component['ngx'].setModalData).toHaveBeenCalledWith(expectedDto, 'natRuleModal');
+      expect(component['ngx'].getModal).toHaveBeenCalledWith('natRuleModal');
+      expect(component['ngx'].getModal('natRuleModal').open).toHaveBeenCalled();
+    });
 
-    // it('should set dto and open modal with existing Nat Rule if modalMode is Edit and natRule is defined', () => {
-    //   const modalMode = ModalMode.Edit;
-    //   spyOn(component, 'subscribeToNatRuleModal');
-    //   spyOn(component['ngx'], 'setModalData');
-    //   spyOn(component['ngx'], 'getModal').and.returnValue({ open: () => {} });
+    it('should open Nat Rule modal with correct data in Edit mode', () => {
+      const modalMode = ModalMode.Edit;
+      const natRule: NatRule = { id: 'testNatRuleId', ruleIndex: 2 } as any;
 
-    //   const natRule = { id: 'natRuleId', ruleIndex: 1 } as any;
+      component.openNatRuleModal(modalMode, natRule);
 
-    //   component.networkObjectGroups = ['networkObjectGroup1'] as any;
-    //   component.networkObjects = ['networkObject1'] as any;
-    //   component.serviceObjects = ['serviceObject1'] as any;
-    //   component.Id = 'natRuleGroupId';
-    //   component.TierId = 'tierId';
+      const expectedDto = {
+        tierId: component.TierId,
+        natRuleGroupId: component.Id,
+        modalMode: modalMode,
+        NetworkObjectGroups: component.networkObjectGroups,
+        NetworkObjects: component.networkObjects,
+        ServiceObjects: component.serviceObjects,
+        natRule: natRule,
+      };
 
-    //   component.openNatRuleModal(modalMode, natRule);
+      expect(component['ngx'].setModalData).toHaveBeenCalledWith(expectedDto, 'natRuleModal');
+      expect(component['ngx'].getModal).toHaveBeenCalledWith('natRuleModal');
+      expect(component['ngx'].getModal('natRuleModal').open).toHaveBeenCalled();
+    });
+  });
 
-    //   const expectedDto = new NatRuleModalDto();
-    //   expectedDto.tierId = component.TierId;
-    //   expectedDto.natRuleGroupId = component.Id;
-    //   expectedDto.modalMode = modalMode;
-    //   expectedDto.NetworkObjectGroups = component.networkObjectGroups;
-    //   expectedDto.NetworkObjects = component.networkObjects;
-    //   expectedDto.ServiceObjects = component.serviceObjects;
-    //   expectedDto.natRule = natRule;
+  describe('subscribeToNatRuleModal', () => {
+    beforeEach(() => {
+      spyOn(component, 'getNatRuleGroup');
+      spyOn(component['ngx'], 'resetModalData');
+    });
 
-    //   expect(component.subscribeToNatRuleModal).toHaveBeenCalled();
-    //   expect(component['ngx'].setModalData).toHaveBeenCalledWith(expectedDto, 'natRuleModal');
-    //   expect(component['ngx'].getModal('natRuleModal').open).toHaveBeenCalled();
-    // });
+    it('should subscribe to natRuleModal onCloseFinished event', () => {
+      const onCloseFinished = new Subject<void>();
+      const mockModal = { onCloseFinished, open: jest.fn() };
+      spyOn(component['ngx'], 'getModal').and.returnValue(mockModal);
+
+      component.subscribeToNatRuleModal();
+
+      expect(component['ngx'].getModal).toHaveBeenCalledWith('natRuleModal');
+      expect(component.natRuleModalSubscription).toBeDefined();
+
+      onCloseFinished.next();
+
+      expect(component.getNatRuleGroup).toHaveBeenCalled();
+      expect(component['ngx'].resetModalData).toHaveBeenCalledWith('natRuleModal');
+    });
+  });
+
+  it('should get the service object name for a given id', () => {
+    const serviceObjectId = 'testServiceObjectId';
+    const serviceName = 'testServiceName';
+    component.serviceObjects = [{ id: serviceObjectId, name: serviceName } as any];
+
+    spyOn(ObjectUtil, 'getObjectName').and.callThrough();
+
+    const result = component.getServiceObjectName(serviceObjectId);
+
+    expect(ObjectUtil.getObjectName).toHaveBeenCalledWith(serviceObjectId, component.serviceObjects);
+    expect(result).toEqual(serviceName);
+  });
+
+  it('should get the network object name for a given id', () => {
+    const networkObjectId = 'testNetworkObjectId';
+    const networkObjectName = 'testNetworkObjectName';
+    component.networkObjects = [{ id: networkObjectId, name: networkObjectName } as any];
+
+    spyOn(ObjectUtil, 'getObjectName').and.callThrough();
+
+    const result = component.getNetworkObjectName(networkObjectId);
+
+    expect(ObjectUtil.getObjectName).toHaveBeenCalledWith(networkObjectId, component.networkObjects);
+    expect(result).toEqual(networkObjectName);
+  });
+
+  it('should get the network object group name for a given id', () => {
+    const networkObjectGroupId = 'testNetworkObjectGroupId';
+    const networkObjectGroupName = 'testNetworkObjectGroupName';
+    component.networkObjectGroups = [{ id: networkObjectGroupId, name: networkObjectGroupName } as any];
+
+    spyOn(ObjectUtil, 'getObjectName').and.callThrough();
+
+    const result = component.getNetworkObjectGroupName(networkObjectGroupId);
+
+    expect(ObjectUtil.getObjectName).toHaveBeenCalledWith(networkObjectGroupId, component.networkObjectGroups);
+    expect(result).toEqual(networkObjectGroupName);
+  });
+
+  describe('deleteNatRule', () => {
+    it('should delete a NatRule and update the nat rules list with search parameters', () => {
+      component.NatRuleGroup = { id: 'testNatRuleGroupId' } as any;
+      const natRule: NatRule = { id: 'testNatRuleId' } as any;
+      const deleteOneNatRuleSpy = jest.spyOn(component['natRuleService'], 'deleteOneNatRule').mockResolvedValue({} as never);
+      const softDeleteOneNatRuleSpy = jest.spyOn(component['natRuleService'], 'softDeleteOneNatRule').mockResolvedValue({} as never);
+
+      jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
+        options.onSuccess();
+        return new Subscription();
+      });
+
+      const getNatRuleSpy = jest.spyOn(component, 'getNatRules');
+
+      component.deleteNatRule(natRule);
+
+      expect(component['entityService'].deleteEntity).toHaveBeenCalled();
+      expect(deleteOneNatRuleSpy).toHaveBeenCalledWith({ id: natRule.id });
+      expect(softDeleteOneNatRuleSpy).toHaveBeenCalledWith({ id: natRule.id });
+      expect(getNatRuleSpy).toHaveBeenCalled();
+    });
+
+    it('should delete a NatRule and update the nat rules list without search parameters', () => {
+      component.NatRuleGroup = { id: 'testNatRuleGroupId' } as any;
+      const natRule = { id: '1' } as any;
+      jest.spyOn(component['natRuleService'], 'deleteOneNatRule').mockResolvedValue({} as never);
+      jest.spyOn(component['natRuleService'], 'softDeleteOneNatRule').mockResolvedValue({} as never);
+
+      jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
+        options.onSuccess();
+        return new Subscription();
+      });
+
+      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+      const getNatRuleSpy = jest.spyOn(component, 'getNatRules');
+
+      component.deleteNatRule(natRule);
+
+      expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
+      expect(component.tableComponentDto.searchText).toBe(params.searchText);
+      expect(getNatRuleSpy).toHaveBeenCalledWith(component.tableComponentDto);
+    });
+  });
+
+  describe('restoreNatRule', () => {
+    it('should restore without filtered results', () => {
+      component.NatRuleGroup = { id: 'testNatRuleGroupId' } as any;
+      const natRule = { id: '1', deletedAt: true } as any;
+      spyOn(component['natRuleService'], 'restoreOneNatRule').and.returnValue(of({} as any));
+      spyOn(component, 'getNatRules');
+      component.restoreNatRule(natRule);
+      expect(component['natRuleService'].restoreOneNatRule).toHaveBeenCalledWith({ id: natRule.id });
+      expect(component.getNatRules).toHaveBeenCalled();
+    });
+
+    it('should restore with filtered results', () => {
+      component.NatRuleGroup = { id: 'testNatRuleGroupId' } as any;
+      const natRule = { id: '1', deletedAt: true } as any;
+      spyOn(component['natRuleService'], 'restoreOneNatRule').and.returnValue(of({} as any));
+
+      const getNatRulesSpy = jest.spyOn(component, 'getNatRules');
+      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+
+      component.restoreNatRule(natRule);
+
+      expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
+      expect(component.tableComponentDto.searchText).toBe(params.searchText);
+      expect(getNatRulesSpy).toHaveBeenCalledWith(component.tableComponentDto);
+    });
+  });
+
+  describe('importNatRulesConfig', () => {
+    it('should import NAT rules, sanitize data, map CSV values, and create a preview', () => {
+      const natRuleImports: NatRuleImport[] = [{ ruleIndex: '5' } as any]; // Define initial data.
+      const sanitizedNatRuleImports: NatRuleImport[] = [{ ruleIndex: 5 } as any]; // Define expected sanitized data.
+      const natRulePreview: NatRulePreview = { natRulesToBeUploaded: [] } as any; // Define response data.
+
+      const importResponse = of(natRulePreview) as any;
+      const getNatRuleGroupResponse = of({}) as any; // Define response for getNatRuleGroup.
+
+      jest.spyOn(component['datacenterService'], 'currentDatacenterValue', 'get').mockReturnValue({ id: 'testDatacenterId' } as any);
+      jest.spyOn(component['natRuleService'], 'bulkImportNatRulesNatRule').mockReturnValue(importResponse);
+      jest.spyOn(component, 'getNatRuleGroup').mockReturnValue(getNatRuleGroupResponse);
+      jest.spyOn(component['ngx'], 'setModalData');
+      jest.spyOn(component['ngx'], 'getModal').mockReturnValue({
+        open: jest.fn(),
+        onCloseFinished: { subscribe: jest.fn() },
+      } as any);
+
+      component.importNatRulesConfig(natRuleImports);
+
+      expect(component['natRuleService'].bulkImportNatRulesNatRule).toHaveBeenCalledWith({
+        natRuleImportCollectionDto: {
+          dryRun: true,
+          datacenterId: component['datacenterService'].currentDatacenterValue.id,
+          natRules: sanitizedNatRuleImports,
+        },
+      });
+
+      expect(component['ngx'].setModalData).toHaveBeenCalled();
+      expect(component['ngx'].getModal).toHaveBeenCalledWith('previewModal');
+    });
   });
 });

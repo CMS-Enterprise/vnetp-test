@@ -247,10 +247,8 @@ describe('FirewallRulesDetailComponent', () => {
     it('should call deleteOneFirewallRule with event params', () => {
       const firewallRule = { id: 'testId' } as any;
       component.FirewallRuleGroup = { id: 'test' } as any;
-      const deleteOneFirewallRuleSpy = jest.spyOn(component['firewallRuleService'], 'deleteOneFirewallRule').mockResolvedValue({} as never);
-      const softDeleteOneFirewallRuleSpy = jest
-        .spyOn(component['firewallRuleService'], 'softDeleteOneFirewallRule')
-        .mockResolvedValue({} as never);
+      jest.spyOn(component['firewallRuleService'], 'deleteOneFirewallRule').mockResolvedValue({} as never);
+      jest.spyOn(component['firewallRuleService'], 'softDeleteOneFirewallRule').mockResolvedValue({} as never);
 
       jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
         options.onSuccess();
