@@ -38,6 +38,8 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   perPage = 20;
   ModalMode = ModalMode;
 
+  objectType = 'NetworkObject';
+
   networkObjects = {} as GetManyNetworkObjectResponseDto;
   networkObjectGroups = {} as GetManyNetworkObjectGroupResponseDto;
 
@@ -133,18 +135,18 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getNetworkObjects(event?): void {
-    let callMade = false;
     console.log('netObjsEvent in get call', event);
+    console.log('netObjtTableComponentDto', this.netObjTableComponentDto);
     let eventParams;
     this.isLoadingObjects = true;
+
     if (typeof event === 'string') {
-      callMade = true;
       this.networkObjectService
         .getManyNetworkObject({
           s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
-          page: this.netObjTableComponentDto.page,
-          limit: this.netObjTableComponentDto.perPage,
-          sort: ['name,ASC'],
+          page: 1,
+          limit: 5000,
+          // sort: ['name,ASC'],
         })
         .subscribe(data => {
           this.networkObjects = data;
@@ -154,11 +156,9 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         () => {
           this.isLoadingObjects = false;
         };
-    }
-    if (callMade) {
       return;
-    } else if (event) {
-      console.log('in else if');
+    }
+    if (event) {
       this.netObjTableComponentDto.page = event.page ? event.page : 1;
       this.netObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
@@ -275,14 +275,17 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.networkObjectModalSubscription = this.ngx.getModal('networkObjectModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
+      let { filteredResults, searchString } = params;
 
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
-      if (filteredResults) {
+      if (filteredResults && !searchString) {
         this.netObjTableComponentDto.searchColumn = params.searchColumn;
         this.netObjTableComponentDto.searchText = params.searchText;
         this.getNetworkObjects(this.netObjTableComponentDto);
+      } else if (filteredResults && searchString) {
+        searchString = JSON.stringify(searchString);
+        this.getNetworkObjects(searchString);
       } else {
         this.getNetworkObjects();
       }
@@ -319,14 +322,17 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       onSuccess: () => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+        let { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
-        if (filteredResults) {
+        if (filteredResults && !searchString) {
           this.netObjTableComponentDto.searchColumn = params.searchColumn;
           this.netObjTableComponentDto.searchText = params.searchText;
           this.getNetworkObjects(this.netObjTableComponentDto);
+        } else if (filteredResults && searchString) {
+          searchString = JSON.stringify(searchString);
+          this.getNetworkObjects(searchString);
         } else {
           this.getNetworkObjects();
         }
@@ -339,14 +345,17 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       this.networkObjectService.restoreOneNetworkObject({ id: networkObject.id }).subscribe(() => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+        let { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
-        if (filteredResults) {
+        if (filteredResults && !searchString) {
           this.netObjTableComponentDto.searchColumn = params.searchColumn;
           this.netObjTableComponentDto.searchText = params.searchText;
           this.getNetworkObjects(this.netObjTableComponentDto);
+        } else if (filteredResults && searchString) {
+          searchString = JSON.stringify(searchString);
+          this.getNetworkObjects(searchString);
         } else {
           this.getNetworkObjects();
         }

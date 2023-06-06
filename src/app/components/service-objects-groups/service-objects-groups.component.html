@@ -24,7 +24,7 @@
     </section>
 
     <ng-container *ngIf="!isLoadingObjects; else loading">
-      <app-table [config]="serviceObjectConfig" [data]="serviceObjects" (clearResults)="getServiceObjects($event)" (searchParams)="getServiceObjects($event)" [searchColumns]="objectSearchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onSvcObjTableEvent($event)"></app-table>
+      <app-table [objectType]="objectType" [config]="serviceObjectConfig" [data]="serviceObjects" (clearResults)="getServiceObjects($event)" (searchParams)="getServiceObjects($event)" [searchColumns]="objectSearchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onSvcObjTableEvent($event)"></app-table>
       <section class="btn-toolbar" role="toolbar">
         <app-import-export
           [exportObject]="serviceObjects"

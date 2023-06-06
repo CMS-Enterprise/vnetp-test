@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 })
 export class AdvancedSearchComponent implements OnInit {
   @Input() formInputs;
+  @Input() objectType;
   @Output() searchCriteria = new EventEmitter<any>();
   form: FormGroup;
   submitted: boolean;
@@ -30,7 +31,7 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   public reset() {
-    console.log('reset');
+    this.ngx.close('advancedSearch');
   }
 
   public test() {
@@ -61,9 +62,9 @@ export class AdvancedSearchComponent implements OnInit {
     /// LOOK AT CONSOLIDATING LOGIC FOR BUILDING QUERY STRING INTO THIS COMPONENT
     ///
 
-    console.log('emiting now');
     this.searchCriteria.emit(this.form.value);
     console.log('form', this.form);
+    this.reset();
   }
 
   private buildForm(): void {

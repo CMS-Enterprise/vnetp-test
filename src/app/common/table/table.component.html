@@ -44,4 +44,4 @@
   </section>
 </ng-container>
 
-<app-advanced-search-modal (searchCriteria)="searchThis($event)" [formInputs]="searchColumns"></app-advanced-search-modal>
+<app-advanced-search-modal [objectType]="objectType" (searchCriteria)="searchThis($event)" [formInputs]="searchColumns"></app-advanced-search-modal>

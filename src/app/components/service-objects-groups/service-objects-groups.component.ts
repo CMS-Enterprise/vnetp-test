@@ -38,6 +38,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   public perPage = 20;
   ModalMode = ModalMode;
 
+  objectType = 'ServiceObject';
+
   serviceObjects = {} as GetManyServiceObjectResponseDto;
   serviceObjectGroups = {} as GetManyServiceObjectGroupResponseDto;
 
@@ -129,8 +131,28 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getServiceObjects(event?): void {
+    console.log('svcObjsEvent in get call', event);
+    console.log('svcObjTableComponentDto', this.svcObjTableComponentDto);
     this.isLoadingObjects = true;
     let eventParams;
+
+    if (typeof event === 'string') {
+      this.serviceObjectService
+        .getManyServiceObject({
+          s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
+          page: 1,
+          limit: 5000,
+        })
+        .subscribe(data => {
+          this.serviceObjects = data;
+          this.isLoadingObjects = false;
+        }),
+        () => {},
+        () => {
+          this.isLoadingObjects = false;
+        };
+      return;
+    }
     if (event) {
       this.svcObjTableComponentDto.page = event.page ? event.page : 1;
       this.svcObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;

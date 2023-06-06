@@ -17,14 +17,16 @@ export class TableContextService {
     localStorage.setItem('filteredResults', JSON.stringify('true'));
   }
 
-  addSearchLocalStorage(searchColumn, searchText): void {
+  addSearchLocalStorage(searchColumn, searchText, searchString): void {
     localStorage.setItem('searchColumn', searchColumn);
     localStorage.setItem('searchText', searchText);
+    localStorage.setItem('searchString', searchString);
   }
 
   removeSearchLocalStorage(): void {
     localStorage.removeItem('searchText');
     localStorage.removeItem('searchColumn');
+    localStorage.removeItem('searchString');
     this.removeFilteredResultsLocalStorage();
   }
 
@@ -36,6 +38,7 @@ export class TableContextService {
     const searchColumn = JSON.parse(localStorage.getItem('searchColumn'));
     const searchText = JSON.parse(localStorage.getItem('searchText'));
     const filteredResults = JSON.parse(localStorage.getItem('filteredResults'));
-    return { searchColumn, searchText, filteredResults };
+    let searchString = localStorage.getItem('searchString');
+    return { searchColumn, searchText, filteredResults, searchString };
   }
 }

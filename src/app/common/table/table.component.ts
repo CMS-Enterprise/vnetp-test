@@ -50,6 +50,7 @@ export class TableComponent<T> implements AfterViewInit {
   @Output() itemsPerPageChange = new EventEmitter<any>();
 
   @Input() searchColumns: SearchColumnConfig[];
+  @Input() objectType;
   @Output() clearResults = new EventEmitter<any>();
   @Output() searchParams = new EventEmitter<any>();
   advancedSearchSubscription: Subscription;
@@ -71,8 +72,10 @@ export class TableComponent<T> implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
+    console.log('this.data', this.data);
     this.show = true;
     this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
+    console.log('this.uniqueTableId', this.uniqueTableId);
     // list of components that should have the search bar hidden when a user navigates to them
     const badList = [
       'managed-network',
@@ -107,6 +110,8 @@ export class TableComponent<T> implements AfterViewInit {
     this.searchParams.emit(searchInformation);
   }
 
+  // function that parses the form values sent by the advanced search modal
+  // and emits them to the child component to use in the GET query
   public searchThis(event?) {
     console.log('event', event);
     Object.entries(event).map(([k, v]) => {
@@ -123,20 +128,27 @@ export class TableComponent<T> implements AfterViewInit {
       const queryObject = { searchColumn: input[0], searchText: input[1] };
       newQueryParams.push(queryObject);
     });
-    console.log('emit registered in table');
     console.log('newly created query params array', newQueryParams);
     this.tableContextService.addFilteredResultsLocalStorage();
-    const finalString = this.advancedSearchNetObjForm(newQueryParams);
+    console.log('objectType', this.objectType);
+    let finalString;
+    if (this.objectType === 'NetworkObject') {
+      finalString = this.advancedSearchNetObjForm(newQueryParams);
+    }
+
+    if (this.objectType === 'ServiceObject') {
+      finalString = this.advancedSearchSvcObjForm(newQueryParams);
+    }
+    this.tableContextService.addSearchLocalStorage(null, null, finalString);
     console.log('finalString', finalString);
     this.getObjectsAndFilter(finalString);
-    // console.log('event',event);
   }
 
   // we do a double emit here, the search bar emits the event to the table component, the table component then resets
   // the itemsPerPage and the currentPage back to its default values, and then emits the event to the parent component,
   // where the appropriate function is called to re-populate the table
   public clearTableResults(): void {
-    this.itemsPerPage = 50;
+    this.itemsPerPage = 20;
     this.currentPage = 1;
     this.clearResults.emit(new TableComponentDto(+this.itemsPerPage, this.currentPage));
   }
@@ -149,11 +161,14 @@ export class TableComponent<T> implements AfterViewInit {
     const { searchColumn, searchText } = searchParams;
     this.tableEvent.emit(new TableComponentDto(+this.itemsPerPage, this.currentPage, searchColumn, searchText));
     this.itemsPerPageChange.emit(this.itemsPerPage);
+    this.ngx.close('advancedSearch');
   }
 
   subscribeToAdvancedSearch() {
     this.advancedSearchSubscription = this.ngx.getModal('advancedSearch').onCloseFinished.subscribe(() => {
+      console.log('inresetdata');
       this.ngx.resetModalData('advancedSearch');
+      this.ngx.close('advancedSearch');
       this.advancedSearchSubscription.unsubscribe();
     });
   }
@@ -185,6 +200,34 @@ export class TableComponent<T> implements AfterViewInit {
 
         if (propertyName === 'FQDN') {
           propertyName = 'fqdn';
+          eventString = `{"${propertyName}": {"$cont": "${searchText}"}}`;
+        }
+      }
+      eventParamsArray.push(eventString);
+    });
+    const finalString = eventParamsArray.concat().toString();
+    return finalString;
+  }
+
+  private advancedSearchSvcObjForm(newQueryParams) {
+    let eventParamsArray = [];
+    newQueryParams.map(param => {
+      let eventString;
+      const { searchText } = param;
+      if (searchText !== '') {
+        let propertyName = param.searchColumn;
+        if (propertyName === 'Type') {
+          propertyName = 'protocol';
+          eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
+        }
+
+        if (propertyName === 'Source Port') {
+          propertyName = 'sourcePorts';
+          eventString = `{"${propertyName}": {"$cont": "${searchText}"}}`;
+        }
+
+        if (propertyName === 'Destination Port') {
+          propertyName = 'destinationPorts';
           eventString = `{"${propertyName}": {"$cont": "${searchText}"}}`;
         }
       }
