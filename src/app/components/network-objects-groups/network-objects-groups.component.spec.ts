@@ -1,3 +1,5 @@
+/* tslint:disable:no-string-literal */
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectsGroupsComponent } from './network-objects-groups.component';
 import {

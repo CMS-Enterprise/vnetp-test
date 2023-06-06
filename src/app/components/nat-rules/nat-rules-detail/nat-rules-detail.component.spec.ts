@@ -163,14 +163,14 @@ describe('NatRulesDetailComponent', () => {
     });
 
     it('should open Nat Rule modal with correct data in Create mode', () => {
-      const modalMode = ModalMode.Create;
+      const mm = ModalMode.Create;
 
-      component.openNatRuleModal(modalMode);
+      component.openNatRuleModal(mm);
 
       const expectedDto = {
         tierId: component.TierId,
         natRuleGroupId: component.Id,
-        modalMode: modalMode,
+        modalMode: mm,
         NetworkObjectGroups: component.networkObjectGroups,
         NetworkObjects: component.networkObjects,
         ServiceObjects: component.serviceObjects,
@@ -183,19 +183,19 @@ describe('NatRulesDetailComponent', () => {
     });
 
     it('should open Nat Rule modal with correct data in Edit mode', () => {
-      const modalMode = ModalMode.Edit;
-      const natRule: NatRule = { id: 'testNatRuleId', ruleIndex: 2 } as any;
+      const mm = ModalMode.Edit;
+      const nr: NatRule = { id: 'testNatRuleId', ruleIndex: 2 } as any;
 
-      component.openNatRuleModal(modalMode, natRule);
+      component.openNatRuleModal(mm, nr);
 
       const expectedDto = {
         tierId: component.TierId,
         natRuleGroupId: component.Id,
-        modalMode: modalMode,
+        modalMode: mm,
         NetworkObjectGroups: component.networkObjectGroups,
         NetworkObjects: component.networkObjects,
         ServiceObjects: component.serviceObjects,
-        natRule: natRule,
+        natRule: nr,
       };
 
       expect(component['ngx'].setModalData).toHaveBeenCalledWith(expectedDto, 'natRuleModal');
