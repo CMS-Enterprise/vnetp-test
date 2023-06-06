@@ -105,4 +105,10 @@ export class ConsumedContractComponent implements OnInit {
         err => (this.contracts = null),
       );
   }
+
+  public clearSelectedContract(): void {
+    if (this.selectedContract) {
+      this.selectedContract = null;
+    }
+  }
 }
