@@ -1,3 +1,4 @@
+/* tslint:disable:quotemark */
 import { TestBed } from '@angular/core/testing';
 import { environment } from 'src/environments/environment';
 
