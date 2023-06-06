@@ -3,7 +3,7 @@
 <main class="dashboard">
   <!-- Service Status -->
   <aside class="dashboard__card" aria-label="Service Status">
-    <h4 class="dashboard__heading">Service Status</h4>
+    <h2 class="dashboard__heading">Service Status</h2>
     <div *ngFor="let service of status" class="status-item">
       <span>
         {{ service.name }}
@@ -54,7 +54,7 @@
 
   <!-- Overall Environment -->
   <aside class="dashboard__card" aria-label="Overall Environment">
-    <h4 class="dashboard__heading">Overall Environment</h4>
+    <h2 class="dashboard__heading">Overall Environment</h2>
     <ul class="dash-card">
       <li>
         <a>
@@ -88,18 +88,6 @@
           </span>
           <span class="inline-block ml-auto">
             {{ loadBalancerVirtualServers || 0 }}
-          </span>
-          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-        </a>
-      </li>
-      <li class="dash-card__item">
-        <a routerLink="/netcentric/vmware" queryParamsHandling="merge">
-          <span>
-            VMware Virtual Machines
-            <tooltip [message]="helpText.VMwareVms"></tooltip
-          ></span>
-          <span class="inline-block ml-auto">
-            {{ vmwareVirtualMachines || 0 }}
           </span>
           <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
         </a>

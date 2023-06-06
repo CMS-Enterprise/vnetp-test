@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
   disableUserPass = true;
   showTenantButton = false;
 
-  selectedMode: string;
+  selectedMode = 'netcentric';
 
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
 

@@ -6,7 +6,6 @@ import {
   FilterEntryArpFlagEnum,
   FilterEntryEtherTypeEnum,
   FilterEntryIpProtocolEnum,
-  FilterEntryTcpFlagsEnum,
   V2AppCentricFilterEntriesService,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -38,7 +37,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
   public etherTypeOptions = Object.values(FilterEntryEtherTypeEnum);
   public arpFlagOptions = Object.values(FilterEntryArpFlagEnum);
   public ipProtocolOptions = Object.values(FilterEntryIpProtocolEnum);
-  public tcpFlagsOptions = Object.values(FilterEntryTcpFlagsEnum).map(key => ({ value: key, label: key }));
 
   constructor(
     private formBuilder: FormBuilder,
@@ -106,7 +104,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
       this.form.controls.sourceToPort.setValue(filterEntry.sourceToPort);
       this.form.controls.destinationFromPort.setValue(filterEntry.destinationFromPort);
       this.form.controls.destinationToPort.setValue(filterEntry.destinationToPort);
-      this.form.controls.tcpFlags.setValue(filterEntry.tcpFlags);
       this.form.controls.stateful.setValue(filterEntry.stateful);
     }
     this.ngx.resetModalData('filterEntryModal');

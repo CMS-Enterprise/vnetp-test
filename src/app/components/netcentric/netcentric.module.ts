@@ -14,9 +14,6 @@ import { NetworkObjectsGroupsModule } from '../../components/network-objects-gro
 import { ServiceObjectsGroupsModule } from '../../components/service-objects-groups/service-objects-groups.module';
 import { NatRulesModule } from '../../components/nat-rules/nat-rules.module';
 import { StaticRoutesModule } from '../../components/static-routes/static-routes.module';
-import { ApplicationGroupModule } from '../../components/application-groups/application-groups.module';
-import { SlaModule } from '../../components/slas/sla.module';
-import { RecoveryPlanModule } from '../recovery-plans/recovery-plans.module';
 import { LogoutModule } from '../../components/logout/logout.module';
 import { UnauthorizedModule } from '../../components/unauthorized/unauthorized.module';
 import { LoadBalancersModule } from '../../components/load-balancers/load-balancers.module';
@@ -134,9 +131,6 @@ const routes: Routes = [
     ServiceObjectsGroupsModule,
     FirewallRulesModule,
     StaticRoutesModule,
-    ApplicationGroupModule,
-    SlaModule,
-    RecoveryPlanModule,
     LogoutModule,
     UnauthorizedModule,
     LoadBalancersModule,
