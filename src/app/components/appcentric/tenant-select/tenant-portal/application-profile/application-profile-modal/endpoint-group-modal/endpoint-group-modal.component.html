@@ -90,6 +90,9 @@
         <div class="form-group">
           <label for="bridgeDomain">Bridge Domain</label>
           <ng-select formControlName="bridgeDomain" [items]="bridgeDomains" id="bridgeDomain" bindLabel="name" bindValue="id"></ng-select>
+          <div *ngIf="submitted && f.bridgeDomain.errors" class="invalid-feedback">
+            <div *ngIf="f.bridgeDomain.errors.required">Bridge Domain is required</div>
+          </div>
         </div>
       </div>
 
