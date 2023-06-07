@@ -39,6 +39,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   ModalMode = ModalMode;
 
   objectType = 'NetworkObject';
+  filteredResults: boolean;
 
   networkObjects = {} as GetManyNetworkObjectResponseDto;
   networkObjectGroups = {} as GetManyNetworkObjectGroupResponseDto;
@@ -134,6 +135,12 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getNetworkObjects(event?): void {
+    const params = this.tableContextService.getSearchLocalStorage();
+    if (params.filteredResults) {
+      this.filteredResults = true;
+    } else {
+      this.filteredResults = false;
+    }
     let eventParams;
     this.isLoadingObjects = true;
 
@@ -317,6 +324,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       onSuccess: () => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
+        console.log('params', params);
         let { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
@@ -326,7 +334,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
           this.netObjTableComponentDto.searchText = params.searchText;
           this.getNetworkObjects(this.netObjTableComponentDto);
         } else if (filteredResults && searchString) {
-          searchString = JSON.stringify(searchString);
           this.getNetworkObjects(searchString);
         } else {
           this.getNetworkObjects();
@@ -349,7 +356,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
           this.netObjTableComponentDto.searchText = params.searchText;
           this.getNetworkObjects(this.netObjTableComponentDto);
         } else if (filteredResults && searchString) {
-          searchString = JSON.stringify(searchString);
           this.getNetworkObjects(searchString);
         } else {
           this.getNetworkObjects();

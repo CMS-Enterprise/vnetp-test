@@ -172,32 +172,47 @@ export class TableComponent<T> implements AfterViewInit {
   }
 
   private advancedSearchNetObjForm(newQueryParams) {
+    const netObjConfig = [
+      { formName: 'IpAddress', propertyName: 'ipAddress', operator: '$eq' },
+      { formName: 'FQDN', propertyName: 'fqdn', operator: '$cont' },
+    ];
     let eventParamsArray = [];
     newQueryParams.map(param => {
-      let eventString;
-      const { searchText } = param;
-      if (searchText !== '') {
-        let propertyName = param.searchColumn;
-        if (propertyName === 'IpAddress') {
-          propertyName = 'ipAddress';
-          eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
-        }
-        if (propertyName === 'Start IP') {
-          propertyName = 'startIpAddress';
-          eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
-        }
-        if (propertyName === 'End IP') {
-          propertyName = 'endIpAddress';
-          eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
-        }
-
-        if (propertyName === 'FQDN') {
-          propertyName = 'fqdn';
-          eventString = `{"${propertyName}": {"$cont": "${searchText}"}}`;
-        }
+      const match = netObjConfig.find(config => {
+        return config.formName === param.searchColumn;
+      });
+      let string;
+      if (match) {
+        string = `{"${match.propertyName}": {"${match.operator}": "${param.searchText}"}}`;
       }
-      eventParamsArray.push(eventString);
+      eventParamsArray.push(string);
     });
+
+    // newQueryParams.map(param => {
+    //   let eventString;
+    //   const { searchText } = param;
+    //   if (searchText !== '') {
+    //     let propertyName = param.searchColumn;
+    //     if (propertyName === 'IpAddress') {
+    //       propertyName = 'ipAddress';
+    //       eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
+    //     }
+    //     if (propertyName === 'Start IP') {
+    //       propertyName = 'startIpAddress';
+    //       eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
+    //     }
+    //     if (propertyName === 'End IP') {
+    //       propertyName = 'endIpAddress';
+    //       eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
+    //     }
+
+    //     if (propertyName === 'FQDN') {
+    //       propertyName = 'fqdn';
+    //       eventString = `{"${propertyName}": {"$cont": "${searchText}"}}`;
+    //     }
+    //   }
+    //   eventParamsArray.push(eventString);
+    // });
     const finalString = eventParamsArray.concat().toString();
     return finalString;
   }
