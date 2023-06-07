@@ -27,7 +27,6 @@ export class AdvancedSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-    console.log('inited!!');
   }
 
   public reset() {
@@ -42,7 +41,7 @@ export class AdvancedSearchComponent implements OnInit {
     });
   }
 
-  public searchThis(event?) {
+  public searchThis() {
     const inputs = document.getElementsByClassName('form-control');
     const elements: any = Array.from(inputs);
     const valueArray = [];
@@ -63,7 +62,6 @@ export class AdvancedSearchComponent implements OnInit {
     ///
 
     this.searchCriteria.emit(this.form.value);
-    console.log('form', this.form);
     this.reset();
   }
 

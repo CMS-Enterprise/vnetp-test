@@ -131,8 +131,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getServiceObjects(event?): void {
-    console.log('svcObjsEvent in get call', event);
-    console.log('svcObjTableComponentDto', this.svcObjTableComponentDto);
     this.isLoadingObjects = true;
     let eventParams;
 
@@ -271,14 +269,16 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     this.serviceObjectModalSubscription = this.ngx.getModal('serviceObjectModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
+      let { filteredResults, searchString } = params;
 
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
-      if (filteredResults) {
+      if (filteredResults && !searchString) {
         this.svcObjTableComponentDto.searchColumn = params.searchColumn;
         this.svcObjTableComponentDto.searchText = params.searchText;
         this.getServiceObjects(this.svcObjTableComponentDto);
+      } else if (filteredResults && searchString) {
+        this.getServiceObjects(searchString);
       } else {
         this.getServiceObjects();
       }

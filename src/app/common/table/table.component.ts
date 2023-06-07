@@ -72,10 +72,8 @@ export class TableComponent<T> implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    console.log('this.data', this.data);
     this.show = true;
     this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
-    console.log('this.uniqueTableId', this.uniqueTableId);
     // list of components that should have the search bar hidden when a user navigates to them
     const badList = [
       'managed-network',
@@ -106,32 +104,25 @@ export class TableComponent<T> implements AfterViewInit {
   // user has registered search parameters, we take these parameters and emit them forward
   // so the parent component has them for the subsequent "get" call
   public getObjectsAndFilter(searchInformation): void {
-    console.log('searchInformation', searchInformation);
     this.searchParams.emit(searchInformation);
   }
 
   // function that parses the form values sent by the advanced search modal
   // and emits them to the child component to use in the GET query
   public searchThis(event?) {
-    console.log('event', event);
     Object.entries(event).map(([k, v]) => {
-      console.log('k,v', k, v);
-
       if (v === '') {
         delete event[k];
       }
     });
     const newQueryParams = [];
 
-    console.log('event', event);
     Object.entries(event).map(input => {
       const queryObject = { searchColumn: input[0], searchText: input[1] };
       newQueryParams.push(queryObject);
     });
-    console.log('newly created query params array', newQueryParams);
     this.tableContextService.addFilteredResultsLocalStorage();
-    console.log('objectType', this.objectType);
-    let finalString;
+    let finalString: string;
     if (this.objectType === 'NetworkObject') {
       finalString = this.advancedSearchNetObjForm(newQueryParams);
     }
@@ -139,8 +130,11 @@ export class TableComponent<T> implements AfterViewInit {
     if (this.objectType === 'ServiceObject') {
       finalString = this.advancedSearchSvcObjForm(newQueryParams);
     }
+
+    if (this.objectType === 'Subnet') {
+      finalString = this.advancedSearchSubnetForm(newQueryParams);
+    }
     this.tableContextService.addSearchLocalStorage(null, null, finalString);
-    console.log('finalString', finalString);
     this.getObjectsAndFilter(finalString);
   }
 
@@ -166,7 +160,6 @@ export class TableComponent<T> implements AfterViewInit {
 
   subscribeToAdvancedSearch() {
     this.advancedSearchSubscription = this.ngx.getModal('advancedSearch').onCloseFinished.subscribe(() => {
-      console.log('inresetdata');
       this.ngx.resetModalData('advancedSearch');
       this.ngx.close('advancedSearch');
       this.advancedSearchSubscription.unsubscribe();
@@ -228,6 +221,34 @@ export class TableComponent<T> implements AfterViewInit {
 
         if (propertyName === 'Destination Port') {
           propertyName = 'destinationPorts';
+          eventString = `{"${propertyName}": {"$cont": "${searchText}"}}`;
+        }
+      }
+      eventParamsArray.push(eventString);
+    });
+    const finalString = eventParamsArray.concat().toString();
+    return finalString;
+  }
+
+  private advancedSearchSubnetForm(newQueryParams) {
+    let eventParamsArray = [];
+    newQueryParams.map(param => {
+      let eventString;
+      const { searchText } = param;
+      if (searchText !== '') {
+        let propertyName = param.searchColumn;
+        if (propertyName === 'Network') {
+          propertyName = 'network';
+          eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
+        }
+
+        if (propertyName === 'Gateway') {
+          propertyName = 'gateway';
+          eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
+        }
+
+        if (propertyName === 'Vlan') {
+          propertyName = 'vlan.name';
           eventString = `{"${propertyName}": {"$cont": "${searchText}"}}`;
         }
       }

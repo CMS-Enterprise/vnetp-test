@@ -115,7 +115,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   ) {}
 
   public onNetObjTableEvent(event: TableComponentDto): void {
-    console.log('netObjTable', event);
     this.netObjTableComponentDto = event;
     this.getNetworkObjects(event);
   }
@@ -135,8 +134,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getNetworkObjects(event?): void {
-    console.log('netObjsEvent in get call', event);
-    console.log('netObjtTableComponentDto', this.netObjTableComponentDto);
     let eventParams;
     this.isLoadingObjects = true;
 
@@ -172,7 +169,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     } else {
       this.netObjTableComponentDto.searchText = undefined;
     }
-    console.log('before original get call', eventParams);
     this.networkObjectService
       .getManyNetworkObject({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
@@ -284,7 +280,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.netObjTableComponentDto.searchText = params.searchText;
         this.getNetworkObjects(this.netObjTableComponentDto);
       } else if (filteredResults && searchString) {
-        searchString = JSON.stringify(searchString);
         this.getNetworkObjects(searchString);
       } else {
         this.getNetworkObjects();

@@ -40,6 +40,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   perPage = 20;
   ModalMode = ModalMode;
 
+  subnetObjectType = 'Subnet';
+  vlanObjectType = 'Vlan';
+
   subnets = {} as GetManySubnetResponseDto;
   vlans = {} as GetManyVlanResponseDto;
   public subnetSearchColumns: SearchColumnConfig[] = [
@@ -180,17 +183,20 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     this.subnetModalSubscription = this.ngx.getModal('subnetModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
+      let { filteredResults, searchString } = params;
 
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
-      if (filteredResults) {
+      if (filteredResults && !searchString) {
         this.subnetTableComponentDto.searchColumn = params.searchColumn;
         this.subnetTableComponentDto.searchText = params.searchText;
         this.getSubnets(this.subnetTableComponentDto);
+      } else if (filteredResults && searchString) {
+        this.getSubnets(searchString);
       } else {
         this.getSubnets();
       }
+
       this.ngx.resetModalData('subnetModal');
       this.datacenterService.unlockDatacenter();
       this.subnetModalSubscription.unsubscribe();
@@ -380,9 +386,26 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   }
 
   public getSubnets(event?): void {
-    console.log('subnetTableEvent', event);
     this.isLoadingSubnets = true;
     let eventParams;
+    if (typeof event === 'string') {
+      console.log('event', event);
+      this.subnetService
+        .getManySubnet({
+          s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
+          page: 1,
+          limit: 5000,
+        })
+        .subscribe(data => {
+          this.subnets = data;
+          this.isLoadingSubnets = false;
+        }),
+        () => {},
+        () => {
+          this.isLoadingSubnets = false;
+        };
+      return;
+    }
     if (event) {
       this.subnetTableComponentDto.page = event.page ? event.page : 1;
       this.subnetTableComponentDto.perPage = event.perPage ? event.perPage : 20;
