@@ -17,10 +17,12 @@ export class TableContextService {
     localStorage.setItem('filteredResults', JSON.stringify('true'));
   }
 
-  addSearchLocalStorage(searchColumn, searchText, searchString): void {
+  addSearchLocalStorage(searchColumn, searchText, searchString?): void {
     localStorage.setItem('searchColumn', searchColumn);
     localStorage.setItem('searchText', searchText);
-    localStorage.setItem('searchString', searchString);
+    if (searchString) {
+      localStorage.setItem('searchString', searchString);
+    }
   }
 
   removeSearchLocalStorage(): void {

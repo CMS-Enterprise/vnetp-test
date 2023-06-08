@@ -156,20 +156,7 @@ export class TableComponent<T> implements AfterViewInit {
       newQueryParams.push(queryObject);
     });
     this.tableContextService.addFilteredResultsLocalStorage();
-    let finalString: string;
-    finalString = this.scrapValues(newQueryParams);
-    console.log('finalString', finalString);
-    // if (this.objectType === 'NetworkObject') {
-    //   finalString = this.advancedSearchNetObjForm(newQueryParams);
-    // }
-
-    // if (this.objectType === 'ServiceObject') {
-    //   finalString = this.advancedSearchSvcObjForm(newQueryParams);
-    // }
-
-    // if (this.objectType === 'Subnet') {
-    //   finalString = this.advancedSearchSubnetForm(newQueryParams);
-    // }
+    const finalString = this.scrapeValues(newQueryParams);
 
     this.tableContextService.addSearchLocalStorage(null, null, finalString);
     this.getObjectsAndFilter(finalString);
@@ -178,7 +165,6 @@ export class TableComponent<T> implements AfterViewInit {
   subscribeToAdvancedSearch() {
     this.advancedSearchSubscription = this.ngx.getModal('advancedSearch').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('advancedSearch');
-      // this.ngx.close('advancedSearch');
       this.advancedSearchSubscription.unsubscribe();
     });
   }
@@ -188,7 +174,7 @@ export class TableComponent<T> implements AfterViewInit {
     this.ngx.getModal('advancedSearch').open();
   }
 
-  private scrapValues(newQueryParams) {
+  private scrapeValues(newQueryParams) {
     const eventParamsArray = [];
     newQueryParams.map(param => {
       const match = this.objectDictionary.find(config => {

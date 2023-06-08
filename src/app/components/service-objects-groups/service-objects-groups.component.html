@@ -1,10 +1,10 @@
 <app-tier-select></app-tier-select>
 
-<tooltip *ngIf="navIndex === 0 && svcObjTableComponentDto.searchText" [message]="filteredHelpText?.FilteredResults"></tooltip>
+<tooltip *ngIf="navIndex === 0 && filteredResults" [message]="filteredHelpText?.FilteredResults"></tooltip>
 
-<h1 *ngIf="navIndex === 0 && svcObjTableComponentDto.searchText">Service Objects ({{serviceObjects?.total}} matching items)</h1>
+<h1 *ngIf="navIndex === 0 && filteredResults">Service Objects ({{serviceObjects?.total}} matching items)</h1>
 
-<h1 *ngIf="navIndex === 0 && !svcObjTableComponentDto.searchText">Service Objects ({{serviceObjects?.total}} items)</h1>
+<h1 *ngIf="navIndex === 0 && !filteredResults">Service Objects ({{serviceObjects?.total}} items)</h1>
 
 <tooltip *ngIf="navIndex === 1 && svcObjGrpTableComponentDto.searchText" [message]="filteredHelpText?.FilteredResults"></tooltip>
 

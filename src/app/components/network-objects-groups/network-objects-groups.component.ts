@@ -327,7 +327,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       onSuccess: () => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        console.log('params', params);
         const { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the

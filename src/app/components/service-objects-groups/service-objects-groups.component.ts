@@ -37,6 +37,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   currentTier: Tier;
   public perPage = 20;
   ModalMode = ModalMode;
+  filteredResults: boolean;
 
   serviceObjects = {} as GetManyServiceObjectResponseDto;
   serviceObjectGroups = {} as GetManyServiceObjectGroupResponseDto;
@@ -129,6 +130,13 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getServiceObjects(event?): void {
+    const params = this.tableContextService.getSearchLocalStorage();
+    if (params.filteredResults) {
+      this.filteredResults = true;
+    } else {
+      this.filteredResults = false;
+    }
+
     this.isLoadingObjects = true;
     let eventParams;
 
@@ -318,14 +326,16 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       onSuccess: () => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+        const { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
-        if (filteredResults) {
+        if (filteredResults && !searchString) {
           this.svcObjTableComponentDto.searchColumn = params.searchColumn;
           this.svcObjTableComponentDto.searchText = params.searchText;
           this.getServiceObjects(this.svcObjTableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getServiceObjects(searchString);
         } else {
           this.getServiceObjects();
         }
@@ -338,14 +348,16 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       this.serviceObjectService.restoreOneServiceObject({ id: serviceObject.id }).subscribe(() => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+        const { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
-        if (filteredResults) {
+        if (filteredResults && !searchString) {
           this.svcObjTableComponentDto.searchColumn = params.searchColumn;
           this.svcObjTableComponentDto.searchText = params.searchText;
           this.getServiceObjects(this.svcObjTableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getServiceObjects(searchString);
         } else {
           this.getServiceObjects();
         }

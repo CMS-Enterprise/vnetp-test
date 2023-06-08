@@ -69,7 +69,7 @@ export class SearchBarComponent implements OnInit {
       return;
     }
 
-    this.tableContextService.addSearchLocalStorage(JSON.stringify(this.searchColumn), JSON.stringify(this.searchText), null);
+    this.tableContextService.addSearchLocalStorage(JSON.stringify(this.searchColumn), JSON.stringify(this.searchText));
     this.tableContextService.addFilteredResultsLocalStorage();
 
     this.searchError = false;

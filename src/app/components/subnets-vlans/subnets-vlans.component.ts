@@ -204,17 +204,20 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     this.vlanModalSubscription = this.ngx.getModal('vlanModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
+      const { filteredResults, searchString } = params;
 
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
-      if (filteredResults) {
+      if (filteredResults && !searchString) {
         this.vlanTableComponentDto.searchColumn = params.searchColumn;
         this.vlanTableComponentDto.searchText = params.searchText;
         this.getVlans(false, this.vlanTableComponentDto);
+      } else if (filteredResults && searchString) {
+        this.getVlans(false, searchString);
       } else {
         this.getVlans();
       }
+
       this.ngx.resetModalData('vlanModal');
       this.datacenterService.unlockDatacenter();
       this.vlanModalSubscription.unsubscribe();
@@ -229,14 +232,17 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       onSuccess: () => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+        const { filteredResults, searchString } = params;
+        console.log('params', params);
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
-        if (filteredResults) {
+        if (filteredResults && !searchString) {
           this.subnetTableComponentDto.searchColumn = params.searchColumn;
           this.subnetTableComponentDto.searchText = params.searchText;
           this.getSubnets(this.subnetTableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getSubnets(searchString);
         } else {
           this.getSubnets();
         }
@@ -249,14 +255,16 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       this.subnetService.restoreOneSubnet({ id: subnet.id }).subscribe(() => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+        const { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
-        if (filteredResults) {
+        if (filteredResults && !searchString) {
           this.subnetTableComponentDto.searchColumn = params.searchColumn;
           this.subnetTableComponentDto.searchText = params.searchText;
           this.getSubnets(this.subnetTableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getSubnets(searchString);
         } else {
           this.getSubnets();
         }
@@ -276,14 +284,16 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       onSuccess: () => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+        const { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
-        if (filteredResults) {
+        if (filteredResults && !searchString) {
           this.vlanTableComponentDto.searchColumn = params.searchColumn;
           this.vlanTableComponentDto.searchText = params.searchText;
           this.getVlans(false, this.vlanTableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getVlans(false, searchString);
         } else {
           this.getVlans();
         }
@@ -300,13 +310,16 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           // get search params from local storage
           const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
+          const { filteredResults, searchString } = params;
+
           // if filtered results boolean is true, apply search params in the
           // subsequent get call
-          if (filteredResults) {
+          if (filteredResults && !searchString) {
             this.vlanTableComponentDto.searchColumn = params.searchColumn;
             this.vlanTableComponentDto.searchText = params.searchText;
             this.getVlans(false, this.vlanTableComponentDto);
+          } else if (filteredResults && searchString) {
+            this.getVlans(false, searchString);
           } else {
             this.getVlans();
           }
