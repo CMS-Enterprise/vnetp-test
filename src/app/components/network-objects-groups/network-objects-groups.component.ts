@@ -154,7 +154,10 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
           this.networkObjects = data;
           this.isLoadingObjects = false;
         }),
-        () => {},
+        () => {
+          this.networkObjects = null;
+          this.getNetworkObjects();
+        },
         () => {
           this.isLoadingObjects = false;
         };
@@ -276,7 +279,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.networkObjectModalSubscription = this.ngx.getModal('networkObjectModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
-      let { filteredResults, searchString } = params;
+      const { filteredResults, searchString } = params;
 
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
@@ -323,7 +326,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
         console.log('params', params);
-        let { filteredResults, searchString } = params;
+        const { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
@@ -345,7 +348,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       this.networkObjectService.restoreOneNetworkObject({ id: networkObject.id }).subscribe(() => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        let { filteredResults, searchString } = params;
+        const { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call

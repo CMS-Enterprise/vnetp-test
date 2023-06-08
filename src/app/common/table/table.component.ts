@@ -189,7 +189,7 @@ export class TableComponent<T> implements AfterViewInit {
   }
 
   private scrapValues(newQueryParams) {
-    let eventParamsArray = [];
+    const eventParamsArray = [];
     newQueryParams.map(param => {
       const match = this.objectDictionary.find(config => {
         return config.formName === param.searchColumn;

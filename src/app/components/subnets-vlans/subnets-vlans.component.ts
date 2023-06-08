@@ -180,7 +180,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     this.subnetModalSubscription = this.ngx.getModal('subnetModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
-      let { filteredResults, searchString } = params;
+      const { filteredResults, searchString } = params;
 
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
@@ -397,7 +397,10 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
           this.subnets = data;
           this.isLoadingSubnets = false;
         }),
-        () => {},
+        () => {
+          this.subnets = null;
+          this.getSubnets();
+        },
         () => {
           this.isLoadingSubnets = false;
         };

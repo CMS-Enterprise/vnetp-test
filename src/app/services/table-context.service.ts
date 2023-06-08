@@ -38,7 +38,7 @@ export class TableContextService {
     const searchColumn = JSON.parse(localStorage.getItem('searchColumn'));
     const searchText = JSON.parse(localStorage.getItem('searchText'));
     const filteredResults = JSON.parse(localStorage.getItem('filteredResults'));
-    let searchString = localStorage.getItem('searchString');
+    const searchString = localStorage.getItem('searchString');
     return { searchColumn, searchText, filteredResults, searchString };
   }
 }

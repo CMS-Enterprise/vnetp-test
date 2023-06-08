@@ -143,7 +143,10 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
           this.serviceObjects = data;
           this.isLoadingObjects = false;
         }),
-        () => {},
+        () => {
+          this.serviceObjects = null;
+          this.getServiceObjects();
+        },
         () => {
           this.isLoadingObjects = false;
         };
@@ -267,7 +270,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     this.serviceObjectModalSubscription = this.ngx.getModal('serviceObjectModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
-      let { filteredResults, searchString } = params;
+      const { filteredResults, searchString } = params;
 
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
