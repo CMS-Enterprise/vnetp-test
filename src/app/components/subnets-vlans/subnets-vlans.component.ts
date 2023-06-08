@@ -397,10 +397,12 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
           this.subnets = data;
           this.isLoadingSubnets = false;
         }),
+        // tslint:disable-next-line
         () => {
           this.subnets = null;
           this.getSubnets();
         },
+        // tslint:disable-next-line
         () => {
           this.isLoadingSubnets = false;
         };
@@ -461,10 +463,12 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
             this.getSubnets();
           }
         }),
+        // tslint:disable-next-line
         () => {
           this.vlans = null;
           this.getVlans();
         },
+        // tslint:disable-next-line
         () => {
           this.isLoadingVlans = false;
         };

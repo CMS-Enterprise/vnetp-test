@@ -154,10 +154,12 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
           this.networkObjects = data;
           this.isLoadingObjects = false;
         }),
+        // tslint:disable-next-line
         () => {
           this.networkObjects = null;
           this.getNetworkObjects();
         },
+        // tslint:disable-next-line
         () => {
           this.isLoadingObjects = false;
         };

@@ -143,10 +143,12 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
           this.serviceObjects = data;
           this.isLoadingObjects = false;
         }),
+        // tslint:disable-next-line
         () => {
           this.serviceObjects = null;
           this.getServiceObjects();
         },
+        // tslint:disable-next-line
         () => {
           this.isLoadingObjects = false;
         };

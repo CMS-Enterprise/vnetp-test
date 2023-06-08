@@ -45,6 +45,7 @@ export class AdvancedSearchComponent implements OnInit {
       valueArray.push(value);
     });
     let i = 0;
+    // tslint:disable-next-line
     for (const field in this.form.controls) {
       // 'field' is a string
       const control = this.form.get(field); // 'control' is a FormControl
