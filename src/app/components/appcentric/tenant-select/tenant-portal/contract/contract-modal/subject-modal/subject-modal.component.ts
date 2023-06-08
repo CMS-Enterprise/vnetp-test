@@ -196,8 +196,8 @@ export class SubjectModalComponent implements OnInit {
     this.filterService
       .findAllFilter({
         filter: [`tenantId||eq||${this.tenantId}`],
-        page: this.tableComponentDto.page,
-        perPage: this.tableComponentDto.perPage,
+        page: 1,
+        perPage: 1000,
       })
       .subscribe(
         data => {
