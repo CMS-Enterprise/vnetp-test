@@ -23,7 +23,7 @@ describe('EndpointGroupModalComponent', () => {
         MockComponent({ selector: 'app-consumed-contract', inputs: ['endpointGroupId', 'tenantId'] }),
         MockComponent({ selector: 'app-provided-contract', inputs: ['endpointGroupId', 'tenantId'] }),
       ],
-      imports: [RouterTestingModule, ReactiveFormsModule, HttpClientModule],
+      imports: [RouterTestingModule, ReactiveFormsModule, HttpClientModule, NgSelectModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
   }));

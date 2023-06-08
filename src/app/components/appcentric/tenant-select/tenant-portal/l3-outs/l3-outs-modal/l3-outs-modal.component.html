@@ -68,6 +68,9 @@
         [(itemsPerPage)]="perPage"
         (tableEvent)="onTableEvent($event)"
       ></app-table>
+      <div *ngIf="f.vrfId.errors" class="invalid-feedback">
+        <div *ngIf="f.vrfId.errors.required">Vrf is required</div>
+      </div>
     </div>
 
     <footer class="modal-footer">

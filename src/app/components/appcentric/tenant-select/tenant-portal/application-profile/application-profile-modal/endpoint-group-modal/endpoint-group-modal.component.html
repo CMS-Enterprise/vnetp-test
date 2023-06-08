@@ -17,13 +17,13 @@
     (tabChange)="handleTabChange($event)"
   ></app-tabs>
 
-  <div class="modal-body" *ngIf="initialTabIndex === 'Consumed Contracts'">
-    <app-consumed-contract [endpointGroupId]="endpointGroupId" [tenantId]="tenantId"></app-consumed-contract>
+  <div class="modal-body" *ngIf="currentTab === 'Consumed Contracts'">
+    <app-consumed-contract #consumedContract [endpointGroupId]="endpointGroupId" [tenantId]="tenantId"></app-consumed-contract>
   </div>
-  <div class="modal-body" *ngIf="initialTabIndex === 'Provided Contracts'">
-    <app-provided-contract [endpointGroupId]="endpointGroupId" [tenantId]="tenantId"></app-provided-contract>
+  <div class="modal-body" *ngIf="currentTab === 'Provided Contracts'">
+    <app-provided-contract #providedContract [endpointGroupId]="endpointGroupId" [tenantId]="tenantId"></app-provided-contract>
   </div>
-  <div *ngIf="initialTabIndex === 'Endpoint Group'">
+  <div *ngIf="currentTab === 'Endpoint Group'">
     <form [formGroup]="form" (ngSubmit)="save()">
       <div class="modal-body">
         <div class="form-group">
@@ -86,6 +86,13 @@
             <option value="true">Isolated</option>
             <option value="false">Not Isolated</option>
           </select>
+        </div>
+        <div class="form-group">
+          <label for="bridgeDomain">Bridge Domain</label>
+          <ng-select formControlName="bridgeDomain" [items]="bridgeDomains" id="bridgeDomain" bindLabel="name" bindValue="id"></ng-select>
+          <div *ngIf="submitted && f.bridgeDomain.errors" class="invalid-feedback">
+            <div *ngIf="f.bridgeDomain.errors.required">Bridge Domain is required</div>
+          </div>
         </div>
       </div>
 

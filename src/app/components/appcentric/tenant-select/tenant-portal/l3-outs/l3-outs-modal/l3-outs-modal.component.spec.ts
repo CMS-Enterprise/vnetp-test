@@ -89,8 +89,8 @@ describe('L3OutsModalComponent', () => {
   });
 
   it('should have correct required and optional fields by default', () => {
-    const requiredFields = ['name'];
-    const optionalFields = ['alias', 'description', 'vrfId'];
+    const requiredFields = ['name', 'vrfId'];
+    const optionalFields = ['alias', 'description'];
 
     requiredFields.forEach(r => {
       expect(isRequired(r)).toBe(true);

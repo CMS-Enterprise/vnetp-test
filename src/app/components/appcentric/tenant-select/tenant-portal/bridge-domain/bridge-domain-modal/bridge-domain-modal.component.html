@@ -141,8 +141,8 @@
       <div class="form-group">
         <label for="vrfs">VRF</label>
         <ng-select id="vrfs" [items]="vrfs" bindLabel="name" bindValue="id" formControlName="vrfId"></ng-select>
-        <div *ngIf="submitted && f.unicastRouting.errors" class="invalid-feedback">
-          <div *ngIf="f.unicastRouting.errors.required">VRF is required</div>
+        <div *ngIf="submitted && f.vrfId.errors" class="invalid-feedback">
+          <div *ngIf="f.vrfId.errors.required">VRF is required</div>
         </div>
       </div>
 

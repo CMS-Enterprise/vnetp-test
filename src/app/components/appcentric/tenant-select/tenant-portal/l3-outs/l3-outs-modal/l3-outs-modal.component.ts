@@ -113,7 +113,7 @@ export class L3OutsModalComponent implements OnInit {
       name: ['', NameValidator()],
       alias: ['', Validators.compose([Validators.maxLength(100)])],
       description: ['', Validators.compose([Validators.maxLength(500)])],
-      vrfId: [null],
+      vrfId: ['', Validators.required],
     });
   }
 
