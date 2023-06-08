@@ -51,7 +51,7 @@ export class SubjectModalComponent implements OnInit {
   public searchColumns: SearchColumnConfig[] = [];
 
   public config: TableConfig<any> = {
-    description: 'Filters',
+    description: 'Filter Subject',
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Alias', property: 'alias' },

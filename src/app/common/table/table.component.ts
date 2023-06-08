@@ -84,6 +84,7 @@ export class TableComponent<T> implements AfterViewInit {
       'subjects',
       'filterentries',
       'self-services',
+      'filter-subject',
     ];
 
     const hidePagination = ['import-preview', 'detailed-audit-log-entry'];
