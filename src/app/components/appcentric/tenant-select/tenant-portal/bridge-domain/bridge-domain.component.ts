@@ -33,8 +33,6 @@ export class BridgeDomainComponent implements OnInit {
   private bridgeDomainModalSubscription: Subscription;
   private subnetsModalSubscription: Subscription;
   public tenantId: string;
-  public vrfs: Vrf[];
-  public l3Outs: L3Out[];
 
   public isLoading = false;
 
@@ -77,8 +75,6 @@ export class BridgeDomainComponent implements OnInit {
 
   ngOnInit(): void {
     this.getBridgeDomains();
-    this.getVrfs();
-    this.getL3Outs();
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -252,43 +248,5 @@ export class BridgeDomainComponent implements OnInit {
     //     });
     // };
     // SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
-  }
-
-  public getVrfs(): void {
-    this.isLoading = true;
-    this.vrfService
-      .findAllVrf({
-        filter: [`tenantId||eq||${this.tenantId}`],
-      })
-      .subscribe(
-        data => {
-          this.vrfs = data.data;
-        },
-        () => {
-          this.vrfs = null;
-        },
-        () => {
-          this.isLoading = false;
-        },
-      );
-  }
-
-  public getL3Outs(): void {
-    this.isLoading = true;
-    this.l3OutsService
-      .findAllL3Out({
-        filter: [`tenantId||eq||${this.tenantId}`],
-      })
-      .subscribe(
-        data => {
-          this.l3Outs = data.data;
-        },
-        () => {
-          this.vrfs = null;
-        },
-        () => {
-          this.isLoading = false;
-        },
-      );
   }
 }
