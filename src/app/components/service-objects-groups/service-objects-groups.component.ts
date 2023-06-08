@@ -38,8 +38,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   public perPage = 20;
   ModalMode = ModalMode;
 
-  objectType = 'ServiceObject';
-
   serviceObjects = {} as GetManyServiceObjectResponseDto;
   serviceObjectGroups = {} as GetManyServiceObjectGroupResponseDto;
 

@@ -50,7 +50,6 @@ export class TableComponent<T> implements AfterViewInit {
   @Output() itemsPerPageChange = new EventEmitter<any>();
 
   @Input() searchColumns: SearchColumnConfig[];
-  @Input() objectType;
   @Output() clearResults = new EventEmitter<any>();
   @Output() searchParams = new EventEmitter<any>();
   advancedSearchSubscription: Subscription;
@@ -63,6 +62,21 @@ export class TableComponent<T> implements AfterViewInit {
 
   public showSearchBar = true;
   public paginationControlsOn = true;
+
+  private objectDictionary = [
+    { formName: 'IpAddress', propertyName: 'ipAddress', operator: '$eq' },
+    { formName: 'FQDN', propertyName: 'fqdn', operator: '$cont' },
+    { formName: 'Start IP', propertyName: 'startIpAddress', operator: '$eq' },
+    { formName: 'End IP', properyName: 'endIpAddress', operator: '$eq' },
+    { formName: 'Type', propertyName: 'protocol', operator: '$eq' },
+    { formName: 'Source Port', propertyName: 'sourcePorts', operator: '$cont' },
+    { formName: 'Destination Port', propertyName: 'destinationPorts', operator: '$cont' },
+    { formName: 'Vlan', propertyName: 'vlan.name', operator: '$cont' },
+    { formName: 'Network', propertyName: 'network', operator: '$eq' },
+    { formName: 'Gateway', propertyName: 'gateway', operator: '$eq' },
+    { formName: 'Vlan Number', propertyName: 'vlanNumber', operator: '$eq' },
+    { formName: 'VCD/Vlan Type', propertyName: 'vcdVlanType', operator: '$eq' },
+  ];
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -107,37 +121,6 @@ export class TableComponent<T> implements AfterViewInit {
     this.searchParams.emit(searchInformation);
   }
 
-  // function that parses the form values sent by the advanced search modal
-  // and emits them to the child component to use in the GET query
-  public searchThis(event?) {
-    Object.entries(event).map(([k, v]) => {
-      if (v === '') {
-        delete event[k];
-      }
-    });
-    const newQueryParams = [];
-
-    Object.entries(event).map(input => {
-      const queryObject = { searchColumn: input[0], searchText: input[1] };
-      newQueryParams.push(queryObject);
-    });
-    this.tableContextService.addFilteredResultsLocalStorage();
-    let finalString: string;
-    if (this.objectType === 'NetworkObject') {
-      finalString = this.advancedSearchNetObjForm(newQueryParams);
-    }
-
-    if (this.objectType === 'ServiceObject') {
-      finalString = this.advancedSearchSvcObjForm(newQueryParams);
-    }
-
-    if (this.objectType === 'Subnet') {
-      finalString = this.advancedSearchSubnetForm(newQueryParams);
-    }
-    this.tableContextService.addSearchLocalStorage(null, null, finalString);
-    this.getObjectsAndFilter(finalString);
-  }
-
   // we do a double emit here, the search bar emits the event to the table component, the table component then resets
   // the itemsPerPage and the currentPage back to its default values, and then emits the event to the parent component,
   // where the appropriate function is called to re-populate the table
@@ -158,10 +141,44 @@ export class TableComponent<T> implements AfterViewInit {
     this.ngx.close('advancedSearch');
   }
 
+  // function that parses the form values sent by the advanced search modal
+  // and emits them to the child component to use in the GET query
+  public searchThis(event?) {
+    Object.entries(event).map(([k, v]) => {
+      if (v === '') {
+        delete event[k];
+      }
+    });
+    const newQueryParams = [];
+
+    Object.entries(event).map(input => {
+      const queryObject = { searchColumn: input[0], searchText: input[1] };
+      newQueryParams.push(queryObject);
+    });
+    this.tableContextService.addFilteredResultsLocalStorage();
+    let finalString: string;
+    finalString = this.scrapValues(newQueryParams);
+    console.log('finalString', finalString);
+    // if (this.objectType === 'NetworkObject') {
+    //   finalString = this.advancedSearchNetObjForm(newQueryParams);
+    // }
+
+    // if (this.objectType === 'ServiceObject') {
+    //   finalString = this.advancedSearchSvcObjForm(newQueryParams);
+    // }
+
+    // if (this.objectType === 'Subnet') {
+    //   finalString = this.advancedSearchSubnetForm(newQueryParams);
+    // }
+
+    this.tableContextService.addSearchLocalStorage(null, null, finalString);
+    this.getObjectsAndFilter(finalString);
+  }
+
   subscribeToAdvancedSearch() {
     this.advancedSearchSubscription = this.ngx.getModal('advancedSearch').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('advancedSearch');
-      this.ngx.close('advancedSearch');
+      // this.ngx.close('advancedSearch');
       this.advancedSearchSubscription.unsubscribe();
     });
   }
@@ -171,14 +188,10 @@ export class TableComponent<T> implements AfterViewInit {
     this.ngx.getModal('advancedSearch').open();
   }
 
-  private advancedSearchNetObjForm(newQueryParams) {
-    const netObjConfig = [
-      { formName: 'IpAddress', propertyName: 'ipAddress', operator: '$eq' },
-      { formName: 'FQDN', propertyName: 'fqdn', operator: '$cont' },
-    ];
+  private scrapValues(newQueryParams) {
     let eventParamsArray = [];
     newQueryParams.map(param => {
-      const match = netObjConfig.find(config => {
+      const match = this.objectDictionary.find(config => {
         return config.formName === param.searchColumn;
       });
       let string;
@@ -187,89 +200,71 @@ export class TableComponent<T> implements AfterViewInit {
       }
       eventParamsArray.push(string);
     });
-
-    // newQueryParams.map(param => {
-    //   let eventString;
-    //   const { searchText } = param;
-    //   if (searchText !== '') {
-    //     let propertyName = param.searchColumn;
-    //     if (propertyName === 'IpAddress') {
-    //       propertyName = 'ipAddress';
-    //       eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
-    //     }
-    //     if (propertyName === 'Start IP') {
-    //       propertyName = 'startIpAddress';
-    //       eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
-    //     }
-    //     if (propertyName === 'End IP') {
-    //       propertyName = 'endIpAddress';
-    //       eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
-    //     }
-
-    //     if (propertyName === 'FQDN') {
-    //       propertyName = 'fqdn';
-    //       eventString = `{"${propertyName}": {"$cont": "${searchText}"}}`;
-    //     }
-    //   }
-    //   eventParamsArray.push(eventString);
-    // });
     const finalString = eventParamsArray.concat().toString();
     return finalString;
   }
 
-  private advancedSearchSvcObjForm(newQueryParams) {
-    let eventParamsArray = [];
-    newQueryParams.map(param => {
-      let eventString;
-      const { searchText } = param;
-      if (searchText !== '') {
-        let propertyName = param.searchColumn;
-        if (propertyName === 'Type') {
-          propertyName = 'protocol';
-          eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
-        }
+  // private advancedSearchNetObjForm(newQueryParams) {
+  //   const netObjConfig = [
+  //     { formName: 'IpAddress', propertyName: 'ipAddress', operator: '$eq' },
+  //     { formName: 'FQDN', propertyName: 'fqdn', operator: '$cont' },
+  //     { formName: 'Start IP', propertyName: 'startIpAddress', operator: '$eq'},
+  //     { formName: 'End IP', properyName: 'endIpAddress', operator: '$eq'}
+  //   ];
+  //   let eventParamsArray = [];
+  //   newQueryParams.map(param => {
+  //     const match = netObjConfig.find(config => {
+  //       return config.formName === param.searchColumn;
+  //     });
+  //     let string;
+  //     if (match) {
+  //       string = `{"${match.propertyName}": {"${match.operator}": "${param.searchText}"}}`;
+  //     }
+  //     eventParamsArray.push(string);
+  //   });
+  //   const finalString = eventParamsArray.concat().toString();
+  //   return finalString;
+  // }
 
-        if (propertyName === 'Source Port') {
-          propertyName = 'sourcePorts';
-          eventString = `{"${propertyName}": {"$cont": "${searchText}"}}`;
-        }
+  // private advancedSearchSvcObjForm(newQueryParams) {
+  //   const svcObjConfig = [
+  //     { formName: 'Type', propertyName: 'protocol', operator: '$eq' },
+  //     { formName: 'Source Port', propertyName: 'sourcePorts', operator: '$cont' },
+  //     { formName: 'Destination Port', propertyName: 'destinationPorts', operator: '$cont'},
+  //   ];
+  //   let eventParamsArray = [];
+  //   newQueryParams.map(param => {
+  //     const match = svcObjConfig.find(config => {
+  //       return config.formName === param.searchColumn;
+  //     });
+  //     let string;
+  //     if (match) {
+  //       string = `{"${match.propertyName}": {"${match.operator}": "${param.searchText}"}}`
+  //     }
+  //     eventParamsArray.push(string);
+  //   });
+  //   const finalString = eventParamsArray.concat().toString();
+  //   return finalString;
+  // }
 
-        if (propertyName === 'Destination Port') {
-          propertyName = 'destinationPorts';
-          eventString = `{"${propertyName}": {"$cont": "${searchText}"}}`;
-        }
-      }
-      eventParamsArray.push(eventString);
-    });
-    const finalString = eventParamsArray.concat().toString();
-    return finalString;
-  }
+  // private advancedSearchSubnetForm(newQueryParams) {
+  //   const subnetObjConfig = [
+  //     { formName: 'Network', propertyName: 'network', operator: '$eq' },
+  //     { formName: 'Gateway', propertyName: 'gateway', operator: '$eq' },
+  //   ];
 
-  private advancedSearchSubnetForm(newQueryParams) {
-    let eventParamsArray = [];
-    newQueryParams.map(param => {
-      let eventString;
-      const { searchText } = param;
-      if (searchText !== '') {
-        let propertyName = param.searchColumn;
-        if (propertyName === 'Network') {
-          propertyName = 'network';
-          eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
-        }
-
-        if (propertyName === 'Gateway') {
-          propertyName = 'gateway';
-          eventString = `{"${propertyName}": {"$eq": "${searchText}"}}`;
-        }
-
-        if (propertyName === 'Vlan') {
-          propertyName = 'vlan.name';
-          eventString = `{"${propertyName}": {"$cont": "${searchText}"}}`;
-        }
-      }
-      eventParamsArray.push(eventString);
-    });
-    const finalString = eventParamsArray.concat().toString();
-    return finalString;
-  }
+  //   let eventParamsArray = [];
+  //   newQueryParams.map(param => {
+  //     const match = subnetObjConfig.find(config => {
+  //       return config.formName === param.searchColumn;
+  //     });
+  //     let string;
+  //     if (match) {
+  //       string = `{"${match.propertyName}": {"${match.operator}": "${param.searchText}"}}`
+  //     }
+  //     eventParamsArray.push(string);
+  //   });
+  //   const finalString = eventParamsArray.concat().toString();
+  //   return finalString;
+  // }
 }

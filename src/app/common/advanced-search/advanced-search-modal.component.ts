@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 })
 export class AdvancedSearchComponent implements OnInit {
   @Input() formInputs;
-  @Input() objectType;
   @Output() searchCriteria = new EventEmitter<any>();
   form: FormGroup;
   submitted: boolean;
@@ -18,12 +17,7 @@ export class AdvancedSearchComponent implements OnInit {
   modalTitle;
 
   doneSearching = false;
-  constructor(
-    private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
-    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
-    private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
-  ) {}
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -35,6 +29,7 @@ export class AdvancedSearchComponent implements OnInit {
 
   public test() {
     this.formInputs.map(input => {
+      console.log('input', input);
       const formControl = new FormControl(input.displayName);
       this.form.addControl(input.displayName, formControl);
       this.form.controls[input.displayName].setValue('');

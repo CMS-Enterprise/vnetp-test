@@ -37,8 +37,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   currentTier: Tier;
   perPage = 20;
   ModalMode = ModalMode;
-
-  objectType = 'NetworkObject';
   filteredResults: boolean;
 
   networkObjects = {} as GetManyNetworkObjectResponseDto;

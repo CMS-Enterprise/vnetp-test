@@ -26,7 +26,7 @@
     </section>
 
     <ng-container *ngIf="!isLoadingSubnets; else loading">
-      <app-table [objectType]="subnetObjectType" [config]="subnetConfig" [data]="subnets" (clearResults)="getSubnets($event)" (searchParams)="getSubnets($event)" [searchColumns]="subnetSearchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onSubnetTableEvent($event)"></app-table>
+      <app-table [config]="subnetConfig" [data]="subnets" (clearResults)="getSubnets($event)" (searchParams)="getSubnets($event)" [searchColumns]="subnetSearchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onSubnetTableEvent($event)"></app-table>
       <section class="btn-toolbar" role="toolbar">
         <app-import-export
           [exportObject]="subnets"
@@ -86,7 +86,7 @@
     </section>
 
     <ng-container *ngIf="!isLoadingVlans; else loading">
-      <app-table [objectType]="vlanObjectType" [config]="vlanConfig" [data]="vlans" (clearResults)="getVlans(false,$event)" (searchParams)="getVlans(false,$event)" [(itemsPerPage)]="perPage" [searchColumns]="vlanSearchColumns" (tableEvent)="onVlanTableEvent($event)"></app-table>
+      <app-table [config]="vlanConfig" [data]="vlans" (clearResults)="getVlans(false,$event)" (searchParams)="getVlans(false,$event)" [(itemsPerPage)]="perPage" [searchColumns]="vlanSearchColumns" (tableEvent)="onVlanTableEvent($event)"></app-table>
       <section class="btn-toolbar" role="toolbar">
         <app-import-export
           [exportObject]="vlans"

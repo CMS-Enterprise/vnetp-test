@@ -40,9 +40,6 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   perPage = 20;
   ModalMode = ModalMode;
 
-  subnetObjectType = 'Subnet';
-  vlanObjectType = 'Vlan';
-
   subnets = {} as GetManySubnetResponseDto;
   vlans = {} as GetManyVlanResponseDto;
   public subnetSearchColumns: SearchColumnConfig[] = [
@@ -389,12 +386,12 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     this.isLoadingSubnets = true;
     let eventParams;
     if (typeof event === 'string') {
-      console.log('event', event);
       this.subnetService
         .getManySubnet({
           s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
           page: 1,
           limit: 5000,
+          join: ['vlan'],
         })
         .subscribe(data => {
           this.subnets = data;
@@ -446,6 +443,30 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   public getVlans(getSubnets = false, event?): void {
     this.isLoadingVlans = true;
     let eventParams;
+    if (typeof event === 'string') {
+      this.vlanService
+        .getManyVlan({
+          s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
+          page: 1,
+          limit: 5000,
+          sort: ['vlanNumber,ASC'],
+        })
+        .subscribe(response => {
+          this.vlans = response;
+          this.isLoadingVlans = false;
+          if (getSubnets) {
+            this.getSubnets();
+          }
+        }),
+        () => {
+          this.vlans = null;
+          this.getVlans();
+        },
+        () => {
+          this.isLoadingVlans = false;
+        };
+      return;
+    }
     if (event) {
       this.vlanTableComponentDto.page = event.page ? event.page : 1;
       this.vlanTableComponentDto.perPage = event.perPage ? event.perPage : 20;
