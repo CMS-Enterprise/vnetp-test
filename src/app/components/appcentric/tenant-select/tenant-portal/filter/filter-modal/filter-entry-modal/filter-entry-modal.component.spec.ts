@@ -90,7 +90,7 @@ describe('FilterEntryModalComponent', () => {
       etherType.setValue('ip');
       ipProtocol.setValue('tcp');
 
-      expect(isRequired('sourceFromPort')).toBe(true);
+      expect(isRequired('sourceFromPort')).toBe(false);
 
       ipProtocol.setValue('icmp');
 
@@ -100,9 +100,14 @@ describe('FilterEntryModalComponent', () => {
     it('Source To Port', () => {
       const etherType = getFormControl('etherType');
       const ipProtocol = getFormControl('ipProtocol');
+      const sourceFromPort = getFormControl('sourceFromPort');
 
       etherType.setValue('ip');
       ipProtocol.setValue('tcp');
+
+      expect(isRequired('sourceToPort')).toBe(false);
+
+      sourceFromPort.setValue(1234);
 
       expect(isRequired('sourceToPort')).toBe(true);
 
@@ -118,7 +123,7 @@ describe('FilterEntryModalComponent', () => {
       etherType.setValue('ip');
       ipProtocol.setValue('tcp');
 
-      expect(isRequired('destinationFromPort')).toBe(true);
+      expect(isRequired('destinationFromPort')).toBe(false);
 
       ipProtocol.setValue('icmp');
 
@@ -128,9 +133,14 @@ describe('FilterEntryModalComponent', () => {
     it('Destination To Port', () => {
       const etherType = getFormControl('etherType');
       const ipProtocol = getFormControl('ipProtocol');
+      const destinationFromPort = getFormControl('destinationFromPort');
 
       etherType.setValue('ip');
       ipProtocol.setValue('tcp');
+
+      expect(isRequired('destinationToPort')).toBe(false);
+
+      destinationFromPort.setValue(1234);
 
       expect(isRequired('destinationToPort')).toBe(true);
 

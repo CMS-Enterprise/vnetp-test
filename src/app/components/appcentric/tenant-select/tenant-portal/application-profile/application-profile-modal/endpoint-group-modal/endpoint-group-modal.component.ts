@@ -15,7 +15,7 @@ const tabs = [{ name: 'Endpoint Group' }, { name: 'Consumed Contracts' }, { name
 @Component({
   selector: 'app-endpoint-group-modal',
   templateUrl: './endpoint-group-modal.component.html',
-  // styleUrls: ['./endpoint-group-modal.component.css'],
+  styleUrls: ['./endpoint-group-modal.component.css'],
 })
 export class EndpointGroupModalComponent implements OnInit {
   public initialTabIndex = 0;
@@ -29,7 +29,8 @@ export class EndpointGroupModalComponent implements OnInit {
   public isLoading = false;
   @Input() public applicationProfileId;
   public bridgeDomains: BridgeDomain[];
-  public currentTab: string;
+  public currentTab = 'Endpoint Group';
+  public selectedBridgeDomain = undefined;
 
   @ViewChild('consumedContract', { static: false })
   consumedContractRef: ConsumedContractComponent;

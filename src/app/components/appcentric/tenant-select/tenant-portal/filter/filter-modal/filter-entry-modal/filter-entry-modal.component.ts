@@ -125,10 +125,11 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
       arpFlag: [null],
       ipProtocol: [null],
       matchOnlyFragments: [null],
-      sourceFromPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
-      sourceToPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
-      destinationFromPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
-      destinationToPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
+      sourceFromPort: [null, Validators.compose([Validators.min(0), Validators.max(65535)])],
+      sourceToPort: [null, Validators.compose([Validators.min(0), Validators.max(65535)])],
+      destinationFromPort: [null, Validators.compose([Validators.min(0), Validators.max(65535)])],
+      destinationToPort: [null, Validators.compose([Validators.min(0), Validators.max(65535)])],
+      tcpFlags: [null],
       stateful: [null],
     });
   }
@@ -184,10 +185,10 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
         destinationFromPort.enable();
         destinationToPort.enable();
 
-        sourceFromPort.setValidators(Validators.required);
-        sourceToPort.setValidators(Validators.required);
-        destinationFromPort.setValidators(Validators.required);
-        destinationToPort.setValidators(Validators.required);
+        sourceFromPort.setValidators(Validators.compose([Validators.min(0), Validators.max(65535)]));
+        sourceToPort.setValidators(Validators.compose([Validators.min(0), Validators.max(65535)]));
+        destinationFromPort.setValidators(Validators.compose([Validators.min(0), Validators.max(65535)]));
+        destinationToPort.setValidators(Validators.compose([Validators.min(0), Validators.max(65535)]));
         if (ipProtocolValue === 'tcp') {
           stateful.enable();
           stateful.setValue(false);
@@ -224,13 +225,25 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
     });
 
     this.sourceFromPortSubscription = sourceFromPort.valueChanges.subscribe(sourceFromPortValue => {
-      sourceToPort.setValidators(Validators.compose([Validators.min(sourceFromPortValue), Validators.max(65535), Validators.required]));
+      if (sourceFromPortValue !== null) {
+        sourceToPort.setValidators(Validators.compose([Validators.min(sourceFromPortValue), Validators.max(65535), Validators.required]));
+        sourceToPort.updateValueAndValidity();
+      } else {
+        sourceToPort.setValidators(Validators.compose([Validators.min(sourceFromPortValue), Validators.max(65535)]));
+        sourceToPort.updateValueAndValidity();
+      }
     });
 
     this.destinationFromPortSubscription = destinationFromPort.valueChanges.subscribe(destinationFromPortValue => {
-      destinationToPort.setValidators(
-        Validators.compose([Validators.min(destinationFromPortValue), Validators.max(65535), Validators.required]),
-      );
+      if (destinationFromPortValue !== null) {
+        destinationToPort.setValidators(
+          Validators.compose([Validators.min(destinationFromPortValue), Validators.max(65535), Validators.required]),
+        );
+        destinationToPort.updateValueAndValidity();
+      } else {
+        destinationToPort.setValidators(Validators.compose([Validators.min(destinationFromPortValue), Validators.max(65535)]));
+        destinationToPort.updateValueAndValidity();
+      }
     });
   }
 

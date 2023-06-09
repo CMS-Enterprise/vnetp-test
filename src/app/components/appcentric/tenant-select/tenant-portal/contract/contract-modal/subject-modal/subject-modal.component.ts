@@ -13,7 +13,6 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
-import { ContractModalDto } from 'src/app/models/appcentric/contract-modal-dto';
 import { SubjectModalDto } from 'src/app/models/appcentric/subject-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
@@ -51,7 +50,7 @@ export class SubjectModalComponent implements OnInit {
   public searchColumns: SearchColumnConfig[] = [];
 
   public config: TableConfig<any> = {
-    description: 'Filters',
+    description: 'Subject filters',
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Alias', property: 'alias' },
@@ -85,7 +84,7 @@ export class SubjectModalComponent implements OnInit {
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getFiltertableData(event);
+    this.getFiltertableData();
   }
 
   get f() {
@@ -215,18 +214,8 @@ export class SubjectModalComponent implements OnInit {
       );
   }
 
-  public getFiltertableData(event?) {
+  public getFiltertableData() {
     this.isLoading = true;
-    let eventParams;
-    if (event) {
-      this.tableComponentDto.page = event.page ? event.page : 1;
-      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
-      const { searchText } = event;
-      const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
-      }
-    }
     this.subjectsService
       .findOneSubject({
         uuid: this.subjectId,

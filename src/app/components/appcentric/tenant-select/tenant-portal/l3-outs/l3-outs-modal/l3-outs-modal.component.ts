@@ -33,7 +33,7 @@ export class L3OutsModalComponent implements OnInit {
   @ViewChild('vrfSelectTemplate') vrfSelectTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
-    description: 'Application Profiles',
+    description: 'l3out modal',
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Alias', property: 'alias' },

@@ -47,6 +47,18 @@ export class SubnetsEditModalComponent implements OnInit {
 
     if (this.modalMode === ModalMode.Edit) {
       this.subnetId = dto.subnet.id;
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.gatewayIp.enable();
+      this.form.controls.treatAsVirtualIpAddress.setValue(true);
+      this.form.controls.primaryIpAddress.setValue(false);
+      this.form.controls.advertisedExternally.setValue(false);
+      this.form.controls.preferred.setValue(false);
+      this.form.controls.sharedBetweenVrfs.setValue(false);
+      this.form.controls.ipDataPlaneLearning.setValue(true);
+    }
+
+    if (subnet !== undefined) {
       this.form.controls.name.setValue(subnet.name);
       this.form.controls.name.disable();
       this.form.controls.description.setValue(subnet.description);
@@ -96,8 +108,8 @@ export class SubnetsEditModalComponent implements OnInit {
 
   private createSubnets(appCentricSubnet: AppCentricSubnet): void {
     this.subnetsService.createAppCentricSubnet({ appCentricSubnet }).subscribe(
-      () => {},
-      () => {},
+      () => undefined,
+      () => undefined,
       () => this.closeModal(),
     );
   }
@@ -113,8 +125,8 @@ export class SubnetsEditModalComponent implements OnInit {
         appCentricSubnet,
       })
       .subscribe(
-        () => {},
-        () => {},
+        () => undefined,
+        () => undefined,
         () => this.closeModal(),
       );
   }
