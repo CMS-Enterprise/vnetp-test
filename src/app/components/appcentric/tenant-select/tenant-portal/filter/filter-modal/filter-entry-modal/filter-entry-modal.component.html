@@ -69,12 +69,9 @@
 
         <div class="form-group col-md-6">
           <label for="ipProtocol">Ip Protocol</label>
-          <ng-select
-            formControlName="ipProtocol"
-            [class.is-invalid]="submitted && f.ipProtocol.errors"
-            [items]="ipProtocolOptions"
-            id="ipProtocol"
-          ></ng-select>
+          <select formControlName="ipProtocol" class="form-control" [class.is-invalid]="submitted && f.ipProtocol.errors" id="ipProtocol">
+            <option *ngFor="let protocol of ipProtocolOptions" [value]="protocol">{{ protocol }}</option>
+          </select>
         </div>
       </div>
 

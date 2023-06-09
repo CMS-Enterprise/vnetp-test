@@ -138,8 +138,8 @@
       <app-table
         [config]="config"
         [data]="filterTableData"
-        (clearResults)="getFiltertableData($event)"
-        (searchParams)="getFiltertableData($event)"
+        (clearResults)="getFiltertableData()"
+        (searchParams)="getFiltertableData()"
         [searchColumns]="searchColumns"
         [(itemsPerPage)]="perPage"
         (tableEvent)="onTableEvent($event)"

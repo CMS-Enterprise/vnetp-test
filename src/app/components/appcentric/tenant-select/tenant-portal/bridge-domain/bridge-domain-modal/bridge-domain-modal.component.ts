@@ -42,7 +42,7 @@ export class BridgeDomainModalComponent implements OnInit {
   public searchColumns: SearchColumnConfig[] = [];
 
   public config: TableConfig<any> = {
-    description: 'L3 Outs',
+    description: 'bd l3Outs',
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Alias', property: 'alias' },
