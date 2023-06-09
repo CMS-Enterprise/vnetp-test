@@ -129,7 +129,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
       sourceToPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
       destinationFromPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
       destinationToPort: ['', Validators.compose([Validators.min(0), Validators.max(65535)])],
-      tcpFlags: [null],
       stateful: [null],
     });
   }
@@ -283,7 +282,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
       sourceToPort,
       destinationFromPort,
       destinationToPort,
-      tcpFlags,
       stateful,
     } = this.form.value;
     const filterEntry = {
@@ -298,7 +296,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
       sourceToPort,
       destinationFromPort,
       destinationToPort,
-      tcpFlags,
       stateful,
       filterId,
       tenantId,
