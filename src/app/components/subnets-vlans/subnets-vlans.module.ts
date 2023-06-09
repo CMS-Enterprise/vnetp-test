@@ -1,19 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SubnetsVlansComponent } from './subnets-vlans.component';
-import { VlanModalComponent } from './vlan-modal/vlan-modal.component';
-import { SubnetModalComponent } from './subnet-modal/subnet-modal.component';
-import { SharedModule } from 'src/app/common/shared.module';
-import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { CommonModule } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { NgxSmartModalModule } from 'ngx-smart-modal';
-import { TabsModule } from 'src/app/common/tabs/tabs.module';
-import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { TableModule } from '../../common/table/table.module';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { SubnetModalComponent } from './subnet-modal/subnet-modal.component';
+import { VlanModalComponent } from './vlan-modal/vlan-modal.component';
+import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
+import { TooltipModule } from '../../common/tooltip/tooltip.module';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
+import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
+import { TableModule } from 'src/app/common/table/table.module';
+import { TabsModule } from 'src/app/common/tabs/tabs.module';
+import { TierSelectModule } from 'src/app/common/tier-select/tier-select.module';
 
 const routes: Routes = [
   {
@@ -25,19 +27,22 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    RouterModule.forChild(routes),
     FontAwesomeModule,
-    FormsModule,
-    IconButtonModule,
-    NgxPaginationModule,
+    TooltipModule,
     NgSelectModule,
+    FormsModule,
     NgxSmartModalModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes),
-    SharedModule,
+    ApplicationPipesModule,
+    YesNoModalModule,
+    IconButtonModule,
+    ImportExportModule,
     TableModule,
     TabsModule,
-    TooltipModule,
+    TierSelectModule,
   ],
   declarations: [SubnetsVlansComponent, SubnetModalComponent, VlanModalComponent],
+  exports: [SubnetsVlansComponent, SubnetModalComponent, VlanModalComponent],
 })
 export class SubnetsVlansModule {}
