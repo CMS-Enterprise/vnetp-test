@@ -64,7 +64,7 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="etherType">Ether Type</label>
-          <select formControlName="etherType" id="etherType">
+          <select formControlName="etherType" class="form-control" [class.is-invalid]="submitted && f.etherType.errors" id="etherType">
             <option *ngFor="let type of etherTypeOptions" [value]="type">{{ type }}</option>
           </select>
         </div>
@@ -80,7 +80,7 @@
       <div class="form-row">
         <div class="form-group col-md-3">
           <label for="arpFlag">Arp Flag</label>
-          <select formControlName="arpFlag" id="arpFlag">
+          <select formControlName="arpFlag" class="form-control" [class.is-invalid]="submitted && f.arpFlag.errors" id="arpFlag">
             <option *ngFor="let flag of arpFlagOptions" [value]="flag">{{ flag }}</option>
           </select>
         </div>
