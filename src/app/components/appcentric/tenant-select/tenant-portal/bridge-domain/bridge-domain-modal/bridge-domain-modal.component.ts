@@ -1,7 +1,15 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
-import { V2AppCentricBridgeDomainsService, BridgeDomain, Vrf, L3OutPaginationResponse, L3Out, V2AppCentricL3outsService } from 'client';
+import {
+  V2AppCentricBridgeDomainsService,
+  BridgeDomain,
+  Vrf,
+  L3OutPaginationResponse,
+  L3Out,
+  V2AppCentricL3outsService,
+  V2AppCentricVrfsService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -30,7 +38,7 @@ export class BridgeDomainModalComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
 
   public l3Outs: L3Out[];
-  @Input() public vrfs: Vrf[];
+  public vrfs: Vrf[];
   public l3OutsTableData: L3OutPaginationResponse;
 
   public selectedL3Out: L3Out;
@@ -42,7 +50,7 @@ export class BridgeDomainModalComponent implements OnInit {
   public searchColumns: SearchColumnConfig[] = [];
 
   public config: TableConfig<any> = {
-    description: 'L3 Outs',
+    description: 'bd l3Outs',
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Alias', property: 'alias' },
@@ -58,6 +66,7 @@ export class BridgeDomainModalComponent implements OnInit {
     private router: Router,
     private tableContextService: TableContextService,
     private l3OutService: V2AppCentricL3outsService,
+    private vrfService: V2AppCentricVrfsService,
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -103,6 +112,8 @@ export class BridgeDomainModalComponent implements OnInit {
       this.form.controls.limitLocalIpLearning.setValue(true);
       this.form.controls.epMoveDetectionModeGarp.setValue(false);
     }
+
+    this.getVrfs();
 
     const bridgeDomain = dto.bridgeDomain;
     if (bridgeDomain !== undefined) {
@@ -235,8 +246,8 @@ export class BridgeDomainModalComponent implements OnInit {
     this.l3OutService
       .findAllL3Out({
         filter: [`tenantId||eq||${this.tenantId}`],
-        page: this.tableComponentDto.page,
-        perPage: this.tableComponentDto.perPage,
+        page: 1,
+        perPage: 1000,
       })
       .subscribe(
         data => {
@@ -246,6 +257,23 @@ export class BridgeDomainModalComponent implements OnInit {
           this.l3Outs = allL3Outs.filter(l3Out => !usedL3OutIds.includes(l3Out.id));
         },
         () => (this.l3Outs = null),
+        () => (this.isLoading = false),
+      );
+  }
+
+  public getVrfs(): void {
+    this.isLoading = true;
+    this.vrfService
+      .findAllVrf({
+        filter: [`tenantId||eq||${this.tenantId}`],
+        page: 1,
+        perPage: 1000,
+      })
+      .subscribe(
+        data => {
+          this.vrfs = data.data;
+        },
+        () => (this.vrfs = null),
         () => (this.isLoading = false),
       );
   }

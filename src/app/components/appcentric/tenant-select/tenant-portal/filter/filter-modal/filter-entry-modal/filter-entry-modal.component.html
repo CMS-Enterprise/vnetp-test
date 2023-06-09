@@ -64,24 +64,25 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="etherType">Ether Type</label>
-          <ng-select formControlName="etherType" [items]="etherTypeOptions" id="etherType"></ng-select>
+          <select formControlName="etherType" class="form-control" [class.is-invalid]="submitted && f.etherType.errors" id="etherType">
+            <option *ngFor="let type of etherTypeOptions" [value]="type">{{ type }}</option>
+          </select>
         </div>
 
         <div class="form-group col-md-6">
           <label for="ipProtocol">Ip Protocol</label>
-          <ng-select
-            formControlName="ipProtocol"
-            [class.is-invalid]="submitted && f.ipProtocol.errors"
-            [items]="ipProtocolOptions"
-            id="ipProtocol"
-          ></ng-select>
+          <select formControlName="ipProtocol" class="form-control" [class.is-invalid]="submitted && f.ipProtocol.errors" id="ipProtocol">
+            <option *ngFor="let protocol of ipProtocolOptions" [value]="protocol">{{ protocol }}</option>
+          </select>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group col-md-3">
           <label for="arpFlag">Arp Flag</label>
-          <ng-select formControlName="arpFlag" [items]="arpFlagOptions" id="arpFlag"></ng-select>
+          <select formControlName="arpFlag" class="form-control" [class.is-invalid]="submitted && f.arpFlag.errors" id="arpFlag">
+            <option *ngFor="let flag of arpFlagOptions" [value]="flag">{{ flag }}</option>
+          </select>
         </div>
 
         <div class="form-group col-md-6">
@@ -130,7 +131,7 @@
           />
           <div *ngIf="submitted && f.sourceFromPort.errors" class="invalid-feedback">
             <div *ngIf="f.sourceFromPort.errors.min">Source from port must be greater than or equal to 0.</div>
-            <div *ngIf="f.sourceFromPort.errors.min">Source from port must be less than or equal to 65535.</div>
+            <div *ngIf="f.sourceFromPort.errors.max">Source from port must be less than or equal to 65535.</div>
           </div>
         </div>
 
@@ -146,7 +147,8 @@
           />
           <div *ngIf="submitted && f.sourceToPort.errors" class="invalid-feedback">
             <div *ngIf="f.sourceToPort.errors.min">Source to port must be greater than or equal to 0.</div>
-            <div *ngIf="f.sourceToPort.errors.min">Source to port must be less than or equal to 65535.</div>
+            <div *ngIf="f.sourceToPort.errors.max">Source to port must be less than or equal to 65535.</div>
+            <div *ngIf="f.sourceToPort.errors.required">Source to port is required when Source from port is set.</div>
           </div>
         </div>
       </div>
@@ -163,9 +165,8 @@
             aria-label="Destination From Port"
           />
           <div *ngIf="submitted && f.destinationFromPort.errors" class="invalid-feedback">
-            \
             <div *ngIf="f.destinationFromPort.errors.min">Destination from port must be greater than or equal to 0.</div>
-            <div *ngIf="f.destinationFromPort.errors.min">Destination from port must be less than or equal to 65535.</div>
+            <div *ngIf="f.destinationFromPort.errors.max">Destination from port must be less than or equal to 65535.</div>
           </div>
         </div>
 
@@ -181,7 +182,8 @@
           />
           <div *ngIf="submitted && f.destinationToPort.errors" class="invalid-feedback">
             <div *ngIf="f.destinationToPort.errors.min">Destination to port must be greater than or equal to 0.</div>
-            <div *ngIf="f.destinationToPort.errors.min">Destination to port must be less than or equal to 65535.</div>
+            <div *ngIf="f.destinationToPort.errors.max">Destination to port must be less than or equal to 65535.</div>
+            <div *ngIf="f.destinationToPort.errors.required">Destination to port is required when Destination from port is set.</div>
           </div>
         </div>
       </div>

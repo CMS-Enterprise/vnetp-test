@@ -79,11 +79,13 @@ export class TableComponent<T> implements AfterViewInit {
       'endpoint-groups',
       'consumed-contracts',
       'provided-contracts',
-      'l3-outs',
       'subnets',
       'subjects',
       'filterentries',
       'self-services',
+      'subject-filters',
+      'l3out-modal',
+      'bd-l3outs',
     ];
 
     const hidePagination = ['import-preview', 'detailed-audit-log-entry'];

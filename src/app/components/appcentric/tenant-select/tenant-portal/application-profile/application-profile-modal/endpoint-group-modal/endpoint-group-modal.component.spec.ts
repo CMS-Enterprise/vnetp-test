@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, async, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -23,7 +23,7 @@ describe('EndpointGroupModalComponent', () => {
         MockComponent({ selector: 'app-consumed-contract', inputs: ['endpointGroupId', 'tenantId'] }),
         MockComponent({ selector: 'app-provided-contract', inputs: ['endpointGroupId', 'tenantId'] }),
       ],
-      imports: [RouterTestingModule, ReactiveFormsModule, HttpClientModule],
+      imports: [RouterTestingModule, ReactiveFormsModule, HttpClientModule, NgSelectModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
   }));

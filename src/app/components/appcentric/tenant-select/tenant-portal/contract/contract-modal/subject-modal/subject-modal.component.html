@@ -106,7 +106,7 @@
         </div>
       </div>
 
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="reset()">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
         Cancel
       </button>
       <button class="btn btn-success" data-dismiss="modal">
@@ -129,16 +129,17 @@
           id="filters"
           bindLabel="name"
         ></ng-select>
+        <button class="btn btn-success" (click)="addFilter()">
+          <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+          <span>Add Filter</span>
+        </button>
       </div>
-      <button class="btn btn-success" (click)="addFilter()">
-        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-        <span>Add Filter</span>
-      </button>
+
       <app-table
         [config]="config"
         [data]="filterTableData"
-        (clearResults)="getFiltertableData($event)"
-        (searchParams)="getFiltertableData($event)"
+        (clearResults)="getFiltertableData()"
+        (searchParams)="getFiltertableData()"
         [searchColumns]="searchColumns"
         [(itemsPerPage)]="perPage"
         (tableEvent)="onTableEvent($event)"

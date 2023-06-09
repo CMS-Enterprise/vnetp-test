@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { Contract, ContractPaginationResponse, V2AppCentricContractsService, V2AppCentricEndpointGroupsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -11,7 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   selector: 'app-consumed-contract',
   templateUrl: './consumed-contract.component.html',
 })
-export class ConsumedContractComponent implements OnInit {
+export class ConsumedContractComponent implements OnInit, OnChanges {
   @Input() public endpointGroupId: string;
   public contractTableData: ContractPaginationResponse;
   public contracts: Contract[];
@@ -45,6 +45,18 @@ export class ConsumedContractComponent implements OnInit {
   ngOnInit(): void {
     this.getContracts();
     this.getConsumedContracts();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes.endpointGroupId &&
+      !changes.endpointGroupId.firstChange &&
+      changes.endpointGroupId.currentValue !== changes.endpointGroupId.previousValue
+    ) {
+      this.getContracts();
+      this.getConsumedContracts();
+      this.clearSelectedContract();
+    }
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -95,6 +107,8 @@ export class ConsumedContractComponent implements OnInit {
     this.contractsService
       .findAllContract({
         filter: [`tenantId||eq||${this.tenantId}`],
+        page: 1,
+        perPage: 1000,
       })
       .subscribe(
         data => {
@@ -104,5 +118,11 @@ export class ConsumedContractComponent implements OnInit {
         },
         err => (this.contracts = null),
       );
+  }
+
+  public clearSelectedContract(): void {
+    if (this.selectedContract) {
+      this.selectedContract = null;
+    }
   }
 }

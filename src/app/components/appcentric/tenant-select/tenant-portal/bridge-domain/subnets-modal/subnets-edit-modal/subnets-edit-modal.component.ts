@@ -49,6 +49,7 @@ export class SubnetsEditModalComponent implements OnInit {
       this.subnetId = dto.subnet.id;
     } else {
       this.form.controls.name.enable();
+      this.form.controls.gatewayIp.enable();
       this.form.controls.treatAsVirtualIpAddress.setValue(true);
       this.form.controls.primaryIpAddress.setValue(false);
       this.form.controls.advertisedExternally.setValue(false);
@@ -70,7 +71,17 @@ export class SubnetsEditModalComponent implements OnInit {
       this.form.controls.sharedBetweenVrfs.setValue(subnet.sharedBetweenVrfs);
       this.form.controls.ipDataPlaneLearning.setValue(subnet.ipDataPlaneLearning);
       this.form.controls.primaryIpAddress.setValue(subnet.primaryIpAddress);
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.gatewayIp.enable();
+      this.form.controls.treatAsVirtualIpAddress.setValue(true);
+      this.form.controls.primaryIpAddress.setValue(false);
+      this.form.controls.advertisedExternally.setValue(false);
+      this.form.controls.preferred.setValue(false);
+      this.form.controls.sharedBetweenVrfs.setValue(false);
+      this.form.controls.ipDataPlaneLearning.setValue(true);
     }
+
     this.ngx.resetModalData('subnetsEditModal');
   }
 
@@ -97,8 +108,8 @@ export class SubnetsEditModalComponent implements OnInit {
 
   private createSubnets(appCentricSubnet: AppCentricSubnet): void {
     this.subnetsService.createAppCentricSubnet({ appCentricSubnet }).subscribe(
-      () => {},
-      () => {},
+      () => undefined,
+      () => undefined,
       () => this.closeModal(),
     );
   }
@@ -114,8 +125,8 @@ export class SubnetsEditModalComponent implements OnInit {
         appCentricSubnet,
       })
       .subscribe(
-        () => {},
-        () => {},
+        () => undefined,
+        () => undefined,
         () => this.closeModal(),
       );
   }

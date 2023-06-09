@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { ContractPaginationResponse, Contract, V2AppCentricEndpointGroupsService, V2AppCentricContractsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -12,7 +12,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   templateUrl: './provided-contract.component.html',
   // styleUrls: ['./provided-contracts.component.css'],
 })
-export class ProvidedContractComponent implements OnInit {
+export class ProvidedContractComponent implements OnInit, OnChanges {
   @Input() public endpointGroupId: string;
   public contractTableData: ContractPaginationResponse;
   public contracts: Contract[];
@@ -46,6 +46,18 @@ export class ProvidedContractComponent implements OnInit {
   ngOnInit(): void {
     this.getContracts();
     this.getProvidedContracts();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes.endpointGroupId &&
+      !changes.endpointGroupId.firstChange &&
+      changes.endpointGroupId.currentValue !== changes.endpointGroupId.previousValue
+    ) {
+      this.getContracts();
+      this.getProvidedContracts();
+      this.clearSelectedContract();
+    }
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -96,6 +108,8 @@ export class ProvidedContractComponent implements OnInit {
     this.contractsService
       .findAllContract({
         filter: [`tenantId||eq||${this.tenantId}`],
+        page: 1,
+        perPage: 1000,
       })
       .subscribe(
         data => {
@@ -105,5 +119,11 @@ export class ProvidedContractComponent implements OnInit {
         },
         err => (this.contracts = null),
       );
+  }
+
+  public clearSelectedContract(): void {
+    if (this.selectedContract) {
+      this.selectedContract = null;
+    }
   }
 }
