@@ -64,7 +64,9 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="etherType">Ether Type</label>
-          <ng-select formControlName="etherType" [items]="etherTypeOptions" id="etherType"></ng-select>
+          <select formControlName="etherType" id="etherType">
+            <option *ngFor="let type of etherTypeOptions" [value]="type">{{ type }}</option>
+          </select>
         </div>
 
         <div class="form-group col-md-6">
@@ -78,7 +80,9 @@
       <div class="form-row">
         <div class="form-group col-md-3">
           <label for="arpFlag">Arp Flag</label>
-          <ng-select formControlName="arpFlag" [items]="arpFlagOptions" id="arpFlag"></ng-select>
+          <select formControlName="arpFlag" id="arpFlag">
+            <option *ngFor="let flag of arpFlagOptions" [value]="flag">{{ flag }}</option>
+          </select>
         </div>
 
         <div class="form-group col-md-6">
