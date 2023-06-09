@@ -28,7 +28,7 @@ describe('BridgeDomainComponent', () => {
         MockIconButtonComponent,
         MockImportExportComponent,
         MockYesNoModalComponent,
-        MockComponent({ selector: 'app-bridge-domain-modal', inputs: ['vrfs', 'l3Outs'] }),
+        MockComponent({ selector: 'app-bridge-domain-modal' }),
         MockComponent('app-subnets-modal'),
       ],
       imports: [HttpClientModule, RouterTestingModule],

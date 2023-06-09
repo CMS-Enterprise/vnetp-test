@@ -295,7 +295,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
       sourceToPort,
       destinationFromPort,
       destinationToPort,
-      tcpFlags,
       stateful,
     } = this.form.value;
     const filterEntry = {
@@ -310,7 +309,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
       sourceToPort,
       destinationFromPort,
       destinationToPort,
-      tcpFlags,
       stateful,
       filterId,
       tenantId,
