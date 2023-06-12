@@ -76,6 +76,13 @@ export class TableComponent<T> implements AfterViewInit {
     { formName: 'Gateway', propertyName: 'gateway', operator: '$eq' },
     { formName: 'Vlan Number', propertyName: 'vlanNumber', operator: '$eq' },
     { formName: 'VCD/Vlan Type', propertyName: 'vcdVlanType', operator: '$eq' },
+    { formName: 'Direction', propertyName: 'direction', operator: '$eq' },
+    { formName: 'Protocol', propertyName: 'protocol', operator: '$eq' },
+    { formName: 'Enabled', propertyName: 'enabled', operator: '$eq' },
+    { formName: 'Source Address', propertyName: 'sourceIpAddress', operator: '$eq' },
+    { formName: 'Destination Address', propertyName: 'destinationIpAddress', operator: '$eq' },
+    { formName: 'Source Port', propertyName: 'sourcePorts', operator: '$eq' },
+    { formName: 'Destination Port', propertyName: 'destinationPorts', operator: '$eq' },
   ];
 
   constructor(
