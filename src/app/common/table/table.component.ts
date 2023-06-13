@@ -86,6 +86,7 @@ export class TableComponent<T> implements AfterViewInit {
       'subject-filters',
       'l3out-modal',
       'bd-l3outs',
+      'tenants-and-datacenters',
     ];
 
     const hidePagination = ['import-preview', 'detailed-audit-log-entry'];
