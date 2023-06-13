@@ -23023,7 +23023,7 @@
         ]
       }
     },
-    "/v2/app-centric/routeProfiles": {
+    "/v2/app-centric/route-profiles": {
       "post": {
         "operationId": "createRouteProfile",
         "parameters": [],
@@ -23050,7 +23050,7 @@
           }
         },
         "tags": [
-          "v2/app-centric/routeProfiles"
+          "v2/app-centric/route-profiles"
         ]
       },
       "get": {
@@ -23136,11 +23136,11 @@
           }
         },
         "tags": [
-          "v2/app-centric/routeProfiles"
+          "v2/app-centric/route-profiles"
         ]
       }
     },
-    "/v2/app-centric/routeProfiles/{uuid}": {
+    "/v2/app-centric/route-profiles/{uuid}": {
       "get": {
         "operationId": "findOneRouteProfile",
         "parameters": [
@@ -23175,7 +23175,7 @@
           }
         },
         "tags": [
-          "v2/app-centric/routeProfiles"
+          "v2/app-centric/route-profiles"
         ]
       },
       "put": {
@@ -23213,7 +23213,7 @@
           }
         },
         "tags": [
-          "v2/app-centric/routeProfiles"
+          "v2/app-centric/route-profiles"
         ]
       },
       "delete": {
@@ -23241,11 +23241,11 @@
           }
         },
         "tags": [
-          "v2/app-centric/routeProfiles"
+          "v2/app-centric/route-profiles"
         ]
       }
     },
-    "/v2/app-centric/routeProfiles/{uuid}/restore": {
+    "/v2/app-centric/route-profiles/{uuid}/restore": {
       "patch": {
         "operationId": "restoreRouteProfile",
         "parameters": [
@@ -23264,11 +23264,11 @@
           }
         },
         "tags": [
-          "v2/app-centric/routeProfiles"
+          "v2/app-centric/route-profiles"
         ]
       }
     },
-    "/v2/app-centric/routeProfiles/{uuid}/soft": {
+    "/v2/app-centric/route-profiles/{uuid}/soft": {
       "delete": {
         "operationId": "softDeleteRouteProfile",
         "parameters": [
@@ -23287,11 +23287,11 @@
           }
         },
         "tags": [
-          "v2/app-centric/routeProfiles"
+          "v2/app-centric/route-profiles"
         ]
       }
     },
-    "/v2/app-centric/routeProfiles/{uuid}/provision": {
+    "/v2/app-centric/route-profiles/{uuid}/provision": {
       "put": {
         "operationId": "provisionRouteProfile",
         "parameters": [
@@ -23310,11 +23310,11 @@
           }
         },
         "tags": [
-          "v2/app-centric/routeProfiles"
+          "v2/app-centric/route-profiles"
         ]
       }
     },
-    "/v2/app-centric/routeProfiles/{uuid}/deprovision": {
+    "/v2/app-centric/route-profiles/{uuid}/deprovision": {
       "patch": {
         "operationId": "deprovisionRouteProfile",
         "parameters": [
@@ -23333,7 +23333,7 @@
           }
         },
         "tags": [
-          "v2/app-centric/routeProfiles"
+          "v2/app-centric/route-profiles"
         ]
       }
     },

@@ -180,7 +180,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/routeProfiles`,
+        return this.httpClient.post<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/route-profiles`,
             routeProfile,
             {
                 responseType: <any>responseType,
@@ -225,7 +225,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/routeProfiles/${encodeURIComponent(String(uuid))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -306,7 +306,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<RouteProfilePaginationResponse>(`${this.configuration.basePath}/v2/app-centric/routeProfiles`,
+        return this.httpClient.get<RouteProfilePaginationResponse>(`${this.configuration.basePath}/v2/app-centric/route-profiles`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -359,7 +359,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/routeProfiles/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.get<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -404,7 +404,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/routeProfiles/${encodeURIComponent(String(uuid))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -450,7 +450,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/routeProfiles/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.delete<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -494,7 +494,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/routeProfiles/${encodeURIComponent(String(uuid))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -539,7 +539,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/routeProfiles/${encodeURIComponent(String(uuid))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -597,7 +597,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/routeProfiles/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.put<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}`,
             routeProfile,
             {
                 responseType: <any>responseType,
