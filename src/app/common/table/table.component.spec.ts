@@ -3,7 +3,7 @@ import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent, Mo
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TableComponent } from './table.component';
 import { By } from '@angular/platform-browser';
-import { SearchBarComponent } from '../seach-bar/search-bar.component';
+import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockProvider } from 'src/test/mock-providers';
