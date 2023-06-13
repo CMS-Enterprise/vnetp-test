@@ -3054,7 +3054,8 @@
               "Filter",
               "FilterEntry",
               "Subject",
-              "Vrf"
+              "Vrf",
+              "RouteProfile"
             ]
           },
           "entityBefore": {
@@ -5277,6 +5278,7 @@
         "required": [
           "intraEpgIsolation",
           "tenantId",
+          "bridgeDomainId",
           "applicationProfileId"
         ]
       },
@@ -5327,6 +5329,13 @@
               "$ref": "#/components/schemas/BridgeDomain"
             }
           },
+          "bridgeDomainsForRouteProfile": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BridgeDomain"
+            }
+          },
           "vrf": {
             "readOnly": true,
             "allOf": [
@@ -5352,6 +5361,69 @@
         },
         "required": [
           "vrfId",
+          "tenantId"
+        ]
+      },
+      "RouteProfile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "bridgeDomains": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BridgeDomain"
+            }
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
           "tenantId"
         ]
       },
@@ -5457,6 +5529,28 @@
             "items": {
               "$ref": "#/components/schemas/L3Out"
             }
+          },
+          "l3OutForRouteProfileId": {
+            "type": "string"
+          },
+          "l3outForRouteProfile": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/L3Out"
+              }
+            ]
+          },
+          "routeProfileId": {
+            "type": "string"
+          },
+          "routeProfile": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RouteProfile"
+              }
+            ]
           }
         },
         "required": [
@@ -5951,6 +6045,36 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/FilterEntry"
+            }
+          },
+          "count": {
+            "type": "number"
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "pageCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "data",
+          "count",
+          "total",
+          "page",
+          "pageCount"
+        ]
+      },
+      "RouteProfilePaginationResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RouteProfile"
             }
           },
           "count": {
@@ -22899,6 +23023,320 @@
         ]
       }
     },
+    "/v2/app-centric/routeProfiles": {
+      "post": {
+        "operationId": "createRouteProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouteProfile"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteProfile"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/routeProfiles"
+        ]
+      },
+      "get": {
+        "operationId": "findAllRouteProfile",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page of entities to return based on the perPage value and total number of entities in the database.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "select",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteProfilePaginationResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/routeProfiles"
+        ]
+      }
+    },
+    "/v2/app-centric/routeProfiles/{uuid}": {
+      "get": {
+        "operationId": "findOneRouteProfile",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteProfile"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/routeProfiles"
+        ]
+      },
+      "put": {
+        "operationId": "updateRouteProfile",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouteProfile"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteProfile"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/routeProfiles"
+        ]
+      },
+      "delete": {
+        "operationId": "removeRouteProfile",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteProfile"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/routeProfiles"
+        ]
+      }
+    },
+    "/v2/app-centric/routeProfiles/{uuid}/restore": {
+      "patch": {
+        "operationId": "restoreRouteProfile",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/routeProfiles"
+        ]
+      }
+    },
+    "/v2/app-centric/routeProfiles/{uuid}/soft": {
+      "delete": {
+        "operationId": "softDeleteRouteProfile",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/routeProfiles"
+        ]
+      }
+    },
+    "/v2/app-centric/routeProfiles/{uuid}/provision": {
+      "put": {
+        "operationId": "provisionRouteProfile",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/routeProfiles"
+        ]
+      }
+    },
+    "/v2/app-centric/routeProfiles/{uuid}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionRouteProfile",
+        "parameters": [
+          {
+            "name": "uuid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/routeProfiles"
+        ]
+      }
+    },
     "/v1/status/tower": {
       "get": {
         "operationId": "getTowerStatusStatus",
@@ -22949,7 +23387,7 @@
       "get": {
         "operationId": "getApiLatStatus",
         "summary": "",
-        "description": "here",
+        "description": "get API latency",
         "parameters": [],
         "responses": {
           "200": {
@@ -22958,6 +23396,29 @@
               "application/json": {
                 "schema": {
                   "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/status"
+        ]
+      }
+    },
+    "/v1/status/ping": {
+      "get": {
+        "operationId": "pingStatus",
+        "summary": "",
+        "description": "get API latency (unauthenticated)",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }

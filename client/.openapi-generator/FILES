@@ -40,6 +40,7 @@ api/v2AppCentricEndpointGroups.service.ts
 api/v2AppCentricFilterEntries.service.ts
 api/v2AppCentricFilters.service.ts
 api/v2AppCentricL3outs.service.ts
+api/v2AppCentricRouteProfiles.service.ts
 api/v2AppCentricSubjects.service.ts
 api/v2AppCentricTenants.service.ts
 api/v2AppCentricVrfs.service.ts
@@ -139,6 +140,8 @@ model/networkObjectGroupRelationBulkImportCollectionDto.ts
 model/networkObjectGroupRelationBulkImportDto.ts
 model/nodeImportCollectionDto.ts
 model/poolImportCollectionDto.ts
+model/routeProfile.ts
+model/routeProfilePaginationResponse.ts
 model/selfService.ts
 model/selfServiceConfig.ts
 model/selfServiceRawConfig.ts

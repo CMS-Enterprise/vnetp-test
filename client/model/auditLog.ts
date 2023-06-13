@@ -71,7 +71,8 @@ export enum AuditLogEntityTypeEnum {
     Filter = 'Filter',
     FilterEntry = 'FilterEntry',
     Subject = 'Subject',
-    Vrf = 'Vrf'
+    Vrf = 'Vrf',
+    RouteProfile = 'RouteProfile'
 };
 
 

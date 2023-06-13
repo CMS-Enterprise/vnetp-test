@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { L3Out } from './l3Out';
+import { RouteProfile } from './routeProfile';
 import { Tenant } from './tenant';
 import { EndpointGroup } from './endpointGroup';
 import { AppCentricSubnet } from './appCentricSubnet';
@@ -52,5 +53,9 @@ export interface BridgeDomain {
     readonly subnets?: Array<AppCentricSubnet>;
     readonly endpointGroups?: Array<EndpointGroup>;
     readonly l3outs?: Array<L3Out>;
+    l3OutForRouteProfileId?: string;
+    readonly l3outForRouteProfile?: L3Out;
+    routeProfileId?: string;
+    readonly routeProfile?: RouteProfile;
 }
 
