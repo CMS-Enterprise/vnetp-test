@@ -121,4 +121,17 @@ describe('BridgeDomainModalComponent', () => {
       expect(bdMacAddress.valid).toBe(false);
     });
   });
+
+  describe('routeProfile', () => {
+    it('should be required when l3OutForRouteProfileId is set', () => {
+      const { l3OutForRouteProfileId, routeProfileId } = component.form.controls;
+
+      l3OutForRouteProfileId.setValue('123');
+      expect(l3OutForRouteProfileId.valid).toBe(true);
+      expect(routeProfileId.valid).toBe(false);
+
+      routeProfileId.setValue('123');
+      expect(routeProfileId.valid).toBe(true);
+    });
+  });
 });

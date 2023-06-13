@@ -88,7 +88,7 @@ export class TableComponent<T> implements AfterViewInit {
       'bd-l3outs',
     ];
 
-    const hidePagination = ['import-preview', 'detailed-audit-log-entry'];
+    const hidePagination = ['import-preview', 'detailed-audit-log-entry', 'bd-l3outs'];
 
     // if tableId is a badList ID, we hide the search bar
     if (badList.includes(this.uniqueTableId)) {
