@@ -186,6 +186,8 @@ export class EndpointGroupModalComponent implements OnInit {
     this.bridgeDomainService
       .findAllBridgeDomain({
         filter: [`tenantId||eq||${this.tenantId}`],
+        page: 1,
+        perPage: 1000,
       })
       .subscribe(
         data => {

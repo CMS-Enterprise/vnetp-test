@@ -107,6 +107,8 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
     this.contractsService
       .findAllContract({
         filter: [`tenantId||eq||${this.tenantId}`],
+        page: 1,
+        perPage: 1000,
       })
       .subscribe(
         data => {
