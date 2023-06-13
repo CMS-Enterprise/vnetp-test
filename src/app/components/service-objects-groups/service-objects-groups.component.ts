@@ -129,28 +129,30 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     this.getObjectsForNavIndex();
   }
 
-  getServiceObjects(event?): void {
-    const params = this.tableContextService.getSearchLocalStorage();
-    if (params.filteredResults) {
-      this.filteredResults = true;
-    } else {
-      this.filteredResults = false;
-    }
+  getServiceObjects(event?) {
+    // const params = this.tableContextService.getSearchLocalStorage();
+    // if (params.filteredResults) {
+    //   this.filteredResults = true;
+    // } else {
+    //   this.filteredResults = false;
+    // }
 
     this.isLoadingObjects = true;
     let eventParams;
 
     if (typeof event === 'string') {
-      this.serviceObjectService
-        .getManyServiceObject({
-          s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
-          page: 1,
-          limit: 5000,
-        })
-        .subscribe(data => {
-          this.serviceObjects = data;
-          this.isLoadingObjects = false;
-        }),
+      this.isLoadingObjects = false;
+      return (
+        this.serviceObjectService
+          .getManyServiceObject({
+            s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
+            page: 1,
+            limit: 5000,
+          })
+          .subscribe(data => {
+            this.serviceObjects = data;
+            this.isLoadingObjects = false;
+          }),
         // tslint:disable-next-line
         () => {
           this.serviceObjects = null;
@@ -159,8 +161,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         // tslint:disable-next-line
         () => {
           this.isLoadingObjects = false;
-        };
-      return;
+        }
+      );
     }
     if (event) {
       this.svcObjTableComponentDto.page = event.page ? event.page : 1;

@@ -24,6 +24,12 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   public reset() {
+    this.ngx.resetModalData('advancedSearch');
+    const inputs = document.getElementsByClassName('form-control');
+    const elements: any = Array.from(inputs);
+    elements.map(element => {
+      element.value = '';
+    });
     this.ngx.close('advancedSearch');
   }
 

@@ -132,28 +132,30 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.getObjectsForNavIndex();
   }
 
-  getNetworkObjects(event?): void {
-    const params = this.tableContextService.getSearchLocalStorage();
-    if (params.filteredResults) {
-      this.filteredResults = true;
-    } else {
-      this.filteredResults = false;
-    }
+  getNetworkObjects(event?) {
+    // const params = this.tableContextService.getSearchLocalStorage();
+    // if (params.filteredResults) {
+    //   this.filteredResults = true;
+    // } else {
+    //   this.filteredResults = false;
+    // }
     let eventParams;
     this.isLoadingObjects = true;
 
     if (typeof event === 'string') {
-      this.networkObjectService
-        .getManyNetworkObject({
-          s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
-          page: 1,
-          limit: 5000,
-          // sort: ['name,ASC'],
-        })
-        .subscribe(data => {
-          this.networkObjects = data;
-          this.isLoadingObjects = false;
-        }),
+      this.isLoadingObjects = false;
+      return (
+        this.networkObjectService
+          .getManyNetworkObject({
+            s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
+            page: 1,
+            limit: 5000,
+            // sort: ['name,ASC'],
+          })
+          .subscribe(data => {
+            this.networkObjects = data;
+            this.isLoadingObjects = false;
+          }),
         // tslint:disable-next-line
         () => {
           this.networkObjects = null;
@@ -162,8 +164,8 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         // tslint:disable-next-line
         () => {
           this.isLoadingObjects = false;
-        };
-      return;
+        }
+      );
     }
     if (event) {
       this.netObjTableComponentDto.page = event.page ? event.page : 1;

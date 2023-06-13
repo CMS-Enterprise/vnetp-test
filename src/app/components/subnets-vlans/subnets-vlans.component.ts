@@ -395,31 +395,11 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getSubnets(event?): void {
-    this.isLoadingSubnets = true;
+  public async getSubnets(event?) {
+    // this.isLoadingSubnets = true;
     let eventParams;
     if (typeof event === 'string') {
-      this.subnetService
-        .getManySubnet({
-          s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
-          page: 1,
-          limit: 5000,
-          join: ['vlan'],
-        })
-        .subscribe(data => {
-          this.subnets = data;
-          this.isLoadingSubnets = false;
-        }),
-        // tslint:disable-next-line
-        () => {
-          this.subnets = null;
-          this.getSubnets();
-        },
-        // tslint:disable-next-line
-        () => {
-          this.isLoadingSubnets = false;
-        };
-      return;
+      return await this.getSubnetsQuery(event);
     }
     if (event) {
       this.subnetTableComponentDto.page = event.page ? event.page : 1;
@@ -446,9 +426,11 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       })
       .subscribe(
         response => {
+          console.log('here?');
           this.subnets = response;
         },
-        () => {
+        error => {
+          console.log('error');
           this.subnets = null;
           this.getSubnets();
         },
@@ -456,6 +438,32 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
           this.isLoadingSubnets = false;
         },
       );
+  }
+
+  private async getSubnetsQuery(event) {
+    this.subnetService
+      .getManySubnet({
+        s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
+        page: 1,
+        limit: 5000,
+        join: ['vlan'],
+      })
+      .subscribe(data => {
+        console.log('here?');
+        this.subnets = data;
+        this.isLoadingSubnets = false;
+      }),
+      // tslint:disable-next-line
+      error => {
+        console.log('error');
+      };
+    // tslint:disable-next-line
+    () => {
+      console.log('fin');
+      this.isLoadingSubnets = false;
+    };
+    console.log('this.subnets', this.subnets);
+    return;
   }
 
   public getVlans(getSubnets = false, event?): void {
