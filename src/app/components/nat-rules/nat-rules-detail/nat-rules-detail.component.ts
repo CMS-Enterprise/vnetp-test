@@ -36,7 +36,11 @@ import { TableContextService } from 'src/app/services/table-context.service';
   templateUrl: './nat-rules-detail.component.html',
 })
 export class NatRulesDetailComponent implements OnInit, OnDestroy {
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Direction', propertyName: 'direction' },
+    { displayName: 'BiDirectional', propertyName: 'biDirectional' },
+    { displayName: 'Enabled', propertyName: 'enabled' },
+  ];
 
   public tableComponentDto = new TableComponentDto();
 
@@ -46,6 +50,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   TierName = '';
   currentTierIds: string[];
   ModalMode = ModalMode;
+  filteredResults: boolean;
   public currentTier: Tier;
 
   natRuleGroup: NatRuleGroup;
@@ -152,8 +157,33 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   getNatRules(event?): void {
+    this.filteredResults = false;
     this.isLoading = true;
     let eventParams;
+    console.log(this.natRuleGroup);
+    if (typeof event === 'string') {
+      this.natRuleService
+        .getManyNatRule({
+          s: `{"natRuleGroupId": {"$eq": "${this.Id}"}, "$or": [${event}]}`,
+          page: 1,
+          limit: 5000,
+        })
+        .subscribe(
+          data => {
+            this.filteredResults = true;
+            this.natRules = data;
+            this.isLoading = false;
+          },
+          () => {
+            this.natRules = null;
+            this.getNatRules();
+          },
+        ),
+        () => {
+          this.isLoading = false;
+        };
+      return;
+    }
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 50;

@@ -130,14 +130,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getServiceObjects(event?) {
-    // const params = this.tableContextService.getSearchLocalStorage();
-    // if (params.filteredResults) {
-    //   this.filteredResults = true;
-    // } else {
-    //   this.filteredResults = false;
-    // }
-
     this.isLoadingObjects = true;
+    this.filteredResults = false;
     let eventParams;
 
     if (typeof event === 'string') {
@@ -150,6 +144,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
             limit: 5000,
           })
           .subscribe(data => {
+            this.filteredResults = true;
             this.serviceObjects = data;
             this.isLoadingObjects = false;
           }),

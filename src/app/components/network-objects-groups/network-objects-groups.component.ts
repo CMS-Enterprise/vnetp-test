@@ -133,23 +133,24 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getNetworkObjects(event?) {
+    this.filteredResults = false;
     let eventParams;
     this.isLoadingObjects = true;
 
     if (typeof event === 'string') {
       this.isLoadingObjects = false;
-      return (
-        this.networkObjectService
-          .getManyNetworkObject({
-            s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
-            page: 1,
-            limit: 5000,
-            // sort: ['name,ASC'],
-          })
-          .subscribe(data => {
-            this.networkObjects = data;
-            this.isLoadingObjects = false;
-          }),
+      this.networkObjectService
+        .getManyNetworkObject({
+          s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
+          page: 1,
+          limit: 5000,
+          // sort: ['name,ASC'],
+        })
+        .subscribe(data => {
+          this.filteredResults = true;
+          this.networkObjects = data;
+          this.isLoadingObjects = false;
+        }),
         // tslint:disable-next-line
         () => {
           this.networkObjects = null;
@@ -158,8 +159,8 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         // tslint:disable-next-line
         () => {
           this.isLoadingObjects = false;
-        }
-      );
+        };
+      return;
     }
     if (event) {
       this.netObjTableComponentDto.page = event.page ? event.page : 1;

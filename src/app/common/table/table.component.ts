@@ -83,6 +83,7 @@ export class TableComponent<T> implements AfterViewInit {
     { formName: 'Destination Address', propertyName: 'destinationIpAddress', operator: '$eq' },
     { formName: 'Source Port', propertyName: 'sourcePorts', operator: '$eq' },
     { formName: 'Destination Port', propertyName: 'destinationPorts', operator: '$eq' },
+    { formName: 'BiDirectional', propertyName: 'biDirectional', operator: '$eq' },
   ];
 
   constructor(
@@ -177,7 +178,6 @@ export class TableComponent<T> implements AfterViewInit {
 
     this.tableContextService.addSearchLocalStorage(null, null, finalString);
     const searchStorageParams = this.tableContextService.getSearchLocalStorage();
-    console.log('searchStorageParams', searchStorageParams);
     this.getObjectsAndFilter(finalString);
   }
 

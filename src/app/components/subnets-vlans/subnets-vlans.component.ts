@@ -392,11 +392,11 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     }
   }
 
-  public async getSubnets(event?) {
+  public getSubnets(event?) {
     this.isLoadingSubnets = true;
     let eventParams;
     if (typeof event === 'string') {
-      return await this.getSubnetsQuery(event);
+      return this.getSubnetsQuery(event);
     }
     if (event) {
       this.subnetTableComponentDto.page = event.page ? event.page : 1;
@@ -435,7 +435,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       );
   }
 
-  private async getSubnetsQuery(event) {
+  private getSubnetsQuery(event) {
     this.isLoadingSubnets = false;
     this.subnetService
       .getManySubnet({
@@ -449,7 +449,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         this.isLoadingSubnets = false;
       }),
       // tslint:disable-next-line
-      error => {};
+      error => {
+        console.log('err');
+      };
     // tslint:disable-next-line
     () => {
       this.isLoadingSubnets = false;
@@ -460,6 +462,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     this.isLoadingVlans = true;
     let eventParams;
     if (typeof event === 'string') {
+      this.isLoadingVlans = false;
       this.vlanService
         .getManyVlan({
           s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
@@ -469,7 +472,6 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         })
         .subscribe(response => {
           this.vlans = response;
-          console.log('here?');
           this.isLoadingVlans = false;
           if (getSubnets) {
             this.getSubnets();

@@ -180,12 +180,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   getFirewallRules(event?): void {
-    const params = this.tableContextService.getSearchLocalStorage();
-    if (params.filteredResults) {
-      this.filteredResults = true;
-    } else {
-      this.filteredResults = false;
-    }
+    this.filteredResults = false;
     this.isLoading = true;
     let eventParams;
     if (typeof event === 'string') {
@@ -197,6 +192,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         })
         .subscribe(
           data => {
+            this.filteredResults = true;
             this.firewallRules = data;
             this.isLoading = false;
           },
@@ -206,7 +202,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           },
         ),
         () => {
-          console.log('here?');
           this.isLoading = false;
         };
       return;
