@@ -44,6 +44,12 @@ const routes: Routes = [
         data: { breadcrumb: 'l3 Outs', title: 'Tenant Portal - L3 Outs' },
         loadChildren: () => import('./l3-outs/l3-outs.module').then(m => m.L3OutsModule),
       },
+      {
+        outlet,
+        path: 'route-profile',
+        data: { breadcrumb: 'Route Profile', title: 'Tenant Portal - Route Profile' },
+        loadChildren: () => import('./route-profile/route-profile.module').then(m => m.RouteProfileModule),
+      },
     ],
   },
 ];
