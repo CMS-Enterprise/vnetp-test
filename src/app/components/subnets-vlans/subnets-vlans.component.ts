@@ -126,7 +126,6 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   }
 
   public onSubnetTableEvent(event: TableComponentDto): void {
-    console.log('subnetTableEvent', event);
     this.subnetTableComponentDto = event;
     this.getSubnets(event);
   }
@@ -233,8 +232,6 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults, searchString } = params;
-        console.log('params', params);
-
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults && !searchString) {
@@ -396,7 +393,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   }
 
   public async getSubnets(event?) {
-    // this.isLoadingSubnets = true;
+    this.isLoadingSubnets = true;
     let eventParams;
     if (typeof event === 'string') {
       return await this.getSubnetsQuery(event);
@@ -426,11 +423,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       })
       .subscribe(
         response => {
-          console.log('here?');
           this.subnets = response;
         },
         error => {
-          console.log('error');
           this.subnets = null;
           this.getSubnets();
         },
@@ -441,6 +436,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   }
 
   private async getSubnetsQuery(event) {
+    this.isLoadingSubnets = false;
     this.subnetService
       .getManySubnet({
         s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
@@ -449,21 +445,15 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         join: ['vlan'],
       })
       .subscribe(data => {
-        console.log('here?');
         this.subnets = data;
         this.isLoadingSubnets = false;
       }),
       // tslint:disable-next-line
-      error => {
-        console.log('error');
-      };
+      error => {};
     // tslint:disable-next-line
     () => {
-      console.log('fin');
       this.isLoadingSubnets = false;
     };
-    console.log('this.subnets', this.subnets);
-    return;
   }
 
   public getVlans(getSubnets = false, event?): void {
@@ -479,6 +469,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         })
         .subscribe(response => {
           this.vlans = response;
+          console.log('here?');
           this.isLoadingVlans = false;
           if (getSubnets) {
             this.getSubnets();

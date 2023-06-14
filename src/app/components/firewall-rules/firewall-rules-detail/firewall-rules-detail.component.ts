@@ -188,8 +188,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     }
     this.isLoading = true;
     let eventParams;
-    console.log('event', event);
-
     if (typeof event === 'string') {
       this.firewallRuleService
         .getManyFirewallRule({

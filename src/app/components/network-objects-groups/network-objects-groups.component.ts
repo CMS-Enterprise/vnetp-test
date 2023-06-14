@@ -133,12 +133,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   getNetworkObjects(event?) {
-    // const params = this.tableContextService.getSearchLocalStorage();
-    // if (params.filteredResults) {
-    //   this.filteredResults = true;
-    // } else {
-    //   this.filteredResults = false;
-    // }
     let eventParams;
     this.isLoadingObjects = true;
 

@@ -67,7 +67,7 @@ export class TableComponent<T> implements AfterViewInit {
     { formName: 'IpAddress', propertyName: 'ipAddress', operator: '$eq' },
     { formName: 'FQDN', propertyName: 'fqdn', operator: '$cont' },
     { formName: 'Start IP', propertyName: 'startIpAddress', operator: '$eq' },
-    { formName: 'End IP', properyName: 'endIpAddress', operator: '$eq' },
+    { formName: 'End IP', propertyName: 'endIpAddress', operator: '$eq' },
     { formName: 'Type', propertyName: 'protocol', operator: '$eq' },
     { formName: 'Source Port', propertyName: 'sourcePorts', operator: '$cont' },
     { formName: 'Destination Port', propertyName: 'destinationPorts', operator: '$cont' },
@@ -129,6 +129,7 @@ export class TableComponent<T> implements AfterViewInit {
       this.paginationControlsOn = false;
     }
 
+    const searchParams = this.tableContextService.getSearchLocalStorage();
     this.changeRef.detectChanges();
   }
 
@@ -155,7 +156,6 @@ export class TableComponent<T> implements AfterViewInit {
     const { searchColumn, searchText } = searchParams;
     this.tableEvent.emit(new TableComponentDto(+this.itemsPerPage, this.currentPage, searchColumn, searchText));
     this.itemsPerPageChange.emit(this.itemsPerPage);
-    this.ngx.close('advancedSearch');
   }
 
   // function that parses the form values sent by the advanced search modal
@@ -176,6 +176,8 @@ export class TableComponent<T> implements AfterViewInit {
     const finalString = this.scrapeValues(newQueryParams);
 
     this.tableContextService.addSearchLocalStorage(null, null, finalString);
+    const searchStorageParams = this.tableContextService.getSearchLocalStorage();
+    console.log('searchStorageParams', searchStorageParams);
     this.getObjectsAndFilter(finalString);
   }
 
