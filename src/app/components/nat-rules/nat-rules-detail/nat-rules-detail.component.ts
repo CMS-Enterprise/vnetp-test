@@ -160,7 +160,6 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.filteredResults = false;
     this.isLoading = true;
     let eventParams;
-    console.log(this.natRuleGroup);
     if (typeof event === 'string') {
       this.natRuleService
         .getManyNatRule({
@@ -178,10 +177,11 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
             this.natRules = null;
             this.getNatRules();
           },
-        ),
-        () => {
-          this.isLoading = false;
-        };
+          () => {
+            this.isLoading = false;
+          },
+        );
+
       return;
     }
     if (event) {

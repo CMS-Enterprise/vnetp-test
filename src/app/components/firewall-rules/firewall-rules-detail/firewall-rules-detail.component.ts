@@ -200,10 +200,11 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
             this.firewallRules = null;
             this.getFirewallRules();
           },
-        ),
-        () => {
-          this.isLoading = false;
-        };
+          () => {
+            this.isLoading = false;
+          },
+        );
+
       return;
     }
 
