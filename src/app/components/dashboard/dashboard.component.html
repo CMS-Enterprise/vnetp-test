@@ -3,7 +3,7 @@
 <main class="dashboard">
   <!-- Service Status -->
   <aside class="dashboard__card" aria-label="Service Status">
-    <h4 class="dashboard__heading">Service Status</h4>
+    <h2 class="dashboard__heading">Service Status</h2>
     <div *ngFor="let service of status" class="status-item">
       <span>
         {{ service.name }}
@@ -54,7 +54,7 @@
 
   <!-- Overall Environment -->
   <aside class="dashboard__card" aria-label="Overall Environment">
-    <h4 class="dashboard__heading">Overall Environment</h4>
+    <h2 class="dashboard__heading">Overall Environment</h2>
     <ul class="dash-card">
       <li>
         <a>
@@ -69,7 +69,7 @@
         </a>
       </li>
       <li class="dash-card__item">
-        <a routerLink="/tiers" queryParamsHandling="merge">
+        <a routerLink="/netcentric/tiers" queryParamsHandling="merge">
           <span>
             Tiers
             <tooltip [message]="helpText.Tiers"></tooltip>
@@ -81,7 +81,7 @@
         </a>
       </li>
       <li class="dash-card__item">
-        <a routerLink="/load-balancers" queryParamsHandling="merge">
+        <a routerLink="/netcentric/load-balancers" queryParamsHandling="merge">
           <span>
             Load Balancer Virtual Servers
             <tooltip [message]="helpText.LbVirtualServers"></tooltip>
