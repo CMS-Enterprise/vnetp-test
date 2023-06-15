@@ -5,7 +5,6 @@ import {
   V1DatacentersService,
   V1TiersService,
   V1LoadBalancerVirtualServersService,
-  V1VmwareVirtualMachinesService,
   V1NetworkSecurityFirewallRulesService,
   V1NetworkSecurityNetworkObjectGroupsService,
   V1NetworkSecurityNetworkObjectsService,
@@ -34,10 +33,6 @@ describe('DashboardComponent', () => {
       getManyTier: jest.fn(() => of({ total: 1 })),
     };
 
-    const vmwareService = {
-      getManyVmwareVirtualMachine: jest.fn(() => of({ total: 1 })),
-    };
-
     const loadBalancerService = {
       getManyLoadBalancerVirtualServer: jest.fn(() => of({ total: 1 })),
     };
@@ -57,7 +52,6 @@ describe('DashboardComponent', () => {
       providers: [
         { provide: V1DatacentersService, useValue: datacenterService },
         { provide: V1TiersService, useValue: tierService },
-        { provide: V1VmwareVirtualMachinesService, useValue: vmwareService },
         { provide: V1LoadBalancerVirtualServersService, useValue: loadBalancerService },
         { provide: AuthService, useValue: authService },
         MockProvider(V1NetworkSecurityFirewallRulesService),
@@ -87,7 +81,6 @@ describe('DashboardComponent', () => {
   it('should load data on init', () => {
     const datacenterService = TestBed.inject(V1DatacentersService);
     const tierService = TestBed.inject(V1TiersService);
-    const vmwareService = TestBed.inject(V1VmwareVirtualMachinesService);
     const loadBalancerService = TestBed.inject(V1LoadBalancerVirtualServersService);
 
     component.ngOnInit();

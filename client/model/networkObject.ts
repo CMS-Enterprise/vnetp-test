@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { NetworkObjectGroup } from './networkObjectGroup';
 
 
 export interface NetworkObject { 
@@ -35,6 +36,7 @@ export interface NetworkObject {
     natSourcePort?: string;
     natTranslatedPort?: string;
     tierId: string;
+    readonly networkObjectGroups?: Array<NetworkObjectGroup>;
 }
 export enum NetworkObjectTypeEnum {
     IpAddress = 'IpAddress',

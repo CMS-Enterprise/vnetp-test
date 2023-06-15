@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   V1DatacentersService,
   V1TiersService,
-  V1VmwareVirtualMachinesService,
   V1LoadBalancerVirtualServersService,
   UserDto,
   V1NetworkSecurityNetworkObjectsService,
@@ -41,7 +40,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private datacenterService: V1DatacentersService,
     private tierService: V1TiersService,
-    private vmwareService: V1VmwareVirtualMachinesService,
     public helpText: DashboardHelpText,
     private loadBalancerService: V1LoadBalancerVirtualServersService,
     private auth: AuthService,
@@ -105,7 +103,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       // console.log('cd',cd);
       if (cd) {
         this.currentDatacenter = cd;
-        this.getAuditLogEntries();
       }
     });
 
@@ -155,17 +152,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const paged: any = data;
       this.tiers = paged.total;
     });
-  }
-
-  private getAuditLogEntries() {
-    this.auditLogService
-      .getAuditLogAuditLog({
-        datacenterId: `${this.currentDatacenter.id}`,
-      })
-      .subscribe(data => {
-        this.auditLogs = data;
-        this.auditLogs = this.auditLogs.data;
-      });
   }
 
   private getFWRules(): void {

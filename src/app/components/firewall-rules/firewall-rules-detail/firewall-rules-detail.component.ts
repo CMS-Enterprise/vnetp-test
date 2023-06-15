@@ -30,7 +30,7 @@ import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
 import { TableConfig } from 'src/app/common/table/table.component';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { EntityService } from 'src/app/services/entity.service';
-import { SearchColumnConfig } from '../../../common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../../../common/search-bar/search-bar.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 
@@ -47,6 +47,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   firewallRuleGroup: FirewallRuleGroup;
   firewallRules = {} as GetManyFirewallRuleResponseDto;
+  latestRuleIndex;
 
   // Pagination
   perPage = 50;
@@ -165,6 +166,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         this.TierId = data.tierId;
 
         this.getObjects();
+        this.getFirewallRuleLastIndex();
       });
   }
 
@@ -203,6 +205,23 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
       );
+  }
+
+  getFirewallRuleLastIndex(): void {
+    this.firewallRuleService
+      .getManyFirewallRule({
+        filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`],
+        page: 1,
+        limit: 1,
+        sort: ['ruleIndex,DESC'],
+      })
+      .subscribe(response => {
+        // TODO: Review this approach, see if we can resolve
+        // this in the generated client.
+        if (response.data[0]) {
+          this.latestRuleIndex = response.data[0].ruleIndex;
+        }
+      });
   }
 
   getObjects(): void {
@@ -269,6 +288,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
     if (modalMode === ModalMode.Edit) {
       dto.FirewallRule = firewallRule;
+    } else {
+      dto.FirewallRule = {} as FirewallRule;
+      dto.FirewallRule.ruleIndex = this.latestRuleIndex + 1;
     }
 
     this.subscribeToFirewallRuleModal();

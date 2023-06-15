@@ -3,7 +3,7 @@
 <main class="dashboard">
   <!-- Service Status -->
   <aside class="dashboard__card" aria-label="Service Status">
-    <h4 class="dashboard__heading">Service Status</h4>
+    <h2 class="dashboard__heading">Service Status</h2>
     <div *ngFor="let service of status" class="status-item">
       <span>
         {{ service.name }}
@@ -140,46 +140,22 @@
     </ul>
   </aside>
 
-  <!-- Job Status Today -->
-  <!-- <aside class="dashboard__card" aria-label="Job Status Today">
-      <app-table [config]="config" [data]="auditLogs">
-      </app-table>
-    <h4 class="dashboard__heading">Job Status Today</h4>
-
-    <div class="chart-wrap">
-      <app-d3-pie-chart [data]="pieChartData" *ngIf="pieChartData"></app-d3-pie-chart>
-      <div class="legend">
-        <p *ngIf="successfulJobs">
-          <span class="legend-color success"></span>
-          <span class="legend-label">Successful Jobs</span>
-        </p>
-        <span class="legend-subtitle" *ngIf="successfulJobs">Total: {{ successfulJobs }}</span>
-
-        <p *ngIf="runningJobs">
-          <span class="legend-color warning"></span>
-          <span class="legend-label">Running Jobs</span>
-        </p>
-        <span class="legend-subtitle" *ngIf="runningJobs">Total: {{ runningJobs }}</span>
-
-        <p *ngIf="failedJobs">
-          <span class="legend-color danger"></span>
-          <span class="legend-label">Failed Jobs</span>
-        </p>
-        <span class="legend-subtitle" *ngIf="failedJobs">Total: {{ failedJobs }}</span>
-
-        <p *ngIf="pendingJobs">
-          <span class="legend-color info"></span>
-          <span class="legend-label">Pending Jobs</span>
-        </p>
-        <span class="legend-subtitle" *ngIf="pendingJobs">Total: {{ pendingJobs }}</span>
-
-        <p *ngIf="cancelledJobs">
-          <span class="legend-color medium"></span>
-          <span class="legend-label">Cancelled Jobs</span>
-        </p>
-        <span class="legend-subtitle" *ngIf="cancelledJobs">Total: {{ cancelledJobs }}</span>
-      </div>
-    </div>
-  </aside> -->
-
+  <!-- Overall Environment -->
+  <aside class="dashboard__card" aria-label="Overall Environment">
+    <h2 class="dashboard__heading">Miscellaneous</h2>
+    <ul class="dash-card">
+      <li class="dash-card__item">
+        <a routerLink="/netcentric/load-balancers" queryParamsHandling="merge">
+          <span>
+            Load Balancer Virtual Servers
+            <tooltip [message]="helpText.LbVirtualServers"></tooltip>
+          </span>
+          <span class="inline-block ml-auto">
+            {{ loadBalancerVirtualServers || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
+        </a>
+      </li>
+    </ul>
+  </aside>
 </main>

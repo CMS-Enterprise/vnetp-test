@@ -27,7 +27,7 @@ import { EntityService } from 'src/app/services/entity.service';
 import { NatRuleModalDto } from '../../../models/nat/nat-rule-modal-dto';
 import { TableConfig } from '../../../common/table/table.component';
 import { PreviewModalDto } from '../../../models/other/preview-modal-dto';
-import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 
@@ -50,6 +50,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
 
   natRuleGroup: NatRuleGroup;
   natRules = {} as GetManyNatRuleResponseDto;
+  latestRuleIndex;
   perPage = 50;
 
   // Relations
@@ -146,6 +147,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
         this.TierId = data.tierId;
 
         this.getObjects();
+        this.getNatRuleLastIndex();
       });
   }
 
@@ -181,6 +183,23 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
       );
+  }
+
+  getNatRuleLastIndex(): void {
+    this.natRuleService
+      .getManyNatRule({
+        filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],
+        page: 1,
+        limit: 1,
+        sort: ['ruleIndex,DESC'],
+      })
+      .subscribe(response => {
+        // TODO: Review this approach, see if we can resolve
+        // this in the generated client.
+        if (response.data[0]) {
+          this.latestRuleIndex = response.data[0].ruleIndex;
+        }
+      });
   }
 
   getObjects(): void {
@@ -236,6 +255,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
 
     if (modalMode === ModalMode.Edit) {
       dto.natRule = natRule;
+    } else {
+      dto.natRule = {} as NatRule;
+      dto.natRule.ruleIndex = this.latestRuleIndex + 1;
     }
     this.subscribeToNatRuleModal();
     this.ngx.setModalData(dto, 'natRuleModal');
