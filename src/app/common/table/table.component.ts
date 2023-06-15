@@ -84,6 +84,7 @@ export class TableComponent<T> implements AfterViewInit {
     { formName: 'Source Port', propertyName: 'sourcePorts', operator: '$eq' },
     { formName: 'Destination Port', propertyName: 'destinationPorts', operator: '$eq' },
     { formName: 'BiDirectional', propertyName: 'biDirectional', operator: '$eq' },
+    { formName: 'Service Port', propertName: 'servicePort', operator: '$eq' },
   ];
 
   constructor(
@@ -96,7 +97,6 @@ export class TableComponent<T> implements AfterViewInit {
   ngAfterViewInit(): void {
     this.show = true;
     this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
-
     // list of components that should have the search bar hidden when a user navigates to them
     const badList = [
       'managed-network',
@@ -117,6 +117,7 @@ export class TableComponent<T> implements AfterViewInit {
       'subject-filters',
       'l3out-modal',
       'bd-l3outs',
+      'tiers-in-the-currently-selected-datacenter',
     ];
 
     const hidePagination = ['import-preview', 'detailed-audit-log-entry'];

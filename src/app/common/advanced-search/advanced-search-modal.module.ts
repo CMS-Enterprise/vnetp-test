@@ -4,9 +4,11 @@ import { AdvancedSearchComponent } from './advanced-search-modal.component';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { IconButtonModule } from '../icon-button/icon-button.module';
 
 @NgModule({
-  imports: [NgxSmartModalModule, CommonModule, SharedModule, FormsModule, ReactiveFormsModule],
+  imports: [NgxSmartModalModule, CommonModule, SharedModule, FormsModule, ReactiveFormsModule, FontAwesomeModule, IconButtonModule],
   declarations: [AdvancedSearchComponent],
   exports: [AdvancedSearchComponent],
 })
