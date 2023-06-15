@@ -3,10 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { RouteProfile, V2AppCentricRouteProfilesService, V2AppCentricVrfsService, Vrf, VrfPaginationResponse } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
-import { TableConfig } from 'src/app/common/table/table.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { RouteProfileModalDto } from '../../../../../../models/appcentric/route-profile-modal-dto';
 
@@ -20,33 +17,15 @@ export class RouteProfileModalComponent implements OnInit {
   public form: FormGroup;
   public submitted: boolean;
   public tenantId: string;
-  public tableComponentDto = new TableComponentDto();
-  public searchColumns: SearchColumnConfig[] = [];
-  public perPage = 5;
   public isLoading = false;
-  @Input() public vrfs: VrfPaginationResponse;
-  public create: boolean;
-  public dto;
-  public vrf;
 
-  @ViewChild('vrfSelectTemplate') vrfSelectTemplate: TemplateRef<any>;
-
-  public config: TableConfig<any> = {
-    description: 'l3out modal',
-    columns: [
-      { name: 'Name', property: 'name' },
-      { name: 'Alias', property: 'alias' },
-      { name: 'Description', property: 'description' },
-      { name: '', template: () => this.vrfSelectTemplate },
-    ],
-  };
+  public dto: RouteProfileModalDto;
 
   constructor(
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
     private routeProfileService: V2AppCentricRouteProfilesService,
     private router: Router,
-    private vrfService: V2AppCentricVrfsService,
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -61,10 +40,6 @@ export class RouteProfileModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-  }
-
-  public onTableEvent(event: TableComponentDto): void {
-    this.tableComponentDto = event;
   }
 
   get f() {

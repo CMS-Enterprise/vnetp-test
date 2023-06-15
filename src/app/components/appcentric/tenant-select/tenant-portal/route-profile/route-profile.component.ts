@@ -29,7 +29,6 @@ export class RouteProfileComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
   private routeProfilesModalSubscription: Subscription;
   public tenantId: string;
-  public vrfs: VrfPaginationResponse;
 
   public isLoading = false;
 
@@ -52,7 +51,6 @@ export class RouteProfileComponent implements OnInit {
     private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
     private router: Router,
-    private vrfService: V2AppCentricVrfsService,
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -171,8 +169,6 @@ export class RouteProfileComponent implements OnInit {
       dto.routeProfile = routeProfile;
     }
 
-    this.getVrfs();
-
     this.subscribeToRouteProfileModal();
     this.ngx.setModalData(dto, 'routeProfilesModal');
     this.ngx.getModal('routeProfilesModal').open();
@@ -186,7 +182,7 @@ export class RouteProfileComponent implements OnInit {
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
 
-      // if routeProfileed results boolean is true, apply search params in the
+      // if routeProfile results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
         this.getRouteProfile(params);
@@ -214,36 +210,5 @@ export class RouteProfileComponent implements OnInit {
     //     });
     // };
     // SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
-  }
-
-  public getVrfs(event?): void {
-    this.isLoading = true;
-    let eventParams;
-    if (event) {
-      this.tableComponentDto.page = event.page ? event.page : 1;
-      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
-      const { searchText } = event;
-      const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
-      }
-    }
-    this.vrfService
-      .findAllVrf({
-        filter: [`tenantId||eq||${this.tenantId}`, eventParams],
-        page: this.tableComponentDto.page,
-        perPage: this.tableComponentDto.perPage,
-      })
-      .subscribe(
-        data => {
-          this.vrfs = data;
-        },
-        () => {
-          this.vrfs = null;
-        },
-        () => {
-          this.isLoading = false;
-        },
-      );
   }
 }
