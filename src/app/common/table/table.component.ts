@@ -51,6 +51,8 @@ export class TableComponent<T> implements AfterViewInit {
   @Output() clearResults = new EventEmitter<any>();
   @Output() searchParams = new EventEmitter<any>();
 
+  @Input() genericService: any;
+
   public searchText = '';
 
   public currentPage = 1;
@@ -126,5 +128,9 @@ export class TableComponent<T> implements AfterViewInit {
     const { searchColumn, searchText } = searchParams;
     this.tableEvent.emit(new TableComponentDto(+this.itemsPerPage, this.currentPage, searchColumn, searchText));
     this.itemsPerPageChange.emit(this.itemsPerPage);
+  }
+
+  public setAdvancedSearchData($event): void {
+    this.data = $event;
   }
 }

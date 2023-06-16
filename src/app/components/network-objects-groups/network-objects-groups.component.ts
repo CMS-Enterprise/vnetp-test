@@ -27,6 +27,7 @@ import { TableConfig } from '../../common/table/table.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { GenericService } from 'src/app/services/generic.service';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -94,6 +95,9 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     ],
   };
 
+  genericService: GenericService<NetworkObject>;
+  methodName = 'getManyNetworkObject';
+
   constructor(
     private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,
@@ -104,7 +108,11 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     private tierService: V1TiersService,
     public helpText: NetworkObjectsGroupsHelpText,
     private tableContextService: TableContextService,
-  ) {}
+  ) {
+    this.genericService = new GenericService<NetworkObject>();
+    this.genericService.setService(this.networkObjectService);
+    this.genericService.setMethodName(this.methodName);
+  }
 
   public onNetObjTableEvent(event: TableComponentDto): void {
     this.netObjTableComponentDto = event;

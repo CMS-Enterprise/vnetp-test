@@ -16,7 +16,7 @@
     </section>
 
     <ng-container *ngIf="!isLoadingObjects; else loading">
-      <app-table [config]="networkObjectConfig" [data]="networkObjects" (clearResults)="getNetworkObjects($event)" (searchParams)="getNetworkObjects($event)" [searchColumns]="objectSearchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onNetObjTableEvent($event)"></app-table>
+      <app-table [genericService]="genericService" [config]="networkObjectConfig" [data]="networkObjects" (clearResults)="getNetworkObjects($event)" (searchParams)="getNetworkObjects($event)" [searchColumns]="objectSearchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onNetObjTableEvent($event)"></app-table>
       <section class="btn-toolbar" role="toolbar">
         <app-import-export
           [exportObject]="networkObjects"

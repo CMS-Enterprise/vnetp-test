@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { GenericService } from 'src/app/services/generic.service';
 import { TableContextService } from 'src/app/services/table-context.service';
 
 export interface SearchColumnConfig {
@@ -25,11 +26,14 @@ export interface SearchColumnConfig {
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.scss'],
 })
-export class SearchBarComponent implements OnInit {
+export class SearchBarComponent<T> implements OnInit {
   @Input() columns: SearchColumnConfig[];
   @Output() searchCriteria = new EventEmitter<any>();
 
   @Output() searchBarClearResults = new EventEmitter<any>();
+
+  @Input() genericService: GenericService<T>;
+  @Output() searchResults = new EventEmitter<any>();
 
   public searchText = '';
   public searchColumn: string;
@@ -58,24 +62,37 @@ export class SearchBarComponent implements OnInit {
     this.searchText = previousSearchText;
   }
 
+  // public searchThis(): void {
+  //   if (!this.searchText) {
+  //     this.searchError = true;
+  //     return;
+  //   }
+
+  //   if (!this.searchColumn) {
+  //     this.searchError = true;
+  //     return;
+  //   }
+
+  //   this.tableContextService.addSearchLocalStorage(JSON.stringify(this.searchColumn), JSON.stringify(this.searchText));
+  //   this.tableContextService.addFilteredResultsLocalStorage();
+
+  //   this.searchError = false;
+  //   this.filteredResults = true;
+
+  //   this.searchCriteria.emit({ searchColumn: this.searchColumn, searchText: this.searchText });
+  // }
+
   public searchThis(): void {
-    if (!this.searchText) {
-      this.searchError = true;
-      return;
-    }
-
-    if (!this.searchColumn) {
-      this.searchError = true;
-      return;
-    }
-
-    this.tableContextService.addSearchLocalStorage(JSON.stringify(this.searchColumn), JSON.stringify(this.searchText));
-    this.tableContextService.addFilteredResultsLocalStorage();
-
-    this.searchError = false;
-    this.filteredResults = true;
-
-    this.searchCriteria.emit({ searchColumn: this.searchColumn, searchText: this.searchText });
+    const params = {
+      filter: [`${this.searchColumn}||eq||${this.searchText}`],
+      page: 1,
+      limit: 20,
+      sort: ['name,ASC'],
+    };
+    this.genericService.getMany(params).subscribe(res => {
+      this.searchResults.emit(res);
+      this.filteredResults = true;
+    });
   }
 
   // we begin a double emit here, because "clear results" is now on the search bar component,
