@@ -12,6 +12,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { NodeModalDto } from '../node-modal/node-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
 
 export interface NodeView extends LoadBalancerNode {
   nameView: string;
@@ -26,7 +27,11 @@ export interface NodeView extends LoadBalancerNode {
 export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Type', propertyName: 'type' },
+    { displayName: 'IpAddress', propertyName: 'ipAddress' },
+    { displayName: 'FQDN', propertyName: 'fqdn' },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -57,6 +62,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
+    public filteredHelpText: FilteredCount,
   ) {}
 
   ngOnInit(): void {
@@ -106,8 +112,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'ipAddress' || propertyName === 'type') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -138,6 +147,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
         },
         () => {
           this.nodes = null;
+          this.loadNodes();
         },
         () => {
           this.isLoading = false;

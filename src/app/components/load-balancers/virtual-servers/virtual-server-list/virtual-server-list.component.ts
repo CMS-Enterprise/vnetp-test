@@ -17,6 +17,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { VirtualServerModalDto } from '../virtual-server-modal/virtual-server-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
 
 export interface VirtualServerView extends LoadBalancerVirtualServer {
   nameView: string;
@@ -32,7 +33,10 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
   public currentTier: Tier;
   public datacenterId: string;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Destination Address', propertyName: 'destinationIpAddress' },
+    { displayName: 'Service Port', propertyName: 'servicePort' },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('defaultPoolTemplate') defaultPoolTemplate: TemplateRef<any>;
@@ -64,6 +68,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
+    public filteredHelpText: FilteredCount,
   ) {}
 
   ngOnInit(): void {
@@ -113,8 +118,11 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'destinationIpAddress' || propertyName === 'servicePort') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -144,6 +152,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
         },
         () => {
           this.virtualServers = null;
+          this.loadVirtualServers();
         },
         () => {
           this.isLoading = false;

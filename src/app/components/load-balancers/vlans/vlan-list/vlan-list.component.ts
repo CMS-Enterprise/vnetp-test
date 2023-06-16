@@ -12,6 +12,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { VlanModalDto } from '../vlan-modal/vlan-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
 
 export interface VlanView extends LoadBalancerVlan {
   nameView: string;
@@ -25,7 +26,7 @@ export interface VlanView extends LoadBalancerVlan {
 export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [{ displayName: 'Tag', propertyName: 'tag' }];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -53,6 +54,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
+    public filteredHelpText: FilteredCount,
   ) {}
 
   ngOnInit(): void {
@@ -102,8 +104,11 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'tag') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -127,6 +132,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
         },
         () => {
           this.vlans = null;
+          this.loadVlans();
         },
         () => {
           this.isLoading = false;

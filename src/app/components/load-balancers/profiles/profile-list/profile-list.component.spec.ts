@@ -5,6 +5,7 @@ import {
   MockFontAwesomeComponent,
   MockIconButtonComponent,
   MockImportExportComponent,
+  MockTooltipComponent,
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
@@ -33,6 +34,7 @@ describe('ProfileListComponent', () => {
         MockIconButtonComponent,
         MockImportExportComponent,
         MockYesNoModalComponent,
+        MockTooltipComponent,
       ],
       providers: [
         MockProvider(DatacenterContextService),

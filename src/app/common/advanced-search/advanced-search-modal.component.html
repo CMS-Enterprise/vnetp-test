@@ -1,0 +1,38 @@
+<ngx-smart-modal #advancedSearch identifier="advancedSearch"
+  (onClose)="reset()" (onOpen)="test()" [dismissable]="false" customClass="medium-modal">
+  <header class="modal-header">
+    <h4 class="modal-title">Advanced Search</h4>
+  </header>
+
+  
+
+  <form [formGroup]="form" (ngSubmit)="searchThis()">
+    <div class="modal-body">
+
+      <div class="form-row">
+
+        <div *ngFor="let formInput of formInputs" class="form-group">
+
+          <label>{{formInput.displayName}}</label>
+          <input type="text" class="form-control">
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="modal-footer">
+
+      <button style="margin-right: auto" type="button" class="btn btn-warning" data-dismiss="modal" (click)="reset()">
+        <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
+        <span>Reset</span>
+      </button>
+
+      <button type="submit" class="btn btn-success">
+        <span (click)="searchThis()">Search</span>
+      </button>
+    </footer>
+
+  </form>
+</ngx-smart-modal>

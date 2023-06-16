@@ -4,7 +4,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
-import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
+import { FilteredCount, NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Tier } from 'client/model/tier';
 import {
@@ -38,6 +38,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   currentTier: Tier;
   perPage = 20;
   ModalMode = ModalMode;
+  filteredResults: boolean;
 
   networkObjects = {} as GetManyNetworkObjectResponseDto;
   networkObjectGroups = {} as GetManyNetworkObjectGroupResponseDto;
@@ -65,9 +66,14 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   @ViewChild('objStateTemplate') objStateTemplate: TemplateRef<any>;
   @ViewChild('groupStateTemplate') groupStateTemplate: TemplateRef<any>;
 
-  public objectSearchColumns: SearchColumnConfig[] = [];
+  public objectSearchColumns: SearchColumnConfig[] = [
+    { displayName: 'IpAddress', propertyName: 'ipAddress' },
+    { displayName: 'FQDN', propertyName: 'fqdn' },
+    { displayName: 'Start IP', propertyName: 'startIpAddress' },
+    { displayName: 'End IP', propertyName: 'endIpAddress' },
+  ];
 
-  public groupSearchColumns: SearchColumnConfig[] = [];
+  public groupSearchColumns: SearchColumnConfig[] = [{ displayName: 'Member', propertyName: 'networkObjects' }];
 
   public networkObjectConfig: TableConfig<any> = {
     description: 'Network Objects can consist of a single host (with NAT/PAT), range or subnet',
@@ -107,6 +113,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     private tierContextService: TierContextService,
     private tierService: V1TiersService,
     public helpText: NetworkObjectsGroupsHelpText,
+    public filteredHelpText: FilteredCount,
     private tableContextService: TableContextService,
   ) {
     this.genericService = new GenericService<NetworkObject>();
@@ -133,17 +140,49 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.getObjectsForNavIndex();
   }
 
-  getNetworkObjects(event?): void {
+  getNetworkObjects(event?) {
+    this.filteredResults = false;
     let eventParams;
     this.isLoadingObjects = true;
+
+    if (typeof event === 'string') {
+      this.isLoadingObjects = false;
+      this.networkObjectService
+        .getManyNetworkObject({
+          s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
+          page: 1,
+          limit: 5000,
+          // sort: ['name,ASC'],
+        })
+        .subscribe(data => {
+          this.filteredResults = true;
+          this.networkObjects = data;
+          this.isLoadingObjects = false;
+        }),
+        // tslint:disable-next-line
+        () => {
+          this.networkObjects = null;
+          this.getNetworkObjects();
+        },
+        // tslint:disable-next-line
+        () => {
+          this.isLoadingObjects = false;
+        };
+      return;
+    }
     if (event) {
       this.netObjTableComponentDto.page = event.page ? event.page : 1;
       this.netObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      this.netObjTableComponentDto.searchText = searchText;
+      if (propertyName === 'ipAddress' || propertyName === 'startIpAddress' || propertyName === 'endIpAddress') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
+    } else {
+      this.netObjTableComponentDto.searchText = undefined;
     }
     this.networkObjectService
       .getManyNetworkObject({
@@ -158,6 +197,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         },
         () => {
           this.networkObjects = null;
+          this.getNetworkObjects();
         },
         () => {
           this.isLoadingObjects = false;
@@ -172,10 +212,13 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       this.netObjGrpTableComponentDto.page = event.page ? event.page : 1;
       this.netObjGrpTableComponentDto.perPage = event.perPage ? event.perPage : 50;
       const { searchText } = event;
+      this.netObjGrpTableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
       if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
+    } else {
+      this.netObjGrpTableComponentDto.searchText = undefined;
     }
     this.networkObjectGroupService
       .getManyNetworkObjectGroup({
@@ -191,6 +234,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         },
         () => {
           this.networkObjectGroups = null;
+          this.getNetworkObjectGroups();
         },
         () => {
           this.isLoadingGroups = false;
@@ -242,14 +286,16 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.networkObjectModalSubscription = this.ngx.getModal('networkObjectModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
+      const { filteredResults, searchString } = params;
 
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
-      if (filteredResults) {
+      if (filteredResults && !searchString) {
         this.netObjTableComponentDto.searchColumn = params.searchColumn;
         this.netObjTableComponentDto.searchText = params.searchText;
         this.getNetworkObjects(this.netObjTableComponentDto);
+      } else if (filteredResults && searchString) {
+        this.getNetworkObjects(searchString);
       } else {
         this.getNetworkObjects();
       }
@@ -286,14 +332,16 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       onSuccess: () => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+        const { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
-        if (filteredResults) {
+        if (filteredResults && !searchString) {
           this.netObjTableComponentDto.searchColumn = params.searchColumn;
           this.netObjTableComponentDto.searchText = params.searchText;
           this.getNetworkObjects(this.netObjTableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getNetworkObjects(searchString);
         } else {
           this.getNetworkObjects();
         }
@@ -306,14 +354,16 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       this.networkObjectService.restoreOneNetworkObject({ id: networkObject.id }).subscribe(() => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+        const { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
-        if (filteredResults) {
+        if (filteredResults && !searchString) {
           this.netObjTableComponentDto.searchColumn = params.searchColumn;
           this.netObjTableComponentDto.searchText = params.searchText;
           this.getNetworkObjects(this.netObjTableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getNetworkObjects(searchString);
         } else {
           this.getNetworkObjects();
         }

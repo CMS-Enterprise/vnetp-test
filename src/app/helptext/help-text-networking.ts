@@ -8,6 +8,14 @@ import { environment } from 'src/environments/environment';
 export class SearchBarHelpText {
   CaseSensitive = `Search parameters are case sensitive!`;
 }
+
+@Injectable({
+  providedIn: 'root',
+})
+export class FilteredCount {
+  FilteredResults = `Items that match the search bar criteria`;
+}
+
 @Injectable({
   providedIn: 'root',
 })

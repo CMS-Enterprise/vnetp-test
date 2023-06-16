@@ -12,6 +12,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { ProfileModalDto } from '../profile-modal/profile-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
 
 export interface ProfileView extends LoadBalancerProfile {
   nameView: string;
@@ -26,7 +27,10 @@ export interface ProfileView extends LoadBalancerProfile {
 export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Type', propertyName: 'type' },
+    { displayName: 'Reverse Proxy', propertyName: 'reverseProxy' },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -55,6 +59,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
+    public filteredHelpText: FilteredCount,
   ) {}
 
   ngOnInit(): void {
@@ -104,8 +109,11 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'type' || propertyName === 'reverseProxy') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -134,6 +142,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
         },
         () => {
           this.profiles = null;
+          this.loadProfiles();
         },
         () => {
           this.isLoading = false;

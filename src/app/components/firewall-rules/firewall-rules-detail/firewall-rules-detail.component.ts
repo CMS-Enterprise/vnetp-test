@@ -39,11 +39,20 @@ import { TableContextService } from 'src/app/services/table-context.service';
   templateUrl: './firewall-rules-detail.component.html',
 })
 export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Direction', propertyName: 'direction' },
+    { displayName: 'Protocol', propertyName: 'protocol' },
+    { displayName: 'Enabled', propertyName: 'enabled' },
+    { displayName: 'Source Address', propertyName: 'sourceIpAddress' },
+    { displayName: 'Destination Address', propertyName: 'destinationIpAddress' },
+    { displayName: 'Source Port', propertyName: 'sourcePorts' },
+    { displayName: 'Destination Port', propertyName: 'destinationPorts' },
+  ];
   Id = '';
   TierName = '';
   currentTierIds: string[];
   ModalMode = ModalMode;
+  filteredResults: boolean;
 
   firewallRuleGroup: FirewallRuleGroup;
   firewallRules = {} as GetManyFirewallRuleResponseDto;
@@ -171,8 +180,34 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   getFirewallRules(event?): void {
+    this.filteredResults = false;
     this.isLoading = true;
     let eventParams;
+    if (typeof event === 'string') {
+      this.firewallRuleService
+        .getManyFirewallRule({
+          s: `{"firewallRuleGroupId": {"$eq": "${this.FirewallRuleGroup.id}"}, "$or": [${event}]}`,
+          page: 1,
+          limit: 5000,
+        })
+        .subscribe(
+          data => {
+            this.filteredResults = true;
+            this.firewallRules = data;
+            this.isLoading = false;
+          },
+          () => {
+            this.firewallRules = null;
+            this.getFirewallRules();
+          },
+          () => {
+            this.isLoading = false;
+          },
+        );
+
+      return;
+    }
+
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 50;

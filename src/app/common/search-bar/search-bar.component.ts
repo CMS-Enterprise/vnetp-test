@@ -35,7 +35,7 @@ export class SearchBarComponent<T> implements OnInit {
   @Input() genericService: GenericService<T>;
   @Output() searchResults = new EventEmitter<any>();
 
-  public searchText = '';
+  public searchText;
   public searchColumn: string;
   public filteredResults = false;
   public searchError = false;
