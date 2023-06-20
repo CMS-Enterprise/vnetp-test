@@ -95,12 +95,14 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
       params.filter.push(baseSearch);
     }
 
-    for (const field in this.form.value) {
-      const value = values[field];
-      if (value !== '') {
-        const searchColumn = this.formInputs.find(column => column.propertyName === field);
-        const searchOperator = searchColumn.searchOperator ? searchColumn.searchOperator : 'eq';
-        params.filter.push(`${field}||${searchOperator}||${value}`);
+    for (const field in values) {
+      if (values.hasOwnProperty(field)) {
+        const value = values[field];
+        if (value !== '') {
+          const searchColumn = this.formInputs.find(column => column.propertyName === field);
+          const searchOperator = searchColumn && searchColumn.searchOperator ? searchColumn.searchOperator : 'eq';
+          params.filter.push(`${field}||${searchOperator}||${value}`);
+        }
       }
     }
 
@@ -124,12 +126,14 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     const search = [];
     const values = this.form.value;
 
-    for (const field in this.form.value) {
-      const value = values[field];
-      if (value !== '') {
-        const searchColumn = this.formInputs.find(column => column.propertyName === field);
-        const searchOperator = searchColumn.searchOperator ? searchColumn.searchOperator : 'eq';
-        search.push(`{"${field}": {"$${searchOperator}": "${value}"}}`);
+    for (const field in values) {
+      if (values.hasOwnProperty(field)) {
+        const value = values[field];
+        if (value !== '') {
+          const searchColumn = this.formInputs.find(column => column.propertyName === field);
+          const searchOperator = searchColumn && searchColumn.searchOperator ? searchColumn.searchOperator : 'eq';
+          search.push(`{"${field}": {"$${searchOperator}": "${value}"}}`);
+        }
       }
     }
 

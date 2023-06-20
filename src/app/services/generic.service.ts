@@ -25,7 +25,7 @@ export class GenericService<T> implements IBaseService<T> {
   public getMethodName(subString: string): string {
     const propertyNames = Object.getOwnPropertyNames(Object.getPrototypeOf(this.service));
 
-    for (let name of propertyNames) {
+    for (const name of propertyNames) {
       if (name.includes(subString) && typeof this.service[name] === 'function') {
         return name;
       }
