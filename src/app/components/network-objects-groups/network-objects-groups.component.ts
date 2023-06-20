@@ -68,7 +68,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
   public objectSearchColumns: SearchColumnConfig[] = [
     { displayName: 'IpAddress', propertyName: 'ipAddress' },
-    { displayName: 'FQDN', propertyName: 'fqdn' },
+    { displayName: 'FQDN', propertyName: 'fqdn', searchOperator: 'cont' },
     { displayName: 'Start IP', propertyName: 'startIpAddress' },
     { displayName: 'End IP', propertyName: 'endIpAddress' },
   ];
@@ -101,9 +101,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     ],
   };
 
-  genericService: GenericService<NetworkObject>;
-  methodName = 'getManyNetworkObject';
-
   constructor(
     private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,
@@ -116,9 +113,9 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     public filteredHelpText: FilteredCount,
     private tableContextService: TableContextService,
   ) {
-    this.genericService = new GenericService<NetworkObject>();
-    this.genericService.setService(this.networkObjectService);
-    this.genericService.setMethodName(this.methodName);
+    const genericService = new GenericService<NetworkObject>();
+    genericService.setService(this.networkObjectService);
+    this.networkObjectConfig.genericService = genericService;
   }
 
   public onNetObjTableEvent(event: TableComponentDto): void {
@@ -140,49 +137,17 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.getObjectsForNavIndex();
   }
 
-  getNetworkObjects(event?) {
-    this.filteredResults = false;
+  getNetworkObjects(event?): void {
     let eventParams;
     this.isLoadingObjects = true;
-
-    if (typeof event === 'string') {
-      this.isLoadingObjects = false;
-      this.networkObjectService
-        .getManyNetworkObject({
-          s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
-          page: 1,
-          limit: 5000,
-          // sort: ['name,ASC'],
-        })
-        .subscribe(data => {
-          this.filteredResults = true;
-          this.networkObjects = data;
-          this.isLoadingObjects = false;
-        }),
-        // tslint:disable-next-line
-        () => {
-          this.networkObjects = null;
-          this.getNetworkObjects();
-        },
-        // tslint:disable-next-line
-        () => {
-          this.isLoadingObjects = false;
-        };
-      return;
-    }
     if (event) {
       this.netObjTableComponentDto.page = event.page ? event.page : 1;
       this.netObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      this.netObjTableComponentDto.searchText = searchText;
-      if (propertyName === 'ipAddress' || propertyName === 'startIpAddress' || propertyName === 'endIpAddress') {
-        eventParams = `${propertyName}||eq||${searchText}`;
-      } else if (propertyName) {
+      if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
-    } else {
-      this.netObjTableComponentDto.searchText = undefined;
     }
     this.networkObjectService
       .getManyNetworkObject({
@@ -197,7 +162,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         },
         () => {
           this.networkObjects = null;
-          this.getNetworkObjects();
         },
         () => {
           this.isLoadingObjects = false;

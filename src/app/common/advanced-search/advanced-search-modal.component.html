@@ -1,5 +1,5 @@
 <ngx-smart-modal #advancedSearch identifier="advancedSearch"
-  (onClose)="reset()" (onOpen)="test()" [dismissable]="false" customClass="medium-modal">
+  (onClose)="reset()" (onOpen)="onOpen()" [dismissable]="false" customClass="medium-modal">
   <header class="modal-header">
     <h4 class="modal-title">Advanced Search</h4>
   </header>
@@ -14,7 +14,7 @@
         <div *ngFor="let formInput of formInputs" class="form-group">
 
           <label>{{formInput.displayName}}</label>
-          <input type="text" class="form-control">
+          <input type="text" class="form-control" [formControlName]="formInput.propertyName">
 
         </div>
 
@@ -23,14 +23,11 @@
     </div>
 
     <footer class="modal-footer">
-
-      <button style="margin-right: auto" type="button" class="btn btn-warning" data-dismiss="modal" (click)="reset()">
-        <fa-icon class="icon" [icon]="['fas', 'undo']"></fa-icon>
-        <span>Reset</span>
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
+        <span>Cancel</span>
       </button>
-
-      <button type="submit" class="btn btn-success">
-        <span (click)="searchThis()">Search</span>
+      <button type="submit" class="btn btn-success" data-dismiss="modal">
+        <span>Search</span>
       </button>
     </footer>
 

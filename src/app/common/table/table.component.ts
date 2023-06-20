@@ -3,8 +3,9 @@ import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef, Output
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { SearchBarHelpText } from 'src/app/helptext/help-text-networking';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { GenericService } from 'src/app/services/generic.service';
 
 export interface TableColumn<T> {
   name: string;
@@ -15,6 +16,7 @@ export interface TableConfig<T> {
   description: string;
   columns: TableColumn<T>[];
   rowStyle?: (datum: object) => Partial<CSSStyleDeclaration>;
+  genericService?: GenericService<T>;
 }
 
 /**
@@ -52,9 +54,8 @@ export class TableComponent<T> implements AfterViewInit {
   @Input() searchColumns: SearchColumnConfig[];
   @Output() clearResults = new EventEmitter<any>();
   @Output() searchParams = new EventEmitter<any>();
-  advancedSearchSubscription: Subscription;
 
-  @Input() genericService: any;
+  advancedSearchSubscription: Subscription;
 
   public searchText = '';
 
@@ -65,29 +66,7 @@ export class TableComponent<T> implements AfterViewInit {
   public showSearchBar = true;
   public paginationControlsOn = true;
 
-  private objectDictionary = [
-    { formName: 'IpAddress', propertyName: 'ipAddress', operator: '$eq' },
-    { formName: 'FQDN', propertyName: 'fqdn', operator: '$cont' },
-    { formName: 'Start IP', propertyName: 'startIpAddress', operator: '$eq' },
-    { formName: 'End IP', propertyName: 'endIpAddress', operator: '$eq' },
-    { formName: 'Type', propertyName: 'protocol', operator: '$eq' },
-    { formName: 'Source Port', propertyName: 'sourcePorts', operator: '$cont' },
-    { formName: 'Destination Port', propertyName: 'destinationPorts', operator: '$cont' },
-    { formName: 'Vlan', propertyName: 'vlan.name', operator: '$cont' },
-    { formName: 'Network', propertyName: 'network', operator: '$eq' },
-    { formName: 'Gateway', propertyName: 'gateway', operator: '$eq' },
-    { formName: 'Vlan Number', propertyName: 'vlanNumber', operator: '$eq' },
-    { formName: 'VCD/Vlan Type', propertyName: 'vcdVlanType', operator: '$eq' },
-    { formName: 'Direction', propertyName: 'direction', operator: '$eq' },
-    { formName: 'Protocol', propertyName: 'protocol', operator: '$eq' },
-    { formName: 'Enabled', propertyName: 'enabled', operator: '$eq' },
-    { formName: 'Source Address', propertyName: 'sourceIpAddress', operator: '$eq' },
-    { formName: 'Destination Address', propertyName: 'destinationIpAddress', operator: '$eq' },
-    { formName: 'Source Port', propertyName: 'sourcePorts', operator: '$eq' },
-    { formName: 'Destination Port', propertyName: 'destinationPorts', operator: '$eq' },
-    { formName: 'BiDirectional', propertyName: 'biDirectional', operator: '$eq' },
-    { formName: 'Service Port', propertName: 'servicePort', operator: '$eq' },
-  ];
+  public genericServiceSubject: Subject<any> = new Subject<any>();
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -97,6 +76,11 @@ export class TableComponent<T> implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
+    if (this.config?.genericService) {
+      const genericService = this.config.genericService;
+      this.genericServiceSubject.next(genericService);
+    }
+
     this.show = true;
     this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
     // list of components that should have the search bar hidden when a user navigates to them
@@ -167,28 +151,6 @@ export class TableComponent<T> implements AfterViewInit {
     this.data = $event;
   }
 
-  // function that parses the form values sent by the advanced search modal
-  // and emits them to the child component to use in the GET query
-  public searchThis(event?) {
-    Object.entries(event).map(([k, v]) => {
-      if (v === '') {
-        delete event[k];
-      }
-    });
-    const newQueryParams = [];
-
-    Object.entries(event).map(input => {
-      const queryObject = { searchColumn: input[0], searchText: input[1] };
-      newQueryParams.push(queryObject);
-    });
-    this.tableContextService.addFilteredResultsLocalStorage();
-    const finalString = this.scrapeValues(newQueryParams);
-
-    this.tableContextService.addSearchLocalStorage(null, null, finalString);
-    const searchStorageParams = this.tableContextService.getSearchLocalStorage();
-    this.getObjectsAndFilter(finalString);
-  }
-
   subscribeToAdvancedSearch() {
     this.advancedSearchSubscription = this.ngx.getModal('advancedSearch').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('advancedSearch');
@@ -200,84 +162,4 @@ export class TableComponent<T> implements AfterViewInit {
     this.subscribeToAdvancedSearch();
     this.ngx.getModal('advancedSearch').open();
   }
-
-  private scrapeValues(newQueryParams) {
-    const eventParamsArray = [];
-    newQueryParams.map(param => {
-      const match = this.objectDictionary.find(config => {
-        return config.formName === param.searchColumn;
-      });
-      let string;
-      if (match) {
-        string = `{"${match.propertyName}": {"${match.operator}": "${param.searchText}"}}`;
-      }
-      eventParamsArray.push(string);
-    });
-    const finalString = eventParamsArray.concat().toString();
-    return finalString;
-  }
-
-  // private advancedSearchNetObjForm(newQueryParams) {
-  //   const netObjConfig = [
-  //     { formName: 'IpAddress', propertyName: 'ipAddress', operator: '$eq' },
-  //     { formName: 'FQDN', propertyName: 'fqdn', operator: '$cont' },
-  //     { formName: 'Start IP', propertyName: 'startIpAddress', operator: '$eq'},
-  //     { formName: 'End IP', properyName: 'endIpAddress', operator: '$eq'}
-  //   ];
-  //   let eventParamsArray = [];
-  //   newQueryParams.map(param => {
-  //     const match = netObjConfig.find(config => {
-  //       return config.formName === param.searchColumn;
-  //     });
-  //     let string;
-  //     if (match) {
-  //       string = `{"${match.propertyName}": {"${match.operator}": "${param.searchText}"}}`;
-  //     }
-  //     eventParamsArray.push(string);
-  //   });
-  //   const finalString = eventParamsArray.concat().toString();
-  //   return finalString;
-  // }
-
-  // private advancedSearchSvcObjForm(newQueryParams) {
-  //   const svcObjConfig = [
-  //     { formName: 'Type', propertyName: 'protocol', operator: '$eq' },
-  //     { formName: 'Source Port', propertyName: 'sourcePorts', operator: '$cont' },
-  //     { formName: 'Destination Port', propertyName: 'destinationPorts', operator: '$cont'},
-  //   ];
-  //   let eventParamsArray = [];
-  //   newQueryParams.map(param => {
-  //     const match = svcObjConfig.find(config => {
-  //       return config.formName === param.searchColumn;
-  //     });
-  //     let string;
-  //     if (match) {
-  //       string = `{"${match.propertyName}": {"${match.operator}": "${param.searchText}"}}`
-  //     }
-  //     eventParamsArray.push(string);
-  //   });
-  //   const finalString = eventParamsArray.concat().toString();
-  //   return finalString;
-  // }
-
-  // private advancedSearchSubnetForm(newQueryParams) {
-  //   const subnetObjConfig = [
-  //     { formName: 'Network', propertyName: 'network', operator: '$eq' },
-  //     { formName: 'Gateway', propertyName: 'gateway', operator: '$eq' },
-  //   ];
-
-  //   let eventParamsArray = [];
-  //   newQueryParams.map(param => {
-  //     const match = subnetObjConfig.find(config => {
-  //       return config.formName === param.searchColumn;
-  //     });
-  //     let string;
-  //     if (match) {
-  //       string = `{"${match.propertyName}": {"${match.operator}": "${param.searchText}"}}`
-  //     }
-  //     eventParamsArray.push(string);
-  //   });
-  //   const finalString = eventParamsArray.concat().toString();
-  //   return finalString;
-  // }
 }

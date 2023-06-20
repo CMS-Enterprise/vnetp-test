@@ -13,11 +13,24 @@ export class GenericService<T> implements IBaseService<T> {
     this.service = service;
   }
 
-  setMethodName(methodName: string) {
+  public setMethodName(methodName: string) {
     this.methodName = methodName;
   }
 
-  getMany(params: any): Observable<{ data: any[]; count: number; total: number; page: number; pageCount: number }> {
-    return this.service[this.methodName](params);
+  public getMany(params: any): Observable<{ data: any[]; count: number; total: number; page: number; pageCount: number }> {
+    const methodName = this.getMethodName('getMany');
+    return this.service[methodName](params);
+  }
+
+  public getMethodName(subString: string): string {
+    const propertyNames = Object.getOwnPropertyNames(Object.getPrototypeOf(this.service));
+
+    for (let name of propertyNames) {
+      if (name.includes(subString) && typeof this.service[name] === 'function') {
+        return name;
+      }
+    }
+
+    return null;
   }
 }

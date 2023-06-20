@@ -11,9 +11,9 @@
     </optgroup>
 
   </select>
-  <input id="searchText" aria-label="searchText" type="search" [(ngModel)]="searchText" placeholder="Search" />
+  <input aria-label="searchText" type="search" [(ngModel)]="searchText" placeholder="Search" />
   <a id="search-button" aria-label="searchButton" (click)="searchThis()">
     <fa-icon class="icon" [icon]="['fas', 'search']"></fa-icon>
   </a>
-  <span id="clear" (click)="clearFilteredResults()">clear</span>
+  <span id="clear" *ngIf="filteredResults" (click)="clearFilteredResults()">clear</span>
 </div>
