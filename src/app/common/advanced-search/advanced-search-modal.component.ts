@@ -18,8 +18,6 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
 
-  public andOrPlaceholder = 'OR';
-
   @Input() genericServiceSubject: Subject<any>;
   private genericServiceSubscription: Subscription;
   public genericService: GenericService<T>;
@@ -28,7 +26,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
 
   public currentTierSubscription: Subscription;
   public currentTier: Tier;
-  public orActive: boolean = false;
+  public orActive = false;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private tierContextService: TierContextService) {}
 
