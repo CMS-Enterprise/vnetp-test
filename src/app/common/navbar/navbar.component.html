@@ -29,14 +29,70 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
           <a id="tiers-link" class="dropdown-item" routerLink="tiers" queryParamsHandling="merge">Tiers</a>
-          <a id="self-service-link" *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="self-service" queryParamsHandling="merge">Managed Network</a>
-          <a id="subnets-vlans-link" *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="subnets-vlans" queryParamsHandling="merge">Subnets & VLANs</a>
-          <a id="firewall-rule-groups-link" *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="firewall-rules" queryParamsHandling="merge">Firewall Rule Groups</a>
-          <a id="nat-rule-groups-link" *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="nat-rules" queryParamsHandling="merge">NAT Rule Groups</a>
-          <a id="network-objects-groups-link" *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="network-objects-groups" queryParamsHandling="merge">Network Objects/Groups</a>
-          <a id="service-objects-groups-link" *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="service-objects-groups" queryParamsHandling="merge">Service Objects/Groups</a>
-          <a id="load-balancers-link" *ngIf="userRoles?.includes('admin') || userRoles?.includes('loadbalancer_admin')" class="dropdown-item" routerLink="load-balancers" queryParamsHandling="merge">Load Balancers</a>
-          <a id="routing-link" *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')" class="dropdown-item" routerLink="static-routes" queryParamsHandling="merge">Routing</a>
+          <a
+            id="self-service-link"
+            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
+            class="dropdown-item"
+            routerLink="self-service"
+            queryParamsHandling="merge"
+            >Managed Network</a
+          >
+          <a
+            id="subnets-vlans-link"
+            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
+            class="dropdown-item"
+            routerLink="subnets-vlans"
+            queryParamsHandling="merge"
+            >Subnets & VLANs</a
+          >
+          <a
+            id="firewall-rule-groups-link"
+            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
+            class="dropdown-item"
+            routerLink="firewall-rules"
+            queryParamsHandling="merge"
+            >Firewall Rule Groups</a
+          >
+          <a
+            id="nat-rule-groups-link"
+            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
+            class="dropdown-item"
+            routerLink="nat-rules"
+            queryParamsHandling="merge"
+            >NAT Rule Groups</a
+          >
+          <a
+            id="network-objects-groups-link"
+            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
+            class="dropdown-item"
+            routerLink="network-objects-groups"
+            queryParamsHandling="merge"
+            >Network Objects/Groups</a
+          >
+          <a
+            id="service-objects-groups-link"
+            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
+            class="dropdown-item"
+            routerLink="service-objects-groups"
+            queryParamsHandling="merge"
+            >Service Objects/Groups</a
+          >
+          <a
+            id="load-balancers-link"
+            *ngIf="userRoles?.includes('admin') || userRoles?.includes('loadbalancer_admin')"
+            class="dropdown-item"
+            routerLink="load-balancers"
+            queryParamsHandling="merge"
+            >Load Balancers</a
+          >
+          <a
+            id="routing-link"
+            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
+            class="dropdown-item"
+            routerLink="static-routes"
+            queryParamsHandling="merge"
+            >Routing</a
+          >
         </div>
       </li>
     </ul>
@@ -67,9 +123,23 @@
           <span *ngIf="user">{{ user.uid }} ({{ user.cn }})</span>
         </a>
         <div class="dropdown-menu dropdown-menu--reverse" aria-labelledby="userNavbarDropdown">
-          <a id="audit-log-link" *ngIf="userRoles?.includes('admin')" class="dropdown-item" routerLink="audit-log" queryParamsHandling="merge">Audit Log</a>
-          <a id="ticket-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://jiraent.cms.gov/">Ticketing System</a>
-          <a id="documentation-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="http://wiki.draas.cdsvdc.lcl/">Documentation</a>
+          <a id="environment-summary-link" class="dropdown-item" routerLink="environment-summary" queryParamsHandling="merge"
+            >Environment Summary</a
+          >
+          <a
+            id="audit-log-link"
+            *ngIf="userRoles?.includes('admin')"
+            class="dropdown-item"
+            routerLink="audit-log"
+            queryParamsHandling="merge"
+            >Audit Log</a
+          >
+          <a id="ticket-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://jiraent.cms.gov/"
+            >Ticketing System</a
+          >
+          <a id="documentation-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="http://wiki.draas.cdsvdc.lcl/"
+            >Documentation</a
+          >
           <a name="logout-link" class="dropdown-item" (click)="openLogoutModal()">Logout</a>
           <div class="dropdown-divider" *ngIf="dcsVersion"></div>
           <a name="version" class="dropdown-item" target="_blank" rel="noopener noreferrer" *ngIf="dcsVersion">v{{ dcsVersion }}</a>

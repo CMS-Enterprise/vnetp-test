@@ -1,0 +1,9 @@
+.clickable-link {
+  cursor: pointer;
+  text-decoration: none;
+  color: #0058da;
+}
+
+.clickable-link:hover {
+  text-decoration: underline;
+}

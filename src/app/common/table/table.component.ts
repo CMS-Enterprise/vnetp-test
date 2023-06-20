@@ -86,9 +86,10 @@ export class TableComponent<T> implements AfterViewInit {
       'subject-filters',
       'l3out-modal',
       'bd-l3outs',
+      'tenants-and-datacenters',
     ];
 
-    const hidePagination = ['import-preview', 'detailed-audit-log-entry'];
+    const hidePagination = ['import-preview', 'detailed-audit-log-entry', 'tenants-and-datacenters'];
 
     // if tableId is a badList ID, we hide the search bar
     if (badList.includes(this.uniqueTableId)) {

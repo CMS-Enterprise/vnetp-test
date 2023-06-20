@@ -1,0 +1,27 @@
+<h1>Environment Summary</h1>
+<ng-container>
+  <ng-container *ngIf="!isLoading; else loading">
+    <app-table
+      [config]="config"
+      [data]="tableDataPagination"
+      (clearResults)="getTenants()"
+      (searchParams)="getTenants()"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
+  </ng-container>
+</ng-container>
+
+<ng-template #nameNavigateTemplate let-environmentSummary="datum">
+  <section *ngIf="environmentSummary.type === 'Appcentric'">
+    <a routerLink="/appcentric/tenant-select/edit/{{ environmentSummary.id }}/home" queryParamsHandling="merge">{{ environmentSummary.name }}</a>
+  </section>
+  <section *ngIf="environmentSummary.type === 'Netcentric'">
+    <a (click)="switchDatacenter(environmentSummary.id)" class="clickable-link">{{ environmentSummary.name }}</a>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
