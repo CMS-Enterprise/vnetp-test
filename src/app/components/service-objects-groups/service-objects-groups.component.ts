@@ -129,49 +129,17 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     this.getObjectsForNavIndex();
   }
 
-  getServiceObjects(event?) {
+  getServiceObjects(event?): void {
     this.isLoadingObjects = true;
-    this.filteredResults = false;
     let eventParams;
-
-    if (typeof event === 'string') {
-      this.isLoadingObjects = false;
-      return (
-        this.serviceObjectService
-          .getManyServiceObject({
-            s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
-            page: 1,
-            limit: 5000,
-          })
-          .subscribe(data => {
-            this.filteredResults = true;
-            this.serviceObjects = data;
-            this.isLoadingObjects = false;
-          }),
-        // tslint:disable-next-line
-        () => {
-          this.serviceObjects = null;
-          this.getServiceObjects();
-        },
-        // tslint:disable-next-line
-        () => {
-          this.isLoadingObjects = false;
-        }
-      );
-    }
     if (event) {
       this.svcObjTableComponentDto.page = event.page ? event.page : 1;
       this.svcObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
-      this.svcObjTableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName === 'protocol') {
-        eventParams = `${propertyName}||eq||${searchText}`;
-      } else if (propertyName) {
+      if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
-    } else {
-      this.svcObjTableComponentDto.searchText = undefined;
     }
     this.serviceObjectService
       .getManyServiceObject({
@@ -186,7 +154,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         },
         () => {
           this.serviceObjects = null;
-          this.getServiceObjects();
         },
         () => {
           this.isLoadingObjects = false;

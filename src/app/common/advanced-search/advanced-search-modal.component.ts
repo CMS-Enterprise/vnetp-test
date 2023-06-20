@@ -28,6 +28,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
 
   public currentTierSubscription: Subscription;
   public currentTier: Tier;
+  public orActive: boolean = false;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private tierContextService: TierContextService) {}
 
@@ -71,10 +72,10 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   }
 
   public searchThis(): void {
-    if (this.andOrPlaceholder === 'AND') {
-      this.advancedSearchAnd();
-    } else {
+    if (this.orActive) {
       this.advancedSearchOr();
+    } else {
+      this.advancedSearchAnd();
     }
   }
 
