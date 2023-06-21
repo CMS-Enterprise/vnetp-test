@@ -4,34 +4,60 @@
   (onClose)="reset()"
   (onOpen)="onOpen()"
   [dismissable]="false"
+  [closable]="false"
   customClass="medium-modal"
 >
-  <header class="modal-header">
-    <h4 class="modal-title">Advanced Search</h4>
-
-    <div class="custom-control custom-switch">
-      <input type="checkbox" class="custom-control-input" id="customSwitch1" [(ngModel)]="orActive" />
-      <label class="custom-control-label" for="customSwitch1">{{ orActive ? 'or' : 'and' }}</label>
-    </div>
-  </header>
-
-  <form [formGroup]="form" (ngSubmit)="searchThis()">
-    <div class="modal-body">
-      <div class="form-row">
-        <div *ngFor="let formInput of formInputs" class="form-group">
-          <label>{{ formInput.displayName }}</label>
-          <input type="text" class="form-control" [formControlName]="formInput.propertyName" />
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Advanced Search</h5>
+      <div class="mt-2 mb-3">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <label class="btn btn-outline-secondary active">
+            <input
+              type="radio"
+              name="options"
+              id="option2"
+              autocomplete="off"
+              [(ngModel)]="orActive"
+              [ngModelOptions]="{ standalone: true }"
+              [value]="true"
+            />
+            OR Search
+          </label>
+          <label class="btn btn-outline-secondary">
+            <input
+              type="radio"
+              name="options"
+              id="option1"
+              autocomplete="off"
+              [(ngModel)]="orActive"
+              [ngModelOptions]="{ standalone: true }"
+              [value]="false"
+            />
+            AND Search
+          </label>
         </div>
       </div>
     </div>
-
-    <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
-        <span>Cancel</span>
-      </button>
-      <button type="submit" class="btn btn-success" data-dismiss="modal">
-        <span>Search</span>
-      </button>
-    </footer>
-  </form>
+    <form [formGroup]="form" (ngSubmit)="searchThis()">
+      <div class="modal-body">
+        <div class="row">
+          <div *ngFor="let formInput of formInputs" class="col-md-6 mb-3">
+            <div class="form-group">
+              <label>{{ formInput.displayName }}</label>
+              <input type="text" class="form-control" [formControlName]="formInput.propertyName" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="closeModal()">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" data-dismiss="modal">
+          Search
+        </button>
+      </div>
+    </form>
+  </div>
 </ngx-smart-modal>

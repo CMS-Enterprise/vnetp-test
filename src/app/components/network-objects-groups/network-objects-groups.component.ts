@@ -116,6 +116,10 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     const genericService = new GenericService<NetworkObject>();
     genericService.setService(this.networkObjectService);
     this.networkObjectConfig.genericService = genericService;
+
+    const genericServiceGroup = new GenericService<NetworkObjectGroup>();
+    genericServiceGroup.setService(this.networkObjectGroupService);
+    this.networkObjectGroupConfig.genericService = genericServiceGroup;
   }
 
   public onNetObjTableEvent(event: TableComponentDto): void {

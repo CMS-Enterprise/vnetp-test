@@ -26,7 +26,7 @@ describe('TableComponent', () => {
         MockTooltipComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-search-bar', inputs: ['columns'] }),
-        MockComponent({ selector: 'app-advanced-search-modal', inputs: ['objectType', 'formInputs'] }),
+        MockComponent({ selector: 'app-advanced-search-modal', inputs: ['objectType', 'formInputs', 'genericServiceSubject'] }),
         MockNgxSmartModalComponent,
       ],
       providers: [AdvancedSearchComponent, SearchBarComponent, MockProvider(NgxSmartModalService)],

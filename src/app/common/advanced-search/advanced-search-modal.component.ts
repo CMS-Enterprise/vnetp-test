@@ -26,7 +26,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
 
   public currentTierSubscription: Subscription;
   public currentTier: Tier;
-  public orActive = false;
+  public orActive = true;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private tierContextService: TierContextService) {}
 
