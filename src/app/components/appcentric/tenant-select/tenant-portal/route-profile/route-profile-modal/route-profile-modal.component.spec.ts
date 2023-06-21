@@ -1,34 +1,31 @@
 import { HttpClientModule } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { MockNgxSmartModalComponent, MockFontAwesomeComponent, MockComponent, MockIconButtonComponent } from 'src/test/mock-components';
+import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
+import { RouteProfileModalComponent } from './route-profile-modal.component';
 
-import { BridgeDomainModalComponent } from './bridge-domain-modal.component';
-
-describe('BridgeDomainModalComponent', () => {
-  let component: BridgeDomainModalComponent;
-  let fixture: ComponentFixture<BridgeDomainModalComponent>;
+describe('RouteProfilesModalComponent', () => {
+  let component: RouteProfileModalComponent;
+  let fixture: ComponentFixture<RouteProfileModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        BridgeDomainModalComponent,
+        RouteProfileModalComponent,
         MockNgxSmartModalComponent,
-        MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
-        MockIconButtonComponent,
+        MockFontAwesomeComponent,
       ],
-      imports: [NgSelectModule, FormsModule, ReactiveFormsModule, RouterTestingModule, HttpClientModule],
+      imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BridgeDomainModalComponent);
+    fixture = TestBed.createComponent(RouteProfileModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -91,47 +88,14 @@ describe('BridgeDomainModalComponent', () => {
   });
 
   it('should have correct required and optional fields by default', () => {
-    const requiredFields = ['name', 'vrfId'];
-    const optionalFields = [
-      'alias',
-      'description',
-      'unicastRouting',
-      'arpFlooding',
-      'bdMacAddress',
-      'limitLocalIpLearning',
-      'epMoveDetectionModeGarp',
-    ];
+    const requiredFields = ['name'];
+    const optionalFields = ['alias', 'description'];
 
     requiredFields.forEach(r => {
       expect(isRequired(r)).toBe(true);
     });
     optionalFields.forEach(r => {
       expect(isRequired(r)).toBe(false);
-    });
-  });
-
-  describe('bdMacAddress', () => {
-    it('should have a valid mac address', () => {
-      const { bdMacAddress } = component.form.controls;
-
-      bdMacAddress.setValue('00:0a:95:9d:68:16');
-      expect(bdMacAddress.valid).toBe(true);
-
-      bdMacAddress.setValue('ma:ca:dd:re:ss');
-      expect(bdMacAddress.valid).toBe(false);
-    });
-  });
-
-  describe('routeProfile', () => {
-    it('should be required when l3OutForRouteProfileId is set', () => {
-      const { l3OutForRouteProfileId, routeProfileId } = component.form.controls;
-
-      l3OutForRouteProfileId.setValue('123');
-      expect(l3OutForRouteProfileId.valid).toBe(true);
-      expect(routeProfileId.valid).toBe(false);
-
-      routeProfileId.setValue('123');
-      expect(routeProfileId.valid).toBe(true);
     });
   });
 });
