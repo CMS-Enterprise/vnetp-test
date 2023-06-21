@@ -60,6 +60,9 @@
           <span *ngIf="user">{{ user.uid }} ({{ user.cn }})</span>
         </a>
         <div class="dropdown-menu dropdown-menu--reverse" aria-labelledby="userNavbarDropdown">
+          <a id="environment-summary-link" class="dropdown-item" routerLink="environment-summary" queryParamsHandling="merge"
+            >Environment Summary</a
+          >
           <a class="dropdown-item" (click)="openLogoutModal()">Logout</a>
         </div>
       </li>

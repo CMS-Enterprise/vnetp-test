@@ -111,6 +111,12 @@ const routes: Routes = [
         data: { breadcrumb: 'Load Balancers', title: 'Automation - Load Balancers' },
         loadChildren: () => import('../../components/load-balancers/load-balancers.module').then(m => m.LoadBalancersModule),
       },
+      {
+        path: 'environment-summary',
+        canActivate: [AuthGuard],
+        data: { breadcrumb: 'Environment Summary', title: 'Automation - Environment Summary' },
+        loadChildren: () => import('../../common/environment-summary/environment-summary.module').then(m => m.EnvironmentSummaryModule),
+      },
     ],
   },
 ];

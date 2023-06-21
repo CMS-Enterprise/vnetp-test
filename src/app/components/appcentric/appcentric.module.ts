@@ -29,6 +29,12 @@ const routes: Routes = [
         data: { breadcrumb: 'Tenant Select', title: 'Tenant Select' },
         loadChildren: () => import('./tenant-select/tenant-select.module').then(m => m.TenantSelectModule),
       },
+      {
+        path: 'environment-summary',
+        canActivate: [AuthGuard],
+        data: { breadcrumb: 'Environment Summary', title: 'Environment Summary' },
+        loadChildren: () => import('../../common/environment-summary/environment-summary.module').then(m => m.EnvironmentSummaryModule),
+      },
     ],
   },
 ];
