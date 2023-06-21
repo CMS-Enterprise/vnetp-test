@@ -1,33 +1,28 @@
-<ngx-smart-modal #advancedSearch identifier="advancedSearch"
-  (onClose)="reset()" (onOpen)="onOpen()" [dismissable]="false" customClass="medium-modal">
+<ngx-smart-modal
+  #advancedSearch
+  identifier="advancedSearch"
+  (onClose)="reset()"
+  (onOpen)="onOpen()"
+  [dismissable]="false"
+  customClass="medium-modal"
+>
   <header class="modal-header">
     <h4 class="modal-title">Advanced Search</h4>
 
-  
-  <div class="custom-control custom-switch">
-    <input type="checkbox" class="custom-control-input" id="customSwitch1" [(ngModel)]="orActive">
-    <label class="custom-control-label" for="customSwitch1">{{ orActive ? 'or' : 'and' }}</label>
-  </div>
-    
-    
+    <div class="custom-control custom-switch">
+      <input type="checkbox" class="custom-control-input" id="customSwitch1" [(ngModel)]="orActive" />
+      <label class="custom-control-label" for="customSwitch1">{{ orActive ? 'or' : 'and' }}</label>
+    </div>
   </header>
-
-  
 
   <form [formGroup]="form" (ngSubmit)="searchThis()">
     <div class="modal-body">
-
       <div class="form-row">
-
         <div *ngFor="let formInput of formInputs" class="form-group">
-
-          <label>{{formInput.displayName}}</label>
-          <input type="text" class="form-control" [formControlName]="formInput.propertyName">
-
+          <label>{{ formInput.displayName }}</label>
+          <input type="text" class="form-control" [formControlName]="formInput.propertyName" />
         </div>
-
       </div>
-
     </div>
 
     <footer class="modal-footer">
@@ -38,6 +33,5 @@
         <span>Search</span>
       </button>
     </footer>
-
   </form>
 </ngx-smart-modal>
