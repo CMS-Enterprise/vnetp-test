@@ -5,7 +5,7 @@ import { TableContextService } from 'src/app/services/table-context.service';
 import { SearchBarHelpText } from 'src/app/helptext/help-text-networking';
 import { Subject, Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { GenericService } from 'src/app/services/generic.service';
+import { AdvancedSearchAdapter } from '../advanced-search/advanced-search.adapter';
 
 export interface TableColumn<T> {
   name: string;
@@ -16,7 +16,7 @@ export interface TableConfig<T> {
   description: string;
   columns: TableColumn<T>[];
   rowStyle?: (datum: object) => Partial<CSSStyleDeclaration>;
-  genericService?: GenericService<T>;
+  advancedSearchAdapter?: AdvancedSearchAdapter<T>;
 }
 
 /**
@@ -66,7 +66,7 @@ export class TableComponent<T> implements AfterViewInit {
   public showSearchBar = true;
   public paginationControlsOn = true;
 
-  public genericServiceSubject: Subject<any> = new Subject<any>();
+  public advancedSearchAdapterSubject: Subject<any> = new Subject<any>();
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -76,9 +76,9 @@ export class TableComponent<T> implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    if (this.config?.genericService) {
-      const genericService = this.config.genericService;
-      this.genericServiceSubject.next(genericService);
+    if (this.config?.advancedSearchAdapter) {
+      const advancedSearchAdapter = this.config.advancedSearchAdapter;
+      this.advancedSearchAdapterSubject.next(advancedSearchAdapter);
     }
 
     this.show = true;

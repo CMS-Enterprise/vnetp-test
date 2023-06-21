@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { IBaseService } from '../interfaces/IBaseService.inetrface';
+import { IBaseAdapter } from '../../interfaces/IBaseAdapter.inetrface';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class GenericService<T> implements IBaseService<T> {
+export class AdvancedSearchAdapter<T> implements IBaseAdapter<T> {
   private service: any;
   public methodName: string;
 

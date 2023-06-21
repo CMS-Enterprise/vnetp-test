@@ -27,7 +27,7 @@ import { TableConfig } from '../../common/table/table.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
-import { GenericService } from 'src/app/services/generic.service';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -113,13 +113,13 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     public filteredHelpText: FilteredCount,
     private tableContextService: TableContextService,
   ) {
-    const genericService = new GenericService<NetworkObject>();
-    genericService.setService(this.networkObjectService);
-    this.networkObjectConfig.genericService = genericService;
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<NetworkObject>();
+    advancedSearchAdapterObject.setService(this.networkObjectService);
+    this.networkObjectConfig.advancedSearchAdapter = advancedSearchAdapterObject;
 
-    const genericServiceGroup = new GenericService<NetworkObjectGroup>();
-    genericServiceGroup.setService(this.networkObjectGroupService);
-    this.networkObjectGroupConfig.genericService = genericServiceGroup;
+    const advancedSearchAdapterGroup = new AdvancedSearchAdapter<NetworkObjectGroup>();
+    advancedSearchAdapterGroup.setService(this.networkObjectGroupService);
+    this.networkObjectGroupConfig.advancedSearchAdapter = advancedSearchAdapterGroup;
   }
 
   public onNetObjTableEvent(event: TableComponentDto): void {

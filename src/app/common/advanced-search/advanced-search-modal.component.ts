@@ -1,13 +1,12 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { V1NetworkSecurityNetworkObjectsService, V1NetworkSecurityNetworkObjectGroupsService } from 'client';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subject, Subscription } from 'rxjs';
-import { GenericService } from 'src/app/services/generic.service';
 import { Tier } from 'client/model/tier';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../search-bar/search-bar.component';
+import { AdvancedSearchAdapter } from './advanced-search.adapter';
 
 @Component({
   selector: 'app-advanced-search-modal',
@@ -18,9 +17,9 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   form: FormGroup;
   submitted: boolean;
 
-  @Input() genericServiceSubject: Subject<any>;
-  private genericServiceSubscription: Subscription;
-  public genericService: GenericService<T>;
+  @Input() advancedSearchAdapterSubject: Subject<any>;
+  private advancedSearchAdapterSubscription: Subscription;
+  public advancedSearchAdapter: AdvancedSearchAdapter<T>;
 
   @Output() advancedSearchResults = new EventEmitter<any>();
 
@@ -31,9 +30,9 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private tierContextService: TierContextService) {}
 
   ngOnInit(): void {
-    this.genericServiceSubscription = this.genericServiceSubject.subscribe((genericService: any) => {
-      if (genericService) {
-        this.genericService = genericService;
+    this.advancedSearchAdapterSubscription = this.advancedSearchAdapterSubject.subscribe((advancedSearchAdapter: any) => {
+      if (advancedSearchAdapter) {
+        this.advancedSearchAdapter = advancedSearchAdapter;
       }
     });
 
@@ -47,7 +46,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.currentTierSubscription, this.genericServiceSubscription]);
+    SubscriptionUtil.unsubscribe([this.currentTierSubscription, this.advancedSearchAdapterSubscription]);
   }
 
   public reset() {
@@ -106,7 +105,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     }
 
     if (params.filter.length > 1) {
-      this.genericService.getMany(params).subscribe(data => {
+      this.advancedSearchAdapter.getMany(params).subscribe(data => {
         this.advancedSearchResults.emit(data);
       });
     }
@@ -139,7 +138,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     if (search.length > 1) {
       const searchString = search.toString();
       params.s = `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${searchString}]}`;
-      this.genericService.getMany(params).subscribe(data => {
+      this.advancedSearchAdapter.getMany(params).subscribe(data => {
         this.advancedSearchResults.emit(data);
       });
     }
@@ -147,7 +146,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     this.closeModal();
   }
 
-  private buildForm(): void {
+  public buildForm(): void {
     const group: FormGroup = this.formBuilder.group({});
 
     this.formInputs.forEach(input => {
