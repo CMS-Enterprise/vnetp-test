@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class AdvancedSearchAdapter<T> implements IBaseAdapter<T> {
-  private service: any;
+  public service: any;
   public methodName: string;
 
   constructor() {}

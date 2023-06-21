@@ -7,6 +7,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../search-bar/search-bar.component';
 import { AdvancedSearchAdapter } from './advanced-search.adapter';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-advanced-search-modal',
@@ -27,7 +28,12 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   public currentTier: Tier;
   public orActive = true;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private tierContextService: TierContextService) {}
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: FormBuilder,
+    private tierContextService: TierContextService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.advancedSearchAdapterSubscription = this.advancedSearchAdapterSubject.subscribe((advancedSearchAdapter: any) => {
@@ -69,18 +75,18 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   }
 
   public searchThis(): void {
+    const baseSearchProperty = this.getBaseSearchProperty();
+    const baseSearchValue = this.getBaseSearchValue();
     if (this.orActive) {
-      this.advancedSearchOr();
+      this.advancedSearchOr(baseSearchProperty, baseSearchValue);
     } else {
-      this.advancedSearchAnd();
+      this.advancedSearchAnd(baseSearchProperty, baseSearchValue);
     }
   }
 
-  public advancedSearchAnd(): void {
-    let baseSearch = '';
+  public advancedSearchAnd(baseSearchProperty: string, baseSearchValue: string): void {
+    const baseSearch = `${baseSearchProperty}||eq||${baseSearchValue}`;
     const values = this.form.value;
-
-    baseSearch = `tierId||eq||${this.currentTier.id}`;
 
     const params = {
       filter: [],
@@ -113,7 +119,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     this.closeModal();
   }
 
-  public advancedSearchOr(): void {
+  public advancedSearchOr(baseSearchProperty: string, baseSearchValue: string): void {
     const params = {
       s: '',
       page: 1,
@@ -137,7 +143,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
 
     if (search.length > 1) {
       const searchString = search.toString();
-      params.s = `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${searchString}]}`;
+      params.s = `{"${baseSearchProperty}": {"$eq": "${baseSearchValue}"}, "$or": [${searchString}]}`;
       this.advancedSearchAdapter.getMany(params).subscribe(data => {
         this.advancedSearchResults.emit(data);
       });
@@ -154,5 +160,48 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     });
 
     this.form = group;
+  }
+
+  public getServiceType(): string {
+    return this.advancedSearchAdapter.service.constructor.name;
+  }
+
+  public getUuidFromUrl(): string {
+    let uuid = '';
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
+        if (match) {
+          uuid = match[0].split('/')[2];
+        }
+      }
+    });
+    return uuid;
+  }
+
+  public getBaseSearchProperty(): string {
+    const serviceType = this.getServiceType();
+    let baseSearchProperty = 'tierId';
+
+    if (serviceType.includes('V2')) {
+      baseSearchProperty = 'tenant';
+    } else if (serviceType.includes('FirewallRule')) {
+      baseSearchProperty = 'firewallRuleGroupId';
+    } else if (serviceType.includes('NatRule')) {
+      baseSearchProperty = 'natRuleGroupId';
+    }
+
+    return baseSearchProperty;
+  }
+
+  public getBaseSearchValue(): string {
+    const baseSearchProperty = this.getBaseSearchProperty();
+    let baseSearchValue = this.currentTier.id;
+
+    if (baseSearchProperty === 'tenant' || baseSearchProperty === 'firewallRuleGroupId' || baseSearchProperty === 'natRuleGroupId') {
+      baseSearchValue = this.getUuidFromUrl();
+    }
+
+    return baseSearchValue;
   }
 }

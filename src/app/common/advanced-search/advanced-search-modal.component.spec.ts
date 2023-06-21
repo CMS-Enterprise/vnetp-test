@@ -103,16 +103,26 @@ describe('AdvancedSearchModalComponent', () => {
 
   describe('searchThis', () => {
     it('should call advancedSearchOr when orActive is true', () => {
+      spyOn(component, 'getBaseSearchProperty').and.returnValue('test');
+      spyOn(component, 'getBaseSearchValue').and.returnValue('test');
       const advancedSearchOrSpy = jest.spyOn(component, 'advancedSearchOr');
       component.orActive = true;
       component.searchThis();
+
+      expect(component.getBaseSearchProperty).toHaveBeenCalled();
+      expect(component.getBaseSearchValue).toHaveBeenCalled();
       expect(advancedSearchOrSpy).toHaveBeenCalled();
     });
 
     it('should call advancedSearchAnd when orActive is false', () => {
+      spyOn(component, 'getBaseSearchProperty').and.returnValue('test');
+      spyOn(component, 'getBaseSearchValue').and.returnValue('test');
       const advancedSearchAndSpy = jest.spyOn(component, 'advancedSearchAnd');
       component.orActive = false;
       component.searchThis();
+
+      expect(component.getBaseSearchProperty).toHaveBeenCalled();
+      expect(component.getBaseSearchValue).toHaveBeenCalled();
       expect(advancedSearchAndSpy).toHaveBeenCalled();
     });
   });
@@ -139,7 +149,7 @@ describe('AdvancedSearchModalComponent', () => {
       ipAddress: '192.168.0.1',
     });
 
-    component.advancedSearchOr();
+    component.advancedSearchOr('tierId', '1');
 
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
       s: '{"tierId": {"$eq": "1"}, "$or": [{"name": {"$eq": "testName"}},{"ipAddress": {"$eq": "192.168.0.1"}}]}',
@@ -173,7 +183,7 @@ describe('AdvancedSearchModalComponent', () => {
       ipAddress: '192.168.0.1',
     });
 
-    component.advancedSearchAnd();
+    component.advancedSearchAnd('tierId', '1');
 
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
       filter: ['tierId||eq||1', 'name||eq||testName', 'ipAddress||eq||192.168.0.1'],

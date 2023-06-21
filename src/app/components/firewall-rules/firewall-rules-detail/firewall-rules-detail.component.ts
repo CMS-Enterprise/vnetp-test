@@ -183,31 +183,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     this.filteredResults = false;
     this.isLoading = true;
     let eventParams;
-    if (typeof event === 'string') {
-      this.firewallRuleService
-        .getManyFirewallRule({
-          s: `{"firewallRuleGroupId": {"$eq": "${this.FirewallRuleGroup.id}"}, "$or": [${event}]}`,
-          page: 1,
-          limit: 5000,
-        })
-        .subscribe(
-          data => {
-            this.filteredResults = true;
-            this.firewallRules = data;
-            this.isLoading = false;
-          },
-          () => {
-            this.firewallRules = null;
-            this.getFirewallRules();
-          },
-          () => {
-            this.isLoading = false;
-          },
-        );
-
-      return;
-    }
-
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 50;
