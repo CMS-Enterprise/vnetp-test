@@ -141,7 +141,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
       }
     }
 
-    if (search.length > 1) {
+    if (search.length > 0) {
       const searchString = search.toString();
       params.s = `{"${baseSearchProperty}": {"$eq": "${baseSearchValue}"}, "$or": [${searchString}]}`;
       this.advancedSearchAdapter.getMany(params).subscribe(data => {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IBaseAdapter } from '../../interfaces/IBaseAdapter.inetrface';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class AdvancedSearchAdapter<T> implements IBaseAdapter<T> {

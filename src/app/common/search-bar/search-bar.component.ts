@@ -78,6 +78,10 @@ export class SearchBarComponent implements OnInit {
     this.searchCriteria.emit({ searchColumn: this.searchColumn, searchText: this.searchText });
   }
 
+  public setFilteredResults(): void {
+    this.filteredResults = true;
+  }
+
   // we begin a double emit here, because "clear results" is now on the search bar component,
   // when "clear results" is clicked on the search bar component emits the event to the table component
   // the table component then emits the event further upstream

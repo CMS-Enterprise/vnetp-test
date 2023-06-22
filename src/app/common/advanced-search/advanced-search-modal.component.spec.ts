@@ -9,8 +9,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, Subject } from 'rxjs';
 import { TierContextService } from 'src/app/services/tier-context.service';
+import { NavigationEnd, Router } from '@angular/router';
 
 export class TestType {
+  constructor() {}
   id: number;
   name: string;
 }
@@ -22,6 +24,8 @@ describe('AdvancedSearchModalComponent', () => {
   let tierContextService: any;
   let advancedSearchAdapterSubject: Subject<any>;
   let advancedSearchAdapter: any;
+  let router: any;
+  let routerEventSubject: Subject<any>;
 
   beforeEach(async(() => {
     tierContextService = {
@@ -42,9 +46,15 @@ describe('AdvancedSearchModalComponent', () => {
 
     advancedSearchAdapter = {
       getMany: jest.fn(),
+      service: {} as any,
     };
 
     advancedSearchAdapterSubject = new Subject<any>();
+
+    routerEventSubject = new Subject();
+    router = {
+      events: routerEventSubject.asObservable(),
+    };
 
     TestBed.configureTestingModule({
       declarations: [AdvancedSearchComponent, MockNgxSmartModalComponent],
@@ -52,6 +62,7 @@ describe('AdvancedSearchModalComponent', () => {
       providers: [
         { provide: NgxSmartModalService, useValue: ngxSmartModalService },
         { provide: TierContextService, useValue: tierContextService },
+        { provide: Router, useValue: router },
       ],
     }).compileComponents();
   }));
@@ -193,5 +204,28 @@ describe('AdvancedSearchModalComponent', () => {
     });
     expect(component.closeModal).toHaveBeenCalled();
     expect(component.advancedSearchResults.emit).toHaveBeenCalledWith(mockData);
+  });
+
+  it('should return the service type', () => {
+    const testType = new TestType();
+    component.advancedSearchAdapter = advancedSearchAdapter;
+    component.advancedSearchAdapter.service = testType;
+    const serviceType = component.getServiceType();
+    expect(serviceType).toBe('TestType');
+  });
+
+  it('should return empty string if no UUID in URL', () => {
+    const mockUrl = '/tenant-select/edit/no-uuid-here';
+
+    routerEventSubject.next({
+      id: 1,
+      url: mockUrl,
+      urlAfterRedirects: mockUrl,
+      constructor: { name: 'NavigationEnd' },
+    });
+
+    const uuid = component.getUuidFromUrl();
+
+    expect(uuid).toEqual('');
   });
 });
