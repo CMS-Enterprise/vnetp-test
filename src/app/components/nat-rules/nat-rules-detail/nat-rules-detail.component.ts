@@ -30,6 +30,7 @@ import { PreviewModalDto } from '../../../models/other/preview-modal-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 @Component({
   selector: 'app-nat-rules-detail',
@@ -109,7 +110,11 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private datacenterService: DatacenterContextService,
     private tableContextService: TableContextService,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<NatRule>();
+    advancedSearchAdapterObject.setService(this.natRuleService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
@@ -160,30 +165,6 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.filteredResults = false;
     this.isLoading = true;
     let eventParams;
-    if (typeof event === 'string') {
-      this.natRuleService
-        .getManyNatRule({
-          s: `{"natRuleGroupId": {"$eq": "${this.Id}"}, "$or": [${event}]}`,
-          page: 1,
-          limit: 5000,
-        })
-        .subscribe(
-          data => {
-            this.filteredResults = true;
-            this.natRules = data;
-            this.isLoading = false;
-          },
-          () => {
-            this.natRules = null;
-            this.getNatRules();
-          },
-          () => {
-            this.isLoading = false;
-          },
-        );
-
-      return;
-    }
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 50;
