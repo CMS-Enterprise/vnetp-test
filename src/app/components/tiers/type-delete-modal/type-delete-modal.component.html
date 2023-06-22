@@ -7,7 +7,8 @@
 
         <input type="text" [(ngModel)]="tierName">
         <div>
-            <span>Please type in the name of the tier you wish to delete</span>
+            <span style=" color: #dc3545;" *ngIf="nameMismatch">Names do not match</span>
+            <span *ngIf="!nameMismatch">Please type in the name of the tier you wish to delete</span>
         </div>
     </main>
 

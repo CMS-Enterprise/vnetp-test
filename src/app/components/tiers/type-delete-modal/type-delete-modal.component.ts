@@ -6,21 +6,23 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
   selector: 'app-type-delete-modal',
   templateUrl: './type-delete-modal.component.html',
 })
-export class TypeDeleteModalComponent implements OnInit {
+export class TypeDeleteModalComponent {
   @Input() tierToDelete;
   tierName;
+  nameMismatch;
   constructor(private ngx: NgxSmartModalService, private tierService: V1TiersService) {}
-  ngOnInit(): void {
-    console.log('tierToDelete', this.tierToDelete);
-  }
 
   onOpen() {}
 
   deleteTier() {
-    console.log('tierName', this.tierName);
-    console.log('tierToDelete', this.tierToDelete);
     if (this.tierName === this.tierToDelete.name) {
-      console.log('full match');
+      this.nameMismatch = false;
+      this.tierService.cascadeDeleteTierTier({ id: this.tierToDelete.id }).subscribe(data => {
+        this.closeModal();
+        return data;
+      });
+    } else {
+      this.nameMismatch = true;
     }
   }
 
