@@ -33,6 +33,7 @@ import { EntityService } from 'src/app/services/entity.service';
 import { SearchColumnConfig } from '../../../common/search-bar/search-bar.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -45,8 +46,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     { displayName: 'Enabled', propertyName: 'enabled' },
     { displayName: 'Source Address', propertyName: 'sourceIpAddress' },
     { displayName: 'Destination Address', propertyName: 'destinationIpAddress' },
-    { displayName: 'Source Port', propertyName: 'sourcePorts' },
-    { displayName: 'Destination Port', propertyName: 'destinationPorts' },
+    { displayName: 'Source Port', propertyName: 'sourcePorts', searchOperator: 'cont' },
+    { displayName: 'Destination Port', propertyName: 'destinationPorts', searchOperator: 'cont' },
   ];
   Id = '';
   TierName = '';
@@ -132,7 +133,11 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private datacenterService: DatacenterContextService,
     private tableContextService: TableContextService,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<FirewallRule>();
+    advancedSearchAdapterObject.setService(this.firewallRuleService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {

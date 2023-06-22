@@ -1,13 +1,14 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { Tier } from 'client/model/tier';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../search-bar/search-bar.component';
 import { AdvancedSearchAdapter } from './advanced-search.adapter';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-advanced-search-modal',
@@ -32,7 +33,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
     private tierContextService: TierContextService,
-    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -166,19 +167,6 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     return this.advancedSearchAdapter.service.constructor.name;
   }
 
-  public getUuidFromUrl(): string {
-    let uuid = '';
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          uuid = match[0].split('/')[2];
-        }
-      }
-    });
-    return uuid;
-  }
-
   public getBaseSearchProperty(): string {
     const serviceType = this.getServiceType();
     let baseSearchProperty = 'tierId';
@@ -199,7 +187,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     let baseSearchValue = this.currentTier.id;
 
     if (baseSearchProperty === 'tenant' || baseSearchProperty === 'firewallRuleGroupId' || baseSearchProperty === 'natRuleGroupId') {
-      baseSearchValue = this.getUuidFromUrl();
+      baseSearchValue = this.route.snapshot.paramMap.get('id');
     }
 
     return baseSearchValue;
