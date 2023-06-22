@@ -27,6 +27,7 @@ import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -51,8 +52,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   public tabs: Tab[] = [{ name: 'Service Objects' }, { name: 'Service Object Groups' }, { name: 'Service Object Group Relations' }];
   public objectSearchColumns: SearchColumnConfig[] = [
     { displayName: 'Type', propertyName: 'protocol' },
-    { displayName: 'Source Port', propertyName: 'sourcePorts' },
-    { displayName: 'Destination Port', propertyName: 'destinationPorts' },
+    { displayName: 'Source Port', propertyName: 'sourcePorts', searchOperator: 'cont' },
+    { displayName: 'Destination Port', propertyName: 'destinationPorts', searchOperator: 'cont' },
   ];
 
   public groupSearchColumns: SearchColumnConfig[] = [
@@ -108,7 +109,15 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private tierService: V1TiersService,
     private tableContextService: TableContextService,
     public filteredHelpText: FilteredCount,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<ServiceObject>();
+    advancedSearchAdapterObject.setService(this.serviceObjectService);
+    this.serviceObjectConfig.advancedSearchAdapter = advancedSearchAdapterObject;
+
+    const advancedSearchAdapterGroup = new AdvancedSearchAdapter<ServiceObjectGroup>();
+    advancedSearchAdapterGroup.setService(this.serviceObjectGroupService);
+    this.serviceObjectGroupConfig.advancedSearchAdapter = advancedSearchAdapterGroup;
+  }
 
   public onSvcObjTableEvent(event: TableComponentDto): void {
     this.svcObjTableComponentDto = event;
