@@ -18,6 +18,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { VirtualServerModalDto } from '../virtual-server-modal/virtual-server-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface VirtualServerView extends LoadBalancerVirtualServer {
   nameView: string;
@@ -44,7 +45,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
   public config: TableConfig<VirtualServerView> = {
     description: 'Virtual Servers in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
       { name: 'Destination Address', property: 'destinationIpAddress' },
       { name: 'Service Port', property: 'servicePort' },
@@ -69,7 +70,11 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
     public filteredHelpText: FilteredCount,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerVirtualServer>();
+    advancedSearchAdapterObject.setService(this.virtualServersService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();

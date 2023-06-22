@@ -13,6 +13,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { ProfileModalDto } from '../profile-modal/profile-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface ProfileView extends LoadBalancerProfile {
   nameView: string;
@@ -37,7 +38,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<ProfileView> = {
     description: 'Profiles in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
       { name: 'Reverse Proxy', property: 'reverseProxyView' },
       { name: 'State', property: 'state' },
@@ -60,7 +61,11 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
     public filteredHelpText: FilteredCount,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerProfile>();
+    advancedSearchAdapterObject.setService(this.profilesService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();

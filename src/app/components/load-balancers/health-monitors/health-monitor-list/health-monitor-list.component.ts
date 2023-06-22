@@ -13,6 +13,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { HealthMonitorModalDto } from '../health-monitor-modal/health-monitor-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface HealthMonitorView extends LoadBalancerHealthMonitor {
   nameView: string;
@@ -38,7 +39,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
   public config: TableConfig<HealthMonitorView> = {
     description: 'Health Monitors in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
       { name: 'Service Port', property: 'servicePort' },
       { name: 'Interval', property: 'interval' },
@@ -63,7 +64,11 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
     public filteredHelpText: FilteredCount,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerHealthMonitor>();
+    advancedSearchAdapterObject.setService(this.healthMonitorsService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit() {
     this.dataChanges = this.subscribeToDataChanges();

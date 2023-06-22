@@ -1,15 +1,5 @@
 import { SearchBarComponent, SearchColumnConfig } from '../search-bar/search-bar.component';
-import {
-  Component,
-  TemplateRef,
-  Input,
-  AfterViewInit,
-  ChangeDetectorRef,
-  Output,
-  EventEmitter,
-  AfterContentInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef, Output, EventEmitter, ViewChild } from '@angular/core';
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { SearchBarHelpText } from 'src/app/helptext/help-text-networking';

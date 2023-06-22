@@ -13,6 +13,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { RouteModalDto } from '../route-modal/route-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface RouteView extends LoadBalancerRoute {
   nameView: string;
@@ -36,7 +37,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<RouteView> = {
     description: 'Routes in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Destination', property: 'destination' },
       { name: 'Gateway', property: 'gateway' },
       { name: 'State', property: 'state' },
@@ -59,7 +60,11 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
     public filteredHelpText: FilteredCount,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerRoute>();
+    advancedSearchAdapterObject.setService(this.routesService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();

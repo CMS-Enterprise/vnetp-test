@@ -19,6 +19,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { SelfIpModalDto } from '../self-ip-modal/self-ip-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface SelfIpView extends LoadBalancerSelfIp {
   nameView: string;
@@ -35,7 +36,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
     { displayName: 'IpAddress', propertyName: 'ipAddress' },
-    { displayName: 'Vlan', propertyName: 'loadBalancerVlan.name' },
+    { displayName: 'Vlan', propertyName: 'loadBalancerVlan.name', searchOperator: 'cont' },
   ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
@@ -43,13 +44,14 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<SelfIpView> = {
     description: 'Self IPs in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'IP Address', property: 'ipAddress' },
       { name: 'VLAN', property: 'vlanName' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
+
   public vlans;
   public selfIps = {} as GetManyLoadBalancerSelfIpResponseDto;
   public tableComponentDto = new TableComponentDto();
@@ -68,7 +70,11 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
     private tableContextService: TableContextService,
     private vlansService: V1LoadBalancerVlansService,
     public filteredHelpText: FilteredCount,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerSelfIp>();
+    advancedSearchAdapterObject.setService(this.selfIpsService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();

@@ -13,6 +13,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { NodeModalDto } from '../node-modal/node-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface NodeView extends LoadBalancerNode {
   nameView: string;
@@ -30,7 +31,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
   public searchColumns: SearchColumnConfig[] = [
     { displayName: 'Type', propertyName: 'type' },
     { displayName: 'IpAddress', propertyName: 'ipAddress' },
-    { displayName: 'FQDN', propertyName: 'fqdn' },
+    { displayName: 'FQDN', propertyName: 'fqdn', searchOperator: 'cont' },
   ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
@@ -63,7 +64,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
     public filteredHelpText: FilteredCount,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerNode>();
+    advancedSearchAdapterObject.setService(this.nodesService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();

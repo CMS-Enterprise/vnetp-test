@@ -13,6 +13,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { PolicyModalDto } from '../policy-modal/policy-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface PolicyView extends LoadBalancerPolicy {
   nameView: string;
@@ -33,7 +34,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<PolicyView> = {
     description: 'Policies in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
@@ -55,7 +56,11 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
     public filteredHelpText: FilteredCount,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerPolicy>();
+    advancedSearchAdapterObject.setService(this.policiesService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
