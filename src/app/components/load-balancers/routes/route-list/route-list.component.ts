@@ -115,10 +115,8 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       const { searchText } = event;
       this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName === 'destination' || propertyName === 'gateway') {
+      if (propertyName) {
         eventParams = `${propertyName}||eq||${searchText}`;
-      } else if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
     this.routesService

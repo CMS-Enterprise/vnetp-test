@@ -111,10 +111,8 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
       const { searchText } = event;
       this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName === 'tag') {
+      if (propertyName) {
         eventParams = `${propertyName}||eq||${searchText}`;
-      } else if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
     this.vlansService

@@ -116,10 +116,8 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
       const { searchText } = event;
       this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName === 'type' || propertyName === 'reverseProxy') {
+      if (propertyName) {
         eventParams = `${propertyName}||eq||${searchText}`;
-      } else if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
     this.profilesService

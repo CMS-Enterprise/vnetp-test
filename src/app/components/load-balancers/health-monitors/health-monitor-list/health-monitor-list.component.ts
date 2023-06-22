@@ -119,10 +119,8 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       const { searchText } = event;
       this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName === 'type' || propertyName === 'servicePort' || propertyName === 'interval' || propertyName === 'timeout') {
+      if (propertyName) {
         eventParams = `${propertyName}||eq||${searchText}`;
-      } else if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
     this.healthMonitorsService

@@ -125,10 +125,8 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
       const { searchText } = event;
       this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName === 'destinationIpAddress' || propertyName === 'servicePort') {
+      if (propertyName) {
         eventParams = `${propertyName}||eq||${searchText}`;
-      } else if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
     this.virtualServersService

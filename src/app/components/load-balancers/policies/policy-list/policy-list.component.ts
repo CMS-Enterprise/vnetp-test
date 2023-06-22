@@ -113,8 +113,6 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
       const propertyName = event.searchColumn ? event.searchColumn : null;
       if (propertyName === 'type') {
         eventParams = `${propertyName}||eq||${searchText}`;
-      } else if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
     this.policiesService

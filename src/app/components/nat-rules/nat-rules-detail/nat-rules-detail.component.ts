@@ -171,7 +171,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
       if (propertyName) {
-        eventParams = propertyName + '||cont||' + searchText;
+        eventParams = propertyName + '||eq||' + searchText;
       }
     } else {
       this.tableComponentDto.perPage = this.perPage;
