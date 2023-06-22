@@ -1,14 +1,13 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Tier } from 'client/model/tier';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../search-bar/search-bar.component';
 import { AdvancedSearchAdapter } from './advanced-search.adapter';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-advanced-search-modal',
@@ -89,7 +88,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     const baseSearch = `${baseSearchProperty}||eq||${baseSearchValue}`;
     const values = this.form.value;
 
-    const params = {
+    const params: Params = {
       filter: [],
       page: 1,
       limit: 20,
@@ -106,6 +105,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
         if (value !== '') {
           const searchColumn = this.formInputs.find(column => column.propertyName === field);
           const searchOperator = searchColumn && searchColumn.searchOperator ? searchColumn.searchOperator : 'eq';
+          params.join = searchColumn.join;
           params.filter.push(`${field}||${searchOperator}||${value}`);
         }
       }
@@ -121,7 +121,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   }
 
   public advancedSearchOr(baseSearchProperty: string, baseSearchValue: string): void {
-    const params = {
+    const params: Params = {
       s: '',
       page: 1,
       limit: 20,
@@ -137,13 +137,14 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
         if (value !== '') {
           const searchColumn = this.formInputs.find(column => column.propertyName === field);
           const searchOperator = searchColumn && searchColumn.searchOperator ? searchColumn.searchOperator : 'eq';
+          params.join = searchColumn.join;
           search.push(`{"${field}": {"$${searchOperator}": "${value}"}}`);
         }
       }
     }
 
     if (search.length > 0) {
-      const searchString = search.toString();
+      const searchString = search.concat().toString();
       params.s = `{"${baseSearchProperty}": {"$eq": "${baseSearchValue}"}, "$or": [${searchString}]}`;
       this.advancedSearchAdapter.getMany(params).subscribe(data => {
         this.advancedSearchResults.emit(data);
@@ -192,4 +193,13 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
 
     return baseSearchValue;
   }
+}
+
+interface Params {
+  filter?: string[];
+  s?: string;
+  page: number;
+  limit: number;
+  sort: string[];
+  join?: string[];
 }

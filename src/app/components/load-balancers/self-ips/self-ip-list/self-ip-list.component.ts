@@ -35,8 +35,8 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
-    { displayName: 'IpAddress', propertyName: 'ipAddress' },
-    { displayName: 'Vlan', propertyName: 'loadBalancerVlan.name', searchOperator: 'cont' },
+    { displayName: 'IpAddress', propertyName: 'ipAddress', join: ['loadBalancerVlan'] },
+    { displayName: 'Vlan', propertyName: 'loadBalancerVlan.name', searchOperator: 'cont', join: ['loadBalancerVlan'] },
   ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
@@ -46,7 +46,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'IP Address', property: 'ipAddress' },
-      { name: 'VLAN', property: 'vlanName' },
+      { name: 'VLAN', property: 'name' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
