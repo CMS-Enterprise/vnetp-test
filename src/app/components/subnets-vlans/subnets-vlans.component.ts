@@ -28,6 +28,7 @@ import { TableConfig } from '../../common/table/table.component';
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 @Component({
   selector: 'app-subnets-vlans',
@@ -43,7 +44,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   subnets = {} as GetManySubnetResponseDto;
   vlans = {} as GetManyVlanResponseDto;
   public subnetSearchColumns: SearchColumnConfig[] = [
-    { displayName: 'Vlan', propertyName: 'vlan.name' },
+    { displayName: 'Vlan', propertyName: 'vlan.name', searchOperator: 'cont' },
     { displayName: 'Network', propertyName: 'network' },
     { displayName: 'Gateway', propertyName: 'gateway' },
   ];
@@ -113,7 +114,15 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     private vlanService: V1NetworkVlansService,
     private subnetService: V1NetworkSubnetsService,
     private tableContextService: TableContextService,
-  ) {}
+  ) {
+    const advancedSearchAdapterSubnet = new AdvancedSearchAdapter<Subnet>();
+    advancedSearchAdapterSubnet.setService(this.subnetService);
+    this.subnetConfig.advancedSearchAdapter = advancedSearchAdapterSubnet;
+
+    const advancedSearchAdapterVlan = new AdvancedSearchAdapter<Vlan>();
+    advancedSearchAdapterVlan.setService(this.vlanService);
+    this.vlanConfig.advancedSearchAdapter = advancedSearchAdapterVlan;
+  }
 
   public handleTabChange(tab: Tab): void {
     // if user clicks on the same tab that they are currently on, don't load any new objects
@@ -395,9 +404,6 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   public getSubnets(event?) {
     this.isLoadingSubnets = true;
     let eventParams;
-    if (typeof event === 'string') {
-      return this.getSubnetsQuery(event);
-    }
     if (event) {
       this.subnetTableComponentDto.page = event.page ? event.page : 1;
       this.subnetTableComponentDto.perPage = event.perPage ? event.perPage : 20;
@@ -435,59 +441,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       );
   }
 
-  private getSubnetsQuery(event) {
-    this.isLoadingSubnets = false;
-    this.subnetService
-      .getManySubnet({
-        s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
-        page: 1,
-        limit: 5000,
-        join: ['vlan'],
-      })
-      .subscribe(data => {
-        this.subnets = data;
-        this.isLoadingSubnets = false;
-      }),
-      // tslint:disable-next-line
-      error => {
-        console.log('err');
-      };
-    // tslint:disable-next-line
-    () => {
-      this.isLoadingSubnets = false;
-    };
-  }
-
   public getVlans(getSubnets = false, event?): void {
     this.isLoadingVlans = true;
     let eventParams;
-    if (typeof event === 'string') {
-      this.isLoadingVlans = false;
-      this.vlanService
-        .getManyVlan({
-          s: `{"tierId": {"$eq": "${this.currentTier.id}"}, "$or": [${event}]}`,
-          page: 1,
-          limit: 5000,
-          sort: ['vlanNumber,ASC'],
-        })
-        .subscribe(response => {
-          this.vlans = response;
-          this.isLoadingVlans = false;
-          if (getSubnets) {
-            this.getSubnets();
-          }
-        }),
-        // tslint:disable-next-line
-        () => {
-          this.vlans = null;
-          this.getVlans();
-        },
-        // tslint:disable-next-line
-        () => {
-          this.isLoadingVlans = false;
-        };
-      return;
-    }
     if (event) {
       this.vlanTableComponentDto.page = event.page ? event.page : 1;
       this.vlanTableComponentDto.perPage = event.perPage ? event.perPage : 20;
