@@ -149,7 +149,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       this.svcObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName == 'protocol') {
+      if (propertyName === 'protocol') {
         eventParams = `${propertyName}||eq||${searchText}`;
       } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;

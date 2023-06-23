@@ -149,7 +149,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       this.netObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName == 'fqdn') {
+      if (propertyName === 'fqdn') {
         eventParams = `${propertyName}||cont||${searchText}`;
       } else if (propertyName) {
         eventParams = `${propertyName}||eq||${searchText}`;
