@@ -13,6 +13,8 @@ import {
   ServiceObjectGroupRelationBulkImportCollectionDto,
   GetManyServiceObjectResponseDto,
   GetManyServiceObjectGroupResponseDto,
+  ServiceObjectProtocolEnum,
+  ServiceObjectGroupTypeEnum,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
@@ -51,7 +53,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   public tabs: Tab[] = [{ name: 'Service Objects' }, { name: 'Service Object Groups' }, { name: 'Service Object Group Relations' }];
   public objectSearchColumns: SearchColumnConfig[] = [
-    { displayName: 'Type', propertyName: 'protocol' },
+    { displayName: 'Type', propertyName: 'protocol', propertyType: ServiceObjectProtocolEnum },
     { displayName: 'Source Port', propertyName: 'sourcePorts', searchOperator: 'cont' },
     { displayName: 'Destination Port', propertyName: 'destinationPorts', searchOperator: 'cont' },
   ];
@@ -60,6 +62,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     {
       displayName: 'Type',
       propertyName: 'type',
+      propertyType: ServiceObjectGroupTypeEnum,
     },
   ];
 

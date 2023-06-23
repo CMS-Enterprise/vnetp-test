@@ -45,7 +45,8 @@
           <div *ngFor="let formInput of formInputs" class="col-md-6 mb-3">
             <div class="form-group">
               <label>{{ formInput.displayName }}</label>
-              <input type="text" class="form-control" [formControlName]="formInput.propertyName" />
+              <ng-select *ngIf="showPropertyList(formInput)" [formControlName]="formInput.propertyName" [items]="ngSelectOptions[formInput.propertyName]" ></ng-select>
+              <input *ngIf="!showPropertyList(formInput)" type="text" class="form-control" [formControlName]="formInput.propertyName" />
             </div>
           </div>
         </div>

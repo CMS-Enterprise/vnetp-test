@@ -1,5 +1,11 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { GetManyLoadBalancerPolicyResponseDto, LoadBalancerPolicy, Tier, V1LoadBalancerPoliciesService } from 'client';
+import {
+  GetManyLoadBalancerPolicyResponseDto,
+  LoadBalancerPolicy,
+  LoadBalancerPolicyTypeEnum,
+  Tier,
+  V1LoadBalancerPoliciesService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -27,7 +33,7 @@ export interface PolicyView extends LoadBalancerPolicy {
 export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [{ displayName: 'Type', propertyName: 'type' }];
+  public searchColumns: SearchColumnConfig[] = [{ displayName: 'Type', propertyName: 'type', propertyType: LoadBalancerPolicyTypeEnum }];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 

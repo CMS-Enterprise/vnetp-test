@@ -1,5 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { GetManyLoadBalancerProfileResponseDto, LoadBalancerProfile, Tier, V1LoadBalancerProfilesService } from 'client';
+import {
+  GetManyLoadBalancerProfileResponseDto,
+  LoadBalancerProfile,
+  LoadBalancerProfileTypeEnum,
+  Tier,
+  V1LoadBalancerProfilesService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -14,6 +20,7 @@ import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.com
 import { ProfileModalDto } from '../profile-modal/profile-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import { ProfileReverseProxyType } from '../profile-modal/profile-modal.component';
 
 export interface ProfileView extends LoadBalancerProfile {
   nameView: string;
@@ -29,8 +36,8 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
-    { displayName: 'Type', propertyName: 'type' },
-    { displayName: 'Reverse Proxy', propertyName: 'reverseProxy' },
+    { displayName: 'Type', propertyName: 'type', propertyType: LoadBalancerProfileTypeEnum },
+    { displayName: 'Reverse Proxy', propertyName: 'reverseProxy', propertyType: ProfileReverseProxyType },
   ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
@@ -40,7 +47,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
-      { name: 'Reverse Proxy', property: 'reverseProxyView' },
+      { name: 'Reverse Proxy', property: 'reverseProxy' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],

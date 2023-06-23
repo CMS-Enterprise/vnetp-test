@@ -6,9 +6,19 @@ import { SharedModule } from '../shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconButtonModule } from '../icon-button/icon-button.module';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
-  imports: [NgxSmartModalModule, CommonModule, SharedModule, FormsModule, ReactiveFormsModule, FontAwesomeModule, IconButtonModule],
+  imports: [
+    NgxSmartModalModule,
+    CommonModule,
+    NgSelectModule,
+    SharedModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+    IconButtonModule,
+  ],
   declarations: [AdvancedSearchComponent],
   exports: [AdvancedSearchComponent],
 })

@@ -6,6 +6,7 @@ export interface SearchColumnConfig {
   displayName: string;
   searchOperator?: string;
   join?: string[];
+  propertyType?: any;
 }
 
 /**

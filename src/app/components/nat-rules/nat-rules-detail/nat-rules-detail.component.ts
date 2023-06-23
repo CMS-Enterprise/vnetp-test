@@ -20,6 +20,7 @@ import {
   NatRuleImport,
   NatRulePreview,
   GetManyNatRuleResponseDto,
+  NatRuleDirectionEnum,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
@@ -38,9 +39,9 @@ import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-s
 })
 export class NatRulesDetailComponent implements OnInit, OnDestroy {
   public searchColumns: SearchColumnConfig[] = [
-    { displayName: 'Direction', propertyName: 'direction' },
-    { displayName: 'BiDirectional', propertyName: 'biDirectional' },
-    { displayName: 'Enabled', propertyName: 'enabled' },
+    { displayName: 'Direction', propertyName: 'direction', propertyType: NatRuleDirectionEnum },
+    { displayName: 'BiDirectional', propertyName: 'biDirectional', propertyType: 'boolean' },
+    { displayName: 'Enabled', propertyName: 'enabled', propertyType: 'boolean' },
   ];
 
   public tableComponentDto = new TableComponentDto();

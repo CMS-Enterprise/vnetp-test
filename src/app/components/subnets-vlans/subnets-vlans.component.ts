@@ -14,6 +14,7 @@ import {
   SubnetImport,
   GetManyVlanResponseDto,
   GetManySubnetResponseDto,
+  VlanVcdVlanTypeEnum,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
@@ -50,7 +51,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   ];
   public vlanSearchColumns: SearchColumnConfig[] = [
     { displayName: 'Vlan Number', propertyName: 'vlanNumber' },
-    { displayName: 'VCD/Vlan Type', propertyName: 'vcdVlanType' },
+    { displayName: 'VCD/Vlan Type', propertyName: 'vcdVlanType', propertyType: VlanVcdVlanTypeEnum },
   ];
 
   navIndex = 0;

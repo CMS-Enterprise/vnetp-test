@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { GetManyLoadBalancerNodeResponseDto, LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'client';
+import { GetManyLoadBalancerNodeResponseDto, LoadBalancerNode, LoadBalancerNodeTypeEnum, Tier, V1LoadBalancerNodesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -29,7 +29,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
-    { displayName: 'Type', propertyName: 'type' },
+    { displayName: 'Type', propertyName: 'type', propertyType: LoadBalancerNodeTypeEnum },
     { displayName: 'IpAddress', propertyName: 'ipAddress' },
     { displayName: 'FQDN', propertyName: 'fqdn', searchOperator: 'cont' },
   ];

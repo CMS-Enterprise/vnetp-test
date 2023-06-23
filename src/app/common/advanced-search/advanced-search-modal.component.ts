@@ -28,6 +28,8 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   public currentTier: Tier;
   public orActive = true;
 
+  public ngSelectOptions = {};
+
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
@@ -157,9 +159,17 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   public buildForm(): void {
     const group: FormGroup = this.formBuilder.group({});
 
-    this.formInputs.forEach(input => {
-      group.addControl(input.propertyName, this.formBuilder.control(''));
-    });
+    if (this.formInputs) {
+      this.formInputs.forEach(input => {
+        group.addControl(input.propertyName, this.formBuilder.control(''));
+        if (this.isEnum(input.propertyType)) {
+          const enumValues = this.getEnumValues(input.propertyType);
+          this.ngSelectOptions[input.propertyName] = enumValues;
+        } else if (input.propertyType === 'boolean') {
+          this.ngSelectOptions[input.propertyName] = ['true', 'false'];
+        }
+      });
+    }
 
     this.form = group;
   }
@@ -192,6 +202,30 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     }
 
     return baseSearchValue;
+  }
+
+  isEnum(object: any): boolean {
+    if (object === null || object === undefined) {
+      return false;
+    }
+    const values = Object.values(object);
+    return values.every((value, index, array) => array.indexOf(value) === index);
+  }
+
+  getEnumValues(e: any) {
+    if (e === null || e === undefined) {
+      return [];
+    }
+
+    return Object.values(e);
+  }
+
+  public showPropertyList(property: any): boolean {
+    if (this.isEnum(property.propertyType) || property.propertyType === 'boolean') {
+      return true;
+    }
+
+    return false;
   }
 }
 

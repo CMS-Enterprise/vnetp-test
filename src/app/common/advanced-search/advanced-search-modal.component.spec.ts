@@ -9,6 +9,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of, Subject } from 'rxjs';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 export class TestType {
   constructor() {}
@@ -55,7 +56,7 @@ describe('AdvancedSearchModalComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [AdvancedSearchComponent, MockNgxSmartModalComponent],
-      imports: [FormsModule, ReactiveFormsModule, HttpClientModule, RouterTestingModule],
+      imports: [FormsModule, ReactiveFormsModule, HttpClientModule, RouterTestingModule, NgSelectModule],
       providers: [
         { provide: NgxSmartModalService, useValue: ngxSmartModalService },
         { provide: TierContextService, useValue: tierContextService },

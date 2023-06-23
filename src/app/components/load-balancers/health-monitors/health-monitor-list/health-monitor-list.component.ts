@@ -1,5 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { GetManyLoadBalancerHealthMonitorResponseDto, LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'client';
+import {
+  GetManyLoadBalancerHealthMonitorResponseDto,
+  LoadBalancerHealthMonitor,
+  LoadBalancerHealthMonitorTypeEnum,
+  Tier,
+  V1LoadBalancerHealthMonitorsService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -28,7 +34,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
-    { displayName: 'Type', propertyName: 'type' },
+    { displayName: 'Type', propertyName: 'type', propertyType: LoadBalancerHealthMonitorTypeEnum },
     { displayName: 'Service Port', propertyName: 'servicePort' },
     { displayName: 'Interval', propertyName: 'interval' },
     { displayName: 'Timeout', propertyName: 'timeout' },

@@ -73,7 +73,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     { displayName: 'End IP', propertyName: 'endIpAddress' },
   ];
 
-  public groupSearchColumns: SearchColumnConfig[] = [{ displayName: 'Member', propertyName: 'networkObjects' }];
+  public groupSearchColumns: SearchColumnConfig[] = [];
 
   public networkObjectConfig: TableConfig<any> = {
     description: 'Network Objects can consist of a single host (with NAT/PAT), range or subnet',
