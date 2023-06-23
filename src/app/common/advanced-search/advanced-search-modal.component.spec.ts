@@ -211,4 +211,96 @@ describe('AdvancedSearchModalComponent', () => {
     const serviceType = component.getServiceType();
     expect(serviceType).toBe('TestType');
   });
+
+  describe('AdvancedSearchModalComponent additional methods', () => {
+    // Tests for getBaseSearchProperty method
+    it('should return "tierId" as base search property when service type does not include "V2", "FirewallRule", or "NatRule"', () => {
+      jest.spyOn(component, 'getServiceType').mockReturnValue('SomeService');
+      expect(component.getBaseSearchProperty()).toBe('tierId');
+    });
+
+    it('should return "tenant" as base search property when service type includes "V2"', () => {
+      jest.spyOn(component, 'getServiceType').mockReturnValue('SomeServiceV2');
+      expect(component.getBaseSearchProperty()).toBe('tenant');
+    });
+
+    it('should return "firewallRuleGroupId" as base search property when service type includes "FirewallRule"', () => {
+      jest.spyOn(component, 'getServiceType').mockReturnValue('FirewallRuleService');
+      expect(component.getBaseSearchProperty()).toBe('firewallRuleGroupId');
+    });
+
+    it('should return "natRuleGroupId" as base search property when service type includes "NatRule"', () => {
+      jest.spyOn(component, 'getServiceType').mockReturnValue('NatRuleService');
+      expect(component.getBaseSearchProperty()).toBe('natRuleGroupId');
+    });
+
+    // Tests for getBaseSearchValue method
+    it('should return current tier id as base search value when base search property is "tierId"', () => {
+      jest.spyOn(component, 'getBaseSearchProperty').mockReturnValue('tierId');
+      expect(component.getBaseSearchValue()).toBe(component.currentTier.id);
+    });
+
+    it('should return route snapshot param id as base search value when base search property is not "tierId"', () => {
+      jest.spyOn(component, 'getBaseSearchProperty').mockReturnValue('tenant');
+      expect(component.getBaseSearchValue()).toBe('7b8f68e5-2d8d-43c4-9fd8-07d521ab34c7');
+    });
+
+    // Tests for isEnum method
+    it('should return false when passed object is null', () => {
+      expect(component.isEnum(null)).toBeFalsy();
+    });
+
+    it('should return false when passed object is undefined', () => {
+      expect(component.isEnum(undefined)).toBeFalsy();
+    });
+
+    it('should return true when passed object is enum', () => {
+      enum TestEnum {
+        Test1,
+        Test2,
+        Test3,
+      }
+      expect(component.isEnum(TestEnum)).toBeTruthy();
+    });
+
+    // Tests for getEnumValues method
+    it('should return empty array when passed object is null or undefined', () => {
+      expect(component.getEnumValues(null)).toEqual([]);
+      expect(component.getEnumValues(undefined)).toEqual([]);
+    });
+
+    it('should return enum values when passed object is enum', () => {
+      enum TestEnum {
+        Test1 = 'Test1',
+        Test2 = 'Test2',
+        Test3 = 'Test3',
+      }
+      const numericEnumValues = Object.values(TestEnum);
+      expect(component.getEnumValues(TestEnum)).toEqual(numericEnumValues);
+    });
+
+    // Tests for showPropertyList method
+    it('should return true when property type is enum or boolean', () => {
+      enum TestEnum {
+        Test1,
+        Test2,
+        Test3,
+      }
+      let property = { propertyType: TestEnum } as any;
+      expect(component.showPropertyList(property)).toBeTruthy();
+
+      property = { propertyType: 'boolean' } as any;
+      expect(component.showPropertyList(property)).toBeTruthy();
+    });
+
+    it('should return false when property type is string', () => {
+      const property = { propertyType: 'string' } as any;
+      expect(component.showPropertyList(property)).toBeFalsy();
+    });
+
+    it('should return false when property type is number', () => {
+      const property = { propertyType: 'string' } as any;
+      expect(component.showPropertyList(property)).toBeFalsy();
+    });
+  });
 });

@@ -12,7 +12,7 @@
         <tooltip [message]="helpText?.CaseSensitive"></tooltip>
       </div>
     </div>
-    <button type="button" class="btn btn-warning align-self-end" (click)="openAdvancedSearch($event)">
+    <button *ngIf="!config.hideAdvancedSearch" type="button" class="btn btn-warning align-self-end" (click)="openAdvancedSearch($event)">
       <fa-icon [icon]="['fas', 'search-plus']"></fa-icon>
       <span>Advanced Search</span>
     </button>

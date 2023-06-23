@@ -204,7 +204,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     return baseSearchValue;
   }
 
-  isEnum(object: any): boolean {
+  public isEnum(object: any): boolean {
     if (object === null || object === undefined) {
       return false;
     }
@@ -212,7 +212,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     return values.every((value, index, array) => array.indexOf(value) === index);
   }
 
-  getEnumValues(e: any) {
+  public getEnumValues(e: any) {
     if (e === null || e === undefined) {
       return [];
     }
@@ -220,7 +220,11 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     return Object.values(e);
   }
 
-  public showPropertyList(property: any): boolean {
+  public showPropertyList(property: SearchColumnConfig): boolean {
+    if (property.propertyType === 'string' || property.propertyType === 'number') {
+      return false;
+    }
+
     if (this.isEnum(property.propertyType) || property.propertyType === 'boolean') {
       return true;
     }

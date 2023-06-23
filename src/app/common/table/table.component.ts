@@ -17,6 +17,7 @@ export interface TableConfig<T> {
   columns: TableColumn<T>[];
   rowStyle?: (datum: object) => Partial<CSSStyleDeclaration>;
   advancedSearchAdapter?: AdvancedSearchAdapter<T>;
+  hideAdvancedSearch?: boolean;
 }
 
 /**
