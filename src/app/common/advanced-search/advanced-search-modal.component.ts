@@ -93,8 +93,6 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     const params: Params = {
       filter: [baseSearch],
       page: 1,
-      limit: 20,
-      sort: ['name,ASC'],
     };
 
     for (const field in values) {
@@ -110,11 +108,14 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     }
 
     if (params.filter.length > 1) {
-      if (baseSearchProperty === 'tenant') {
+      if (baseSearchProperty === 'tenantId') {
+        params.perPage = 20;
         this.advancedSearchAdapter.findAll(params).subscribe(data => {
           this.advancedSearchResults.emit(data);
         });
       } else {
+        params.limit = 20;
+        params.sort = ['name,ASC'];
         this.advancedSearchAdapter.getMany(params).subscribe(data => {
           this.advancedSearchResults.emit(data);
         });
@@ -128,8 +129,6 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     const params: Params = {
       s: '',
       page: 1,
-      limit: 20,
-      sort: ['name,ASC'],
     };
 
     const search = [];
@@ -150,11 +149,14 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     if (search.length > 0) {
       const searchString = search.concat().toString();
       params.s = `{"${baseSearchProperty}": {"$eq": "${baseSearchValue}"}, "$or": [${searchString}]}`;
-      if (baseSearchProperty === 'tenant') {
+      if (baseSearchProperty === 'tenantId') {
+        params.perPage = 20;
         this.advancedSearchAdapter.findAll(params).subscribe(data => {
           this.advancedSearchResults.emit(data);
         });
       } else {
+        params.limit = 20;
+        params.sort = ['name,ASC'];
         this.advancedSearchAdapter.getMany(params).subscribe(data => {
           this.advancedSearchResults.emit(data);
         });
@@ -191,7 +193,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     let baseSearchProperty = 'tierId';
 
     if (serviceType.includes('V2')) {
-      baseSearchProperty = 'tenant';
+      baseSearchProperty = 'tenantId';
     } else if (serviceType.includes('FirewallRule')) {
       baseSearchProperty = 'firewallRuleGroupId';
     } else if (serviceType.includes('NatRule')) {
@@ -203,13 +205,26 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
 
   public getBaseSearchValue(): string {
     const baseSearchProperty = this.getBaseSearchProperty();
-    let baseSearchValue = this.currentTier.id;
 
-    if (baseSearchProperty === 'tenant' || baseSearchProperty === 'firewallRuleGroupId' || baseSearchProperty === 'natRuleGroupId') {
-      baseSearchValue = this.route.snapshot.paramMap.get('id');
+    if (baseSearchProperty === 'tenantId' || baseSearchProperty === 'firewallRuleGroupId' || baseSearchProperty === 'natRuleGroupId') {
+      return this.getUuidFromUrl();
     }
 
-    return baseSearchValue;
+    return this.currentTier.id;
+  }
+
+  public getUuidFromUrl(): string | null {
+    let currentRoute = this.route;
+
+    while (currentRoute) {
+      const id = currentRoute.snapshot.paramMap.get('id');
+      if (id) {
+        return id;
+      }
+      currentRoute = currentRoute.parent;
+    }
+
+    return null;
   }
 
   public isEnum(object: any): boolean {
@@ -245,7 +260,8 @@ interface Params {
   filter?: string[];
   s?: string;
   page: number;
-  limit: number;
-  sort: string[];
+  limit?: number;
+  perPage?: number;
+  sort?: string[];
   join?: string[];
 }

@@ -85,7 +85,6 @@ export class TableComponent<T> implements AfterViewInit {
       const advancedSearchAdapter = this.config.advancedSearchAdapter;
       this.advancedSearchAdapterSubject.next(advancedSearchAdapter);
     }
-    console.log('this.config', this.config);
     this.show = true;
     this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
     // list of components that should have the search bar hidden when a user navigates to them

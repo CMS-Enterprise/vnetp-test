@@ -219,9 +219,9 @@ describe('AdvancedSearchModalComponent', () => {
       expect(component.getBaseSearchProperty()).toBe('tierId');
     });
 
-    it('should return "tenant" as base search property when service type includes "V2"', () => {
+    it('should return "tenantId" as base search property when service type includes "V2"', () => {
       jest.spyOn(component, 'getServiceType').mockReturnValue('SomeServiceV2');
-      expect(component.getBaseSearchProperty()).toBe('tenant');
+      expect(component.getBaseSearchProperty()).toBe('tenantId');
     });
 
     it('should return "firewallRuleGroupId" as base search property when service type includes "FirewallRule"', () => {
@@ -241,7 +241,7 @@ describe('AdvancedSearchModalComponent', () => {
     });
 
     it('should return route snapshot param id as base search value when base search property is not "tierId"', () => {
-      jest.spyOn(component, 'getBaseSearchProperty').mockReturnValue('tenant');
+      jest.spyOn(component, 'getBaseSearchProperty').mockReturnValue('tenantId');
       expect(component.getBaseSearchValue()).toBe('7b8f68e5-2d8d-43c4-9fd8-07d521ab34c7');
     });
 

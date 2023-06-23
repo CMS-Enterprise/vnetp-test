@@ -10,6 +10,7 @@ import {
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { ApplicationProfileModalDto } from 'src/app/models/appcentric/application-profile-modal-dto';
@@ -61,6 +62,10 @@ export class ApplicationProfileComponent implements OnInit {
     private router: Router,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
   ) {
+    const advancedSearchAdapter = new AdvancedSearchAdapter<ApplicationProfile>();
+    advancedSearchAdapter.setService(this.applicationProfileService);
+    this.config.advancedSearchAdapter = advancedSearchAdapter;
+
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
