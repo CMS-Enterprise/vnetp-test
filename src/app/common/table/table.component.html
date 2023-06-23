@@ -2,10 +2,9 @@
   <div>Count: {{ data?.data?.length }}</div>
 
   <div *ngIf="showSearchBar" class="d-flex align-items-end justify-content-between border-bottom">
-    <div>
+    <div *ngIf="!config.hideSearchBar">
       <div class="d-flex">
         <app-search-bar
-          *ngIf="!config.hideSearchBar"
           (searchBarClearResults)="clearTableResults()"
           [columns]="searchColumns"
           (searchCriteria)="getObjectsAndFilter($event)"
