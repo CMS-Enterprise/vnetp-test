@@ -4,14 +4,9 @@
 
 <tooltip *ngIf="navIndex === 0 && subnetTableComponentDto.searchText" [message]="filteredHelpText?.FilteredResults"></tooltip>
 
-<h1 *ngIf="navIndex === 0 && subnetTableComponentDto.searchText">Subnets ({{subnets?.total}} matching items)</h1>
+<h1 *ngIf="navIndex === 0">Subnets ({{subnets?.total}} items)</h1>
 
-<tooltip *ngIf="navIndex === 1 && vlanTableComponentDto.searchText" [message]="filteredHelpText?.FilteredResults"></tooltip>
-
-<h1 *ngIf="navIndex === 1 && !vlanTableComponentDto.searchText">Vlans ({{vlans?.total}} items)</h1>
-
-<h1 *ngIf="navIndex === 1 && vlanTableComponentDto.searchText">Vlans ({{vlans?.total}} filtered items)</h1>
-
+<h1 *ngIf="navIndex === 1">Vlans ({{vlans?.total}} items)</h1>
 
 <ng-container *ngIf="currentTier; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
