@@ -40,6 +40,7 @@
       >
         <td *ngFor="let column of config.columns">
           <ng-container *ngIf="column.property">{{ datum[column.property] }}</ng-container>
+          <ng-container *ngIf="!column.property && column.value">{{ column.value(datum) }}</ng-container>
           <ng-container *ngIf="!column.property && column.template">
             <ng-container *ngTemplateOutlet="column.template(); context: { datum: datum }"></ng-container>
           </ng-container>

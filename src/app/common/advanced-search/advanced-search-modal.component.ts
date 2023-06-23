@@ -91,15 +91,11 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     const values = this.form.value;
 
     const params: Params = {
-      filter: [],
+      filter: [baseSearch],
       page: 1,
       limit: 20,
       sort: ['name,ASC'],
     };
-
-    if (baseSearch) {
-      params.filter.push(baseSearch);
-    }
 
     for (const field in values) {
       if (values.hasOwnProperty(field)) {
@@ -114,9 +110,15 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     }
 
     if (params.filter.length > 1) {
-      this.advancedSearchAdapter.getMany(params).subscribe(data => {
-        this.advancedSearchResults.emit(data);
-      });
+      if (baseSearchProperty === 'tenant') {
+        this.advancedSearchAdapter.findAll(params).subscribe(data => {
+          this.advancedSearchResults.emit(data);
+        });
+      } else {
+        this.advancedSearchAdapter.getMany(params).subscribe(data => {
+          this.advancedSearchResults.emit(data);
+        });
+      }
     }
 
     this.closeModal();
@@ -148,9 +150,15 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     if (search.length > 0) {
       const searchString = search.concat().toString();
       params.s = `{"${baseSearchProperty}": {"$eq": "${baseSearchValue}"}, "$or": [${searchString}]}`;
-      this.advancedSearchAdapter.getMany(params).subscribe(data => {
-        this.advancedSearchResults.emit(data);
-      });
+      if (baseSearchProperty === 'tenant') {
+        this.advancedSearchAdapter.findAll(params).subscribe(data => {
+          this.advancedSearchResults.emit(data);
+        });
+      } else {
+        this.advancedSearchAdapter.getMany(params).subscribe(data => {
+          this.advancedSearchResults.emit(data);
+        });
+      }
     }
 
     this.closeModal();

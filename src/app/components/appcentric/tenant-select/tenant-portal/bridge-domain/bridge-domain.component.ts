@@ -38,7 +38,14 @@ export class BridgeDomainComponent implements OnInit {
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
+    { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
+    { displayName: 'Mac Address', propertyName: 'bdMacAddress' },
+    { displayName: 'Arp Flooding', propertyName: 'arpFlooding', propertyType: 'boolean' },
+    { displayName: 'Limit Local IP Learning', propertyName: 'limitLocalIpLearning', propertyType: 'boolean' },
+    { displayName: 'Move Detection Mode Garp', propertyName: 'epMoveDetectionModeGarp', propertyType: 'boolean' },
+  ];
 
   public config: TableConfig<any> = {
     description: 'Bridge Domains',
@@ -90,8 +97,10 @@ export class BridgeDomainComponent implements OnInit {
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'name' || propertyName === 'alias' || propertyName === 'description') {
         eventParams = `${propertyName}||cont||${searchText}`;
+      } else if (propertyName) {
+        eventParams = `${propertyName}||eq||${searchText}`;
       }
     }
     this.bridgeDomainService

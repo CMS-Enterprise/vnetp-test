@@ -11,6 +11,7 @@ export interface TableColumn<T> {
   name: string;
   property?: keyof T;
   template?: () => TemplateRef<any>;
+  value?: (datum: T) => any;
 }
 export interface TableConfig<T> {
   description: string;
@@ -18,7 +19,7 @@ export interface TableConfig<T> {
   rowStyle?: (datum: object) => Partial<CSSStyleDeclaration>;
   advancedSearchAdapter?: AdvancedSearchAdapter<T>;
   hideAdvancedSearch?: boolean;
-  hideSearch?: boolean;
+  hideSearchBar?: boolean;
 }
 
 /**
@@ -84,7 +85,7 @@ export class TableComponent<T> implements AfterViewInit {
       const advancedSearchAdapter = this.config.advancedSearchAdapter;
       this.advancedSearchAdapterSubject.next(advancedSearchAdapter);
     }
-
+    console.log('this.config', this.config);
     this.show = true;
     this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
     // list of components that should have the search bar hidden when a user navigates to them

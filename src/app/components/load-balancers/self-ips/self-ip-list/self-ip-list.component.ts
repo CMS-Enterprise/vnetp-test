@@ -41,12 +41,15 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
-  public config: TableConfig<SelfIpView> = {
+  public config: TableConfig<any> = {
     description: 'Self IPs in the currently selected Tier',
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'IP Address', property: 'ipAddress' },
-      { name: 'VLAN', property: 'name' },
+      {
+        name: 'VLAN',
+        value: (datum: any) => datum?.loadBalancerVlan?.name,
+      },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],

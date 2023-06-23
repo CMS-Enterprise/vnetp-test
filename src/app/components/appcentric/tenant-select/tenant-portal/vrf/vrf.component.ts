@@ -28,7 +28,12 @@ export class VrfComponent implements OnInit {
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
+    { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
+    { displayName: 'Policy Control Enforced', propertyName: 'policyControlEnforced', propertyType: 'boolean' },
+    { displayName: 'Policy Control Enforcement Ingress', propertyName: 'policyControlEnforcementIngress', propertyType: 'boolean' },
+  ];
 
   public config: TableConfig<any> = {
     description: 'Vrfs',

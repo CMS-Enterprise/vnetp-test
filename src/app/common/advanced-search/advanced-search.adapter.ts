@@ -22,6 +22,11 @@ export class AdvancedSearchAdapter<T> implements IBaseAdapter<T> {
     return this.service[methodName](params);
   }
 
+  public findAll(params: any): Observable<{ data: any[]; count: number; total: number; page: number; pageCount: number }> {
+    const methodName = this.getMethodName('findAll');
+    return this.service[methodName](params);
+  }
+
   public getMethodName(subString: string): string {
     const propertyNames = Object.getOwnPropertyNames(Object.getPrototypeOf(this.service));
 
