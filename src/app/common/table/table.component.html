@@ -27,7 +27,7 @@
         </td>
       </tr>
     </tbody>
-    <tfoot>
+    <tfoot *ngIf="paginationControlsOn">
       <td [attr.colspan]="config.columns.length">
         <pagination-controls *ngIf="paginationControlsOn" [id]="uniqueTableId" (pageChange)="currentPage = $event; onTableEvent()"></pagination-controls>
       </td>

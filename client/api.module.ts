@@ -40,6 +40,7 @@ import { V2AppCentricEndpointGroupsService } from './api/v2AppCentricEndpointGro
 import { V2AppCentricFilterEntriesService } from './api/v2AppCentricFilterEntries.service';
 import { V2AppCentricFiltersService } from './api/v2AppCentricFilters.service';
 import { V2AppCentricL3outsService } from './api/v2AppCentricL3outs.service';
+import { V2AppCentricRouteProfilesService } from './api/v2AppCentricRouteProfiles.service';
 import { V2AppCentricSubjectsService } from './api/v2AppCentricSubjects.service';
 import { V2AppCentricTenantsService } from './api/v2AppCentricTenants.service';
 import { V2AppCentricVrfsService } from './api/v2AppCentricVrfs.service';
