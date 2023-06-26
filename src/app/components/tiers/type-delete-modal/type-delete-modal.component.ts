@@ -12,8 +12,6 @@ export class TypeDeleteModalComponent {
   nameMismatch;
   constructor(private ngx: NgxSmartModalService, private tierService: V1TiersService) {}
 
-  onOpen() {}
-
   deleteTier() {
     if (this.tierName === this.tierToDelete.name) {
       this.nameMismatch = false;
@@ -28,6 +26,7 @@ export class TypeDeleteModalComponent {
 
   public closeModal(): void {
     this.tierName = '';
+    this.nameMismatch = false;
     this.ngx.resetModalData('typeDeleteModal');
     this.ngx.close('typeDeleteModal');
   }
