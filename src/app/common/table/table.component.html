@@ -1,6 +1,4 @@
 <ng-container *ngIf="show">
-  <div>Count: {{ data?.data?.length }}</div>
-
   <div *ngIf="showSearchBar" class="d-flex align-items-end justify-content-between border-bottom">
     <div *ngIf="!config.hideSearchBar">
       <div class="d-flex">
@@ -54,6 +52,12 @@
           [id]="uniqueTableId"
           (pageChange)="currentPage = $event; onTableEvent()"
         ></pagination-controls>
+        <span
+          *ngIf="show"
+          class="badge badge-pill badge-secondary ml-2 py-1 px-2 align-middle"
+          style="font-size: 0.8em; vertical-align: middle;"
+          >Current Entries: {{ data?.data?.length }}</span
+        >
       </td>
     </tfoot>
   </table>

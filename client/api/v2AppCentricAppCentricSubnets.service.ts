@@ -47,6 +47,8 @@ export interface FindAllAppCentricSubnetRequestParams {
     group?: string;
     /** Properties to select. */
     select?: string;
+    /** s */
+    s?: string;
 }
 
 export interface FindOneAppCentricSubnetRequestParams {
@@ -253,6 +255,7 @@ export class V2AppCentricAppCentricSubnetsService {
         const sort = requestParameters.sort;
         const group = requestParameters.group;
         const select = requestParameters.select;
+        const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (relations !== undefined && relations !== null) {
@@ -284,6 +287,10 @@ export class V2AppCentricAppCentricSubnetsService {
         if (select !== undefined && select !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>select, 'select');
+        }
+        if (s !== undefined && s !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>s, 's');
         }
 
         let headers = this.defaultHeaders;

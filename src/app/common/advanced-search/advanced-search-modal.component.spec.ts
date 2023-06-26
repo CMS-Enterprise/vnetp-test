@@ -22,6 +22,8 @@ const mockActivatedRoute = {
   },
 };
 
+class AdvancedSearchComponentDummy extends AdvancedSearchComponent<TestType> {}
+
 describe('AdvancedSearchModalComponent', () => {
   let component: AdvancedSearchComponent<TestType>;
   let fixture: ComponentFixture<AdvancedSearchComponent<TestType>>;
@@ -55,7 +57,7 @@ describe('AdvancedSearchModalComponent', () => {
     advancedSearchAdapterSubject = new Subject<any>();
 
     TestBed.configureTestingModule({
-      declarations: [AdvancedSearchComponent, MockNgxSmartModalComponent],
+      declarations: [AdvancedSearchComponentDummy, MockNgxSmartModalComponent],
       imports: [FormsModule, ReactiveFormsModule, HttpClientModule, RouterTestingModule, NgSelectModule],
       providers: [
         { provide: NgxSmartModalService, useValue: ngxSmartModalService },
@@ -66,7 +68,7 @@ describe('AdvancedSearchModalComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AdvancedSearchComponent);
+    fixture = TestBed.createComponent(AdvancedSearchComponentDummy);
     component = fixture.componentInstance;
     component.advancedSearchAdapterSubject = advancedSearchAdapterSubject;
     component.formInputs = [{ propertyName: 'test', displayName: 'Test' }];
