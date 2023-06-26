@@ -11,10 +11,9 @@
  */
 import { Tenant } from './tenant';
 import { BridgeDomain } from './bridgeDomain';
-import { Vrf } from './vrf';
 
 
-export interface L3Out { 
+export interface RouteProfile { 
     readonly id?: string;
     name?: string;
     alias?: string;
@@ -24,9 +23,6 @@ export interface L3Out {
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly bridgeDomains?: Array<BridgeDomain>;
-    readonly bridgeDomainsForRouteProfile?: Array<BridgeDomain>;
-    readonly vrf?: Vrf;
-    vrfId: string;
     readonly tenant?: Tenant;
     tenantId: string;
 }

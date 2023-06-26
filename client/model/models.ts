@@ -89,6 +89,8 @@ export * from './networkObjectGroupRelationBulkImportCollectionDto';
 export * from './networkObjectGroupRelationBulkImportDto';
 export * from './nodeImportCollectionDto';
 export * from './poolImportCollectionDto';
+export * from './routeProfile';
+export * from './routeProfilePaginationResponse';
 export * from './selfService';
 export * from './selfServiceConfig';
 export * from './selfServiceRawConfig';
