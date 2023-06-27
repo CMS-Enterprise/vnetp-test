@@ -12,6 +12,7 @@ describe('AdvancedSearchAdapter', () => {
     adapter = new AdvancedSearchAdapter<any>();
     mockService = {
       getManyWithPagination: jest.fn(),
+      findAll: jest.fn(),
     };
     mockData = { data: [], count: 0, total: 0, page: 0, pageCount: 0 };
     adapter.setService(mockService);
@@ -38,6 +39,21 @@ describe('AdvancedSearchAdapter', () => {
     const params = { limit: 10, page: 1 };
     adapter.getMany(params).subscribe(data => {
       expect(mockServiceInstance.getManyWithPagination).toHaveBeenCalledWith(params);
+      expect(data).toEqual(mockData);
+    });
+  });
+
+  it('should call service findAll method with correct params in getMany', () => {
+    class MockService {
+      findAll() {}
+    }
+    MockService.prototype.findAll = jest.fn(() => of(mockData));
+    const mockServiceInstance = new MockService();
+    adapter.setService(mockServiceInstance);
+
+    const params = { limit: 10, page: 1 };
+    adapter.findAll(params).subscribe(data => {
+      expect(mockServiceInstance.findAll).toHaveBeenCalledWith(params);
       expect(data).toEqual(mockData);
     });
   });

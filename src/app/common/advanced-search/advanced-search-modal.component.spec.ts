@@ -51,6 +51,7 @@ describe('AdvancedSearchModalComponent', () => {
 
     advancedSearchAdapter = {
       getMany: jest.fn(),
+      findAll: jest.fn(),
       service: {} as any,
     };
 
@@ -172,6 +173,39 @@ describe('AdvancedSearchModalComponent', () => {
     expect(component.advancedSearchResults.emit).toHaveBeenCalledWith(mockData);
   });
 
+  it('should build OR search parameters, get appcentric data, and close modal in advancedSearchOr', () => {
+    advancedSearchAdapterSubject.next(advancedSearchAdapter);
+
+    const advancedSearchAdapterSpy = jest.spyOn(component.advancedSearchAdapter, 'findAll');
+    jest.spyOn(component, 'closeModal');
+    const mockData = { data: 'mockData' };
+    const mockSubscribe = { subscribe: jest.fn() } as any;
+    jest.spyOn(component.advancedSearchResults, 'emit');
+
+    advancedSearchAdapterSpy.mockReturnValue(mockSubscribe);
+    mockSubscribe.subscribe.mockImplementation(callback => callback(mockData));
+
+    component.currentTier = { id: '1' } as any;
+    component.formInputs = [
+      { propertyName: 'name', searchOperator: 'eq' } as any,
+      { propertyName: 'ipAddress', searchOperator: 'eq' } as any,
+    ];
+    component.form = new FormBuilder().group({
+      name: 'testName',
+      ipAddress: '192.168.0.1',
+    });
+
+    component.advancedSearchOr('tenantId', '1');
+
+    expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
+      s: '{"tenantId": {"$eq": "1"}, "$or": [{"name": {"$eq": "testName"}},{"ipAddress": {"$eq": "192.168.0.1"}}]}',
+      page: 1,
+      perPage: 20,
+    });
+    expect(component.closeModal).toHaveBeenCalled();
+    expect(component.advancedSearchResults.emit).toHaveBeenCalledWith(mockData);
+  });
+
   it('should build AND search parameters, get data, and close modal in advancedSearchAnd', () => {
     advancedSearchAdapterSubject.next(advancedSearchAdapter);
 
@@ -201,6 +235,39 @@ describe('AdvancedSearchModalComponent', () => {
       page: 1,
       limit: 20,
       sort: ['name,ASC'],
+    });
+    expect(component.closeModal).toHaveBeenCalled();
+    expect(component.advancedSearchResults.emit).toHaveBeenCalledWith(mockData);
+  });
+
+  it('should build AND search parameters, get appcentric data, and close modal in advancedSearchAnd', () => {
+    advancedSearchAdapterSubject.next(advancedSearchAdapter);
+
+    jest.spyOn(component.advancedSearchResults, 'emit');
+    const advancedSearchAdapterSpy = jest.spyOn(component.advancedSearchAdapter, 'findAll');
+    jest.spyOn(component, 'closeModal');
+    const mockData = { data: 'mockData' };
+    const mockSubscribe = { subscribe: jest.fn() } as any;
+
+    advancedSearchAdapterSpy.mockReturnValue(mockSubscribe);
+    mockSubscribe.subscribe.mockImplementation(callback => callback(mockData));
+
+    component.currentTier = { id: '1' } as any;
+    component.formInputs = [
+      { propertyName: 'name', searchOperator: 'eq' } as any,
+      { propertyName: 'ipAddress', searchOperator: 'eq' } as any,
+    ];
+    component.form = new FormBuilder().group({
+      name: 'testName',
+      ipAddress: '192.168.0.1',
+    });
+
+    component.advancedSearchAnd('tenantId', '1');
+
+    expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
+      filter: ['tenantId||eq||1', 'name||eq||testName', 'ipAddress||eq||192.168.0.1'],
+      page: 1,
+      perPage: 20,
     });
     expect(component.closeModal).toHaveBeenCalled();
     expect(component.advancedSearchResults.emit).toHaveBeenCalledWith(mockData);
