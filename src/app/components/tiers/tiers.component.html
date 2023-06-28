@@ -61,6 +61,7 @@
         ></app-icon-button>
 
         <app-icon-button
+        *ngIf="!tier?.provisionedAt"
         icon="delete"
         label="Soft-Delete/Delete Tier"
         [type]="tier?.deletedAt ? 'danger' : 'default'"
