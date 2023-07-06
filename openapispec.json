@@ -5533,7 +5533,7 @@
           "l3OutForRouteProfileId": {
             "type": "string"
           },
-          "l3outForRouteProfile": {
+          "l3OutForRouteProfile": {
             "readOnly": true,
             "allOf": [
               {
@@ -9194,6 +9194,22 @@
         ]
       }
     },
+    "/v1/network-security/service-objects/checkObjectUsage": {
+      "get": {
+        "operationId": "checkObjectsServiceObject",
+        "summary": "",
+        "description": "Check Service Object Usage",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
+      }
+    },
     "/v1/network-security/service-objects/{id}": {
       "get": {
         "operationId": "getOneServiceObject",
@@ -10249,6 +10265,22 @@
         },
         "tags": [
           "v1/network-security/network-object-groups"
+        ]
+      }
+    },
+    "/v1/network-security/network-objects/checkObjectUsage": {
+      "get": {
+        "operationId": "checkObjectsNetworkObject",
+        "summary": "",
+        "description": "Check Network Object Usage",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/network-objects"
         ]
       }
     },

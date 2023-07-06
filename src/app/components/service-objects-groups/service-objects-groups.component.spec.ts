@@ -16,15 +16,7 @@ import { MockProvider } from 'src/test/mock-providers';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import {
-  V1NetworkSecurityFirewallRuleGroupsService,
-  V1NetworkSecurityFirewallRulesService,
-  V1NetworkSecurityNatRuleGroupsService,
-  V1NetworkSecurityNatRulesService,
-  V1NetworkSecurityServiceObjectGroupsService,
-  V1NetworkSecurityServiceObjectsService,
-  V1TiersService,
-} from 'client';
+import { V1NetworkSecurityServiceObjectGroupsService, V1NetworkSecurityServiceObjectsService } from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { FilterPipe } from '../../pipes/filter.pipe';
 import { UnusedObjectsModalComponent } from './unused-objects-modal/unused-objects-modal.component';
@@ -58,11 +50,6 @@ describe('ServicesObjectsGroupsComponent', () => {
         MockProvider(V1NetworkSecurityServiceObjectGroupsService),
         MockProvider(V1NetworkSecurityServiceObjectsService),
         MockProvider(TierContextService),
-        MockProvider(V1TiersService),
-        MockProvider(V1NetworkSecurityFirewallRulesService),
-        MockProvider(V1NetworkSecurityNatRulesService),
-        MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
-        MockProvider(V1NetworkSecurityNatRuleGroupsService),
       ],
     }).compileComponents();
   }));

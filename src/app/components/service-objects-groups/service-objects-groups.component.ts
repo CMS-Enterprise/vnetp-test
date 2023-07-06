@@ -17,10 +17,6 @@ import {
   V1NetworkSecurityNatRulesService,
   V1NetworkSecurityFirewallRuleGroupsService,
   V1NetworkSecurityNatRuleGroupsService,
-  NatRuleGroup,
-  FirewallRule,
-  FirewallRuleGroup,
-  NatRule,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
@@ -41,22 +37,7 @@ import { TableContextService } from 'src/app/services/table-context.service';
 })
 export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
-  FWRuleGroups: FirewallRuleGroup[];
-  natRuleGroups: NatRuleGroup[];
-  firewallRules: FirewallRule[];
-  natRules: NatRule[];
-  allServiceObjects: ServiceObject[];
-  allServiceObjectGroups: ServiceObjectGroup[];
-  usedObjects = { serviceObjects: [], serviceObjectGroups: [] };
-  unusedObjects = {
-    fwRuleServiceObjects: [],
-    fwRuleServiceObjectGroups: [],
-    natRuleServiceObjects: [],
-    natRuleServiceObjectGroups: [],
-    globalUnusedObjects: [],
-    globalUnusedObjectGroups: [],
-    data: [],
-  };
+  unusedObjects = {} as any;
   currentTier: Tier;
   public perPage = 20;
   ModalMode = ModalMode;
@@ -119,306 +100,29 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private tierContextService: TierContextService,
-    private tierService: V1TiersService,
     private tableContextService: TableContextService,
-    private firewallRuleService: V1NetworkSecurityFirewallRulesService,
-    private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
-    private natRuleGroupService: V1NetworkSecurityNatRuleGroupsService,
-    private natRuleService: V1NetworkSecurityNatRulesService,
   ) {}
 
-  public getFirewallRuleGroups() {
-    this.firewallRuleGroupService
-      .getManyFirewallRuleGroup({
-        filter: [`tierId||eq||${this.currentTier.id}`],
-      })
-      .subscribe(data => {
-        this.FWRuleGroups = data as any;
-      });
-  }
-
-  public getNatRuleGroups() {
-    this.natRuleGroupService
-      .getManyNatRuleGroup({
-        filter: [`tierId||eq||${this.currentTier.id}`],
-      })
-      .subscribe(data => {
-        this.natRuleGroups = data as any;
-      });
-  }
-
-  // loops through all svc obj groups and adds every object member
-  // from every group into the usedObjects.serviceObjects array
-  public checkGroupMembership() {
-    this.allServiceObjectGroups.forEach(serObjGrp => {
-      serObjGrp.serviceObjects.forEach(serObj => {
-        this.usedObjects.serviceObjects.push(serObj.id);
-      });
+  public checkObjectUsage() {
+    this.serviceObjectService.checkObjectsServiceObject().subscribe(data => {
+      console.log('data', data);
+      this.unusedObjects.data = data.unusedObjectsArray;
+      console.log('this.unusedObjects', this.unusedObjects);
+      this.openUnusedObjectsModal();
     });
   }
 
-  public getFirewallRules() {
-    // clear all arrays
-    this.usedObjects.serviceObjects = [];
-    this.usedObjects.serviceObjectGroups = [];
-    this.unusedObjects.fwRuleServiceObjects = [];
-    this.unusedObjects.fwRuleServiceObjectGroups = [];
-    this.unusedObjects.natRuleServiceObjects = [];
-    this.unusedObjects.natRuleServiceObjectGroups = [];
-
-    // get external FWGroup ID
-    const externalId = this.FWRuleGroups.find(group => {
-      if (group.name === 'External') {
-        return group;
-      }
-    }).id;
-
-    // get intervrf FWGroup ID
-    const intervrfId = this.FWRuleGroups.find(group => {
-      if (group.name === 'Intervrf') {
-        return group;
-      }
-    }).id;
-
-    // run through object group membership check
-    this.checkGroupMembership();
-
-    this.firewallRuleService
-      .getManyFirewallRule({
-        filter: [`firewallRuleGroupId||eq||${externalId}`],
-        or: [`firewallRuleGroupId||eq||${intervrfId}`],
-        sort: ['ruleIndex,ASC'],
-        limit: 50000,
-      })
-      .subscribe(data => {
-        // loop through each FW rule
-        this.firewallRules = data as any;
-        this.firewallRules.forEach(rule => {
-          // loop through each service object
-          this.allServiceObjects.forEach(serObj => {
-            // if any service object is referenced in a FW rule
-            const exists = Object.values(rule).includes(serObj.id);
-            if (exists) {
-              // add that service object to the usedObjects.serviceObjects array
-              this.usedObjects.serviceObjects.push(serObj.id);
-            }
-          });
-
-          // loop through each service object group
-          this.allServiceObjectGroups.forEach(serObjGrp => {
-            // if any service object group is referenced in a FW rule
-            const exists = Object.values(rule).includes(serObjGrp.id);
-            if (exists) {
-              // add that service object group to the usedObjects.networkObjectGroups array
-              this.usedObjects.serviceObjectGroups.push(serObjGrp.id);
-            }
-          });
-        });
-        // since any object can belong to multiple groups
-        // and any object / group can be referenced by multiple rules
-
-        // we create a unique set of both arrays of USED objects and groups
-        const serObjGroupSet = [...new Set(this.usedObjects.serviceObjectGroups)];
-        const serObjSet = [...new Set(this.usedObjects.serviceObjects)];
-
-        // if an object / group is not included in the unique sets we created above
-        // we know that constitutes an unused object / group
-        const unusedObjects = this.allServiceObjects.filter(serObj => !serObjSet.includes(serObj.id));
-        const unusedObjectGroups = this.allServiceObjectGroups.filter(serObjGrp => !serObjGroupSet.includes(serObjGrp.id));
-        // add unusedObjectsArray to unusedObjects.fwRuleServiceObjects/groups arrays
-        this.unusedObjects.fwRuleServiceObjects.push(...unusedObjects);
-        this.unusedObjects.fwRuleServiceObjectGroups.push(...unusedObjectGroups);
-
-        // again we need to create a unique object / group set for all UNUSED Objects / groups
-        const unusedObjSet = Array.from(new Set(this.unusedObjects.fwRuleServiceObjects)).filter(
-          (v, i, a) => a.findIndex(v2 => v2.id === v.id) === i,
-        );
-        const unusedObjGroupSet = Array.from(new Set(this.unusedObjects.fwRuleServiceObjectGroups)).filter(
-          (v, i, a) => a.findIndex(v2 => v2.id === v.id) === i,
-        );
-
-        // reassign unusedObjects.fwRuleNetworkObjects/groups array to the unique unusedObject/group Sets we created above
-        this.unusedObjects.fwRuleServiceObjects = unusedObjSet;
-        this.unusedObjects.fwRuleServiceObjectGroups = unusedObjGroupSet;
-      });
-    this.getNatRules();
-  }
-
-  public getNatRules() {
-    // get external NatRuleGroup ID
-    const externalId = this.natRuleGroups.find(group => {
-      if (group.name === 'External') {
-        return group;
-      }
-    }).id;
-
-    // get intervrf NatRuleGroup ID
-    const intervrfId = this.natRuleGroups.find(group => {
-      if (group.name === 'Intervrf') {
-        return group;
-      }
-    }).id;
-    this.natRuleService
-      .getManyNatRule({
-        filter: [`natRuleGroupId||eq||${externalId}`],
-        or: [`natRuleGroupId||eq||${intervrfId}`],
-        limit: 50000,
-      })
-      .subscribe(data => {
-        this.natRules = data as any;
-
-        // loop through each nat rule
-        this.natRules.forEach(rule => {
-          // loop through each service object
-          this.allServiceObjects.forEach(serObj => {
-            // if any service object is referenced in a NAT rule
-            const exists = Object.values(rule).includes(serObj.id);
-            if (exists) {
-              // add that service object to the usedObjects.serviceObjects array
-              this.usedObjects.serviceObjects.push(serObj.id);
-            }
-          });
-          // loop through each service object group
-          this.allServiceObjectGroups.forEach(serObjGrp => {
-            // if any service object group is referenced in a NAT rule
-            const exists = Object.values(rule).includes(serObjGrp.id);
-            if (exists) {
-              // add that service object group to the usedObjects.serviceObjectGroups array
-              this.usedObjects.serviceObjectGroups.push(serObjGrp.id);
-            }
-          });
-        });
-        // since any object can belong to multiple groups
-        // and any object / group can be referenced by multiple rules
-
-        // we create a unique set of both arrays of used objects and groups
-        const serObjGroupSet = [...new Set(this.usedObjects.serviceObjectGroups)];
-        const serObjSet = [...new Set(this.usedObjects.serviceObjects)];
-
-        // if an object / group is not included in the unique sets we created above
-        // we know that constitutes an unused object / group
-        const unusedObjects = this.allServiceObjects.filter(serObj => !serObjSet.includes(serObj.id));
-        const unusedObjectGroups = this.allServiceObjectGroups.filter(serObjGrp => !serObjGroupSet.includes(serObjGrp.id));
-
-        // add unusedObjectsArray to unusedObjects.fwRuleServiceObjects/groups arrays
-        this.unusedObjects.natRuleServiceObjects.push(...unusedObjects);
-        this.unusedObjects.natRuleServiceObjectGroups.push(...unusedObjectGroups);
-
-        // again we need to create a unique object / group set for all UNUSEDObjects / groups
-        const unusedObjSet = Array.from(new Set(this.unusedObjects.natRuleServiceObjects)).filter(
-          (v, i, a) => a.findIndex(v2 => v2.id === v.id) === i,
-        );
-        const unusedObjGroupSet = Array.from(new Set(this.unusedObjects.natRuleServiceObjectGroups)).filter(
-          (v, i, a) => a.findIndex(v2 => v2.id === v.id) === i,
-        );
-
-        // reassign unusedObjects.fwRuleServiceObjects/groups array to the unique unusedObject/group Sets we created above
-        this.unusedObjects.natRuleServiceObjects = unusedObjSet;
-        this.unusedObjects.natRuleServiceObjectGroups = unusedObjGroupSet;
-        this.getDelta();
-      });
-  }
-
-  // since we split up objects based on whether they were referenced in FW or NAT rules
-  // we need to compare both sets of arrays and consolidate all objects / groups
-  // into globally unusedObjects/Groups
-  private getDelta() {
-    const objectsToRemove = [];
-    const objectGroupsToRemove = [];
-    // loop through all unusedFWServiceObjects
-    this.unusedObjects.fwRuleServiceObjects.map(unusedObj => {
-      // if the unusedFWServiceObject exists in the usedObjects.serviceObjects array
-      // we know we need to remove that object from the UNUSED fwRuleServiceObjects array
-      if (this.usedObjects.serviceObjects.includes(unusedObj.id)) {
-        objectsToRemove.push(unusedObj);
-      }
-    });
-    this.unusedObjects.fwRuleServiceObjectGroups.map(unusedObjGrp => {
-      // if the unusedFWServiceObjectGroup exists in the usedObjects.serviceObjectGroups array
-      // we know we need to remove that object from the UNUSED fwRuleServiceObjectGroups array
-      if (this.usedObjects.serviceObjectGroups.includes(unusedObjGrp.id)) {
-        objectGroupsToRemove.push(unusedObjGrp);
-      }
-    });
-
-    // loop through objectsToRemove array and remove each entry from the UNUSED.fwRuleServiceObjects array
-    objectsToRemove.map(obj => {
-      this.unusedObjects.fwRuleServiceObjects.splice(this.unusedObjects.fwRuleServiceObjects.indexOf(obj), 1);
-    });
-    // loop through objectsToRemove array and remove each entry from the UNUSED.fwRuleServiceObjectGroups array
-    objectGroupsToRemove.map(objGrp => {
-      this.unusedObjects.fwRuleServiceObjectGroups.splice(this.unusedObjects.fwRuleServiceObjectGroups.indexOf(objGrp), 1);
-    });
-
-    // add unusedFWServceObjects and unusedNATRuleServiceObjects to globalUnusedObjects array
-    this.unusedObjects.globalUnusedObjects.push(...this.unusedObjects.fwRuleServiceObjects);
-    this.unusedObjects.globalUnusedObjects.push(...this.unusedObjects.natRuleServiceObjects);
-    // add unusedFWServiceObjectGroups and unusedNATRuleServiceObjectGroups to globalUnusedObjects array
-    this.unusedObjects.globalUnusedObjectGroups.push(...this.unusedObjects.fwRuleServiceObjectGroups);
-    this.unusedObjects.globalUnusedObjectGroups.push(...this.unusedObjects.natRuleServiceObjectGroups);
-
-    // create a unique set of globalUnusedObjects and globalUnusedObjectGroups
-    const serObjSet = [...new Set(this.unusedObjects.globalUnusedObjects)];
-    const serObjGroupSet = [...new Set(this.unusedObjects.globalUnusedObjectGroups)];
-
-    // assign unique set to appropriate properties
-    this.unusedObjects.globalUnusedObjects = serObjSet;
-    this.unusedObjects.globalUnusedObjectGroups = serObjGroupSet;
-
-    this.openUnusedObjectsModal();
-  }
-
-  public subscribeToUnusedObjectsModal(): void {
+  private subscribeToUnusedObjectsModal(): void {
     this.unusedObjectsModalSubscription = this.ngx.getModal('unusedObjectsModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('unusedObjectsModal');
-      // clear all arrays to avoid duplicates if the object scan is run multiple times
-      this.unusedObjects.fwRuleServiceObjects = [];
-      this.unusedObjects.fwRuleServiceObjectGroups = [];
-      this.unusedObjects.natRuleServiceObjects = [];
-      this.unusedObjects.natRuleServiceObjectGroups = [];
-      this.unusedObjects.globalUnusedObjects = [];
-      this.unusedObjects.globalUnusedObjectGroups = [];
-      this.unusedObjects.data = [];
       this.getServiceObjects();
-      this.getAllServiceObjectsAndGroups();
       this.unusedObjectsModalSubscription.unsubscribe();
     });
   }
 
-  public openUnusedObjectsModal(): void {
-    // dynamically add a new object type property to each unused object / group
-    this.unusedObjects.globalUnusedObjects.map(obj => {
-      obj.type = 'Service Object';
-    });
-    this.unusedObjects.globalUnusedObjectGroups.map(obj => {
-      obj.type = 'Service Object Group';
-    });
-    // table template expects `data.data` to display table entries
-    this.unusedObjects.data.push(...this.unusedObjects.globalUnusedObjects);
-    this.unusedObjects.data.push(...this.unusedObjects.globalUnusedObjectGroups);
+  private openUnusedObjectsModal(): void {
     this.subscribeToUnusedObjectsModal();
     this.ngx.getModal('unusedObjectsModal').open();
-  }
-
-  public getAllServiceObjectsAndGroups() {
-    this.serviceObjectService
-      .getManyServiceObject({
-        filter: [`tierId||eq||${this.currentTier.id}`, `deletedAt||isnull`],
-        limit: 50000,
-      })
-      .subscribe(data => {
-        this.allServiceObjects = data as any;
-      });
-
-    this.serviceObjectGroupService
-      .getManyServiceObjectGroup({
-        filter: [`tierId||eq||${this.currentTier.id}`, `deletedAt||isnull`],
-        join: ['serviceObjects'],
-        limit: 50000,
-      })
-      .subscribe(data => {
-        this.allServiceObjectGroups = data as any;
-      });
   }
 
   public onSvcObjTableEvent(event: TableComponentDto): void {
@@ -560,7 +264,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       } else {
         this.getServiceObjects();
       }
-      this.getAllServiceObjectsAndGroups();
       this.ngx.resetModalData('serviceObjectModal');
       this.datacenterContextService.unlockDatacenter();
     });
@@ -581,7 +284,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       } else {
         this.getServiceObjectGroups();
       }
-      this.getAllServiceObjectsAndGroups();
       this.ngx.resetModalData('serviceObjectGroupModal');
       this.datacenterContextService.unlockDatacenter();
     });
@@ -626,7 +328,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         } else {
           this.getServiceObjects();
         }
-        this.getAllServiceObjectsAndGroups();
       });
     }
   }
@@ -813,9 +514,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       if (ct) {
         this.currentTier = ct;
         this.getObjectsForNavIndex();
-        this.getAllServiceObjectsAndGroups();
-        this.getFirewallRuleGroups();
-        this.getNatRuleGroups();
       }
     });
   }
