@@ -47,7 +47,7 @@ export interface FindAllApplicationProfileRequestParams {
     group?: string;
     /** Properties to select. */
     select?: string;
-    /** s */
+    /** JSON filter string. */
     s?: string;
 }
 

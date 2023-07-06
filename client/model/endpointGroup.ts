@@ -31,7 +31,7 @@ export interface EndpointGroup {
     readonly tenant?: Tenant;
     tenantId: string;
     readonly bridgeDomain?: BridgeDomain;
-    bridgeDomainId?: string;
+    bridgeDomainId: string;
     readonly applicationProfile?: ApplicationProfile;
     applicationProfileId: string;
     readonly consumedContracts?: Array<Contract>;

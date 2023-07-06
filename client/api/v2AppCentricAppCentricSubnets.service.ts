@@ -47,7 +47,7 @@ export interface FindAllAppCentricSubnetRequestParams {
     group?: string;
     /** Properties to select. */
     select?: string;
-    /** s */
+    /** JSON filter string. */
     s?: string;
 }
 

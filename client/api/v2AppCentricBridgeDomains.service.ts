@@ -54,7 +54,7 @@ export interface FindAllBridgeDomainRequestParams {
     group?: string;
     /** Properties to select. */
     select?: string;
-    /** s */
+    /** JSON filter string. */
     s?: string;
 }
 
