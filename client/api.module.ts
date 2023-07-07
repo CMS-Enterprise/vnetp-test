@@ -2,27 +2,8 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
-import { V1ActifioGmApplicationsService } from './api/v1ActifioGmApplications.service';
-import { V1ActifioGmClustersService } from './api/v1ActifioGmClusters.service';
-import { V1ActifioGmDiskPoolsService } from './api/v1ActifioGmDiskPools.service';
-import { V1ActifioGmHostsService } from './api/v1ActifioGmHosts.service';
-import { V1ActifioGmJobsService } from './api/v1ActifioGmJobs.service';
-import { V1ActifioGmLogicalGroupsService } from './api/v1ActifioGmLogicalGroups.service';
-import { V1ActifioGmOrganizationsService } from './api/v1ActifioGmOrganizations.service';
-import { V1ActifioGmProfilesService } from './api/v1ActifioGmProfiles.service';
-import { V1ActifioGmSlasService } from './api/v1ActifioGmSlas.service';
-import { V1ActifioGmTemplatesService } from './api/v1ActifioGmTemplates.service';
-import { V1ActifioRdcAppliancesService } from './api/v1ActifioRdcAppliances.service';
-import { V1ActifioRdcApplicationGroupsService } from './api/v1ActifioRdcApplicationGroups.service';
-import { V1ActifioRdcApplicationsService } from './api/v1ActifioRdcApplications.service';
-import { V1ActifioRdcRecoveryTypesService } from './api/v1ActifioRdcRecoveryTypes.service';
-import { V1ActifioRdsArmServersService } from './api/v1ActifioRdsArmServers.service';
-import { V1ActifioRdsRecoveryPlansService } from './api/v1ActifioRdsRecoveryPlans.service';
-import { V1ActifioRdsVirtualManagementServersService } from './api/v1ActifioRdsVirtualManagementServers.service';
-import { V1AppliancesService } from './api/v1Appliances.service';
 import { V1AuditLogService } from './api/v1AuditLog.service';
 import { V1AuthService } from './api/v1Auth.service';
-import { V1ConfigurationUploadService } from './api/v1ConfigurationUpload.service';
 import { V1DatacentersService } from './api/v1Datacenters.service';
 import { V1JobsService } from './api/v1Jobs.service';
 import { V1LoadBalancerHealthMonitorsService } from './api/v1LoadBalancerHealthMonitors.service';
@@ -46,15 +27,23 @@ import { V1NetworkSecurityServiceObjectsService } from './api/v1NetworkSecurityS
 import { V1NetworkStaticRoutesService } from './api/v1NetworkStaticRoutes.service';
 import { V1NetworkSubnetsService } from './api/v1NetworkSubnets.service';
 import { V1NetworkVlansService } from './api/v1NetworkVlans.service';
-import { V1PhysicalServersService } from './api/v1PhysicalServers.service';
-import { V1PriorityGroupsService } from './api/v1PriorityGroups.service';
 import { V1SelfServiceService } from './api/v1SelfService.service';
+import { V1StatusService } from './api/v1Status.service';
 import { V1TierGroupsService } from './api/v1TierGroups.service';
 import { V1TiersService } from './api/v1Tiers.service';
 import { V1VlansService } from './api/v1Vlans.service';
-import { V1VmwareNetworkAdapterService } from './api/v1VmwareNetworkAdapter.service';
-import { V1VmwareVirtualDisksService } from './api/v1VmwareVirtualDisks.service';
-import { V1VmwareVirtualMachinesService } from './api/v1VmwareVirtualMachines.service';
+import { V2AppCentricAppCentricSubnetsService } from './api/v2AppCentricAppCentricSubnets.service';
+import { V2AppCentricApplicationProfilesService } from './api/v2AppCentricApplicationProfiles.service';
+import { V2AppCentricBridgeDomainsService } from './api/v2AppCentricBridgeDomains.service';
+import { V2AppCentricContractsService } from './api/v2AppCentricContracts.service';
+import { V2AppCentricEndpointGroupsService } from './api/v2AppCentricEndpointGroups.service';
+import { V2AppCentricFilterEntriesService } from './api/v2AppCentricFilterEntries.service';
+import { V2AppCentricFiltersService } from './api/v2AppCentricFilters.service';
+import { V2AppCentricL3outsService } from './api/v2AppCentricL3outs.service';
+import { V2AppCentricRouteProfilesService } from './api/v2AppCentricRouteProfiles.service';
+import { V2AppCentricSubjectsService } from './api/v2AppCentricSubjects.service';
+import { V2AppCentricTenantsService } from './api/v2AppCentricTenants.service';
+import { V2AppCentricVrfsService } from './api/v2AppCentricVrfs.service';
 
 @NgModule({
   imports:      [],

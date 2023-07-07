@@ -1,4 +1,4 @@
-import { SearchColumnConfig } from '../seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../search-bar/search-bar.component';
 import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef, Output, EventEmitter, AfterContentInit } from '@angular/core';
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
@@ -65,6 +65,7 @@ export class TableComponent<T> implements AfterViewInit {
   ngAfterViewInit(): void {
     this.show = true;
     this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
+
     // list of components that should have the search bar hidden when a user navigates to them
     const badList = [
       'managed-network',
@@ -75,10 +76,20 @@ export class TableComponent<T> implements AfterViewInit {
       'static-routes-for-the-currently-selected-tier',
       'audit-log',
       'detailed-audit-log-entry',
+      'endpoint-groups',
+      'consumed-contracts',
+      'provided-contracts',
+      'subnets',
+      'subjects',
+      'filterentries',
       'self-services',
+      'subject-filters',
+      'l3out-modal',
+      'bd-l3outs',
+      'tenants-and-datacenters',
     ];
 
-    const hidePagination = ['import-preview', 'detailed-audit-log-entry'];
+    const hidePagination = ['import-preview', 'detailed-audit-log-entry', 'bd-l3outs', 'tenants-and-datacenters'];
 
     // if tableId is a badList ID, we hide the search bar
     if (badList.includes(this.uniqueTableId)) {
