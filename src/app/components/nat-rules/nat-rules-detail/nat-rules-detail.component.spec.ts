@@ -1,7 +1,14 @@
 /* tslint:disable:no-string-literal */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NatRulesDetailComponent } from './nat-rules-detail.component';
-import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import {
+  MockComponent,
+  MockFontAwesomeComponent,
+  MockIconButtonComponent,
+  MockImportExportComponent,
+  MockNgxSmartModalComponent,
+  MockYesNoModalComponent,
+} from 'src/test/mock-components';
 import { SharedModule } from 'src/app/common/shared.module';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -11,6 +18,8 @@ import { of, Subject, Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NatRule, NatRuleImport, NatRulePreview } from 'client';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 
 describe('NatRulesDetailComponent', () => {
   let component: NatRulesDetailComponent;
@@ -39,8 +48,10 @@ describe('NatRulesDetailComponent', () => {
         MockComponent('app-nat-rule-modal'),
         MockComponent('app-preview-modal'),
         MockNgxSmartModalComponent,
+        MockImportExportComponent,
+        MockYesNoModalComponent,
       ],
-      imports: [SharedModule, RouterTestingModule, HttpClientModule],
+      imports: [ApplicationPipesModule, SharedModule, RouterTestingModule, HttpClientModule],
       providers: [
         MockProvider(NgxSmartModalService),
         { provide: 'DatacenterService', useValue: mockDatacenterService },

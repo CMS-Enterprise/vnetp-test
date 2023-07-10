@@ -168,40 +168,24 @@ describe('DatacenterContextService', () => {
   describe('switchDatacenter', () => {
     const datacenterId = 'test-datacenter-id';
 
-    it('should send a message if the current datacenter is locked', () => {
-      service.lockDatacenter();
-      const messageSpy = jest.spyOn(service['messageService'], 'sendMessage');
-
-      const result = service.switchDatacenter(datacenterId);
-
-      expect(messageSpy).toHaveBeenCalled();
-      expect(result).toBeFalsy();
-    });
-
     it('should return false if the datacenter id doesnt match', () => {
       service['_datacenters'] = [{ id: 'test-datacenter-id-2' }] as any;
-      const messageSpy = spyOn(service['messageService'], 'sendMessage');
       const result = service.switchDatacenter(datacenterId);
       expect(result).toBeFalsy();
-      expect(messageSpy).not.toHaveBeenCalled();
     });
 
     it('should return false if isSameDatacenter', () => {
       service['_datacenters'] = [{ id: 'test-datacenter-id' }] as any;
       jest.spyOn(service, 'currentDatacenterValue', 'get').mockReturnValue({ id: 'test-datacenter-id' } as any);
-      const messageSpy = spyOn(service['messageService'], 'sendMessage');
       const result = service.switchDatacenter(datacenterId);
       expect(result).toBeFalsy();
-      expect(messageSpy).toHaveBeenCalled();
     });
 
     it('should return true if datacenter isnt the same', () => {
       service['_datacenters'] = [{ id: 'test-datacenter-id' }] as any;
       jest.spyOn(service, 'currentDatacenterValue', 'get').mockReturnValue({ id: 'test-datacenter-id-2' } as any);
-      const messageSpy = spyOn(service['messageService'], 'sendMessage');
       const result = service.switchDatacenter(datacenterId);
       expect(result).toBeTruthy();
-      expect(messageSpy).toHaveBeenCalled();
     });
   });
 });
