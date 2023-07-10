@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Datacenter, V1DatacentersService } from 'client';
@@ -29,7 +29,12 @@ export class DatacenterContextService {
   private routesNotToRender: string[] = ['/', '/tenant', '/logout', '/unauthorized'];
   private ignoreNextQueryParamEvent: boolean;
 
-  constructor(private datacenterService: V1DatacentersService, private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(
+    private datacenterService: V1DatacentersService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private zone: NgZone,
+  ) {
     // This subscription ensures that we release
     // the datacenter change lock when a navigation
     // event occurs. This is useful in the event
@@ -146,10 +151,16 @@ export class DatacenterContextService {
 
     this.currentDatacenterSubject.next(datacenter);
     this.ignoreNextQueryParamEvent = true;
-    this.router.navigate([], {
-      queryParams: { datacenter: datacenter.id },
-      queryParamsHandling: 'merge',
+    this.zone.run(() => {
+      this.router.navigate([], {
+        queryParams: { datacenter: datacenter.id },
+        queryParamsHandling: 'merge',
+      });
     });
+    // this.router.navigate([], {
+    //   queryParams: { datacenter: datacenter.id },
+    //   queryParamsHandling: 'merge',
+    // });
     return true;
   }
 }

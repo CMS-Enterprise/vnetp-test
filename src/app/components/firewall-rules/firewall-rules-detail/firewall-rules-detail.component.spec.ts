@@ -30,6 +30,7 @@ import {
 import { HttpClientModule } from '@angular/common/http';
 import { of, Subject, Subscription, throwError } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -37,7 +38,7 @@ describe('FirewallRulesDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, NgxPaginationModule, ReactiveFormsModule, RouterTestingModule, HttpClientModule],
+      imports: [FormsModule, NgxPaginationModule, ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule],
       declarations: [
         FirewallRulesDetailComponent,
         ImportExportComponent,

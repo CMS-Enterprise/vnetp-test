@@ -20,6 +20,7 @@ import { NatRule, NatRuleImport, NatRulePreview } from 'client';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('NatRulesDetailComponent', () => {
   let component: NatRulesDetailComponent;
@@ -51,7 +52,7 @@ describe('NatRulesDetailComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],
-      imports: [ApplicationPipesModule, SharedModule, RouterTestingModule, HttpClientModule],
+      imports: [ApplicationPipesModule, SharedModule, RouterTestingModule.withRoutes([]), HttpClientTestingModule],
       providers: [
         MockProvider(NgxSmartModalService),
         { provide: 'DatacenterService', useValue: mockDatacenterService },
