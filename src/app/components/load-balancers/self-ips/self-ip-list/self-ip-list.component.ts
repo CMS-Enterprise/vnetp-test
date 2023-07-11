@@ -171,8 +171,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.selfIps = null;
-          this.loadSelfIps();
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

@@ -140,7 +140,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.iRules = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

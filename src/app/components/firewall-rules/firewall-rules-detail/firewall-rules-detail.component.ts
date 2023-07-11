@@ -216,7 +216,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           // this.totalFirewallRules = result.total;
         },
         () => {
-          this.firewallRules = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

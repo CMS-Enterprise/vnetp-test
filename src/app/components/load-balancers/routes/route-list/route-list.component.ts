@@ -146,8 +146,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.routes = null;
-          // this.loadRoutes();
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

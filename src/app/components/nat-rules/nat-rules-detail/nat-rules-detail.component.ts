@@ -189,7 +189,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
           this.natRules = response;
         },
         () => {
-          this.natRules = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

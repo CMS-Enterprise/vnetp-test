@@ -151,8 +151,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.profiles = null;
-          this.loadProfiles();
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

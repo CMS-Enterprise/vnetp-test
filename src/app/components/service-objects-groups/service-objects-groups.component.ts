@@ -167,7 +167,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
           this.serviceObjects = response;
         },
         () => {
-          this.serviceObjects = null;
+          this.isLoadingObjects = false;
         },
         () => {
           this.isLoadingObjects = false;
@@ -205,8 +205,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
           this.serviceObjectGroups = response;
         },
         () => {
-          this.serviceObjectGroups = null;
-          this.getServiceObjectGroups();
+          this.isLoadingGroups = false;
         },
         () => {
           this.isLoadingGroups = false;

@@ -1,9 +1,5 @@
 <app-tier-select></app-tier-select>
 
-<h1 *ngIf="navIndex === 0 && !subnetTableComponentDto.searchText">Subnets ({{subnets?.total}} items)</h1>
-
-<tooltip *ngIf="navIndex === 0 && subnetTableComponentDto.searchText" [message]="filteredHelpText?.FilteredResults"></tooltip>
-
 <h1 *ngIf="navIndex === 0">Subnets ({{subnets?.total}} items)</h1>
 
 <h1 *ngIf="navIndex === 1">Vlans ({{vlans?.total}} items)</h1>

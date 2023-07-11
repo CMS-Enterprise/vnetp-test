@@ -134,8 +134,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.vlans = null;
-          this.loadVlans();
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

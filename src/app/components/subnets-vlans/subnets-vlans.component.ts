@@ -433,8 +433,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
           this.subnets = response;
         },
         error => {
-          this.subnets = null;
-          this.getSubnets();
+          this.isLoadingSubnets = false;
         },
         () => {
           this.isLoadingSubnets = false;
@@ -476,8 +475,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
           }
         },
         () => {
-          this.vlans = null;
-          this.getVlans();
+          this.isLoadingVlans = false;
         },
         () => {
           this.isLoadingVlans = false;

@@ -151,8 +151,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.nodes = null;
-          this.loadNodes();
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

@@ -140,8 +140,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.policies = null;
-          this.loadPolicies();
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

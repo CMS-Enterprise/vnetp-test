@@ -148,8 +148,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
           });
         },
         () => {
-          this.healthMonitors = null;
-          this.loadHealthMonitors();
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

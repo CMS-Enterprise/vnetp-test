@@ -154,8 +154,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
           });
         },
         () => {
-          this.virtualServers = null;
-          this.loadVirtualServers();
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

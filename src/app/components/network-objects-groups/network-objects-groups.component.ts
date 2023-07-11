@@ -149,7 +149,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       this.netObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName === 'fqdn') {
+      if (propertyName === 'fqdn' || propertyName === 'name') {
         eventParams = `${propertyName}||cont||${searchText}`;
       } else if (propertyName) {
         eventParams = `${propertyName}||eq||${searchText}`;
@@ -167,7 +167,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
           this.networkObjects = response;
         },
         () => {
-          this.networkObjects = null;
+          this.isLoadingObjects = false;
         },
         () => {
           this.isLoadingObjects = false;
@@ -203,8 +203,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
           this.networkObjectGroups = response;
         },
         () => {
-          this.networkObjectGroups = null;
-          this.getNetworkObjectGroups();
+          this.isLoadingGroups = false;
         },
         () => {
           this.isLoadingGroups = false;
