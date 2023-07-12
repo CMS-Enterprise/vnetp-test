@@ -9,6 +9,7 @@ const tabs = [
   { name: 'Filter', route: ['filter'] },
   { name: 'L3 Outs', route: ['l3-outs'] },
   { name: 'VRF', route: ['vrf'] },
+  { name: 'Route Profile', route: ['route-profile'] },
 ];
 
 @Component({
