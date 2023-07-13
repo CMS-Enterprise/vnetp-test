@@ -47,8 +47,8 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const currentRoute = this.router.url.split('?')[0];
-    this.disableSelect = !currentRoute.includes('/dashboard');
+    const initialRoute = this.router.url.split('?')[0];
+    this.disableSelect = !initialRoute.includes('/dashboard');
     this.datacentersSubscription = this.datacenterContextService.datacenters.subscribe(datacenters => (this.datacenters = datacenters));
 
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(
