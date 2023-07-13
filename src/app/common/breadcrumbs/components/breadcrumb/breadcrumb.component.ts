@@ -35,9 +35,9 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     };
 
     this.breadcrumbs.push(dashboardBreadcrumb);
-    const root = this.route.root;
-    const newBreadCrumbs = this.getBreadcrumbs(root);
-    this.breadcrumbs = [dashboardBreadcrumb, ...newBreadCrumbs];
+    const originalRoot = this.route.root;
+    const originalBreadCrumbs = this.getBreadcrumbs(originalRoot);
+    this.breadcrumbs = [dashboardBreadcrumb, ...originalBreadCrumbs];
 
     this.routeChanges = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       const root: ActivatedRoute = this.route.root;
