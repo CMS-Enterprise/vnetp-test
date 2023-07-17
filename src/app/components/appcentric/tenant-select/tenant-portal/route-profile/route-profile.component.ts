@@ -1,13 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import {
-  RouteProfilePaginationResponse,
-  RouteProfile,
-  VrfPaginationResponse,
-  V2AppCentricVrfsService,
-  Vrf,
-  V2AppCentricRouteProfilesService,
-} from 'client';
+import { RouteProfilePaginationResponse, RouteProfile, V2AppCentricRouteProfilesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -192,7 +185,7 @@ export class RouteProfileComponent implements OnInit {
     });
   }
 
-  public importRouteProfileConfig(routeProfile: RouteProfile[]): void {
+  public importRouteProfileConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

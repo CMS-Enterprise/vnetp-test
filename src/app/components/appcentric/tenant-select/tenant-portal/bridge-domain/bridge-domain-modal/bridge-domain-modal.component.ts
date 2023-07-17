@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import {
@@ -276,7 +276,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
           l3PagResponse.data = data.l3outs;
           this.l3OutsTableData = l3PagResponse;
         },
-        err => (this.l3OutsTableData = null),
+        () => (this.l3OutsTableData = null),
         () => (this.isLoading = false),
       );
   }

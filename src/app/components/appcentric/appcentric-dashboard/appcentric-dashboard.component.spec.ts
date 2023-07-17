@@ -2,9 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
-  V1DatacentersService,
-  V1LoadBalancerVirtualServersService,
-  V1TiersService,
   V2AppCentricBridgeDomainsService,
   V2AppCentricContractsService,
   V2AppCentricTenantsService,

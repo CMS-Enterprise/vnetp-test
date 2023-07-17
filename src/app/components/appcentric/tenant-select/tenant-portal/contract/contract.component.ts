@@ -23,7 +23,6 @@ export class ContractComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
   private contractModalSubscription: Subscription;
   public tenantId: string;
-  private subjectModalSubscription: Subscription;
 
   public isLoading = false;
 
@@ -188,7 +187,7 @@ export class ContractComponent implements OnInit {
     });
   }
 
-  public importContractsConfig(contract: Contract[]): void {
+  public importContractsConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

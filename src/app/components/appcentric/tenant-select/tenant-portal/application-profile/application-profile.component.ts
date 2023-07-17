@@ -1,9 +1,8 @@
-import { Component, enableProdMode, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   ApplicationProfile,
   ApplicationProfilePaginationResponse,
-  EndpointGroup,
   EndpointGroupPaginationResponse,
   V2AppCentricApplicationProfilesService,
   V2AppCentricEndpointGroupsService,
@@ -220,7 +219,7 @@ export class ApplicationProfileComponent implements OnInit {
     });
   }
 
-  public importApplicationProfilesConfig(applicationProfiles: ApplicationProfile[]): void {
+  public importApplicationProfilesConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

@@ -188,7 +188,7 @@ export class VrfComponent implements OnInit {
     });
   }
 
-  public importVrfsConfig(vrf: Vrf[]): void {
+  public importVrfsConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

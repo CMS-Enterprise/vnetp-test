@@ -38,9 +38,7 @@ export class EndpointGroupModalComponent implements OnInit {
   @ViewChild('providedContract', { static: false })
   providedContractRef: ProvidedContractComponent;
 
-  public tabs: Tab[] = tabs.map(t => {
-    return { name: t.name };
-  });
+  public tabs: Tab[] = tabs.map(t => ({ name: t.name }));
 
   constructor(
     private formBuilder: FormBuilder,
@@ -181,7 +179,7 @@ export class EndpointGroupModalComponent implements OnInit {
     }
   }
 
-  public getBridgeDomains(event?): void {
+  public getBridgeDomains(): void {
     this.isLoading = true;
     this.bridgeDomainService
       .findAllBridgeDomain({

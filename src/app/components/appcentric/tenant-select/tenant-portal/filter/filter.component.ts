@@ -22,7 +22,6 @@ export class FilterComponent implements OnInit {
   public filters = {} as FilterPaginationResponse;
   public tableComponentDto = new TableComponentDto();
   private filterModalSubscription: Subscription;
-  private filterEntryModalSubscription: Subscription;
   public tenantId: string;
 
   public isLoading = false;
@@ -187,7 +186,7 @@ export class FilterComponent implements OnInit {
     });
   }
 
-  public importFiltersConfig(filter: Filter[]): void {
+  public importFiltersConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

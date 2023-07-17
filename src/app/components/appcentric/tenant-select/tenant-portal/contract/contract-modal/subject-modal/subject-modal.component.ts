@@ -37,9 +37,6 @@ export class SubjectModalComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
   public perPage = 20;
 
-  private addFilterModalSubscription: Subscription;
-  private subjectEditModalSubscription: Subscription;
-
   public filters: Filter[];
   public selectedFilter: Filter;
   public subjectId: string;
@@ -64,7 +61,6 @@ export class SubjectModalComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private subjectsService: V2AppCentricSubjectsService,
     private router: Router,
-    private tableContextService: TableContextService,
     private filterService: V2AppCentricFiltersService,
   ) {
     this.router.events.subscribe(event => {

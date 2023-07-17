@@ -71,7 +71,7 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
         endpointGroupId: this.endpointGroupId,
         contractId: this.selectedContract.id,
       })
-      .subscribe(data => this.getProvidedContracts());
+      .subscribe(() => this.getProvidedContracts());
   }
 
   public removeContract(contract: Contract): void {
@@ -82,7 +82,7 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
           endpointGroupId: this.endpointGroupId,
           contractId: contract.id,
         })
-        .subscribe(data => this.getProvidedContracts());
+        .subscribe(() => this.getProvidedContracts());
     };
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
@@ -117,7 +117,7 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
           const usedFilters = this.contractTableData?.data.map(contract => contract.id);
           this.contracts = allContracts.filter(contract => !usedFilters?.includes(contract.id));
         },
-        err => (this.contracts = null),
+        () => (this.contracts = null),
       );
   }
 

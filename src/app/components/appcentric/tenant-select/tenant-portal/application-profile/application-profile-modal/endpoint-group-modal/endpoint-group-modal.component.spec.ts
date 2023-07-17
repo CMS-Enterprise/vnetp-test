@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, async, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -13,7 +13,7 @@ describe('EndpointGroupModalComponent', () => {
   let component: EndpointGroupModalComponent;
   let fixture: ComponentFixture<EndpointGroupModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         EndpointGroupModalComponent,
@@ -26,7 +26,7 @@ describe('EndpointGroupModalComponent', () => {
       imports: [RouterTestingModule, ReactiveFormsModule, HttpClientModule, NgSelectModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EndpointGroupModalComponent);

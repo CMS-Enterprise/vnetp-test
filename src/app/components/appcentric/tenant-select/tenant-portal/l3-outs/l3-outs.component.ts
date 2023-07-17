@@ -190,7 +190,7 @@ export class L3OutsComponent implements OnInit {
     });
   }
 
-  public importL3OutsConfig(l3Out: L3Out[]): void {
+  public importL3OutsConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

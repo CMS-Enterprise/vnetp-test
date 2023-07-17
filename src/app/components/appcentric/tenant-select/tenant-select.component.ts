@@ -154,7 +154,7 @@ export class TenantSelectComponent implements OnInit {
       });
   }
 
-  public importTenantsConfig(tenants: Tenant[]): void {
+  public importTenantsConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

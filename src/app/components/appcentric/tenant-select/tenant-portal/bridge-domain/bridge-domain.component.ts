@@ -3,12 +3,9 @@ import { NavigationEnd, Router } from '@angular/router';
 import {
   BridgeDomain,
   BridgeDomainPaginationResponse,
-  L3Out,
-  L3OutPaginationResponse,
   V2AppCentricBridgeDomainsService,
   V2AppCentricL3outsService,
   V2AppCentricVrfsService,
-  Vrf,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -230,7 +227,7 @@ export class BridgeDomainComponent implements OnInit {
     });
   }
 
-  public importBridgeDomainsConfig(bridgeDomain: BridgeDomain[]): void {
+  public importBridgeDomainsConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,
