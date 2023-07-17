@@ -15,7 +15,7 @@ import { EntityService } from 'src/app/services/entity.service';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { VirtualServerModalDto } from '../virtual-server-modal/virtual-server-modal.dto';
 
 export interface VirtualServerView extends LoadBalancerVirtualServer {

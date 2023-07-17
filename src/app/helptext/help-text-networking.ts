@@ -287,3 +287,13 @@ export class DashboardHelpText {
   ZvmLpars = 'Total z/VM LPARs within the current tenant.';
   ZosLpars = 'Total z/OS LPARs within the current tenant.';
 }
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AppcentricDashboardHelpText {
+  Tenants = 'Total Appcentric Tenants within the current tenant.';
+  Vrfs = 'Total VRFs within the current tenant.';
+  BridgeDomains = 'Total Bridge Domains within the current tenant.';
+  Contracts = 'Total Contracts within the current tenant.';
+}

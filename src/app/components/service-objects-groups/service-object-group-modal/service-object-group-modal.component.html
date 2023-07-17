@@ -7,7 +7,7 @@
   customClass="medium-modal"
 >
   <header class="modal-header">
-    <h4 class="modal-title">Service Object Group</h4>
+    <h2 class="modal-title">Service Object Group</h2>
   </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -51,11 +51,14 @@
         <div class="form-group col-md-12">
           <label for="type">Type</label>
           <tooltip [message]="helpText.Type"></tooltip>
-          <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors" aria-label="Type">
-            <option></option>
-            <option value="TCPUDP">TCP/UDP</option>
-            <option value="TCP">TCP</option>
-            <option value="UDP">UDP</option>
+          <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors" aria-label="type">
+            <optgroup aria-label="types">
+              <option selected></option>
+              <option value="TCPUDP">TCP/UDP</option>
+              <option value="TCP">TCP</option>
+              <option value="UDP">UDP</option>
+            </optgroup>
+            
           </select>
           <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
             <div *ngIf="f.type.errors.required">Type is required</div>

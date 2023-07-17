@@ -4,7 +4,7 @@
   "generator-cli": {
     "version": "5.0.1",
     "generators": {
-      "drass-ui": {
+      "draas-ui": {
         "generatorName": "typescript-angular",
         "output": "#{cwd}/client",
         "glob": "openapispec.json",

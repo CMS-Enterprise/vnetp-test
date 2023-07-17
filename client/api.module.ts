@@ -28,9 +28,22 @@ import { V1NetworkStaticRoutesService } from './api/v1NetworkStaticRoutes.servic
 import { V1NetworkSubnetsService } from './api/v1NetworkSubnets.service';
 import { V1NetworkVlansService } from './api/v1NetworkVlans.service';
 import { V1SelfServiceService } from './api/v1SelfService.service';
+import { V1StatusService } from './api/v1Status.service';
 import { V1TierGroupsService } from './api/v1TierGroups.service';
 import { V1TiersService } from './api/v1Tiers.service';
 import { V1VlansService } from './api/v1Vlans.service';
+import { V2AppCentricAppCentricSubnetsService } from './api/v2AppCentricAppCentricSubnets.service';
+import { V2AppCentricApplicationProfilesService } from './api/v2AppCentricApplicationProfiles.service';
+import { V2AppCentricBridgeDomainsService } from './api/v2AppCentricBridgeDomains.service';
+import { V2AppCentricContractsService } from './api/v2AppCentricContracts.service';
+import { V2AppCentricEndpointGroupsService } from './api/v2AppCentricEndpointGroups.service';
+import { V2AppCentricFilterEntriesService } from './api/v2AppCentricFilterEntries.service';
+import { V2AppCentricFiltersService } from './api/v2AppCentricFilters.service';
+import { V2AppCentricL3outsService } from './api/v2AppCentricL3outs.service';
+import { V2AppCentricRouteProfilesService } from './api/v2AppCentricRouteProfiles.service';
+import { V2AppCentricSubjectsService } from './api/v2AppCentricSubjects.service';
+import { V2AppCentricTenantsService } from './api/v2AppCentricTenants.service';
+import { V2AppCentricVrfsService } from './api/v2AppCentricVrfs.service';
 
 @NgModule({
   imports:      [],

@@ -15,7 +15,7 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { EntityService } from 'src/app/services/entity.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { PoolModalDto } from '../pool-modal/pool-modal.dto';
 
 export interface PoolView extends LoadBalancerPool {
