@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EnvironmentSummaryComponent } from './environment-summary.component';
 import { MockComponent, MockFontAwesomeComponent } from 'src/test/mock-components';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -10,7 +10,7 @@ describe('NetworkSummaryComponent', () => {
   let component: EnvironmentSummaryComponent;
   let fixture: ComponentFixture<EnvironmentSummaryComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         EnvironmentSummaryComponent,
@@ -19,7 +19,7 @@ describe('NetworkSummaryComponent', () => {
       ],
       imports: [RouterTestingModule, HttpClientModule],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EnvironmentSummaryComponent);
