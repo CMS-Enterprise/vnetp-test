@@ -35,7 +35,6 @@
     "@swimlane/ngx-charts": "^16.0.0",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.5.0",
-    "core-js": "^2.5.4",
     "d3": "^5.9.2",
     "d3-context-menu": "^1.1.1",
     "d3-scale": "^3.0.0",
