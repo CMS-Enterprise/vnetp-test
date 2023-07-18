@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { V2AppCentricL3outsService, L3OutPaginationResponse, L3Out, VrfPaginationResponse, V2AppCentricVrfsService, Vrf } from 'client';
+import { V2AppCentricL3outsService, L3OutPaginationResponse, L3Out, VrfPaginationResponse, V2AppCentricVrfsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';

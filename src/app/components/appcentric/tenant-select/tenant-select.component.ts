@@ -50,21 +50,21 @@ export class TenantSelectComponent implements OnInit {
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getTenants(event);
+    this.getTenants();
   }
 
-  public getTenants(event?): void {
+  public getTenants(): void {
     this.isLoading = true;
-    let eventParams;
-    if (event) {
-      this.tableComponentDto.page = event.page ? event.page : 1;
-      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
-      const { searchText } = event;
-      const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
-      }
-    }
+    // let eventParams;
+    // if (event) {
+    //   this.tableComponentDto.page = event.page ? event.page : 1;
+    //   this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+    //   const { searchText } = event;
+    //   const propertyName = event.searchColumn ? event.searchColumn : null;
+    //   if (propertyName) {
+    //     eventParams = `${propertyName}||cont||${searchText}`;
+    //   }
+    // }
     this.tenantService
       .findAllTenant({
         page: this.tableComponentDto.page,
@@ -106,7 +106,7 @@ export class TenantSelectComponent implements OnInit {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getTenants(params);
+          this.getTenants();
         } else {
           this.getTenants();
         }
@@ -123,7 +123,7 @@ export class TenantSelectComponent implements OnInit {
           // if filtered results boolean is true, apply search params in the
           // subsequent get call
           if (filteredResults) {
-            this.getTenants(params);
+            this.getTenants();
           } else {
             this.getTenants();
           }
@@ -147,7 +147,7 @@ export class TenantSelectComponent implements OnInit {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getTenants(params);
+          this.getTenants();
         } else {
           this.getTenants();
         }
@@ -185,7 +185,7 @@ export class TenantSelectComponent implements OnInit {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.getTenants(params);
+        this.getTenants();
       } else {
         this.getTenants();
       }

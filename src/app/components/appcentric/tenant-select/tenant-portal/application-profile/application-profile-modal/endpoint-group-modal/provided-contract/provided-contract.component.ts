@@ -62,7 +62,7 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getProvidedContracts(event);
+    this.getProvidedContracts();
   }
 
   public addContract(): void {
@@ -87,7 +87,7 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  public getProvidedContracts(event?): void {
+  public getProvidedContracts(): void {
     this.endpointGroupsService
       .findOneEndpointGroup({
         uuid: this.endpointGroupId,

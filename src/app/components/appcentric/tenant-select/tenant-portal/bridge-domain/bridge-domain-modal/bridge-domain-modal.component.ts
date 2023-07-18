@@ -99,7 +99,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getL3OutsTableData(event);
+    this.getL3OutsTableData();
   }
 
   get f() {
@@ -259,7 +259,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getL3OutsTableData(event?): void {
+  public getL3OutsTableData(): void {
     this.isLoading = true;
     this.bridgeDomainService
       .findOneBridgeDomain({
@@ -349,7 +349,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getL3OutsTableData(params);
+          this.getL3OutsTableData();
         } else {
           this.getL3OutsTableData();
         }
@@ -374,7 +374,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
             // if filtered results boolean is true, apply search params in the
             // subsequent get call
             if (filteredResults) {
-              this.getL3OutsTableData(params);
+              this.getL3OutsTableData();
             } else {
               this.getL3OutsTableData();
             }

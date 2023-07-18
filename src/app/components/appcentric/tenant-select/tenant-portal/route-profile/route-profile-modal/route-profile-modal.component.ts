@@ -1,7 +1,7 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
-import { RouteProfile, V2AppCentricRouteProfilesService, V2AppCentricVrfsService, Vrf, VrfPaginationResponse } from 'client';
+import { RouteProfile, V2AppCentricRouteProfilesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';

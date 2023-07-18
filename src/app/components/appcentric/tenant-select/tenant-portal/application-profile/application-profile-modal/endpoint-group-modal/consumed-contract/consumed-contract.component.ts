@@ -61,7 +61,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getConsumedContracts(event);
+    this.getConsumedContracts();
   }
 
   public addContract(): void {
@@ -86,7 +86,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  public getConsumedContracts(event?): void {
+  public getConsumedContracts(): void {
     this.endpointGroupsService
       .findOneEndpointGroup({
         uuid: this.endpointGroupId,

@@ -37,7 +37,7 @@ describe('FilterEntryModalComponent', () => {
   });
 
   const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
-  const isRequired = (prop: string): boolean => {
+  (prop: string): boolean => {
     const fc = getFormControl(prop);
     fc.setValue(null);
     return !!fc.errors && !!fc.errors.required;

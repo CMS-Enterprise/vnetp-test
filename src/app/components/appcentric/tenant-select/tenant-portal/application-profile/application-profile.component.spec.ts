@@ -1,6 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
@@ -19,7 +18,7 @@ describe('ApplicationProfileComponent', () => {
   let component: ApplicationProfileComponent;
   let fixture: ComponentFixture<ApplicationProfileComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         ApplicationProfileComponent,
@@ -35,7 +34,7 @@ describe('ApplicationProfileComponent', () => {
       imports: [HttpClientModule, RouterTestingModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ApplicationProfileComponent);

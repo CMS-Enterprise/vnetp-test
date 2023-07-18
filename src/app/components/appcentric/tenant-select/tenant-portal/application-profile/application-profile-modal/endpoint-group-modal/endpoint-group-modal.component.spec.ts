@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockTabsComponent } from 'src/test/mock-components';
+import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 
 import { EndpointGroupModalComponent } from './endpoint-group-modal.component';

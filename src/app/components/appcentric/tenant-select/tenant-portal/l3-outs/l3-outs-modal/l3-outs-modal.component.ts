@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
-import { L3Out, V2AppCentricL3outsService, V2AppCentricVrfsService, Vrf, VrfPaginationResponse } from 'client';
+import { L3Out, V2AppCentricL3outsService, V2AppCentricVrfsService, VrfPaginationResponse } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';

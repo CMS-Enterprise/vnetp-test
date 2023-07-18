@@ -151,7 +151,7 @@ export class ContractModalComponent implements OnInit {
       return;
     }
 
-    const { name, description, alias, scope } = this.form.value;
+    const { name, description, alias } = this.form.value;
     const tenantId = this.tenantId;
     const contract = {
       name,
