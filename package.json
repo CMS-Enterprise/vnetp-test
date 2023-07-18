@@ -31,7 +31,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-regular-svg-icons": "^5.13.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
-    "@ng-select/ng-select": "^6.1.0",
+    "@ng-select/ng-select": "^7.4.0",
     "@swimlane/ngx-charts": "^16.0.0",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.5.0",
