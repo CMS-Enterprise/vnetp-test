@@ -1,5 +1,4 @@
-/* tslint:disable:no-string-literal */
-
+/* eslint-disable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EnvironmentSummaryComponent } from './environment-summary.component';
 import { MockComponent, MockFontAwesomeComponent } from 'src/test/mock-components';

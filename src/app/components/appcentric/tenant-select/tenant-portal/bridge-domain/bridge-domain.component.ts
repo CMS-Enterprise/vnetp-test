@@ -1,12 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import {
-  BridgeDomain,
-  BridgeDomainPaginationResponse,
-  V2AppCentricBridgeDomainsService,
-  V2AppCentricL3outsService,
-  V2AppCentricVrfsService,
-} from 'client';
+import { BridgeDomain, BridgeDomainPaginationResponse, V2AppCentricBridgeDomainsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -56,8 +50,6 @@ export class BridgeDomainComponent implements OnInit {
     private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
     private router: Router,
-    private vrfService: V2AppCentricVrfsService,
-    private l3OutsService: V2AppCentricL3outsService,
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
