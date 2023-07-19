@@ -1,7 +1,6 @@
 // Angular Imports
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 // 3rd-Party Imports
@@ -30,7 +29,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
-import { NgxMaskModule } from 'ngx-mask';
 
 // 1st-Party Imports
 import { AppRoutingModule } from './app-routing.module';
@@ -39,7 +37,7 @@ import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
 import { ApiModule, Configuration, ConfigurationParameters } from 'client';
 import { environment } from 'src/environments/environment';
 import { AppInitService } from './app.init';
-import { APP_INITIALIZER } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavbarModule } from './common/navbar/navbar.module';
 import { BreadcrumbsModule } from './common/breadcrumbs/breadcrumbs.module';
@@ -65,7 +63,6 @@ export function init_app(appLoadService: AppInitService) {
     FontAwesomeModule,
     FormsModule,
     HttpClientModule,
-    NgxMaskModule.forRoot(),
     NgxSmartModalModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right',
