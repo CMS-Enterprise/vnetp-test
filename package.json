@@ -33,7 +33,6 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@ng-select/ng-select": "^7.4.0",
     "@swimlane/ngx-charts": "^16.0.0",
-    "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.5.0",
     "d3": "^5.9.2",
     "d3-context-menu": "^1.1.1",
