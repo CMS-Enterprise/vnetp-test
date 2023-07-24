@@ -1,7 +1,6 @@
 def nodeImage = 'node:16.3.0'
 def sonarImage = 'sonarsource/sonar-scanner-cli'
 
-
 pipeline {
    agent any
     environment { npm_config_cache = 'npm-cache' }
@@ -67,8 +66,10 @@ pipeline {
             docker.image("${sonarImage}").withRun('--security-opt label=disable -v "$PWD:/usr/src"') { c ->
             
             // NEED THIS LINE TO WORK!
-            // sh 'if [ -d ./.scannerwork ]; then rm -Rf ./.scannerwork; fi'
             sh 'while [ ! -f ./.scannerwork/report-task.txt ]; do sleep 5; done'
+            sh 'sleep 10'
+            sh 'if [ -d ./.scannerwork ]; then chmod -R 777 ./.scannerwork; fi'
+            sh 'if [ -d ./.scannerwork ]; then rm -Rf ./.scannerwork; fi'
             }
           }
         }

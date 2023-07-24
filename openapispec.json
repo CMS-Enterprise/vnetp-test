@@ -5533,7 +5533,7 @@
           "l3OutForRouteProfileId": {
             "type": "string"
           },
-          "l3outForRouteProfile": {
+          "l3OutForRouteProfile": {
             "readOnly": true,
             "allOf": [
               {

@@ -54,7 +54,7 @@ export interface BridgeDomain {
     readonly endpointGroups?: Array<EndpointGroup>;
     readonly l3outs?: Array<L3Out>;
     l3OutForRouteProfileId?: string;
-    readonly l3outForRouteProfile?: L3Out;
+    readonly l3OutForRouteProfile?: L3Out;
     routeProfileId?: string;
     readonly routeProfile?: RouteProfile;
 }
