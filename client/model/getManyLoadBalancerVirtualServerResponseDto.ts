@@ -13,10 +13,11 @@ import { LoadBalancerVirtualServer } from './loadBalancerVirtualServer';
 
 
 export interface GetManyLoadBalancerVirtualServerResponseDto { 
-    data: Array<LoadBalancerVirtualServer>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<LoadBalancerVirtualServer>;
 }
 

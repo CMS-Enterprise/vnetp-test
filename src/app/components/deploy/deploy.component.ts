@@ -82,14 +82,13 @@ export class DeployComponent implements OnInit {
 
   private getTiers(): void {
     this.tierService
-      .getManyDatacenterTier({
-        datacenterId: this.currentDatacenter.id,
+      .getManyTier({
+        filter: [`datacenterId||eq||${this.currentDatacenter.id}`, 'deletedAt||isnull'],
         page: 1,
         limit: 1000,
-        filter: [`deletedAt||isnull`],
       })
-      .subscribe(response => {
-        this.tiers = response.data.map(tier => new TableRowWrapper(tier));
+      .subscribe(data => {
+        this.tiers = data.data.map(tier => new TableRowWrapper(tier));
       });
   }
 

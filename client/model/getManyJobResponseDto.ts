@@ -13,10 +13,11 @@ import { Job } from './job';
 
 
 export interface GetManyJobResponseDto { 
-    data: Array<Job>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<Job>;
 }
 

@@ -18,9 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { CreateManyVlanDto } from '../model/models';
-import { GetManySubnetResponseDto } from '../model/models';
 import { GetManyVlanResponseDto } from '../model/models';
-import { Subnet } from '../model/models';
 import { Vlan } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -36,99 +34,62 @@ export interface CreateOneVlanRequestParams {
 }
 
 export interface DeleteOneVlanRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface DeprovisionOneVlanRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface GetManyVlanRequestParams {
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds search condition. */
-    s?: string;
-    /** Adds filter condition. */
-    filter?: Array<string>;
-    /** Adds OR condition. */
-    or?: Array<string>;
-    /** Adds sort by field. */
-    sort?: Array<string>;
-    /** Adds relational resources. */
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Limit amount of resources. */
-    limit?: number;
-    /** Offset amount of resources. */
-    offset?: number;
-    /** Page portion of resources. */
+    /** Number of entities to return per page. */
+    perPage?: number;
+    /** Page of entities to return based on the perPage value and total number of entities in the database. */
     page?: number;
-    /** Reset cache (if was enabled). */
-    cache?: number;
-}
-
-export interface GetManyVlanSubnetRequestParams {
-    vlanId: string;
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds search condition. */
-    s?: string;
-    /** Adds filter condition. */
+    /** Filter condition to apply to the query. */
     filter?: Array<string>;
-    /** Adds OR condition. */
-    or?: Array<string>;
-    /** Adds sort by field. */
+    /** Properties to sort the response by. */
     sort?: Array<string>;
-    /** Adds relational resources. */
-    join?: Array<string>;
-    /** Limit amount of resources. */
+    /** Properties to group the response by. */
+    group?: Array<string>;
+    /** Properties to select. */
+    fields?: Array<string>;
+    /** Alias for perPage. Number of entities to return per page. */
     limit?: number;
-    /** Offset amount of resources. */
-    offset?: number;
-    /** Page portion of resources. */
-    page?: number;
-    /** Reset cache (if was enabled). */
-    cache?: number;
 }
 
 export interface GetOneVlanRequestParams {
+    /** UUID. */
     id: string;
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds relational resources. */
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Reset cache (if was enabled). */
-    cache?: number;
-}
-
-export interface GetOneVlanSubnetRequestParams {
-    vlanId: string;
-    id: string;
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds relational resources. */
-    join?: Array<string>;
-    /** Reset cache (if was enabled). */
-    cache?: number;
 }
 
 export interface ProvisionOneVlanRequestParams {
+    /** UUID. */
     id: string;
-}
-
-export interface ReplaceOneVlanRequestParams {
-    id: string;
-    vlan: Vlan;
 }
 
 export interface RestoreOneVlanRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface SoftDeleteOneVlanRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface UpdateOneVlanRequestParams {
+    /** UUID. */
     id: string;
     vlan: Vlan;
 }
@@ -200,10 +161,10 @@ export class V1NetworkVlansService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createManyVlan(requestParameters: CreateManyVlanRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Vlan>>;
-    public createManyVlan(requestParameters: CreateManyVlanRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Vlan>>>;
-    public createManyVlan(requestParameters: CreateManyVlanRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Vlan>>>;
-    public createManyVlan(requestParameters: CreateManyVlanRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createManyVlan(requestParameters: CreateManyVlanRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createManyVlan(requestParameters: CreateManyVlanRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createManyVlan(requestParameters: CreateManyVlanRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createManyVlan(requestParameters: CreateManyVlanRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const createManyVlanDto = requestParameters.createManyVlanDto;
         if (createManyVlanDto === null || createManyVlanDto === undefined) {
             throw new Error('Required parameter createManyVlanDto was null or undefined when calling createManyVlan.');
@@ -215,7 +176,6 @@ export class V1NetworkVlansService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -238,7 +198,7 @@ export class V1NetworkVlansService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<Vlan>>(`${this.configuration.basePath}/v1/network/vlans/bulk`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/network/vlans/bulk`,
             createManyVlanDto,
             {
                 responseType: <any>responseType,
@@ -312,10 +272,10 @@ export class V1NetworkVlansService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneVlan(requestParameters: DeleteOneVlanRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deleteOneVlan(requestParameters: DeleteOneVlanRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deleteOneVlan(requestParameters: DeleteOneVlanRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deleteOneVlan(requestParameters: DeleteOneVlanRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public deleteOneVlan(requestParameters: DeleteOneVlanRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Vlan>;
+    public deleteOneVlan(requestParameters: DeleteOneVlanRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Vlan>>;
+    public deleteOneVlan(requestParameters: DeleteOneVlanRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Vlan>>;
+    public deleteOneVlan(requestParameters: DeleteOneVlanRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling deleteOneVlan.');
@@ -327,6 +287,7 @@ export class V1NetworkVlansService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -340,7 +301,7 @@ export class V1NetworkVlansService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network/vlans/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<Vlan>(`${this.configuration.basePath}/v1/network/vlans/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -352,7 +313,7 @@ export class V1NetworkVlansService {
     }
 
     /**
-     * Deprovisions an Entity.
+     * Deprovision one Vlan
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -398,7 +359,7 @@ export class V1NetworkVlansService {
     }
 
     /**
-     * Retrieve many Vlan
+     * Get many Vlan
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -407,42 +368,21 @@ export class V1NetworkVlansService {
     public getManyVlan(requestParameters: GetManyVlanRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyVlanResponseDto>>;
     public getManyVlan(requestParameters: GetManyVlanRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyVlanResponseDto>>;
     public getManyVlan(requestParameters: GetManyVlanRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const fields = requestParameters.fields;
-        const s = requestParameters.s;
-        const filter = requestParameters.filter;
-        const or = requestParameters.or;
-        const sort = requestParameters.sort;
+        const relations = requestParameters.relations;
         const join = requestParameters.join;
-        const limit = requestParameters.limit;
-        const offset = requestParameters.offset;
+        const perPage = requestParameters.perPage;
         const page = requestParameters.page;
-        const cache = requestParameters.cache;
+        const filter = requestParameters.filter;
+        const sort = requestParameters.sort;
+        const group = requestParameters.group;
+        const fields = requestParameters.fields;
+        const limit = requestParameters.limit;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
-        }
-        if (s !== undefined && s !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>s, 's');
-        }
-        if (filter) {
-            filter.forEach((element) => {
+        if (relations) {
+            relations.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'filter');
-            })
-        }
-        if (or) {
-            or.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'or');
-            })
-        }
-        if (sort) {
-            sort.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'sort');
+                  <any>element, 'relations');
             })
         }
         if (join) {
@@ -451,21 +391,41 @@ export class V1NetworkVlansService {
                   <any>element, 'join');
             })
         }
-        if (limit !== undefined && limit !== null) {
+        if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
-        if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
+            <any>perPage, 'perPage');
         }
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>page, 'page');
         }
-        if (cache !== undefined && cache !== null) {
+        if (filter) {
+            filter.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'filter');
+            })
+        }
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
+        }
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
+        }
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
+            <any>limit, 'limit');
         }
 
         let headers = this.defaultHeaders;
@@ -501,114 +461,7 @@ export class V1NetworkVlansService {
     }
 
     /**
-     * Retrieve many Subnet
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getManyVlanSubnet(requestParameters: GetManyVlanSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManySubnetResponseDto>;
-    public getManyVlanSubnet(requestParameters: GetManyVlanSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManySubnetResponseDto>>;
-    public getManyVlanSubnet(requestParameters: GetManyVlanSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManySubnetResponseDto>>;
-    public getManyVlanSubnet(requestParameters: GetManyVlanSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const vlanId = requestParameters.vlanId;
-        if (vlanId === null || vlanId === undefined) {
-            throw new Error('Required parameter vlanId was null or undefined when calling getManyVlanSubnet.');
-        }
-        const fields = requestParameters.fields;
-        const s = requestParameters.s;
-        const filter = requestParameters.filter;
-        const or = requestParameters.or;
-        const sort = requestParameters.sort;
-        const join = requestParameters.join;
-        const limit = requestParameters.limit;
-        const offset = requestParameters.offset;
-        const page = requestParameters.page;
-        const cache = requestParameters.cache;
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
-        }
-        if (s !== undefined && s !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>s, 's');
-        }
-        if (filter) {
-            filter.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'filter');
-            })
-        }
-        if (or) {
-            or.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'or');
-            })
-        }
-        if (sort) {
-            sort.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'sort');
-            })
-        }
-        if (join) {
-            join.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'join');
-            })
-        }
-        if (limit !== undefined && limit !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
-        if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
-        }
-        if (page !== undefined && page !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>page, 'page');
-        }
-        if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<GetManySubnetResponseDto>(`${this.configuration.basePath}/v1/network/vlans/${encodeURIComponent(String(vlanId))}/subnets`,
-            {
-                params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Retrieve one Vlan
+     * Get one Vlan
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -621,24 +474,21 @@ export class V1NetworkVlansService {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getOneVlan.');
         }
-        const fields = requestParameters.fields;
+        const relations = requestParameters.relations;
         const join = requestParameters.join;
-        const cache = requestParameters.cache;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
         }
         if (join) {
             join.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
                   <any>element, 'join');
             })
-        }
-        if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
         }
 
         let headers = this.defaultHeaders;
@@ -674,77 +524,7 @@ export class V1NetworkVlansService {
     }
 
     /**
-     * Retrieve one Subnet
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getOneVlanSubnet(requestParameters: GetOneVlanSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Subnet>;
-    public getOneVlanSubnet(requestParameters: GetOneVlanSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Subnet>>;
-    public getOneVlanSubnet(requestParameters: GetOneVlanSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Subnet>>;
-    public getOneVlanSubnet(requestParameters: GetOneVlanSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const vlanId = requestParameters.vlanId;
-        if (vlanId === null || vlanId === undefined) {
-            throw new Error('Required parameter vlanId was null or undefined when calling getOneVlanSubnet.');
-        }
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getOneVlanSubnet.');
-        }
-        const fields = requestParameters.fields;
-        const join = requestParameters.join;
-        const cache = requestParameters.cache;
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
-        }
-        if (join) {
-            join.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'join');
-            })
-        }
-        if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<Subnet>(`${this.configuration.basePath}/v1/network/vlans/${encodeURIComponent(String(vlanId))}/subnets/${encodeURIComponent(String(id))}`,
-            {
-                params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Provisions an Entity.
+     * Provision one Vlan
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -790,67 +570,7 @@ export class V1NetworkVlansService {
     }
 
     /**
-     * Replace one Vlan
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public replaceOneVlan(requestParameters: ReplaceOneVlanRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Vlan>;
-    public replaceOneVlan(requestParameters: ReplaceOneVlanRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Vlan>>;
-    public replaceOneVlan(requestParameters: ReplaceOneVlanRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Vlan>>;
-    public replaceOneVlan(requestParameters: ReplaceOneVlanRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling replaceOneVlan.');
-        }
-        const vlan = requestParameters.vlan;
-        if (vlan === null || vlan === undefined) {
-            throw new Error('Required parameter vlan was null or undefined when calling replaceOneVlan.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.put<Vlan>(`${this.configuration.basePath}/v1/network/vlans/${encodeURIComponent(String(id))}`,
-            vlan,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Restores a Soft-Deleted Entity.
+     * Restore one Vlan
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -896,7 +616,7 @@ export class V1NetworkVlansService {
     }
 
     /**
-     * Soft deletes an Entity.
+     * Soft delete one Vlan
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -988,7 +708,7 @@ export class V1NetworkVlansService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<Vlan>(`${this.configuration.basePath}/v1/network/vlans/${encodeURIComponent(String(id))}`,
+        return this.httpClient.put<Vlan>(`${this.configuration.basePath}/v1/network/vlans/${encodeURIComponent(String(id))}`,
             vlan,
             {
                 responseType: <any>responseType,

@@ -17,6 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { CreateManyDatacenterDto } from '../model/models';
 import { Datacenter } from '../model/models';
 import { GetManyDatacenterResponseDto } from '../model/models';
 
@@ -24,57 +25,61 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateOneDatacentersRequestParams {
+export interface CreateManyDatacenterRequestParams {
+    createManyDatacenterDto: CreateManyDatacenterDto;
+}
+
+export interface CreateOneDatacenterRequestParams {
     datacenter: Datacenter;
 }
 
-export interface GetManyDatacentersRequestParams {
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds search condition. */
-    s?: string;
-    /** Adds filter condition. */
-    filter?: Array<string>;
-    /** Adds OR condition. */
-    or?: Array<string>;
-    /** Adds sort by field. */
-    sort?: Array<string>;
-    /** Adds relational resources. */
+export interface DeleteOneDatacenterRequestParams {
+    /** UUID. */
+    id: string;
+}
+
+export interface GetManyDatacenterRequestParams {
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Limit amount of resources. */
-    limit?: number;
-    /** Offset amount of resources. */
-    offset?: number;
-    /** Page portion of resources. */
+    /** Number of entities to return per page. */
+    perPage?: number;
+    /** Page of entities to return based on the perPage value and total number of entities in the database. */
     page?: number;
-    /** Reset cache (if was enabled). */
-    cache?: number;
-}
-
-export interface GetOneDatacentersRequestParams {
-    id: string;
-    /** Selects resource fields. */
+    /** Filter condition to apply to the query. */
+    filter?: Array<string>;
+    /** Properties to sort the response by. */
+    sort?: Array<string>;
+    /** Properties to group the response by. */
+    group?: Array<string>;
+    /** Properties to select. */
     fields?: Array<string>;
-    /** Adds relational resources. */
+    /** Alias for perPage. Number of entities to return per page. */
+    limit?: number;
+}
+
+export interface GetOneDatacenterRequestParams {
+    /** UUID. */
+    id: string;
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Reset cache (if was enabled). */
-    cache?: number;
 }
 
-export interface ReplaceOneDatacentersRequestParams {
-    id: string;
-    datacenter: Datacenter;
-}
-
-export interface RestoreOneDatacentersRequestParams {
+export interface RestoreOneDatacenterRequestParams {
+    /** UUID. */
     id: string;
 }
 
-export interface SoftDeleteOneDatacentersRequestParams {
+export interface SoftDeleteOneDatacenterRequestParams {
+    /** UUID. */
     id: string;
 }
 
-export interface UpdateOneDatacentersRequestParams {
+export interface UpdateOneDatacenterRequestParams {
+    /** UUID. */
     id: string;
     datacenter: Datacenter;
 }
@@ -141,18 +146,73 @@ export class V1DatacentersService {
     }
 
     /**
+     * Create many Datacenter
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createManyDatacenter(requestParameters: CreateManyDatacenterRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createManyDatacenter(requestParameters: CreateManyDatacenterRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createManyDatacenter(requestParameters: CreateManyDatacenterRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createManyDatacenter(requestParameters: CreateManyDatacenterRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const createManyDatacenterDto = requestParameters.createManyDatacenterDto;
+        if (createManyDatacenterDto === null || createManyDatacenterDto === undefined) {
+            throw new Error('Required parameter createManyDatacenterDto was null or undefined when calling createManyDatacenter.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/datacenters/bulk`,
+            createManyDatacenterDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Create one Datacenter
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneDatacenters(requestParameters: CreateOneDatacentersRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Datacenter>;
-    public createOneDatacenters(requestParameters: CreateOneDatacentersRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Datacenter>>;
-    public createOneDatacenters(requestParameters: CreateOneDatacentersRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Datacenter>>;
-    public createOneDatacenters(requestParameters: CreateOneDatacentersRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createOneDatacenter(requestParameters: CreateOneDatacenterRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Datacenter>;
+    public createOneDatacenter(requestParameters: CreateOneDatacenterRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Datacenter>>;
+    public createOneDatacenter(requestParameters: CreateOneDatacenterRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Datacenter>>;
+    public createOneDatacenter(requestParameters: CreateOneDatacenterRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const datacenter = requestParameters.datacenter;
         if (datacenter === null || datacenter === undefined) {
-            throw new Error('Required parameter datacenter was null or undefined when calling createOneDatacenters.');
+            throw new Error('Required parameter datacenter was null or undefined when calling createOneDatacenter.');
         }
 
         let headers = this.defaultHeaders;
@@ -197,51 +257,76 @@ export class V1DatacentersService {
     }
 
     /**
-     * Retrieve many Datacenter
+     * Delete one Datacenter
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getManyDatacenters(requestParameters: GetManyDatacentersRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyDatacenterResponseDto>;
-    public getManyDatacenters(requestParameters: GetManyDatacentersRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyDatacenterResponseDto>>;
-    public getManyDatacenters(requestParameters: GetManyDatacentersRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyDatacenterResponseDto>>;
-    public getManyDatacenters(requestParameters: GetManyDatacentersRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const fields = requestParameters.fields;
-        const s = requestParameters.s;
-        const filter = requestParameters.filter;
-        const or = requestParameters.or;
-        const sort = requestParameters.sort;
+    public deleteOneDatacenter(requestParameters: DeleteOneDatacenterRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Datacenter>;
+    public deleteOneDatacenter(requestParameters: DeleteOneDatacenterRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Datacenter>>;
+    public deleteOneDatacenter(requestParameters: DeleteOneDatacenterRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Datacenter>>;
+    public deleteOneDatacenter(requestParameters: DeleteOneDatacenterRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteOneDatacenter.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<Datacenter>(`${this.configuration.basePath}/v1/datacenters/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get many Datacenter
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getManyDatacenter(requestParameters: GetManyDatacenterRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyDatacenterResponseDto>;
+    public getManyDatacenter(requestParameters: GetManyDatacenterRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyDatacenterResponseDto>>;
+    public getManyDatacenter(requestParameters: GetManyDatacenterRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyDatacenterResponseDto>>;
+    public getManyDatacenter(requestParameters: GetManyDatacenterRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const relations = requestParameters.relations;
         const join = requestParameters.join;
-        const limit = requestParameters.limit;
-        const offset = requestParameters.offset;
+        const perPage = requestParameters.perPage;
         const page = requestParameters.page;
-        const cache = requestParameters.cache;
+        const filter = requestParameters.filter;
+        const sort = requestParameters.sort;
+        const group = requestParameters.group;
+        const fields = requestParameters.fields;
+        const limit = requestParameters.limit;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
-        }
-        if (s !== undefined && s !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>s, 's');
-        }
-        if (filter) {
-            filter.forEach((element) => {
+        if (relations) {
+            relations.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'filter');
-            })
-        }
-        if (or) {
-            or.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'or');
-            })
-        }
-        if (sort) {
-            sort.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'sort');
+                  <any>element, 'relations');
             })
         }
         if (join) {
@@ -250,21 +335,41 @@ export class V1DatacentersService {
                   <any>element, 'join');
             })
         }
-        if (limit !== undefined && limit !== null) {
+        if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
-        if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
+            <any>perPage, 'perPage');
         }
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>page, 'page');
         }
-        if (cache !== undefined && cache !== null) {
+        if (filter) {
+            filter.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'filter');
+            })
+        }
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
+        }
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
+        }
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
+            <any>limit, 'limit');
         }
 
         let headers = this.defaultHeaders;
@@ -300,37 +405,34 @@ export class V1DatacentersService {
     }
 
     /**
-     * Retrieve one Datacenter
+     * Get one Datacenter
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getOneDatacenters(requestParameters: GetOneDatacentersRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Datacenter>;
-    public getOneDatacenters(requestParameters: GetOneDatacentersRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Datacenter>>;
-    public getOneDatacenters(requestParameters: GetOneDatacentersRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Datacenter>>;
-    public getOneDatacenters(requestParameters: GetOneDatacentersRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getOneDatacenter(requestParameters: GetOneDatacenterRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Datacenter>;
+    public getOneDatacenter(requestParameters: GetOneDatacenterRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Datacenter>>;
+    public getOneDatacenter(requestParameters: GetOneDatacenterRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Datacenter>>;
+    public getOneDatacenter(requestParameters: GetOneDatacenterRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getOneDatacenters.');
+            throw new Error('Required parameter id was null or undefined when calling getOneDatacenter.');
         }
-        const fields = requestParameters.fields;
+        const relations = requestParameters.relations;
         const join = requestParameters.join;
-        const cache = requestParameters.cache;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
         }
         if (join) {
             join.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
                   <any>element, 'join');
             })
-        }
-        if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
         }
 
         let headers = this.defaultHeaders;
@@ -366,78 +468,18 @@ export class V1DatacentersService {
     }
 
     /**
-     * Replace one Datacenter
+     * Restore one Datacenter
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public replaceOneDatacenters(requestParameters: ReplaceOneDatacentersRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Datacenter>;
-    public replaceOneDatacenters(requestParameters: ReplaceOneDatacentersRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Datacenter>>;
-    public replaceOneDatacenters(requestParameters: ReplaceOneDatacentersRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Datacenter>>;
-    public replaceOneDatacenters(requestParameters: ReplaceOneDatacentersRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public restoreOneDatacenter(requestParameters: RestoreOneDatacenterRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneDatacenter(requestParameters: RestoreOneDatacenterRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneDatacenter(requestParameters: RestoreOneDatacenterRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneDatacenter(requestParameters: RestoreOneDatacenterRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling replaceOneDatacenters.');
-        }
-        const datacenter = requestParameters.datacenter;
-        if (datacenter === null || datacenter === undefined) {
-            throw new Error('Required parameter datacenter was null or undefined when calling replaceOneDatacenters.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.put<Datacenter>(`${this.configuration.basePath}/v1/datacenters/${encodeURIComponent(String(id))}`,
-            datacenter,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Restores a Soft-Deleted Entity.
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public restoreOneDatacenters(requestParameters: RestoreOneDatacentersRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreOneDatacenters(requestParameters: RestoreOneDatacentersRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreOneDatacenters(requestParameters: RestoreOneDatacentersRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreOneDatacenters(requestParameters: RestoreOneDatacentersRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling restoreOneDatacenters.');
+            throw new Error('Required parameter id was null or undefined when calling restoreOneDatacenter.');
         }
 
         let headers = this.defaultHeaders;
@@ -472,18 +514,18 @@ export class V1DatacentersService {
     }
 
     /**
-     * Soft deletes an Entity.
+     * Soft delete one Datacenter
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteOneDatacenters(requestParameters: SoftDeleteOneDatacentersRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteOneDatacenters(requestParameters: SoftDeleteOneDatacentersRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteOneDatacenters(requestParameters: SoftDeleteOneDatacentersRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteOneDatacenters(requestParameters: SoftDeleteOneDatacentersRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public softDeleteOneDatacenter(requestParameters: SoftDeleteOneDatacenterRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneDatacenter(requestParameters: SoftDeleteOneDatacenterRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneDatacenter(requestParameters: SoftDeleteOneDatacenterRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneDatacenter(requestParameters: SoftDeleteOneDatacenterRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling softDeleteOneDatacenters.');
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneDatacenter.');
         }
 
         let headers = this.defaultHeaders;
@@ -522,17 +564,17 @@ export class V1DatacentersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateOneDatacenters(requestParameters: UpdateOneDatacentersRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Datacenter>;
-    public updateOneDatacenters(requestParameters: UpdateOneDatacentersRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Datacenter>>;
-    public updateOneDatacenters(requestParameters: UpdateOneDatacentersRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Datacenter>>;
-    public updateOneDatacenters(requestParameters: UpdateOneDatacentersRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public updateOneDatacenter(requestParameters: UpdateOneDatacenterRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Datacenter>;
+    public updateOneDatacenter(requestParameters: UpdateOneDatacenterRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Datacenter>>;
+    public updateOneDatacenter(requestParameters: UpdateOneDatacenterRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Datacenter>>;
+    public updateOneDatacenter(requestParameters: UpdateOneDatacenterRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateOneDatacenters.');
+            throw new Error('Required parameter id was null or undefined when calling updateOneDatacenter.');
         }
         const datacenter = requestParameters.datacenter;
         if (datacenter === null || datacenter === undefined) {
-            throw new Error('Required parameter datacenter was null or undefined when calling updateOneDatacenters.');
+            throw new Error('Required parameter datacenter was null or undefined when calling updateOneDatacenter.');
         }
 
         let headers = this.defaultHeaders;
@@ -564,7 +606,7 @@ export class V1DatacentersService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<Datacenter>(`${this.configuration.basePath}/v1/datacenters/${encodeURIComponent(String(id))}`,
+        return this.httpClient.put<Datacenter>(`${this.configuration.basePath}/v1/datacenters/${encodeURIComponent(String(id))}`,
             datacenter,
             {
                 responseType: <any>responseType,

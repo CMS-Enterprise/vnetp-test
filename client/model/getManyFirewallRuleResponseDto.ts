@@ -13,10 +13,11 @@ import { FirewallRule } from './firewallRule';
 
 
 export interface GetManyFirewallRuleResponseDto { 
-    data: Array<FirewallRule>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<FirewallRule>;
 }
 

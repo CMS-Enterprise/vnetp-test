@@ -264,7 +264,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     this.bridgeDomainService
       .findOneBridgeDomain({
         uuid: this.bridgeDomainId,
-        relations: 'l3outs',
+        relations: ['l3outs'],
       })
       .subscribe(
         data => {

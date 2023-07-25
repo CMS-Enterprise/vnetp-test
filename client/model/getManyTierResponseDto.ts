@@ -13,10 +13,11 @@ import { Tier } from './tier';
 
 
 export interface GetManyTierResponseDto { 
-    data: Array<Tier>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<Tier>;
 }
 

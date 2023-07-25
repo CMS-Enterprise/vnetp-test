@@ -507,13 +507,13 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
   public getTiers(): void {
     this.tiersService
-      .getManyDatacenterTier({
-        limit: 1000,
-        datacenterId: this.datacenterId,
+      .getManyTier({
+        filter: [`datacenterId||eq||${this.datacenterId}`],
         join: ['firewallRuleGroups', 'natRuleGroups'],
+        limit: 1000,
       })
-      .subscribe(returnedData => {
-        this.tiers = returnedData as any;
+      .subscribe(data => {
+        this.tiers = data.data;
       });
   }
 

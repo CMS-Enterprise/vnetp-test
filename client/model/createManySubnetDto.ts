@@ -9,15 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { LoadBalancerIrule } from './loadBalancerIrule';
+import { Subnet } from './subnet';
 
 
-export interface GetManyLoadBalancerIruleResponseDto { 
-    totalPages: number;
-    count: number;
-    total: number;
-    page: number;
-    pageCount: number;
-    data: Array<LoadBalancerIrule>;
+export interface CreateManySubnetDto { 
+    bulk: Array<Subnet>;
 }
 

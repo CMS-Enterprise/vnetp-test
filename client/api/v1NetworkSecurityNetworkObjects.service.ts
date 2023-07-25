@@ -34,64 +34,62 @@ export interface CreateOneNetworkObjectRequestParams {
 }
 
 export interface DeleteOneNetworkObjectRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface DeprovisionOneNetworkObjectRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface GetManyNetworkObjectRequestParams {
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds search condition. */
-    s?: string;
-    /** Adds filter condition. */
-    filter?: Array<string>;
-    /** Adds OR condition. */
-    or?: Array<string>;
-    /** Adds sort by field. */
-    sort?: Array<string>;
-    /** Adds relational resources. */
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Limit amount of resources. */
-    limit?: number;
-    /** Offset amount of resources. */
-    offset?: number;
-    /** Page portion of resources. */
+    /** Number of entities to return per page. */
+    perPage?: number;
+    /** Page of entities to return based on the perPage value and total number of entities in the database. */
     page?: number;
-    /** Reset cache (if was enabled). */
-    cache?: number;
+    /** Filter condition to apply to the query. */
+    filter?: Array<string>;
+    /** Properties to sort the response by. */
+    sort?: Array<string>;
+    /** Properties to group the response by. */
+    group?: Array<string>;
+    /** Properties to select. */
+    fields?: Array<string>;
+    /** Alias for perPage. Number of entities to return per page. */
+    limit?: number;
 }
 
 export interface GetOneNetworkObjectRequestParams {
+    /** UUID. */
     id: string;
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds relational resources. */
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Reset cache (if was enabled). */
-    cache?: number;
 }
 
 export interface ProvisionOneNetworkObjectRequestParams {
+    /** UUID. */
     id: string;
-}
-
-export interface ReplaceOneNetworkObjectRequestParams {
-    id: string;
-    networkObject: NetworkObject;
 }
 
 export interface RestoreOneNetworkObjectRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface SoftDeleteOneNetworkObjectRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface UpdateOneNetworkObjectRequestParams {
+    /** UUID. */
     id: string;
     networkObject: NetworkObject;
 }
@@ -163,10 +161,10 @@ export class V1NetworkSecurityNetworkObjectsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createManyNetworkObject(requestParameters: CreateManyNetworkObjectRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<NetworkObject>>;
-    public createManyNetworkObject(requestParameters: CreateManyNetworkObjectRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<NetworkObject>>>;
-    public createManyNetworkObject(requestParameters: CreateManyNetworkObjectRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<NetworkObject>>>;
-    public createManyNetworkObject(requestParameters: CreateManyNetworkObjectRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createManyNetworkObject(requestParameters: CreateManyNetworkObjectRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createManyNetworkObject(requestParameters: CreateManyNetworkObjectRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createManyNetworkObject(requestParameters: CreateManyNetworkObjectRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createManyNetworkObject(requestParameters: CreateManyNetworkObjectRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const createManyNetworkObjectDto = requestParameters.createManyNetworkObjectDto;
         if (createManyNetworkObjectDto === null || createManyNetworkObjectDto === undefined) {
             throw new Error('Required parameter createManyNetworkObjectDto was null or undefined when calling createManyNetworkObject.');
@@ -178,7 +176,6 @@ export class V1NetworkSecurityNetworkObjectsService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -201,7 +198,7 @@ export class V1NetworkSecurityNetworkObjectsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<NetworkObject>>(`${this.configuration.basePath}/v1/network-security/network-objects/bulk`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/network-security/network-objects/bulk`,
             createManyNetworkObjectDto,
             {
                 responseType: <any>responseType,
@@ -275,10 +272,10 @@ export class V1NetworkSecurityNetworkObjectsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneNetworkObject(requestParameters: DeleteOneNetworkObjectRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deleteOneNetworkObject(requestParameters: DeleteOneNetworkObjectRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deleteOneNetworkObject(requestParameters: DeleteOneNetworkObjectRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deleteOneNetworkObject(requestParameters: DeleteOneNetworkObjectRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public deleteOneNetworkObject(requestParameters: DeleteOneNetworkObjectRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<NetworkObject>;
+    public deleteOneNetworkObject(requestParameters: DeleteOneNetworkObjectRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<NetworkObject>>;
+    public deleteOneNetworkObject(requestParameters: DeleteOneNetworkObjectRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<NetworkObject>>;
+    public deleteOneNetworkObject(requestParameters: DeleteOneNetworkObjectRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling deleteOneNetworkObject.');
@@ -290,6 +287,7 @@ export class V1NetworkSecurityNetworkObjectsService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -303,7 +301,7 @@ export class V1NetworkSecurityNetworkObjectsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network-security/network-objects/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<NetworkObject>(`${this.configuration.basePath}/v1/network-security/network-objects/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -315,7 +313,7 @@ export class V1NetworkSecurityNetworkObjectsService {
     }
 
     /**
-     * Deprovisions an Entity.
+     * Deprovision one NetworkObject
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -361,7 +359,7 @@ export class V1NetworkSecurityNetworkObjectsService {
     }
 
     /**
-     * Retrieve many NetworkObject
+     * Get many NetworkObject
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -370,42 +368,21 @@ export class V1NetworkSecurityNetworkObjectsService {
     public getManyNetworkObject(requestParameters: GetManyNetworkObjectRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyNetworkObjectResponseDto>>;
     public getManyNetworkObject(requestParameters: GetManyNetworkObjectRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyNetworkObjectResponseDto>>;
     public getManyNetworkObject(requestParameters: GetManyNetworkObjectRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const fields = requestParameters.fields;
-        const s = requestParameters.s;
-        const filter = requestParameters.filter;
-        const or = requestParameters.or;
-        const sort = requestParameters.sort;
+        const relations = requestParameters.relations;
         const join = requestParameters.join;
-        const limit = requestParameters.limit;
-        const offset = requestParameters.offset;
+        const perPage = requestParameters.perPage;
         const page = requestParameters.page;
-        const cache = requestParameters.cache;
+        const filter = requestParameters.filter;
+        const sort = requestParameters.sort;
+        const group = requestParameters.group;
+        const fields = requestParameters.fields;
+        const limit = requestParameters.limit;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
-        }
-        if (s !== undefined && s !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>s, 's');
-        }
-        if (filter) {
-            filter.forEach((element) => {
+        if (relations) {
+            relations.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'filter');
-            })
-        }
-        if (or) {
-            or.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'or');
-            })
-        }
-        if (sort) {
-            sort.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'sort');
+                  <any>element, 'relations');
             })
         }
         if (join) {
@@ -414,21 +391,41 @@ export class V1NetworkSecurityNetworkObjectsService {
                   <any>element, 'join');
             })
         }
-        if (limit !== undefined && limit !== null) {
+        if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
-        if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
+            <any>perPage, 'perPage');
         }
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>page, 'page');
         }
-        if (cache !== undefined && cache !== null) {
+        if (filter) {
+            filter.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'filter');
+            })
+        }
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
+        }
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
+        }
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
+            <any>limit, 'limit');
         }
 
         let headers = this.defaultHeaders;
@@ -464,7 +461,7 @@ export class V1NetworkSecurityNetworkObjectsService {
     }
 
     /**
-     * Retrieve one NetworkObject
+     * Get one NetworkObject
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -477,24 +474,21 @@ export class V1NetworkSecurityNetworkObjectsService {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getOneNetworkObject.');
         }
-        const fields = requestParameters.fields;
+        const relations = requestParameters.relations;
         const join = requestParameters.join;
-        const cache = requestParameters.cache;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
         }
         if (join) {
             join.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
                   <any>element, 'join');
             })
-        }
-        if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
         }
 
         let headers = this.defaultHeaders;
@@ -530,7 +524,7 @@ export class V1NetworkSecurityNetworkObjectsService {
     }
 
     /**
-     * Provisions an Entity.
+     * Provision one NetworkObject
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -576,67 +570,7 @@ export class V1NetworkSecurityNetworkObjectsService {
     }
 
     /**
-     * Replace one NetworkObject
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public replaceOneNetworkObject(requestParameters: ReplaceOneNetworkObjectRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<NetworkObject>;
-    public replaceOneNetworkObject(requestParameters: ReplaceOneNetworkObjectRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<NetworkObject>>;
-    public replaceOneNetworkObject(requestParameters: ReplaceOneNetworkObjectRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<NetworkObject>>;
-    public replaceOneNetworkObject(requestParameters: ReplaceOneNetworkObjectRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling replaceOneNetworkObject.');
-        }
-        const networkObject = requestParameters.networkObject;
-        if (networkObject === null || networkObject === undefined) {
-            throw new Error('Required parameter networkObject was null or undefined when calling replaceOneNetworkObject.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.put<NetworkObject>(`${this.configuration.basePath}/v1/network-security/network-objects/${encodeURIComponent(String(id))}`,
-            networkObject,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Restores a Soft-Deleted Entity.
+     * Restore one NetworkObject
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -682,7 +616,7 @@ export class V1NetworkSecurityNetworkObjectsService {
     }
 
     /**
-     * Soft deletes an Entity.
+     * Soft delete one NetworkObject
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -774,7 +708,7 @@ export class V1NetworkSecurityNetworkObjectsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<NetworkObject>(`${this.configuration.basePath}/v1/network-security/network-objects/${encodeURIComponent(String(id))}`,
+        return this.httpClient.put<NetworkObject>(`${this.configuration.basePath}/v1/network-security/network-objects/${encodeURIComponent(String(id))}`,
             networkObject,
             {
                 responseType: <any>responseType,

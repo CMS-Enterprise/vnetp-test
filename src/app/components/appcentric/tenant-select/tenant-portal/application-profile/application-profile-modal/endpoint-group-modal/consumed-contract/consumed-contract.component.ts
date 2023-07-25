@@ -90,7 +90,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
     this.endpointGroupsService
       .findOneEndpointGroup({
         uuid: this.endpointGroupId,
-        relations: 'consumedContracts',
+        relations: ['consumedContracts'],
       })
       .subscribe(data => {
         const contractPagResponse = {} as ContractPaginationResponse;

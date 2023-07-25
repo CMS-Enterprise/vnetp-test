@@ -9,15 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { LoadBalancerIrule } from './loadBalancerIrule';
+import { Datacenter } from './datacenter';
 
 
-export interface GetManyLoadBalancerIruleResponseDto { 
-    totalPages: number;
-    count: number;
-    total: number;
-    page: number;
-    pageCount: number;
-    data: Array<LoadBalancerIrule>;
+export interface CreateManyDatacenterDto { 
+    bulk: Array<Datacenter>;
 }
 

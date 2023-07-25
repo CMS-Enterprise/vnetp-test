@@ -414,7 +414,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       networkObjectRelationsDto.networkObjectRelations = event;
 
       this.networkObjectGroupService
-        .bulkImportRelationsNetworkObjectGroupNetworkObject({
+        .bulkImportRelationsNetworkObjectGroup({
           networkObjectGroupRelationBulkImportCollectionDto: networkObjectRelationsDto,
         })
         .subscribe(() => {

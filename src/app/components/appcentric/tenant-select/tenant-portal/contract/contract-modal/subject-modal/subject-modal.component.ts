@@ -219,7 +219,7 @@ export class SubjectModalComponent implements OnInit {
     this.subjectsService
       .findOneSubject({
         uuid: this.subjectId,
-        relations: 'filters',
+        relations: ['filters'],
       })
       .subscribe(
         data => {

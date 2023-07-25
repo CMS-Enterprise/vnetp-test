@@ -90,7 +90,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
 
   addServiceObject() {
     this.serviceObjectGroupService
-      .addServiceObjectToGroupServiceObjectGroupServiceObject({
+      .addServiceObjectToGroupServiceObjectGroup({
         serviceObjectGroupId: this.ServiceObjectGroupId,
         serviceObjectId: this.selectedServiceObject.id,
       })
@@ -105,7 +105,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
     const modalDto = new YesNoModalDto('Remove Service Object from Service Object Group', '');
     const onConfirm = () => {
       this.serviceObjectGroupService
-        .removeServiceObjectFromGroupServiceObjectGroupServiceObject({
+        .removeServiceObjectFromGroupServiceObjectGroup({
           serviceObjectGroupId: this.ServiceObjectGroupId,
           serviceObjectId: serviceObject.id,
         })
