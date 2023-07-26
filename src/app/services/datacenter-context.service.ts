@@ -157,10 +157,6 @@ export class DatacenterContextService {
         queryParamsHandling: 'merge',
       });
     });
-    // this.router.navigate([], {
-    //   queryParams: { datacenter: datacenter.id },
-    //   queryParamsHandling: 'merge',
-    // });
     return true;
   }
 }

@@ -206,20 +206,4 @@ describe('ServiceObjectGroupModalComponent', () => {
     component.addServiceObject();
     expect(component['serviceObjectGroupService'].addServiceObjectToGroupServiceObjectGroupServiceObject).toHaveBeenCalled();
   });
-
-  // it('should call subscribeToYesNoModal with correct arguments when removeServiceObject is called', () => {
-  //   // Arrange
-  //   spyOn(component, 'getGroupServiceObjects').and.returnValue(of([]));
-  //   spyOn(component, 'getTierServiceObjects').and.returnValue(of([]));
-  //   // const getTierServiceObjectsSpy = spyOn(component, 'getTierServiceObjects').and.returnValue(of());
-
-  //   // jest
-  //   //   .spyOn(component['tierService'], 'getOneTier')
-  //   //   .mockReturnValue(of({ serviceObjects: [{ id: 'test', deletedAt: null }] as any[] } as any));
-  //   // Act
-  //   component.removeServiceObject({ id: 'test-id' } as any);
-
-  //   // Assert
-  //   expect(subscriptionUtilSubscribeToYesNoModalSpy).toHaveBeenCalled;
-  // });
 });
