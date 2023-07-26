@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Tier, V1SelfServiceService, V1TiersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
   templateUrl: './self-service-modal.component.html',
 })
 export class SelfServiceModalComponent implements OnInit, OnDestroy {
-  initialForm: FormGroup;
+  initialForm: UntypedFormGroup;
   submittedInitialForm: boolean;
   submittedSecondForm: boolean;
   showSecondForm: boolean;
@@ -40,7 +40,7 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private datacenterContextService: DatacenterContextService,
     private selfServiceService: V1SelfServiceService,
     private tiersService: V1TiersService,

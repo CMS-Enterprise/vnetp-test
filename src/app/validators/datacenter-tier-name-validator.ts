@@ -1,10 +1,10 @@
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 
-function ValidDatacenterTierName(control: FormControl): { invalidName: boolean } | null {
+function ValidDatacenterTierName(control: UntypedFormControl): { invalidName: boolean } | null {
   return ValidateName(control, /^[A-Za-z0-9_]*$/);
 }
 
-function ValidateName(control: FormControl, regex) {
+function ValidateName(control: UntypedFormControl, regex) {
   if (!control || !control.value) {
     return null;
   }

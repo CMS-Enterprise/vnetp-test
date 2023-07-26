@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import {
   FilterEntryPaginationResponse,
@@ -33,7 +33,7 @@ export class FilterModalComponent implements OnInit {
   public ModalMode = ModalMode;
   public isLoading = false;
   public modalMode: ModalMode;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public tenantId: string;
   public filterId: string;
@@ -70,7 +70,7 @@ export class FilterModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private filterService: V2AppCentricFiltersService,
     private filterEntriesService: V2AppCentricFilterEntriesService,

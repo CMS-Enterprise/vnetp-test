@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { TableConfig } from '../table/table.component';
 
 @Component({
@@ -8,7 +8,7 @@ import { TableConfig } from '../table/table.component';
   templateUrl: './preview-modal.component.html',
 })
 export class PreviewModalComponent<T> {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   config: TableConfig<T> = {
     description: 'Import Preview',

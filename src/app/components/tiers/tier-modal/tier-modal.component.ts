@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Tier, V1TiersService, V1TierGroupsService, TierGroup } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
@@ -14,12 +14,12 @@ export class TierModalComponent implements OnInit {
   public DatacenterId: string;
   public ModalMode: ModalMode;
   public TierId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public tierGroups: TierGroup[] = [];
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private tierGroupService: V1TierGroupsService,
     private tierService: V1TiersService,

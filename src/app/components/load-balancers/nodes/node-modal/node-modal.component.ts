@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NodeModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerNode, LoadBalancerNodeTypeEnum, V1LoadBalancerNodesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -17,7 +17,7 @@ import { nodeTypeLookup } from 'src/app/lookups/load-balancer-node-type.lookup';
   templateUrl: './node-modal.component.html',
 })
 export class NodeModalComponent implements OnInit, OnDestroy {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
 
   public NodeType = LoadBalancerNodeTypeEnum;
@@ -31,7 +31,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private nodeService: V1LoadBalancerNodesService,
     public helpText: NodeModalHelpText,
   ) {}

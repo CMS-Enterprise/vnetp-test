@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
 import {
   LoadBalancerHealthMonitor,
@@ -28,7 +28,7 @@ import { methodsLookup } from 'src/app/lookups/load-balancing-method.lookup';
   templateUrl: './pool-modal.component.html',
 })
 export class PoolModalComponent implements OnInit {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public modalMode: ModalMode;
   public submitted: boolean;
   public ModalMode = ModalMode;
@@ -55,7 +55,7 @@ export class PoolModalComponent implements OnInit {
   private tierId: string;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private poolService: V1LoadBalancerPoolsService,
     public helpText: PoolModalHelpText,

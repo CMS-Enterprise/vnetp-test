@@ -1,8 +1,8 @@
 // 3rd party imports
-@import '~ngx-toastr/toastr.css';
-@import '~ngx-smart-modal/ngx-smart-modal';
-@import '~bootstrap/dist/css/bootstrap.min.css';
-@import '~@ng-select/ng-select/themes/default.theme.css';
+@import 'ngx-toastr/toastr.css';
+@import 'ngx-smart-modal/ngx-smart-modal';
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import '@ng-select/ng-select/themes/default.theme.css';
 
 // custom imports
 @import 'variables', 'buttons', 'tables', 'forms', 'modals';

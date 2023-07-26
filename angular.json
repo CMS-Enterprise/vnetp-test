@@ -82,7 +82,6 @@
       }
     }
   },
-  "defaultProject": "automation-ui",
   "cli": {
     "analytics": false
   }

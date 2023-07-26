@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { V2AppCentricContractsService, Contract, V2AppCentricSubjectsService, SubjectPaginationResponse, Subject } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -25,7 +25,7 @@ export class ContractModalComponent implements OnInit {
   public ModalMode = ModalMode;
   public modalMode: ModalMode;
   public contractId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public tenantId: string;
 
@@ -49,7 +49,7 @@ export class ContractModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private contractService: V2AppCentricContractsService,
     private router: Router,

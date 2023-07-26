@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { LoadBalancerSelfIp, LoadBalancerVlan, V1LoadBalancerSelfIpsService, V1LoadBalancerVlansService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
@@ -13,7 +13,7 @@ import { IpAddressIpValidator } from 'src/app/validators/network-form-validators
 })
 export class SelfIpModalComponent implements OnInit {
   public availableVlans: LoadBalancerVlan[] = [];
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
 
   private selfIpId: string;
@@ -22,7 +22,7 @@ export class SelfIpModalComponent implements OnInit {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private selfIpService: V1LoadBalancerSelfIpsService,
     private vlansService: V1LoadBalancerVlansService,
   ) {}

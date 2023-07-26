@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { V2AppCentricEndpointGroupsService, EndpointGroup, V2AppCentricBridgeDomainsService, BridgeDomain } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -22,7 +22,7 @@ export class EndpointGroupModalComponent implements OnInit {
 
   public ModalMode: ModalMode;
   public endpointGroupId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public tenantId: string;
   public perPage = 5;
@@ -41,7 +41,7 @@ export class EndpointGroupModalComponent implements OnInit {
   public tabs: Tab[] = tabs.map(t => ({ name: t.name }));
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
     private router: Router,

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { L3Out, V2AppCentricL3outsService, V2AppCentricVrfsService, VrfPaginationResponse } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -18,7 +18,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
 export class L3OutsModalComponent implements OnInit {
   public modalMode: ModalMode;
   public l3OutId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public tenantId: string;
   public tableComponentDto = new TableComponentDto();
@@ -43,7 +43,7 @@ export class L3OutsModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private l3OutsService: V2AppCentricL3outsService,
     private router: Router,

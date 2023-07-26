@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
@@ -30,7 +30,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   templateUrl: './firewall-rule-modal.component.html',
 })
 export class FirewallRuleModalComponent implements OnInit, OnDestroy {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted: boolean;
   TierId: string;
 
@@ -51,7 +51,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private firewallRuleService: V1NetworkSecurityFirewallRulesService,
     public helpText: FirewallRuleModalHelpText,
     private networkObjectService: V1NetworkSecurityNetworkObjectsService,

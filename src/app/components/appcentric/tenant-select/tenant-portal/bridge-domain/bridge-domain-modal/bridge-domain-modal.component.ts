@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import {
   V2AppCentricBridgeDomainsService,
@@ -34,7 +34,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   public isLoading = false;
   public modalMode: ModalMode;
   public bridgeDomainId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public tenantId: string;
 
@@ -67,7 +67,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private bridgeDomainService: V2AppCentricBridgeDomainsService,
     private router: Router,

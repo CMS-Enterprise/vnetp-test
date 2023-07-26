@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { AppCentricSubnet, AppCentricSubnetPaginationResponse, V2AppCentricAppCentricSubnetsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -23,7 +23,7 @@ export class SubnetsModalComponent implements OnInit {
   public isLoading = false;
   public ModalMode = ModalMode;
   public modalMode: ModalMode;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public tenantId: string;
   public bridgeDomainId: string;
@@ -48,7 +48,7 @@ export class SubnetsModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private subnetsService: V2AppCentricAppCentricSubnetsService,
     private router: Router,

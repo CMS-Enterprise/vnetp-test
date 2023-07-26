@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   ApplicationProfile,
@@ -30,7 +30,7 @@ export class ApplicationProfileModalComponent implements OnInit {
   public modalMode: ModalMode;
   public ModalMode = ModalMode;
   public applicationProfileId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public endpointGroups: EndpointGroupPaginationResponse;
   public isLoading = false;
@@ -54,7 +54,7 @@ export class ApplicationProfileModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private applicationProfileService: V2AppCentricApplicationProfilesService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,

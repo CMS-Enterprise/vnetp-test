@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { VirtualServerModalHelpText } from 'src/app/helptext/help-text-networking';
 import {
   LoadBalancerIrule,
@@ -29,7 +29,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
   templateUrl: './virtual-server-modal.component.html',
 })
 export class VirtualServerModalComponent implements OnInit {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public modalMode: ModalMode;
   public pools: LoadBalancerPool[] = [];
   public submitted: boolean;
@@ -48,7 +48,7 @@ export class VirtualServerModalComponent implements OnInit {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private tiersService: V1TiersService,
     private poolsService: V1LoadBalancerPoolsService,
     private virtualServerService: V1LoadBalancerVirtualServersService,

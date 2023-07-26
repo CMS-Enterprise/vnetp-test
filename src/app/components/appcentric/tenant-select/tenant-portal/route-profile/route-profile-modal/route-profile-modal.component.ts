@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { RouteProfile, V2AppCentricRouteProfilesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -14,7 +14,7 @@ import { RouteProfileModalDto } from '../../../../../../models/appcentric/route-
 export class RouteProfileModalComponent implements OnInit {
   public modalMode: ModalMode;
   public routeProfileId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public tenantId: string;
   public isLoading = false;
@@ -22,7 +22,7 @@ export class RouteProfileModalComponent implements OnInit {
   public dto: RouteProfileModalDto;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private routeProfileService: V2AppCentricRouteProfilesService,
     private router: Router,

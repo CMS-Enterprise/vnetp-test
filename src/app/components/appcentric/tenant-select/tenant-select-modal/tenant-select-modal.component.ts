@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Tenant, V2AppCentricTenantsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
@@ -14,10 +14,14 @@ import { NameValidator } from 'src/app/validators/name-validator';
 export class TenantSelectModalComponent implements OnInit {
   public ModalMode: ModalMode;
   public TenantId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
 
-  constructor(private formBuilder: FormBuilder, private ngx: NgxSmartModalService, private tenantService: V2AppCentricTenantsService) {}
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private ngx: NgxSmartModalService,
+    private tenantService: V2AppCentricTenantsService,
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import {
   SubjectPaginationResponse,
@@ -27,7 +27,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
 export class SubjectModalComponent implements OnInit {
   public isLoading = false;
   public modalMode: ModalMode;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public tenantId: string;
   @Input() public contractId: string;
@@ -55,7 +55,7 @@ export class SubjectModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private subjectsService: V2AppCentricSubjectsService,
     private router: Router,

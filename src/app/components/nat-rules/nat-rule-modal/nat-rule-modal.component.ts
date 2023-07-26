@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -38,7 +38,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   serviceObjects: Array<ServiceObject>;
 
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted = false;
   public modalMode: ModalMode;
   public natRuleGroupId: string;
@@ -58,7 +58,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   private objectInfoSubscription: Subscription;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private natRuleService: V1NetworkSecurityNatRulesService,
     public helpText: NatRuleModalHelpText,
