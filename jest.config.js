@@ -1,12 +1,6 @@
 module.exports = {
   globals: {
     'ts-jest': {
-      astTransformers: {
-        before: [
-          'jest-preset-angular/build/InlineFilesTransformer',
-          'jest-preset-angular/build/StripStylesTransformer',
-        ],
-      },
     },
   },
   preset: 'jest-preset-angular',

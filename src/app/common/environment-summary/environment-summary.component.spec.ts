@@ -32,7 +32,7 @@ describe('NetworkSummaryComponent', () => {
   });
 
   it('should get get tenants on table event', () => {
-    spyOn(component, 'getTenants');
+    jest.spyOn(component, 'getTenants');
     component.onTableEvent({ type: 'onSearch' } as any);
     expect(component.getTenants).toHaveBeenCalled();
   });
