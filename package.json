@@ -4,7 +4,6 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --disable-host-check",
-    "analyze": "webpack-bundle-analyzer dist/automation-ui/stats-es2015.json",
     "build": "ng build",
     "build:stats": "ng build --stats-json",
     "build:prod": "ng build --configuration production",
@@ -67,8 +66,7 @@
     "ts-jest": "^28.0.8",
     "ts-node": "~7.0.0",
     "tslint": "~6.1.0",
-    "typescript": "~4.6.4",
-    "webpack-bundle-analyzer": "^3.8.0"
+    "typescript": "~4.6.4"
   },
   "husky": {
     "hooks": {
