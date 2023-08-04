@@ -250,7 +250,7 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
   private createFilterEntry(filterEntry: FilterEntry): void {
     filterEntry.filterId = this.filterId;
     filterEntry.tenantId = this.tenantId;
-    this.filterEntriesService.createFilterEntry({ filterEntry }).subscribe(
+    this.filterEntriesService.createOneFilterEntry({ filterEntry }).subscribe(
       () => {
         this.closeModal();
       },
@@ -262,8 +262,8 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
     filterEntry.name = null;
     filterEntry.tenantId = null;
     this.filterEntriesService
-      .updateFilterEntry({
-        uuid: this.filterEntryId,
+      .updateOneFilterEntry({
+        id: this.filterEntryId,
         filterEntry,
       })
       .subscribe(

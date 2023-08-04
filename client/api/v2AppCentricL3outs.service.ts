@@ -17,22 +17,33 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { CreateManyL3OutDto } from '../model/models';
+import { GetManyL3OutResponseDto } from '../model/models';
 import { L3Out } from '../model/models';
-import { L3OutPaginationResponse } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateL3OutRequestParams {
+export interface CreateManyL3OutRequestParams {
+    createManyL3OutDto: CreateManyL3OutDto;
+}
+
+export interface CreateOneL3OutRequestParams {
     l3Out: L3Out;
 }
 
-export interface DeprovisionL3OutRequestParams {
-    uuid: string;
+export interface DeleteOneL3OutRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface FindAllL3OutRequestParams {
+export interface DeprovisionOneL3OutRequestParams {
+    /** UUID. */
+    id: string;
+}
+
+export interface GetManyL3OutRequestParams {
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -53,32 +64,33 @@ export interface FindAllL3OutRequestParams {
     limit?: number;
 }
 
-export interface FindOneL3OutRequestParams {
-    uuid: string;
+export interface GetOneL3OutRequestParams {
+    /** UUID. */
+    id: string;
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
     join?: Array<string>;
 }
 
-export interface ProvisionL3OutRequestParams {
-    uuid: string;
+export interface ProvisionOneL3OutRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface RemoveL3OutRequestParams {
-    uuid: string;
+export interface RestoreOneL3OutRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface RestoreL3OutRequestParams {
-    uuid: string;
+export interface SoftDeleteOneL3OutRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface SoftDeleteL3OutRequestParams {
-    uuid: string;
-}
-
-export interface UpdateL3OutRequestParams {
-    uuid: string;
+export interface UpdateOneL3OutRequestParams {
+    /** UUID. */
+    id: string;
     l3Out: L3Out;
 }
 
@@ -144,17 +156,73 @@ export class V2AppCentricL3outsService {
     }
 
     /**
+     * Create many L3Out
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createL3Out(requestParameters: CreateL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
-    public createL3Out(requestParameters: CreateL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
-    public createL3Out(requestParameters: CreateL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
-    public createL3Out(requestParameters: CreateL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createManyL3Out(requestParameters: CreateManyL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createManyL3Out(requestParameters: CreateManyL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createManyL3Out(requestParameters: CreateManyL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createManyL3Out(requestParameters: CreateManyL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const createManyL3OutDto = requestParameters.createManyL3OutDto;
+        if (createManyL3OutDto === null || createManyL3OutDto === undefined) {
+            throw new Error('Required parameter createManyL3OutDto was null or undefined when calling createManyL3Out.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/bulk`,
+            createManyL3OutDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Create one L3Out
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createOneL3Out(requestParameters: CreateOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
+    public createOneL3Out(requestParameters: CreateOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
+    public createOneL3Out(requestParameters: CreateOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
+    public createOneL3Out(requestParameters: CreateOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const l3Out = requestParameters.l3Out;
         if (l3Out === null || l3Out === undefined) {
-            throw new Error('Required parameter l3Out was null or undefined when calling createL3Out.');
+            throw new Error('Required parameter l3Out was null or undefined when calling createOneL3Out.');
         }
 
         let headers = this.defaultHeaders;
@@ -199,17 +267,64 @@ export class V2AppCentricL3outsService {
     }
 
     /**
+     * Delete one L3Out
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionL3Out(requestParameters: DeprovisionL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionL3Out(requestParameters: DeprovisionL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionL3Out(requestParameters: DeprovisionL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionL3Out(requestParameters: DeprovisionL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling deprovisionL3Out.');
+    public deleteOneL3Out(requestParameters: DeleteOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
+    public deleteOneL3Out(requestParameters: DeleteOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
+    public deleteOneL3Out(requestParameters: DeleteOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
+    public deleteOneL3Out(requestParameters: DeleteOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteOneL3Out.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Deprovision one L3Out
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deprovisionOneL3Out(requestParameters: DeprovisionOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneL3Out(requestParameters: DeprovisionOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneL3Out(requestParameters: DeprovisionOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneL3Out(requestParameters: DeprovisionOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneL3Out.');
         }
 
         let headers = this.defaultHeaders;
@@ -231,7 +346,7 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(uuid))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -244,14 +359,15 @@ export class V2AppCentricL3outsService {
     }
 
     /**
+     * Get many L3Out
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findAllL3Out(requestParameters: FindAllL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3OutPaginationResponse>;
-    public findAllL3Out(requestParameters: FindAllL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3OutPaginationResponse>>;
-    public findAllL3Out(requestParameters: FindAllL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3OutPaginationResponse>>;
-    public findAllL3Out(requestParameters: FindAllL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyL3Out(requestParameters: GetManyL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyL3OutResponseDto>;
+    public getManyL3Out(requestParameters: GetManyL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyL3OutResponseDto>>;
+    public getManyL3Out(requestParameters: GetManyL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyL3OutResponseDto>>;
+    public getManyL3Out(requestParameters: GetManyL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
@@ -332,7 +448,7 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<L3OutPaginationResponse>(`${this.configuration.basePath}/v2/app-centric/l3outs`,
+        return this.httpClient.get<GetManyL3OutResponseDto>(`${this.configuration.basePath}/v2/app-centric/l3outs`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -345,17 +461,18 @@ export class V2AppCentricL3outsService {
     }
 
     /**
+     * Get one L3Out
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findOneL3Out(requestParameters: FindOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
-    public findOneL3Out(requestParameters: FindOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
-    public findOneL3Out(requestParameters: FindOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
-    public findOneL3Out(requestParameters: FindOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling findOneL3Out.');
+    public getOneL3Out(requestParameters: GetOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
+    public getOneL3Out(requestParameters: GetOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
+    public getOneL3Out(requestParameters: GetOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
+    public getOneL3Out(requestParameters: GetOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getOneL3Out.');
         }
         const relations = requestParameters.relations;
         const join = requestParameters.join;
@@ -394,7 +511,7 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.get<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -407,17 +524,18 @@ export class V2AppCentricL3outsService {
     }
 
     /**
+     * Provision one L3Out
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionL3Out(requestParameters: ProvisionL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionL3Out(requestParameters: ProvisionL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionL3Out(requestParameters: ProvisionL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionL3Out(requestParameters: ProvisionL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling provisionL3Out.');
+    public provisionOneL3Out(requestParameters: ProvisionOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneL3Out(requestParameters: ProvisionOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneL3Out(requestParameters: ProvisionOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneL3Out(requestParameters: ProvisionOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling provisionOneL3Out.');
         }
 
         let headers = this.defaultHeaders;
@@ -439,7 +557,7 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(uuid))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -452,62 +570,18 @@ export class V2AppCentricL3outsService {
     }
 
     /**
+     * Restore one L3Out
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public removeL3Out(requestParameters: RemoveL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
-    public removeL3Out(requestParameters: RemoveL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
-    public removeL3Out(requestParameters: RemoveL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
-    public removeL3Out(requestParameters: RemoveL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling removeL3Out.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(uuid))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public restoreL3Out(requestParameters: RestoreL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreL3Out(requestParameters: RestoreL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreL3Out(requestParameters: RestoreL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreL3Out(requestParameters: RestoreL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling restoreL3Out.');
+    public restoreOneL3Out(requestParameters: RestoreOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneL3Out(requestParameters: RestoreOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneL3Out(requestParameters: RestoreOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneL3Out(requestParameters: RestoreOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling restoreOneL3Out.');
         }
 
         let headers = this.defaultHeaders;
@@ -529,7 +603,7 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(uuid))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -542,17 +616,18 @@ export class V2AppCentricL3outsService {
     }
 
     /**
+     * Soft delete one L3Out
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteL3Out(requestParameters: SoftDeleteL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteL3Out(requestParameters: SoftDeleteL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteL3Out(requestParameters: SoftDeleteL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteL3Out(requestParameters: SoftDeleteL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling softDeleteL3Out.');
+    public softDeleteOneL3Out(requestParameters: SoftDeleteOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneL3Out(requestParameters: SoftDeleteOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneL3Out(requestParameters: SoftDeleteOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneL3Out(requestParameters: SoftDeleteOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneL3Out.');
         }
 
         let headers = this.defaultHeaders;
@@ -574,7 +649,7 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(uuid))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -586,21 +661,22 @@ export class V2AppCentricL3outsService {
     }
 
     /**
+     * Update one L3Out
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateL3Out(requestParameters: UpdateL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
-    public updateL3Out(requestParameters: UpdateL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
-    public updateL3Out(requestParameters: UpdateL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
-    public updateL3Out(requestParameters: UpdateL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling updateL3Out.');
+    public updateOneL3Out(requestParameters: UpdateOneL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
+    public updateOneL3Out(requestParameters: UpdateOneL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
+    public updateOneL3Out(requestParameters: UpdateOneL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
+    public updateOneL3Out(requestParameters: UpdateOneL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateOneL3Out.');
         }
         const l3Out = requestParameters.l3Out;
         if (l3Out === null || l3Out === undefined) {
-            throw new Error('Required parameter l3Out was null or undefined when calling updateL3Out.');
+            throw new Error('Required parameter l3Out was null or undefined when calling updateOneL3Out.');
         }
 
         let headers = this.defaultHeaders;
@@ -632,7 +708,7 @@ export class V2AppCentricL3outsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.put<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}`,
             l3Out,
             {
                 responseType: <any>responseType,

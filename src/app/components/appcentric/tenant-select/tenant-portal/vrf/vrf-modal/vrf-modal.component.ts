@@ -90,7 +90,7 @@ export class VrfModalComponent implements OnInit {
   }
 
   private createVrf(vrf: Vrf): void {
-    this.vrfService.createVrf({ vrf }).subscribe(
+    this.vrfService.createOneVrf({ vrf }).subscribe(
       () => {
         this.closeModal();
       },
@@ -102,8 +102,8 @@ export class VrfModalComponent implements OnInit {
     vrf.name = null;
     vrf.tenantId = null;
     this.vrfService
-      .updateVrf({
-        uuid: this.vrfId,
+      .updateOneVrf({
+        id: this.vrfId,
         vrf,
       })
       .subscribe(

@@ -2,12 +2,12 @@ import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import {
-  SubjectPaginationResponse,
   V2AppCentricSubjectsService,
   Subject,
   Filter,
-  FilterPaginationResponse,
   V2AppCentricFiltersService,
+  GetManySubjectResponseDto,
+  GetManyFilterResponseDto,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -33,7 +33,7 @@ export class SubjectModalComponent implements OnInit {
   public submitted: boolean;
   public tenantId: string;
   @Input() public contractId: string;
-  public subjects: SubjectPaginationResponse;
+  public subjects: GetManySubjectResponseDto;
   public tableComponentDto = new TableComponentDto();
   public perPage = 20;
 
@@ -43,7 +43,7 @@ export class SubjectModalComponent implements OnInit {
   public filters: Filter[];
   public selectedFilter: Filter;
   public subjectId: string;
-  public filterTableData: FilterPaginationResponse;
+  public filterTableData: GetManyFilterResponseDto;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -141,7 +141,7 @@ export class SubjectModalComponent implements OnInit {
   }
 
   private createSubjects(subject: Subject): void {
-    this.subjectsService.createSubject({ subject }).subscribe(
+    this.subjectsService.createOneSubject({ subject }).subscribe(
       () => {
         this.closeModal();
       },
@@ -154,8 +154,8 @@ export class SubjectModalComponent implements OnInit {
     subject.tenantId = null;
     subject.contractId = null;
     this.subjectsService
-      .updateSubject({
-        uuid: this.subjectId,
+      .updateOneSubject({
+        id: this.subjectId,
         subject,
       })
       .subscribe(() => this.closeModal());
@@ -193,7 +193,7 @@ export class SubjectModalComponent implements OnInit {
   public getFilters(): void {
     this.isLoading = true;
     this.filterService
-      .findAllFilter({
+      .getManyFilter({
         filter: [`tenantId||eq||${this.tenantId}`],
         page: 1,
         perPage: 1000,
@@ -217,13 +217,13 @@ export class SubjectModalComponent implements OnInit {
   public getFiltertableData() {
     this.isLoading = true;
     this.subjectsService
-      .findOneSubject({
-        uuid: this.subjectId,
+      .getOneSubject({
+        id: this.subjectId,
         relations: ['filters'],
       })
       .subscribe(
         data => {
-          const filterPagResponse = {} as FilterPaginationResponse;
+          const filterPagResponse = {} as GetManyFilterResponseDto;
           filterPagResponse.count = data.filters.length;
           filterPagResponse.page = 1;
           filterPagResponse.pageCount = 1;

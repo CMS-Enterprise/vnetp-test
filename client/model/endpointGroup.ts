@@ -17,13 +17,15 @@ import { Contract } from './contract';
 
 export interface EndpointGroup { 
     readonly id?: string;
+    readonly createdAt?: string;
+    readonly updatedAt?: string;
+    readonly version?: number;
+    readonly deletedAt?: string;
+    readonly provisionedAt?: string;
+    readonly provisionedVersion?: number;
     name?: string;
     alias?: string;
     description?: string;
-    readonly createdAt?: string;
-    readonly updatedAt?: string;
-    readonly deletedAt?: string;
-    readonly provisionedAt?: string;
     /**
      * Intra-EPG endpoint isolation policies provide full isolation for virtual or physical endpoints; no communication is allowed between endpoints in an EPG that is operating with isolation enforced.
      */

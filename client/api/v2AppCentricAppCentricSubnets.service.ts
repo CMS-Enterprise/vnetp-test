@@ -18,21 +18,32 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { AppCentricSubnet } from '../model/models';
-import { AppCentricSubnetPaginationResponse } from '../model/models';
+import { CreateManyAppCentricSubnetDto } from '../model/models';
+import { GetManyAppCentricSubnetResponseDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateAppCentricSubnetRequestParams {
+export interface CreateManyAppCentricSubnetRequestParams {
+    createManyAppCentricSubnetDto: CreateManyAppCentricSubnetDto;
+}
+
+export interface CreateOneAppCentricSubnetRequestParams {
     appCentricSubnet: AppCentricSubnet;
 }
 
-export interface DeprovisionAppCentricSubnetRequestParams {
-    uuid: string;
+export interface DeleteOneAppCentricSubnetRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface FindAllAppCentricSubnetRequestParams {
+export interface DeprovisionOneAppCentricSubnetRequestParams {
+    /** UUID. */
+    id: string;
+}
+
+export interface GetManyAppCentricSubnetRequestParams {
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -53,32 +64,33 @@ export interface FindAllAppCentricSubnetRequestParams {
     limit?: number;
 }
 
-export interface FindOneAppCentricSubnetRequestParams {
-    uuid: string;
+export interface GetOneAppCentricSubnetRequestParams {
+    /** UUID. */
+    id: string;
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
     join?: Array<string>;
 }
 
-export interface ProvisionAppCentricSubnetRequestParams {
-    uuid: string;
+export interface ProvisionOneAppCentricSubnetRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface RemoveAppCentricSubnetRequestParams {
-    uuid: string;
+export interface RestoreOneAppCentricSubnetRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface RestoreAppCentricSubnetRequestParams {
-    uuid: string;
+export interface SoftDeleteOneAppCentricSubnetRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface SoftDeleteAppCentricSubnetRequestParams {
-    uuid: string;
-}
-
-export interface UpdateAppCentricSubnetRequestParams {
-    uuid: string;
+export interface UpdateOneAppCentricSubnetRequestParams {
+    /** UUID. */
+    id: string;
     appCentricSubnet: AppCentricSubnet;
 }
 
@@ -144,17 +156,73 @@ export class V2AppCentricAppCentricSubnetsService {
     }
 
     /**
+     * Create many AppCentricSubnet
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createAppCentricSubnet(requestParameters: CreateAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<AppCentricSubnet>;
-    public createAppCentricSubnet(requestParameters: CreateAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<AppCentricSubnet>>;
-    public createAppCentricSubnet(requestParameters: CreateAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<AppCentricSubnet>>;
-    public createAppCentricSubnet(requestParameters: CreateAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createManyAppCentricSubnet(requestParameters: CreateManyAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createManyAppCentricSubnet(requestParameters: CreateManyAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createManyAppCentricSubnet(requestParameters: CreateManyAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createManyAppCentricSubnet(requestParameters: CreateManyAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const createManyAppCentricSubnetDto = requestParameters.createManyAppCentricSubnetDto;
+        if (createManyAppCentricSubnetDto === null || createManyAppCentricSubnetDto === undefined) {
+            throw new Error('Required parameter createManyAppCentricSubnetDto was null or undefined when calling createManyAppCentricSubnet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/bulk`,
+            createManyAppCentricSubnetDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Create one AppCentricSubnet
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createOneAppCentricSubnet(requestParameters: CreateOneAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<AppCentricSubnet>;
+    public createOneAppCentricSubnet(requestParameters: CreateOneAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<AppCentricSubnet>>;
+    public createOneAppCentricSubnet(requestParameters: CreateOneAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<AppCentricSubnet>>;
+    public createOneAppCentricSubnet(requestParameters: CreateOneAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const appCentricSubnet = requestParameters.appCentricSubnet;
         if (appCentricSubnet === null || appCentricSubnet === undefined) {
-            throw new Error('Required parameter appCentricSubnet was null or undefined when calling createAppCentricSubnet.');
+            throw new Error('Required parameter appCentricSubnet was null or undefined when calling createOneAppCentricSubnet.');
         }
 
         let headers = this.defaultHeaders;
@@ -199,17 +267,64 @@ export class V2AppCentricAppCentricSubnetsService {
     }
 
     /**
+     * Delete one AppCentricSubnet
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionAppCentricSubnet(requestParameters: DeprovisionAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionAppCentricSubnet(requestParameters: DeprovisionAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionAppCentricSubnet(requestParameters: DeprovisionAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionAppCentricSubnet(requestParameters: DeprovisionAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling deprovisionAppCentricSubnet.');
+    public deleteOneAppCentricSubnet(requestParameters: DeleteOneAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<AppCentricSubnet>;
+    public deleteOneAppCentricSubnet(requestParameters: DeleteOneAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<AppCentricSubnet>>;
+    public deleteOneAppCentricSubnet(requestParameters: DeleteOneAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<AppCentricSubnet>>;
+    public deleteOneAppCentricSubnet(requestParameters: DeleteOneAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteOneAppCentricSubnet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<AppCentricSubnet>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Deprovision one AppCentricSubnet
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deprovisionOneAppCentricSubnet(requestParameters: DeprovisionOneAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneAppCentricSubnet(requestParameters: DeprovisionOneAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneAppCentricSubnet(requestParameters: DeprovisionOneAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneAppCentricSubnet(requestParameters: DeprovisionOneAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneAppCentricSubnet.');
         }
 
         let headers = this.defaultHeaders;
@@ -231,7 +346,7 @@ export class V2AppCentricAppCentricSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(uuid))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -244,14 +359,15 @@ export class V2AppCentricAppCentricSubnetsService {
     }
 
     /**
+     * Get many AppCentricSubnet
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findAllAppCentricSubnet(requestParameters: FindAllAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<AppCentricSubnetPaginationResponse>;
-    public findAllAppCentricSubnet(requestParameters: FindAllAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<AppCentricSubnetPaginationResponse>>;
-    public findAllAppCentricSubnet(requestParameters: FindAllAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<AppCentricSubnetPaginationResponse>>;
-    public findAllAppCentricSubnet(requestParameters: FindAllAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyAppCentricSubnet(requestParameters: GetManyAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyAppCentricSubnetResponseDto>;
+    public getManyAppCentricSubnet(requestParameters: GetManyAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyAppCentricSubnetResponseDto>>;
+    public getManyAppCentricSubnet(requestParameters: GetManyAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyAppCentricSubnetResponseDto>>;
+    public getManyAppCentricSubnet(requestParameters: GetManyAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
@@ -332,7 +448,7 @@ export class V2AppCentricAppCentricSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<AppCentricSubnetPaginationResponse>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets`,
+        return this.httpClient.get<GetManyAppCentricSubnetResponseDto>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -345,17 +461,18 @@ export class V2AppCentricAppCentricSubnetsService {
     }
 
     /**
+     * Get one AppCentricSubnet
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findOneAppCentricSubnet(requestParameters: FindOneAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<AppCentricSubnet>;
-    public findOneAppCentricSubnet(requestParameters: FindOneAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<AppCentricSubnet>>;
-    public findOneAppCentricSubnet(requestParameters: FindOneAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<AppCentricSubnet>>;
-    public findOneAppCentricSubnet(requestParameters: FindOneAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling findOneAppCentricSubnet.');
+    public getOneAppCentricSubnet(requestParameters: GetOneAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<AppCentricSubnet>;
+    public getOneAppCentricSubnet(requestParameters: GetOneAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<AppCentricSubnet>>;
+    public getOneAppCentricSubnet(requestParameters: GetOneAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<AppCentricSubnet>>;
+    public getOneAppCentricSubnet(requestParameters: GetOneAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getOneAppCentricSubnet.');
         }
         const relations = requestParameters.relations;
         const join = requestParameters.join;
@@ -394,7 +511,7 @@ export class V2AppCentricAppCentricSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<AppCentricSubnet>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.get<AppCentricSubnet>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -407,17 +524,18 @@ export class V2AppCentricAppCentricSubnetsService {
     }
 
     /**
+     * Provision one AppCentricSubnet
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionAppCentricSubnet(requestParameters: ProvisionAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionAppCentricSubnet(requestParameters: ProvisionAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionAppCentricSubnet(requestParameters: ProvisionAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionAppCentricSubnet(requestParameters: ProvisionAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling provisionAppCentricSubnet.');
+    public provisionOneAppCentricSubnet(requestParameters: ProvisionOneAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneAppCentricSubnet(requestParameters: ProvisionOneAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneAppCentricSubnet(requestParameters: ProvisionOneAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneAppCentricSubnet(requestParameters: ProvisionOneAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling provisionOneAppCentricSubnet.');
         }
 
         let headers = this.defaultHeaders;
@@ -439,7 +557,7 @@ export class V2AppCentricAppCentricSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(uuid))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -452,62 +570,18 @@ export class V2AppCentricAppCentricSubnetsService {
     }
 
     /**
+     * Restore one AppCentricSubnet
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public removeAppCentricSubnet(requestParameters: RemoveAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<AppCentricSubnet>;
-    public removeAppCentricSubnet(requestParameters: RemoveAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<AppCentricSubnet>>;
-    public removeAppCentricSubnet(requestParameters: RemoveAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<AppCentricSubnet>>;
-    public removeAppCentricSubnet(requestParameters: RemoveAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling removeAppCentricSubnet.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<AppCentricSubnet>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(uuid))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public restoreAppCentricSubnet(requestParameters: RestoreAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreAppCentricSubnet(requestParameters: RestoreAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreAppCentricSubnet(requestParameters: RestoreAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreAppCentricSubnet(requestParameters: RestoreAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling restoreAppCentricSubnet.');
+    public restoreOneAppCentricSubnet(requestParameters: RestoreOneAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneAppCentricSubnet(requestParameters: RestoreOneAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneAppCentricSubnet(requestParameters: RestoreOneAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneAppCentricSubnet(requestParameters: RestoreOneAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling restoreOneAppCentricSubnet.');
         }
 
         let headers = this.defaultHeaders;
@@ -529,7 +603,7 @@ export class V2AppCentricAppCentricSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(uuid))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -542,17 +616,18 @@ export class V2AppCentricAppCentricSubnetsService {
     }
 
     /**
+     * Soft delete one AppCentricSubnet
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteAppCentricSubnet(requestParameters: SoftDeleteAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteAppCentricSubnet(requestParameters: SoftDeleteAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteAppCentricSubnet(requestParameters: SoftDeleteAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteAppCentricSubnet(requestParameters: SoftDeleteAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling softDeleteAppCentricSubnet.');
+    public softDeleteOneAppCentricSubnet(requestParameters: SoftDeleteOneAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneAppCentricSubnet(requestParameters: SoftDeleteOneAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneAppCentricSubnet(requestParameters: SoftDeleteOneAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneAppCentricSubnet(requestParameters: SoftDeleteOneAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneAppCentricSubnet.');
         }
 
         let headers = this.defaultHeaders;
@@ -574,7 +649,7 @@ export class V2AppCentricAppCentricSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(uuid))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -586,21 +661,22 @@ export class V2AppCentricAppCentricSubnetsService {
     }
 
     /**
+     * Update one AppCentricSubnet
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateAppCentricSubnet(requestParameters: UpdateAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<AppCentricSubnet>;
-    public updateAppCentricSubnet(requestParameters: UpdateAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<AppCentricSubnet>>;
-    public updateAppCentricSubnet(requestParameters: UpdateAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<AppCentricSubnet>>;
-    public updateAppCentricSubnet(requestParameters: UpdateAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling updateAppCentricSubnet.');
+    public updateOneAppCentricSubnet(requestParameters: UpdateOneAppCentricSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<AppCentricSubnet>;
+    public updateOneAppCentricSubnet(requestParameters: UpdateOneAppCentricSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<AppCentricSubnet>>;
+    public updateOneAppCentricSubnet(requestParameters: UpdateOneAppCentricSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<AppCentricSubnet>>;
+    public updateOneAppCentricSubnet(requestParameters: UpdateOneAppCentricSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateOneAppCentricSubnet.');
         }
         const appCentricSubnet = requestParameters.appCentricSubnet;
         if (appCentricSubnet === null || appCentricSubnet === undefined) {
-            throw new Error('Required parameter appCentricSubnet was null or undefined when calling updateAppCentricSubnet.');
+            throw new Error('Required parameter appCentricSubnet was null or undefined when calling updateOneAppCentricSubnet.');
         }
 
         let headers = this.defaultHeaders;
@@ -632,7 +708,7 @@ export class V2AppCentricAppCentricSubnetsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<AppCentricSubnet>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.put<AppCentricSubnet>(`${this.configuration.basePath}/v2/app-centric/app-centric-subnets/${encodeURIComponent(String(id))}`,
             appCentricSubnet,
             {
                 responseType: <any>responseType,

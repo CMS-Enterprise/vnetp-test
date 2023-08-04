@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { V2AppCentricVrfsService, Vrf, VrfPaginationResponse } from 'client';
+import { GetManyVrfResponseDto, V2AppCentricVrfsService, Vrf } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -19,7 +19,7 @@ export class VrfComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentVrfPage = 1;
   public perPage = 20;
-  public vrfs = {} as VrfPaginationResponse;
+  public vrfs = {} as GetManyVrfResponseDto;
   public tableComponentDto = new TableComponentDto();
   private vrfModalSubscription: Subscription;
   public tenantId: string;
@@ -81,7 +81,7 @@ export class VrfComponent implements OnInit {
       }
     }
     this.vrfService
-      .findAllVrf({
+      .getManyVrf({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -101,7 +101,7 @@ export class VrfComponent implements OnInit {
 
   public deleteVrf(vrf: Vrf): void {
     if (vrf.deletedAt) {
-      this.vrfService.removeVrf({ uuid: vrf.id }).subscribe(() => {
+      this.vrfService.deleteOneVrf({ id: vrf.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -115,8 +115,8 @@ export class VrfComponent implements OnInit {
       });
     } else {
       this.vrfService
-        .softDeleteVrf({
-          uuid: vrf.id,
+        .softDeleteOneVrf({
+          id: vrf.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -139,8 +139,8 @@ export class VrfComponent implements OnInit {
     }
 
     this.vrfService
-      .restoreVrf({
-        uuid: vrf.id,
+      .restoreOneVrf({
+        id: vrf.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

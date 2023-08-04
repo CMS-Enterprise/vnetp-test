@@ -889,7 +889,7 @@ export class V1LoadBalancerPoolsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}/tierId/`,
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/load-balancer/pools/${encodeURIComponent(String(id))}/tierId`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

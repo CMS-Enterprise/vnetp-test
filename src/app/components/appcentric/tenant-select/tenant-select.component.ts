@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Tenant, TenantPaginationResponse, V2AppCentricTenantsService } from 'client';
+import { Tenant, GetManyTenantResponseDto, V2AppCentricTenantsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -17,7 +17,7 @@ export class TenantSelectComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentTenantsPage = 1;
   public perPage = 20;
-  public tenants = {} as TenantPaginationResponse;
+  public tenants = {} as GetManyTenantResponseDto;
   public tableComponentDto = new TableComponentDto();
   private tenantModalSubscription: Subscription;
 
@@ -66,7 +66,7 @@ export class TenantSelectComponent implements OnInit {
       }
     }
     this.tenantService
-      .findAllTenant({
+      .getManyTenant({
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })
@@ -99,7 +99,7 @@ export class TenantSelectComponent implements OnInit {
 
   public deleteTenant(tenant: Tenant): void {
     if (tenant.deletedAt) {
-      this.tenantService.removeTenant({ uuid: tenant.id }).subscribe(() => {
+      this.tenantService.deleteOneTenant({ id: tenant.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -113,8 +113,8 @@ export class TenantSelectComponent implements OnInit {
       });
     } else {
       this.tenantService
-        .softDeleteTenant({
-          uuid: tenant.id,
+        .softDeleteOneTenant({
+          id: tenant.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -137,8 +137,8 @@ export class TenantSelectComponent implements OnInit {
     }
 
     this.tenantService
-      .restoreTenant({
-        uuid: tenant.id,
+      .restoreOneTenant({
+        id: tenant.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

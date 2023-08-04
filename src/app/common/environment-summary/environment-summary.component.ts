@@ -75,7 +75,7 @@ export class EnvironmentSummaryComponent implements OnInit, OnDestroy {
   public getTenants(): void {
     this.isLoading = true;
     this.tenantService
-      .findAllTenant({
+      .getManyTenant({
         page: 1,
         perPage: 1000,
       })

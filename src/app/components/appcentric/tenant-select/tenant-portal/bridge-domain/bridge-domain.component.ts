@@ -2,9 +2,8 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   BridgeDomain,
-  BridgeDomainPaginationResponse,
+  GetManyBridgeDomainResponseDto,
   L3Out,
-  L3OutPaginationResponse,
   V2AppCentricBridgeDomainsService,
   V2AppCentricL3outsService,
   V2AppCentricVrfsService,
@@ -28,7 +27,7 @@ export class BridgeDomainComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentBridgeDomainPage = 1;
   public perPage = 20;
-  public bridgeDomains = {} as BridgeDomainPaginationResponse;
+  public bridgeDomains = {} as GetManyBridgeDomainResponseDto;
   public tableComponentDto = new TableComponentDto();
   private bridgeDomainModalSubscription: Subscription;
   private subnetsModalSubscription: Subscription;
@@ -95,7 +94,7 @@ export class BridgeDomainComponent implements OnInit {
       }
     }
     this.bridgeDomainService
-      .findAllBridgeDomain({
+      .getManyBridgeDomain({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -115,7 +114,7 @@ export class BridgeDomainComponent implements OnInit {
 
   public deleteBridgeDomain(bridgeDomain: BridgeDomain): void {
     if (bridgeDomain.deletedAt) {
-      this.bridgeDomainService.removeBridgeDomain({ uuid: bridgeDomain.id }).subscribe(() => {
+      this.bridgeDomainService.deleteOneBridgeDomain({ id: bridgeDomain.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -129,8 +128,8 @@ export class BridgeDomainComponent implements OnInit {
       });
     } else {
       this.bridgeDomainService
-        .softDeleteBridgeDomain({
-          uuid: bridgeDomain.id,
+        .softDeleteOneBridgeDomain({
+          id: bridgeDomain.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -153,8 +152,8 @@ export class BridgeDomainComponent implements OnInit {
     }
 
     this.bridgeDomainService
-      .restoreBridgeDomain({
-        uuid: bridgeDomain.id,
+      .restoreOneBridgeDomain({
+        id: bridgeDomain.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

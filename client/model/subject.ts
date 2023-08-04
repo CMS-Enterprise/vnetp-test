@@ -16,13 +16,15 @@ import { Contract } from './contract';
 
 export interface Subject { 
     readonly id?: string;
+    readonly createdAt?: string;
+    readonly updatedAt?: string;
+    readonly version?: number;
+    readonly deletedAt?: string;
+    readonly provisionedAt?: string;
+    readonly provisionedVersion?: number;
     name?: string;
     alias?: string;
     description?: string;
-    readonly createdAt?: string;
-    readonly updatedAt?: string;
-    readonly deletedAt?: string;
-    readonly provisionedAt?: string;
     /**
      * Sets the contract filter to apply on both ingress and egress traffic directions.
      */
