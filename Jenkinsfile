@@ -5,25 +5,6 @@ pipeline {
    agent any
     environment { npm_config_cache = 'npm-cache' }
     stages {
-	     stage ('Artifactory Configuration') {
-            steps {
-                rtServer(
-                    id: "artifactory_dev",
-                    url: "http://10.151.14.53/artifactory",
-                    credentialsId: "svccicdartifactory" 
-                    )
-                rtNpmResolver(
-                   id: "NPM_RESOLVER",
-                   serverId: "artifactory_dev",
-                   repo: "draas-npm-dev-virtual"
-                   )
-                rtNpmDeployer(
-                   id: "NPM_DEPLOYER",
-                   serverId: "artifactory_dev",
-                   repo: "draas-npm-dev-virtual"
-                   )    
-            }
-        }
     
      stage('Build') {
          agent {
@@ -76,34 +57,29 @@ pipeline {
       }
     }
       
- 
+
    stage('Publish') {
-    agent { label 'rehl8-prod' }
-      steps {
-        script {
-          sh 'mkdir -p builds/$GIT_COMMIT'
-          sh 'rm -f dist.tar'
-          sh 'tar cvf dist.tar dist/automation-ui/*'
-          sh 'rm -f dist.tar.gz'
-          sh 'gzip dist.tar'
-          sh 'mv dist.tar.gz builds/$GIT_COMMIT/dist.tar.gz'
-          rtUpload (
-            serverId: 'artifactory_dev',
-            spec: '''{
-              "files": [
-                {
-                  "pattern": "builds/$GIT_COMMIT/dist.tar.gz",
-                  "target": "dcs-ui",
-                  "recursive": "true",
-                  "flat" : "false"
-                }
-              ]}'''
-            )
-            rtPublishBuildInfo ( serverId: "artifactory_dev" )
+     agent { label 'rehl8-prod' }
+       steps {
+         script {
+          sh '''
+              mkdir -p builds/$GIT_COMMIT
+              rm -f dist.tar
+              tar cvf dist.tar dist/automation-ui/*
+              rm -f dist.tar.gz
+              gzip dist.tar
+              mv dist.tar.gz builds/$GIT_COMMIT/dist.tar.gz
+              
+             if (findmnt -T /mnt/buildartifacts)
+             then mkdir -p /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && cp builds/$GIT_COMMIT/dist.tar.gz  /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT
+             else echo 'NFS Mount not available'; exit 1
+             fi
+          '''
+             
         }
       }
-    }
-  }    
+    }  
+
       
   post { 
      always {
