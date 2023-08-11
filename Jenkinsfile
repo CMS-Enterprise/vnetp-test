@@ -74,11 +74,11 @@ pipeline {
              then mkdir -p /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && cp builds/$GIT_COMMIT/dist.tar.gz  /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT
              else echo 'NFS Mount not available'; exit 1
              fi
-          '''
-             
-        }
-      }
-    }  
+          '''         
+          }
+       }
+     } 
+  }  
 
       
   post { 
