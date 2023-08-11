@@ -71,7 +71,7 @@ pipeline {
               mv dist.tar.gz builds/$GIT_COMMIT/dist.tar.gz
               
              if (findmnt -T /mnt/buildartifacts)
-             then mkdir -p /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && cp builds/$GIT_COMMIT/dist.tar.gz  /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT
+             then mkdir -p /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && cp builds/$GIT_COMMIT/dist.tar.gz  /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && chmod -R 755 /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT
              else echo 'NFS Mount not available'; exit 1
              fi
           '''         
