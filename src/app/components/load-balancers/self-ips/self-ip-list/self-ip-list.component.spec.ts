@@ -114,14 +114,14 @@ describe('SelfIpListComponent', () => {
   });
 
   it('should import self ips', () => {
-    const selfIps = [{ name: 'SelfIp1', vrfName: 'Tier1' }, { name: 'SelfIp2' }] as ImportSelfIp[];
+    const selfIps = [{ name: 'SelfIp1', tierName: 'Tier1' }, { name: 'SelfIp2' }] as ImportSelfIp[];
     const spy = jest.spyOn(service, 'createManyLoadBalancerSelfIp');
 
     component.import(selfIps);
 
     expect(spy).toHaveBeenCalledWith({
       createManyLoadBalancerSelfIpDto: {
-        bulk: [{ name: 'SelfIp1', tierId: '1', vrfName: 'Tier1' }, { name: 'SelfIp2' }],
+        bulk: [{ name: 'SelfIp1', tierId: '1', tierName: 'Tier1' }, { name: 'SelfIp2' }],
       },
     });
   });

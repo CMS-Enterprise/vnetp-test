@@ -111,14 +111,14 @@ describe('NodeListComponent', () => {
   });
 
   it('should import nodes', () => {
-    const nodes = [{ name: 'Node1', vrfName: 'Tier1' }, { name: 'Node2' }] as ImportNode[];
+    const nodes = [{ name: 'Node1', tierName: 'Tier1' }, { name: 'Node2' }] as ImportNode[];
     const spy = jest.spyOn(service, 'createManyLoadBalancerNode');
 
     component.import(nodes);
 
     expect(spy).toHaveBeenCalledWith({
       createManyLoadBalancerNodeDto: {
-        bulk: [{ name: 'Node1', tierId: '1', vrfName: 'Tier1' }, { name: 'Node2' }],
+        bulk: [{ name: 'Node1', tierId: '1', tierName: 'Tier1' }, { name: 'Node2' }],
       },
     });
   });
