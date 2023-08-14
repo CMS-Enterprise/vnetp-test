@@ -145,12 +145,12 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(iRules: ImportIRule[]): void {
     const bulk = iRules.map(iRule => {
-      const { vrfName } = iRule;
-      if (!vrfName) {
+      const { tierName } = iRule;
+      if (!tierName) {
         return iRule;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...iRule,
         tierId,
@@ -227,5 +227,5 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
 }
 
 export interface ImportIRule extends LoadBalancerIrule {
-  vrfName?: string;
+  tierName?: string;
 }

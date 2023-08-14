@@ -139,12 +139,12 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
 
   public import(healthMonitors: ImportHealthMonitor[]): void {
     const bulk = healthMonitors.map(healthMonitor => {
-      const { vrfName } = healthMonitor;
-      if (!vrfName) {
+      const { tierName } = healthMonitor;
+      if (!tierName) {
         return healthMonitor;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...healthMonitor,
         tierId,
@@ -221,5 +221,5 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
 }
 
 export interface ImportHealthMonitor extends LoadBalancerHealthMonitor {
-  vrfName?: string;
+  tierName?: string;
 }

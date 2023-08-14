@@ -140,12 +140,12 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
       if (vlan.tag && typeof vlan.tag !== 'number') {
         vlan.tag = +vlan.tag;
       }
-      const { vrfName } = vlan;
-      if (!vrfName) {
+      const { tierName } = vlan;
+      if (!tierName) {
         return vlan;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...vlan,
         tierId,
@@ -222,5 +222,5 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
 }
 
 export interface ImportVlan extends LoadBalancerVlan {
-  vrfName?: string;
+  tierName?: string;
 }

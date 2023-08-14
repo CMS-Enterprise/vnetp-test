@@ -143,12 +143,12 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(profiles: ImportProfile[]): void {
     const bulk = profiles.map(profile => {
-      const { vrfName } = profile;
-      if (!vrfName) {
+      const { tierName } = profile;
+      if (!tierName) {
         return profile;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...profile,
         tierId,
@@ -225,5 +225,5 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
 }
 
 export interface ImportProfile extends LoadBalancerProfile {
-  vrfName?: string;
+  tierName?: string;
 }

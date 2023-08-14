@@ -164,14 +164,14 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(selfIps: ImportSelfIp[]): void {
     const bulk = selfIps.map(selfIp => {
-      const { vrfName } = selfIp;
-      if (!vrfName) {
+      const { tierName } = selfIp;
+      if (!tierName) {
         return selfIp;
       }
       const { loadBalancerVlanId } = selfIp;
       // continue getting vlanUUID
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       const vlanId = ObjectUtil.getObjectId(loadBalancerVlanId, this.vlans);
       if (loadBalancerVlanId) {
         selfIp.loadBalancerVlanId = vlanId;
@@ -253,5 +253,5 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
 }
 
 export interface ImportSelfIp extends LoadBalancerSelfIp {
-  vrfName?: string;
+  tierName?: string;
 }

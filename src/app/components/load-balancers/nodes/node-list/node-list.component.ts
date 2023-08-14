@@ -147,12 +147,12 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(nodes: ImportNode[]): void {
     const bulk = nodes.map(node => {
-      const { vrfName } = node;
-      if (!vrfName) {
+      const { tierName } = node;
+      if (!tierName) {
         return node;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...node,
         tierId,
@@ -229,5 +229,5 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
 }
 
 export interface ImportNode extends LoadBalancerNode {
-  vrfName?: string;
+  tierName?: string;
 }
