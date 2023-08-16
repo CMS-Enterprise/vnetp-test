@@ -84,15 +84,15 @@ export class FirewallRuleModalHelpText {
   Protocol = `Layer 4 Protocol that matching traffic uses.`;
   Enabled = 'Indicates whether the firewall rule is enabled.';
   Logging = `Indicates whether traffic that matches this rule should be logged.`;
-  SourceNetworkType = `Type of Source Network (IP, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
-  SourceServiceType = `Type of Source Service (Port/Port Range, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
-  DestinationNetworkType = `Type of Destination Network (IP, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
-  DestinationServiceType = `Type of Destination Service (Port/Port Range, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
+  SourceNetworkType = `Type of Source Network (IP, Object, Object Group).`;
+  SourceServiceType = `Type of Source Service (Port/Port Range, Object, Object Group).`;
+  DestinationNetworkType = `Type of Destination Network (IP, Object, Object Group).`;
+  DestinationServiceType = `Type of Destination Service (Port/Port Range, Object, Object Group).`;
   IpNetworkType = `IP address of a single host (X.X.X.X) or subnet (X.X.X.X/YY).`;
   NetworkObjectType = `Network Object created under IPAM.`;
   NetworkObjectGroupType = `Network Object Group created under IPAM.`;
   PortServiceType = `Single port (80), Range of ports (22-23) or 'any' to match any Port.`;
-  ServiceObjectType = `Service Object created under IPAM. <a href="${this.wikiBase}/ipam#Service_Groups">wiki</a>`;
+  ServiceObjectType = `Service Object created under IPAM.`;
   ServiceObjectGroupType = `Service Object Group created under IPAM.`;
   RuleIndex = `<p>Index of the rule relative to other rules in the ruleset. Rules with a lower index will be applied first.</p>
   <p>We auto-suggest the next available Rule Index in the rule list, please ensure this auto-suggestion does not place this rule behind any deny rules that may exist at the end of an ACL</p>`;
@@ -115,8 +115,8 @@ export class NatRuleModalHelpText {
   Enabled = 'Indicates whether the NAT rule is enabled.';
   Logging = `Indicates whether traffic that matches this rule should be logged.`;
   OriginalServiceType = `Type of Original Service (None, Service Object).`;
-  OriginalSourceAddressType = `Type of Original Source Address (None, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
-  OriginalDestinationAddressType = `Type of Original Destination Address (None, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>
+  OriginalSourceAddressType = `Type of Original Source Address (None, Object, Object Group)`;
+  OriginalDestinationAddressType = `Type of Original Destination Address (None, Object, Object Group)
   <br>
   <p>Constraints:</p>
   <p>*When a translated destination address type is not 'None', the original destination address must also not be 'None'.</p>
@@ -128,11 +128,11 @@ export class NatRuleModalHelpText {
   <p>*Translated Source and Destination Network Objects/Object Groups must be provided with DynamicIp or DynamicIpAndPort Translation Types.</p>
   `;
   TranslatedServiceType = `Type of Destination Service (None, Service Object). Note that if a Service Object is chosen, the Service Object must have a source port that is not 'any' or a range.`;
-  TranslatedSourceAddressType = `Type of Translated Source Address (None, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>
+  TranslatedSourceAddressType = `Type of Translated Source Address (None, Object, Object Group).
   <br>
   <p>Constraints:</p>
   <p>When translation type is dynamicIp or dynamicIpAndPort translatedSourceAddress MUST NOT be 'None'</p>`;
-  TranslatedDestinationAddressType = `Type of Translated Destination Address (None, Object, Object Group). More info: <a href="${this.wikiBase}/ipam#Network_Groups">wiki</a>`;
+  TranslatedDestinationAddressType = `Type of Translated Destination Address (None, Object, Object Group).`;
   RuleIndex = `<p>Index of the rule relative to other rules in the ruleset. Rules with a lower index will be applied first.</p>
   <p>We auto-suggest the next available Rule Index in the rule list, please ensure this auto-suggestion does not place this rule behind any deny rules that may exist at the end of an ACL</p>`;
 }

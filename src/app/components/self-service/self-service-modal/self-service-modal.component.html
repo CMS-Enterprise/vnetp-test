@@ -85,11 +85,10 @@
               <div>
                 <ul>
                   <li *ngFor="let interface of tier.interfaces">{{interface.interface}} -
-                    <input [(ngModel)]="interface.intervrf" type="checkbox" (click)="markInterfaceIntervrf(interface)">
+                    <input (keyup.enter)="markInterfaceIntervrf(interface)"  [(ngModel)]="interface.intervrf" type="checkbox" (click)="markInterfaceIntervrf(interface)">
                     Intervrf
-                    <input [(ngModel)]="interface.external" type="checkbox" (click)="markInterfaceExternal(interface)">
+                    <input (keyup.enter)="markInterfaceExternal(interface)" [(ngModel)]="interface.external" type="checkbox" (click)="markInterfaceExternal(interface)">
                     External
-                    <!-- <input [(ngModel)]="interface.inside" type="checkbox" (click)="markInterfaceInside(interface)"> Inside -->
                     <div style="display: inline-block" *ngIf="interface.needsSelection">
                       <div class="interfaceNeedsSelection">Make a selection</div>
 
