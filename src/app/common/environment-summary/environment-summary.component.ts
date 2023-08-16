@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-environment-summary',
   templateUrl: './environment-summary.component.html',
-  styleUrls: ['./environment-summary.component.css'],
+  styleUrls: ['./environment-summary.component.scss'],
 })
 export class EnvironmentSummaryComponent implements OnInit, OnDestroy {
   public tenants: Tenant[];

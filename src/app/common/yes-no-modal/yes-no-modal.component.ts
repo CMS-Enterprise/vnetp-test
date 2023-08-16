@@ -42,7 +42,6 @@ export class YesNoModalComponent {
 
   public getData(): void {
     const modalConfig = this.ngx.getModalData('yesNoModal') as YesNoModalDto;
-
     this.cancelText = modalConfig.cancelText;
     this.confirmButtonType = modalConfig.confirmButtonType;
     this.confirmText = modalConfig.confirmText;
