@@ -361,7 +361,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  private sanitizeData(entities: FirewallRuleImport[]): FirewallRuleImport[] {
+  public sanitizeData(entities: FirewallRuleImport[]): FirewallRuleImport[] {
     return entities.map((entity: FirewallRuleImport) => {
       entity.ruleIndex = Number(entity.ruleIndex);
       this.mapCsv(entity);
@@ -369,7 +369,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  private mapCsv(entity: FirewallRuleImport): FirewallRuleImport {
+  public mapCsv(entity: FirewallRuleImport): FirewallRuleImport {
     Object.entries(entity).forEach(([key, val]) => {
       if (val === 'FALSE' || val === 'false' || val === 'f' || val === 'F') {
         entity[key] = false;
@@ -384,7 +384,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     return entity;
   }
 
-  private createPreview(data: FirewallRulePreview, firewallRules: FirewallRuleImport[]): void {
+  public createPreview(data: FirewallRulePreview, firewallRules: FirewallRuleImport[]): void {
     const { firewallRulesToBeUploaded, firewallRulesToBeDeleted } = data;
     const fwData = { data: firewallRulesToBeUploaded };
     const tableConfig: TableConfig<FirewallRule> = {
