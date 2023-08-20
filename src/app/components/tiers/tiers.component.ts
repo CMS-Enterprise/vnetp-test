@@ -44,8 +44,11 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   private currentDatacenterSubscription: Subscription;
   private tierModalSubscription: Subscription;
+  private typeDeletemodalSubscription: Subscription;
 
   public isLoading = false;
+
+  selectedTierToDelete;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('stateTemplate') stateTemplate: TemplateRef<any>;
@@ -226,25 +229,43 @@ export class TiersComponent implements OnInit, OnDestroy {
     this.ngx.getModal('tierModal').open();
   }
 
-  public deleteTier(tier: Tier): void {
-    this.entityService.deleteEntity(tier, {
-      entityName: 'Tier',
-      delete$: this.tierService.deleteOneTier({ id: tier.id }),
-      softDelete$: this.tierService.softDeleteOneTier({ id: tier.id }),
-      onSuccess: () => {
-        // get search params from local storage
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getTiers(params);
-        } else {
-          this.getTiers();
-        }
-      },
+  public subscribeToTypeDeleteModal(tier) {
+    this.typeDeletemodalSubscription = this.ngx.getModal('typeDeleteModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('typeDeleteModal');
+      this.typeDeletemodalSubscription.unsubscribe();
+      this.getTiers();
     });
+  }
+
+  public openTypeDeleteModal(tier) {
+    this.selectedTierToDelete = tier;
+    this.subscribeToTypeDeleteModal(tier);
+    this.ngx.getModal('typeDeleteModal').open();
+  }
+
+  public deleteTier(tier: Tier): void {
+    if (tier.deletedAt) {
+      this.openTypeDeleteModal(tier);
+    } else {
+      this.entityService.deleteEntity(tier, {
+        entityName: 'Tier',
+        delete$: this.tierService.deleteOneTier({ id: tier.id }),
+        softDelete$: this.tierService.softDeleteOneTier({ id: tier.id }),
+        onSuccess: () => {
+          // get search params from local storage
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
+
+          // if filtered results boolean is true, apply search params in the
+          // subsequent get call
+          if (filteredResults) {
+            this.getTiers(params);
+          } else {
+            this.getTiers();
+          }
+        },
+      });
+    }
   }
 
   public restoreTier(tier: Tier): void {

@@ -6764,6 +6764,31 @@
         ]
       }
     },
+    "/v1/tiers/{id}/cascade": {
+      "get": {
+        "operationId": "cascadeDeleteTierTier",
+        "summary": "",
+        "description": "Cascade Delete Tier",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/tiers"
+        ]
+      }
+    },
     "/v1/tiers/{id}": {
       "get": {
         "operationId": "getOneTier",
