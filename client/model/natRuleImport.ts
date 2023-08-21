@@ -54,7 +54,7 @@ export interface NatRuleImport {
     readonly translatedDestinationNetworkObjectGroup?: NetworkObjectGroup;
     readonly originalServiceObject?: ServiceObject;
     readonly translatedServiceObject?: ServiceObject;
-    vrfName: string;
+    tierName: string;
     natRuleGroupType: string;
 }
 export enum NatRuleImportTranslationTypeEnum {

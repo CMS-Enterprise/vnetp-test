@@ -49,7 +49,7 @@ export interface FirewallRuleImport {
     readonly destinationNetworkObjectGroup?: NetworkObjectGroup;
     readonly serviceObject?: ServiceObject;
     readonly serviceObjectGroup?: ServiceObjectGroup;
-    vrfName: string;
+    tierName: string;
     firewallRuleGroupType: string;
 }
 export enum FirewallRuleImportDirectionEnum {
