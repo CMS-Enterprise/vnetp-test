@@ -204,7 +204,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   openServiceObjectGroupModal(modalMode: ModalMode, serviceObjectGroup?: ServiceObjectGroup) {
     if (modalMode === ModalMode.Edit && !serviceObjectGroup) {
-      throw new Error('Service Object required');
+      throw new Error('Service Object Group required');
     }
 
     const dto = new ServiceObjectGroupModalDto();
@@ -318,7 +318,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
-
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Datacenter, Tenant, V2AppCentricTenantsService } from 'client';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-environment-summary',
   templateUrl: './environment-summary.component.html',
-  styleUrls: ['./environment-summary.component.css'],
+  styleUrls: ['./environment-summary.component.scss'],
 })
 export class EnvironmentSummaryComponent implements OnInit, OnDestroy {
   public tenants: Tenant[];
@@ -44,6 +44,7 @@ export class EnvironmentSummaryComponent implements OnInit, OnDestroy {
     private tenantService: V2AppCentricTenantsService,
     private datacenterContextService: DatacenterContextService,
     private router: Router,
+    private zone: NgZone,
   ) {}
 
   ngOnInit(): void {
@@ -104,9 +105,11 @@ export class EnvironmentSummaryComponent implements OnInit, OnDestroy {
 
   public switchDatacenter(datacenterId): void {
     this.datacenterContextService.switchDatacenter(datacenterId);
-    this.router.navigate(['/netcentric/dashboard'], {
-      queryParams: { datacenter: datacenterId },
-      queryParamsHandling: 'merge',
+    this.zone.run(() => {
+      this.router.navigate(['/netcentric/dashboard'], {
+        queryParams: { datacenter: datacenterId },
+        queryParamsHandling: 'merge',
+      });
     });
   }
 }

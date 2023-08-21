@@ -13,6 +13,7 @@ import { TableModule } from '../../common/table/table.module';
 import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
+import { TypeDeleteModalComponent } from './type-delete-modal/type-delete-modal.component';
 
 const routes: Routes = [
   {
@@ -35,7 +36,7 @@ const routes: Routes = [
     FontAwesomeModule,
     ApplicationPipesModule,
   ],
-  declarations: [TiersComponent, TierModalComponent],
-  exports: [TiersComponent, TierModalComponent],
+  declarations: [TiersComponent, TierModalComponent, TypeDeleteModalComponent],
+  exports: [TiersComponent, TierModalComponent, TypeDeleteModalComponent],
 })
 export class TiersModule {}
