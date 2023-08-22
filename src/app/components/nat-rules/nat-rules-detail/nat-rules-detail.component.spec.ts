@@ -9,7 +9,6 @@ import {
   MockNgxSmartModalComponent,
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
-import { SharedModule } from 'src/app/common/shared.module';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -52,7 +51,7 @@ describe('NatRulesDetailComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],
-      imports: [ApplicationPipesModule, SharedModule, RouterTestingModule.withRoutes([]), HttpClientTestingModule],
+      imports: [ApplicationPipesModule, RouterTestingModule.withRoutes([]), HttpClientTestingModule],
       providers: [
         MockProvider(NgxSmartModalService),
         { provide: 'DatacenterService', useValue: mockDatacenterService },
