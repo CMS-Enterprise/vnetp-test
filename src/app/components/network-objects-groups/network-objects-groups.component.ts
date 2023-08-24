@@ -99,6 +99,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       { name: 'State', template: () => this.groupStateTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
+    hideAdvancedSearch: true,
   };
 
   constructor(

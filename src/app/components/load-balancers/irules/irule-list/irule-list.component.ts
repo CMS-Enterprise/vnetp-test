@@ -41,6 +41,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
+    hideAdvancedSearch: true,
   };
   public iRules = {} as GetManyLoadBalancerIruleResponseDto;
   public tableComponentDto = new TableComponentDto();

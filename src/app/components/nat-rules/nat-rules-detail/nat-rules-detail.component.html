@@ -3,9 +3,7 @@
   <span>Back</span>
 </a>
 
-<h1 *ngIf="!filteredResults">{{ TierName }} - {{ NatRuleGroup?.name }} Nat Rules ({{ natRules?.total }} items)</h1>
-
-<h1 *ngIf="filteredResults">{{ TierName }} - {{ NatRuleGroup?.name }} Nat Rules ({{ natRules?.total }} matching items)</h1>
+<h1>{{ TierName }} - {{ NatRuleGroup?.name }} Nat Rules ({{ natRules?.total }} items)</h1>
 
 <section class="btn-toolbar" role="toolbar">
   <!-- Add Nat Rule -->
