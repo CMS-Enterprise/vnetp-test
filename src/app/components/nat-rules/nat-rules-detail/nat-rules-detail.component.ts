@@ -362,7 +362,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   private createPreview(data: NatRulePreview, natRules: NatRuleImport[]): void {
-    const { natRulesToBeDeleted, natRulesToBeUploaded } = data;
+    const { natRulesToBeUploaded } = data;
     const natData = { data: natRulesToBeUploaded };
     const tableConfig: TableConfig<NatRule> = {
       description: 'Nat Rules Import Preview',
