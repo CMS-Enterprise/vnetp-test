@@ -16,17 +16,33 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   private routesNotToRender = ['/unauthorized', '/logout', '/login'];
   private routeChanges: Subscription;
 
+  public currentMode = '';
+
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    const path = window.location.pathname;
+
+    if (path.split('/').some(c => c === 'appcentric')) {
+      this.currentMode = 'appcentric';
+    } else {
+      this.currentMode = 'netcentric';
+    }
+
     const dashboardBreadcrumb: Breadcrumb = {
       label: 'Dashboard',
-      url: '/dashboard',
+      url: `/${this.currentMode}/dashboard`,
     };
+
+    this.breadcrumbs.push(dashboardBreadcrumb);
+    const originalRoot = this.route.root;
+    const originalBreadCrumbs = this.getBreadcrumbs(originalRoot);
+    this.breadcrumbs = [dashboardBreadcrumb, ...originalBreadCrumbs];
 
     this.routeChanges = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       const root: ActivatedRoute = this.route.root;
       const currentRoute = this.router.url.split('?')[0];
+
       this.render = !this.routesNotToRender.some(r => r.includes(currentRoute));
 
       const breadcrumbs = this.getBreadcrumbs(root);
@@ -47,7 +63,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     }
 
     for (const child of children) {
-      if (child.outlet !== PRIMARY_OUTLET || child.snapshot.url.length === 0) {
+      if (child.outlet !== PRIMARY_OUTLET) {
         continue;
       }
 
@@ -57,7 +73,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
       const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
 
-      url += `/${routeURL}`;
+      url += `/${this.currentMode}/${routeURL}`;
 
       const breadcrumb: Breadcrumb = {
         label: child.snapshot.data[ROUTE_DATA_BREADCRUMB],

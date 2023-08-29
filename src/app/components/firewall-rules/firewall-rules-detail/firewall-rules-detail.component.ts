@@ -30,7 +30,7 @@ import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
 import { TableConfig } from 'src/app/common/table/table.component';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { EntityService } from 'src/app/services/entity.service';
-import { SearchColumnConfig } from '../../../common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../../../common/search-bar/search-bar.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 
@@ -375,7 +375,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  private sanitizeData(entities: FirewallRuleImport[]): FirewallRuleImport[] {
+  public sanitizeData(entities: FirewallRuleImport[]): FirewallRuleImport[] {
     return entities.map((entity: FirewallRuleImport) => {
       entity.ruleIndex = Number(entity.ruleIndex);
       this.mapCsv(entity);
@@ -383,7 +383,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  private mapCsv(entity: FirewallRuleImport): FirewallRuleImport {
+  public mapCsv(entity: FirewallRuleImport): FirewallRuleImport {
     Object.entries(entity).forEach(([key, val]) => {
       if (val === 'FALSE' || val === 'false' || val === 'f' || val === 'F') {
         entity[key] = false;
@@ -398,7 +398,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     return entity;
   }
 
-  private createPreview(data: FirewallRulePreview, firewallRules: FirewallRuleImport[]): void {
+  public createPreview(data: FirewallRulePreview, firewallRules: FirewallRuleImport[]): void {
     const { firewallRulesToBeUploaded, firewallRulesToBeDeleted } = data;
     const fwData = { data: firewallRulesToBeUploaded };
     const tableConfig: TableConfig<FirewallRule> = {

@@ -36,5 +36,5 @@ module.exports = {
     '!**/src/setupJest.ts',
   ],
   moduleDirectories: ['', 'node_modules', 'src'],
-  transformIgnorePatterns: ['node_modules/(?!lodash-es/*)']
+  transformIgnorePatterns: ['node_modules/(?!lodash-es/*)'],
 };

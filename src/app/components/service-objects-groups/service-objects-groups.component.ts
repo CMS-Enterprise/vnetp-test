@@ -24,7 +24,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { EntityService } from 'src/app/services/entity.service';
 import { TableConfig } from '../../common/table/table.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
-import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
 
 @Component({
@@ -204,7 +204,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   openServiceObjectGroupModal(modalMode: ModalMode, serviceObjectGroup?: ServiceObjectGroup) {
     if (modalMode === ModalMode.Edit && !serviceObjectGroup) {
-      throw new Error('Service Object required');
+      throw new Error('Service Object Group required');
     }
 
     const dto = new ServiceObjectGroupModalDto();
@@ -318,7 +318,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
-
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {

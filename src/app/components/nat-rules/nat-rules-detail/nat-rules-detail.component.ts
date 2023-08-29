@@ -27,7 +27,7 @@ import { EntityService } from 'src/app/services/entity.service';
 import { NatRuleModalDto } from '../../../models/nat/nat-rule-modal-dto';
 import { TableConfig } from '../../../common/table/table.component';
 import { PreviewModalDto } from '../../../models/other/preview-modal-dto';
-import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 
@@ -355,7 +355,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   private createPreview(data: NatRulePreview, natRules: NatRuleImport[]): void {
-    const { natRulesToBeDeleted, natRulesToBeUploaded } = data;
+    const { natRulesToBeUploaded } = data;
     const natData = { data: natRulesToBeUploaded };
     const tableConfig: TableConfig<NatRule> = {
       description: 'Nat Rules Import Preview',

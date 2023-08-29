@@ -20,7 +20,7 @@ import {
 import { of } from 'rxjs';
 import { NatRulePacketTracerComponent } from './nat-rule-packet-tracer.component';
 
-describe('FirewallRulesPacketTracerComponent', () => {
+describe('NatRulesPacketTracerComponent', () => {
   let component: NatRulePacketTracerComponent;
   let fixture: ComponentFixture<NatRulePacketTracerComponent>;
   let netObjService: V1NetworkSecurityNetworkObjectsService;
