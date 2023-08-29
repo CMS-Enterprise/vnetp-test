@@ -40,7 +40,7 @@ pipeline {
    stage("SonarQube - Static Analysis") {
      agent { label 'rehl8-prod' }
        steps {
-        withSonarQubeEnv('CB2Sonar') {
+        withSonarQubeEnv('CB2Sonarrehl8') {
           script {
             def readContent = readFile "sonar-project.properties"
             writeFile file: "sonar-project.properties", text: "$readContent \nsonar.branch.name=$BRANCH_NAME\n"
@@ -57,44 +57,8 @@ pipeline {
       }
     }
       
-
-   stage('Publish') {
-     agent { label 'rehl8-prod' }
-       steps {
-         script {
-          sh '''
-              mkdir -p builds/$GIT_COMMIT
-              rm -f dist.tar
-              tar cvf dist.tar dist/automation-ui/*
-              rm -f dist.tar.gz
-              gzip dist.tar
-              mv dist.tar.gz builds/$GIT_COMMIT/dist.tar.gz
-              
-             if (findmnt -T /mnt/buildartifacts)
-             then mkdir -p /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && cp builds/$GIT_COMMIT/dist.tar.gz  /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && chmod -R 755 /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT
-             else echo 'NFS Mount not available'; exit 1
-             fi
-          '''         
-          }
-       }
-     } 
   }  
-
-      
-  post { 
-     always {
-         echo 'send to cds-draas-jenkins channel in Slack'
-     }
-    success {
-      node ('rehl8-prod') {
-           sh 'cp coverage/cobertura-coverage.xml cobertura-coverage.xml'
-           cobertura(coberturaReportFile: 'cobertura-coverage.xml')
-              script {
-                     slackNotifier.notify(currentBuild.currentResult)
-              }
-       }
-    }
-  }
 }
+
 
  
