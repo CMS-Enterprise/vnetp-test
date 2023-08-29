@@ -117,7 +117,7 @@ describe('NatRulesPacketTracerComponent', () => {
 
     fixture = TestBed.createComponent(NatRulePacketTracerComponent);
     component = fixture.componentInstance;
-    component.objects = { natRules: natRules };
+    component.objects = { natRules };
     netObjService = TestBed.inject(V1NetworkSecurityNetworkObjectsService);
     netObjGroupService = TestBed.inject(V1NetworkSecurityNetworkObjectGroupsService);
     serviceObjectService = TestBed.inject(V1NetworkSecurityServiceObjectsService);
