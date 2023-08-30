@@ -213,6 +213,7 @@
             <div *ngIf="submitted && f.sourcePorts.errors" class="invalid-feedback">
               <div *ngIf="f.sourcePorts.errors.invalidPortNumber">Source Port/Range must be between 1-65535</div>
               <div *ngIf="f.sourcePorts.errors.required">Source Port is required</div>
+              <div *ngIf="f.sourcePorts.errors.portRangeNotAllowed">Port range not allowed</div>
             </div>
           </div>
   
@@ -224,6 +225,7 @@
               <div *ngIf="f.destinationPorts.errors.invalidPortNumber">Destination Port/Range must be between 1-65535
               </div>
               <div *ngIf="f.destinationPorts.errors.required">Destination Port is required</div>
+              <div *ngIf="f.destinationPorts.errors.portRangeNotAllowed">Port range not allowed</div>
             </div>
           </div>
         </div>
