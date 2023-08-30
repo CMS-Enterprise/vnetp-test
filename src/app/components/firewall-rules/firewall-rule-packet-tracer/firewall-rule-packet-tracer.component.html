@@ -11,7 +11,7 @@
   </ng-container>
   <br>
 
-  <div *ngIf="partialMatches.length > 0">
+  <div *ngIf="partialMatches.length > 0 && doneSearching">
     <a style="color: blue; cursor: pointer;" (click)="showPartials = !showPartials">Show Partials</a>
   </div>
   <div *ngIf="showPartials">
@@ -95,12 +95,12 @@
           </td>
 
           <td>
-            <span *ngIf="partial.checkList.sourcePortMatch === false">
-              <b>{{partial.checkList.sourcePortMatch}}</b>
+            <span *ngIf="partial.checkList.destPortMatch === false">
+              <b>{{partial.checkList.destPortMatch}}</b>
             </span>
 
-            <span *ngIf="partial.checkList.sourcePortMatch === true">
-              {{partial.checkList.sourcePortMatch}}
+            <span *ngIf="partial.checkList.destPortMatch === true">
+              {{partial.checkList.destPortMatch}}
             </span>
           </td>
 

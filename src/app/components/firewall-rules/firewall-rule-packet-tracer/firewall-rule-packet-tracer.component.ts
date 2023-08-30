@@ -2,7 +2,12 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { V1NetworkSecurityNetworkObjectGroupsService, V1NetworkSecurityNetworkObjectsService } from 'client';
+import {
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
@@ -28,6 +33,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     private formBuilder: FormBuilder,
     private networkObjectService: V1NetworkSecurityNetworkObjectsService,
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
+    private serviceObjectService: V1NetworkSecurityServiceObjectsService,
+    private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
   ) {}
 
   ngOnInit(): void {
@@ -385,6 +392,28 @@ export class FirewallRulePacketTracerComponent implements OnInit {
           checkList.destPortMatch = true;
         }
 
+        if (rule.serviceType === 'ServiceObject') {
+          const serviceObject = await this.getServiceObjectInfo(rule.serviceObjectId);
+          if (serviceObject.sourcePorts === searchDto.sourcePortsLookup) {
+            checkList.sourcePortMatch = true;
+          }
+          if (serviceObject.destinationPorts === searchDto.destPortsLookup) {
+            checkList.destPortMatch = true;
+          }
+        }
+
+        if (rule.serviceType === 'ServiceObjectGroup') {
+          const serviceObjectGroup = await this.getServiceObjectGroupInfo(rule.serviceObjectGroupId);
+          serviceObjectGroup.serviceObjects.forEach(svcObj => {
+            if (svcObj.sourcePorts === searchDto.sourcePortsLookup) {
+              checkList.sourcePortMatch = true;
+            }
+            if (svcObj.destinationPorts === searchDto.destPortsLookup) {
+              checkList.destPortMatch = true;
+            }
+          });
+        }
+
         // evaluate if direction matches
         if (searchDto.directionLookup === rule.direction) {
           checkList.directionMatch = true;
@@ -459,6 +488,14 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     return this.form.controls;
   }
 
+  getServiceObjectInfo(serviceObjectId) {
+    return this.serviceObjectService.getOneServiceObject({ id: serviceObjectId }).toPromise();
+  }
+
+  getServiceObjectGroupInfo(serviceObjectGroupId) {
+    return this.serviceObjectGroupService.getOneServiceObjectGroup({ id: serviceObjectGroupId, join: ['serviceObjects'] }).toPromise();
+  }
+
   getNetworkObjectInfo(networkObjectId) {
     return this.networkObjectService.getOneNetworkObject({ id: networkObjectId }).toPromise();
   }
@@ -479,21 +516,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       destinationPorts: ['', ValidatePortRange],
     });
   }
-
-  // setFormValidators() {
-  //   this.protocolSubscription = this.form.controls.protocol.valueChanges.subscribe(protocol => {
-  //     if (protocol === 'IP' || protocol === 'ICMP') {
-  //       this.form.controls.sourcePorts.setValidators(null);
-  //       this.form.controls.destinationPorts.setValidators(null);
-  //     } else {
-  //       this.form.controls.sourcePorts.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
-  //       this.form.controls.destinationPorts.setValidators(Validators.compose([Validators.required, ValidatePortRange]));
-  //     }
-
-  //     this.form.controls.sourcePorts.updateValueAndValidity();
-  //     this.form.controls.destinationPorts.updateValueAndValidity();
-  //   });
-  // }
 
   reset(): void {
     this.submitted = false;

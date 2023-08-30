@@ -12,7 +12,12 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MockProvider } from 'src/test/mock-providers';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
-import { V1NetworkSecurityNetworkObjectsService, V1NetworkSecurityNetworkObjectGroupsService } from 'client';
+import {
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
+} from 'client';
 import { FirewallRulePacketTracerComponent } from '../firewall-rule-packet-tracer/firewall-rule-packet-tracer.component';
 import { of } from 'rxjs';
 
@@ -38,6 +43,8 @@ describe('FirewallRulesPacketTracerComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
         MockProvider(V1NetworkSecurityNetworkObjectsService),
+        MockProvider(V1NetworkSecurityServiceObjectsService),
+        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
       ],
     });
     const firewallRules = [
