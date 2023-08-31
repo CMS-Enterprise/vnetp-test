@@ -34,6 +34,7 @@ import { TableContextService } from 'src/app/services/table-context.service';
 export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   unusedObjects = {} as any;
+  usedObjectsParents = {} as any;
   currentTier: Tier;
   perPage = 20;
   ModalMode = ModalMode;
@@ -54,6 +55,8 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   private networkObjectGroupModalSubscription: Subscription;
   private networkObjectModalSubscription: Subscription;
   private unusedObjectsModalSubscription: Subscription;
+
+  private usedObjectsParentsModalSubscription: Subscription;
 
   public isLoadingObjects = false;
   public isLoadingGroups = false;
@@ -114,16 +117,34 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     });
   }
 
+  private openUsedObjectsParentsModal(): void {
+    this.subscribeToUsedObjectsParentsModal();
+    this.ngx.getModal('usedObjectsParentsModal').open();
+  }
+
+  private subscribeToUsedObjectsParentsModal(): void {
+    this.usedObjectsParentsModalSubscription = this.ngx.getModal('usedObjectsParentsModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('usedObjectsParentsModal');
+      this.getNetworkObjects();
+      this.usedObjectsParentsModalSubscription.unsubscribe();
+    });
+  }
+
   private openUnusedObjectsModal(): void {
     this.subscribeToUnusedObjectsModal();
     this.ngx.getModal('unusedObjectsModal').open();
   }
 
+  public checkObjectsParents(netObjId) {
+    this.networkObjectService.checkUsedObjectsNetworkObject(netObjId).subscribe(data => {
+      this.usedObjectsParents.data = data;
+      this.openUsedObjectsParentsModal();
+    });
+  }
+
   public checkObjectUsage() {
     this.networkObjectService.checkObjectsNetworkObject().subscribe(data => {
-      console.log('data', data);
       this.unusedObjects.data = data.unusedObjectsArray;
-      console.log('this.unusedObjects', this.unusedObjects);
       this.openUnusedObjectsModal();
     });
   }

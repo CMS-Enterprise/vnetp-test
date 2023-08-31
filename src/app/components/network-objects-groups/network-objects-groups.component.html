@@ -52,6 +52,7 @@
 
     <ng-template #actionsTemplate let-netObj="datum">
       <section class="table__actions">
+        <fa-icon (click)="checkObjectsParents(netObj)" class="icon" [icon]="['fas', 'search']"></fa-icon>
         <app-icon-button
               *ngIf="!netObj?.deletedAt"
               icon="edit"
@@ -160,6 +161,8 @@
 <app-network-object-group-modal></app-network-object-group-modal>
 <app-network-object-modal></app-network-object-modal>
 <app-unused-objects-modal [unusedObjectsInput]="unusedObjects"></app-unused-objects-modal>
+<app-used-objects-parents-modal [usedObjectsParentsInput]="usedObjectsParents"></app-used-objects-parents-modal>
+
 <app-yes-no-modal [allowEmptyTier]="showRadio"></app-yes-no-modal>
 <ng-template #warningMessage>
   <p>Select a Tier to display Network Objects & Groups details</p>

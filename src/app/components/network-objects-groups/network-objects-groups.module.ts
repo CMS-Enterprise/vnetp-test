@@ -16,6 +16,7 @@ import { ImportExportModule } from 'src/app/common/import-export/import-export.m
 import { TableModule } from 'src/app/common/table/table.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TierSelectModule } from 'src/app/common/tier-select/tier-select.module';
+import { UsedObjectsParentsModalComponent } from './used-objects-parents-modal/used-objects-parents-modal.component';
 
 const routes: Routes = [
   {
@@ -41,6 +42,12 @@ const routes: Routes = [
     TabsModule,
     TierSelectModule,
   ],
-  declarations: [NetworkObjectsGroupsComponent, NetworkObjectGroupModalComponent, NetworkObjectModalComponent, UnusedObjectsModalComponent],
+  declarations: [
+    UsedObjectsParentsModalComponent,
+    NetworkObjectsGroupsComponent,
+    NetworkObjectGroupModalComponent,
+    NetworkObjectModalComponent,
+    UnusedObjectsModalComponent,
+  ],
 })
 export class NetworkObjectsGroupsModule {}

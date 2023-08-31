@@ -10309,6 +10309,31 @@
         ]
       }
     },
+    "/v1/network-security/network-objects/checkUsedObjects/{id}": {
+      "get": {
+        "operationId": "checkUsedObjectsNetworkObject",
+        "summary": "",
+        "description": "Get Used Network Objects Parents",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
+      }
+    },
     "/v1/network-security/network-objects/{id}": {
       "get": {
         "operationId": "getOneNetworkObject",
