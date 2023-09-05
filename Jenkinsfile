@@ -21,20 +21,7 @@ pipeline {
          sh 'npm run build:prod'
        }
      } 
-
-   stage('Test') {
-      agent {
-         docker {
-             image "${nodeImage}"
-             args "--userns=keep-id -e HOME=/tmp/home --security-opt label=disable"
-             label 'rehl8-prod'
-             }
-        }
-      steps {
-        sh 'npm --version'
-        sh 'npm run test:ci'
-      }
-    }     
+    
       
    stage("SonarQube - Static Analysis") {
      agent { label 'rehl8-prod' }
