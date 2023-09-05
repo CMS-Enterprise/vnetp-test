@@ -9235,6 +9235,31 @@
         ]
       }
     },
+    "/v1/network-security/service-objects/checkUsedObjects/{id}": {
+      "get": {
+        "operationId": "checkUsedObjectsServiceObject",
+        "summary": "",
+        "description": "Get Used Service Objects Parents",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
+      }
+    },
     "/v1/network-security/service-objects/{id}": {
       "get": {
         "operationId": "getOneServiceObject",

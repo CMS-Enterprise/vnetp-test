@@ -38,6 +38,7 @@ import { TableContextService } from 'src/app/services/table-context.service';
 export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
   unusedObjects = {} as any;
+  usedObjectsParents = {} as any;
   currentTier: Tier;
   public perPage = 20;
   ModalMode = ModalMode;
@@ -61,6 +62,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
   private unusedObjectsModalSubscription: Subscription;
+
+  private usedObjectsParentsModalSubscription: Subscription;
 
   public isLoadingObjects = false;
   public isLoadingGroups = false;
@@ -103,11 +106,29 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private tableContextService: TableContextService,
   ) {}
 
+  private openUsedObjectsParentsModal(): void {
+    this.subscribeToUsedObjectsParentsModal();
+    this.ngx.getModal('usedObjectsParentsModal').open();
+  }
+
+  private subscribeToUsedObjectsParentsModal(): void {
+    this.usedObjectsParentsModalSubscription = this.ngx.getModal('usedObjectsParentsModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('usedObjectsParentsModal');
+      this.getServiceObjects();
+      this.usedObjectsParentsModalSubscription.unsubscribe();
+    });
+  }
+
+  public checkObjectsParents(svcObjId) {
+    this.serviceObjectService.checkUsedObjectsServiceObject(svcObjId).subscribe(data => {
+      this.usedObjectsParents.data = data;
+      this.openUsedObjectsParentsModal();
+    });
+  }
+
   public checkObjectUsage() {
     this.serviceObjectService.checkObjectsServiceObject().subscribe(data => {
-      console.log('data', data);
       this.unusedObjects.data = data.unusedObjectsArray;
-      console.log('this.unusedObjects', this.unusedObjects);
       this.openUnusedObjectsModal();
     });
   }
