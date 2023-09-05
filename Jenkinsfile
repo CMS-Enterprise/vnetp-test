@@ -35,7 +35,6 @@ pipeline {
         sh 'npm run test:ci'
       }
     }     
-
       
    stage("SonarQube - Static Analysis") {
      agent { label 'rehl8-prod' }
