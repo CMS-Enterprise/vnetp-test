@@ -7,11 +7,12 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { TooltipModule } from '../tooltip/tooltip.module';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { SharedModule } from '../shared.module';
+import { UsedObjectsParentsModalComponent } from '../used-objects-parents-modal/used-objects-parents-modal.component';
 
 @NgModule({
   imports: [SharedModule, CommonModule, FontAwesomeModule, NgxPaginationModule, TooltipModule],
   declarations: [TableComponent],
   exports: [TableComponent],
-  providers: [SearchBarComponent],
+  providers: [SearchBarComponent, UsedObjectsParentsModalComponent],
 })
 export class TableModule {}

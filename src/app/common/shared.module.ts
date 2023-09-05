@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SearchBarComponent } from './search-bar/search-bar.component';
+import { UsedObjectsParentsModalComponent } from './used-objects-parents-modal/used-objects-parents-modal.component';
 
 @NgModule({
   imports: [CommonModule, FontAwesomeModule, FormsModule, ReactiveFormsModule],

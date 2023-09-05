@@ -28,7 +28,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { UsedObjectsParentsModalComponent } from './used-objects-parents-modal/used-objects-parents-modal.component';
+import { UsedObjectsParentsModalComponent } from '../../common/used-objects-parents-modal/used-objects-parents-modal.component';
 
 describe('NetworkObjectsGroupsComponent', () => {
   let component: NetworkObjectsGroupsComponent;
