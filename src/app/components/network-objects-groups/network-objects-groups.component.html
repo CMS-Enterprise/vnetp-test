@@ -52,7 +52,7 @@
 
     <ng-template #actionsTemplate let-netObj="datum">
       <section class="table__actions">
-        <fa-icon (click)="checkObjectsParents(netObj)" class="icon" [icon]="['fas', 'search']"></fa-icon>
+        <app-icon-button (click)="checkObjectsParents(netObj)" icon="search"></app-icon-button>
         <app-icon-button
               *ngIf="!netObj?.deletedAt"
               icon="edit"

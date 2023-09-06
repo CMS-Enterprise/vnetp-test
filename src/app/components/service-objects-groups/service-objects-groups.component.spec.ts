@@ -28,6 +28,7 @@ import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-ob
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import { UsedObjectsParentsModalComponent } from 'src/app/common/used-objects-parents-modal/used-objects-parents-modal.component';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
@@ -50,6 +51,7 @@ describe('ServicesObjectsGroupsComponent', () => {
         MockTooltipComponent,
         ServiceObjectsGroupsComponent,
         UnusedObjectsModalComponent,
+        UsedObjectsParentsModalComponent,
         YesNoModalComponent,
       ],
       providers: [

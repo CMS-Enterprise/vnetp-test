@@ -38,7 +38,7 @@
 
     <ng-template #actionsTemplate let-serviceObj="datum">
       <section class="table__actions">
-        <fa-icon (click)="checkObjectsParents(serviceObj)" class="icon" [icon]="['fas', 'search']"></fa-icon>
+        <app-icon-button (click)="checkObjectsParents(serviceObj)" icon="search"></app-icon-button>
         <app-icon-button
               *ngIf="!serviceObj?.deletedAt"
               icon="edit"

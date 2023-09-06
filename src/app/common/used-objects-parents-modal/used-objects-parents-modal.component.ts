@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-used-objects-parents-modal',
@@ -8,7 +8,7 @@ export class UsedObjectsParentsModalComponent {
   @Input() usedObjectsParentsInput;
 
   public config = {
-    description: 'Network Object Usage',
+    description: 'Object Usage',
     columns: [
       {
         name: 'Name',
