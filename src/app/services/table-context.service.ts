@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { AdvancedSearchLocalStorageModel } from '../models/other/advanced-search-local-storage-model';
 
 @Injectable({
   providedIn: 'root',
@@ -25,15 +26,33 @@ export class TableContextService {
     }
   }
 
+  addAdvancedSearchLocalStorage(searchOperator, searchString): void {
+    const advancedSearchValue = {
+      searchOperator: searchOperator,
+      searchString: searchString,
+    };
+    localStorage.setItem('advancedSearchParams', JSON.stringify(advancedSearchValue));
+  }
+
+  getAdvancedSearchLocalStorage(): AdvancedSearchLocalStorageModel {
+    const advancedSearchParams = JSON.parse(localStorage.getItem('advancedSearchParams'));
+    return advancedSearchParams;
+  }
+
   removeSearchLocalStorage(): void {
     localStorage.removeItem('searchText');
     localStorage.removeItem('searchColumn');
     localStorage.removeItem('searchString');
     this.removeFilteredResultsLocalStorage();
+    this.removeAdvancedSearchLocalStorage();
   }
 
   removeFilteredResultsLocalStorage(): void {
     localStorage.removeItem('filteredResults');
+  }
+
+  removeAdvancedSearchLocalStorage(): void {
+    localStorage.removeItem('advancedSearchParams');
   }
 
   getSearchLocalStorage() {

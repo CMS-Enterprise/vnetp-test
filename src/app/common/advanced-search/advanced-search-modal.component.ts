@@ -8,6 +8,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../search-bar/search-bar.component';
 import { AdvancedSearchAdapter } from './advanced-search.adapter';
 import { ActivatedRoute } from '@angular/router';
+import { TableContextService } from '../../services/table-context.service';
 
 @Component({
   selector: 'app-advanced-search-modal',
@@ -35,6 +36,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private tierContextService: TierContextService,
     private route: ActivatedRoute,
+    private tableContextService: TableContextService,
   ) {}
 
   ngOnInit(): void {
@@ -57,42 +59,41 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     SubscriptionUtil.unsubscribe([this.currentTierSubscription, this.advancedSearchAdapterSubscription]);
   }
 
-  public reset() {
-    this.ngx.resetModalData('advancedSearch');
-    this.buildForm();
-  }
-
   public closeModal(): void {
     this.ngx.close('advancedSearch');
-    this.reset();
-    this.buildForm();
   }
 
   public onOpen(): void {
-    this.ngx.resetModalData('advancedSearch');
+    this.buildForm();
   }
 
   get f() {
     return this.form.controls;
   }
 
-  public searchThis(): void {
+  public searchThis(page = 1, perPage = 20, operator?: string, searchString?: string): void {
     const baseSearchProperty = this.getBaseSearchProperty();
     const baseSearchValue = this.getBaseSearchValue();
-    if (this.orActive) {
-      this.advancedSearchOr(baseSearchProperty, baseSearchValue);
+    if (this.orActive || (operator && operator === 'or')) {
+      this.advancedSearchOr(baseSearchProperty, baseSearchValue, page, perPage, searchString);
     } else {
-      this.advancedSearchAnd(baseSearchProperty, baseSearchValue);
+      this.advancedSearchAnd(baseSearchProperty, baseSearchValue, page, perPage, searchString);
     }
   }
 
-  public advancedSearchAnd(baseSearchProperty: string, baseSearchValue: string): void {
+  public advancedSearchAnd(
+    baseSearchProperty: string,
+    baseSearchValue: string,
+    page: number,
+    perPage: number,
+    searchString?: string,
+  ): void {
     const baseSearch = `${baseSearchProperty}||eq||${baseSearchValue}`;
     const values = this.form.value;
 
     const params: Params = {
       filter: [baseSearch],
-      page: 1,
+      page: page,
     };
 
     for (const field in values) {
@@ -107,17 +108,24 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
       }
     }
 
+    if (searchString) {
+      const searchArray = JSON.parse(searchString);
+      params.filter = [...searchArray];
+    }
+
     if (params.filter.length > 1) {
       if (baseSearchProperty === 'tenantId') {
-        params.perPage = 20;
+        params.perPage = perPage;
         this.advancedSearchAdapter.findAll(params).subscribe(data => {
           this.advancedSearchResults.emit(data);
+          this.tableContextService.addAdvancedSearchLocalStorage('or', params.s);
         });
       } else {
-        params.limit = 20;
+        params.limit = perPage;
         params.sort = ['name,ASC'];
         this.advancedSearchAdapter.getMany(params).subscribe(data => {
           this.advancedSearchResults.emit(data);
+          this.tableContextService.addAdvancedSearchLocalStorage('and', JSON.stringify(params.filter));
         });
       }
     }
@@ -125,10 +133,10 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     this.closeModal();
   }
 
-  public advancedSearchOr(baseSearchProperty: string, baseSearchValue: string): void {
+  public advancedSearchOr(baseSearchProperty: string, baseSearchValue: string, page: number, perPage: number, searchString?: string): void {
     const params: Params = {
       s: '',
-      page: 1,
+      page: page,
     };
 
     const search = [];
@@ -146,19 +154,25 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
       }
     }
 
+    if (searchString) {
+      search.push(searchString);
+    }
+
     if (search.length > 0) {
       const searchString = search.concat().toString();
       params.s = `{"${baseSearchProperty}": {"$eq": "${baseSearchValue}"}, "$or": [${searchString}]}`;
       if (baseSearchProperty === 'tenantId') {
-        params.perPage = 20;
+        params.perPage = perPage;
         this.advancedSearchAdapter.findAll(params).subscribe(data => {
           this.advancedSearchResults.emit(data);
+          this.tableContextService.addAdvancedSearchLocalStorage('or', params.s);
         });
       } else {
-        params.limit = 20;
+        params.limit = perPage;
         params.sort = ['name,ASC'];
         this.advancedSearchAdapter.getMany(params).subscribe(data => {
           this.advancedSearchResults.emit(data);
+          this.tableContextService.addAdvancedSearchLocalStorage('or', params.s);
         });
       }
     }
@@ -168,20 +182,78 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
 
   public buildForm(): void {
     const group: FormGroup = this.formBuilder.group({});
+    const advancedSearchParams = this.tableContextService.getAdvancedSearchLocalStorage();
+    const searchOperator = advancedSearchParams?.searchOperator;
+    const searchString = advancedSearchParams?.searchString;
+    let parsedSearchString: { [key: string]: any } = {};
+
+    if (searchString) {
+      try {
+        parsedSearchString = JSON.parse(searchString);
+      } catch (error) {
+        console.error('Failed to parse searchString:', error);
+      }
+    }
 
     if (this.formInputs) {
       this.formInputs.forEach(input => {
-        group.addControl(input.propertyName, this.formBuilder.control(''));
-        if (this.isEnum(input.propertyType)) {
-          const enumValues = this.getEnumValues(input.propertyType);
-          this.ngSelectOptions[input.propertyName] = enumValues;
-        } else if (input.propertyType === 'boolean') {
-          this.ngSelectOptions[input.propertyName] = ['true', 'false'];
-        }
+        const initialValue = this.getInitialValue(input, searchOperator, parsedSearchString);
+        group.addControl(input.propertyName, this.formBuilder.control(initialValue));
+        this.setFormControls(input);
       });
     }
 
     this.form = group;
+  }
+
+  private getInitialValue(input: any, searchOperator: string, parsedSearchString: { [key: string]: any }): string {
+    if (searchOperator === 'and') {
+      return this.getInitialValueForAndOperator(input, parsedSearchString);
+    } else if (searchOperator === 'or') {
+      return this.getInitialValueForOrOperator(input, parsedSearchString);
+    }
+    return '';
+  }
+
+  private getInitialValueForAndOperator(input: any, parsedSearchString: { [key: string]: any }): string {
+    for (let search in parsedSearchString) {
+      if (parsedSearchString.hasOwnProperty(search)) {
+        const searchArray = parsedSearchString[search].split('||');
+        if (searchArray[0] === input.propertyName) {
+          return searchArray[2];
+        }
+      }
+    }
+    return '';
+  }
+
+  private getInitialValueForOrOperator(input: any, parsedSearchString: { [key: string]: any }): string {
+    const orParams = parsedSearchString['$or'];
+
+    if (!orParams) {
+      return '';
+    }
+
+    for (const search of orParams) {
+      for (const key in search) {
+        if (search.hasOwnProperty(key) && Array.isArray(search[key])) {
+          const searchArray = search[key].split('||');
+          if (searchArray[0] === input.propertyName) {
+            return searchArray[2];
+          }
+        }
+      }
+    }
+    return '';
+  }
+
+  private setFormControls(input: SearchColumnConfig): void {
+    if (this.isEnum(input.propertyType)) {
+      const enumValues = this.getEnumValues(input.propertyType);
+      this.ngSelectOptions[input.propertyName] = enumValues;
+    } else if (input.propertyType === 'boolean') {
+      this.ngSelectOptions[input.propertyName] = ['true', 'false'];
+    }
   }
 
   public getServiceType(): string {

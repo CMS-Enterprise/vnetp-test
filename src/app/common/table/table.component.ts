@@ -6,6 +6,7 @@ import { SearchBarHelpText } from 'src/app/helptext/help-text-networking';
 import { Subject, Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { AdvancedSearchAdapter } from '../advanced-search/advanced-search.adapter';
+import { AdvancedSearchComponent } from '../advanced-search/advanced-search-modal.component';
 
 export interface TableColumn<T> {
   name: string;
@@ -59,6 +60,7 @@ export class TableComponent<T> implements AfterViewInit {
   @Output() searchParams = new EventEmitter<any>();
 
   @ViewChild(SearchBarComponent) searchBarComponent!: SearchBarComponent;
+  @ViewChild(AdvancedSearchComponent) advancedSearchComponent!: AdvancedSearchComponent<any>;
 
   advancedSearchSubscription: Subscription;
 
@@ -144,6 +146,16 @@ export class TableComponent<T> implements AfterViewInit {
   // when a user interacts with the pagination controls this function is invoked
   // we get the searchParams from localStorage and emit the pagination & search params
   onTableEvent(): void {
+    const advancedSearchParams = this.tableContextService.getAdvancedSearchLocalStorage();
+    if (advancedSearchParams) {
+      this.advancedSearchComponent.searchThis(
+        this.currentPage,
+        this.itemsPerPage,
+        advancedSearchParams.searchOperator,
+        advancedSearchParams.searchString,
+      );
+      return;
+    }
     const searchParams = this.tableContextService.getSearchLocalStorage();
     this.tableContextService.addFilteredResultsLocalStorage();
     const { searchColumn, searchText } = searchParams;

@@ -24,6 +24,8 @@ import {
   FirewallRuleImport,
   FirewallRulePreview,
   GetManyFirewallRuleResponseDto,
+  FirewallRuleDirectionEnum,
+  FirewallRuleProtocolEnum,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
@@ -41,9 +43,9 @@ import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-s
 })
 export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   public searchColumns: SearchColumnConfig[] = [
-    { displayName: 'Direction', propertyName: 'direction' },
-    { displayName: 'Protocol', propertyName: 'protocol' },
-    { displayName: 'Enabled', propertyName: 'enabled' },
+    { displayName: 'Direction', propertyName: 'direction', propertyType: FirewallRuleDirectionEnum },
+    { displayName: 'Protocol', propertyName: 'protocol', propertyType: FirewallRuleProtocolEnum },
+    { displayName: 'Enabled', propertyName: 'enabled', propertyType: 'boolean' },
     { displayName: 'Source Address', propertyName: 'sourceIpAddress' },
     { displayName: 'Destination Address', propertyName: 'destinationIpAddress' },
     { displayName: 'Source Port', propertyName: 'sourcePorts', searchOperator: 'cont' },

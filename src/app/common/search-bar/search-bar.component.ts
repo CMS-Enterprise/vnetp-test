@@ -6,6 +6,8 @@ export interface SearchColumnConfig {
   displayName: string;
   searchOperator?: string;
   join?: string[];
+  // property type is used for populated advanced search drop downs
+  // can either be set to 'boolean' for true false drop downs, or passed any enum object
   propertyType?: any;
 }
 
@@ -89,6 +91,7 @@ export class SearchBarComponent implements OnInit {
   // the table component then emits the event further upstream
   public clearFilteredResults(): void {
     this.tableContextService.removeSearchLocalStorage();
+    this.tableContextService.removeAdvancedSearchLocalStorage();
     this.filteredResults = false;
     this.searchError = false;
     this.searchBarClearResults.emit();

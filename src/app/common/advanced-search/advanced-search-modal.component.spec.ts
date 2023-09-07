@@ -80,32 +80,18 @@ describe('AdvancedSearchModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should reset modal data and build form on reset', () => {
-    const resetModalDataSpy = jest.spyOn(ngxSmartModalService, 'resetModalData');
-    const buildFormSpy = jest.spyOn(component, 'buildForm');
-
-    component.reset();
-
-    expect(resetModalDataSpy).toHaveBeenCalledWith('advancedSearch');
-    expect(buildFormSpy).toHaveBeenCalled();
-  });
-
-  it('should close modal, reset, and build form on closeModal', () => {
+  it('should close modal', () => {
     const closeSpy = jest.spyOn(ngxSmartModalService, 'close');
-    const resetSpy = jest.spyOn(component, 'reset');
-    const buildFormSpy = jest.spyOn(component, 'buildForm');
 
     component.closeModal();
 
     expect(closeSpy).toHaveBeenCalledWith('advancedSearch');
-    expect(resetSpy).toHaveBeenCalled();
-    expect(buildFormSpy).toHaveBeenCalled();
   });
 
-  it('should reset modal data on onOpen', () => {
-    const resetModalDataSpy = jest.spyOn(ngxSmartModalService, 'resetModalData');
+  it('should build form on onOpen', () => {
+    const buildFormSpy = jest.spyOn(component, 'buildForm');
     component.onOpen();
-    expect(resetModalDataSpy).toHaveBeenCalledWith('advancedSearch');
+    expect(buildFormSpy).toHaveBeenCalled();
   });
 
   it('should return form controls', () => {
@@ -161,7 +147,7 @@ describe('AdvancedSearchModalComponent', () => {
       ipAddress: '192.168.0.1',
     });
 
-    component.advancedSearchOr('tierId', '1');
+    component.advancedSearchOr('tierId', '1', 1, 20);
 
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
       s: '{"tierId": {"$eq": "1"}, "$or": [{"name": {"$eq": "testName"}},{"ipAddress": {"$eq": "192.168.0.1"}}]}',
@@ -195,7 +181,7 @@ describe('AdvancedSearchModalComponent', () => {
       ipAddress: '192.168.0.1',
     });
 
-    component.advancedSearchOr('tenantId', '1');
+    component.advancedSearchOr('tenantId', '1', 1, 20);
 
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
       s: '{"tenantId": {"$eq": "1"}, "$or": [{"name": {"$eq": "testName"}},{"ipAddress": {"$eq": "192.168.0.1"}}]}',
@@ -228,7 +214,7 @@ describe('AdvancedSearchModalComponent', () => {
       ipAddress: '192.168.0.1',
     });
 
-    component.advancedSearchAnd('tierId', '1');
+    component.advancedSearchAnd('tierId', '1', 1, 20);
 
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
       filter: ['tierId||eq||1', 'name||eq||testName', 'ipAddress||eq||192.168.0.1'],
@@ -262,7 +248,7 @@ describe('AdvancedSearchModalComponent', () => {
       ipAddress: '192.168.0.1',
     });
 
-    component.advancedSearchAnd('tenantId', '1');
+    component.advancedSearchAnd('tenantId', '1', 1, 20);
 
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
       filter: ['tenantId||eq||1', 'name||eq||testName', 'ipAddress||eq||192.168.0.1'],
