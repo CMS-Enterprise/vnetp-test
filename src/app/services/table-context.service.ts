@@ -26,17 +26,16 @@ export class TableContextService {
     }
   }
 
-  addAdvancedSearchLocalStorage(searchOperator, searchString): void {
+  addAdvancedSearchLocalStorage(operator, search): void {
     const advancedSearchValue = {
-      searchOperator: searchOperator,
-      searchString: searchString,
+      searchOperator: operator,
+      searchString: search,
     };
     localStorage.setItem('advancedSearchParams', JSON.stringify(advancedSearchValue));
   }
 
   getAdvancedSearchLocalStorage(): AdvancedSearchLocalStorageModel {
-    const advancedSearchParams = JSON.parse(localStorage.getItem('advancedSearchParams'));
-    return advancedSearchParams;
+    return JSON.parse(localStorage.getItem('advancedSearchParams'));
   }
 
   removeSearchLocalStorage(): void {

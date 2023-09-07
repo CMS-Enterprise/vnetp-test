@@ -84,7 +84,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   public advancedSearchAnd(
     baseSearchProperty: string,
     baseSearchValue: string,
-    page: number,
+    currentPage: number,
     perPage: number,
     searchString?: string,
   ): void {
@@ -93,7 +93,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
 
     const params: Params = {
       filter: [baseSearch],
-      page: page,
+      page: currentPage,
     };
 
     for (const field in values) {
@@ -133,10 +133,16 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     this.closeModal();
   }
 
-  public advancedSearchOr(baseSearchProperty: string, baseSearchValue: string, page: number, perPage: number, searchString?: string): void {
+  public advancedSearchOr(
+    baseSearchProperty: string,
+    baseSearchValue: string,
+    currentPage: number,
+    perPage: number,
+    searchString?: string,
+  ): void {
     const params: Params = {
       s: '',
-      page: page,
+      page: currentPage,
     };
 
     const search = [];
@@ -159,8 +165,8 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     }
 
     if (search.length > 0) {
-      const searchString = search.concat().toString();
-      params.s = `{"${baseSearchProperty}": {"$eq": "${baseSearchValue}"}, "$or": [${searchString}]}`;
+      const orSearchString = search.concat().toString();
+      params.s = `{"${baseSearchProperty}": {"$eq": "${baseSearchValue}"}, "$or": [${orSearchString}]}`;
       if (baseSearchProperty === 'tenantId') {
         params.perPage = perPage;
         this.advancedSearchAdapter.findAll(params).subscribe(data => {
@@ -216,7 +222,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   }
 
   private getInitialValueForAndOperator(input: any, parsedSearchString: { [key: string]: any }): string {
-    for (let search in parsedSearchString) {
+    for (const search in parsedSearchString) {
       if (parsedSearchString.hasOwnProperty(search)) {
         const searchArray = parsedSearchString[search].split('||');
         if (searchArray[0] === input.propertyName) {
@@ -228,6 +234,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   }
 
   private getInitialValueForOrOperator(input: any, parsedSearchString: { [key: string]: any }): string {
+    // tslint:disable-next-line:no-string-literal
     const orParams = parsedSearchString['$or'];
 
     if (!orParams) {
