@@ -31,6 +31,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { of, Subject, Subscription, throwError } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FirewallRuleObjectInfoModalComponent } from '../firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -51,6 +52,7 @@ describe('FirewallRulesDetailComponent', () => {
         PreviewModalComponent,
         ResolvePipe,
         YesNoModalComponent,
+        FirewallRuleObjectInfoModalComponent,
       ],
       providers: [
         // MockProvider(DatacenterContextService),

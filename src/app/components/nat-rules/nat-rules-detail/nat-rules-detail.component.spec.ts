@@ -21,6 +21,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NatRuleObjectInfoModalComponent } from '../nat-rule-modal/nat-rule-object-info-modal/nat-rule-object-info-modal.component';
 
 describe('NatRulesDetailComponent', () => {
   let component: NatRulesDetailComponent;
@@ -51,6 +52,7 @@ describe('NatRulesDetailComponent', () => {
         MockNgxSmartModalComponent,
         MockImportExportComponent,
         MockYesNoModalComponent,
+        NatRuleObjectInfoModalComponent,
       ],
       imports: [ApplicationPipesModule, SharedModule, RouterTestingModule.withRoutes([]), HttpClientTestingModule],
       providers: [
