@@ -74,6 +74,10 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   public searchThis(page = 1, perPage = 20, operator?: string, searchString?: string): void {
     const baseSearchProperty = this.getBaseSearchProperty();
     const baseSearchValue = this.getBaseSearchValue();
+    console.log('baseSearchProperty', baseSearchProperty);
+    console.log('baseSearchValue', baseSearchValue);
+    console.log('searchString', searchString);
+
     if (this.orActive || (operator && operator === 'or')) {
       this.advancedSearchOr(baseSearchProperty, baseSearchValue, page, perPage, searchString);
     } else {
