@@ -138,6 +138,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<FirewallRule>();
     advancedSearchAdapterObject.setService(this.firewallRuleService);
+    advancedSearchAdapterObject.setServiceName('V1NetworkSecurityFirewallRulesService');
     this.config.advancedSearchAdapter = advancedSearchAdapterObject;
   }
 

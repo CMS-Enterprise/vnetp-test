@@ -18,6 +18,10 @@ export class AdvancedSearchAdapter<T> implements IBaseAdapter<T> {
     this.methodName = methodName;
   }
 
+  public setServiceName(serviceName: string) {
+    this.service.name = serviceName;
+  }
+
   public getMany(params: any): Observable<{ data: any[]; count: number; total: number; page: number; pageCount: number }> {
     const methodName = this.getMethodName('getMany');
     return this.service[methodName](params);

@@ -274,7 +274,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   }
 
   public getServiceType(): string {
-    return this.advancedSearchAdapter.service.constructor.name;
+    return this.advancedSearchAdapter.service.name;
   }
 
   public getBaseSearchProperty(): string {
