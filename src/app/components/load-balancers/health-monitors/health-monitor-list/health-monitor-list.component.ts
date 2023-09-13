@@ -1,5 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { GetManyLoadBalancerHealthMonitorResponseDto, LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'client';
+import {
+  GetManyLoadBalancerHealthMonitorResponseDto,
+  LoadBalancerHealthMonitor,
+  LoadBalancerHealthMonitorTypeEnum,
+  Tier,
+  V1LoadBalancerHealthMonitorsService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -12,6 +18,8 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { HealthMonitorModalDto } from '../health-monitor-modal/health-monitor-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface HealthMonitorView extends LoadBalancerHealthMonitor {
   nameView: string;
@@ -25,14 +33,19 @@ export interface HealthMonitorView extends LoadBalancerHealthMonitor {
 export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Type', propertyName: 'type', propertyType: LoadBalancerHealthMonitorTypeEnum },
+    { displayName: 'Service Port', propertyName: 'servicePort' },
+    { displayName: 'Interval', propertyName: 'interval' },
+    { displayName: 'Timeout', propertyName: 'timeout' },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<HealthMonitorView> = {
     description: 'Health Monitors in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
       { name: 'Service Port', property: 'servicePort' },
       { name: 'Interval', property: 'interval' },
@@ -56,7 +69,12 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
-  ) {}
+    public filteredHelpText: FilteredCount,
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerHealthMonitor>();
+    advancedSearchAdapterObject.setService(this.healthMonitorsService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit() {
     this.dataChanges = this.subscribeToDataChanges();
@@ -105,9 +123,10 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
       if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
+        eventParams = `${propertyName}||eq||${searchText}`;
       }
     }
     this.healthMonitorsService
@@ -129,7 +148,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
           });
         },
         () => {
-          this.healthMonitors = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

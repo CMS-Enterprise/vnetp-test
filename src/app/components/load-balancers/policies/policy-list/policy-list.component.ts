@@ -1,5 +1,11 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { GetManyLoadBalancerPolicyResponseDto, LoadBalancerPolicy, Tier, V1LoadBalancerPoliciesService } from 'client';
+import {
+  GetManyLoadBalancerPolicyResponseDto,
+  LoadBalancerPolicy,
+  LoadBalancerPolicyTypeEnum,
+  Tier,
+  V1LoadBalancerPoliciesService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -12,6 +18,8 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { PolicyModalDto } from '../policy-modal/policy-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface PolicyView extends LoadBalancerPolicy {
   nameView: string;
@@ -25,14 +33,14 @@ export interface PolicyView extends LoadBalancerPolicy {
 export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [{ displayName: 'Type', propertyName: 'type', propertyType: LoadBalancerPolicyTypeEnum }];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<PolicyView> = {
     description: 'Policies in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
@@ -53,7 +61,12 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
-  ) {}
+    public filteredHelpText: FilteredCount,
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerPolicy>();
+    advancedSearchAdapterObject.setService(this.policiesService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
@@ -102,9 +115,10 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
+      if (propertyName === 'type') {
+        eventParams = `${propertyName}||eq||${searchText}`;
       }
     }
     this.policiesService
@@ -126,7 +140,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.policies = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;
