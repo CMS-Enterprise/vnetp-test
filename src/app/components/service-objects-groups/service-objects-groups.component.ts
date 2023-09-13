@@ -13,10 +13,8 @@ import {
   ServiceObjectGroupRelationBulkImportCollectionDto,
   GetManyServiceObjectResponseDto,
   GetManyServiceObjectGroupResponseDto,
-  V1NetworkSecurityFirewallRulesService,
-  V1NetworkSecurityNatRulesService,
-  V1NetworkSecurityFirewallRuleGroupsService,
-  V1NetworkSecurityNatRuleGroupsService,
+  ServiceObjectProtocolEnum,
+  ServiceObjectGroupTypeEnum,
 } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
@@ -30,6 +28,8 @@ import { TableConfig } from '../../common/table/table.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -42,6 +42,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   currentTier: Tier;
   public perPage = 20;
   ModalMode = ModalMode;
+  filteredResults: boolean;
 
   serviceObjects = {} as GetManyServiceObjectResponseDto;
   serviceObjectGroups = {} as GetManyServiceObjectGroupResponseDto;
@@ -53,9 +54,19 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   showRadio = false;
 
   public tabs: Tab[] = [{ name: 'Service Objects' }, { name: 'Service Object Groups' }, { name: 'Service Object Group Relations' }];
-  public objectSearchColumns: SearchColumnConfig[] = [];
+  public objectSearchColumns: SearchColumnConfig[] = [
+    { displayName: 'Type', propertyName: 'protocol', propertyType: ServiceObjectProtocolEnum },
+    { displayName: 'Source Port', propertyName: 'sourcePorts', searchOperator: 'cont' },
+    { displayName: 'Destination Port', propertyName: 'destinationPorts', searchOperator: 'cont' },
+  ];
 
-  public groupSearchColumns: SearchColumnConfig[] = [];
+  public groupSearchColumns: SearchColumnConfig[] = [
+    {
+      displayName: 'Type',
+      propertyName: 'type',
+      propertyType: ServiceObjectGroupTypeEnum,
+    },
+  ];
 
   private serviceObjectModalSubscription: Subscription;
   private serviceObjectGroupModalSubscription: Subscription;
@@ -104,7 +115,16 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
-  ) {}
+    public filteredHelpText: FilteredCount,
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<ServiceObject>();
+    advancedSearchAdapterObject.setService(this.serviceObjectService);
+    this.serviceObjectConfig.advancedSearchAdapter = advancedSearchAdapterObject;
+
+    const advancedSearchAdapterGroup = new AdvancedSearchAdapter<ServiceObjectGroup>();
+    advancedSearchAdapterGroup.setService(this.serviceObjectGroupService);
+    this.serviceObjectGroupConfig.advancedSearchAdapter = advancedSearchAdapterGroup;
+  }
 
   private openUsedObjectsParentsModal(): void {
     this.subscribeToUsedObjectsParentsModal();
@@ -173,7 +193,9 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       this.svcObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'protocol') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -189,7 +211,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
           this.serviceObjects = response;
         },
         () => {
-          this.serviceObjects = null;
+          this.isLoadingObjects = false;
         },
         () => {
           this.isLoadingObjects = false;
@@ -204,10 +226,15 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       this.svcObjGrpTableComponentDto.page = event.page ? event.page : 1;
       this.svcObjGrpTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.svcObjGrpTableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'type') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
+    } else {
+      this.svcObjGrpTableComponentDto.searchText = undefined;
     }
     this.serviceObjectGroupService
       .getManyServiceObjectGroup({
@@ -222,7 +249,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
           this.serviceObjectGroups = response;
         },
         () => {
-          this.serviceObjectGroups = null;
+          this.isLoadingGroups = false;
         },
         () => {
           this.isLoadingGroups = false;
@@ -274,14 +301,16 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     this.serviceObjectModalSubscription = this.ngx.getModal('serviceObjectModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
+      const { filteredResults, searchString } = params;
 
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
-      if (filteredResults) {
+      if (filteredResults && !searchString) {
         this.svcObjTableComponentDto.searchColumn = params.searchColumn;
         this.svcObjTableComponentDto.searchText = params.searchText;
         this.getServiceObjects(this.svcObjTableComponentDto);
+      } else if (filteredResults && searchString) {
+        this.getServiceObjects(searchString);
       } else {
         this.getServiceObjects();
       }
@@ -318,14 +347,16 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       onSuccess: () => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+        const { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
-        if (filteredResults) {
+        if (filteredResults && !searchString) {
           this.svcObjTableComponentDto.searchColumn = params.searchColumn;
           this.svcObjTableComponentDto.searchText = params.searchText;
           this.getServiceObjects(this.svcObjTableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getServiceObjects(searchString);
         } else {
           this.getServiceObjects();
         }
@@ -338,14 +369,16 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       this.serviceObjectService.restoreOneServiceObject({ id: serviceObject.id }).subscribe(() => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+        const { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
-        if (filteredResults) {
+        if (filteredResults && !searchString) {
           this.svcObjTableComponentDto.searchColumn = params.searchColumn;
           this.svcObjTableComponentDto.searchText = params.searchText;
           this.getServiceObjects(this.svcObjTableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getServiceObjects(searchString);
         } else {
           this.getServiceObjects();
         }

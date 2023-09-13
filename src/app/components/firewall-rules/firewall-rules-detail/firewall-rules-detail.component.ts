@@ -24,6 +24,8 @@ import {
   FirewallRuleImport,
   FirewallRulePreview,
   GetManyFirewallRuleResponseDto,
+  FirewallRuleDirectionEnum,
+  FirewallRuleProtocolEnum,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
@@ -33,17 +35,27 @@ import { EntityService } from 'src/app/services/entity.service';
 import { SearchColumnConfig } from '../../../common/search-bar/search-bar.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 @Component({
   selector: 'app-firewall-rules-detail',
   templateUrl: './firewall-rules-detail.component.html',
 })
 export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Direction', propertyName: 'direction', propertyType: FirewallRuleDirectionEnum },
+    { displayName: 'Protocol', propertyName: 'protocol', propertyType: FirewallRuleProtocolEnum },
+    { displayName: 'Enabled', propertyName: 'enabled', propertyType: 'boolean' },
+    { displayName: 'Source Address', propertyName: 'sourceIpAddress' },
+    { displayName: 'Destination Address', propertyName: 'destinationIpAddress' },
+    { displayName: 'Source Port', propertyName: 'sourcePorts', searchOperator: 'cont' },
+    { displayName: 'Destination Port', propertyName: 'destinationPorts', searchOperator: 'cont' },
+  ];
   Id = '';
   TierName = '';
   currentTierIds: string[];
   ModalMode = ModalMode;
+  filteredResults: boolean;
 
   firewallRuleGroup: FirewallRuleGroup;
   firewallRules = {} as GetManyFirewallRuleResponseDto;
@@ -123,7 +135,11 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private datacenterService: DatacenterContextService,
     private tableContextService: TableContextService,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<FirewallRule>();
+    advancedSearchAdapterObject.setService(this.firewallRuleService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
@@ -171,6 +187,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   getFirewallRules(event?): void {
+    this.filteredResults = false;
     this.isLoading = true;
     let eventParams;
     if (event) {
@@ -178,8 +195,10 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 50;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'sourcePorts' || propertyName === 'destinationPorts') {
         eventParams = propertyName + '||cont||' + searchText;
+      } else if (propertyName) {
+        eventParams = propertyName + '||eq||' + searchText;
       }
     } else {
       this.tableComponentDto.perPage = this.perPage;
@@ -199,7 +218,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           // this.totalFirewallRules = result.total;
         },
         () => {
-          this.firewallRules = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

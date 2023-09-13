@@ -19461,6 +19461,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -19772,6 +19781,15 @@
             "required": false,
             "in": "query",
             "description": "Properties to select.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
             "schema": {
               "type": "string"
             }
@@ -20167,6 +20185,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -20478,6 +20505,15 @@
             "required": false,
             "in": "query",
             "description": "Properties to select.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
             "schema": {
               "type": "string"
             }
@@ -20795,6 +20831,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -21106,6 +21151,15 @@
             "required": false,
             "in": "query",
             "description": "Properties to select.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
             "schema": {
               "type": "string"
             }
@@ -21501,6 +21555,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -21812,6 +21875,15 @@
             "required": false,
             "in": "query",
             "description": "Properties to select.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
             "schema": {
               "type": "string"
             }
@@ -22129,6 +22201,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -22440,6 +22521,15 @@
             "required": false,
             "in": "query",
             "description": "Properties to select.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
             "schema": {
               "type": "string"
             }
@@ -22914,6 +23004,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -23225,6 +23324,15 @@
             "required": false,
             "in": "query",
             "description": "Properties to select.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
             "schema": {
               "type": "string"
             }

@@ -137,7 +137,7 @@ describe('NetworkObjectsGroupsComponent', () => {
         .subscribe(
           () => {},
           () => {
-            expect(component.networkObjects).toBeNull();
+            expect(component.networkObjects).toEqual([]);
           },
           () => {},
         );
@@ -249,7 +249,7 @@ describe('NetworkObjectsGroupsComponent', () => {
         return new Subscription();
       });
 
-      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
       const getNetworkObjectsSpy = jest.spyOn(component, 'getNetworkObjects');
 
@@ -276,7 +276,7 @@ describe('NetworkObjectsGroupsComponent', () => {
       spyOn(component['networkObjectService'], 'restoreOneNetworkObject').and.returnValue(of({} as any));
 
       const getNetworkObjectsSpy = jest.spyOn(component, 'getNetworkObjects');
-      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
       component.restoreNetworkObject(networkObject);
@@ -322,7 +322,7 @@ describe('NetworkObjectsGroupsComponent', () => {
         return new Subscription();
       });
 
-      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
       const getNetworkObjectGroupsSpy = jest.spyOn(component, 'getNetworkObjectGroups');
@@ -349,7 +349,7 @@ describe('NetworkObjectsGroupsComponent', () => {
       spyOn(component['networkObjectGroupService'], 'restoreOneNetworkObjectGroup').and.returnValue(of({} as any));
 
       const getNetworkObjectGroupsSpy = jest.spyOn(component, 'getNetworkObjectGroups');
-      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
       component.restoreNetworkObjectGroup(networkObjectGroup);

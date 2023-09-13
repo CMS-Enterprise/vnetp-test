@@ -131,7 +131,7 @@ describe('FirewallRulesDetailComponent', () => {
         .subscribe(
           () => {},
           () => {
-            expect(component.firewallRules).toBeNull();
+            expect(component.firewallRules).toEqual({});
           },
           () => {},
         );
@@ -256,7 +256,7 @@ describe('FirewallRulesDetailComponent', () => {
         return new Subscription();
       });
 
-      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
       const getFirewallRulesSpy = jest.spyOn(component, 'getFirewallRules');
 
@@ -307,6 +307,7 @@ describe('FirewallRulesDetailComponent', () => {
 
       const getFirewallRulesSpy = jest.spyOn(component, 'getFirewallRules');
       const params = {
+        searchString: '',
         filteredResults: true,
         searchColumn: 'name',
         searchText: 'test',
