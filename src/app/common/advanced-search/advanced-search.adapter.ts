@@ -11,6 +11,7 @@ export class AdvancedSearchAdapter<T> implements IBaseAdapter<T> {
 
   setService(service: any) {
     this.service = service;
+    console.log('this.service', this.service);
   }
 
   public setMethodName(methodName: string) {

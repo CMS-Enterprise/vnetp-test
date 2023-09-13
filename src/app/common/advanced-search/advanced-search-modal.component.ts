@@ -43,6 +43,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     this.advancedSearchAdapterSubscription = this.advancedSearchAdapterSubject.subscribe((advancedSearchAdapter: any) => {
       if (advancedSearchAdapter) {
         this.advancedSearchAdapter = advancedSearchAdapter;
+        console.log('this.advancedSearchAdapter', this.advancedSearchAdapter);
       }
     });
 
@@ -144,6 +145,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     perPage: number,
     searchString?: string,
   ): void {
+    console.log('this.advancedSearchAdapter', this.advancedSearchAdapter);
     console.log('baseSearchProperty', baseSearchProperty);
     console.log('baseSearchValue', baseSearchValue);
     console.log('searchString', searchString);
