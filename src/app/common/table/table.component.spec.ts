@@ -1,10 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockComponent, MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
+import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TableComponent } from './table.component';
 import { By } from '@angular/platform-browser';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { MockProvider } from 'src/test/mock-providers';
+import { AdvancedSearchModule } from '../advanced-search/advanced-search-modal.module';
+import { AdvancedSearchComponent } from '../advanced-search/advanced-search-modal.component';
 
 interface Data {
   name: string;
@@ -22,8 +26,10 @@ describe('TableComponent', () => {
         MockTooltipComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-search-bar', inputs: ['columns'] }),
+        MockComponent({ selector: 'app-advanced-search-modal', inputs: ['objectType', 'formInputs', 'advancedSearchAdapterSubject'] }),
+        MockNgxSmartModalComponent,
       ],
-      providers: [SearchBarComponent],
+      providers: [AdvancedSearchComponent, SearchBarComponent, MockProvider(NgxSmartModalService)],
     });
 
     fixture = TestBed.createComponent(TableComponent);

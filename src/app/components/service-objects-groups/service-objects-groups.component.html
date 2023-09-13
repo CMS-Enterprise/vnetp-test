@@ -1,5 +1,7 @@
 <app-tier-select></app-tier-select>
 
+<tooltip *ngIf="navIndex === 0 && filteredResults" [message]="filteredHelpText?.FilteredResults"></tooltip>
+
 <h1 *ngIf="navIndex === 0">Service Objects ({{serviceObjects?.total}} items)</h1>
 
 <h1 *ngIf="navIndex === 1">Service Object Groups ({{serviceObjectGroups?.total}} items)</h1>

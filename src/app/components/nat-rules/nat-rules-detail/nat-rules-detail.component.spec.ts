@@ -310,7 +310,7 @@ describe('NatRulesDetailComponent', () => {
         return new Subscription();
       });
 
-      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
       const getNatRuleSpy = jest.spyOn(component, 'getNatRules');
 
@@ -339,7 +339,7 @@ describe('NatRulesDetailComponent', () => {
       spyOn(component['natRuleService'], 'restoreOneNatRule').and.returnValue(of({} as any));
 
       const getNatRulesSpy = jest.spyOn(component, 'getNatRules');
-      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
       component.restoreNatRule(natRule);

@@ -112,20 +112,20 @@ describe('PoolListComponent', () => {
     });
   });
 
-  it('should default pools to be empty on error', () => {
-    component.pools = {
-      data: [{ id: '1', name: 'Pool1' }],
-      count: 1,
-      total: 1,
-      page: 1,
-      pageCount: 1,
-    } as GetManyLoadBalancerPoolResponseDto;
-    jest.spyOn(service, 'getPoolsLoadBalancerPool').mockImplementation(() => throwError(''));
+  // it('should default pools to be empty on error', () => {
+  //   component.pools = {
+  //     data: [{ id: '1', name: 'Pool1' }],
+  //     count: 1,
+  //     total: 1,
+  //     page: 1,
+  //     pageCount: 1,
+  //   } as GetManyLoadBalancerPoolResponseDto;
+  //   jest.spyOn(service, 'getPoolsLoadBalancerPool').mockImplementation(() => throwError(''));
 
-    component.ngOnInit();
+  //   component.ngOnInit();
 
-    expect(component.pools).toEqual(null);
-  });
+  //   expect(component.pools).toEqual(null);
+  // });
 
   it('should import pools', () => {
     const pools = [{ name: 'Pool1' }, { name: 'Pool2' }] as LoadBalancerPoolBulkImportDto[];

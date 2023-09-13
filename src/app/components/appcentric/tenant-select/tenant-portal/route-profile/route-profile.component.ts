@@ -34,7 +34,10 @@ export class RouteProfileComponent implements OnInit {
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Alias', propertyName: 'alias' },
+    { displayName: 'Description', propertyName: 'description' },
+  ];
 
   public config: TableConfig<any> = {
     description: 'RouteProfile',

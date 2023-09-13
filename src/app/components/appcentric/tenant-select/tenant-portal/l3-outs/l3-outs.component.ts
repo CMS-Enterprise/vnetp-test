@@ -3,6 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { V2AppCentricL3outsService, L3OutPaginationResponse, L3Out, VrfPaginationResponse, V2AppCentricVrfsService, Vrf } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { L3OutsModalDto } from 'src/app/models/appcentric/l3-outs-model-dto';
@@ -29,7 +30,10 @@ export class L3OutsComponent implements OnInit {
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
+    { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
+  ];
 
   public config: TableConfig<any> = {
     description: 'L3Outs',
@@ -48,6 +52,10 @@ export class L3OutsComponent implements OnInit {
     private router: Router,
     private vrfService: V2AppCentricVrfsService,
   ) {
+    const advancedSearchAdapter = new AdvancedSearchAdapter<L3Out>();
+    advancedSearchAdapter.setService(this.l3OutService);
+    this.config.advancedSearchAdapter = advancedSearchAdapter;
+
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
