@@ -140,6 +140,10 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     perPage: number,
     searchString?: string,
   ): void {
+    console.log('baseSearchProperty', baseSearchProperty);
+    console.log('baseSearchValue', baseSearchValue);
+    console.log('searchString', searchString);
+
     const params: Params = {
       s: '',
       page: currentPage,
@@ -270,6 +274,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   public getBaseSearchProperty(): string {
     const serviceType = this.getServiceType();
     let baseSearchProperty = 'tierId';
+    console.log('serviceType', serviceType);
 
     if (serviceType.includes('V2')) {
       baseSearchProperty = 'tenantId';
@@ -284,6 +289,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
 
   public getBaseSearchValue(): string {
     const baseSearchProperty = this.getBaseSearchProperty();
+    console.log('baseSearchProperty', baseSearchProperty);
 
     if (baseSearchProperty === 'tenantId' || baseSearchProperty === 'firewallRuleGroupId' || baseSearchProperty === 'natRuleGroupId') {
       return this.getUuidFromUrl();
@@ -295,13 +301,16 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   public getUuidFromUrl(): string | null {
     let currentRoute = this.route;
 
+    console.log('currentRoute', currentRoute);
     while (currentRoute) {
       const id = currentRoute.snapshot.paramMap.get('id');
+      console.log('id', id);
       if (id) {
         return id;
       }
       currentRoute = currentRoute.parent;
     }
+    console.log('currentRoute', currentRoute);
 
     return null;
   }
