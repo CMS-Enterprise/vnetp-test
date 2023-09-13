@@ -37,6 +37,8 @@ import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-s
 })
 export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
+  unusedObjects = {} as any;
+  usedObjectsParents = {} as any;
   currentTier: Tier;
   public perPage = 20;
   ModalMode = ModalMode;
@@ -70,6 +72,9 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   private serviceObjectGroupModalSubscription: Subscription;
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
+  private unusedObjectsModalSubscription: Subscription;
+
+  private usedObjectsParentsModalSubscription: Subscription;
 
   public isLoadingObjects = false;
   public isLoadingGroups = false;
@@ -109,7 +114,6 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private tierContextService: TierContextService,
-    private tierService: V1TiersService,
     private tableContextService: TableContextService,
     public filteredHelpText: FilteredCount,
   ) {
@@ -120,6 +124,46 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     const advancedSearchAdapterGroup = new AdvancedSearchAdapter<ServiceObjectGroup>();
     advancedSearchAdapterGroup.setService(this.serviceObjectGroupService);
     this.serviceObjectGroupConfig.advancedSearchAdapter = advancedSearchAdapterGroup;
+  }
+
+  private openUsedObjectsParentsModal(): void {
+    this.subscribeToUsedObjectsParentsModal();
+    this.ngx.getModal('usedObjectsParentsModal').open();
+  }
+
+  private subscribeToUsedObjectsParentsModal(): void {
+    this.usedObjectsParentsModalSubscription = this.ngx.getModal('usedObjectsParentsModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('usedObjectsParentsModal');
+      this.getServiceObjects();
+      this.usedObjectsParentsModalSubscription.unsubscribe();
+    });
+  }
+
+  public checkObjectsParents(svcObjId) {
+    this.serviceObjectService.checkUsedObjectsServiceObject(svcObjId).subscribe(data => {
+      this.usedObjectsParents.data = data;
+      this.openUsedObjectsParentsModal();
+    });
+  }
+
+  public checkObjectUsage() {
+    this.serviceObjectService.checkObjectsServiceObject().subscribe(data => {
+      this.unusedObjects.data = data.unusedObjectsArray;
+      this.openUnusedObjectsModal();
+    });
+  }
+
+  private subscribeToUnusedObjectsModal(): void {
+    this.unusedObjectsModalSubscription = this.ngx.getModal('unusedObjectsModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('unusedObjectsModal');
+      this.getServiceObjects();
+      this.unusedObjectsModalSubscription.unsubscribe();
+    });
+  }
+
+  private openUnusedObjectsModal(): void {
+    this.subscribeToUnusedObjectsModal();
+    this.ngx.getModal('unusedObjectsModal').open();
   }
 
   public onSvcObjTableEvent(event: TableComponentDto): void {

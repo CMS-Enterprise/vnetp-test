@@ -7,13 +7,14 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { TooltipModule } from '../tooltip/tooltip.module';
 import { AdvancedSearchModule } from '../advanced-search/advanced-search-modal.module';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
-import { SearchBarModule } from '../search-bar/search-bar.module';
 
+import { UsedObjectsParentsModalComponent } from '../used-objects-parents-modal/used-objects-parents-modal.component';
+import { SearchBarModule } from '../search-bar/search-bar.module';
 @NgModule({
   imports: [SearchBarModule, CommonModule, FontAwesomeModule, NgxPaginationModule, TooltipModule, AdvancedSearchModule],
 
   declarations: [TableComponent],
   exports: [TableComponent],
-  providers: [SearchBarComponent],
+  providers: [SearchBarComponent, UsedObjectsParentsModalComponent],
 })
 export class TableModule {}

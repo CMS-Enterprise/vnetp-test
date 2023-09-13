@@ -8,7 +8,6 @@ import { FilteredCount, NetworkObjectsGroupsHelpText } from 'src/app/helptext/he
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Tier } from 'client/model/tier';
 import {
-  V1TiersService,
   NetworkObject,
   V1NetworkSecurityNetworkObjectsService,
   NetworkObjectGroup,
@@ -35,6 +34,8 @@ import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-s
 })
 export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
+  unusedObjects = {} as any;
+  usedObjectsParents = {} as any;
   currentTier: Tier;
   perPage = 20;
   ModalMode = ModalMode;
@@ -55,6 +56,9 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   private currentTierSubscription: Subscription;
   private networkObjectGroupModalSubscription: Subscription;
   private networkObjectModalSubscription: Subscription;
+  private unusedObjectsModalSubscription: Subscription;
+
+  private usedObjectsParentsModalSubscription: Subscription;
 
   public isLoadingObjects = false;
   public isLoadingGroups = false;
@@ -109,7 +113,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     private networkObjectService: V1NetworkSecurityNetworkObjectsService,
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
-    private tierService: V1TiersService,
     public helpText: NetworkObjectsGroupsHelpText,
     public filteredHelpText: FilteredCount,
     private tableContextService: TableContextService,
@@ -121,6 +124,46 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     const advancedSearchAdapterGroup = new AdvancedSearchAdapter<NetworkObjectGroup>();
     advancedSearchAdapterGroup.setService(this.networkObjectGroupService);
     this.networkObjectGroupConfig.advancedSearchAdapter = advancedSearchAdapterGroup;
+  }
+
+  private subscribeToUnusedObjectsModal(): void {
+    this.unusedObjectsModalSubscription = this.ngx.getModal('unusedObjectsModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('unusedObjectsModal');
+      this.getNetworkObjects();
+      this.unusedObjectsModalSubscription.unsubscribe();
+    });
+  }
+
+  private openUsedObjectsParentsModal(): void {
+    this.subscribeToUsedObjectsParentsModal();
+    this.ngx.getModal('usedObjectsParentsModal').open();
+  }
+
+  private subscribeToUsedObjectsParentsModal(): void {
+    this.usedObjectsParentsModalSubscription = this.ngx.getModal('usedObjectsParentsModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('usedObjectsParentsModal');
+      this.getNetworkObjects();
+      this.usedObjectsParentsModalSubscription.unsubscribe();
+    });
+  }
+
+  private openUnusedObjectsModal(): void {
+    this.subscribeToUnusedObjectsModal();
+    this.ngx.getModal('unusedObjectsModal').open();
+  }
+
+  public checkObjectsParents(netObjId) {
+    this.networkObjectService.checkUsedObjectsNetworkObject(netObjId).subscribe(data => {
+      this.usedObjectsParents.data = data;
+      this.openUsedObjectsParentsModal();
+    });
+  }
+
+  public checkObjectUsage() {
+    this.networkObjectService.checkObjectsNetworkObject().subscribe(data => {
+      this.unusedObjects.data = data.unusedObjectsArray;
+      this.openUnusedObjectsModal();
+    });
   }
 
   public onNetObjTableEvent(event: TableComponentDto): void {
@@ -521,7 +564,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.networkObjectGroups = null;
 
         if (cd.tiers.length) {
-          this.getObjectsForNavIndex();
         }
       }
     });
