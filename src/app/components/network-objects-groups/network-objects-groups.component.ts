@@ -162,8 +162,8 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   public checkObjectUsage() {
-    this.networkObjectService.checkObjectsNetworkObject().subscribe(data => {
-      this.unusedObjects.data = data.unusedObjectsArray;
+    this.networkObjectService.checkObjectsNetworkObject({ tierId: `${this.currentTier.id}` }).subscribe(data => {
+      this.unusedObjects.data = data;
       this.openUnusedObjectsModal();
     });
   }
