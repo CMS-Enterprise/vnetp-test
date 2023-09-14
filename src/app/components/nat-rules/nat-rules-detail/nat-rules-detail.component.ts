@@ -114,6 +114,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<NatRule>();
     advancedSearchAdapterObject.setService(this.natRuleService);
+    advancedSearchAdapterObject.setServiceName('V1NetworkSecurityNatRulesService');
     this.config.advancedSearchAdapter = advancedSearchAdapterObject;
   }
 

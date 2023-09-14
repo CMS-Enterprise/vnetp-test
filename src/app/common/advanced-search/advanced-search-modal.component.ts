@@ -280,7 +280,6 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   public getBaseSearchProperty(): string {
     const serviceType = this.getServiceType();
     let baseSearchProperty = 'tierId';
-    console.log('serviceType', serviceType);
 
     if (serviceType.includes('V2')) {
       baseSearchProperty = 'tenantId';

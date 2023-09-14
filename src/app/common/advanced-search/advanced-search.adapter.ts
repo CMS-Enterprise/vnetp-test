@@ -11,7 +11,6 @@ export class AdvancedSearchAdapter<T> implements IBaseAdapter<T> {
 
   setService(service: any) {
     this.service = service;
-    console.log('this.service', this.service);
   }
 
   public setMethodName(methodName: string) {
@@ -19,6 +18,12 @@ export class AdvancedSearchAdapter<T> implements IBaseAdapter<T> {
   }
 
   public setServiceName(serviceName: string) {
+    Object.defineProperties(this.service, {
+      name: {
+        value: serviceName,
+        writable: true,
+      },
+    });
     this.service.name = serviceName;
   }
 

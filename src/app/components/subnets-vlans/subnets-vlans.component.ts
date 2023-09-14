@@ -118,10 +118,12 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   ) {
     const advancedSearchAdapterSubnet = new AdvancedSearchAdapter<Subnet>();
     advancedSearchAdapterSubnet.setService(this.subnetService);
+    advancedSearchAdapterSubnet.setServiceName('V1NetworkSubnetsService');
     this.subnetConfig.advancedSearchAdapter = advancedSearchAdapterSubnet;
 
     const advancedSearchAdapterVlan = new AdvancedSearchAdapter<Vlan>();
     advancedSearchAdapterVlan.setService(this.vlanService);
+    advancedSearchAdapterVlan.setServiceName('V1NetworkVlansService');
     this.vlanConfig.advancedSearchAdapter = advancedSearchAdapterVlan;
   }
 

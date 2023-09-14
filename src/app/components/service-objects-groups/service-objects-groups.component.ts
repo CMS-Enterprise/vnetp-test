@@ -119,10 +119,12 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<ServiceObject>();
     advancedSearchAdapterObject.setService(this.serviceObjectService);
+    advancedSearchAdapterObject.setServiceName('V1NetworkSecurityServiceObjectsService');
     this.serviceObjectConfig.advancedSearchAdapter = advancedSearchAdapterObject;
 
     const advancedSearchAdapterGroup = new AdvancedSearchAdapter<ServiceObjectGroup>();
     advancedSearchAdapterGroup.setService(this.serviceObjectGroupService);
+    advancedSearchAdapterGroup.setServiceName('V1NetworkSecurityServiceObjectGroupsService');
     this.serviceObjectGroupConfig.advancedSearchAdapter = advancedSearchAdapterGroup;
   }
 
