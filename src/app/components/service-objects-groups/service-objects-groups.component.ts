@@ -149,7 +149,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   public checkObjectUsage() {
-    this.serviceObjectService.checkObjectsServiceObject().subscribe(data => {
+    this.serviceObjectService.checkObjectsServiceObject({ tierId: `${this.currentTier.id}` }).subscribe(data => {
       this.unusedObjects.data = data.unusedObjectsArray;
       this.openUnusedObjectsModal();
     });
