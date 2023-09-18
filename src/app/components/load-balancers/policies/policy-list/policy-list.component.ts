@@ -65,6 +65,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerPolicy>();
     advancedSearchAdapterObject.setService(this.policiesService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerPoliciesService');
     this.config.advancedSearchAdapter = advancedSearchAdapterObject;
   }
 

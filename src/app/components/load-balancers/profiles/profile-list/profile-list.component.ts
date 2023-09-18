@@ -71,6 +71,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerProfile>();
     advancedSearchAdapterObject.setService(this.profilesService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerProfilesService');
     this.config.advancedSearchAdapter = advancedSearchAdapterObject;
   }
 

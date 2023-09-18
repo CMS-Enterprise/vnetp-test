@@ -73,6 +73,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerVirtualServer>();
     advancedSearchAdapterObject.setService(this.virtualServersService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerVirutalServersService');
     this.config.advancedSearchAdapter = advancedSearchAdapterObject;
   }
 

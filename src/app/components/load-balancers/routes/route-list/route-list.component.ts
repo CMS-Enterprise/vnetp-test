@@ -63,6 +63,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerRoute>();
     advancedSearchAdapterObject.setService(this.routesService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerRoutesService');
     this.config.advancedSearchAdapter = advancedSearchAdapterObject;
   }
 

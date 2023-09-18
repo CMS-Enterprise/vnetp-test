@@ -73,6 +73,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerHealthMonitor>();
     advancedSearchAdapterObject.setService(this.healthMonitorsService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerHealthMonitorsService');
     this.config.advancedSearchAdapter = advancedSearchAdapterObject;
   }
 
