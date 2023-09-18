@@ -54,6 +54,7 @@ export class L3OutsComponent implements OnInit {
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<L3Out>();
     advancedSearchAdapter.setService(this.l3OutService);
+    advancedSearchAdapter.setServiceName('V2AppCentricL3outsService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
 
     this.router.events.subscribe(event => {

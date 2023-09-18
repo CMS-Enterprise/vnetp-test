@@ -72,6 +72,7 @@ export class BridgeDomainComponent implements OnInit {
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<BridgeDomain>();
     advancedSearchAdapter.setService(this.bridgeDomainService);
+    advancedSearchAdapter.setServiceName('V2AppCentricBridgeDomainsService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
 
     this.router.events.subscribe(event => {

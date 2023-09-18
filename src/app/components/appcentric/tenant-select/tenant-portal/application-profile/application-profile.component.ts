@@ -64,6 +64,7 @@ export class ApplicationProfileComponent implements OnInit {
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<ApplicationProfile>();
     advancedSearchAdapter.setService(this.applicationProfileService);
+    advancedSearchAdapter.setServiceName('V2AppCentricApplicationProfilesService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
 
     this.router.events.subscribe(event => {

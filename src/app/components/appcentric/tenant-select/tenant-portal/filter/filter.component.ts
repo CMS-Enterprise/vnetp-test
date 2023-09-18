@@ -53,6 +53,7 @@ export class FilterComponent implements OnInit {
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<Filter>();
     advancedSearchAdapter.setService(this.filterService);
+    advancedSearchAdapter.setServiceName('V2AppCentricFiltersService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
 
     this.router.events.subscribe(event => {
