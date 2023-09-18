@@ -43,7 +43,6 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     this.advancedSearchAdapterSubscription = this.advancedSearchAdapterSubject.subscribe((advancedSearchAdapter: any) => {
       if (advancedSearchAdapter) {
         this.advancedSearchAdapter = advancedSearchAdapter;
-        console.log('this.advancedSearchAdapter', this.advancedSearchAdapter);
       }
     });
 
@@ -75,9 +74,6 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   public searchThis(page = 1, perPage = 20, operator?: string, searchString?: string): void {
     const baseSearchProperty = this.getBaseSearchProperty();
     const baseSearchValue = this.getBaseSearchValue();
-    console.log('baseSearchProperty', baseSearchProperty);
-    console.log('baseSearchValue', baseSearchValue);
-    console.log('searchString', searchString);
 
     if (this.orActive || (operator && operator === 'or')) {
       this.advancedSearchOr(baseSearchProperty, baseSearchValue, page, perPage, searchString);
@@ -145,11 +141,6 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     perPage: number,
     searchString?: string,
   ): void {
-    console.log('this.advancedSearchAdapter', this.advancedSearchAdapter);
-    console.log('baseSearchProperty', baseSearchProperty);
-    console.log('baseSearchValue', baseSearchValue);
-    console.log('searchString', searchString);
-
     const params: Params = {
       s: '',
       page: currentPage,
@@ -294,8 +285,6 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
 
   public getBaseSearchValue(): string {
     const baseSearchProperty = this.getBaseSearchProperty();
-    console.log('baseSearchProperty', baseSearchProperty);
-
     if (baseSearchProperty === 'tenantId' || baseSearchProperty === 'firewallRuleGroupId' || baseSearchProperty === 'natRuleGroupId') {
       return this.getUuidFromUrl();
     }
@@ -306,16 +295,13 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   public getUuidFromUrl(): string | null {
     let currentRoute = this.route;
 
-    console.log('currentRoute', currentRoute);
     while (currentRoute) {
       const id = currentRoute.snapshot.paramMap.get('id');
-      console.log('id', id);
       if (id) {
         return id;
       }
       currentRoute = currentRoute.parent;
     }
-    console.log('currentRoute', currentRoute);
 
     return null;
   }
