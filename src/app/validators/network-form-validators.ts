@@ -180,13 +180,13 @@ function checkHostBitsSet(ipData: [string, number], ipVersion: 4 | 6): boolean {
     s
       .split('.')
       .map(octet =>
-        parseInt(octet)
+        parseInt(octet, 10)
           .toString(2)
           .padStart(8, '0'),
       )
       .join('');
 
-  const createMask = (length: number, totalLength: number) => '1'.repeat(length) + '0'.repeat(totalLength - length);
+  const createMask = (length: number, addressTotalBits: number) => '1'.repeat(length) + '0'.repeat(addressTotalBits - length);
 
   const ip = ipData[0];
   const maskLength = ipData[1];
