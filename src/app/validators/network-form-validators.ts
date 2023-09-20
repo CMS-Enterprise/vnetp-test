@@ -140,13 +140,65 @@ function ValidateCidrAddress(ipArray: string[]): boolean {
     return false;
   }
 
+  const netMaskNumber = Number(netMask);
+
+  let valid = false;
+
   if (isIP(ipAddress, 4)) {
-    return ValidateNetMask(Number(netMask), 4);
+    valid = ValidateNetMask(netMaskNumber, 4);
+    if (valid) {
+      valid = checkHostBitsSet([ipArray[0], netMaskNumber], 4);
+    }
+  } else if (isIP(ipAddress, 6)) {
+    valid = ValidateNetMask(netMaskNumber, 6);
+    if (valid) {
+      valid = checkHostBitsSet([ipArray[0], netMaskNumber], 6);
+    }
   }
-  if (isIP(ipAddress, 6)) {
-    return ValidateNetMask(Number(netMask), 6);
-  }
-  return false;
+  return valid;
+}
+
+function expandIPv6Address(address: string): string {
+  const emptyGroups = 8 - (address.split(':').length - 1);
+  return address.replace('::', ':' + '0:'.repeat(emptyGroups)).replace(/^:|:$/g, '');
+}
+
+function toBinaryIPv6(s: string): string {
+  const expandedAddress = expandIPv6Address(s);
+  return expandedAddress
+    .split(':')
+    .map(hex =>
+      parseInt(hex, 16)
+        .toString(2)
+        .padStart(16, '0'),
+    )
+    .join('');
+}
+
+function checkHostBitsSet(ipData: [string, number], ipVersion: 4 | 6): boolean {
+  const toBinaryIPv4 = (s: string) =>
+    s
+      .split('.')
+      .map(octet =>
+        parseInt(octet)
+          .toString(2)
+          .padStart(8, '0'),
+      )
+      .join('');
+
+  const createMask = (length: number, totalLength: number) => '1'.repeat(length) + '0'.repeat(totalLength - length);
+
+  const ip = ipData[0];
+  const maskLength = ipData[1];
+  const totalLength = ipVersion === 4 ? 32 : 128;
+
+  const maskBinary = createMask(maskLength, totalLength);
+  const toBinary = ipVersion === 4 ? toBinaryIPv4 : toBinaryIPv6;
+
+  const ipBinary = toBinary(ip);
+
+  const valid = !Array.from(maskBinary).some((bit, i) => bit === '0' && ipBinary[i] === '1');
+  return valid;
 }
 
 function ValidateNetMask(netMask: number, ipVersion: number): boolean {

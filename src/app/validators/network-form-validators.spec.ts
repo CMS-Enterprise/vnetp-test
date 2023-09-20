@@ -28,7 +28,7 @@ describe('NetworkFormValidators', () => {
       expect(validate('1.1.1.1')).toBeNull();
       expect(validate('255.255.255.255/32')).toBeNull();
       expect(validate('0.0.0.0/0')).toBeNull();
-      expect(validate('fe80::7ccc:2a54:aed2:2180/128')).toBeNull();
+      expect(validate('2001:db8::/64')).toBeNull();
       expect(validate('fe80::7ccc:2a54:aed2:2180')).toBeNull();
       expect(validate('::/0')).toBeNull();
     });
@@ -72,15 +72,17 @@ describe('NetworkFormValidators', () => {
       expect(validate('255.255.255.255/32')).toBeNull();
       expect(validate('1.1.1.1/32')).toBeNull();
       expect(validate('192.168.10.0/24')).toBeNull();
-      expect(validate('127.0.0.1/20')).toBeNull();
-      expect(validate('fe80::7ccc:2a54:aed2:2180/128')).toBeNull();
+      expect(validate('127.0.0.0/20')).toBeNull();
+      expect(validate('2001:db8::/64')).toBeNull();
       expect(validate('::/0')).toBeNull();
     });
 
     it('should not allow invalid cidr addresses', () => {
+      expect(validate('192.168.1.1/24')).toEqual({ invalidIpCidr: true });
       expect(validate('1.1.1/24')).toEqual({ invalidIpCidr: true });
       expect(validate('1.1.1.1//24')).toEqual({ invalidIpCidr: true });
       expect(validate('1.1.1.1/-24')).toEqual({ invalidIpCidr: true });
+      expect(validate('2001:db8::1/64')).toEqual({ invalidIpCidr: true });
       expect(validate('one.two.three.four/five')).toEqual({ invalidIpCidr: true });
       expect(validate('1.2.three.four//')).toEqual({ invalidIpCidr: true });
       expect(validate('fe80::7ccc:2a54:aed2:2180/129')).toEqual({ invalidIpCidr: true });
