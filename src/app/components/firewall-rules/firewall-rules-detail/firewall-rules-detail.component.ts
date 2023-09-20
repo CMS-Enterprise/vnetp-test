@@ -196,7 +196,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 50;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName === 'sourcePorts' || propertyName === 'destinationPorts') {
+      if (propertyName === 'sourcePorts' || propertyName === 'destinationPorts' || propertyName === 'name') {
         eventParams = propertyName + '||cont||' + searchText;
       } else if (propertyName) {
         eventParams = propertyName + '||eq||' + searchText;
