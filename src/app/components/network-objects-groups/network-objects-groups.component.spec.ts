@@ -57,7 +57,6 @@ describe('NetworkObjectsGroupsComponent', () => {
       providers: [
         MockProvider(DatacenterContextService),
         MockProvider(NgxSmartModalService),
-        MockProvider(NgxSmartModalService),
         MockProvider(TierContextService),
         MockProvider(ToastrService),
         MockProvider(V1NetworkSecurityNetworkObjectGroupsService),

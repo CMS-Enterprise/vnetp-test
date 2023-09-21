@@ -73,6 +73,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerHealthMonitor>();
     advancedSearchAdapterObject.setService(this.healthMonitorsService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerHealthMonitorsService');
     this.config.advancedSearchAdapter = advancedSearchAdapterObject;
   }
 
@@ -125,8 +126,10 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       const { searchText } = event;
       this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||eq||${searchText}`;
+      if (propertyName === 'name') {
+        eventParams = propertyName + '||cont||' + searchText;
+      } else if (propertyName) {
+        eventParams = propertyName + '||eq||' + searchText;
       }
     }
     this.healthMonitorsService

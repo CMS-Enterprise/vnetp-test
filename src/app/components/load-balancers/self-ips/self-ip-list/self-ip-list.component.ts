@@ -76,6 +76,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerSelfIp>();
     advancedSearchAdapterObject.setService(this.selfIpsService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerSelfIpsService');
     this.config.advancedSearchAdapter = advancedSearchAdapterObject;
   }
 

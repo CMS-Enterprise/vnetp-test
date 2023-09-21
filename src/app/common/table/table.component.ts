@@ -113,6 +113,7 @@ export class TableComponent<T> implements AfterViewInit {
       'tiers-in-the-currently-selected-datacenter',
       'tenants-and-datacenters',
       'object-usage',
+      'tenants',
     ];
 
     const hidePagination = [

@@ -25,6 +25,10 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface CheckObjectsNetworkObjectRequestParams {
+    tierId: string;
+}
+
 export interface CheckUsedObjectsNetworkObjectRequestParams {
     id: string;
 }
@@ -163,13 +167,24 @@ export class V1NetworkSecurityNetworkObjectsService {
 
     /**
      * Check Network Object Usage
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public checkObjectsNetworkObject(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public checkObjectsNetworkObject(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public checkObjectsNetworkObject(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public checkObjectsNetworkObject(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public checkObjectsNetworkObject(requestParameters: CheckObjectsNetworkObjectRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public checkObjectsNetworkObject(requestParameters: CheckObjectsNetworkObjectRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public checkObjectsNetworkObject(requestParameters: CheckObjectsNetworkObjectRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public checkObjectsNetworkObject(requestParameters: CheckObjectsNetworkObjectRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const tierId = requestParameters.tierId;
+        if (tierId === null || tierId === undefined) {
+            throw new Error('Required parameter tierId was null or undefined when calling checkObjectsNetworkObject.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (tierId !== undefined && tierId !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>tierId, 'tierId');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -192,6 +207,7 @@ export class V1NetworkSecurityNetworkObjectsService {
 
         return this.httpClient.get<any>(`${this.configuration.basePath}/v1/network-security/network-objects/checkObjectUsage`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

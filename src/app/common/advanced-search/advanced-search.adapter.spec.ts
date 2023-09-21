@@ -7,6 +7,7 @@ describe('AdvancedSearchAdapter', () => {
   let adapter: AdvancedSearchAdapter<any>;
   let mockService: any;
   let mockData: any;
+  let mockServiceName;
 
   beforeEach(() => {
     adapter = new AdvancedSearchAdapter<any>();
@@ -14,8 +15,10 @@ describe('AdvancedSearchAdapter', () => {
       getManyWithPagination: jest.fn(),
       findAll: jest.fn(),
     };
+    mockServiceName = 'mockService';
     mockData = { data: [], count: 0, total: 0, page: 0, pageCount: 0 };
     adapter.setService(mockService);
+    adapter.setServiceName(mockServiceName);
   });
 
   it('should set service correctly', () => {

@@ -74,6 +74,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   public searchThis(page = 1, perPage = 20, operator?: string, searchString?: string): void {
     const baseSearchProperty = this.getBaseSearchProperty();
     const baseSearchValue = this.getBaseSearchValue();
+
     if (this.orActive || (operator && operator === 'or')) {
       this.advancedSearchOr(baseSearchProperty, baseSearchValue, page, perPage, searchString);
     } else {
@@ -264,7 +265,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   }
 
   public getServiceType(): string {
-    return this.advancedSearchAdapter.service.constructor.name;
+    return this.advancedSearchAdapter.service.name;
   }
 
   public getBaseSearchProperty(): string {
@@ -284,7 +285,6 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
 
   public getBaseSearchValue(): string {
     const baseSearchProperty = this.getBaseSearchProperty();
-
     if (baseSearchProperty === 'tenantId' || baseSearchProperty === 'firewallRuleGroupId' || baseSearchProperty === 'natRuleGroupId') {
       return this.getUuidFromUrl();
     }
