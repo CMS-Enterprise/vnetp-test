@@ -59,6 +59,7 @@
     
       <app-icon-button
         icon="delete"
+        id="softDeleteSubnet"
         label="Soft-Delete/Delete Subnet"
         [type]="subnet?.deletedAt ? 'danger' : 'default'"
         (handleClick)="deleteSubnet(subnet)"
