@@ -301,6 +301,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults, searchString } = params;
 
+      const advancesSearch = this.tableContextService.getAdvancedSearchLocalStorage();
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults && !searchString) {
@@ -309,6 +310,28 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.getNetworkObjects(this.netObjTableComponentDto);
       } else if (filteredResults && searchString) {
         this.getNetworkObjects(searchString);
+      } else if (advancesSearch) {
+        let params = {
+          page: this.netObjTableComponentDto.page,
+          limit: this.netObjTableComponentDto.perPage,
+          sort: ['name,ASC'],
+        };
+        if (advancesSearch.searchOperator === 'and') {
+          params['filter'] = [`${advancesSearch.searchString}`];
+        } else if (advancesSearch.searchOperator === 'or') {
+          params['s'] = `${advancesSearch.searchString}`;
+        }
+        this.networkObjectService.getManyNetworkObject(params).subscribe(
+          response => {
+            this.networkObjects = response;
+          },
+          () => {
+            this.isLoadingObjects = false;
+          },
+          () => {
+            this.isLoadingObjects = false;
+          },
+        );
       } else {
         this.getNetworkObjects();
       }
@@ -562,9 +585,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.tiers = cd.tiers;
         this.networkObjects = null;
         this.networkObjectGroups = null;
-
-        if (cd.tiers.length) {
-        }
       }
     });
 

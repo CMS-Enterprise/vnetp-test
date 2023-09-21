@@ -68,6 +68,7 @@ export class TableComponent<T> implements AfterViewInit {
 
   public currentPage = 1;
   public show = false;
+  public hasSearchResults = false;
   public uniqueTableId: string;
 
   public showSearchBar = true;
@@ -87,6 +88,14 @@ export class TableComponent<T> implements AfterViewInit {
       const advancedSearchAdapter = this.config.advancedSearchAdapter;
       this.advancedSearchAdapterSubject.next(advancedSearchAdapter);
     }
+    const searchParams = this.tableContextService.getSearchLocalStorage();
+    const advancedSearchParams = this.tableContextService.getAdvancedSearchLocalStorage();
+    if (searchParams.searchText || advancedSearchParams) {
+      this.hasSearchResults = true;
+    } else {
+      this.hasSearchResults = false;
+    }
+
     this.show = true;
     this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
     // list of components that should have the search bar hidden when a user navigates to them
@@ -134,7 +143,6 @@ export class TableComponent<T> implements AfterViewInit {
       this.paginationControlsOn = false;
     }
 
-    const searchParams = this.tableContextService.getSearchLocalStorage();
     this.changeRef.detectChanges();
   }
 
@@ -157,7 +165,16 @@ export class TableComponent<T> implements AfterViewInit {
   // we get the searchParams from localStorage and emit the pagination & search params
   onTableEvent(): void {
     const advancedSearchParams = this.tableContextService.getAdvancedSearchLocalStorage();
+    const searchParams = this.tableContextService.getSearchLocalStorage();
+
+    if (searchParams.searchText || advancedSearchParams) {
+      this.hasSearchResults = true;
+    } else {
+      this.hasSearchResults = false;
+    }
+
     if (advancedSearchParams) {
+      console.log('advancedSearchParams', advancedSearchParams);
       this.advancedSearchComponent.searchThis(
         this.currentPage,
         this.itemsPerPage,
@@ -166,7 +183,7 @@ export class TableComponent<T> implements AfterViewInit {
       );
       return;
     }
-    const searchParams = this.tableContextService.getSearchLocalStorage();
+
     this.tableContextService.addFilteredResultsLocalStorage();
     const { searchColumn, searchText } = searchParams;
     this.tableEvent.emit(new TableComponentDto(+this.itemsPerPage, this.currentPage, searchColumn, searchText));
@@ -176,6 +193,7 @@ export class TableComponent<T> implements AfterViewInit {
   public setAdvancedSearchData($event): void {
     this.data = $event;
     this.searchBarComponent.setFilteredResults();
+    this.hasSearchResults = true;
   }
 
   subscribeToAdvancedSearch() {

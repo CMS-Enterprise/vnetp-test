@@ -38,6 +38,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   destinationNetworkTypeSubscription: Subscription;
   serviceTypeSubscription: Subscription;
   objectInfoSubscription: Subscription;
+  protocolChangeSubscription: Subscription;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
@@ -441,6 +442,24 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           break;
       }
 
+      // this.protocolChangeSubscription = this.form.controls.protocol.valueChanges.subscribe(protocol => {
+      //   console.log('protocol is icmp or ip');
+
+      //   if (protocol === 'icmp' || protocol === 'ip') {
+      //     this.form.controls.serviceType.setValue('Port');
+      //     this.form.controls.sourcePorts.setValue('any');
+      //     this.form.controls.destinationPorts.setValue('any');
+
+      //     this.form.controls.serviceType.disable();
+      //     this.form.controls.sourcePorts.disable();
+      //     this.form.controls.destinationPorts.disable();
+      //   } else {
+      //     this.form.controls.serviceType.enable();
+      //     this.form.controls.sourcePorts.enable();
+      //     this.form.controls.destinationPorts.enable();
+      //   }
+      // });
+
       sourcePorts.updateValueAndValidity();
       destinationPorts.updateValueAndValidity();
       serviceObject.updateValueAndValidity();
@@ -481,6 +500,28 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       logging: [false],
       enabled: [true],
     });
+
+    this.protocolChangeSubscription = this.form.controls.protocol.valueChanges.subscribe(protocol => {
+      if (protocol === 'ICMP' || protocol === 'IP') {
+        if (
+          (!this.form.controls.sourcePorts.value || this.form.controls.sourcePorts.value.trim() === '') &&
+          (!this.form.controls.destinationPorts.value || this.form.controls.destinationPorts.value.trim() === '') &&
+          (!this.form.controls.serviceObject.value || this.form.controls.serviceObject.value.trim() === '') &&
+          (!this.form.controls.serviceObjectGroup.value || this.form.controls.serviceObjectGroup.value.trim() === '')
+        ) {
+          this.form.controls.sourcePorts.setValue('any');
+          this.form.controls.destinationPorts.setValue('any');
+        }
+
+        this.form.controls.serviceType.disable();
+        this.form.controls.sourcePorts.disable();
+        this.form.controls.destinationPorts.disable();
+      } else {
+        this.form.controls.serviceType.enable();
+        this.form.controls.sourcePorts.enable();
+        this.form.controls.destinationPorts.enable();
+      }
+    });
   }
 
   private unsubAll() {
@@ -488,6 +529,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       this.sourceNetworkTypeSubscription,
       this.destinationNetworkTypeSubscription,
       this.serviceTypeSubscription,
+      this.protocolChangeSubscription,
     ]);
   }
 
