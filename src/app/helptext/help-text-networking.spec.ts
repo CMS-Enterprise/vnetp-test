@@ -236,26 +236,20 @@ describe('HelpTextService', () => {
     });
 
     it('should have the correct SourceNetworkType help text', () => {
-      expect(firewallRuleModalHelpText.SourceNetworkType).toEqual(
-        `Type of Source Network (IP, Object, Object Group). More info: <a href="${environment.wikiBase}/ipam#Network_Groups">wiki</a>`,
-      );
+      expect(firewallRuleModalHelpText.SourceNetworkType).toEqual(`Type of Source Network (IP, Object, Object Group).`);
     });
 
     it('should have the correct SourceServiceType help text', () => {
-      expect(firewallRuleModalHelpText.SourceServiceType).toEqual(
-        `Type of Source Service (Port/Port Range, Object, Object Group). More info: <a href="${environment.wikiBase}/ipam#Network_Groups">wiki</a>`,
-      );
+      expect(firewallRuleModalHelpText.SourceServiceType).toEqual(`Type of Source Service (Port/Port Range, Object, Object Group).`);
     });
 
     it('should have the correct DestinationNetworkType help text', () => {
-      expect(firewallRuleModalHelpText.DestinationNetworkType).toEqual(
-        `Type of Destination Network (IP, Object, Object Group). More info: <a href="${environment.wikiBase}/ipam#Network_Groups">wiki</a>`,
-      );
+      expect(firewallRuleModalHelpText.DestinationNetworkType).toEqual(`Type of Destination Network (IP, Object, Object Group).`);
     });
 
     it('should have the correct DestinationServiceType help text', () => {
       expect(firewallRuleModalHelpText.DestinationServiceType).toEqual(
-        `Type of Destination Service (Port/Port Range, Object, Object Group). More info: <a href="${environment.wikiBase}/ipam#Network_Groups">wiki</a>`,
+        `Type of Destination Service (Port/Port Range, Object, Object Group).`,
       );
     });
 
@@ -276,9 +270,7 @@ describe('HelpTextService', () => {
     });
 
     it('should have the correct ServiceObjectType help text', () => {
-      expect(firewallRuleModalHelpText.ServiceObjectType).toEqual(
-        `Service Object created under IPAM. <a href="${environment.wikiBase}/ipam#Service_Groups">wiki</a>`,
-      );
+      expect(firewallRuleModalHelpText.ServiceObjectType).toEqual(`Service Object created under IPAM.`);
     });
 
     it('should have the correct ServiceObjectGroupType help text', () => {
@@ -325,14 +317,11 @@ describe('HelpTextService', () => {
     });
 
     it('should have the correct OriginalSourceAddressType help text', () => {
-      expect(natRuleModalHelpText.OriginalSourceAddressType).toEqual(
-        `Type of Original Source Address (None, Object, Object Group). More info: <a href="${natRuleModalHelpText.wikiBase}/ipam#Network_Groups">wiki</a>`,
-      );
+      expect(natRuleModalHelpText.OriginalSourceAddressType).toEqual(`Type of Original Source Address (None, Object, Object Group)`);
     });
 
     it('should have the correct OriginalDestinationAddressType help text', () => {
-      expect(natRuleModalHelpText.OriginalDestinationAddressType)
-        .toEqual(`Type of Original Destination Address (None, Object, Object Group). More info: <a href="${natRuleModalHelpText.wikiBase}/ipam#Network_Groups">wiki</a>
+      expect(natRuleModalHelpText.OriginalDestinationAddressType).toEqual(`Type of Original Destination Address (None, Object, Object Group)
   <br>
   <p>Constraints:</p>
   <p>*When a translated destination address type is not 'None', the original destination address must also not be 'None'.</p>
@@ -349,15 +338,14 @@ describe('HelpTextService', () => {
     });
 
     it('should have the correct TranslatedSourceAddressType help text', () => {
-      expect(natRuleModalHelpText.TranslatedSourceAddressType)
-        .toEqual(`Type of Translated Source Address (None, Object, Object Group). More info: <a href="${environment.wikiBase}/ipam#Network_Groups">wiki</a>
+      expect(natRuleModalHelpText.TranslatedSourceAddressType).toEqual(`Type of Translated Source Address (None, Object, Object Group).
   <br>
   <p>Constraints:</p>
   <p>When translation type is dynamicIp or dynamicIpAndPort translatedSourceAddress MUST NOT be 'None'</p>`);
     });
     it('should have the correct TranslatedDestinationAddressType help text', () => {
       expect(natRuleModalHelpText.TranslatedDestinationAddressType).toEqual(
-        `Type of Translated Destination Address (None, Object, Object Group). More info: <a href="${environment.wikiBase}/ipam#Network_Groups">wiki</a>`,
+        `Type of Translated Destination Address (None, Object, Object Group).`,
       );
     });
 

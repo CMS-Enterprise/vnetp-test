@@ -4,11 +4,10 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
 import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
-import { NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
+import { FilteredCount, NetworkObjectsGroupsHelpText } from 'src/app/helptext/help-text-networking';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Tier } from 'client/model/tier';
 import {
-  V1TiersService,
   NetworkObject,
   V1NetworkSecurityNetworkObjectsService,
   NetworkObjectGroup,
@@ -27,6 +26,7 @@ import { TableConfig } from '../../common/table/table.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -34,9 +34,12 @@ import { TableContextService } from 'src/app/services/table-context.service';
 })
 export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];
+  unusedObjects = {} as any;
+  usedObjectsParents = {} as any;
   currentTier: Tier;
   perPage = 20;
   ModalMode = ModalMode;
+  filteredResults: boolean;
 
   networkObjects = {} as GetManyNetworkObjectResponseDto;
   networkObjectGroups = {} as GetManyNetworkObjectGroupResponseDto;
@@ -53,6 +56,9 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   private currentTierSubscription: Subscription;
   private networkObjectGroupModalSubscription: Subscription;
   private networkObjectModalSubscription: Subscription;
+  private unusedObjectsModalSubscription: Subscription;
+
+  private usedObjectsParentsModalSubscription: Subscription;
 
   public isLoadingObjects = false;
   public isLoadingGroups = false;
@@ -64,7 +70,12 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   @ViewChild('objStateTemplate') objStateTemplate: TemplateRef<any>;
   @ViewChild('groupStateTemplate') groupStateTemplate: TemplateRef<any>;
 
-  public objectSearchColumns: SearchColumnConfig[] = [];
+  public objectSearchColumns: SearchColumnConfig[] = [
+    { displayName: 'IpAddress', propertyName: 'ipAddress' },
+    { displayName: 'FQDN', propertyName: 'fqdn', searchOperator: 'cont' },
+    { displayName: 'Start IP', propertyName: 'startIpAddress' },
+    { displayName: 'End IP', propertyName: 'endIpAddress' },
+  ];
 
   public groupSearchColumns: SearchColumnConfig[] = [];
 
@@ -92,6 +103,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       { name: 'State', template: () => this.groupStateTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
+    hideAdvancedSearch: true,
   };
 
   constructor(
@@ -101,10 +113,60 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     private networkObjectService: V1NetworkSecurityNetworkObjectsService,
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
-    private tierService: V1TiersService,
     public helpText: NetworkObjectsGroupsHelpText,
+    public filteredHelpText: FilteredCount,
     private tableContextService: TableContextService,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<NetworkObject>();
+    advancedSearchAdapterObject.setService(this.networkObjectService);
+    advancedSearchAdapterObject.setServiceName('V1NetworkSecurityNetworkObjectsService');
+    this.networkObjectConfig.advancedSearchAdapter = advancedSearchAdapterObject;
+
+    const advancedSearchAdapterGroup = new AdvancedSearchAdapter<NetworkObjectGroup>();
+    advancedSearchAdapterGroup.setService(this.networkObjectGroupService);
+    advancedSearchAdapterGroup.setServiceName('V1NetworkSecurityNetworkObjectGroupsService');
+    this.networkObjectGroupConfig.advancedSearchAdapter = advancedSearchAdapterGroup;
+  }
+
+  private subscribeToUnusedObjectsModal(): void {
+    this.unusedObjectsModalSubscription = this.ngx.getModal('unusedObjectsModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('unusedObjectsModal');
+      this.getNetworkObjects();
+      this.unusedObjectsModalSubscription.unsubscribe();
+    });
+  }
+
+  private openUsedObjectsParentsModal(): void {
+    this.subscribeToUsedObjectsParentsModal();
+    this.ngx.getModal('usedObjectsParentsModal').open();
+  }
+
+  private subscribeToUsedObjectsParentsModal(): void {
+    this.usedObjectsParentsModalSubscription = this.ngx.getModal('usedObjectsParentsModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('usedObjectsParentsModal');
+      this.getNetworkObjects();
+      this.usedObjectsParentsModalSubscription.unsubscribe();
+    });
+  }
+
+  private openUnusedObjectsModal(): void {
+    this.subscribeToUnusedObjectsModal();
+    this.ngx.getModal('unusedObjectsModal').open();
+  }
+
+  public checkObjectsParents(netObjId) {
+    this.networkObjectService.checkUsedObjectsNetworkObject(netObjId).subscribe(data => {
+      this.usedObjectsParents.data = data;
+      this.openUsedObjectsParentsModal();
+    });
+  }
+
+  public checkObjectUsage() {
+    this.networkObjectService.checkObjectsNetworkObject({ tierId: `${this.currentTier.id}` }).subscribe(data => {
+      this.unusedObjects.data = data;
+      this.openUnusedObjectsModal();
+    });
+  }
 
   public onNetObjTableEvent(event: TableComponentDto): void {
     this.netObjTableComponentDto = event;
@@ -133,8 +195,10 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       this.netObjTableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'fqdn' || propertyName === 'name') {
         eventParams = `${propertyName}||cont||${searchText}`;
+      } else if (propertyName) {
+        eventParams = `${propertyName}||eq||${searchText}`;
       }
     }
     this.networkObjectService
@@ -149,7 +213,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
           this.networkObjects = response;
         },
         () => {
-          this.networkObjects = null;
+          this.isLoadingObjects = false;
         },
         () => {
           this.isLoadingObjects = false;
@@ -164,10 +228,13 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       this.netObjGrpTableComponentDto.page = event.page ? event.page : 1;
       this.netObjGrpTableComponentDto.perPage = event.perPage ? event.perPage : 50;
       const { searchText } = event;
+      this.netObjGrpTableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
       if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
+    } else {
+      this.netObjGrpTableComponentDto.searchText = undefined;
     }
     this.networkObjectGroupService
       .getManyNetworkObjectGroup({
@@ -182,7 +249,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
           this.networkObjectGroups = response;
         },
         () => {
-          this.networkObjectGroups = null;
+          this.isLoadingGroups = false;
         },
         () => {
           this.isLoadingGroups = false;
@@ -234,14 +301,16 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.networkObjectModalSubscription = this.ngx.getModal('networkObjectModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
+      const { filteredResults, searchString } = params;
 
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
-      if (filteredResults) {
+      if (filteredResults && !searchString) {
         this.netObjTableComponentDto.searchColumn = params.searchColumn;
         this.netObjTableComponentDto.searchText = params.searchText;
         this.getNetworkObjects(this.netObjTableComponentDto);
+      } else if (filteredResults && searchString) {
+        this.getNetworkObjects(searchString);
       } else {
         this.getNetworkObjects();
       }
@@ -278,14 +347,16 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       onSuccess: () => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+        const { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
-        if (filteredResults) {
+        if (filteredResults && !searchString) {
           this.netObjTableComponentDto.searchColumn = params.searchColumn;
           this.netObjTableComponentDto.searchText = params.searchText;
           this.getNetworkObjects(this.netObjTableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getNetworkObjects(searchString);
         } else {
           this.getNetworkObjects();
         }
@@ -298,14 +369,16 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       this.networkObjectService.restoreOneNetworkObject({ id: networkObject.id }).subscribe(() => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+        const { filteredResults, searchString } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
-        if (filteredResults) {
+        if (filteredResults && !searchString) {
           this.netObjTableComponentDto.searchColumn = params.searchColumn;
           this.netObjTableComponentDto.searchText = params.searchText;
           this.getNetworkObjects(this.netObjTableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getNetworkObjects(searchString);
         } else {
           this.getNetworkObjects();
         }
@@ -493,7 +566,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.networkObjectGroups = null;
 
         if (cd.tiers.length) {
-          this.getObjectsForNavIndex();
         }
       }
     });

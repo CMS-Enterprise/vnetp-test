@@ -17,9 +17,10 @@ import { MockProvider } from 'src/test/mock-providers';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { V1NetworkSecurityServiceObjectGroupsService, V1NetworkSecurityServiceObjectsService, V1TiersService } from 'client';
+import { V1NetworkSecurityServiceObjectGroupsService, V1NetworkSecurityServiceObjectsService } from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { FilterPipe } from '../../pipes/filter.pipe';
+import { UnusedObjectsModalComponent } from './unused-objects-modal/unused-objects-modal.component';
 import { of, Subscription, throwError } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -27,6 +28,7 @@ import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-ob
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import { UsedObjectsParentsModalComponent } from 'src/app/common/used-objects-parents-modal/used-objects-parents-modal.component';
 
 describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
@@ -48,6 +50,8 @@ describe('ServicesObjectsGroupsComponent', () => {
         MockTabsComponent,
         MockTooltipComponent,
         ServiceObjectsGroupsComponent,
+        UnusedObjectsModalComponent,
+        UsedObjectsParentsModalComponent,
         YesNoModalComponent,
       ],
       providers: [
@@ -56,7 +60,6 @@ describe('ServicesObjectsGroupsComponent', () => {
         MockProvider(V1NetworkSecurityServiceObjectGroupsService),
         MockProvider(V1NetworkSecurityServiceObjectsService),
         MockProvider(TierContextService),
-        MockProvider(V1TiersService),
       ],
     }).compileComponents();
   }));
@@ -89,6 +92,8 @@ describe('ServicesObjectsGroupsComponent', () => {
         ],
       };
 
+      delete component.serviceObjectConfig.advancedSearchAdapter;
+
       expect(component.serviceObjectConfig).toEqual(expectedConfig);
     });
 
@@ -115,6 +120,8 @@ describe('ServicesObjectsGroupsComponent', () => {
           { name: '', template: expect.any(Function) },
         ],
       };
+
+      delete component.serviceObjectGroupConfig.advancedSearchAdapter;
 
       expect(component.serviceObjectGroupConfig).toEqual(expectedConfig);
     });
@@ -192,7 +199,7 @@ describe('ServicesObjectsGroupsComponent', () => {
         .subscribe(
           () => {},
           () => {
-            expect(component.serviceObjects).toBeNull();
+            expect(component.serviceObjects).toEqual([]);
           },
           () => {},
         );
@@ -304,7 +311,7 @@ describe('ServicesObjectsGroupsComponent', () => {
         return new Subscription();
       });
 
-      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
       const getServiceObjectsSpy = jest.spyOn(component, 'getServiceObjects');
 
@@ -331,7 +338,7 @@ describe('ServicesObjectsGroupsComponent', () => {
       spyOn(component['serviceObjectService'], 'restoreOneServiceObject').and.returnValue(of({} as any));
 
       const getServiceObjectsSpy = jest.spyOn(component, 'getServiceObjects');
-      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
       component.restoreServiceObject(serviceObject);
@@ -377,7 +384,7 @@ describe('ServicesObjectsGroupsComponent', () => {
         return new Subscription();
       });
 
-      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
       const getServiceObjectGroupsSpy = jest.spyOn(component, 'getServiceObjectGroups');
@@ -403,7 +410,7 @@ describe('ServicesObjectsGroupsComponent', () => {
       spyOn(component['serviceObjectGroupService'], 'restoreOneServiceObjectGroup').and.returnValue(of({} as any));
 
       const getServiceObjectGroupsSpy = jest.spyOn(component, 'getServiceObjectGroups');
-      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
       component.restoreServiceObjectGroup(serviceObjectGroup);

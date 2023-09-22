@@ -40,7 +40,7 @@ pipeline {
    stage("SonarQube - Static Analysis") {
      agent { label 'rehl8-prod' }
        steps {
-        withSonarQubeEnv('CB2Sonarrehl8') {
+        withSonarQubeEnv('CB2Sonar') {
           script {
             def readContent = readFile "sonar-project.properties"
             writeFile file: "sonar-project.properties", text: "$readContent \nsonar.branch.name=$BRANCH_NAME\n"
@@ -97,6 +97,22 @@ pipeline {
   }
 }
 
+      
+  post { 
+     always {
+         echo 'send to cds-draas-jenkins channel in Slack'
+     }
+    success {
+      node ('rehl8-prod') {
+           sh 'cp coverage/cobertura-coverage.xml cobertura-coverage.xml'
+           cobertura(coberturaReportFile: 'cobertura-coverage.xml')
+              script {
+                     slackNotifier.notify(currentBuild.currentResult)
+              }
+       }
+    }
+  }
+}
 
 
  
