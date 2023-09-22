@@ -40,7 +40,7 @@ pipeline {
    stage("SonarQube - Static Analysis") {
      agent { label 'rehl8-prod' }
        steps {
-        withSonarQubeEnv('CB2Sonar') {
+        withSonarQubeEnv('CB2Sonarrehl8') {
           script {
             def readContent = readFile "sonar-project.properties"
             writeFile file: "sonar-project.properties", text: "$readContent \nsonar.branch.name=$BRANCH_NAME\n"
@@ -97,4 +97,3 @@ pipeline {
   }
 }
 
- 
