@@ -97,21 +97,3 @@ pipeline {
   }
 }
 
-      
-  post { 
-     always {
-         echo 'send to cds-draas-jenkins channel in Slack'
-     }
-    success {
-      node ('rehl8-prod') {
-           sh 'cp coverage/cobertura-coverage.xml cobertura-coverage.xml'
-           cobertura(coberturaReportFile: 'cobertura-coverage.xml')
-              script {
-                     slackNotifier.notify(currentBuild.currentResult)
-              }
-       }
-    }
-  }
-
-
- 
