@@ -9219,6 +9219,56 @@
         ]
       }
     },
+    "/v1/network-security/service-objects/checkObjectUsage": {
+      "get": {
+        "operationId": "checkObjectsServiceObject",
+        "summary": "",
+        "description": "Check Network Object Usage",
+        "parameters": [
+          {
+            "name": "tierId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
+      }
+    },
+    "/v1/network-security/service-objects/checkUsedObjects/{id}": {
+      "get": {
+        "operationId": "checkUsedObjectsServiceObject",
+        "summary": "",
+        "description": "Get Used Service Objects Parents",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
+      }
+    },
     "/v1/network-security/service-objects/{id}": {
       "get": {
         "operationId": "getOneServiceObject",
@@ -10274,6 +10324,56 @@
         },
         "tags": [
           "v1/network-security/network-object-groups"
+        ]
+      }
+    },
+    "/v1/network-security/network-objects/checkObjectUsage": {
+      "get": {
+        "operationId": "checkObjectsNetworkObject",
+        "summary": "",
+        "description": "Check Network Object Usage",
+        "parameters": [
+          {
+            "name": "tierId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
+      }
+    },
+    "/v1/network-security/network-objects/checkUsedObjects/{id}": {
+      "get": {
+        "operationId": "checkUsedObjectsNetworkObject",
+        "summary": "",
+        "description": "Get Used Network Objects Parents",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/network-objects"
         ]
       }
     },
@@ -19379,6 +19479,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -19690,6 +19799,15 @@
             "required": false,
             "in": "query",
             "description": "Properties to select.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
             "schema": {
               "type": "string"
             }
@@ -20085,6 +20203,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -20396,6 +20523,15 @@
             "required": false,
             "in": "query",
             "description": "Properties to select.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
             "schema": {
               "type": "string"
             }
@@ -20713,6 +20849,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -21024,6 +21169,15 @@
             "required": false,
             "in": "query",
             "description": "Properties to select.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
             "schema": {
               "type": "string"
             }
@@ -21419,6 +21573,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -21730,6 +21893,15 @@
             "required": false,
             "in": "query",
             "description": "Properties to select.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
             "schema": {
               "type": "string"
             }
@@ -22047,6 +22219,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -22358,6 +22539,15 @@
             "required": false,
             "in": "query",
             "description": "Properties to select.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
             "schema": {
               "type": "string"
             }
@@ -22832,6 +23022,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -23143,6 +23342,15 @@
             "required": false,
             "in": "query",
             "description": "Properties to select.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
             "schema": {
               "type": "string"
             }

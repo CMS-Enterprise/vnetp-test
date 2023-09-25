@@ -20,6 +20,7 @@ describe('SearchBarComponent', () => {
         filteredResults: true,
       };
     }),
+    removeAdvancedSearchLocalStorage: jest.fn(),
   };
 
   beforeEach(async () => {

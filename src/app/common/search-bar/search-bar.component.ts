@@ -1,10 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 
 export interface SearchColumnConfig {
   propertyName: string;
   displayName: string;
+  searchOperator?: string;
+  join?: string[];
+  // property type is used for populated advanced search drop downs
+  // can either be set to 'boolean' for true false drop downs, or passed any enum object
+  propertyType?: any;
 }
 
 /**
@@ -78,11 +82,16 @@ export class SearchBarComponent implements OnInit {
     this.searchCriteria.emit({ searchColumn: this.searchColumn, searchText: this.searchText });
   }
 
+  public setFilteredResults(): void {
+    this.filteredResults = true;
+  }
+
   // we begin a double emit here, because "clear results" is now on the search bar component,
   // when "clear results" is clicked on the search bar component emits the event to the table component
   // the table component then emits the event further upstream
   public clearFilteredResults(): void {
     this.tableContextService.removeSearchLocalStorage();
+    this.tableContextService.removeAdvancedSearchLocalStorage();
     this.filteredResults = false;
     this.searchError = false;
     this.searchBarClearResults.emit();

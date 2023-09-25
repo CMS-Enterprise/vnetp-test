@@ -1,0 +1,26 @@
+<ngx-smart-modal [dismissable]="false" #unusedObjectsModal identifier="unusedObjectsModal"
+    customClass="large-modal">
+
+    <header class="modal-header">
+        <h4>Unused Network Objects/Groups</h4>
+    </header>
+
+    <main class="modal-body">
+
+        <ng-container>
+            <app-table [config]="config" [data]="unusedObjectsInput"></app-table>
+        </ng-container>
+    </main>
+</ngx-smart-modal>
+
+<ng-template #actionsTemplate let-netObj="datum">
+    <section class="table__actions">
+            <app-icon-button
+              icon="delete"
+              label="Soft-Delete/Delete Network Object"
+              [type]="netObj?.deletedAt ? 'danger' : 'default'"
+              (handleClick)="softDeleteNetworkObject(netObj)"
+            ></app-icon-button>
+
+      </section>
+  </ng-template>
