@@ -29,7 +29,7 @@ export const MockImportExportComponent = MockComponent({
 export const MockNgxSmartModalComponent = MockComponent({
   selector: 'ngx-smart-modal',
   template: '<ng-content></ng-content>',
-  inputs: ['identifier', 'customClass', 'dismissable'],
+  inputs: ['identifier', 'customClass', 'dismissable', 'closable'],
   outputs: ['onClose', 'onOpen'],
 });
 export const MockIconButtonComponent = MockComponent({

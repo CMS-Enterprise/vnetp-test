@@ -1,18 +1,26 @@
-import { SearchColumnConfig } from '../search-bar/search-bar.component';
-import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef, Output, EventEmitter, AfterContentInit } from '@angular/core';
+import { SearchBarComponent, SearchColumnConfig } from '../search-bar/search-bar.component';
+import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef, Output, EventEmitter, ViewChild } from '@angular/core';
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { SearchBarHelpText } from 'src/app/helptext/help-text-networking';
+import { Subject, Subscription } from 'rxjs';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { AdvancedSearchAdapter } from '../advanced-search/advanced-search.adapter';
+import { AdvancedSearchComponent } from '../advanced-search/advanced-search-modal.component';
 
 export interface TableColumn<T> {
   name: string;
   property?: keyof T;
   template?: () => TemplateRef<any>;
+  value?: (datum: T) => any;
 }
 export interface TableConfig<T> {
   description: string;
   columns: TableColumn<T>[];
   rowStyle?: (datum: object) => Partial<CSSStyleDeclaration>;
+  advancedSearchAdapter?: AdvancedSearchAdapter<T>;
+  hideAdvancedSearch?: boolean;
+  hideSearchBar?: boolean;
 }
 
 /**
@@ -51,6 +59,11 @@ export class TableComponent<T> implements AfterViewInit {
   @Output() clearResults = new EventEmitter<any>();
   @Output() searchParams = new EventEmitter<any>();
 
+  @ViewChild(SearchBarComponent) searchBarComponent!: SearchBarComponent;
+  @ViewChild(AdvancedSearchComponent) advancedSearchComponent!: AdvancedSearchComponent<any>;
+
+  advancedSearchSubscription: Subscription;
+
   public searchText = '';
 
   public currentPage = 1;
@@ -60,16 +73,27 @@ export class TableComponent<T> implements AfterViewInit {
   public showSearchBar = true;
   public paginationControlsOn = true;
 
-  constructor(private changeRef: ChangeDetectorRef, private tableContextService: TableContextService, public helpText: SearchBarHelpText) {}
+  public advancedSearchAdapterSubject: Subject<any> = new Subject<any>();
+
+  constructor(
+    private changeRef: ChangeDetectorRef,
+    private tableContextService: TableContextService,
+    public helpText: SearchBarHelpText,
+    private ngx: NgxSmartModalService,
+  ) {}
 
   ngAfterViewInit(): void {
+    if (this.config?.advancedSearchAdapter) {
+      const advancedSearchAdapter = this.config.advancedSearchAdapter;
+      this.advancedSearchAdapterSubject.next(advancedSearchAdapter);
+    }
     this.show = true;
     this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
-
     // list of components that should have the search bar hidden when a user navigates to them
     const badList = [
       'managed-network',
-      'selected-objects',
+      'unused-network-objects/groups',
+      'unused-service-objects/groups',
       'import-preview',
       'pools-in-the-currently-selected-tier',
       'static-routes-listed-by-tier',
@@ -86,10 +110,21 @@ export class TableComponent<T> implements AfterViewInit {
       'subject-filters',
       'l3out-modal',
       'bd-l3outs',
+      'tiers-in-the-currently-selected-datacenter',
       'tenants-and-datacenters',
+      'object-usage',
+      'tenants',
     ];
 
-    const hidePagination = ['import-preview', 'detailed-audit-log-entry', 'bd-l3outs', 'tenants-and-datacenters'];
+    const hidePagination = [
+      'import-preview',
+      'detailed-audit-log-entry',
+      'unused-network-objects/groups',
+      'unused-service-objects/groups',
+      'bd-l3outs',
+      'tenants-and-datacenters',
+      'object-usage',
+    ];
 
     // if tableId is a badList ID, we hide the search bar
     if (badList.includes(this.uniqueTableId)) {
@@ -100,6 +135,7 @@ export class TableComponent<T> implements AfterViewInit {
       this.paginationControlsOn = false;
     }
 
+    const searchParams = this.tableContextService.getSearchLocalStorage();
     this.changeRef.detectChanges();
   }
 
@@ -113,7 +149,7 @@ export class TableComponent<T> implements AfterViewInit {
   // the itemsPerPage and the currentPage back to its default values, and then emits the event to the parent component,
   // where the appropriate function is called to re-populate the table
   public clearTableResults(): void {
-    this.itemsPerPage = 50;
+    this.itemsPerPage = 20;
     this.currentPage = 1;
     this.clearResults.emit(new TableComponentDto(+this.itemsPerPage, this.currentPage));
   }
@@ -121,10 +157,37 @@ export class TableComponent<T> implements AfterViewInit {
   // when a user interacts with the pagination controls this function is invoked
   // we get the searchParams from localStorage and emit the pagination & search params
   onTableEvent(): void {
+    const advancedSearchParams = this.tableContextService.getAdvancedSearchLocalStorage();
+    if (advancedSearchParams) {
+      this.advancedSearchComponent.searchThis(
+        this.currentPage,
+        this.itemsPerPage,
+        advancedSearchParams.searchOperator,
+        advancedSearchParams.searchString,
+      );
+      return;
+    }
     const searchParams = this.tableContextService.getSearchLocalStorage();
     this.tableContextService.addFilteredResultsLocalStorage();
     const { searchColumn, searchText } = searchParams;
     this.tableEvent.emit(new TableComponentDto(+this.itemsPerPage, this.currentPage, searchColumn, searchText));
     this.itemsPerPageChange.emit(this.itemsPerPage);
+  }
+
+  public setAdvancedSearchData($event): void {
+    this.data = $event;
+    this.searchBarComponent.setFilteredResults();
+  }
+
+  subscribeToAdvancedSearch() {
+    this.advancedSearchSubscription = this.ngx.getModal('advancedSearch').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('advancedSearch');
+      this.advancedSearchSubscription.unsubscribe();
+    });
+  }
+
+  openAdvancedSearch(event?) {
+    this.subscribeToAdvancedSearch();
+    this.ngx.getModal('advancedSearch').open();
   }
 }

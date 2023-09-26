@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [CommonModule, FontAwesomeModule, FormsModule, ReactiveFormsModule],
-  declarations: [],
-  exports: [],
+  declarations: [SearchBarComponent],
+  exports: [SearchBarComponent],
 })
 export class SearchBarModule {}
