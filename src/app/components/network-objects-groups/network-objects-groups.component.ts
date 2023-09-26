@@ -1,3 +1,5 @@
+/* tslint:disable:no-string-literal */
+
 import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -303,6 +305,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults, searchString } = params;
 
+      const advancesSearch = this.tableContextService.getAdvancedSearchLocalStorage();
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults && !searchString) {
@@ -311,6 +314,28 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.getNetworkObjects(this.netObjTableComponentDto);
       } else if (filteredResults && searchString) {
         this.getNetworkObjects(searchString);
+      } else if (advancesSearch) {
+        const param = {
+          page: this.netObjTableComponentDto.page,
+          limit: this.netObjTableComponentDto.perPage,
+          sort: ['name,ASC'],
+        };
+        if (advancesSearch.searchOperator === 'and') {
+          param['filter'] = [`${advancesSearch.searchString}`];
+        } else if (advancesSearch.searchOperator === 'or') {
+          param['s'] = `${advancesSearch.searchString}`;
+        }
+        this.networkObjectService.getManyNetworkObject(param).subscribe(
+          response => {
+            this.networkObjects = response;
+          },
+          () => {
+            this.isLoadingObjects = false;
+          },
+          () => {
+            this.isLoadingObjects = false;
+          },
+        );
       } else {
         this.getNetworkObjects();
       }
@@ -564,9 +589,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.tiers = cd.tiers;
         this.networkObjects = null;
         this.networkObjectGroups = null;
-
-        if (cd.tiers.length) {
-        }
       }
     });
 

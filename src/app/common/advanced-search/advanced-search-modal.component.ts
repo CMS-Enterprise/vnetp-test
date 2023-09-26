@@ -72,6 +72,10 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   }
 
   public searchThis(page = 1, perPage = 20, operator?: string, searchString?: string): void {
+    this.tableContextService.removeSearchLocalStorage();
+    if (!searchString) {
+      this.tableContextService.removeAdvancedSearchLocalStorage();
+    }
     const baseSearchProperty = this.getBaseSearchProperty();
     const baseSearchValue = this.getBaseSearchValue();
 
@@ -119,14 +123,18 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
         params.perPage = perPage;
         this.advancedSearchAdapter.findAll(params).subscribe(data => {
           this.advancedSearchResults.emit(data);
-          this.tableContextService.addAdvancedSearchLocalStorage('or', params.s);
+          if (!this.checkAdvancedSearchSet()) {
+            this.tableContextService.addAdvancedSearchLocalStorage('or', params.s);
+          }
         });
       } else {
         params.limit = perPage;
         params.sort = ['name,ASC'];
         this.advancedSearchAdapter.getMany(params).subscribe(data => {
           this.advancedSearchResults.emit(data);
-          this.tableContextService.addAdvancedSearchLocalStorage('and', JSON.stringify(params.filter));
+          if (!this.checkAdvancedSearchSet()) {
+            this.tableContextService.addAdvancedSearchLocalStorage('and', JSON.stringify(params.filter));
+          }
         });
       }
     }
@@ -146,7 +154,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
       page: currentPage,
     };
 
-    const search = [];
+    let search = [];
     const values = this.form.value;
 
     for (const field in values) {
@@ -162,7 +170,8 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     }
 
     if (searchString) {
-      search.push(searchString);
+      const extractedOrsearch = this.extractOrSearch(searchString);
+      search = [extractedOrsearch];
     }
 
     if (search.length > 0) {
@@ -172,19 +181,28 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
         params.perPage = perPage;
         this.advancedSearchAdapter.findAll(params).subscribe(data => {
           this.advancedSearchResults.emit(data);
-          this.tableContextService.addAdvancedSearchLocalStorage('or', params.s);
+          if (!this.checkAdvancedSearchSet()) {
+            this.tableContextService.addAdvancedSearchLocalStorage('or', params.s);
+          }
         });
       } else {
         params.limit = perPage;
         params.sort = ['name,ASC'];
         this.advancedSearchAdapter.getMany(params).subscribe(data => {
           this.advancedSearchResults.emit(data);
-          this.tableContextService.addAdvancedSearchLocalStorage('or', params.s);
+          if (!this.checkAdvancedSearchSet()) {
+            this.tableContextService.addAdvancedSearchLocalStorage('or', params.s);
+          }
         });
       }
     }
 
     this.closeModal();
+  }
+
+  private extractOrSearch(searchString: string): string {
+    const match = searchString.match(/\[(.*?)\]/);
+    return match && match[1] ? match[1] : '';
   }
 
   public buildForm(): void {
@@ -262,6 +280,11 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     } else if (input.propertyType === 'boolean') {
       this.ngSelectOptions[input.propertyName] = ['true', 'false'];
     }
+  }
+
+  private checkAdvancedSearchSet(): boolean {
+    const advancedSearchParams = this.tableContextService.getAdvancedSearchLocalStorage();
+    return advancedSearchParams !== null;
   }
 
   public getServiceType(): string {

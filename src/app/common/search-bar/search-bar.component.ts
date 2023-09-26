@@ -80,6 +80,7 @@ export class SearchBarComponent implements OnInit {
     this.filteredResults = true;
 
     this.searchCriteria.emit({ searchColumn: this.searchColumn, searchText: this.searchText });
+    this.tableContextService.removeAdvancedSearchLocalStorage();
   }
 
   public setFilteredResults(): void {
