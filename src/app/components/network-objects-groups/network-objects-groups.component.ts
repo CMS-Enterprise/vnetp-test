@@ -1,3 +1,5 @@
+/* tslint:disable:no-string-literal */
+
 import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -311,17 +313,17 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       } else if (filteredResults && searchString) {
         this.getNetworkObjects(searchString);
       } else if (advancesSearch) {
-        let params = {
+        const param = {
           page: this.netObjTableComponentDto.page,
           limit: this.netObjTableComponentDto.perPage,
           sort: ['name,ASC'],
         };
         if (advancesSearch.searchOperator === 'and') {
-          params['filter'] = [`${advancesSearch.searchString}`];
+          param['filter'] = [`${advancesSearch.searchString}`];
         } else if (advancesSearch.searchOperator === 'or') {
-          params['s'] = `${advancesSearch.searchString}`;
+          param['s'] = `${advancesSearch.searchString}`;
         }
-        this.networkObjectService.getManyNetworkObject(params).subscribe(
+        this.networkObjectService.getManyNetworkObject(param).subscribe(
           response => {
             this.networkObjects = response;
           },
