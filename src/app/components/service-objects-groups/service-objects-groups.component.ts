@@ -119,10 +119,12 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<ServiceObject>();
     advancedSearchAdapterObject.setService(this.serviceObjectService);
+    advancedSearchAdapterObject.setServiceName('V1NetworkSecurityServiceObjectsService');
     this.serviceObjectConfig.advancedSearchAdapter = advancedSearchAdapterObject;
 
     const advancedSearchAdapterGroup = new AdvancedSearchAdapter<ServiceObjectGroup>();
     advancedSearchAdapterGroup.setService(this.serviceObjectGroupService);
+    advancedSearchAdapterGroup.setServiceName('V1NetworkSecurityServiceObjectGroupsService');
     this.serviceObjectGroupConfig.advancedSearchAdapter = advancedSearchAdapterGroup;
   }
 
@@ -147,7 +149,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   public checkObjectUsage() {
-    this.serviceObjectService.checkObjectsServiceObject().subscribe(data => {
+    this.serviceObjectService.checkObjectsServiceObject({ tierId: `${this.currentTier.id}` }).subscribe(data => {
       this.unusedObjects.data = data.unusedObjectsArray;
       this.openUnusedObjectsModal();
     });

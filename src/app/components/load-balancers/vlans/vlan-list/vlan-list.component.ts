@@ -59,6 +59,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerVlan>();
     advancedSearchAdapterObject.setService(this.vlansService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerVlansService');
     this.config.advancedSearchAdapter = advancedSearchAdapterObject;
   }
 

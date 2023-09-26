@@ -67,6 +67,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerNode>();
     advancedSearchAdapterObject.setService(this.nodesService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerNodesService');
     this.config.advancedSearchAdapter = advancedSearchAdapterObject;
   }
 

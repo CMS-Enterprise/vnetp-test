@@ -9223,8 +9223,17 @@
       "get": {
         "operationId": "checkObjectsServiceObject",
         "summary": "",
-        "description": "Check Service Object Usage",
-        "parameters": [],
+        "description": "Check Network Object Usage",
+        "parameters": [
+          {
+            "name": "tierId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": ""
@@ -10323,7 +10332,16 @@
         "operationId": "checkObjectsNetworkObject",
         "summary": "",
         "description": "Check Network Object Usage",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "tierId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": ""

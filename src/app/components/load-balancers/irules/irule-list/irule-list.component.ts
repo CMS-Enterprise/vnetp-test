@@ -61,6 +61,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerIrule>();
     advancedSearchAdapterObject.setService(this.iRuleService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerIrulesService');
     this.config.advancedSearchAdapter = advancedSearchAdapterObject;
   }
 

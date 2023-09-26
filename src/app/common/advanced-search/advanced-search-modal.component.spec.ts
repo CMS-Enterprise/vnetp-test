@@ -261,6 +261,7 @@ describe('AdvancedSearchModalComponent', () => {
 
   it('should return the service type', () => {
     const testType = new TestType();
+    testType.name = 'TestType';
     component.advancedSearchAdapter = advancedSearchAdapter;
     component.advancedSearchAdapter.service = testType;
     const serviceType = component.getServiceType();

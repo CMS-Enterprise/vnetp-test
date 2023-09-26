@@ -54,6 +54,7 @@ export class ContractComponent implements OnInit {
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<Contract>();
     advancedSearchAdapter.setService(this.contractService);
+    advancedSearchAdapter.setServiceName('V2AppCentricContractsService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
 
     this.router.events.subscribe(event => {

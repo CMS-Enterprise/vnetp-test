@@ -56,6 +56,7 @@ export class VrfComponent implements OnInit {
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<Vrf>();
     advancedSearchAdapter.setService(this.vrfService);
+    advancedSearchAdapter.setServiceName('V2AppCentricVrfsService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
 
     this.router.events.subscribe(event => {

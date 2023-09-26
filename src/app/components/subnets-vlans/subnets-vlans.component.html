@@ -1,8 +1,8 @@
 <app-tier-select></app-tier-select>
 
-<h1 *ngIf="navIndex === 0">Subnets ({{subnets?.total}} items)</h1>
+<h1 *ngIf="navIndex === 0">Subnets</h1>
 
-<h1 *ngIf="navIndex === 1">Vlans ({{vlans?.total}} items)</h1>
+<h1 *ngIf="navIndex === 1">Vlans</h1>
 
 <ng-container *ngIf="currentTier; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
@@ -59,6 +59,7 @@
     
       <app-icon-button
         icon="delete"
+        id="softDeleteSubnet"
         label="Soft-Delete/Delete Subnet"
         [type]="subnet?.deletedAt ? 'danger' : 'default'"
         (handleClick)="deleteSubnet(subnet)"
