@@ -175,7 +175,6 @@ export class TableComponent<T> implements AfterViewInit {
     }
 
     if (advancedSearchParams) {
-      console.log('advancedSearchParams', advancedSearchParams);
       this.advancedSearchComponent.searchThis(
         this.currentPage,
         this.itemsPerPage,
