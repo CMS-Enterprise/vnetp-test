@@ -120,7 +120,7 @@ describe('SubnetsModalComponent', () => {
       gatewayIp.setValue('192.168.1.0/abc');
       expect(gatewayIp.valid).toBe(false);
 
-      gatewayIp.setValue('2001:0db8:85a3:0000:0000:8a2e:0370:7334/64');
+      gatewayIp.setValue('2001:0db8:85a3:0000:0000:8a2e:0370:7334/128');
       expect(gatewayIp.valid).toBe(true);
 
       gatewayIp.setValue('2001:0db8:85a3:0000:0000:8a2e:0370:7334/xyz');

@@ -125,7 +125,7 @@ describe('VirtualServerModalComponent', () => {
       selectedProfileId: '1',
       servicePort: 5,
       sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslationEnum.AutoMap,
-      sourceIpAddress: '192.168.1.1/11',
+      sourceIpAddress: '192.168.1.0/24',
       type: LoadBalancerVirtualServerTypeEnum.Standard,
     });
     component.save();
@@ -138,7 +138,7 @@ describe('VirtualServerModalComponent', () => {
         name: 'NewName',
         servicePort: 5,
         sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslationEnum.AutoMap,
-        sourceIpAddress: '192.168.1.1/11',
+        sourceIpAddress: '192.168.1.0/24',
         type: LoadBalancerVirtualServerTypeEnum.Standard,
         tierId: '1',
       },
@@ -166,7 +166,7 @@ describe('VirtualServerModalComponent', () => {
       selectedProfileId: '1',
       servicePort: 5,
       sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslationEnum.AutoMap,
-      sourceIpAddress: '192.168.1.1/11',
+      sourceIpAddress: '192.168.1.0/24',
       type: LoadBalancerVirtualServerTypeEnum.Standard,
     });
     component.save();
@@ -180,7 +180,7 @@ describe('VirtualServerModalComponent', () => {
         name: undefined,
         servicePort: 5,
         sourceAddressTranslation: LoadBalancerVirtualServerSourceAddressTranslationEnum.AutoMap,
-        sourceIpAddress: '192.168.1.1/11',
+        sourceIpAddress: '192.168.1.0/24',
         type: undefined,
         tierId: null,
       },

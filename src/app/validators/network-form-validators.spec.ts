@@ -5,6 +5,7 @@ import {
   IpAddressAnyValidator,
   FqdnValidator,
   MacAddressValidator,
+  IpAddressCidrValidatorAllowHostBits,
 } from './network-form-validators';
 import { FormControl } from '@angular/forms';
 
@@ -83,6 +84,27 @@ describe('NetworkFormValidators', () => {
       expect(validate('1.1.1.1//24')).toEqual({ invalidIpCidr: true });
       expect(validate('1.1.1.1/-24')).toEqual({ invalidIpCidr: true });
       expect(validate('2001:db8::1/64')).toEqual({ invalidIpCidr: true });
+      expect(validate('one.two.three.four/five')).toEqual({ invalidIpCidr: true });
+      expect(validate('1.2.three.four//')).toEqual({ invalidIpCidr: true });
+      expect(validate('fe80::7ccc:2a54:aed2:2180/129')).toEqual({ invalidIpCidr: true });
+    });
+  });
+
+  describe('IpAddressCidrValidatorAllowHostBits', () => {
+    const { validate } = createValidator(IpAddressCidrValidatorAllowHostBits);
+
+    it('should allow valid cidr addresses', () => {
+      expect(validate('255.255.255.255/32')).toBeNull();
+      expect(validate('1.1.1.1/32')).toBeNull();
+      expect(validate('192.168.10.2/24')).toBeNull();
+      expect(validate('127.0.0.156/20')).toBeNull();
+      expect(validate('2001:db8::1/64')).toBeNull();
+    });
+
+    it('should not allow invalid cidr addresses', () => {
+      expect(validate('1.1.1/24')).toEqual({ invalidIpCidr: true });
+      expect(validate('1.1.1.1//24')).toEqual({ invalidIpCidr: true });
+      expect(validate('1.1.1.1/-24')).toEqual({ invalidIpCidr: true });
       expect(validate('one.two.three.four/five')).toEqual({ invalidIpCidr: true });
       expect(validate('1.2.three.four//')).toEqual({ invalidIpCidr: true });
       expect(validate('fe80::7ccc:2a54:aed2:2180/129')).toEqual({ invalidIpCidr: true });

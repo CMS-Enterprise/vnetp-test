@@ -13,7 +13,7 @@ export function IpAddressAnyValidator(control: FormControl): { invalidIpAny: boo
   if (ipArray.length === 1) {
     isValid = ValidateIpAddress(ipArray[0]);
   } else if (ipArray.length === 2) {
-    isValid = ValidateCidrAddress(ipArray);
+    isValid = ValidateCidrAddress(control.value, true);
   }
 
   if (isValid) {
@@ -26,13 +26,23 @@ export function IpAddressCidrValidator(control: FormControl): { invalidIpCidr: b
   if (!control || !control.value) {
     return null;
   }
-  const valueArray = control.value.split('/');
-
   let isValid = false;
 
-  if (valueArray.length === 2) {
-    isValid = ValidateCidrAddress(valueArray);
+  isValid = ValidateCidrAddress(control.value, false);
+
+  if (isValid) {
+    return null;
   }
+  return { invalidIpCidr: true };
+}
+
+export function IpAddressCidrValidatorAllowHostBits(control: FormControl): { invalidIpCidr: boolean } {
+  if (!control || !control.value) {
+    return null;
+  }
+  let isValid = false;
+
+  isValid = ValidateCidrAddress(control.value, true);
 
   if (isValid) {
     return null;
@@ -133,7 +143,13 @@ function ValidateIpAddress(ipAddress: string): boolean {
   return isIP(ipAddress, 4) || isIP(ipAddress, 6);
 }
 
-function ValidateCidrAddress(ipArray: string[]): boolean {
+function ValidateCidrAddress(value: string, allowHostBits: boolean): boolean {
+  const ipArray = value.split('/');
+
+  if (ipArray.length !== 2) {
+    return false;
+  }
+
   // If IP portion after subnet mask is empty.
   const [ipAddress, netMask] = ipArray;
   if (!netMask) {
@@ -146,13 +162,13 @@ function ValidateCidrAddress(ipArray: string[]): boolean {
 
   if (isIP(ipAddress, 4)) {
     valid = ValidateNetMask(netMaskNumber, 4);
-    if (valid) {
-      valid = checkHostBitsSet([ipArray[0], netMaskNumber], 4);
+    if (valid && !allowHostBits) {
+      valid = hasHostBitsSet([ipArray[0], netMaskNumber], 4);
     }
   } else if (isIP(ipAddress, 6)) {
     valid = ValidateNetMask(netMaskNumber, 6);
-    if (valid) {
-      valid = checkHostBitsSet([ipArray[0], netMaskNumber], 6);
+    if (valid && !allowHostBits) {
+      valid = hasHostBitsSet([ipArray[0], netMaskNumber], 6);
     }
   }
   return valid;
@@ -175,7 +191,7 @@ function toBinaryIPv6(s: string): string {
     .join('');
 }
 
-function checkHostBitsSet(ipData: [string, number], ipVersion: 4 | 6): boolean {
+function hasHostBitsSet(ipData: [string, number], ipVersion: 4 | 6): boolean {
   const toBinaryIPv4 = (s: string) =>
     s
       .split('.')

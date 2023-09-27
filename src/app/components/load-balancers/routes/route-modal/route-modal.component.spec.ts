@@ -34,7 +34,7 @@ describe('RouteModalComponent', () => {
       tierId: '1',
       id: '2',
       name: 'Route2',
-      destination: '192.168.1.1/11',
+      destination: '192.168.1.0/24',
       gateway: '192.168.1.1',
     };
   };
@@ -80,7 +80,7 @@ describe('RouteModalComponent', () => {
     component.getData();
 
     component.form.setValue({
-      destination: '192.168.1.2/12',
+      destination: '192.168.2.0/24',
       gateway: '192.168.1.2',
       name: 'NewName',
     });
@@ -89,7 +89,7 @@ describe('RouteModalComponent', () => {
 
     expect(spy).toHaveBeenCalledWith({
       loadBalancerRoute: {
-        destination: '192.168.1.2/12',
+        destination: '192.168.2.0/24',
         gateway: '192.168.1.2',
         name: 'NewName',
         tierId: '1',
@@ -109,7 +109,7 @@ describe('RouteModalComponent', () => {
 
     component.getData();
     component.form.setValue({
-      destination: '192.168.1.2/12',
+      destination: '192.168.2.0/24',
       gateway: '192.168.1.2',
       name: 'NewName',
     });
@@ -118,7 +118,7 @@ describe('RouteModalComponent', () => {
     expect(spy).toHaveBeenCalledWith({
       id: '2',
       loadBalancerRoute: {
-        destination: '192.168.1.2/12',
+        destination: '192.168.2.0/24',
         gateway: '192.168.1.2',
         name: 'NewName',
         tierId: null,
