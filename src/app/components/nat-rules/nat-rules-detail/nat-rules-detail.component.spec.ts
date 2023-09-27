@@ -1,4 +1,4 @@
-/* tslint:disable:no-string-literal */
+/* eslint-disable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NatRulesDetailComponent } from './nat-rules-detail.component';
 import {

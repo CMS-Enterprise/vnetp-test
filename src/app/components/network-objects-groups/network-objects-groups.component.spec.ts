@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NetworkObjectsGroupsComponent } from './network-objects-groups.component';
 import {

@@ -1,4 +1,4 @@
-/* tslint:disable:no-string-literal */
+/* eslint-disable */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavbarComponent } from './navbar.component';
 import { AuthService } from 'src/app/services/auth.service';

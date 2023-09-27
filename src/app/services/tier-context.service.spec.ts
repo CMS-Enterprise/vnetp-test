@@ -1,4 +1,4 @@
-/* tslint:disable:no-string-literal */
+/* eslint-disable */
 import { TierContextService } from './tier-context.service';
 import { BehaviorSubject, of } from 'rxjs';
 

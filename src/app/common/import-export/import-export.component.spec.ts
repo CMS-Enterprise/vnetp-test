@@ -95,6 +95,7 @@ describe('ImportExportComponent', () => {
 
   it('should call importCallback with JSON imported data', done => {
     const mockFile = new Blob(['{"key": "value"}'], { type: 'application/json' });
+    // eslint-disable-next-line
     mockFile['name'] = 'file.json';
     const mockFileList = {
       0: mockFile,

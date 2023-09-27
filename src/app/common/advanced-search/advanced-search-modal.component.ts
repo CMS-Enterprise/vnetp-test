@@ -253,7 +253,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   }
 
   private getInitialValueForOrOperator(input: any, parsedSearchString: { [key: string]: any }): string {
-    // tslint:disable-next-line:no-string-literal
+    // eslint-disable-next-line
     const orParams = parsedSearchString['$or'];
     if (!orParams) {
       return '';
@@ -263,7 +263,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
       for (const key in search) {
         if (search.hasOwnProperty(key)) {
           if (key === input.propertyName) {
-            // tslint:disable-next-line:no-string-literal
+            // eslint-disable-next-line
             const operator = Object.keys(search[key])[0];
             return search[key][operator];
           }

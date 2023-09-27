@@ -236,20 +236,20 @@ describe('HelpTextService', () => {
     });
 
     it('should have the correct SourceNetworkType help text', () => {
-      expect(firewallRuleModalHelpText.SourceNetworkType).toEqual(`Type of Source Network (IP, Object, Object Group).`);
+      expect(firewallRuleModalHelpText.SourceNetworkType).toEqual('Type of Source Network (IP, Object, Object Group).');
     });
 
     it('should have the correct SourceServiceType help text', () => {
-      expect(firewallRuleModalHelpText.SourceServiceType).toEqual(`Type of Source Service (Port/Port Range, Object, Object Group).`);
+      expect(firewallRuleModalHelpText.SourceServiceType).toEqual('Type of Source Service (Port/Port Range, Object, Object Group).');
     });
 
     it('should have the correct DestinationNetworkType help text', () => {
-      expect(firewallRuleModalHelpText.DestinationNetworkType).toEqual(`Type of Destination Network (IP, Object, Object Group).`);
+      expect(firewallRuleModalHelpText.DestinationNetworkType).toEqual('Type of Destination Network (IP, Object, Object Group).');
     });
 
     it('should have the correct DestinationServiceType help text', () => {
       expect(firewallRuleModalHelpText.DestinationServiceType).toEqual(
-        `Type of Destination Service (Port/Port Range, Object, Object Group).`,
+        'Type of Destination Service (Port/Port Range, Object, Object Group).',
       );
     });
 
@@ -262,24 +262,24 @@ describe('HelpTextService', () => {
     });
 
     it('should have the correct NetworkObjectGroupType help text', () => {
-      expect(firewallRuleModalHelpText.NetworkObjectGroupType).toEqual(`Network Object Group created under IPAM.`);
+      expect(firewallRuleModalHelpText.NetworkObjectGroupType).toEqual('Network Object Group created under IPAM.');
     });
 
     it('should have the correct PortServiceType help text', () => {
-      expect(firewallRuleModalHelpText.PortServiceType).toEqual(`Single port (80), Range of ports (22-23) or 'any' to match any Port.`);
+      expect(firewallRuleModalHelpText.PortServiceType).toEqual("Single port (80), Range of ports (22-23) or 'any' to match any Port.");
     });
 
     it('should have the correct ServiceObjectType help text', () => {
-      expect(firewallRuleModalHelpText.ServiceObjectType).toEqual(`Service Object created under IPAM.`);
+      expect(firewallRuleModalHelpText.ServiceObjectType).toEqual('Service Object created under IPAM.');
     });
 
     it('should have the correct ServiceObjectGroupType help text', () => {
-      expect(firewallRuleModalHelpText.ServiceObjectGroupType).toEqual(`Service Object Group created under IPAM.`);
+      expect(firewallRuleModalHelpText.ServiceObjectGroupType).toEqual('Service Object Group created under IPAM.');
     });
 
     it('should have the correct RuleIndex help text', () => {
       expect(firewallRuleModalHelpText.RuleIndex).toContain(
-        `Index of the rule relative to other rules in the ruleset. Rules with a lower index will be applied first.`,
+        'Index of the rule relative to other rules in the ruleset. Rules with a lower index will be applied first.',
       );
     });
   });
@@ -291,7 +291,7 @@ describe('HelpTextService', () => {
 
     it('should have the correct Direction help text', () => {
       expect(natRuleModalHelpText.Direction).toEqual(
-        `Direction that this traffic flow will take. 'In' represents traffic entering the VRF from external/intervrf and 'Out' represents traffic leaving the VRF to external/intervrf.`,
+        "Direction that this traffic flow will take. 'In' represents traffic entering the VRF from external/intervrf and 'Out' represents traffic leaving the VRF to external/intervrf.",
       );
     });
 
@@ -309,15 +309,15 @@ describe('HelpTextService', () => {
     });
 
     it('should have the correct Logging help text', () => {
-      expect(natRuleModalHelpText.Logging).toEqual(`Indicates whether traffic that matches this rule should be logged.`);
+      expect(natRuleModalHelpText.Logging).toEqual('Indicates whether traffic that matches this rule should be logged.');
     });
 
     it('should have the correct OriginalServiceType help text', () => {
-      expect(natRuleModalHelpText.OriginalServiceType).toEqual(`Type of Original Service (None, Service Object).`);
+      expect(natRuleModalHelpText.OriginalServiceType).toEqual('Type of Original Service (None, Service Object).');
     });
 
     it('should have the correct OriginalSourceAddressType help text', () => {
-      expect(natRuleModalHelpText.OriginalSourceAddressType).toEqual(`Type of Original Source Address (None, Object, Object Group)`);
+      expect(natRuleModalHelpText.OriginalSourceAddressType).toEqual('Type of Original Source Address (None, Object, Object Group)');
     });
 
     it('should have the correct OriginalDestinationAddressType help text', () => {
@@ -345,7 +345,7 @@ describe('HelpTextService', () => {
     });
     it('should have the correct TranslatedDestinationAddressType help text', () => {
       expect(natRuleModalHelpText.TranslatedDestinationAddressType).toEqual(
-        `Type of Translated Destination Address (None, Object, Object Group).`,
+        'Type of Translated Destination Address (None, Object, Object Group).',
       );
     });
 
@@ -357,7 +357,7 @@ describe('HelpTextService', () => {
 
     it('should have the correct TranslatedServiceType help text', () => {
       expect(natRuleModalHelpText.TranslatedServiceType).toEqual(
-        `Type of Destination Service (None, Service Object). Note that if a Service Object is chosen, the Service Object must have a source port that is not 'any' or a range.`,
+        "Type of Destination Service (None, Service Object). Note that if a Service Object is chosen, the Service Object must have a source port that is not 'any' or a range.",
       );
     });
   });
@@ -368,17 +368,17 @@ describe('HelpTextService', () => {
     });
 
     it('should have the correct Tier help text', () => {
-      expect(networkObjectsGroupsHelpText.Tier).toEqual(`Tier that Network Objects & Groups are created within.`);
+      expect(networkObjectsGroupsHelpText.Tier).toEqual('Tier that Network Objects & Groups are created within.');
     });
 
     it('should have the correct NetworkObjects help text', () => {
       expect(networkObjectsGroupsHelpText.NetworkObjects).toEqual(
-        `Network Objects can consist of a single host (with NAT/PAT), range or subnet.`,
+        'Network Objects can consist of a single host (with NAT/PAT), range or subnet.',
       );
     });
 
     it('should have the correct NetworkObjectGroups help text', () => {
-      expect(networkObjectsGroupsHelpText.NetworkObjectGroups).toEqual(`Network Object Groups are a collection of Network Objects.`);
+      expect(networkObjectsGroupsHelpText.NetworkObjectGroups).toEqual('Network Object Groups are a collection of Network Objects.');
     });
   });
 
@@ -448,11 +448,11 @@ describe('HelpTextService', () => {
 
   describe('NetworkObjectGroupModalHelpText', () => {
     it('should have the correct Name help text', () => {
-      expect(networkObjectGroupModalHelpText.Name).toEqual(`Name of Network Object Group.`);
+      expect(networkObjectGroupModalHelpText.Name).toEqual('Name of Network Object Group.');
     });
 
     it('should have the correct Description help text', () => {
-      expect(networkObjectGroupModalHelpText.Description).toEqual(`Description of Network Object Group.`);
+      expect(networkObjectGroupModalHelpText.Description).toEqual('Description of Network Object Group.');
     });
 
     it('should have the correct NetworkObjects help text', () => {
@@ -466,15 +466,15 @@ describe('HelpTextService', () => {
     });
 
     it('should have the correct Tier help text', () => {
-      expect(serviceObjectsGroupsHelpText.Tier).toEqual(`Tier that Service Objects & Groups are created within.`);
+      expect(serviceObjectsGroupsHelpText.Tier).toEqual('Tier that Service Objects & Groups are created within.');
     });
 
     it('should have the correct ServiceObjects help text', () => {
-      expect(serviceObjectsGroupsHelpText.ServiceObjects).toEqual(`Service Objects consist of a source and destination ports.`);
+      expect(serviceObjectsGroupsHelpText.ServiceObjects).toEqual('Service Objects consist of a source and destination ports.');
     });
 
     it('should have the correct ServiceObjectGroups help text', () => {
-      expect(serviceObjectsGroupsHelpText.ServiceObjectGroups).toEqual(`Service Object Groups are a collection of Service Objects.`);
+      expect(serviceObjectsGroupsHelpText.ServiceObjectGroups).toEqual('Service Object Groups are a collection of Service Objects.');
     });
   });
 
@@ -514,37 +514,37 @@ describe('HelpTextService', () => {
 
   describe('VirtualServerHelpText', () => {
     it('should have the correct SourceAddress help text', () => {
-      expect(virtualServerModalHelpText.SourceAddress).toEqual(`Address or Network that the Virtual Server accepts traffic from.`);
+      expect(virtualServerModalHelpText.SourceAddress).toEqual('Address or Network that the Virtual Server accepts traffic from.');
     });
 
     it('should have the correct SourceAddressTranslation help text', () => {
-      expect(virtualServerModalHelpText.SourceAddressTranslation).toEqual(`Source Address type.`);
+      expect(virtualServerModalHelpText.SourceAddressTranslation).toEqual('Source Address type.');
     });
 
     it('should have the correct DestinationAddress help text', () => {
-      expect(virtualServerModalHelpText.DestinationAddress).toEqual(`Address that the Virtual Server accepts traffic at.`);
+      expect(virtualServerModalHelpText.DestinationAddress).toEqual('Address that the Virtual Server accepts traffic at.');
     });
 
     it('should have the correct ServicePort help text', () => {
-      expect(virtualServerModalHelpText.ServicePort).toEqual(`Port that the Virtual Server listens on.`);
+      expect(virtualServerModalHelpText.ServicePort).toEqual('Port that the Virtual Server listens on.');
     });
 
     it('should have the correct Pool help text', () => {
-      expect(virtualServerModalHelpText.Pool).toEqual(`Pool that the Virtual Server forwards the request to.`);
+      expect(virtualServerModalHelpText.Pool).toEqual('Pool that the Virtual Server forwards the request to.');
     });
 
     it('should have the correct IRules help text', () => {
       expect(virtualServerModalHelpText.IRules).toEqual(
-        `List of iRules that the Virtual Server evaluates incoming traffic against in a top-down fashion.`,
+        'List of iRules that the Virtual Server evaluates incoming traffic against in a top-down fashion.',
       );
     });
 
     it('should have the correct AvailableProfiles help text', () => {
-      expect(virtualServerModalHelpText.AvailableProfiles).toEqual(`Client SSL profiles available (can select multiple).`);
+      expect(virtualServerModalHelpText.AvailableProfiles).toEqual('Client SSL profiles available (can select multiple).');
     });
 
     it('should have the correct AvailablePolicies help text', () => {
-      expect(virtualServerModalHelpText.AvailablePolicies).toEqual(`Policies available (can select multiple).`);
+      expect(virtualServerModalHelpText.AvailablePolicies).toEqual('Policies available (can select multiple).');
     });
   });
 
@@ -564,7 +564,7 @@ describe('HelpTextService', () => {
 
   describe('NodeModalHelpText', () => {
     it('should have the correct AutoPopulate help text', () => {
-      expect(nodeModalHelpText.AutoPopulate).toEqual(`Determines whether the pool member will be auto-populated from the FQDN.`);
+      expect(nodeModalHelpText.AutoPopulate).toEqual('Determines whether the pool member will be auto-populated from the FQDN.');
     });
   });
 
@@ -574,7 +574,7 @@ describe('HelpTextService', () => {
     });
 
     it('should have the correct Content help text', () => {
-      expect(iRuleModalHelpText.Content).toEqual(`iRule content in valid F5 format.`);
+      expect(iRuleModalHelpText.Content).toEqual('iRule content in valid F5 format.');
     });
   });
 
@@ -602,7 +602,7 @@ describe('HelpTextService', () => {
     });
 
     it('should have the correct Name help text', () => {
-      expect(contractModalHelpText.Name).toEqual(`Contract Name.`);
+      expect(contractModalHelpText.Name).toEqual('Contract Name.');
     });
 
     it('should have the correct Description help text', () => {

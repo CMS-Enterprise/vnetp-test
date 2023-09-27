@@ -54,7 +54,7 @@ describe('SelfServiceModalComponent', () => {
     });
 
     it('should process XML input with vsys elements', () => {
-      const xmlString = `<vsys><entry name="vsys1"></entry><entry name="vsys2"></entry></vsys>`;
+      const xmlString = '<vsys><entry name="vsys1"></entry><entry name="vsys2"></entry></vsys>';
       const xml = new DOMParser().parseFromString(xmlString, 'application/xml').documentElement;
       const result = component.xml2json(xml);
       expect(result).toEqual({ entry: ['', ''] });
@@ -62,7 +62,7 @@ describe('SelfServiceModalComponent', () => {
     });
 
     it('should process XML input with zone elements', () => {
-      const xmlString = `<zone><entry name="zone1"></entry><entry name="zone2"></entry></zone>`;
+      const xmlString = '<zone><entry name="zone1"></entry><entry name="zone2"></entry></zone>';
       const xml = new DOMParser().parseFromString(xmlString, 'application/xml').documentElement;
       const result = component.xml2json(xml);
       expect(result).toEqual({ entry: ['', ''] });
@@ -70,7 +70,7 @@ describe('SelfServiceModalComponent', () => {
     });
 
     it('should process nested XML input', () => {
-      const xmlString = `<root><parent><child>content</child></parent></root>`;
+      const xmlString = '<root><parent><child>content</child></parent></root>';
       const xml = new DOMParser().parseFromString(xmlString, 'application/xml').documentElement;
       const result = component.xml2json(xml);
       expect(result).toEqual({ parent: { child: 'content' } });
