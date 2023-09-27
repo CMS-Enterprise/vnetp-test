@@ -434,7 +434,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         response => {
           this.subnets = response;
         },
-        error => {
+        () => {
           this.isLoadingSubnets = false;
         },
         () => {

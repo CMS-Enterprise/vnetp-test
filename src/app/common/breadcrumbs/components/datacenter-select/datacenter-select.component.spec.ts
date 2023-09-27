@@ -8,7 +8,6 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { By } from '@angular/platform-browser';
 import { MockProvider } from 'src/test/mock-providers';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router';
 
 describe('DatacenterSelectComponent', () => {
   let component: DatacenterSelectComponent;

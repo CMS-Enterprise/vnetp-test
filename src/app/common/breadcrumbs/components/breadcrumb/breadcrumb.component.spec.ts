@@ -7,6 +7,7 @@ import { MockComponent } from 'src/test/mock-components';
 describe('BreadcrumbComponent', () => {
   let component: BreadcrumbComponent;
   let fixture: ComponentFixture<BreadcrumbComponent>;
+  /* eslint-disable-next-line */
   let activatedRoute: ActivatedRoute;
 
   beforeEach(async () => {

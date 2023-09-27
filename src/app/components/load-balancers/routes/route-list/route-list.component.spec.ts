@@ -9,10 +9,10 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { GetManyLoadBalancerRouteResponseDto, LoadBalancerRoute, Tier, V1LoadBalancerRoutesService } from 'client';
+import { LoadBalancerRoute, Tier, V1LoadBalancerRoutesService } from 'client';
 import { RouteListComponent, ImportRoute, RouteView } from './route-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';

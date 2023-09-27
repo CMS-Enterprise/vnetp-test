@@ -1,7 +1,7 @@
 import { HttpConfigInterceptor } from './httpconfig.interceptor';
 import { AuthService } from '../services/auth.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { HttpRequest, HttpResponse, HttpErrorResponse, HttpEvent, HttpHandler, HttpParams } from '@angular/common/http';
+import { HttpRequest, HttpResponse, HttpErrorResponse, HttpHandler, HttpParams } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
@@ -142,7 +142,7 @@ describe('HttpConfigInterceptor', () => {
 
       jest.spyOn(interceptor, 'processSuccessRequest');
 
-      interceptor.intercept(request, mockHttpHandler).subscribe((event: HttpEvent<any>) => {
+      interceptor.intercept(request, mockHttpHandler).subscribe(() => {
         expect(interceptor.processSuccessRequest).toHaveBeenCalledWith(request, httpResponse);
       });
     });

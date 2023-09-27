@@ -9,16 +9,10 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import {
-  GetManyLoadBalancerVirtualServerResponseDto,
-  LoadBalancerVirtualServer,
-  Tier,
-  V1LoadBalancerVirtualServersService,
-  VirtualServerImportDto,
-} from 'client';
+import { LoadBalancerVirtualServer, Tier, V1LoadBalancerVirtualServersService, VirtualServerImportDto } from 'client';
 import { VirtualServerListComponent, VirtualServerView } from './virtual-server-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';

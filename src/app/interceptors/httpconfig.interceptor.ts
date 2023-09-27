@@ -100,6 +100,7 @@ export class HttpConfigInterceptor {
           }
         }
 
+        /* eslint-disable-next-line */
         const data = {
           error: errorResponse,
           status: errorResponse.status,

@@ -9,10 +9,10 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { GetManyLoadBalancerNodeResponseDto, LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'client';
+import { LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'client';
 import { NodeListComponent, ImportNode, NodeView } from './node-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';

@@ -9,16 +9,10 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import {
-  GetManyLoadBalancerPolicyResponseDto,
-  LoadBalancerPolicy,
-  LoadBalancerPolicyTypeEnum,
-  Tier,
-  V1LoadBalancerPoliciesService,
-} from 'client';
+import { LoadBalancerPolicy, LoadBalancerPolicyTypeEnum, Tier, V1LoadBalancerPoliciesService } from 'client';
 import { PolicyListComponent, ImportPolicy, PolicyView } from './policy-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';

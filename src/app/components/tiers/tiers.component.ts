@@ -229,7 +229,7 @@ export class TiersComponent implements OnInit, OnDestroy {
     this.ngx.getModal('tierModal').open();
   }
 
-  public subscribeToTypeDeleteModal(tier) {
+  public subscribeToTypeDeleteModal() {
     this.typeDeletemodalSubscription = this.ngx.getModal('typeDeleteModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('typeDeleteModal');
       this.typeDeletemodalSubscription.unsubscribe();
@@ -239,7 +239,7 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   public openTypeDeleteModal(tier) {
     this.selectedTierToDelete = tier;
-    this.subscribeToTypeDeleteModal(tier);
+    this.subscribeToTypeDeleteModal();
     this.ngx.getModal('typeDeleteModal').open();
   }
 

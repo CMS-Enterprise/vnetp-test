@@ -37,6 +37,7 @@ describe('FilterEntryModalComponent', () => {
   });
 
   const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
+  /* eslint-disable-next-line */
   const isRequired = (prop: string) => {
     const fc = getFormControl(prop);
     fc.setValue(null);

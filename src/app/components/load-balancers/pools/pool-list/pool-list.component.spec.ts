@@ -9,7 +9,6 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import {
-  GetManyLoadBalancerPoolResponseDto,
   LoadBalancerPool,
   LoadBalancerPoolBulkImportDto,
   LoadBalancerPoolLoadBalancingMethodEnum,
@@ -18,7 +17,7 @@ import {
 } from 'client';
 import { PoolListComponent, PoolView } from './pool-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';

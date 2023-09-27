@@ -9,16 +9,10 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import {
-  GetManyLoadBalancerSelfIpResponseDto,
-  LoadBalancerSelfIp,
-  Tier,
-  V1LoadBalancerSelfIpsService,
-  V1LoadBalancerVlansService,
-} from 'client';
+import { LoadBalancerSelfIp, Tier, V1LoadBalancerSelfIpsService, V1LoadBalancerVlansService } from 'client';
 import { SelfIpListComponent, ImportSelfIp, SelfIpView } from './self-ip-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
