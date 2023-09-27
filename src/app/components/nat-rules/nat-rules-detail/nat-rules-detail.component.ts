@@ -20,6 +20,7 @@ import {
   NatRuleImport,
   NatRulePreview,
   GetManyNatRuleResponseDto,
+  NatRuleDirectionEnum,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
@@ -30,13 +31,18 @@ import { PreviewModalDto } from '../../../models/other/preview-modal-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 @Component({
   selector: 'app-nat-rules-detail',
   templateUrl: './nat-rules-detail.component.html',
 })
 export class NatRulesDetailComponent implements OnInit, OnDestroy {
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Direction', propertyName: 'direction', propertyType: NatRuleDirectionEnum },
+    { displayName: 'BiDirectional', propertyName: 'biDirectional', propertyType: 'boolean' },
+    { displayName: 'Enabled', propertyName: 'enabled', propertyType: 'boolean' },
+  ];
 
   public tableComponentDto = new TableComponentDto();
 
@@ -46,6 +52,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   TierName = '';
   currentTierIds: string[];
   ModalMode = ModalMode;
+  filteredResults: boolean;
   public currentTier: Tier;
 
   natRuleGroup: NatRuleGroup;
@@ -104,7 +111,12 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private datacenterService: DatacenterContextService,
     private tableContextService: TableContextService,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<NatRule>();
+    advancedSearchAdapterObject.setService(this.natRuleService);
+    advancedSearchAdapterObject.setServiceName('V1NetworkSecurityNatRulesService');
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
@@ -152,6 +164,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   getNatRules(event?): void {
+    this.filteredResults = false;
     this.isLoading = true;
     let eventParams;
     if (event) {
@@ -159,8 +172,10 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 50;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'name') {
         eventParams = propertyName + '||cont||' + searchText;
+      } else if (propertyName) {
+        eventParams = propertyName + '||eq||' + searchText;
       }
     } else {
       this.tableComponentDto.perPage = this.perPage;
@@ -177,7 +192,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
           this.natRules = response;
         },
         () => {
-          this.natRules = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

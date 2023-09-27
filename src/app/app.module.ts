@@ -19,6 +19,7 @@ import {
   faPlus,
   faSave,
   faSearch,
+  faSearchPlus,
   faSignOutAlt,
   faSpinner,
   faSyncAlt,
@@ -113,6 +114,7 @@ export class AppModule {
       faTrash,
       faUndo,
       faUpload,
+      faSearchPlus,
     );
   }
 }

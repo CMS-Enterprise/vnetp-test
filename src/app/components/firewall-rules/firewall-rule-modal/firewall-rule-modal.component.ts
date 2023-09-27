@@ -38,6 +38,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   destinationNetworkTypeSubscription: Subscription;
   serviceTypeSubscription: Subscription;
   objectInfoSubscription: Subscription;
+  protocolChangeSubscription: Subscription;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
@@ -446,6 +447,32 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       serviceObject.updateValueAndValidity();
       serviceObjectGroup.updateValueAndValidity();
     });
+
+    const formServiceType = this.form.controls.serviceType;
+
+    this.protocolChangeSubscription = this.form.controls.protocol.valueChanges.subscribe(protocol => {
+      if (protocol === 'ICMP' || protocol === 'IP') {
+        if (
+          (!sourcePorts.value || sourcePorts.value.trim() === '' || !destinationPorts.value || destinationPorts.value.trim() === '') &&
+          (!serviceObject.value || serviceObject.value.trim() === '') &&
+          (!serviceObjectGroup.value || serviceObjectGroup.value.trim() === '')
+        ) {
+          formServiceType.setValue('Port');
+          sourcePorts.setValue('any');
+          destinationPorts.setValue('any');
+        }
+        formServiceType.disable();
+        sourcePorts.disable();
+        destinationPorts.disable();
+      } else {
+        formServiceType.enable();
+        sourcePorts.enable();
+        destinationPorts.enable();
+      }
+      formServiceType.updateValueAndValidity();
+      sourcePorts.updateValueAndValidity();
+      destinationPorts.updateValueAndValidity();
+    });
   }
 
   private buildForm() {
@@ -488,6 +515,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       this.sourceNetworkTypeSubscription,
       this.destinationNetworkTypeSubscription,
       this.serviceTypeSubscription,
+      this.protocolChangeSubscription,
     ]);
   }
 

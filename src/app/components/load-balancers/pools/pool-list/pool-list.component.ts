@@ -17,6 +17,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { PoolModalDto } from '../pool-modal/pool-modal.dto';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface PoolView extends LoadBalancerPool {
   nameView: string;
@@ -41,7 +42,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<PoolView> = {
     description: 'Pools in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Load Balancing Method', property: 'methodName' },
       { name: 'Nodes', property: 'totalNodes' },
       { name: 'Health Monitors', property: 'totalHealthMonitors' },
@@ -63,7 +64,11 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     private poolsService: V1LoadBalancerPoolsService,
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerPool>();
+    advancedSearchAdapterObject.setService(this.poolsService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();

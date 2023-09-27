@@ -5,7 +5,6 @@ import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { TableModule } from 'src/app/common/table/table.module';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
-import { SharedModule } from 'src/app/common/shared.module';
 
 const routes: Routes = [
   {
@@ -14,7 +13,7 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule, SharedModule, RouterModule.forChild(routes), TableModule, TooltipModule],
+  imports: [CommonModule, FontAwesomeModule, RouterModule.forChild(routes), TableModule, TooltipModule],
   declarations: [DashboardComponent],
 })
 export class DashboardModule {}

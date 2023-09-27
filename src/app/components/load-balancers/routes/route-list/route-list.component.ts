@@ -12,6 +12,8 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { RouteModalDto } from '../route-modal/route-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface RouteView extends LoadBalancerRoute {
   nameView: string;
@@ -25,14 +27,17 @@ export interface RouteView extends LoadBalancerRoute {
 export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Destination', propertyName: 'destination' },
+    { displayName: 'Gateway', propertyName: 'gateway' },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<RouteView> = {
     description: 'Routes in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Destination', property: 'destination' },
       { name: 'Gateway', property: 'gateway' },
       { name: 'State', property: 'state' },
@@ -54,7 +59,13 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
-  ) {}
+    public filteredHelpText: FilteredCount,
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerRoute>();
+    advancedSearchAdapterObject.setService(this.routesService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerRoutesService');
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
@@ -103,9 +114,12 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
+      if (propertyName === 'name') {
+        eventParams = propertyName + '||cont||' + searchText;
+      } else if (propertyName) {
+        eventParams = propertyName + '||eq||' + searchText;
       }
     }
     this.routesService
@@ -133,7 +147,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
           }));
         },
         () => {
-          this.routes = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

@@ -12,6 +12,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { IRuleModalDto } from '../irule-modal/irule-modal.dto';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface IRuleView extends LoadBalancerIrule {
   nameView: string;
@@ -34,12 +35,13 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<IRuleView> = {
     description: 'iRules in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Description', property: 'descriptionView' },
       { name: 'Content', property: 'contentView' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
+    hideAdvancedSearch: true,
   };
   public iRules = {} as GetManyLoadBalancerIruleResponseDto;
   public tableComponentDto = new TableComponentDto();
@@ -56,7 +58,12 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerIrule>();
+    advancedSearchAdapterObject.setService(this.iRuleService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerIrulesService');
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
@@ -129,7 +136,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
           }));
         },
         () => {
-          this.iRules = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

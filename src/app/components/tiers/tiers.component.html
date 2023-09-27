@@ -61,6 +61,7 @@
         ></app-icon-button>
 
         <app-icon-button
+        *ngIf="!tier?.provisionedAt"
         icon="delete"
         label="Soft-Delete/Delete Tier"
         [type]="tier?.deletedAt ? 'danger' : 'default'"
@@ -78,3 +79,4 @@
 <ng-template #warningMessage>
   <p>Select a Datacenter to display Tier details</p>
 </ng-template>
+<app-type-delete-modal [tierToDelete]="selectedTierToDelete"></app-type-delete-modal>

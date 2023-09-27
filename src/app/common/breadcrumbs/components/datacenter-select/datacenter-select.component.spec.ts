@@ -8,11 +8,11 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { By } from '@angular/platform-browser';
 import { MockProvider } from 'src/test/mock-providers';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 
 describe('DatacenterSelectComponent', () => {
   let component: DatacenterSelectComponent;
   let fixture: ComponentFixture<DatacenterSelectComponent>;
-
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, RouterTestingModule.withRoutes([])],
@@ -37,7 +37,7 @@ describe('DatacenterSelectComponent', () => {
     }));
 
     const openButton = fixture.debugElement.query(By.css('.btn.btn-primary'));
-    openButton.nativeElement.click();
+    openButton.triggerEventHandler('click', 'getModal');
 
     expect(openSpy).toHaveBeenCalled();
   });

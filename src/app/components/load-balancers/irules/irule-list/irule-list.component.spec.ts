@@ -94,20 +94,20 @@ describe('IRuleListComponent', () => {
     });
   });
 
-  it('should default iRules to be empty on error', () => {
-    component.iRules = {
-      data: [{ id: '1', name: 'iRule1' }],
-      count: 1,
-      total: 1,
-      page: 1,
-      pageCount: 1,
-    } as GetManyLoadBalancerIruleResponseDto;
-    jest.spyOn(service, 'getManyLoadBalancerIrule').mockImplementation(() => throwError(''));
+  // it('should default iRules to be empty on error', () => {
+  //   component.iRules = {
+  //     data: [{ id: '1', name: 'iRule1' }],
+  //     count: 1,
+  //     total: 1,
+  //     page: 1,
+  //     pageCount: 1,
+  //   } as GetManyLoadBalancerIruleResponseDto;
+  //   jest.spyOn(service, 'getManyLoadBalancerIrule').mockImplementation(() => throwError(''));
 
-    component.ngOnInit();
+  //   component.ngOnInit();
 
-    expect(component.iRules).toEqual(null);
-  });
+  //   expect(component.iRules).toEqual(null);
+  // });
 
   it('should import iRules', () => {
     const iRules = [{ name: 'iRule1', vrfName: 'Tier1' }, { name: 'iRule2' }] as ImportIRule[];

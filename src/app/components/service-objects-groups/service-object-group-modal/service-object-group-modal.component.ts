@@ -65,12 +65,9 @@ export class ServiceObjectGroupModalComponent implements OnInit {
           id: this.ServiceObjectGroupId,
           serviceObjectGroup: modalServiceObjectGroup,
         })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+        .subscribe(() => {
+          this.closeModal();
+        });
     }
   }
 
@@ -149,7 +146,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
     this.ngx.resetModalData('serviceObjectGroupModal');
   }
 
-  private getTierServiceObjects() {
+  public getTierServiceObjects() {
     this.tierService.getOneTier({ id: this.TierId, join: ['serviceObjects'] }).subscribe(data => {
       this.tierServiceObjects = data.serviceObjects.filter(
         tierObj => !this.serviceObjects.some(groupObj => groupObj.id === tierObj.id) && tierObj.deletedAt === null,
@@ -157,7 +154,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
     });
   }
 
-  private getGroupServiceObjects() {
+  public getGroupServiceObjects() {
     this.serviceObjectGroupService
       .getOneServiceObjectGroup({
         id: this.ServiceObjectGroupId,

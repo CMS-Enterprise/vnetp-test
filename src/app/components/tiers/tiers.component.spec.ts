@@ -37,6 +37,7 @@ describe('TiersComponent', () => {
       declarations: [
         MockComponent('app-tier-modal'),
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockComponent({ selector: 'app-type-delete-modal', inputs: ['tierToDelete'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockImportExportComponent,
