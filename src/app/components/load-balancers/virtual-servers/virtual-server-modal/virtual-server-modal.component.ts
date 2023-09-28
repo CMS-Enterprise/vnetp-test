@@ -19,7 +19,7 @@ import {
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { VirtualServerModalDto } from './virtual-server-modal.dto';
-import { IpAddressAnyValidator, IpAddressCidrValidator } from 'src/app/validators/network-form-validators';
+import { IpAddressAnyValidatorAllowHostBits, IpAddressCidrValidator } from 'src/app/validators/network-form-validators';
 import { RangeValidator } from 'src/app/validators/range-validator';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -248,7 +248,7 @@ export class VirtualServerModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       defaultPoolId: [null],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
-      destinationIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
+      destinationIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidatorAllowHostBits])],
       name: ['', NameValidator()],
       selectedIRuleId: [null],
       selectedPolicyId: [null],
