@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { FirewallRuleModalComponent } from './firewall-rule-modal.component';

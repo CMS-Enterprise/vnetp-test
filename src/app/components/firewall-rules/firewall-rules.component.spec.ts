@@ -14,7 +14,7 @@ import { MockProvider } from 'src/test/mock-providers';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { V1TiersService, V1NetworkSecurityFirewallRuleGroupsService } from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';

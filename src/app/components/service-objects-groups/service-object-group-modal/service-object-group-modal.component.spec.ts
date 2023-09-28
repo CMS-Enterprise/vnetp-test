@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -15,7 +15,6 @@ import { V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'cli
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { of, Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 describe('ServiceObjectGroupModalComponent', () => {
   let component: ServiceObjectGroupModalComponent;

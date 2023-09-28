@@ -21,8 +21,8 @@ describe('ImportExportComponent', () => {
   let sanitizer: DomSanitizer;
   let papa: Papa;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       declarations: [ImportExportComponent, MockFontAwesomeComponent],
       imports: [FormsModule],
       providers: [{ provide: DomSanitizer, useClass: MockDomSanitizer }, Papa],
@@ -61,6 +61,7 @@ describe('ImportExportComponent', () => {
 
   it('should call importCallback with imported data', fakeAsync(() => {
     const mockFile = new Blob(['data'], { type: 'text/csv' });
+    /* eslint-disable-next-line */
     mockFile['name'] = 'file.csv';
     const mockFileList = {
       0: mockFile,

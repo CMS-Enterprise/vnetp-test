@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TooltipComponent } from './tooltip.component';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { By } from '@angular/platform-browser';
