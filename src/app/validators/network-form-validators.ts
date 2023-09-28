@@ -1,71 +1,61 @@
 import { FormControl } from '@angular/forms';
 import { isFQDN, isIP, isMACAddress } from 'validator';
 
-export function IpAddressAnyValidator(control: FormControl): { invalidIpAny: boolean } {
+type ValidationResult = { [key: string]: boolean } | null;
+
+function genericIpAddressValidator(
+  control: FormControl,
+  validationType: 'IpAny' | 'IpCidr' | 'IpAddress',
+  allowHostBits: boolean,
+): ValidationResult {
   if (!control || !control.value) {
     return null;
   }
 
+  let isValid = false;
   const ipArray = control.value.split('/');
 
-  let isValid = false;
-
-  if (ipArray.length === 1) {
-    isValid = ValidateIpAddress(ipArray[0]);
-  } else if (ipArray.length === 2) {
-    isValid = ValidateCidrAddress(control.value, true);
+  switch (validationType) {
+    case 'IpAny':
+      if (ipArray.length === 1) {
+        isValid = ValidateIpAddress(ipArray[0]);
+      } else if (ipArray.length === 2) {
+        isValid = ValidateCidrAddress(control.value, allowHostBits);
+      }
+      break;
+    case 'IpCidr':
+      isValid = ValidateCidrAddress(control.value, allowHostBits);
+      break;
+    case 'IpAddress':
+      if (ipArray.length === 1) {
+        isValid = ValidateIpAddress(ipArray[0]);
+      }
+      break;
   }
 
-  if (isValid) {
-    return null;
-  }
-  return { invalidIpAny: true };
+  const validationResult: ValidationResult = isValid ? null : { ['invalid' + validationType]: true };
+
+  return validationResult;
 }
 
-export function IpAddressCidrValidator(control: FormControl): { invalidIpCidr: boolean } {
-  if (!control || !control.value) {
-    return null;
-  }
-  let isValid = false;
-
-  isValid = ValidateCidrAddress(control.value, false);
-
-  if (isValid) {
-    return null;
-  }
-  return { invalidIpCidr: true };
+export function IpAddressAnyValidator(control: FormControl): ValidationResult {
+  return genericIpAddressValidator(control, 'IpAny', false);
 }
 
-export function IpAddressCidrValidatorAllowHostBits(control: FormControl): { invalidIpCidr: boolean } {
-  if (!control || !control.value) {
-    return null;
-  }
-  let isValid = false;
-
-  isValid = ValidateCidrAddress(control.value, true);
-
-  if (isValid) {
-    return null;
-  }
-  return { invalidIpCidr: true };
+export function IpAddressAnyValidatorAllowHostBits(control: FormControl): ValidationResult {
+  return genericIpAddressValidator(control, 'IpAny', true);
 }
 
-export function IpAddressIpValidator(control: FormControl): { invalidIpAddress: boolean } {
-  if (!control || !control.value) {
-    return null;
-  }
-  const valueArray = control.value.split('/');
+export function IpAddressCidrValidator(control: FormControl): ValidationResult {
+  return genericIpAddressValidator(control, 'IpCidr', false);
+}
 
-  let isValid = false;
+export function IpAddressCidrValidatorAllowHostBits(control: FormControl): ValidationResult {
+  return genericIpAddressValidator(control, 'IpCidr', true);
+}
 
-  if (valueArray.length === 1) {
-    isValid = ValidateIpAddress(control.value);
-  }
-
-  if (isValid) {
-    return null;
-  }
-  return { invalidIpAddress: true };
+export function IpAddressIpValidator(control: FormControl): ValidationResult {
+  return genericIpAddressValidator(control, 'IpAddress', false);
 }
 
 export function FqdnValidator(control: FormControl): { invalidFqdn: boolean } {
