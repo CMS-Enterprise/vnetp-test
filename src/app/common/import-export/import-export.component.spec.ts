@@ -66,7 +66,7 @@ describe('ImportExportComponent', () => {
     const mockFileList = {
       0: mockFile,
       length: 1,
-      item: (index: number) => mockFile,
+      item: () => mockFile,
     };
     const mockEvent = { target: { files: mockFileList } } as unknown;
 
