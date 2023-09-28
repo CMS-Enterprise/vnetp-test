@@ -6,6 +6,7 @@ import {
   FqdnValidator,
   MacAddressValidator,
   IpAddressCidrValidatorAllowHostBits,
+  IpAddressAnyValidatorAllowHostBits,
 } from './network-form-validators';
 import { FormControl } from '@angular/forms';
 
@@ -42,6 +43,18 @@ describe('NetworkFormValidators', () => {
       expect(validate('0.0.0.0/-1')).toEqual({ invalidIpAny: true });
       expect(validate('fe80::7ccc:2a54:aed2:2180/129')).toEqual({ invalidIpAny: true });
       expect(validate('fe80::::://')).toEqual({ invalidIpAny: true });
+    });
+  });
+
+  describe('IpAddressAnyValidatorAllowHostBits', () => {
+    const { validate } = createValidator(IpAddressAnyValidatorAllowHostBits);
+
+    it('should allow valid ip addresses (any type)', () => {
+      expect(validate('192.168.10.1/24')).toBeNull();
+    });
+
+    it('should not allow invalid ip addresses (any type)', () => {
+      expect(validate('any')).toEqual({ invalidIpAny: true });
     });
   });
 
