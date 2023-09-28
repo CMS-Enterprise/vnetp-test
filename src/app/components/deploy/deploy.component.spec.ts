@@ -50,7 +50,7 @@ describe('DeployComponent', () => {
 
   const datacenterSubject = new Subject();
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     const datacenterService = {
       currentDatacenter: datacenterSubject.asObservable(),
     };
@@ -76,7 +76,7 @@ describe('DeployComponent', () => {
         };
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

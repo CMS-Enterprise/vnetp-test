@@ -31,7 +31,7 @@ describe('TiersComponent', () => {
   let component: TiersComponent;
   let fixture: ComponentFixture<TiersComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NgxSmartModalModule, NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
@@ -59,7 +59,7 @@ describe('TiersComponent', () => {
         MockProvider(V1NetworkSecurityServiceObjectGroupsService),
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TiersComponent);

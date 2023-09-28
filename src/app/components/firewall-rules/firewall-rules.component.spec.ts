@@ -23,7 +23,7 @@ describe('FirewallRulesComponent', () => {
   let component: FirewallRulesComponent;
   let fixture: ComponentFixture<FirewallRulesComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, RouterTestingModule, NgxPaginationModule],
       declarations: [
@@ -53,7 +53,7 @@ describe('FirewallRulesComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

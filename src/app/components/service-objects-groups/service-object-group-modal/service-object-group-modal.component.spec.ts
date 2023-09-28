@@ -23,7 +23,7 @@ describe('ServiceObjectGroupModalComponent', () => {
   let onConfirm: jest.Mock;
   let subscriptionUtilSubscribeToYesNoModalSpy: jest.SpyInstance;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -46,7 +46,7 @@ describe('ServiceObjectGroupModalComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
   beforeEach(() => {
     onConfirm = jest.fn();
     subscriptionUtilSubscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockReturnValue(new Subscription());

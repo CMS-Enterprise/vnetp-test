@@ -24,7 +24,7 @@ describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     const datacenterService = {
       getManyDatacenters: jest.fn(() => of({ total: 1 })),
     };
@@ -71,7 +71,7 @@ describe('DashboardComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -10,7 +10,7 @@ describe('StaticRouteModalComponent', () => {
   let component: StaticRouteModalComponent;
   let fixture: ComponentFixture<StaticRouteModalComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [StaticRouteModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
@@ -22,7 +22,7 @@ describe('StaticRouteModalComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

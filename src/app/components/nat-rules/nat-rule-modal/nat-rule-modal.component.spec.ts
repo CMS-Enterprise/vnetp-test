@@ -34,7 +34,7 @@ describe('NatRuleModalComponent', () => {
   let component: NatRuleModalComponent;
   let fixture: ComponentFixture<NatRuleModalComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
@@ -63,7 +63,7 @@ describe('NatRuleModalComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   const getFormControl = (name: string) => component.f[name];
   const testRequiredFields = (options: {

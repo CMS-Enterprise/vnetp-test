@@ -33,7 +33,7 @@ describe('NetworkObjectsGroupsComponent', () => {
   let component: NetworkObjectsGroupsComponent;
   let fixture: ComponentFixture<NetworkObjectsGroupsComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
@@ -62,7 +62,7 @@ describe('NetworkObjectsGroupsComponent', () => {
         MockProvider(V1NetworkSecurityNetworkObjectsService),
       ],
     });
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NetworkObjectsGroupsComponent);

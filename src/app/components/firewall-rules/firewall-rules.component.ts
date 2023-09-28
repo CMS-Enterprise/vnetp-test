@@ -38,7 +38,6 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
   }
 
   public filterFirewallRuleGroup = (firewallRuleGroup: FirewallRuleGroup): boolean => firewallRuleGroup.name !== 'Intravrf';
-  // tslint:disable-next-line: semicolon
 
   public getTierName(tierId: string): string {
     return ObjectUtil.getObjectName(tierId, [this.currentTier], 'Error Resolving Name');

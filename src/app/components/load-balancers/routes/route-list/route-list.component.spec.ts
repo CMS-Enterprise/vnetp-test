@@ -23,7 +23,7 @@ describe('RouteListComponent', () => {
   let fixture: ComponentFixture<RouteListComponent>;
   let service: V1LoadBalancerRoutesService;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes([])],
       declarations: [
@@ -52,7 +52,7 @@ describe('RouteListComponent', () => {
     fixture.detectChanges();
 
     service = TestBed.inject(V1LoadBalancerRoutesService);
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

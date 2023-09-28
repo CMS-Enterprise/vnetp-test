@@ -10,7 +10,7 @@ describe('YesNoModalComponent', () => {
   let component: YesNoModalComponent;
   let fixture: ComponentFixture<YesNoModalComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [YesNoModalComponent, MockNgxSmartModalComponent],
@@ -22,7 +22,7 @@ describe('YesNoModalComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

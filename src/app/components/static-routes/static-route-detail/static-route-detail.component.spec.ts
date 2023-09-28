@@ -14,7 +14,7 @@ describe('StaticRouteDetailComponent', () => {
   let component: StaticRouteDetailComponent;
   let fixture: ComponentFixture<StaticRouteDetailComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, RouterTestingModule.withRoutes([]), ReactiveFormsModule],
       declarations: [
@@ -41,7 +41,7 @@ describe('StaticRouteDetailComponent', () => {
         },
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StaticRouteDetailComponent);

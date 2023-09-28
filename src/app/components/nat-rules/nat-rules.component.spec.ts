@@ -23,7 +23,7 @@ describe('NatRuleComponent', () => {
   let component: NatRulesComponent;
   let fixture: ComponentFixture<NatRulesComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, RouterTestingModule, NgxPaginationModule],
       declarations: [
@@ -49,7 +49,7 @@ describe('NatRuleComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

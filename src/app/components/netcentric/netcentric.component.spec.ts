@@ -8,12 +8,12 @@ describe('NetcentricComponent', () => {
   let component: NetcentricComponent;
   let fixture: ComponentFixture<NetcentricComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [NetcentricComponent, MockComponent('app-navbar'), MockComponent('app-breadcrumb')],
       imports: [RouterTestingModule],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NetcentricComponent);

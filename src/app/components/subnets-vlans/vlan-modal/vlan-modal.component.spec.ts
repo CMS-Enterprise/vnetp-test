@@ -14,7 +14,7 @@ describe('VlanModalComponent', () => {
   let component: VlanModalComponent;
   let fixture: ComponentFixture<VlanModalComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [VlanModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
@@ -28,7 +28,7 @@ describe('VlanModalComponent', () => {
         component.VlanId = '2';
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

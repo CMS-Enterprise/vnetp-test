@@ -16,7 +16,7 @@ describe('NetworkObjectGroupModalComponent', () => {
   let component: NetworkObjectGroupModalComponent;
   let fixture: ComponentFixture<NetworkObjectGroupModalComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -33,7 +33,7 @@ describe('NetworkObjectGroupModalComponent', () => {
         MockProvider(V1TiersService),
       ],
     });
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NetworkObjectGroupModalComponent);

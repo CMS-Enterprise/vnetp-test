@@ -7,7 +7,7 @@ describe('IconButtonComponent', () => {
   let component: IconButtonComponent;
   let fixture: ComponentFixture<IconButtonComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [IconButtonComponent, MockFontAwesomeComponent],
     })
@@ -17,7 +17,7 @@ describe('IconButtonComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

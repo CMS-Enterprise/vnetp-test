@@ -25,7 +25,7 @@ describe('SubnetsVlansComponent', () => {
   let component: SubnetsVlansComponent;
   let fixture: ComponentFixture<SubnetsVlansComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
@@ -53,7 +53,7 @@ describe('SubnetsVlansComponent', () => {
         MockProvider(V1TiersService),
       ],
     });
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubnetsVlansComponent);

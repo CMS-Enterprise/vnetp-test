@@ -17,7 +17,7 @@ describe('TierSelectComponent', () => {
   let component: TierSelectComponent;
   let fixture: ComponentFixture<TierSelectComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     const authService = {
       currentUser: of({}),
     };
@@ -40,7 +40,7 @@ describe('TierSelectComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     // const datacenterService = TestBed.inject(V1DatacentersService);

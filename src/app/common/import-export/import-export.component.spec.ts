@@ -59,29 +59,28 @@ describe('ImportExportComponent', () => {
     expect(sanitizer.bypassSecurityTrustUrl).toHaveBeenCalledWith(`data:text/csv;charset=UTF-8,${encodeURIComponent(csvContent)}`);
   });
 
-  //   it('should call importCallback with imported data', done => {
-  //     const mockFile = new Blob(['data'], { type: 'text/csv' });
-  //     mockFile['name'] = 'file.csv';
-  //     const mockFileList = {
-  //       0: mockFile,
-  //       length: 1,
-  //       item: (index: number) => mockFile,
-  //     };
-  //     const mockEvent = { target: { files: mockFileList } } as unknown;
+  it('should call importCallback with imported data', fakeAsync(() => {
+    const mockFile = new Blob(['data'], { type: 'text/csv' });
+    mockFile['name'] = 'file.csv';
+    const mockFileList = {
+      0: mockFile,
+      length: 1,
+      item: (index: number) => mockFile,
+    };
+    const mockEvent = { target: { files: mockFileList } } as unknown;
 
-  //     const importObjects = [{ key: 'value' }];
+    const importObjects = [{ key: 'value' }];
 
-  //     jest.spyOn(component, 'importCallback').mockImplementation(() => {
-  //       expect(component.importCallback).toHaveBeenCalledWith(importObjects);
-  //       done();
-  //     });
+    jest.spyOn(component, 'importCallback').mockImplementation(() => {
+      expect(component.importCallback).toHaveBeenCalledWith(importObjects);
+    });
 
-  //     spyOn(component as any, 'Import').and.callFake((event, importCallback) => {
-  //       importCallback(importObjects);
-  //     });
+    jest.spyOn(component as any, 'Import').mockResolvedValueOnce((event, importCallback) => {
+      importCallback(importObjects);
+    });
 
-  //     component.importFile(mockEvent as Event);
-  //   });
+    component.importFile(mockEvent as Event);
+  }));
 
   it('should set currentDate to current ISO date and time', fakeAsync(() => {
     const mockDate = new Date('2023-05-01T10:30:45Z');

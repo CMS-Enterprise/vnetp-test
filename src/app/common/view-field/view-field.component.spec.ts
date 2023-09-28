@@ -6,7 +6,7 @@ describe('ViewFieldComponent', () => {
   let component: ViewFieldComponent;
   let fixture: ComponentFixture<ViewFieldComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ViewFieldComponent],
     })
@@ -16,7 +16,7 @@ describe('ViewFieldComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

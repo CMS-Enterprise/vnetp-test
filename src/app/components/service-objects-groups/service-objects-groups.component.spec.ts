@@ -34,7 +34,7 @@ describe('ServicesObjectsGroupsComponent', () => {
   let component: ServiceObjectsGroupsComponent;
   let fixture: ComponentFixture<ServiceObjectsGroupsComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
@@ -62,7 +62,7 @@ describe('ServicesObjectsGroupsComponent', () => {
         MockProvider(TierContextService),
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ServiceObjectsGroupsComponent);

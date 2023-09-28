@@ -7,7 +7,7 @@ describe('TabsComponent', () => {
   let component: TabsComponent;
   let fixture: ComponentFixture<TabsComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [TabsComponent, MockTooltipComponent],
     })
@@ -18,7 +18,7 @@ describe('TabsComponent', () => {
         component.tabs = [{ name: '1' }, { name: '2' }];
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -12,7 +12,7 @@ describe('AppComponent', () => {
 
   const routerEvents = new Subject<Event>();
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     const activatedRoute = { data: of({ title: 'test' }), outlet: 'primary' };
 
     const router = {
@@ -38,7 +38,7 @@ describe('AppComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
