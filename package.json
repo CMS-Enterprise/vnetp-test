@@ -36,7 +36,7 @@
     "ngx-pagination": "^5.0.0",
     "ngx-papaparse": "^5.0.0",
     "ngx-smart-modal": "^7.1.1",
-    "ngx-toastr": "^15.2.2",
+    "ngx-toastr": "^14.3.0",
     "rxjs": "~6.5.3",
     "tslib": "^2.6.1",
     "validator": "^13.9.0",
