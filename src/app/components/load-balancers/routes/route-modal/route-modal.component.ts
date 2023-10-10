@@ -62,7 +62,7 @@ export class RouteModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const dto: RouteModalDto = Object.assign({}, this.ngx.getModalData('routeModal'));
+    const dto: RouteModalDto = Object.assign({}, this.ngx.getModalData('routeModal')) as any;
     const { route, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = route ? ModalMode.Edit : ModalMode.Create;

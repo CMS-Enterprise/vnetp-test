@@ -71,7 +71,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
   }
 
   public getData(): void {
-    const dto: NodeModalDto = Object.assign({}, this.ngx.getModalData('nodeModal'));
+    const dto: NodeModalDto = Object.assign({}, this.ngx.getModalData('nodeModal')) as any;
     const { node, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = node ? ModalMode.Edit : ModalMode.Create;

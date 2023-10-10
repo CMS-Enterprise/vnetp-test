@@ -32,7 +32,7 @@ export class PreviewModalComponent<T> {
   }
 
   public getData(): void {
-    const modalConfig = this.ngx.getModalData('previewModal');
+    const modalConfig = this.ngx.getModalData('previewModal') as any;
     this.config = modalConfig.tableConfig;
     this.data = modalConfig.data;
     this.ngx.resetModalData('previewModal');
