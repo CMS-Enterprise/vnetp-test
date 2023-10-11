@@ -202,7 +202,7 @@ export class VirtualServerModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const dto: VirtualServerModalDto = Object.assign({}, this.ngx.getModalData('virtualServerModal'));
+    const dto: VirtualServerModalDto = Object.assign({}, this.ngx.getModalData('virtualServerModal')) as any;
     const { virtualServer, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = virtualServer ? ModalMode.Edit : ModalMode.Create;

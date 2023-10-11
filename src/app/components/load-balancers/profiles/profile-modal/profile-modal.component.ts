@@ -74,7 +74,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   }
 
   public getData(): void {
-    const dto: ProfileModalDto = Object.assign({}, this.ngx.getModalData('profileModal'));
+    const dto: ProfileModalDto = Object.assign({}, this.ngx.getModalData('profileModal')) as any;
     const { profile, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = profile ? ModalMode.Edit : ModalMode.Create;

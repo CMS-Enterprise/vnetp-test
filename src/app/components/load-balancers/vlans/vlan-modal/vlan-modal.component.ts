@@ -62,7 +62,7 @@ export class VlanModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const dto: VlanModalDto = Object.assign({}, this.ngx.getModalData('vlanModal'));
+    const dto: VlanModalDto = Object.assign({}, this.ngx.getModalData('vlanModal')) as any;
     const { tierId, vlan } = dto;
     this.tierId = tierId;
     this.modalMode = vlan ? ModalMode.Edit : ModalMode.Create;

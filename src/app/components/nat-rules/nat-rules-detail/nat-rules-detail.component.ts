@@ -390,7 +390,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.ngx.getModal('previewModal').open();
 
     const previewImportSubscription = this.ngx.getModal('previewModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData: PreviewModalDto<NatRule> = modal.getData();
+      const modalData: PreviewModalDto<NatRule> = modal.getData() as any;
       modal.removeData();
       if (modalData && modalData.confirm) {
         const natConfirmDto: NatRuleImportCollectionDto = {

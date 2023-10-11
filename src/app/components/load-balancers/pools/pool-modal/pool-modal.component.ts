@@ -217,7 +217,7 @@ export class PoolModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const dto: PoolModalDto = Object.assign({}, this.ngx.getModalData('poolModal'));
+    const dto: PoolModalDto = Object.assign({}, this.ngx.getModalData('poolModal')) as any;
     const { pool, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = pool ? ModalMode.Edit : ModalMode.Create;

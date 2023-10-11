@@ -426,7 +426,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     this.ngx.getModal('previewModal').open();
 
     const previewImportSubscription = this.ngx.getModal('previewModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData: PreviewModalDto<FirewallRule> = modal.getData();
+      const modalData: PreviewModalDto<FirewallRule> = modal.getData() as any;
       modal.removeData();
       if (modalData && modalData.confirm) {
         const firewallConfirmDto: FirewallRuleImportCollectionDto = {

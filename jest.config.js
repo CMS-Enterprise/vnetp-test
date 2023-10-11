@@ -7,7 +7,6 @@ globalThis.ngJest = {
 
 
 module.exports = {
-  globalSetup: 'jest-preset-angular/global-setup',
   preset: 'jest-preset-angular',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/src/test/setupJest.ts'],

@@ -72,7 +72,7 @@ export class HealthMonitorModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const dto: HealthMonitorModalDto = Object.assign({}, this.ngx.getModalData('healthMonitorModal'));
+    const dto: HealthMonitorModalDto = Object.assign({}, this.ngx.getModalData('healthMonitorModal')) as any;
     const { healthMonitor, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = healthMonitor ? ModalMode.Edit : ModalMode.Create;

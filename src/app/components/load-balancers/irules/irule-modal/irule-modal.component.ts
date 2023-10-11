@@ -41,7 +41,7 @@ export class IRuleModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const dto: IRuleModalDto = Object.assign({}, this.ngx.getModalData('iRuleModal'));
+    const dto: IRuleModalDto = Object.assign({}, this.ngx.getModalData('iRuleModal')) as any;
     const { iRule, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = iRule ? ModalMode.Edit : ModalMode.Create;

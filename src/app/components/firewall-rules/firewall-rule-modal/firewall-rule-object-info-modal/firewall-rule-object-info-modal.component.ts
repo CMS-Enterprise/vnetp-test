@@ -13,7 +13,7 @@ export class FirewallRuleObjectInfoModalComponent implements OnInit {
   ngOnInit(): void {}
 
   getData() {
-    const modalData = this.ngx.getModalData('firewallRuleObjectInfoModal');
+    const modalData = this.ngx.getModalData('firewallRuleObjectInfoModal') as any;
     this.modalTitle = modalData.modalTitle;
     this.modalBody = modalData.modalBody;
   }

@@ -67,7 +67,7 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
   }
 
   public getData(): void {
-    const dto: PolicyModalDto = Object.assign({}, this.ngx.getModalData('policyModal'));
+    const dto: PolicyModalDto = Object.assign({}, this.ngx.getModalData('policyModal')) as any;
     const { policy, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = policy ? ModalMode.Edit : ModalMode.Create;

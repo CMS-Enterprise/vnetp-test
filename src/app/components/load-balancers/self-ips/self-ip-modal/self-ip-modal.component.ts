@@ -64,7 +64,7 @@ export class SelfIpModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const dto: SelfIpModalDto = Object.assign({}, this.ngx.getModalData('selfIpModal'));
+    const dto: SelfIpModalDto = Object.assign({}, this.ngx.getModalData('selfIpModal')) as any;
     const { selfIp, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = selfIp ? ModalMode.Edit : ModalMode.Create;
