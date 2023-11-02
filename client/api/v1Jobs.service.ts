@@ -47,6 +47,8 @@ export interface GetManyJobRequestParams {
     fields?: Array<string>;
     /** Alias for perPage. Number of entities to return per page. */
     limit?: number;
+    /** Where object for advanced AND/OR queries. */
+    s?: string;
 }
 
 export interface GetOneJobRequestParams {
@@ -200,6 +202,7 @@ export class V1JobsService {
         const group = requestParameters.group;
         const fields = requestParameters.fields;
         const limit = requestParameters.limit;
+        const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (relations) {
@@ -249,6 +252,10 @@ export class V1JobsService {
         if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>limit, 'limit');
+        }
+        if (s !== undefined && s !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>s, 's');
         }
 
         let headers = this.defaultHeaders;

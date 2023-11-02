@@ -3,6 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { Contract, GetManyContractResponseDto, V2AppCentricContractsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { ContractModalDto } from 'src/app/models/appcentric/contract-modal-dto';
@@ -29,7 +30,10 @@ export class ContractComponent implements OnInit {
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
+    { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
+  ];
 
   public config: TableConfig<any> = {
     description: 'Contracts',
@@ -48,6 +52,11 @@ export class ContractComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private router: Router,
   ) {
+    const advancedSearchAdapter = new AdvancedSearchAdapter<Contract>();
+    advancedSearchAdapter.setService(this.contractService);
+    advancedSearchAdapter.setServiceName('V2AppCentricContractsService');
+    this.config.advancedSearchAdapter = advancedSearchAdapter;
+
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);

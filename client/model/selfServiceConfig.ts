@@ -9,9 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { SelfServiceConvertedArtifactObjects } from './selfServiceConvertedArtifactObjects';
 
 
 export interface SelfServiceConfig { 
-    artifact: object;
+    artifact: SelfServiceConvertedArtifactObjects;
 }
 

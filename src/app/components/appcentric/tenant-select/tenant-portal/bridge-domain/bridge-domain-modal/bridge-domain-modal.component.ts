@@ -220,7 +220,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let {
+    const {
       name,
       description,
       alias,
@@ -230,9 +230,9 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       limitLocalIpLearning,
       epMoveDetectionModeGarp,
       vrfId,
-      l3OutForRouteProfileId,
-      routeProfileId,
     } = this.form.value;
+
+    let { l3OutForRouteProfileId, routeProfileId } = this.form.value;
 
     // Check if these fields are empty strings, and if so, set them to null
     l3OutForRouteProfileId = l3OutForRouteProfileId === '' ? null : l3OutForRouteProfileId;

@@ -114,6 +114,7 @@ export * from './poolImportCollectionDto';
 export * from './routeProfile';
 export * from './selfService';
 export * from './selfServiceConfig';
+export * from './selfServiceConvertedArtifactObjects';
 export * from './selfServiceRawConfig';
 export * from './serviceObject';
 export * from './serviceObjectGroup';
