@@ -25,6 +25,7 @@ describe('AppcentricDashboardComponent', () => {
   beforeEach(async(() => {
     const tenantsService = {
       findAllTenant: jest.fn(() => of({ total: 1 })),
+      getManyTenant: jest.fn(() => of({ total: 1 })),
     };
 
     const vrfsService = {

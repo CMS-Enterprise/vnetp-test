@@ -62,7 +62,7 @@ describe('DeployComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(V1JobsService),
         MockProvider(V1TierGroupsService),
-        MockProvider(V1TiersService, { getManyDatacenterTier: of(testData.getManyDatacenterTierResponse) }),
+        MockProvider(V1TiersService, { getManyTier: of(testData.getManyDatacenterTierResponse) }),
         { provide: DatacenterContextService, useValue: datacenterService },
       ],
     })
