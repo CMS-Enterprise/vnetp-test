@@ -13,7 +13,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
   styleUrls: ['./self-service-modal.component.scss'],
   templateUrl: './self-service-modal.component.html',
 })
-export class SelfServiceModalComponent implements OnInit, OnDestroy {
+export class SelfServiceModalComponent implements OnInit {
   initialForm: FormGroup;
   submittedInitialForm: boolean;
   submittedSecondForm: boolean;
@@ -636,9 +636,5 @@ export class SelfServiceModalComponent implements OnInit, OnDestroy {
         this.getTiers();
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.reset();
   }
 }

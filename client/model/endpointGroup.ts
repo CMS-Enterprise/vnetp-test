@@ -27,7 +27,7 @@ export interface EndpointGroup {
     alias?: string;
     description?: string;
     /**
-     * Intra-EPG endpoint isolation policies provide full isolation for virtual or physical endpoints; no communication is allowed between endpoints in an EPG that is operating with isolation enforced.
+     * Intra-EPG endpoint isolation policies provide full isolation for virtual or physical endpoints;no communication is allowed between endpoints in an EPG that is operating with isolation enforced.
      */
     intraEpgIsolation: boolean;
     readonly tenant?: Tenant;

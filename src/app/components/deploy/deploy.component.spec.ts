@@ -33,7 +33,7 @@ describe('DeployComponent', () => {
       },
       isSelected: true,
     },
-    getManyDatacenterTierResponse: {
+    getManyTierResponse: {
       data: [
         {
           id: '1',
@@ -62,7 +62,7 @@ describe('DeployComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(V1JobsService),
         MockProvider(V1TierGroupsService),
-        MockProvider(V1TiersService, { getManyTier: of(testData.getManyDatacenterTierResponse) }),
+        MockProvider(V1TiersService, { getManyTier: of(testData.getManyTierResponse) }),
         { provide: DatacenterContextService, useValue: datacenterService },
       ],
     })
@@ -88,11 +88,10 @@ describe('DeployComponent', () => {
 
     datacenterSubject.next(testData.datacenter);
 
-    expect(tiersService.getManyDatacenterTier).toHaveBeenCalledWith({
-      datacenterId: '1',
+    expect(tiersService.getManyTier).toHaveBeenCalledWith({
       page: 1,
       limit: 1000,
-      filter: [`deletedAt||isnull`],
+      filter: [`datacenterId||eq||${testData.datacenter.id}`, 'deletedAt||isnull'],
     });
     expect(tierGroupService.getManyTierGroup).toHaveBeenCalledWith({ filter: ['datacenterId||eq||1'], page: 1, limit: 1000 });
     expect(component.tiers.length).toBe(1);

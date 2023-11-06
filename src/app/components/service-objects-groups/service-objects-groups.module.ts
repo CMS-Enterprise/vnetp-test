@@ -13,9 +13,11 @@ import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TableModule } from '../../common/table/table.module';
+import { UnusedObjectsModalComponent } from './unused-objects-modal/unused-objects-modal.component';
 import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
 import { TierSelectModule } from 'src/app/common/tier-select/tier-select.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
+import { UsedObjectsParentsModalModule } from 'src/app/common/used-objects-parents-modal/used-objects-parents-modal.module';
 
 const routes: Routes = [
   {
@@ -41,8 +43,9 @@ const routes: Routes = [
     ImportExportModule,
     TierSelectModule,
     YesNoModalModule,
+    UsedObjectsParentsModalModule,
   ],
-  declarations: [ServiceObjectsGroupsComponent, ServiceObjectGroupModalComponent, ServiceObjectModalComponent],
+  declarations: [ServiceObjectsGroupsComponent, ServiceObjectGroupModalComponent, ServiceObjectModalComponent, UnusedObjectsModalComponent],
   exports: [ServiceObjectsGroupsComponent, ServiceObjectGroupModalComponent, ServiceObjectModalComponent],
 })
 export class ServiceObjectsGroupsModule {}
