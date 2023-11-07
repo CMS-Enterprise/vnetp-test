@@ -9,14 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Filter } from './filter';
+import { EndpointGroup } from './endpointGroup';
 
 
-export interface FilterPaginationResponse { 
-    data: Array<Filter>;
-    count: number;
-    total: number;
-    page: number;
-    pageCount: number;
+export interface CreateManyEndpointGroupDto { 
+    bulk: Array<EndpointGroup>;
 }
 

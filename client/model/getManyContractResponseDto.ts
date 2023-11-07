@@ -9,14 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RouteProfile } from './routeProfile';
+import { Contract } from './contract';
 
 
-export interface RouteProfilePaginationResponse { 
-    data: Array<RouteProfile>;
+export interface GetManyContractResponseDto { 
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<Contract>;
 }
 

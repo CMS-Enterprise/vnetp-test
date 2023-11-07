@@ -14,7 +14,7 @@
 export interface SelfServiceRawConfig { 
     type: string;
     rawXMLConfig?: object;
-    rawTextConfig?: object;
+    rawTextConfig?: string;
     rawJsonConfig?: object;
 }
 

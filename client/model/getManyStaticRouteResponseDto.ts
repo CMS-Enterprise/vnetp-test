@@ -13,10 +13,11 @@ import { StaticRoute } from './staticRoute';
 
 
 export interface GetManyStaticRouteResponseDto { 
-    data: Array<StaticRoute>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<StaticRoute>;
 }
 

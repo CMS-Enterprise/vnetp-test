@@ -19,13 +19,15 @@ import { Vrf } from './vrf';
 
 export interface BridgeDomain { 
     readonly id?: string;
+    readonly createdAt?: string;
+    readonly updatedAt?: string;
+    readonly version?: number;
+    readonly deletedAt?: string;
+    readonly provisionedAt?: string;
+    readonly provisionedVersion?: number;
     name?: string;
     alias?: string;
     description?: string;
-    readonly createdAt?: string;
-    readonly updatedAt?: string;
-    readonly deletedAt?: string;
-    readonly provisionedAt?: string;
     /**
      * Unicast routing enabled, default: true.
      */

@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Contract, ContractPaginationResponse, V2AppCentricContractsService } from 'client';
+import { Contract, GetManyContractResponseDto, V2AppCentricContractsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
@@ -20,7 +20,7 @@ export class ContractComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentContractPage = 1;
   public perPage = 20;
-  public contracts = {} as ContractPaginationResponse;
+  public contracts = {} as GetManyContractResponseDto;
   public tableComponentDto = new TableComponentDto();
   private contractModalSubscription: Subscription;
   public tenantId: string;
@@ -90,7 +90,7 @@ export class ContractComponent implements OnInit {
       }
     }
     this.contractService
-      .findAllContract({
+      .getManyContract({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -110,7 +110,7 @@ export class ContractComponent implements OnInit {
 
   public deleteContract(contract: Contract): void {
     if (contract.deletedAt) {
-      this.contractService.removeContract({ uuid: contract.id }).subscribe(() => {
+      this.contractService.deleteOneContract({ id: contract.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -124,8 +124,8 @@ export class ContractComponent implements OnInit {
       });
     } else {
       this.contractService
-        .softDeleteContract({
-          uuid: contract.id,
+        .softDeleteOneContract({
+          id: contract.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -148,8 +148,8 @@ export class ContractComponent implements OnInit {
     }
 
     this.contractService
-      .restoreContract({
-        uuid: contract.id,
+      .restoreOneContract({
+        id: contract.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

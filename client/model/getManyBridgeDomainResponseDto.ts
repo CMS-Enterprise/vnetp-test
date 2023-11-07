@@ -9,14 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ApplicationProfile } from './applicationProfile';
+import { BridgeDomain } from './bridgeDomain';
 
 
-export interface ApplicationProfilePaginationResponse { 
-    data: Array<ApplicationProfile>;
+export interface GetManyBridgeDomainResponseDto { 
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<BridgeDomain>;
 }
 

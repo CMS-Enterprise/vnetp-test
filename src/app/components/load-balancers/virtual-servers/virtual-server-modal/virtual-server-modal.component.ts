@@ -64,19 +64,19 @@ export class VirtualServerModalComponent implements OnInit {
 
   private loadProfiles(): void {
     this.profilesService.getManyLoadBalancerProfile({ filter: [`tierId||eq||${this.tierId}`], limit: 10000 }).subscribe(response => {
-      this.availableProfiles = response;
+      this.availableProfiles = response.data;
     });
   }
 
   private loadPolicies(): void {
     this.policiesService.getManyLoadBalancerPolicy({ filter: [`tierId||eq||${this.tierId}`], limit: 10000 }).subscribe(response => {
-      this.availablePolicies = response;
+      this.availablePolicies = response.data;
     });
   }
 
   private loadIRules(): void {
     this.iRulesService.getManyLoadBalancerIrule({ filter: [`tierId||eq||${this.tierId}`], limit: 10000 }).subscribe(response => {
-      this.availableIRules = response;
+      this.availableIRules = response.data;
     });
   }
 
@@ -94,7 +94,7 @@ export class VirtualServerModalComponent implements OnInit {
 
   public addIRule(): void {
     this.virtualServerService
-      .addIRuleToVirtualServerLoadBalancerVirtualServerIRule({
+      .addIRuleToVirtualServerLoadBalancerVirtualServer({
         virtualServerId: this.virtualServerId,
         iruleId: this.f.selectedIRuleId.value,
       })
@@ -108,7 +108,7 @@ export class VirtualServerModalComponent implements OnInit {
     const modalDto = new YesNoModalDto('Remove iRule from Virtual Server', '', 'Remove iRule', 'Cancel', 'danger');
     const onConfirm = () => {
       this.virtualServerService
-        .removeIRuleFromVirtualServerLoadBalancerVirtualServerIRule({
+        .removeIRuleFromVirtualServerLoadBalancerVirtualServer({
           virtualServerId: this.virtualServerId,
           iruleId: irule.id,
         })
@@ -121,7 +121,7 @@ export class VirtualServerModalComponent implements OnInit {
 
   public addProfile(): void {
     this.virtualServerService
-      .addProfileToVirtualServerLoadBalancerVirtualServerProfile({
+      .addProfileToVirtualServerLoadBalancerVirtualServer({
         virtualServerId: this.virtualServerId,
         profileId: this.f.selectedProfileId.value,
       })
@@ -135,7 +135,7 @@ export class VirtualServerModalComponent implements OnInit {
     const modalDto = new YesNoModalDto('Remove Profile from Virtual Server', '', 'Remove Profile', 'Cancel', 'danger');
     const onConfirm = () => {
       this.virtualServerService
-        .removeProfileFromVirtualServerLoadBalancerVirtualServerProfile({
+        .removeProfileFromVirtualServerLoadBalancerVirtualServer({
           virtualServerId: this.virtualServerId,
           profileId: profile.id,
         })
@@ -148,7 +148,7 @@ export class VirtualServerModalComponent implements OnInit {
 
   public addPolicy(): void {
     this.virtualServerService
-      .addPolicyToVirtualServerLoadBalancerVirtualServerPolicy({
+      .addPolicyToVirtualServerLoadBalancerVirtualServer({
         virtualServerId: this.virtualServerId,
         policyId: this.f.selectedPolicyId.value,
       })
@@ -162,7 +162,7 @@ export class VirtualServerModalComponent implements OnInit {
     const modalDto = new YesNoModalDto('Remove Policy from Virtual Server', '', 'Remove Policy', 'Cancel', 'danger');
     const onConfirm = () => {
       this.virtualServerService
-        .removePolicyFromVirtualServerLoadBalancerVirtualServerPolicy({
+        .removePolicyFromVirtualServerLoadBalancerVirtualServer({
           virtualServerId: this.virtualServerId,
           policyId: policy.id,
         })

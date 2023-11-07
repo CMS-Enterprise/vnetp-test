@@ -18,7 +18,8 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { BridgeDomain } from '../model/models';
-import { BridgeDomainPaginationResponse } from '../model/models';
+import { CreateManyBridgeDomainDto } from '../model/models';
+import { GetManyBridgeDomainResponseDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -31,17 +32,29 @@ export interface AddL3OutToBridgeDomainBridgeDomainRequestParams {
     l3OutId: string;
 }
 
-export interface CreateBridgeDomainRequestParams {
+export interface CreateManyBridgeDomainRequestParams {
+    createManyBridgeDomainDto: CreateManyBridgeDomainDto;
+}
+
+export interface CreateOneBridgeDomainRequestParams {
     bridgeDomain: BridgeDomain;
 }
 
-export interface DeprovisionBridgeDomainRequestParams {
-    uuid: string;
+export interface DeleteOneBridgeDomainRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface FindAllBridgeDomainRequestParams {
+export interface DeprovisionOneBridgeDomainRequestParams {
+    /** UUID. */
+    id: string;
+}
+
+export interface GetManyBridgeDomainRequestParams {
     /** Comma-seperated array of relations to join. */
-    relations?: string;
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
     /** Number of entities to return per page. */
     perPage?: number;
     /** Page of entities to return based on the perPage value and total number of entities in the database. */
@@ -49,27 +62,29 @@ export interface FindAllBridgeDomainRequestParams {
     /** Filter condition to apply to the query. */
     filter?: Array<string>;
     /** Properties to sort the response by. */
-    sort?: string;
+    sort?: Array<string>;
     /** Properties to group the response by. */
-    group?: string;
+    group?: Array<string>;
     /** Properties to select. */
-    select?: string;
-    /** JSON filter string. */
+    fields?: Array<string>;
+    /** Alias for perPage. Number of entities to return per page. */
+    limit?: number;
+    /** Where object for advanced AND/OR queries. */
     s?: string;
 }
 
-export interface FindOneBridgeDomainRequestParams {
-    uuid: string;
+export interface GetOneBridgeDomainRequestParams {
+    /** UUID. */
+    id: string;
     /** Comma-seperated array of relations to join. */
-    relations?: string;
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
 }
 
-export interface ProvisionBridgeDomainRequestParams {
-    uuid: string;
-}
-
-export interface RemoveBridgeDomainRequestParams {
-    uuid: string;
+export interface ProvisionOneBridgeDomainRequestParams {
+    /** UUID. */
+    id: string;
 }
 
 export interface RemoveL3OutFromBridgeDomainBridgeDomainRequestParams {
@@ -79,16 +94,19 @@ export interface RemoveL3OutFromBridgeDomainBridgeDomainRequestParams {
     l3OutId: string;
 }
 
-export interface RestoreBridgeDomainRequestParams {
-    uuid: string;
+export interface RestoreOneBridgeDomainRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface SoftDeleteBridgeDomainRequestParams {
-    uuid: string;
+export interface SoftDeleteOneBridgeDomainRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface UpdateBridgeDomainRequestParams {
-    uuid: string;
+export interface UpdateOneBridgeDomainRequestParams {
+    /** UUID. */
+    id: string;
     bridgeDomain: BridgeDomain;
 }
 
@@ -204,17 +222,73 @@ export class V2AppCentricBridgeDomainsService {
     }
 
     /**
+     * Create many BridgeDomain
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createBridgeDomain(requestParameters: CreateBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<BridgeDomain>;
-    public createBridgeDomain(requestParameters: CreateBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<BridgeDomain>>;
-    public createBridgeDomain(requestParameters: CreateBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<BridgeDomain>>;
-    public createBridgeDomain(requestParameters: CreateBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createManyBridgeDomain(requestParameters: CreateManyBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createManyBridgeDomain(requestParameters: CreateManyBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createManyBridgeDomain(requestParameters: CreateManyBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createManyBridgeDomain(requestParameters: CreateManyBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const createManyBridgeDomainDto = requestParameters.createManyBridgeDomainDto;
+        if (createManyBridgeDomainDto === null || createManyBridgeDomainDto === undefined) {
+            throw new Error('Required parameter createManyBridgeDomainDto was null or undefined when calling createManyBridgeDomain.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/bulk`,
+            createManyBridgeDomainDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Create one BridgeDomain
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createOneBridgeDomain(requestParameters: CreateOneBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<BridgeDomain>;
+    public createOneBridgeDomain(requestParameters: CreateOneBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<BridgeDomain>>;
+    public createOneBridgeDomain(requestParameters: CreateOneBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<BridgeDomain>>;
+    public createOneBridgeDomain(requestParameters: CreateOneBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const bridgeDomain = requestParameters.bridgeDomain;
         if (bridgeDomain === null || bridgeDomain === undefined) {
-            throw new Error('Required parameter bridgeDomain was null or undefined when calling createBridgeDomain.');
+            throw new Error('Required parameter bridgeDomain was null or undefined when calling createOneBridgeDomain.');
         }
 
         let headers = this.defaultHeaders;
@@ -259,17 +333,64 @@ export class V2AppCentricBridgeDomainsService {
     }
 
     /**
+     * Delete one BridgeDomain
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionBridgeDomain(requestParameters: DeprovisionBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionBridgeDomain(requestParameters: DeprovisionBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionBridgeDomain(requestParameters: DeprovisionBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionBridgeDomain(requestParameters: DeprovisionBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling deprovisionBridgeDomain.');
+    public deleteOneBridgeDomain(requestParameters: DeleteOneBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<BridgeDomain>;
+    public deleteOneBridgeDomain(requestParameters: DeleteOneBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<BridgeDomain>>;
+    public deleteOneBridgeDomain(requestParameters: DeleteOneBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<BridgeDomain>>;
+    public deleteOneBridgeDomain(requestParameters: DeleteOneBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteOneBridgeDomain.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<BridgeDomain>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Deprovision one BridgeDomain
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deprovisionOneBridgeDomain(requestParameters: DeprovisionOneBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneBridgeDomain(requestParameters: DeprovisionOneBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneBridgeDomain(requestParameters: DeprovisionOneBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneBridgeDomain(requestParameters: DeprovisionOneBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneBridgeDomain.');
         }
 
         let headers = this.defaultHeaders;
@@ -291,7 +412,7 @@ export class V2AppCentricBridgeDomainsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(uuid))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -304,27 +425,38 @@ export class V2AppCentricBridgeDomainsService {
     }
 
     /**
+     * Get many BridgeDomain
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findAllBridgeDomain(requestParameters: FindAllBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<BridgeDomainPaginationResponse>;
-    public findAllBridgeDomain(requestParameters: FindAllBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<BridgeDomainPaginationResponse>>;
-    public findAllBridgeDomain(requestParameters: FindAllBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<BridgeDomainPaginationResponse>>;
-    public findAllBridgeDomain(requestParameters: FindAllBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyBridgeDomain(requestParameters: GetManyBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyBridgeDomainResponseDto>;
+    public getManyBridgeDomain(requestParameters: GetManyBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyBridgeDomainResponseDto>>;
+    public getManyBridgeDomain(requestParameters: GetManyBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyBridgeDomainResponseDto>>;
+    public getManyBridgeDomain(requestParameters: GetManyBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
+        const join = requestParameters.join;
         const perPage = requestParameters.perPage;
         const page = requestParameters.page;
         const filter = requestParameters.filter;
         const sort = requestParameters.sort;
         const group = requestParameters.group;
-        const select = requestParameters.select;
+        const fields = requestParameters.fields;
+        const limit = requestParameters.limit;
         const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (relations !== undefined && relations !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>relations, 'relations');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
         if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -340,17 +472,27 @@ export class V2AppCentricBridgeDomainsService {
                   <any>element, 'filter');
             })
         }
-        if (sort !== undefined && sort !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>sort, 'sort');
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
         }
-        if (group !== undefined && group !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>group, 'group');
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
         }
-        if (select !== undefined && select !== null) {
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>select, 'select');
+            <any>limit, 'limit');
         }
         if (s !== undefined && s !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -377,7 +519,7 @@ export class V2AppCentricBridgeDomainsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<BridgeDomainPaginationResponse>(`${this.configuration.basePath}/v2/app-centric/bridge-domains`,
+        return this.httpClient.get<GetManyBridgeDomainResponseDto>(`${this.configuration.basePath}/v2/app-centric/bridge-domains`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -390,24 +532,34 @@ export class V2AppCentricBridgeDomainsService {
     }
 
     /**
+     * Get one BridgeDomain
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findOneBridgeDomain(requestParameters: FindOneBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<BridgeDomain>;
-    public findOneBridgeDomain(requestParameters: FindOneBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<BridgeDomain>>;
-    public findOneBridgeDomain(requestParameters: FindOneBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<BridgeDomain>>;
-    public findOneBridgeDomain(requestParameters: FindOneBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling findOneBridgeDomain.');
+    public getOneBridgeDomain(requestParameters: GetOneBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<BridgeDomain>;
+    public getOneBridgeDomain(requestParameters: GetOneBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<BridgeDomain>>;
+    public getOneBridgeDomain(requestParameters: GetOneBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<BridgeDomain>>;
+    public getOneBridgeDomain(requestParameters: GetOneBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getOneBridgeDomain.');
         }
         const relations = requestParameters.relations;
+        const join = requestParameters.join;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (relations !== undefined && relations !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>relations, 'relations');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
 
         let headers = this.defaultHeaders;
@@ -430,7 +582,7 @@ export class V2AppCentricBridgeDomainsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<BridgeDomain>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.get<BridgeDomain>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -443,17 +595,18 @@ export class V2AppCentricBridgeDomainsService {
     }
 
     /**
+     * Provision one BridgeDomain
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionBridgeDomain(requestParameters: ProvisionBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionBridgeDomain(requestParameters: ProvisionBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionBridgeDomain(requestParameters: ProvisionBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionBridgeDomain(requestParameters: ProvisionBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling provisionBridgeDomain.');
+    public provisionOneBridgeDomain(requestParameters: ProvisionOneBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneBridgeDomain(requestParameters: ProvisionOneBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneBridgeDomain(requestParameters: ProvisionOneBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneBridgeDomain(requestParameters: ProvisionOneBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling provisionOneBridgeDomain.');
         }
 
         let headers = this.defaultHeaders;
@@ -475,53 +628,8 @@ export class V2AppCentricBridgeDomainsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(uuid))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(id))}/provision`,
             null,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public removeBridgeDomain(requestParameters: RemoveBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<BridgeDomain>;
-    public removeBridgeDomain(requestParameters: RemoveBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<BridgeDomain>>;
-    public removeBridgeDomain(requestParameters: RemoveBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<BridgeDomain>>;
-    public removeBridgeDomain(requestParameters: RemoveBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling removeBridgeDomain.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<BridgeDomain>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(uuid))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -582,17 +690,18 @@ export class V2AppCentricBridgeDomainsService {
     }
 
     /**
+     * Restore one BridgeDomain
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public restoreBridgeDomain(requestParameters: RestoreBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreBridgeDomain(requestParameters: RestoreBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreBridgeDomain(requestParameters: RestoreBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreBridgeDomain(requestParameters: RestoreBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling restoreBridgeDomain.');
+    public restoreOneBridgeDomain(requestParameters: RestoreOneBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneBridgeDomain(requestParameters: RestoreOneBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneBridgeDomain(requestParameters: RestoreOneBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneBridgeDomain(requestParameters: RestoreOneBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling restoreOneBridgeDomain.');
         }
 
         let headers = this.defaultHeaders;
@@ -614,7 +723,7 @@ export class V2AppCentricBridgeDomainsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(uuid))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -627,17 +736,18 @@ export class V2AppCentricBridgeDomainsService {
     }
 
     /**
+     * Soft delete one BridgeDomain
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteBridgeDomain(requestParameters: SoftDeleteBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteBridgeDomain(requestParameters: SoftDeleteBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteBridgeDomain(requestParameters: SoftDeleteBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteBridgeDomain(requestParameters: SoftDeleteBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling softDeleteBridgeDomain.');
+    public softDeleteOneBridgeDomain(requestParameters: SoftDeleteOneBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneBridgeDomain(requestParameters: SoftDeleteOneBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneBridgeDomain(requestParameters: SoftDeleteOneBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneBridgeDomain(requestParameters: SoftDeleteOneBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneBridgeDomain.');
         }
 
         let headers = this.defaultHeaders;
@@ -659,7 +769,7 @@ export class V2AppCentricBridgeDomainsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(uuid))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -671,21 +781,22 @@ export class V2AppCentricBridgeDomainsService {
     }
 
     /**
+     * Update one BridgeDomain
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateBridgeDomain(requestParameters: UpdateBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<BridgeDomain>;
-    public updateBridgeDomain(requestParameters: UpdateBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<BridgeDomain>>;
-    public updateBridgeDomain(requestParameters: UpdateBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<BridgeDomain>>;
-    public updateBridgeDomain(requestParameters: UpdateBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling updateBridgeDomain.');
+    public updateOneBridgeDomain(requestParameters: UpdateOneBridgeDomainRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<BridgeDomain>;
+    public updateOneBridgeDomain(requestParameters: UpdateOneBridgeDomainRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<BridgeDomain>>;
+    public updateOneBridgeDomain(requestParameters: UpdateOneBridgeDomainRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<BridgeDomain>>;
+    public updateOneBridgeDomain(requestParameters: UpdateOneBridgeDomainRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateOneBridgeDomain.');
         }
         const bridgeDomain = requestParameters.bridgeDomain;
         if (bridgeDomain === null || bridgeDomain === undefined) {
-            throw new Error('Required parameter bridgeDomain was null or undefined when calling updateBridgeDomain.');
+            throw new Error('Required parameter bridgeDomain was null or undefined when calling updateOneBridgeDomain.');
         }
 
         let headers = this.defaultHeaders;
@@ -717,7 +828,7 @@ export class V2AppCentricBridgeDomainsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<BridgeDomain>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.put<BridgeDomain>(`${this.configuration.basePath}/v2/app-centric/bridge-domains/${encodeURIComponent(String(id))}`,
             bridgeDomain,
             {
                 responseType: <any>responseType,

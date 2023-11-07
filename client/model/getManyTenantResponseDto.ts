@@ -9,14 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { BridgeDomain } from './bridgeDomain';
+import { Tenant } from './tenant';
 
 
-export interface BridgeDomainPaginationResponse { 
-    data: Array<BridgeDomain>;
+export interface GetManyTenantResponseDto { 
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<Tenant>;
 }
 

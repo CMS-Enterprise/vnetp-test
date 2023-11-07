@@ -92,7 +92,7 @@ export class TierContextService {
       }
 
       this.currentDatacenterId = cd.id;
-      this.DatacenterService.getOneDatacenters({
+      this.DatacenterService.getOneDatacenter({
         id: this.currentDatacenterId,
         join: ['tiers'],
       }).subscribe(data => {

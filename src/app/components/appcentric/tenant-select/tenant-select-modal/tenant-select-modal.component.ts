@@ -67,7 +67,7 @@ export class TenantSelectModalComponent implements OnInit {
   }
 
   private createTenant(tenant: Tenant): void {
-    this.tenantService.createTenant({ tenant }).subscribe(
+    this.tenantService.createOneTenant({ tenant }).subscribe(
       () => {
         this.closeModal();
       },
@@ -78,8 +78,8 @@ export class TenantSelectModalComponent implements OnInit {
   private editTenant(tenant: Tenant): void {
     tenant.name = null;
     this.tenantService
-      .updateTenant({
-        uuid: this.TenantId,
+      .updateOneTenant({
+        id: this.TenantId,
         tenant,
       })
       .subscribe(

@@ -1,13 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import {
-  RouteProfilePaginationResponse,
-  RouteProfile,
-  VrfPaginationResponse,
-  V2AppCentricVrfsService,
-  Vrf,
-  V2AppCentricRouteProfilesService,
-} from 'client';
+import { GetManyRouteProfileResponseDto, RouteProfile, V2AppCentricRouteProfilesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -25,7 +18,7 @@ export class RouteProfileComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentRouteProfilePage = 1;
   public perPage = 20;
-  public routeProfiles = {} as RouteProfilePaginationResponse;
+  public routeProfiles = {} as GetManyRouteProfileResponseDto;
   public tableComponentDto = new TableComponentDto();
   private routeProfilesModalSubscription: Subscription;
   public tenantId: string;
@@ -88,7 +81,7 @@ export class RouteProfileComponent implements OnInit {
       }
     }
     this.routeProfileService
-      .findAllRouteProfile({
+      .getManyRouteProfile({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -108,7 +101,7 @@ export class RouteProfileComponent implements OnInit {
 
   public deleteRouteProfile(routeProfile: RouteProfile): void {
     if (routeProfile.deletedAt) {
-      this.routeProfileService.removeRouteProfile({ uuid: routeProfile.id }).subscribe(() => {
+      this.routeProfileService.deleteOneRouteProfile({ id: routeProfile.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -122,8 +115,8 @@ export class RouteProfileComponent implements OnInit {
       });
     } else {
       this.routeProfileService
-        .softDeleteRouteProfile({
-          uuid: routeProfile.id,
+        .softDeleteOneRouteProfile({
+          id: routeProfile.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -146,8 +139,8 @@ export class RouteProfileComponent implements OnInit {
     }
 
     this.routeProfileService
-      .restoreRouteProfile({
-        uuid: routeProfile.id,
+      .restoreOneRouteProfile({
+        id: routeProfile.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

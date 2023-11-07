@@ -80,69 +80,14 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     const baseSearchValue = this.getBaseSearchValue();
 
     if (this.orActive || (operator && operator === 'or')) {
-      this.advancedSearchOr(baseSearchProperty, baseSearchValue, page, perPage, searchString);
+      this.advancedSearch('or', baseSearchProperty, baseSearchValue, page, perPage, searchString);
     } else {
-      this.advancedSearchAnd(baseSearchProperty, baseSearchValue, page, perPage, searchString);
+      this.advancedSearch('and', baseSearchProperty, baseSearchValue, page, perPage, searchString);
     }
   }
 
-  public advancedSearchAnd(
-    baseSearchProperty: string,
-    baseSearchValue: string,
-    currentPage: number,
-    perPage: number,
-    searchString?: string,
-  ): void {
-    const baseSearch = `${baseSearchProperty}||eq||${baseSearchValue}`;
-    const values = this.form.value;
-
-    const params: Params = {
-      filter: [baseSearch],
-      page: currentPage,
-    };
-
-    for (const field in values) {
-      if (values.hasOwnProperty(field)) {
-        const value = values[field];
-        if (value !== '') {
-          const searchColumn = this.formInputs.find(column => column.propertyName === field);
-          const searchOperator = searchColumn && searchColumn.searchOperator ? searchColumn.searchOperator : 'eq';
-          params.join = searchColumn.join;
-          params.filter.push(`${field}||${searchOperator}||${value}`);
-        }
-      }
-    }
-
-    if (searchString) {
-      const searchArray = JSON.parse(searchString);
-      params.filter = [...searchArray];
-    }
-
-    if (params.filter.length > 1) {
-      if (baseSearchProperty === 'tenantId') {
-        params.perPage = perPage;
-        this.advancedSearchAdapter.findAll(params).subscribe(data => {
-          this.advancedSearchResults.emit(data);
-          if (!this.checkAdvancedSearchSet()) {
-            this.tableContextService.addAdvancedSearchLocalStorage('or', params.s);
-          }
-        });
-      } else {
-        params.limit = perPage;
-        params.sort = ['name,ASC'];
-        this.advancedSearchAdapter.getMany(params).subscribe(data => {
-          this.advancedSearchResults.emit(data);
-          if (!this.checkAdvancedSearchSet()) {
-            this.tableContextService.addAdvancedSearchLocalStorage('and', JSON.stringify(params.filter));
-          }
-        });
-      }
-    }
-
-    this.closeModal();
-  }
-
-  public advancedSearchOr(
+  public advancedSearch(
+    queryType: 'and' | 'or',
     baseSearchProperty: string,
     baseSearchValue: string,
     currentPage: number,
@@ -164,43 +109,48 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
           const searchColumn = this.formInputs.find(column => column.propertyName === field);
           const searchOperator = searchColumn && searchColumn.searchOperator ? searchColumn.searchOperator : 'eq';
           params.join = searchColumn.join;
-          search.push(`{"${field}": {"$${searchOperator}": "${value}"}}`);
+          search.push(`{"${field}": {"${searchOperator}": "${value}"}}`);
         }
       }
     }
 
     if (searchString) {
-      const extractedOrsearch = this.extractOrSearch(searchString);
-      search = [extractedOrsearch];
+      const extractedSearch = queryType === 'and' ? this.extractAndSearch(searchString) : this.extractOrSearch(searchString);
+      search = [extractedSearch];
     }
 
     if (search.length > 0) {
-      const orSearchString = search.concat().toString();
-      params.s = `{"${baseSearchProperty}": {"$eq": "${baseSearchValue}"}, "$or": [${orSearchString}]}`;
-      if (baseSearchProperty === 'tenantId') {
-        params.perPage = perPage;
-        this.advancedSearchAdapter.findAll(params).subscribe(data => {
-          this.advancedSearchResults.emit(data);
-          if (!this.checkAdvancedSearchSet()) {
-            this.tableContextService.addAdvancedSearchLocalStorage('or', params.s);
-          }
-        });
+      let query = '';
+      const searchConcat = search.concat().toString();
+      if (queryType === 'and') {
+        search.push(`{"${baseSearchProperty}": {"eq": "${baseSearchValue}"}}`);
+        query = `{"AND": [${searchConcat}]}`;
       } else {
-        params.limit = perPage;
-        params.sort = ['name,ASC'];
-        this.advancedSearchAdapter.getMany(params).subscribe(data => {
-          this.advancedSearchResults.emit(data);
-          if (!this.checkAdvancedSearchSet()) {
-            this.tableContextService.addAdvancedSearchLocalStorage('or', params.s);
-          }
-        });
+        query = `{"AND": [{"${baseSearchProperty}": {"eq": "${baseSearchValue}"}}], "OR": [${searchConcat}]}`;
       }
+      params.s = query;
+
+      const operation = baseSearchProperty === 'tenantId' ? 'findAll' : 'getMany';
+      params[baseSearchProperty === 'tenantId' ? 'perPage' : 'limit'] = perPage;
+      params.sort = ['name,ASC'];
+
+      this.advancedSearchAdapter[operation](params).subscribe(data => {
+        this.advancedSearchResults.emit(data);
+        if (!this.checkAdvancedSearchSet()) {
+          this.tableContextService.addAdvancedSearchLocalStorage(queryType, params.s);
+        }
+      });
     }
 
     this.closeModal();
   }
 
   private extractOrSearch(searchString: string): string {
+    const match = searchString.match(/\[(.*?)\]/);
+    return match && match[1] ? match[1] : '';
+  }
+
+  private extractAndSearch(searchString: string): string {
     const match = searchString.match(/\[(.*?)\]/);
     return match && match[1] ? match[1] : '';
   }
