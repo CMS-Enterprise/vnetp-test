@@ -320,7 +320,6 @@ export class V2AppCentricRouteProfilesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-  
     public deprovisionOneRouteProfile(requestParameters: DeprovisionOneRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
     public deprovisionOneRouteProfile(requestParameters: DeprovisionOneRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
     public deprovisionOneRouteProfile(requestParameters: DeprovisionOneRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
@@ -328,10 +327,6 @@ export class V2AppCentricRouteProfilesService {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling deprovisionOneRouteProfile.');
-        }
-        if (s !== undefined && s !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>s, 's');
         }
 
         let headers = this.defaultHeaders;

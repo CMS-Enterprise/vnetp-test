@@ -320,7 +320,6 @@ export class V2AppCentricFilterEntriesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-
     public deprovisionOneFilterEntry(requestParameters: DeprovisionOneFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
     public deprovisionOneFilterEntry(requestParameters: DeprovisionOneFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
     public deprovisionOneFilterEntry(requestParameters: DeprovisionOneFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
@@ -328,10 +327,6 @@ export class V2AppCentricFilterEntriesService {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling deprovisionOneFilterEntry.');
-        }
-        if (s !== undefined && s !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>s, 's');
         }
 
         let headers = this.defaultHeaders;

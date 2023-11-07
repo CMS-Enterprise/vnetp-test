@@ -498,10 +498,6 @@ export class V2AppCentricSubjectsService {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>s, 's');
         }
-        if (s !== undefined && s !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>s, 's');
-        }
 
         let headers = this.defaultHeaders;
 
