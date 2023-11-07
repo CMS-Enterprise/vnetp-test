@@ -458,7 +458,8 @@
     },
     "/v1/tiers/{id}/cascade": {
       "delete": {
-        "operationId": "cascadeDeleteTierTier",
+        "operationId": "
+        ",
         "summary": "",
         "description": "Cascade Delete Tier",
         "parameters": [
@@ -3344,6 +3345,7 @@
             "description": "UUID.",
             "schema": {
               "type": "string"
+
             }
           }
         ],
@@ -4253,7 +4255,10 @@
           }
         },
         "tags": [
-          "v1/network-security/network-objects"
+          "
+          
+          
+          "
         ]
       },
       "put": {
@@ -6932,6 +6937,62 @@
         "operationId": "removePolicyFromVirtualServerLoadBalancerVirtualServer",
         "summary": "",
         "description": "Remove Policy from Load Balancer Virtual Server",
+      }
+    },
+    "/v1/network-security/service-objects/checkObjectUsage": {
+      "get": {
+        "operationId": "checkObjectsServiceObject",
+        "summary": "",
+        "description": "Check Network Object Usage",
+        "parameters": [
+          {
+            "name": "tierId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
+      }
+    },
+    "/v1/network-security/service-objects/checkUsedObjects/{id}": {
+      "get": {
+        "operationId": "checkUsedObjectsServiceObject",
+        "summary": "",
+        "description": "Get Used Service Objects Parents",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
+      }
+    },
+    "/v1/network-security/service-objects/{id}": {
+      "get": {
+        "operationId": "getOneServiceObject",
+        "summary": "Retrieve one ServiceObject",
         "parameters": [
           {
             "name": "virtualServerId",
@@ -17808,6 +17869,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -18082,6 +18152,15 @@
             "required": true,
             "in": "path",
             "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
             "schema": {
               "type": "string"
             }
@@ -20613,6 +20692,7 @@
               "$ref": "#/components/schemas/FirewallRuleGroup"
             }
           },
+
           "natRuleGroups": {
             "readOnly": true,
             "type": "array",
@@ -21589,6 +21669,7 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/NetworkObject"
+
               }
             ]
           },
@@ -21947,8 +22028,14 @@
               "type": "string"
             }
           },
-          "defaultPoolName": {
-            "type": "string"
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "JSON filter string.",
+            "schema": {
+              "type": "string"
+            }
           }
         },
         "required": [
