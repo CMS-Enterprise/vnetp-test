@@ -544,7 +544,7 @@ describe('ServicesObjectsGroupsComponent', () => {
           serviceObjectRelations: event,
         };
 
-        expect(component['serviceObjectGroupService'].bulkImportRelationsServiceObjectGroupServiceObject).toHaveBeenCalledWith({
+        expect(component['serviceObjectGroupService'].bulkImportRelationsServiceObjectGroup).toHaveBeenCalledWith({
           serviceObjectGroupRelationBulkImportCollectionDto: serviceObjectRelationsDto,
         });
 

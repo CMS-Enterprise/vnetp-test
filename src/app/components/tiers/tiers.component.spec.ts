@@ -50,7 +50,7 @@ describe('TiersComponent', () => {
         MockProvider(DatacenterContextService),
         MockProvider(NgxSmartModalService),
         MockProvider(V1TierGroupsService, { getManyTierGroup: () => of([]) }),
-        MockProvider(V1TiersService, { getManyDatacenterTier: () => of([]) }),
+        MockProvider(V1TiersService, { getManyTier: () => of([]) }),
         MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
         MockProvider(V1NetworkSecurityNatRuleGroupsService),
         MockProvider(V1NetworkSecurityNetworkObjectsService),

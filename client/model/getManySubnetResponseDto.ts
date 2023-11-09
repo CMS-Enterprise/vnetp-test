@@ -13,10 +13,11 @@ import { Subnet } from './subnet';
 
 
 export interface GetManySubnetResponseDto { 
-    data: Array<Subnet>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<Subnet>;
 }
 

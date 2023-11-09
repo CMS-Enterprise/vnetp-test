@@ -17,8 +17,9 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { CreateManyEndpointGroupDto } from '../model/models';
 import { EndpointGroup } from '../model/models';
-import { EndpointGroupPaginationResponse } from '../model/models';
+import { GetManyEndpointGroupResponseDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -38,17 +39,29 @@ export interface AddProvidedContractToEndpointGroupEndpointGroupRequestParams {
     contractId: string;
 }
 
-export interface CreateEndpointGroupRequestParams {
+export interface CreateManyEndpointGroupRequestParams {
+    createManyEndpointGroupDto: CreateManyEndpointGroupDto;
+}
+
+export interface CreateOneEndpointGroupRequestParams {
     endpointGroup: EndpointGroup;
 }
 
-export interface DeprovisionEndpointGroupRequestParams {
-    uuid: string;
+export interface DeleteOneEndpointGroupRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface FindAllEndpointGroupRequestParams {
+export interface DeprovisionOneEndpointGroupRequestParams {
+    /** UUID. */
+    id: string;
+}
+
+export interface GetManyEndpointGroupRequestParams {
     /** Comma-seperated array of relations to join. */
-    relations?: string;
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
     /** Number of entities to return per page. */
     perPage?: number;
     /** Page of entities to return based on the perPage value and total number of entities in the database. */
@@ -56,23 +69,29 @@ export interface FindAllEndpointGroupRequestParams {
     /** Filter condition to apply to the query. */
     filter?: Array<string>;
     /** Properties to sort the response by. */
-    sort?: string;
+    sort?: Array<string>;
     /** Properties to group the response by. */
-    group?: string;
+    group?: Array<string>;
     /** Properties to select. */
-    select?: string;
-    /** JSON filter string. */
+    fields?: Array<string>;
+    /** Alias for perPage. Number of entities to return per page. */
+    limit?: number;
+    /** Where object for advanced AND/OR queries. */
     s?: string;
 }
 
-export interface FindOneEndpointGroupRequestParams {
-    uuid: string;
+export interface GetOneEndpointGroupRequestParams {
+    /** UUID. */
+    id: string;
     /** Comma-seperated array of relations to join. */
-    relations?: string;
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
 }
 
-export interface ProvisionEndpointGroupRequestParams {
-    uuid: string;
+export interface ProvisionOneEndpointGroupRequestParams {
+    /** UUID. */
+    id: string;
 }
 
 export interface RemoveConsumedContractToEndpointGroupEndpointGroupRequestParams {
@@ -82,10 +101,6 @@ export interface RemoveConsumedContractToEndpointGroupEndpointGroupRequestParams
     contractId: string;
 }
 
-export interface RemoveEndpointGroupRequestParams {
-    uuid: string;
-}
-
 export interface RemoveProvidedContractToEndpointGroupEndpointGroupRequestParams {
     /** Endpoint Group that the Contract is being added to/removed from. */
     endpointGroupId: string;
@@ -93,16 +108,19 @@ export interface RemoveProvidedContractToEndpointGroupEndpointGroupRequestParams
     contractId: string;
 }
 
-export interface RestoreEndpointGroupRequestParams {
-    uuid: string;
+export interface RestoreOneEndpointGroupRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface SoftDeleteEndpointGroupRequestParams {
-    uuid: string;
+export interface SoftDeleteOneEndpointGroupRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface UpdateEndpointGroupRequestParams {
-    uuid: string;
+export interface UpdateOneEndpointGroupRequestParams {
+    /** UUID. */
+    id: string;
     endpointGroup: EndpointGroup;
 }
 
@@ -269,17 +287,73 @@ export class V2AppCentricEndpointGroupsService {
     }
 
     /**
+     * Create many EndpointGroup
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createEndpointGroup(requestParameters: CreateEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<EndpointGroup>;
-    public createEndpointGroup(requestParameters: CreateEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<EndpointGroup>>;
-    public createEndpointGroup(requestParameters: CreateEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<EndpointGroup>>;
-    public createEndpointGroup(requestParameters: CreateEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createManyEndpointGroup(requestParameters: CreateManyEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createManyEndpointGroup(requestParameters: CreateManyEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createManyEndpointGroup(requestParameters: CreateManyEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createManyEndpointGroup(requestParameters: CreateManyEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const createManyEndpointGroupDto = requestParameters.createManyEndpointGroupDto;
+        if (createManyEndpointGroupDto === null || createManyEndpointGroupDto === undefined) {
+            throw new Error('Required parameter createManyEndpointGroupDto was null or undefined when calling createManyEndpointGroup.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/bulk`,
+            createManyEndpointGroupDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Create one EndpointGroup
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createOneEndpointGroup(requestParameters: CreateOneEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<EndpointGroup>;
+    public createOneEndpointGroup(requestParameters: CreateOneEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<EndpointGroup>>;
+    public createOneEndpointGroup(requestParameters: CreateOneEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<EndpointGroup>>;
+    public createOneEndpointGroup(requestParameters: CreateOneEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const endpointGroup = requestParameters.endpointGroup;
         if (endpointGroup === null || endpointGroup === undefined) {
-            throw new Error('Required parameter endpointGroup was null or undefined when calling createEndpointGroup.');
+            throw new Error('Required parameter endpointGroup was null or undefined when calling createOneEndpointGroup.');
         }
 
         let headers = this.defaultHeaders;
@@ -324,17 +398,64 @@ export class V2AppCentricEndpointGroupsService {
     }
 
     /**
+     * Delete one EndpointGroup
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionEndpointGroup(requestParameters: DeprovisionEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionEndpointGroup(requestParameters: DeprovisionEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionEndpointGroup(requestParameters: DeprovisionEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionEndpointGroup(requestParameters: DeprovisionEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling deprovisionEndpointGroup.');
+    public deleteOneEndpointGroup(requestParameters: DeleteOneEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<EndpointGroup>;
+    public deleteOneEndpointGroup(requestParameters: DeleteOneEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<EndpointGroup>>;
+    public deleteOneEndpointGroup(requestParameters: DeleteOneEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<EndpointGroup>>;
+    public deleteOneEndpointGroup(requestParameters: DeleteOneEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteOneEndpointGroup.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<EndpointGroup>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Deprovision one EndpointGroup
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deprovisionOneEndpointGroup(requestParameters: DeprovisionOneEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneEndpointGroup(requestParameters: DeprovisionOneEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneEndpointGroup(requestParameters: DeprovisionOneEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneEndpointGroup(requestParameters: DeprovisionOneEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneEndpointGroup.');
         }
 
         let headers = this.defaultHeaders;
@@ -356,7 +477,7 @@ export class V2AppCentricEndpointGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(uuid))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -369,27 +490,38 @@ export class V2AppCentricEndpointGroupsService {
     }
 
     /**
+     * Get many EndpointGroup
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findAllEndpointGroup(requestParameters: FindAllEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<EndpointGroupPaginationResponse>;
-    public findAllEndpointGroup(requestParameters: FindAllEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<EndpointGroupPaginationResponse>>;
-    public findAllEndpointGroup(requestParameters: FindAllEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<EndpointGroupPaginationResponse>>;
-    public findAllEndpointGroup(requestParameters: FindAllEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyEndpointGroup(requestParameters: GetManyEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyEndpointGroupResponseDto>;
+    public getManyEndpointGroup(requestParameters: GetManyEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyEndpointGroupResponseDto>>;
+    public getManyEndpointGroup(requestParameters: GetManyEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyEndpointGroupResponseDto>>;
+    public getManyEndpointGroup(requestParameters: GetManyEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
+        const join = requestParameters.join;
         const perPage = requestParameters.perPage;
         const page = requestParameters.page;
         const filter = requestParameters.filter;
         const sort = requestParameters.sort;
         const group = requestParameters.group;
-        const select = requestParameters.select;
+        const fields = requestParameters.fields;
+        const limit = requestParameters.limit;
         const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (relations !== undefined && relations !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>relations, 'relations');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
         if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -405,17 +537,27 @@ export class V2AppCentricEndpointGroupsService {
                   <any>element, 'filter');
             })
         }
-        if (sort !== undefined && sort !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>sort, 'sort');
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
         }
-        if (group !== undefined && group !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>group, 'group');
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
         }
-        if (select !== undefined && select !== null) {
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>select, 'select');
+            <any>limit, 'limit');
         }
         if (s !== undefined && s !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -442,7 +584,7 @@ export class V2AppCentricEndpointGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<EndpointGroupPaginationResponse>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups`,
+        return this.httpClient.get<GetManyEndpointGroupResponseDto>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -455,24 +597,34 @@ export class V2AppCentricEndpointGroupsService {
     }
 
     /**
+     * Get one EndpointGroup
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findOneEndpointGroup(requestParameters: FindOneEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<EndpointGroup>;
-    public findOneEndpointGroup(requestParameters: FindOneEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<EndpointGroup>>;
-    public findOneEndpointGroup(requestParameters: FindOneEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<EndpointGroup>>;
-    public findOneEndpointGroup(requestParameters: FindOneEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling findOneEndpointGroup.');
+    public getOneEndpointGroup(requestParameters: GetOneEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<EndpointGroup>;
+    public getOneEndpointGroup(requestParameters: GetOneEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<EndpointGroup>>;
+    public getOneEndpointGroup(requestParameters: GetOneEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<EndpointGroup>>;
+    public getOneEndpointGroup(requestParameters: GetOneEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getOneEndpointGroup.');
         }
         const relations = requestParameters.relations;
+        const join = requestParameters.join;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (relations !== undefined && relations !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>relations, 'relations');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
 
         let headers = this.defaultHeaders;
@@ -495,7 +647,7 @@ export class V2AppCentricEndpointGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<EndpointGroup>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.get<EndpointGroup>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -508,17 +660,18 @@ export class V2AppCentricEndpointGroupsService {
     }
 
     /**
+     * Provision one EndpointGroup
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionEndpointGroup(requestParameters: ProvisionEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionEndpointGroup(requestParameters: ProvisionEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionEndpointGroup(requestParameters: ProvisionEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionEndpointGroup(requestParameters: ProvisionEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling provisionEndpointGroup.');
+    public provisionOneEndpointGroup(requestParameters: ProvisionOneEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneEndpointGroup(requestParameters: ProvisionOneEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneEndpointGroup(requestParameters: ProvisionOneEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneEndpointGroup(requestParameters: ProvisionOneEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling provisionOneEndpointGroup.');
         }
 
         let headers = this.defaultHeaders;
@@ -540,7 +693,7 @@ export class V2AppCentricEndpointGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(uuid))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -603,51 +756,6 @@ export class V2AppCentricEndpointGroupsService {
     }
 
     /**
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public removeEndpointGroup(requestParameters: RemoveEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<EndpointGroup>;
-    public removeEndpointGroup(requestParameters: RemoveEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<EndpointGroup>>;
-    public removeEndpointGroup(requestParameters: RemoveEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<EndpointGroup>>;
-    public removeEndpointGroup(requestParameters: RemoveEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling removeEndpointGroup.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<EndpointGroup>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(uuid))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
      * Remove Provided Contract from Endpoint Group
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -698,17 +806,18 @@ export class V2AppCentricEndpointGroupsService {
     }
 
     /**
+     * Restore one EndpointGroup
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public restoreEndpointGroup(requestParameters: RestoreEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreEndpointGroup(requestParameters: RestoreEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreEndpointGroup(requestParameters: RestoreEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreEndpointGroup(requestParameters: RestoreEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling restoreEndpointGroup.');
+    public restoreOneEndpointGroup(requestParameters: RestoreOneEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneEndpointGroup(requestParameters: RestoreOneEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneEndpointGroup(requestParameters: RestoreOneEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneEndpointGroup(requestParameters: RestoreOneEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling restoreOneEndpointGroup.');
         }
 
         let headers = this.defaultHeaders;
@@ -730,7 +839,7 @@ export class V2AppCentricEndpointGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(uuid))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -743,17 +852,18 @@ export class V2AppCentricEndpointGroupsService {
     }
 
     /**
+     * Soft delete one EndpointGroup
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteEndpointGroup(requestParameters: SoftDeleteEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteEndpointGroup(requestParameters: SoftDeleteEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteEndpointGroup(requestParameters: SoftDeleteEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteEndpointGroup(requestParameters: SoftDeleteEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling softDeleteEndpointGroup.');
+    public softDeleteOneEndpointGroup(requestParameters: SoftDeleteOneEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneEndpointGroup(requestParameters: SoftDeleteOneEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneEndpointGroup(requestParameters: SoftDeleteOneEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneEndpointGroup(requestParameters: SoftDeleteOneEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneEndpointGroup.');
         }
 
         let headers = this.defaultHeaders;
@@ -775,7 +885,7 @@ export class V2AppCentricEndpointGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(uuid))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -787,21 +897,22 @@ export class V2AppCentricEndpointGroupsService {
     }
 
     /**
+     * Update one EndpointGroup
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateEndpointGroup(requestParameters: UpdateEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<EndpointGroup>;
-    public updateEndpointGroup(requestParameters: UpdateEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<EndpointGroup>>;
-    public updateEndpointGroup(requestParameters: UpdateEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<EndpointGroup>>;
-    public updateEndpointGroup(requestParameters: UpdateEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling updateEndpointGroup.');
+    public updateOneEndpointGroup(requestParameters: UpdateOneEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<EndpointGroup>;
+    public updateOneEndpointGroup(requestParameters: UpdateOneEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<EndpointGroup>>;
+    public updateOneEndpointGroup(requestParameters: UpdateOneEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<EndpointGroup>>;
+    public updateOneEndpointGroup(requestParameters: UpdateOneEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateOneEndpointGroup.');
         }
         const endpointGroup = requestParameters.endpointGroup;
         if (endpointGroup === null || endpointGroup === undefined) {
-            throw new Error('Required parameter endpointGroup was null or undefined when calling updateEndpointGroup.');
+            throw new Error('Required parameter endpointGroup was null or undefined when calling updateOneEndpointGroup.');
         }
 
         let headers = this.defaultHeaders;
@@ -833,7 +944,7 @@ export class V2AppCentricEndpointGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<EndpointGroup>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.put<EndpointGroup>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(id))}`,
             endpointGroup,
             {
                 responseType: <any>responseType,

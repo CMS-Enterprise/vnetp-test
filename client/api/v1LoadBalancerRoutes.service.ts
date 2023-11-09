@@ -34,64 +34,64 @@ export interface CreateOneLoadBalancerRouteRequestParams {
 }
 
 export interface DeleteOneLoadBalancerRouteRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface DeprovisionOneLoadBalancerRouteRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface GetManyLoadBalancerRouteRequestParams {
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds search condition. */
-    s?: string;
-    /** Adds filter condition. */
-    filter?: Array<string>;
-    /** Adds OR condition. */
-    or?: Array<string>;
-    /** Adds sort by field. */
-    sort?: Array<string>;
-    /** Adds relational resources. */
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Limit amount of resources. */
-    limit?: number;
-    /** Offset amount of resources. */
-    offset?: number;
-    /** Page portion of resources. */
+    /** Number of entities to return per page. */
+    perPage?: number;
+    /** Page of entities to return based on the perPage value and total number of entities in the database. */
     page?: number;
-    /** Reset cache (if was enabled). */
-    cache?: number;
+    /** Filter condition to apply to the query. */
+    filter?: Array<string>;
+    /** Properties to sort the response by. */
+    sort?: Array<string>;
+    /** Properties to group the response by. */
+    group?: Array<string>;
+    /** Properties to select. */
+    fields?: Array<string>;
+    /** Alias for perPage. Number of entities to return per page. */
+    limit?: number;
+    /** Where object for advanced AND/OR queries. */
+    s?: string;
 }
 
 export interface GetOneLoadBalancerRouteRequestParams {
+    /** UUID. */
     id: string;
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds relational resources. */
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Reset cache (if was enabled). */
-    cache?: number;
 }
 
 export interface ProvisionOneLoadBalancerRouteRequestParams {
+    /** UUID. */
     id: string;
-}
-
-export interface ReplaceOneLoadBalancerRouteRequestParams {
-    id: string;
-    loadBalancerRoute: LoadBalancerRoute;
 }
 
 export interface RestoreOneLoadBalancerRouteRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface SoftDeleteOneLoadBalancerRouteRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface UpdateOneLoadBalancerRouteRequestParams {
+    /** UUID. */
     id: string;
     loadBalancerRoute: LoadBalancerRoute;
 }
@@ -163,10 +163,10 @@ export class V1LoadBalancerRoutesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createManyLoadBalancerRoute(requestParameters: CreateManyLoadBalancerRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<LoadBalancerRoute>>;
-    public createManyLoadBalancerRoute(requestParameters: CreateManyLoadBalancerRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<LoadBalancerRoute>>>;
-    public createManyLoadBalancerRoute(requestParameters: CreateManyLoadBalancerRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<LoadBalancerRoute>>>;
-    public createManyLoadBalancerRoute(requestParameters: CreateManyLoadBalancerRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createManyLoadBalancerRoute(requestParameters: CreateManyLoadBalancerRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createManyLoadBalancerRoute(requestParameters: CreateManyLoadBalancerRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createManyLoadBalancerRoute(requestParameters: CreateManyLoadBalancerRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createManyLoadBalancerRoute(requestParameters: CreateManyLoadBalancerRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const createManyLoadBalancerRouteDto = requestParameters.createManyLoadBalancerRouteDto;
         if (createManyLoadBalancerRouteDto === null || createManyLoadBalancerRouteDto === undefined) {
             throw new Error('Required parameter createManyLoadBalancerRouteDto was null or undefined when calling createManyLoadBalancerRoute.');
@@ -178,7 +178,6 @@ export class V1LoadBalancerRoutesService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -201,7 +200,7 @@ export class V1LoadBalancerRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<LoadBalancerRoute>>(`${this.configuration.basePath}/v1/load-balancer/routes/bulk`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/load-balancer/routes/bulk`,
             createManyLoadBalancerRouteDto,
             {
                 responseType: <any>responseType,
@@ -275,10 +274,10 @@ export class V1LoadBalancerRoutesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneLoadBalancerRoute(requestParameters: DeleteOneLoadBalancerRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deleteOneLoadBalancerRoute(requestParameters: DeleteOneLoadBalancerRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deleteOneLoadBalancerRoute(requestParameters: DeleteOneLoadBalancerRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deleteOneLoadBalancerRoute(requestParameters: DeleteOneLoadBalancerRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public deleteOneLoadBalancerRoute(requestParameters: DeleteOneLoadBalancerRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerRoute>;
+    public deleteOneLoadBalancerRoute(requestParameters: DeleteOneLoadBalancerRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerRoute>>;
+    public deleteOneLoadBalancerRoute(requestParameters: DeleteOneLoadBalancerRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerRoute>>;
+    public deleteOneLoadBalancerRoute(requestParameters: DeleteOneLoadBalancerRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling deleteOneLoadBalancerRoute.');
@@ -290,6 +289,7 @@ export class V1LoadBalancerRoutesService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -303,7 +303,7 @@ export class V1LoadBalancerRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/load-balancer/routes/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<LoadBalancerRoute>(`${this.configuration.basePath}/v1/load-balancer/routes/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -315,7 +315,7 @@ export class V1LoadBalancerRoutesService {
     }
 
     /**
-     * Deprovisions an Entity.
+     * Deprovision one LoadBalancerRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -361,7 +361,7 @@ export class V1LoadBalancerRoutesService {
     }
 
     /**
-     * Retrieve many LoadBalancerRoute
+     * Get many LoadBalancerRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -370,42 +370,22 @@ export class V1LoadBalancerRoutesService {
     public getManyLoadBalancerRoute(requestParameters: GetManyLoadBalancerRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyLoadBalancerRouteResponseDto>>;
     public getManyLoadBalancerRoute(requestParameters: GetManyLoadBalancerRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyLoadBalancerRouteResponseDto>>;
     public getManyLoadBalancerRoute(requestParameters: GetManyLoadBalancerRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const fields = requestParameters.fields;
-        const s = requestParameters.s;
-        const filter = requestParameters.filter;
-        const or = requestParameters.or;
-        const sort = requestParameters.sort;
+        const relations = requestParameters.relations;
         const join = requestParameters.join;
-        const limit = requestParameters.limit;
-        const offset = requestParameters.offset;
+        const perPage = requestParameters.perPage;
         const page = requestParameters.page;
-        const cache = requestParameters.cache;
+        const filter = requestParameters.filter;
+        const sort = requestParameters.sort;
+        const group = requestParameters.group;
+        const fields = requestParameters.fields;
+        const limit = requestParameters.limit;
+        const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
-        }
-        if (s !== undefined && s !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>s, 's');
-        }
-        if (filter) {
-            filter.forEach((element) => {
+        if (relations) {
+            relations.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'filter');
-            })
-        }
-        if (or) {
-            or.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'or');
-            })
-        }
-        if (sort) {
-            sort.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'sort');
+                  <any>element, 'relations');
             })
         }
         if (join) {
@@ -414,21 +394,45 @@ export class V1LoadBalancerRoutesService {
                   <any>element, 'join');
             })
         }
-        if (limit !== undefined && limit !== null) {
+        if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
-        if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
+            <any>perPage, 'perPage');
         }
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>page, 'page');
         }
-        if (cache !== undefined && cache !== null) {
+        if (filter) {
+            filter.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'filter');
+            })
+        }
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
+        }
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
+        }
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
+            <any>limit, 'limit');
+        }
+        if (s !== undefined && s !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>s, 's');
         }
 
         let headers = this.defaultHeaders;
@@ -464,7 +468,7 @@ export class V1LoadBalancerRoutesService {
     }
 
     /**
-     * Retrieve one LoadBalancerRoute
+     * Get one LoadBalancerRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -477,24 +481,21 @@ export class V1LoadBalancerRoutesService {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getOneLoadBalancerRoute.');
         }
-        const fields = requestParameters.fields;
+        const relations = requestParameters.relations;
         const join = requestParameters.join;
-        const cache = requestParameters.cache;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
         }
         if (join) {
             join.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
                   <any>element, 'join');
             })
-        }
-        if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
         }
 
         let headers = this.defaultHeaders;
@@ -530,7 +531,7 @@ export class V1LoadBalancerRoutesService {
     }
 
     /**
-     * Provisions an Entity.
+     * Provision one LoadBalancerRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -576,67 +577,7 @@ export class V1LoadBalancerRoutesService {
     }
 
     /**
-     * Replace one LoadBalancerRoute
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public replaceOneLoadBalancerRoute(requestParameters: ReplaceOneLoadBalancerRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerRoute>;
-    public replaceOneLoadBalancerRoute(requestParameters: ReplaceOneLoadBalancerRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerRoute>>;
-    public replaceOneLoadBalancerRoute(requestParameters: ReplaceOneLoadBalancerRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerRoute>>;
-    public replaceOneLoadBalancerRoute(requestParameters: ReplaceOneLoadBalancerRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling replaceOneLoadBalancerRoute.');
-        }
-        const loadBalancerRoute = requestParameters.loadBalancerRoute;
-        if (loadBalancerRoute === null || loadBalancerRoute === undefined) {
-            throw new Error('Required parameter loadBalancerRoute was null or undefined when calling replaceOneLoadBalancerRoute.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.put<LoadBalancerRoute>(`${this.configuration.basePath}/v1/load-balancer/routes/${encodeURIComponent(String(id))}`,
-            loadBalancerRoute,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Restores a Soft-Deleted Entity.
+     * Restore one LoadBalancerRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -682,7 +623,7 @@ export class V1LoadBalancerRoutesService {
     }
 
     /**
-     * Soft deletes an Entity.
+     * Soft delete one LoadBalancerRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -774,7 +715,7 @@ export class V1LoadBalancerRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<LoadBalancerRoute>(`${this.configuration.basePath}/v1/load-balancer/routes/${encodeURIComponent(String(id))}`,
+        return this.httpClient.put<LoadBalancerRoute>(`${this.configuration.basePath}/v1/load-balancer/routes/${encodeURIComponent(String(id))}`,
             loadBalancerRoute,
             {
                 responseType: <any>responseType,

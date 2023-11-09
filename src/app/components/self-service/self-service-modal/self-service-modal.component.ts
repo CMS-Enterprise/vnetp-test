@@ -506,13 +506,14 @@ export class SelfServiceModalComponent implements OnInit {
 
   public getTiers(): void {
     this.tiersService
-      .getManyDatacenterTier({
-        limit: 1000,
-        datacenterId: this.datacenterId,
+      .getManyTier({
+        filter: [`datacenterId||eq||${this.datacenterId}`],
         join: ['firewallRuleGroups', 'natRuleGroups'],
+        limit: 1000,
+        perPage: 1,
       })
-      .subscribe(returnedData => {
-        this.tiers = returnedData as any;
+      .subscribe(data => {
+        this.tiers = data.data;
       });
   }
 

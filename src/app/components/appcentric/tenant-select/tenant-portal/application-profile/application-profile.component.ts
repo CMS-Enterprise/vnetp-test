@@ -2,8 +2,8 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   ApplicationProfile,
-  ApplicationProfilePaginationResponse,
-  EndpointGroupPaginationResponse,
+  GetManyApplicationProfileResponseDto,
+  GetManyEndpointGroupResponseDto,
   V2AppCentricApplicationProfilesService,
   V2AppCentricEndpointGroupsService,
 } from 'client';
@@ -26,7 +26,7 @@ export class ApplicationProfileComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentApplicationProfilePage = 1;
   public perPage = 20;
-  public applicationProfiles = {} as ApplicationProfilePaginationResponse;
+  public applicationProfiles = {} as GetManyApplicationProfileResponseDto;
   public tableComponentDto = new TableComponentDto();
   private applicationPofileModalSubscription: Subscription;
   private endpointGroupModalSubscription: Subscription;
@@ -35,7 +35,7 @@ export class ApplicationProfileComponent implements OnInit {
 
   public isLoading = false;
 
-  public endpointGroups: EndpointGroupPaginationResponse;
+  public endpointGroups: GetManyEndpointGroupResponseDto;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -99,7 +99,7 @@ export class ApplicationProfileComponent implements OnInit {
       }
     }
     this.applicationProfileService
-      .findAllApplicationProfile({
+      .getManyApplicationProfile({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -119,7 +119,7 @@ export class ApplicationProfileComponent implements OnInit {
 
   public deleteApplicationProfile(applicationProfile: ApplicationProfile): void {
     if (applicationProfile.deletedAt) {
-      this.applicationProfileService.removeApplicationProfile({ uuid: applicationProfile.id }).subscribe(() => {
+      this.applicationProfileService.deleteOneApplicationProfile({ id: applicationProfile.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -133,8 +133,8 @@ export class ApplicationProfileComponent implements OnInit {
       });
     } else {
       this.applicationProfileService
-        .softDeleteApplicationProfile({
-          uuid: applicationProfile.id,
+        .softDeleteOneApplicationProfile({
+          id: applicationProfile.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -157,8 +157,8 @@ export class ApplicationProfileComponent implements OnInit {
     }
 
     this.applicationProfileService
-      .restoreApplicationProfile({
-        uuid: applicationProfile.id,
+      .restoreOneApplicationProfile({
+        id: applicationProfile.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
@@ -251,7 +251,7 @@ export class ApplicationProfileComponent implements OnInit {
   public getEndpointGroups(applicationProfileId: string) {
     this.isLoading = true;
     const endpointGroups = this.endpointGroupService
-      .findAllEndpointGroup({
+      .getManyEndpointGroup({
         filter: [`applicationProfileId||eq||${applicationProfileId}`] as Array<string>,
         page: 1,
         perPage: 5,

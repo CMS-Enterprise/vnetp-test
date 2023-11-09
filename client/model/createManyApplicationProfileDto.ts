@@ -9,14 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Contract } from './contract';
+import { ApplicationProfile } from './applicationProfile';
 
 
-export interface ContractPaginationResponse { 
-    data: Array<Contract>;
-    count: number;
-    total: number;
-    page: number;
-    pageCount: number;
+export interface CreateManyApplicationProfileDto { 
+    bulk: Array<ApplicationProfile>;
 }
 

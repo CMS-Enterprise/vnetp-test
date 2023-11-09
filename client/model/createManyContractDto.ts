@@ -9,14 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Vrf } from './vrf';
+import { Contract } from './contract';
 
 
-export interface VrfPaginationResponse { 
-    data: Array<Vrf>;
-    count: number;
-    total: number;
-    page: number;
-    pageCount: number;
+export interface CreateManyContractDto { 
+    bulk: Array<Contract>;
 }
 

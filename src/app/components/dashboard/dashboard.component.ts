@@ -132,7 +132,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getDatacenters(): void {
-    this.datacenterService.getManyDatacenters({ page: 1, limit: 1 }).subscribe(data => {
+    this.datacenterService.getManyDatacenter({ page: 1, limit: 1 }).subscribe(data => {
       const paged: any = data;
       this.datacenters = paged.total;
       try {

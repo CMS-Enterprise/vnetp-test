@@ -31,7 +31,6 @@ import { V1SelfServiceService } from './api/v1SelfService.service';
 import { V1StatusService } from './api/v1Status.service';
 import { V1TierGroupsService } from './api/v1TierGroups.service';
 import { V1TiersService } from './api/v1Tiers.service';
-import { V1VlansService } from './api/v1Vlans.service';
 import { V2AppCentricAppCentricSubnetsService } from './api/v2AppCentricAppCentricSubnets.service';
 import { V2AppCentricApplicationProfilesService } from './api/v2AppCentricApplicationProfiles.service';
 import { V2AppCentricBridgeDomainsService } from './api/v2AppCentricBridgeDomains.service';

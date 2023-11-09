@@ -13,10 +13,11 @@ import { NatRule } from './natRule';
 
 
 export interface GetManyNatRuleResponseDto { 
-    data: Array<NatRule>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<NatRule>;
 }
 

@@ -107,7 +107,7 @@ export class SubnetsEditModalComponent implements OnInit {
   }
 
   private createSubnets(appCentricSubnet: AppCentricSubnet): void {
-    this.subnetsService.createAppCentricSubnet({ appCentricSubnet }).subscribe(
+    this.subnetsService.createOneAppCentricSubnet({ appCentricSubnet }).subscribe(
       () => undefined,
       () => undefined,
       () => this.closeModal(),
@@ -120,8 +120,8 @@ export class SubnetsEditModalComponent implements OnInit {
     appCentricSubnet.tenantId = null;
     appCentricSubnet.bridgeDomainId = null;
     this.subnetsService
-      .updateAppCentricSubnet({
-        uuid: this.subnetId,
+      .updateOneAppCentricSubnet({
+        id: this.subnetId,
         appCentricSubnet,
       })
       .subscribe(

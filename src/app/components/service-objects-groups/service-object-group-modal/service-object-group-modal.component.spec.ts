@@ -198,10 +198,10 @@ describe('ServiceObjectGroupModalComponent', () => {
     component.ServiceObjectGroupId = 'test-id';
     component.selectedServiceObject = 'test-id' as any;
     jest
-      .spyOn(component['serviceObjectGroupService'], 'addServiceObjectToGroupServiceObjectGroupServiceObject')
+      .spyOn(component['serviceObjectGroupService'], 'addServiceObjectToGroupServiceObjectGroup')
       .mockReturnValue(of({ serviceObjects: [] } as any));
 
     component.addServiceObject();
-    expect(component['serviceObjectGroupService'].addServiceObjectToGroupServiceObjectGroupServiceObject).toHaveBeenCalled();
+    expect(component['serviceObjectGroupService'].addServiceObjectToGroupServiceObjectGroup).toHaveBeenCalled();
   });
 });

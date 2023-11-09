@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { V2AppCentricL3outsService, L3OutPaginationResponse, L3Out, VrfPaginationResponse, V2AppCentricVrfsService } from 'client';
+import { V2AppCentricL3outsService, L3Out, V2AppCentricVrfsService, Vrf, GetManyL3OutResponseDto, GetManyVrfResponseDto } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
@@ -20,11 +20,11 @@ export class L3OutsComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentL3OutsPage = 1;
   public perPage = 20;
-  public l3Outs = {} as L3OutPaginationResponse;
+  public l3Outs = {} as GetManyL3OutResponseDto;
   public tableComponentDto = new TableComponentDto();
   private l3OutsModalSubscription: Subscription;
   public tenantId: string;
-  public vrfs: VrfPaginationResponse;
+  public vrfs: GetManyVrfResponseDto;
 
   public isLoading = false;
 
@@ -90,7 +90,7 @@ export class L3OutsComponent implements OnInit {
       }
     }
     this.l3OutService
-      .findAllL3Out({
+      .getManyL3Out({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -110,7 +110,7 @@ export class L3OutsComponent implements OnInit {
 
   public deleteL3Out(l3Out: L3Out): void {
     if (l3Out.deletedAt) {
-      this.l3OutService.removeL3Out({ uuid: l3Out.id }).subscribe(() => {
+      this.l3OutService.deleteOneL3Out({ id: l3Out.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -124,8 +124,8 @@ export class L3OutsComponent implements OnInit {
       });
     } else {
       this.l3OutService
-        .softDeleteL3Out({
-          uuid: l3Out.id,
+        .softDeleteOneL3Out({
+          id: l3Out.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -148,8 +148,8 @@ export class L3OutsComponent implements OnInit {
     }
 
     this.l3OutService
-      .restoreL3Out({
-        uuid: l3Out.id,
+      .restoreOneL3Out({
+        id: l3Out.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
@@ -232,7 +232,7 @@ export class L3OutsComponent implements OnInit {
       }
     }
     this.vrfService
-      .findAllVrf({
+      .getManyVrf({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,

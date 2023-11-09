@@ -9,14 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Tenant } from './tenant';
+import { Vrf } from './vrf';
 
 
-export interface TenantPaginationResponse { 
-    data: Array<Tenant>;
+export interface GetManyVrfResponseDto { 
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<Vrf>;
 }
 

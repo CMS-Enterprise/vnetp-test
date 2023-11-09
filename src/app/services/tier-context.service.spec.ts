@@ -15,7 +15,7 @@ describe('TierContextService', () => {
       currentDatacenter: new BehaviorSubject({ id: 'dc-1' }),
     };
     datacenterServiceSpy = {
-      getOneDatacenters: jest.fn().mockImplementation(() => ({
+      getOneDatacenter: jest.fn().mockImplementation(() => ({
         subscribe: jest.fn(),
       })),
     };
@@ -90,11 +90,11 @@ describe('TierContextService', () => {
       callback({ id: datacenterId });
     });
 
-    datacenterServiceSpy.getOneDatacenters.mockReturnValueOnce(of({ id: datacenterId, tiers }));
+    datacenterServiceSpy.getOneDatacenter.mockReturnValueOnce(of({ id: datacenterId, tiers }));
 
     service['getTiers']();
 
-    expect(datacenterServiceSpy.getOneDatacenters).toHaveBeenCalledWith({ id: datacenterId, join: ['tiers'] });
+    expect(datacenterServiceSpy.getOneDatacenter).toHaveBeenCalledWith({ id: datacenterId, join: ['tiers'] });
     expect(service.tiersValue).toEqual(tiers);
   });
 });

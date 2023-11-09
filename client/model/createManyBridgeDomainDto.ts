@@ -9,14 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { L3Out } from './l3Out';
+import { BridgeDomain } from './bridgeDomain';
 
 
-export interface L3OutPaginationResponse { 
-    data: Array<L3Out>;
-    count: number;
-    total: number;
-    page: number;
-    pageCount: number;
+export interface CreateManyBridgeDomainDto { 
+    bulk: Array<BridgeDomain>;
 }
 

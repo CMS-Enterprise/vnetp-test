@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
-import { AppCentricSubnet, AppCentricSubnetPaginationResponse, V2AppCentricAppCentricSubnetsService } from 'client';
+import { AppCentricSubnet, GetManyAppCentricSubnetResponseDto, V2AppCentricAppCentricSubnetsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -27,7 +27,7 @@ export class SubnetsModalComponent implements OnInit {
   public submitted: boolean;
   public tenantId: string;
   public bridgeDomainId: string;
-  public subnets: AppCentricSubnetPaginationResponse;
+  public subnets: GetManyAppCentricSubnetResponseDto;
   public tableComponentDto = new TableComponentDto();
   public perPage = 20;
   private subnetsEditModalSubscription: Subscription;
@@ -128,7 +128,7 @@ export class SubnetsModalComponent implements OnInit {
       }
     }
     this.subnetsService
-      .findAllAppCentricSubnet({
+      .getManyAppCentricSubnet({
         filter: [`bridgeDomainId||eq||${this.bridgeDomainId}`, eventParams],
       })
       .subscribe(
@@ -140,8 +140,8 @@ export class SubnetsModalComponent implements OnInit {
   public removeSubnet(subnet: AppCentricSubnet) {
     if (subnet.deletedAt) {
       this.subnetsService
-        .removeAppCentricSubnet({
-          uuid: subnet.id,
+        .deleteOneAppCentricSubnet({
+          id: subnet.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -154,8 +154,8 @@ export class SubnetsModalComponent implements OnInit {
         });
     } else {
       this.subnetsService
-        .softDeleteAppCentricSubnet({
-          uuid: subnet.id,
+        .softDeleteOneAppCentricSubnet({
+          id: subnet.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -175,8 +175,8 @@ export class SubnetsModalComponent implements OnInit {
     }
 
     this.subnetsService
-      .restoreAppCentricSubnet({
-        uuid: subnet.id,
+      .restoreOneAppCentricSubnet({
+        id: subnet.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

@@ -9,14 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { FilterEntry } from './filterEntry';
+import { L3Out } from './l3Out';
 
 
-export interface FilterEntryPaginationResponse { 
-    data: Array<FilterEntry>;
+export interface GetManyL3OutResponseDto { 
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<L3Out>;
 }
 

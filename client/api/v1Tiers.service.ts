@@ -18,9 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { CreateManyTierDto } from '../model/models';
-import { GetManySubnetResponseDto } from '../model/models';
 import { GetManyTierResponseDto } from '../model/models';
-import { Subnet } from '../model/models';
 import { Tier } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -40,134 +38,64 @@ export interface CreateOneTierRequestParams {
 }
 
 export interface DeleteOneTierRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface DeprovisionOneTierRequestParams {
+    /** UUID. */
     id: string;
-}
-
-export interface GetManyDatacenterTierRequestParams {
-    datacenterId: string;
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds search condition. */
-    s?: string;
-    /** Adds filter condition. */
-    filter?: Array<string>;
-    /** Adds OR condition. */
-    or?: Array<string>;
-    /** Adds sort by field. */
-    sort?: Array<string>;
-    /** Adds relational resources. */
-    join?: Array<string>;
-    /** Limit amount of resources. */
-    limit?: number;
-    /** Offset amount of resources. */
-    offset?: number;
-    /** Page portion of resources. */
-    page?: number;
-    /** Reset cache (if was enabled). */
-    cache?: number;
 }
 
 export interface GetManyTierRequestParams {
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds search condition. */
-    s?: string;
-    /** Adds filter condition. */
-    filter?: Array<string>;
-    /** Adds OR condition. */
-    or?: Array<string>;
-    /** Adds sort by field. */
-    sort?: Array<string>;
-    /** Adds relational resources. */
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Limit amount of resources. */
-    limit?: number;
-    /** Offset amount of resources. */
-    offset?: number;
-    /** Page portion of resources. */
+    /** Number of entities to return per page. */
+    perPage?: number;
+    /** Page of entities to return based on the perPage value and total number of entities in the database. */
     page?: number;
-    /** Reset cache (if was enabled). */
-    cache?: number;
-}
-
-export interface GetManyTierSubnetRequestParams {
-    tierId: string;
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds search condition. */
-    s?: string;
-    /** Adds filter condition. */
+    /** Filter condition to apply to the query. */
     filter?: Array<string>;
-    /** Adds OR condition. */
-    or?: Array<string>;
-    /** Adds sort by field. */
+    /** Properties to sort the response by. */
     sort?: Array<string>;
-    /** Adds relational resources. */
-    join?: Array<string>;
-    /** Limit amount of resources. */
-    limit?: number;
-    /** Offset amount of resources. */
-    offset?: number;
-    /** Page portion of resources. */
-    page?: number;
-    /** Reset cache (if was enabled). */
-    cache?: number;
-}
-
-export interface GetOneDatacenterTierRequestParams {
-    datacenterId: string;
-    id: string;
-    /** Selects resource fields. */
+    /** Properties to group the response by. */
+    group?: Array<string>;
+    /** Properties to select. */
     fields?: Array<string>;
-    /** Adds relational resources. */
-    join?: Array<string>;
-    /** Reset cache (if was enabled). */
-    cache?: number;
+    /** Alias for perPage. Number of entities to return per page. */
+    limit?: number;
+    /** Where object for advanced AND/OR queries. */
+    s?: string;
 }
 
 export interface GetOneTierRequestParams {
+    /** UUID. */
     id: string;
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds relational resources. */
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Reset cache (if was enabled). */
-    cache?: number;
-}
-
-export interface GetOneTierSubnetRequestParams {
-    tierId: string;
-    id: string;
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds relational resources. */
-    join?: Array<string>;
-    /** Reset cache (if was enabled). */
-    cache?: number;
 }
 
 export interface ProvisionOneTierRequestParams {
+    /** UUID. */
     id: string;
-}
-
-export interface ReplaceOneTierRequestParams {
-    id: string;
-    tier: Tier;
 }
 
 export interface RestoreOneTierRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface SoftDeleteOneTierRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface UpdateOneTierRequestParams {
+    /** UUID. */
     id: string;
     tier: Tier;
 }
@@ -267,7 +195,7 @@ export class V1TiersService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}/cascade`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}/cascade`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -284,10 +212,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createManyTier(requestParameters: CreateManyTierRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Tier>>;
-    public createManyTier(requestParameters: CreateManyTierRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Tier>>>;
-    public createManyTier(requestParameters: CreateManyTierRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Tier>>>;
-    public createManyTier(requestParameters: CreateManyTierRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createManyTier(requestParameters: CreateManyTierRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createManyTier(requestParameters: CreateManyTierRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createManyTier(requestParameters: CreateManyTierRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createManyTier(requestParameters: CreateManyTierRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const createManyTierDto = requestParameters.createManyTierDto;
         if (createManyTierDto === null || createManyTierDto === undefined) {
             throw new Error('Required parameter createManyTierDto was null or undefined when calling createManyTier.');
@@ -299,7 +227,6 @@ export class V1TiersService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -322,7 +249,7 @@ export class V1TiersService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<Tier>>(`${this.configuration.basePath}/v1/tiers/bulk`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/tiers/bulk`,
             createManyTierDto,
             {
                 responseType: <any>responseType,
@@ -396,10 +323,10 @@ export class V1TiersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneTier(requestParameters: DeleteOneTierRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deleteOneTier(requestParameters: DeleteOneTierRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deleteOneTier(requestParameters: DeleteOneTierRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deleteOneTier(requestParameters: DeleteOneTierRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public deleteOneTier(requestParameters: DeleteOneTierRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tier>;
+    public deleteOneTier(requestParameters: DeleteOneTierRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tier>>;
+    public deleteOneTier(requestParameters: DeleteOneTierRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tier>>;
+    public deleteOneTier(requestParameters: DeleteOneTierRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling deleteOneTier.');
@@ -411,6 +338,7 @@ export class V1TiersService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -424,7 +352,7 @@ export class V1TiersService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<Tier>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -436,7 +364,7 @@ export class V1TiersService {
     }
 
     /**
-     * Deprovisions an Entity.
+     * Deprovision one Tier
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -482,114 +410,7 @@ export class V1TiersService {
     }
 
     /**
-     * Retrieve many Tier
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getManyDatacenterTier(requestParameters: GetManyDatacenterTierRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyTierResponseDto>;
-    public getManyDatacenterTier(requestParameters: GetManyDatacenterTierRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyTierResponseDto>>;
-    public getManyDatacenterTier(requestParameters: GetManyDatacenterTierRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyTierResponseDto>>;
-    public getManyDatacenterTier(requestParameters: GetManyDatacenterTierRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const datacenterId = requestParameters.datacenterId;
-        if (datacenterId === null || datacenterId === undefined) {
-            throw new Error('Required parameter datacenterId was null or undefined when calling getManyDatacenterTier.');
-        }
-        const fields = requestParameters.fields;
-        const s = requestParameters.s;
-        const filter = requestParameters.filter;
-        const or = requestParameters.or;
-        const sort = requestParameters.sort;
-        const join = requestParameters.join;
-        const limit = requestParameters.limit;
-        const offset = requestParameters.offset;
-        const page = requestParameters.page;
-        const cache = requestParameters.cache;
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
-        }
-        if (s !== undefined && s !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>s, 's');
-        }
-        if (filter) {
-            filter.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'filter');
-            })
-        }
-        if (or) {
-            or.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'or');
-            })
-        }
-        if (sort) {
-            sort.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'sort');
-            })
-        }
-        if (join) {
-            join.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'join');
-            })
-        }
-        if (limit !== undefined && limit !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
-        if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
-        }
-        if (page !== undefined && page !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>page, 'page');
-        }
-        if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<GetManyTierResponseDto>(`${this.configuration.basePath}/v1/datacenters/${encodeURIComponent(String(datacenterId))}/tiers`,
-            {
-                params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Retrieve many Tier
+     * Get many Tier
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -598,42 +419,22 @@ export class V1TiersService {
     public getManyTier(requestParameters: GetManyTierRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyTierResponseDto>>;
     public getManyTier(requestParameters: GetManyTierRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyTierResponseDto>>;
     public getManyTier(requestParameters: GetManyTierRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const fields = requestParameters.fields;
-        const s = requestParameters.s;
-        const filter = requestParameters.filter;
-        const or = requestParameters.or;
-        const sort = requestParameters.sort;
+        const relations = requestParameters.relations;
         const join = requestParameters.join;
-        const limit = requestParameters.limit;
-        const offset = requestParameters.offset;
+        const perPage = requestParameters.perPage;
         const page = requestParameters.page;
-        const cache = requestParameters.cache;
+        const filter = requestParameters.filter;
+        const sort = requestParameters.sort;
+        const group = requestParameters.group;
+        const fields = requestParameters.fields;
+        const limit = requestParameters.limit;
+        const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
-        }
-        if (s !== undefined && s !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>s, 's');
-        }
-        if (filter) {
-            filter.forEach((element) => {
+        if (relations) {
+            relations.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'filter');
-            })
-        }
-        if (or) {
-            or.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'or');
-            })
-        }
-        if (sort) {
-            sort.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'sort');
+                  <any>element, 'relations');
             })
         }
         if (join) {
@@ -642,21 +443,45 @@ export class V1TiersService {
                   <any>element, 'join');
             })
         }
-        if (limit !== undefined && limit !== null) {
+        if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
-        if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
+            <any>perPage, 'perPage');
         }
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>page, 'page');
         }
-        if (cache !== undefined && cache !== null) {
+        if (filter) {
+            filter.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'filter');
+            })
+        }
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
+        }
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
+        }
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
+            <any>limit, 'limit');
+        }
+        if (s !== undefined && s !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>s, 's');
         }
 
         let headers = this.defaultHeaders;
@@ -692,184 +517,7 @@ export class V1TiersService {
     }
 
     /**
-     * Retrieve many Subnet
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getManyTierSubnet(requestParameters: GetManyTierSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManySubnetResponseDto>;
-    public getManyTierSubnet(requestParameters: GetManyTierSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManySubnetResponseDto>>;
-    public getManyTierSubnet(requestParameters: GetManyTierSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManySubnetResponseDto>>;
-    public getManyTierSubnet(requestParameters: GetManyTierSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const tierId = requestParameters.tierId;
-        if (tierId === null || tierId === undefined) {
-            throw new Error('Required parameter tierId was null or undefined when calling getManyTierSubnet.');
-        }
-        const fields = requestParameters.fields;
-        const s = requestParameters.s;
-        const filter = requestParameters.filter;
-        const or = requestParameters.or;
-        const sort = requestParameters.sort;
-        const join = requestParameters.join;
-        const limit = requestParameters.limit;
-        const offset = requestParameters.offset;
-        const page = requestParameters.page;
-        const cache = requestParameters.cache;
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
-        }
-        if (s !== undefined && s !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>s, 's');
-        }
-        if (filter) {
-            filter.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'filter');
-            })
-        }
-        if (or) {
-            or.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'or');
-            })
-        }
-        if (sort) {
-            sort.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'sort');
-            })
-        }
-        if (join) {
-            join.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'join');
-            })
-        }
-        if (limit !== undefined && limit !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
-        }
-        if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
-        }
-        if (page !== undefined && page !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>page, 'page');
-        }
-        if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<GetManySubnetResponseDto>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(tierId))}/subnets`,
-            {
-                params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Retrieve one Tier
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getOneDatacenterTier(requestParameters: GetOneDatacenterTierRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tier>;
-    public getOneDatacenterTier(requestParameters: GetOneDatacenterTierRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tier>>;
-    public getOneDatacenterTier(requestParameters: GetOneDatacenterTierRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tier>>;
-    public getOneDatacenterTier(requestParameters: GetOneDatacenterTierRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const datacenterId = requestParameters.datacenterId;
-        if (datacenterId === null || datacenterId === undefined) {
-            throw new Error('Required parameter datacenterId was null or undefined when calling getOneDatacenterTier.');
-        }
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getOneDatacenterTier.');
-        }
-        const fields = requestParameters.fields;
-        const join = requestParameters.join;
-        const cache = requestParameters.cache;
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
-        }
-        if (join) {
-            join.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'join');
-            })
-        }
-        if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<Tier>(`${this.configuration.basePath}/v1/datacenters/${encodeURIComponent(String(datacenterId))}/tiers/${encodeURIComponent(String(id))}`,
-            {
-                params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Retrieve one Tier
+     * Get one Tier
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -882,24 +530,21 @@ export class V1TiersService {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getOneTier.');
         }
-        const fields = requestParameters.fields;
+        const relations = requestParameters.relations;
         const join = requestParameters.join;
-        const cache = requestParameters.cache;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
         }
         if (join) {
             join.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
                   <any>element, 'join');
             })
-        }
-        if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
         }
 
         let headers = this.defaultHeaders;
@@ -935,77 +580,7 @@ export class V1TiersService {
     }
 
     /**
-     * Retrieve one Subnet
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getOneTierSubnet(requestParameters: GetOneTierSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Subnet>;
-    public getOneTierSubnet(requestParameters: GetOneTierSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Subnet>>;
-    public getOneTierSubnet(requestParameters: GetOneTierSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Subnet>>;
-    public getOneTierSubnet(requestParameters: GetOneTierSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const tierId = requestParameters.tierId;
-        if (tierId === null || tierId === undefined) {
-            throw new Error('Required parameter tierId was null or undefined when calling getOneTierSubnet.');
-        }
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getOneTierSubnet.');
-        }
-        const fields = requestParameters.fields;
-        const join = requestParameters.join;
-        const cache = requestParameters.cache;
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
-        }
-        if (join) {
-            join.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'join');
-            })
-        }
-        if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<Subnet>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(tierId))}/subnets/${encodeURIComponent(String(id))}`,
-            {
-                params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Provisions an Entity.
+     * Provision one Tier
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -1051,67 +626,7 @@ export class V1TiersService {
     }
 
     /**
-     * Replace one Tier
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public replaceOneTier(requestParameters: ReplaceOneTierRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Tier>;
-    public replaceOneTier(requestParameters: ReplaceOneTierRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Tier>>;
-    public replaceOneTier(requestParameters: ReplaceOneTierRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Tier>>;
-    public replaceOneTier(requestParameters: ReplaceOneTierRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling replaceOneTier.');
-        }
-        const tier = requestParameters.tier;
-        if (tier === null || tier === undefined) {
-            throw new Error('Required parameter tier was null or undefined when calling replaceOneTier.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.put<Tier>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}`,
-            tier,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Restores a Soft-Deleted Entity.
+     * Restore one Tier
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -1157,7 +672,7 @@ export class V1TiersService {
     }
 
     /**
-     * Soft deletes an Entity.
+     * Soft delete one Tier
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -1249,7 +764,7 @@ export class V1TiersService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<Tier>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}`,
+        return this.httpClient.put<Tier>(`${this.configuration.basePath}/v1/tiers/${encodeURIComponent(String(id))}`,
             tier,
             {
                 responseType: <any>responseType,

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { ContractPaginationResponse, Contract, V2AppCentricEndpointGroupsService, V2AppCentricContractsService } from 'client';
+import { Contract, V2AppCentricEndpointGroupsService, V2AppCentricContractsService, GetManyContractResponseDto } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -14,7 +14,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 })
 export class ProvidedContractComponent implements OnInit, OnChanges {
   @Input() public endpointGroupId: string;
-  public contractTableData: ContractPaginationResponse;
+  public contractTableData: GetManyContractResponseDto;
   public contracts: Contract[];
   public selectedContract: Contract;
 
@@ -89,12 +89,12 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
 
   public getProvidedContracts(): void {
     this.endpointGroupsService
-      .findOneEndpointGroup({
-        uuid: this.endpointGroupId,
-        relations: 'providedContracts',
+      .getOneEndpointGroup({
+        id: this.endpointGroupId,
+        relations: ['providedContracts'],
       })
       .subscribe(data => {
-        const contractPagResponse = {} as ContractPaginationResponse;
+        const contractPagResponse = {} as GetManyContractResponseDto;
         contractPagResponse.count = data.providedContracts.length;
         contractPagResponse.page = 1;
         contractPagResponse.pageCount = 1;
@@ -106,7 +106,7 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
 
   public getContracts(): void {
     this.contractsService
-      .findAllContract({
+      .getManyContract({
         filter: [`tenantId||eq||${this.tenantId}`],
         page: 1,
         perPage: 1000,

@@ -13,10 +13,11 @@ import { LoadBalancerSelfIp } from './loadBalancerSelfIp';
 
 
 export interface GetManyLoadBalancerSelfIpResponseDto { 
-    data: Array<LoadBalancerSelfIp>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<LoadBalancerSelfIp>;
 }
 

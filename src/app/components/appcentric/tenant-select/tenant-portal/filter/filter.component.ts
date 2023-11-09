@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Filter, FilterPaginationResponse, V2AppCentricFiltersService } from 'client';
+import { Filter, GetManyFilterResponseDto, V2AppCentricFiltersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
@@ -20,7 +20,7 @@ export class FilterComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentFilterPage = 1;
   public perPage = 20;
-  public filters = {} as FilterPaginationResponse;
+  public filters = {} as GetManyFilterResponseDto;
   public tableComponentDto = new TableComponentDto();
   private filterModalSubscription: Subscription;
   public tenantId: string;
@@ -88,7 +88,7 @@ export class FilterComponent implements OnInit {
       }
     }
     this.filterService
-      .findAllFilter({
+      .getManyFilter({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -108,7 +108,7 @@ export class FilterComponent implements OnInit {
 
   public deleteFilter(filter: Filter): void {
     if (filter.deletedAt) {
-      this.filterService.removeFilter({ uuid: filter.id }).subscribe(() => {
+      this.filterService.deleteOneFilter({ id: filter.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -122,8 +122,8 @@ export class FilterComponent implements OnInit {
       });
     } else {
       this.filterService
-        .softDeleteFilter({
-          uuid: filter.id,
+        .softDeleteOneFilter({
+          id: filter.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -146,8 +146,8 @@ export class FilterComponent implements OnInit {
     }
 
     this.filterService
-      .restoreFilter({
-        uuid: filter.id,
+      .restoreOneFilter({
+        id: filter.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

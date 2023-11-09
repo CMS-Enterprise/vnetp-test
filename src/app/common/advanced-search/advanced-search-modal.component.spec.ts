@@ -103,7 +103,7 @@ describe('AdvancedSearchModalComponent', () => {
     it('should call advancedSearchOr when orActive is true', () => {
       jest.spyOn(component, 'getBaseSearchProperty').mockReturnValue('test');
       jest.spyOn(component, 'getBaseSearchValue').mockReturnValue('test');
-      const advancedSearchOrSpy = jest.spyOn(component, 'advancedSearchOr');
+      const advancedSearchOrSpy = jest.spyOn(component, 'advancedSearch');
       component.orActive = true;
       component.searchThis();
 
@@ -115,7 +115,7 @@ describe('AdvancedSearchModalComponent', () => {
     it('should call advancedSearchAnd when orActive is false', () => {
       jest.spyOn(component, 'getBaseSearchProperty').mockReturnValue('test');
       jest.spyOn(component, 'getBaseSearchValue').mockReturnValue('test');
-      const advancedSearchAndSpy = jest.spyOn(component, 'advancedSearchAnd');
+      const advancedSearchAndSpy = jest.spyOn(component, 'advancedSearch');
       component.orActive = false;
       component.searchThis();
 
@@ -147,10 +147,10 @@ describe('AdvancedSearchModalComponent', () => {
       ipAddress: '192.168.0.1',
     });
 
-    component.advancedSearchOr('tierId', '1', 1, 20);
+    component.advancedSearch('or', 'tierId', '1', 1, 20);
 
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
-      s: '{"tierId": {"$eq": "1"}, "$or": [{"name": {"$eq": "testName"}},{"ipAddress": {"$eq": "192.168.0.1"}}]}',
+      s: '{"AND": [{"tierId": {"eq": "1"}}], "OR": [{"name": {"eq": "testName"}},{"ipAddress": {"eq": "192.168.0.1"}}]}',
       page: 1,
       limit: 20,
       sort: ['name,ASC'],
@@ -181,12 +181,13 @@ describe('AdvancedSearchModalComponent', () => {
       ipAddress: '192.168.0.1',
     });
 
-    component.advancedSearchOr('tenantId', '1', 1, 20);
+    component.advancedSearch('or', 'tenantId', '1', 1, 20);
 
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
-      s: '{"tenantId": {"$eq": "1"}, "$or": [{"name": {"$eq": "testName"}},{"ipAddress": {"$eq": "192.168.0.1"}}]}',
+      s: '{"AND": [{"tenantId": {"eq": "1"}}], "OR": [{"name": {"eq": "testName"}},{"ipAddress": {"eq": "192.168.0.1"}}]}',
       page: 1,
       perPage: 20,
+      sort: ['name,ASC'],
     });
     expect(component.closeModal).toHaveBeenCalled();
     expect(component.advancedSearchResults.emit).toHaveBeenCalledWith(mockData);
@@ -214,10 +215,10 @@ describe('AdvancedSearchModalComponent', () => {
       ipAddress: '192.168.0.1',
     });
 
-    component.advancedSearchAnd('tierId', '1', 1, 20);
+    component.advancedSearch('and', 'tierId', '1', 1, 20);
 
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
-      filter: ['tierId||eq||1', 'name||eq||testName', 'ipAddress||eq||192.168.0.1'],
+      s: '{"AND": [{"name": {"eq": "testName"}},{"ipAddress": {"eq": "192.168.0.1"}}]}',
       page: 1,
       limit: 20,
       sort: ['name,ASC'],
@@ -248,12 +249,13 @@ describe('AdvancedSearchModalComponent', () => {
       ipAddress: '192.168.0.1',
     });
 
-    component.advancedSearchAnd('tenantId', '1', 1, 20);
+    component.advancedSearch('and', 'tenantId', '1', 1, 20);
 
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
-      filter: ['tenantId||eq||1', 'name||eq||testName', 'ipAddress||eq||192.168.0.1'],
       page: 1,
       perPage: 20,
+      s: '{"AND": [{"name": {"eq": "testName"}},{"ipAddress": {"eq": "192.168.0.1"}}]}',
+      sort: ['name,ASC'],
     });
     expect(component.closeModal).toHaveBeenCalled();
     expect(component.advancedSearchResults.emit).toHaveBeenCalledWith(mockData);

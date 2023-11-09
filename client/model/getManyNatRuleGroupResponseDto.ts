@@ -13,10 +13,11 @@ import { NatRuleGroup } from './natRuleGroup';
 
 
 export interface GetManyNatRuleGroupResponseDto { 
-    data: Array<NatRuleGroup>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<NatRuleGroup>;
 }
 

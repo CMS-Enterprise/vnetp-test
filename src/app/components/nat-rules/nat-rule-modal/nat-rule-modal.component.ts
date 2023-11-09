@@ -5,6 +5,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import {
+  NatRule,
   NatRuleDirectionEnum,
   NatRuleOriginalDestinationAddressTypeEnum,
   NatRuleOriginalServiceTypeEnum,
@@ -116,43 +117,67 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       console.log(new FormUtils().findInvalidControlsRecursive(this.form));
       return;
     }
-    const modalNatRule = this.form.getRawValue();
-    modalNatRule.originalServiceObjectId = null;
-    modalNatRule.originalSourceNetworkObjectId = null;
-    modalNatRule.originalSourceNetworkObjectGroupId = null;
-    modalNatRule.originalDestinationNetworkObjectId = null;
-    modalNatRule.originalDestinationNetworkObjectGroupId = null;
-    modalNatRule.translatedServiceObjectId = null;
-    modalNatRule.translatedSourceNetworkObjectId = null;
-    modalNatRule.translatedSourceNetworkObjectGroupId = null;
-    modalNatRule.translatedDestinationNetworkObjectId = null;
-    modalNatRule.translatedDestinationNetworkObjectGroupId = null;
+    const modalNatRule = {
+      originalServiceObjectId: null,
+      originalSourceNetworkObjectId: null,
+      originalSourceNetworkObjectGroupId: null,
+      originalDestinationNetworkObjectId: null,
+      originalDestinationNetworkObjectGroupId: null,
+      translatedServiceObjectId: null,
+      translatedSourceNetworkObjectId: null,
+      translatedSourceNetworkObjectGroupId: null,
+      translatedDestinationNetworkObjectId: null,
+      translatedDestinationNetworkObjectGroupId: null,
+    } as NatRule;
+
+    modalNatRule.name = this.form.controls.name.value;
+    modalNatRule.description = this.form.controls.description.value;
+    modalNatRule.biDirectional = this.form.controls.biDirectional.value;
+    modalNatRule.ruleIndex = this.form.controls.ruleIndex.value;
+    modalNatRule.enabled = this.form.controls.enabled.value;
+
+    modalNatRule.originalServiceType = this.form.controls.originalServiceType.value;
+
     if (modalNatRule.originalServiceType === NatRuleOriginalServiceTypeEnum.ServiceObject) {
-      modalNatRule.originalServiceObjectId = modalNatRule.originalServiceObject;
-      modalNatRule.originalServiceObject = null;
+      modalNatRule.originalServiceObjectId = this.form.controls.originalServiceObject.value;
     }
+
+    modalNatRule.originalSourceAddressType = this.form.controls.originalSourceAddressType.value;
+
     if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressTypeEnum.NetworkObject) {
-      modalNatRule.originalSourceNetworkObjectId = modalNatRule.originalSourceNetworkObject;
+      modalNatRule.originalSourceNetworkObjectId = this.form.controls.originalSourceNetworkObject.value;
     } else if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressTypeEnum.NetworkObjectGroup) {
-      modalNatRule.originalSourceNetworkObjectGroupId = modalNatRule.originalSourceNetworkObjectGroup;
+      modalNatRule.originalSourceNetworkObjectGroupId = this.form.controls.originalSourceNetworkObjectGroup.value;
     }
+
+    modalNatRule.originalDestinationAddressType = this.form.controls.originalDestinationAddressType.value;
+
     if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressTypeEnum.NetworkObject) {
-      modalNatRule.originalDestinationNetworkObjectId = modalNatRule.originalDestinationNetworkObject;
+      modalNatRule.originalDestinationNetworkObjectId = this.form.controls.originalDestinationNetworkObject.value;
     } else if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressTypeEnum.NetworkObjectGroup) {
-      modalNatRule.originalDestinationNetworkObjectGroupId = modalNatRule.originalDestinationNetworkObjectGroup;
+      modalNatRule.originalDestinationNetworkObjectGroupId = this.form.controls.originalDestinationNetworkObjectGroup.value;
     }
+
+    modalNatRule.translatedServiceType = this.form.controls.translatedServiceType.value;
+
     if (modalNatRule.translatedServiceType === NatRuleTranslatedServiceTypeEnum.ServiceObject) {
-      modalNatRule.translatedServiceObjectId = modalNatRule.translatedServiceObject;
+      modalNatRule.translatedServiceObjectId = this.form.controls.translatedServiceObject.value;
     }
+
+    modalNatRule.translatedSourceAddressType = this.form.controls.translatedSourceAddressType.value;
+
     if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressTypeEnum.NetworkObject) {
-      modalNatRule.translatedSourceNetworkObjectId = modalNatRule.translatedSourceNetworkObject;
+      modalNatRule.translatedSourceNetworkObjectId = this.form.controls.translatedSourceNetworkObject.value;
     } else if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressTypeEnum.NetworkObjectGroup) {
-      modalNatRule.translatedSourceNetworkObjectGroupId = modalNatRule.translatedSourceNetworkObjectGroup;
+      modalNatRule.translatedSourceNetworkObjectGroupId = this.form.controls.translatedSourceNetworkObjectGroup.value;
     }
+
+    modalNatRule.translatedDestinationAddressType = this.form.controls.translatedDestinationAddressType.value;
+
     if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressTypeEnum.NetworkObject) {
-      modalNatRule.translatedDestinationNetworkObjectId = modalNatRule.translatedDestinationNetworkObject;
+      modalNatRule.translatedDestinationNetworkObjectId = this.form.controls.translatedDestinationNetworkObject.value;
     } else if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressTypeEnum.NetworkObjectGroup) {
-      modalNatRule.translatedDestinationNetworkObjectGroupId = modalNatRule.translatedDestinationNetworkObjectGroup;
+      modalNatRule.translatedDestinationNetworkObjectGroupId = this.form.controls.translatedDestinationNetworkObjectGroup.value;
     }
 
     if (this.modalMode === ModalMode.Create) {

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
-import { L3Out, V2AppCentricL3outsService, V2AppCentricVrfsService, VrfPaginationResponse } from 'client';
+import { GetManyVrfResponseDto, L3Out, V2AppCentricL3outsService, V2AppCentricVrfsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -25,7 +25,7 @@ export class L3OutsModalComponent implements OnInit {
   public searchColumns: SearchColumnConfig[] = [];
   public perPage = 5;
   public isLoading = false;
-  @Input() public vrfs: VrfPaginationResponse;
+  @Input() public vrfs: GetManyVrfResponseDto;
   public create: boolean;
   public dto;
   public vrf;
@@ -118,7 +118,7 @@ export class L3OutsModalComponent implements OnInit {
   }
 
   private createL3Out(l3Out: L3Out): void {
-    this.l3OutsService.createL3Out({ l3Out }).subscribe(
+    this.l3OutsService.createOneL3Out({ l3Out }).subscribe(
       () => {
         this.closeModal();
       },
@@ -130,8 +130,8 @@ export class L3OutsModalComponent implements OnInit {
     l3Out.name = null;
     l3Out.tenantId = null;
     this.l3OutsService
-      .updateL3Out({
-        uuid: this.l3OutId,
+      .updateOneL3Out({
+        id: this.l3OutId,
         l3Out,
       })
       .subscribe(
@@ -178,7 +178,7 @@ export class L3OutsModalComponent implements OnInit {
       }
     }
     this.vrfService
-      .findAllVrf({
+      .getManyVrf({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -198,8 +198,8 @@ export class L3OutsModalComponent implements OnInit {
 
   public getVrf(vrfId): void {
     this.vrfService
-      .findOneVrf({
-        uuid: vrfId,
+      .getOneVrf({
+        id: vrfId,
       })
       .subscribe(data => (this.vrf = data));
   }

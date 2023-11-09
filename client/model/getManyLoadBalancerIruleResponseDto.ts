@@ -13,10 +13,11 @@ import { LoadBalancerIrule } from './loadBalancerIrule';
 
 
 export interface GetManyLoadBalancerIruleResponseDto { 
-    data: Array<LoadBalancerIrule>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<LoadBalancerIrule>;
 }
 

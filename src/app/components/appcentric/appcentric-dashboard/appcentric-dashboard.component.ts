@@ -70,7 +70,7 @@ export class AppcentricDashboardComponent implements OnInit, OnDestroy {
 
   private getTenantCount(): void {
     this.tenantsService
-      .findAllTenant({
+      .getManyTenant({
         page: 1,
         perPage: 1,
       })
@@ -80,19 +80,19 @@ export class AppcentricDashboardComponent implements OnInit, OnDestroy {
   }
 
   private getVrfCount(): void {
-    this.vrfsService.findAllVrf({ page: 1, perPage: 1 }).subscribe(data => {
+    this.vrfsService.getManyVrf({ page: 1, perPage: 1 }).subscribe(data => {
       this.vrfs = data.total;
     });
   }
 
   private getBridgeDomainCount(): void {
-    this.bridgeDomainsService.findAllBridgeDomain({ page: 1, perPage: 1 }).subscribe(data => {
+    this.bridgeDomainsService.getManyBridgeDomain({ page: 1, perPage: 1 }).subscribe(data => {
       this.bridgeDomains = data.total;
     });
   }
 
   private getContractCount(): void {
-    this.contractsService.findAllContract({ page: 1, perPage: 1 }).subscribe(data => {
+    this.contractsService.getManyContract({ page: 1, perPage: 1 }).subscribe(data => {
       this.contracts = data.total;
     });
   }
