@@ -46,21 +46,6 @@ describe('AdvancedSearchAdapter', () => {
     });
   });
 
-  it('should call service findAll method with correct params in getMany', () => {
-    class MockService {
-      findAll() {}
-    }
-    MockService.prototype.findAll = jest.fn(() => of(mockData));
-    const mockServiceInstance = new MockService();
-    adapter.setService(mockServiceInstance);
-
-    const params = { limit: 10, page: 1 };
-    adapter.findAll(params).subscribe(data => {
-      expect(mockServiceInstance.findAll).toHaveBeenCalledWith(params);
-      expect(data).toEqual(mockData);
-    });
-  });
-
   it('should correctly determine the method name in getMethodName', () => {
     class MockService {
       getManyWithPagination() {}

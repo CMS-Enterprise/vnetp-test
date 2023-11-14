@@ -51,7 +51,6 @@ describe('AdvancedSearchModalComponent', () => {
 
     advancedSearchAdapter = {
       getMany: jest.fn(),
-      findAll: jest.fn(),
       service: {} as any,
     };
 
@@ -152,7 +151,7 @@ describe('AdvancedSearchModalComponent', () => {
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
       s: '{"AND": [{"tierId": {"eq": "1"}}], "OR": [{"name": {"eq": "testName"}},{"ipAddress": {"eq": "192.168.0.1"}}]}',
       page: 1,
-      limit: 20,
+      perPage: 20,
       sort: ['name,ASC'],
     });
     expect(component.closeModal).toHaveBeenCalled();
@@ -162,7 +161,7 @@ describe('AdvancedSearchModalComponent', () => {
   it('should build OR search parameters, get appcentric data, and close modal in advancedSearchOr', () => {
     advancedSearchAdapterSubject.next(advancedSearchAdapter);
 
-    const advancedSearchAdapterSpy = jest.spyOn(component.advancedSearchAdapter, 'findAll');
+    const advancedSearchAdapterSpy = jest.spyOn(component.advancedSearchAdapter, 'getMany');
     jest.spyOn(component, 'closeModal');
     const mockData = { data: 'mockData' };
     const mockSubscribe = { subscribe: jest.fn() } as any;
@@ -218,9 +217,9 @@ describe('AdvancedSearchModalComponent', () => {
     component.advancedSearch('and', 'tierId', '1', 1, 20);
 
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
-      s: '{"AND": [{"name": {"eq": "testName"}},{"ipAddress": {"eq": "192.168.0.1"}}]}',
+      s: '{"AND": [{"name": {"eq": "testName"}},{"ipAddress": {"eq": "192.168.0.1"}},{"tierId": {"eq": "1"}}], "OR":[]}',
       page: 1,
-      limit: 20,
+      perPage: 20,
       sort: ['name,ASC'],
     });
     expect(component.closeModal).toHaveBeenCalled();
@@ -231,7 +230,7 @@ describe('AdvancedSearchModalComponent', () => {
     advancedSearchAdapterSubject.next(advancedSearchAdapter);
 
     jest.spyOn(component.advancedSearchResults, 'emit');
-    const advancedSearchAdapterSpy = jest.spyOn(component.advancedSearchAdapter, 'findAll');
+    const advancedSearchAdapterSpy = jest.spyOn(component.advancedSearchAdapter, 'getMany');
     jest.spyOn(component, 'closeModal');
     const mockData = { data: 'mockData' };
     const mockSubscribe = { subscribe: jest.fn() } as any;
@@ -254,7 +253,7 @@ describe('AdvancedSearchModalComponent', () => {
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
       page: 1,
       perPage: 20,
-      s: '{"AND": [{"name": {"eq": "testName"}},{"ipAddress": {"eq": "192.168.0.1"}}]}',
+      s: '{"AND": [{"name": {"eq": "testName"}},{"ipAddress": {"eq": "192.168.0.1"}},{"tenantId": {"eq": "1"}}], "OR":[]}',
       sort: ['name,ASC'],
     });
     expect(component.closeModal).toHaveBeenCalled();
