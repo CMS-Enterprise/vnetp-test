@@ -121,17 +121,18 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
 
     if (search.length > 0) {
       let query = '';
-      const searchConcat = search.concat().toString();
       if (queryType === 'and') {
         search.push(`{"${baseSearchProperty}": {"eq": "${baseSearchValue}"}}`);
-        query = `{"AND": [${searchConcat}], "OR":[]}`;
-      } else {
-        query = `{"AND": [{"${baseSearchProperty}": {"eq": "${baseSearchValue}"}}], "OR": [${searchConcat}]}`;
+        const andSearchConcat = search.concat().toString();
+        query = `{"AND": [${andSearchConcat}], "OR":[]}`;
+      } else if (queryType === 'or') {
+        const orSearchConcat = search.concat().toString();
+        query = `{"AND": [{"${baseSearchProperty}": {"eq": "${baseSearchValue}"}}], "OR": [${orSearchConcat}]}`;
       }
       params.s = query;
 
-      const operation = baseSearchProperty === 'tenantId' ? 'findAll' : 'getMany';
-      params[baseSearchProperty === 'tenantId' ? 'perPage' : 'limit'] = perPage;
+      const operation = 'getMany';
+      params.perPage = perPage;
       params.sort = ['name,ASC'];
 
       this.advancedSearchAdapter[operation](params).subscribe(data => {
