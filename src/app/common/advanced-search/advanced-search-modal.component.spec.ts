@@ -218,7 +218,7 @@ describe('AdvancedSearchModalComponent', () => {
     component.advancedSearch('and', 'tierId', '1', 1, 20);
 
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
-      s: '{"AND": [{"name": {"eq": "testName"}},{"ipAddress": {"eq": "192.168.0.1"}}]}',
+      s: '{"AND": [{"name": {"eq": "testName"}},{"ipAddress": {"eq": "192.168.0.1"}}], "OR":[]}',
       page: 1,
       limit: 20,
       sort: ['name,ASC'],
@@ -254,7 +254,7 @@ describe('AdvancedSearchModalComponent', () => {
     expect(advancedSearchAdapterSpy).toHaveBeenCalledWith({
       page: 1,
       perPage: 20,
-      s: '{"AND": [{"name": {"eq": "testName"}},{"ipAddress": {"eq": "192.168.0.1"}}]}',
+      s: '{"AND": [{"name": {"eq": "testName"}},{"ipAddress": {"eq": "192.168.0.1"}}], "OR":[]}',
       sort: ['name,ASC'],
     });
     expect(component.closeModal).toHaveBeenCalled();

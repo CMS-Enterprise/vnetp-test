@@ -124,7 +124,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
       const searchConcat = search.concat().toString();
       if (queryType === 'and') {
         search.push(`{"${baseSearchProperty}": {"eq": "${baseSearchValue}"}}`);
-        query = `{"AND": [${searchConcat}]}`;
+        query = `{"AND": [${searchConcat}], "OR":[]}`;
       } else {
         query = `{"AND": [{"${baseSearchProperty}": {"eq": "${baseSearchValue}"}}], "OR": [${searchConcat}]}`;
       }
