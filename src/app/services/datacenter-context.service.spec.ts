@@ -99,7 +99,6 @@ describe('DatacenterContextService', () => {
     it('should fetch datacenters and auto-select the single available datacenter', done => {
       const datacentersMock = [{ id: 'dc1', name: 'Datacenter 1' }];
       const getManyDatacenterSpy = jest.spyOn(datacenterService, 'getManyDatacenter').mockReturnValue(of({ data: datacentersMock } as any));
-
       const switchDatacenterSpy = jest.spyOn(service, 'switchDatacenter').mockImplementation(() => true);
 
       service['getDatacenters']();
