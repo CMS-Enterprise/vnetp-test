@@ -13,10 +13,11 @@ import { LoadBalancerNode } from './loadBalancerNode';
 
 
 export interface GetManyLoadBalancerNodeResponseDto { 
-    data: Array<LoadBalancerNode>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<LoadBalancerNode>;
 }
 

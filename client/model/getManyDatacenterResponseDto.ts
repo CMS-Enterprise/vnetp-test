@@ -13,10 +13,11 @@ import { Datacenter } from './datacenter';
 
 
 export interface GetManyDatacenterResponseDto { 
-    data: Array<Datacenter>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<Datacenter>;
 }
 

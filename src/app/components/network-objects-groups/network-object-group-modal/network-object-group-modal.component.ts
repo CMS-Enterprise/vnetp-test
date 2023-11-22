@@ -87,7 +87,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
 
   addNetworkObject() {
     this.networkObjectGroupService
-      .addNetworkObjectToGroupNetworkObjectGroupNetworkObject({
+      .addNetworkObjectToGroupNetworkObjectGroup({
         networkObjectGroupId: this.NetworkObjectGroupId,
         networkObjectId: this.selectedNetworkObject.id,
       })
@@ -102,7 +102,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
     const modalDto = new YesNoModalDto('Remove Network Object from Network Object Group', '');
     const onConfirm = () => {
       this.networkObjectGroupService
-        .removeNetworkObjectFromGroupNetworkObjectGroupNetworkObject({
+        .removeNetworkObjectFromGroupNetworkObjectGroup({
           networkObjectGroupId: this.NetworkObjectGroupId,
           networkObjectId: networkObject.id,
         })

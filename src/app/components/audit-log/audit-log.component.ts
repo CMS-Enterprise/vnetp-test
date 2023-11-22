@@ -264,12 +264,13 @@ export class AuditLogComponent implements OnInit {
 
   public getTiers(): void {
     this.tierService
-      .getManyDatacenterTier({
-        datacenterId: this.currentDatacenter.id,
-        limit: 50000,
+      .getManyTier({
+        filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
+        page: 1,
+        limit: 1000,
       })
-      .subscribe((data: unknown) => {
-        this.tiers = data as Tier[];
+      .subscribe(data => {
+        this.tiers = data.data;
         this.getObjects();
       });
   }

@@ -489,7 +489,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       serviceObjectRelationsDto.serviceObjectRelations = event;
 
       this.serviceObjectGroupService
-        .bulkImportRelationsServiceObjectGroupServiceObject({
+        .bulkImportRelationsServiceObjectGroup({
           serviceObjectGroupRelationBulkImportCollectionDto: serviceObjectRelationsDto,
         })
         .subscribe(() => {

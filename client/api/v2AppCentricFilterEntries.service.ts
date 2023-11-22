@@ -17,24 +17,37 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { CreateManyFilterEntryDto } from '../model/models';
 import { FilterEntry } from '../model/models';
-import { FilterEntryPaginationResponse } from '../model/models';
+import { GetManyFilterEntryResponseDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateFilterEntryRequestParams {
+export interface CreateManyFilterEntryRequestParams {
+    createManyFilterEntryDto: CreateManyFilterEntryDto;
+}
+
+export interface CreateOneFilterEntryRequestParams {
     filterEntry: FilterEntry;
 }
 
-export interface DeprovisionFilterEntryRequestParams {
-    uuid: string;
+export interface DeleteOneFilterEntryRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface FindAllFilterEntryRequestParams {
+export interface DeprovisionOneFilterEntryRequestParams {
+    /** UUID. */
+    id: string;
+}
+
+export interface GetManyFilterEntryRequestParams {
     /** Comma-seperated array of relations to join. */
-    relations?: string;
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
     /** Number of entities to return per page. */
     perPage?: number;
     /** Page of entities to return based on the perPage value and total number of entities in the database. */
@@ -42,39 +55,44 @@ export interface FindAllFilterEntryRequestParams {
     /** Filter condition to apply to the query. */
     filter?: Array<string>;
     /** Properties to sort the response by. */
-    sort?: string;
+    sort?: Array<string>;
     /** Properties to group the response by. */
-    group?: string;
+    group?: Array<string>;
     /** Properties to select. */
-    select?: string;
-    /** JSON filter string. */
+    fields?: Array<string>;
+    /** Alias for perPage. Number of entities to return per page. */
+    limit?: number;
+    /** Where object for advanced AND/OR queries. */
     s?: string;
 }
 
-export interface FindOneFilterEntryRequestParams {
-    uuid: string;
+export interface GetOneFilterEntryRequestParams {
+    /** UUID. */
+    id: string;
     /** Comma-seperated array of relations to join. */
-    relations?: string;
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
 }
 
-export interface ProvisionFilterEntryRequestParams {
-    uuid: string;
+export interface ProvisionOneFilterEntryRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface RemoveFilterEntryRequestParams {
-    uuid: string;
+export interface RestoreOneFilterEntryRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface RestoreFilterEntryRequestParams {
-    uuid: string;
+export interface SoftDeleteOneFilterEntryRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface SoftDeleteFilterEntryRequestParams {
-    uuid: string;
-}
-
-export interface UpdateFilterEntryRequestParams {
-    uuid: string;
+export interface UpdateOneFilterEntryRequestParams {
+    /** UUID. */
+    id: string;
     filterEntry: FilterEntry;
 }
 
@@ -140,17 +158,73 @@ export class V2AppCentricFilterEntriesService {
     }
 
     /**
+     * Create many FilterEntry
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createFilterEntry(requestParameters: CreateFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FilterEntry>;
-    public createFilterEntry(requestParameters: CreateFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FilterEntry>>;
-    public createFilterEntry(requestParameters: CreateFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FilterEntry>>;
-    public createFilterEntry(requestParameters: CreateFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createManyFilterEntry(requestParameters: CreateManyFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createManyFilterEntry(requestParameters: CreateManyFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createManyFilterEntry(requestParameters: CreateManyFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createManyFilterEntry(requestParameters: CreateManyFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const createManyFilterEntryDto = requestParameters.createManyFilterEntryDto;
+        if (createManyFilterEntryDto === null || createManyFilterEntryDto === undefined) {
+            throw new Error('Required parameter createManyFilterEntryDto was null or undefined when calling createManyFilterEntry.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/filter-entries/bulk`,
+            createManyFilterEntryDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Create one FilterEntry
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createOneFilterEntry(requestParameters: CreateOneFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FilterEntry>;
+    public createOneFilterEntry(requestParameters: CreateOneFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FilterEntry>>;
+    public createOneFilterEntry(requestParameters: CreateOneFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FilterEntry>>;
+    public createOneFilterEntry(requestParameters: CreateOneFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const filterEntry = requestParameters.filterEntry;
         if (filterEntry === null || filterEntry === undefined) {
-            throw new Error('Required parameter filterEntry was null or undefined when calling createFilterEntry.');
+            throw new Error('Required parameter filterEntry was null or undefined when calling createOneFilterEntry.');
         }
 
         let headers = this.defaultHeaders;
@@ -195,17 +269,64 @@ export class V2AppCentricFilterEntriesService {
     }
 
     /**
+     * Delete one FilterEntry
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionFilterEntry(requestParameters: DeprovisionFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionFilterEntry(requestParameters: DeprovisionFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionFilterEntry(requestParameters: DeprovisionFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionFilterEntry(requestParameters: DeprovisionFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling deprovisionFilterEntry.');
+    public deleteOneFilterEntry(requestParameters: DeleteOneFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FilterEntry>;
+    public deleteOneFilterEntry(requestParameters: DeleteOneFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FilterEntry>>;
+    public deleteOneFilterEntry(requestParameters: DeleteOneFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FilterEntry>>;
+    public deleteOneFilterEntry(requestParameters: DeleteOneFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteOneFilterEntry.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<FilterEntry>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Deprovision one FilterEntry
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deprovisionOneFilterEntry(requestParameters: DeprovisionOneFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneFilterEntry(requestParameters: DeprovisionOneFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneFilterEntry(requestParameters: DeprovisionOneFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneFilterEntry(requestParameters: DeprovisionOneFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneFilterEntry.');
         }
 
         let headers = this.defaultHeaders;
@@ -227,7 +348,7 @@ export class V2AppCentricFilterEntriesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(uuid))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -240,27 +361,38 @@ export class V2AppCentricFilterEntriesService {
     }
 
     /**
+     * Get many FilterEntry
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findAllFilterEntry(requestParameters: FindAllFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FilterEntryPaginationResponse>;
-    public findAllFilterEntry(requestParameters: FindAllFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FilterEntryPaginationResponse>>;
-    public findAllFilterEntry(requestParameters: FindAllFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FilterEntryPaginationResponse>>;
-    public findAllFilterEntry(requestParameters: FindAllFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyFilterEntry(requestParameters: GetManyFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyFilterEntryResponseDto>;
+    public getManyFilterEntry(requestParameters: GetManyFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyFilterEntryResponseDto>>;
+    public getManyFilterEntry(requestParameters: GetManyFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyFilterEntryResponseDto>>;
+    public getManyFilterEntry(requestParameters: GetManyFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
+        const join = requestParameters.join;
         const perPage = requestParameters.perPage;
         const page = requestParameters.page;
         const filter = requestParameters.filter;
         const sort = requestParameters.sort;
         const group = requestParameters.group;
-        const select = requestParameters.select;
+        const fields = requestParameters.fields;
+        const limit = requestParameters.limit;
         const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (relations !== undefined && relations !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>relations, 'relations');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
         if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -276,17 +408,27 @@ export class V2AppCentricFilterEntriesService {
                   <any>element, 'filter');
             })
         }
-        if (sort !== undefined && sort !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>sort, 'sort');
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
         }
-        if (group !== undefined && group !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>group, 'group');
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
         }
-        if (select !== undefined && select !== null) {
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>select, 'select');
+            <any>limit, 'limit');
         }
         if (s !== undefined && s !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -313,7 +455,7 @@ export class V2AppCentricFilterEntriesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<FilterEntryPaginationResponse>(`${this.configuration.basePath}/v2/app-centric/filter-entries`,
+        return this.httpClient.get<GetManyFilterEntryResponseDto>(`${this.configuration.basePath}/v2/app-centric/filter-entries`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -326,24 +468,34 @@ export class V2AppCentricFilterEntriesService {
     }
 
     /**
+     * Get one FilterEntry
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findOneFilterEntry(requestParameters: FindOneFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FilterEntry>;
-    public findOneFilterEntry(requestParameters: FindOneFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FilterEntry>>;
-    public findOneFilterEntry(requestParameters: FindOneFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FilterEntry>>;
-    public findOneFilterEntry(requestParameters: FindOneFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling findOneFilterEntry.');
+    public getOneFilterEntry(requestParameters: GetOneFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FilterEntry>;
+    public getOneFilterEntry(requestParameters: GetOneFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FilterEntry>>;
+    public getOneFilterEntry(requestParameters: GetOneFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FilterEntry>>;
+    public getOneFilterEntry(requestParameters: GetOneFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getOneFilterEntry.');
         }
         const relations = requestParameters.relations;
+        const join = requestParameters.join;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (relations !== undefined && relations !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>relations, 'relations');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
 
         let headers = this.defaultHeaders;
@@ -366,7 +518,7 @@ export class V2AppCentricFilterEntriesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<FilterEntry>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.get<FilterEntry>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -379,17 +531,18 @@ export class V2AppCentricFilterEntriesService {
     }
 
     /**
+     * Provision one FilterEntry
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionFilterEntry(requestParameters: ProvisionFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionFilterEntry(requestParameters: ProvisionFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionFilterEntry(requestParameters: ProvisionFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionFilterEntry(requestParameters: ProvisionFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling provisionFilterEntry.');
+    public provisionOneFilterEntry(requestParameters: ProvisionOneFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneFilterEntry(requestParameters: ProvisionOneFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneFilterEntry(requestParameters: ProvisionOneFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneFilterEntry(requestParameters: ProvisionOneFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling provisionOneFilterEntry.');
         }
 
         let headers = this.defaultHeaders;
@@ -411,7 +564,7 @@ export class V2AppCentricFilterEntriesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(uuid))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -424,62 +577,18 @@ export class V2AppCentricFilterEntriesService {
     }
 
     /**
+     * Restore one FilterEntry
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public removeFilterEntry(requestParameters: RemoveFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FilterEntry>;
-    public removeFilterEntry(requestParameters: RemoveFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FilterEntry>>;
-    public removeFilterEntry(requestParameters: RemoveFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FilterEntry>>;
-    public removeFilterEntry(requestParameters: RemoveFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling removeFilterEntry.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<FilterEntry>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(uuid))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public restoreFilterEntry(requestParameters: RestoreFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreFilterEntry(requestParameters: RestoreFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreFilterEntry(requestParameters: RestoreFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreFilterEntry(requestParameters: RestoreFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling restoreFilterEntry.');
+    public restoreOneFilterEntry(requestParameters: RestoreOneFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneFilterEntry(requestParameters: RestoreOneFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneFilterEntry(requestParameters: RestoreOneFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneFilterEntry(requestParameters: RestoreOneFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling restoreOneFilterEntry.');
         }
 
         let headers = this.defaultHeaders;
@@ -501,7 +610,7 @@ export class V2AppCentricFilterEntriesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(uuid))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -514,17 +623,18 @@ export class V2AppCentricFilterEntriesService {
     }
 
     /**
+     * Soft delete one FilterEntry
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteFilterEntry(requestParameters: SoftDeleteFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteFilterEntry(requestParameters: SoftDeleteFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteFilterEntry(requestParameters: SoftDeleteFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteFilterEntry(requestParameters: SoftDeleteFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling softDeleteFilterEntry.');
+    public softDeleteOneFilterEntry(requestParameters: SoftDeleteOneFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneFilterEntry(requestParameters: SoftDeleteOneFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneFilterEntry(requestParameters: SoftDeleteOneFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneFilterEntry(requestParameters: SoftDeleteOneFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneFilterEntry.');
         }
 
         let headers = this.defaultHeaders;
@@ -546,7 +656,7 @@ export class V2AppCentricFilterEntriesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(uuid))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -558,21 +668,22 @@ export class V2AppCentricFilterEntriesService {
     }
 
     /**
+     * Update one FilterEntry
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateFilterEntry(requestParameters: UpdateFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FilterEntry>;
-    public updateFilterEntry(requestParameters: UpdateFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FilterEntry>>;
-    public updateFilterEntry(requestParameters: UpdateFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FilterEntry>>;
-    public updateFilterEntry(requestParameters: UpdateFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling updateFilterEntry.');
+    public updateOneFilterEntry(requestParameters: UpdateOneFilterEntryRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FilterEntry>;
+    public updateOneFilterEntry(requestParameters: UpdateOneFilterEntryRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FilterEntry>>;
+    public updateOneFilterEntry(requestParameters: UpdateOneFilterEntryRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FilterEntry>>;
+    public updateOneFilterEntry(requestParameters: UpdateOneFilterEntryRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateOneFilterEntry.');
         }
         const filterEntry = requestParameters.filterEntry;
         if (filterEntry === null || filterEntry === undefined) {
-            throw new Error('Required parameter filterEntry was null or undefined when calling updateFilterEntry.');
+            throw new Error('Required parameter filterEntry was null or undefined when calling updateOneFilterEntry.');
         }
 
         let headers = this.defaultHeaders;
@@ -604,7 +715,7 @@ export class V2AppCentricFilterEntriesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<FilterEntry>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.put<FilterEntry>(`${this.configuration.basePath}/v2/app-centric/filter-entries/${encodeURIComponent(String(id))}`,
             filterEntry,
             {
                 responseType: <any>responseType,

@@ -13,10 +13,11 @@ import { LoadBalancerVlan } from './loadBalancerVlan';
 
 
 export interface GetManyLoadBalancerVlanResponseDto { 
-    data: Array<LoadBalancerVlan>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<LoadBalancerVlan>;
 }
 

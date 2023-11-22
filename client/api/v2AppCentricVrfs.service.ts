@@ -17,24 +17,37 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { CreateManyVrfDto } from '../model/models';
+import { GetManyVrfResponseDto } from '../model/models';
 import { Vrf } from '../model/models';
-import { VrfPaginationResponse } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateVrfRequestParams {
+export interface CreateManyVrfRequestParams {
+    createManyVrfDto: CreateManyVrfDto;
+}
+
+export interface CreateOneVrfRequestParams {
     vrf: Vrf;
 }
 
-export interface DeprovisionVrfRequestParams {
-    uuid: string;
+export interface DeleteOneVrfRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface FindAllVrfRequestParams {
+export interface DeprovisionOneVrfRequestParams {
+    /** UUID. */
+    id: string;
+}
+
+export interface GetManyVrfRequestParams {
     /** Comma-seperated array of relations to join. */
-    relations?: string;
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
     /** Number of entities to return per page. */
     perPage?: number;
     /** Page of entities to return based on the perPage value and total number of entities in the database. */
@@ -42,39 +55,44 @@ export interface FindAllVrfRequestParams {
     /** Filter condition to apply to the query. */
     filter?: Array<string>;
     /** Properties to sort the response by. */
-    sort?: string;
+    sort?: Array<string>;
     /** Properties to group the response by. */
-    group?: string;
+    group?: Array<string>;
     /** Properties to select. */
-    select?: string;
-    /** JSON filter string. */
+    fields?: Array<string>;
+    /** Alias for perPage. Number of entities to return per page. */
+    limit?: number;
+    /** Where object for advanced AND/OR queries. */
     s?: string;
 }
 
-export interface FindOneVrfRequestParams {
-    uuid: string;
+export interface GetOneVrfRequestParams {
+    /** UUID. */
+    id: string;
     /** Comma-seperated array of relations to join. */
-    relations?: string;
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
 }
 
-export interface ProvisionVrfRequestParams {
-    uuid: string;
+export interface ProvisionOneVrfRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface RemoveVrfRequestParams {
-    uuid: string;
+export interface RestoreOneVrfRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface RestoreVrfRequestParams {
-    uuid: string;
+export interface SoftDeleteOneVrfRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface SoftDeleteVrfRequestParams {
-    uuid: string;
-}
-
-export interface UpdateVrfRequestParams {
-    uuid: string;
+export interface UpdateOneVrfRequestParams {
+    /** UUID. */
+    id: string;
     vrf: Vrf;
 }
 
@@ -140,17 +158,73 @@ export class V2AppCentricVrfsService {
     }
 
     /**
+     * Create many Vrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createVrf(requestParameters: CreateVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Vrf>;
-    public createVrf(requestParameters: CreateVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Vrf>>;
-    public createVrf(requestParameters: CreateVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Vrf>>;
-    public createVrf(requestParameters: CreateVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createManyVrf(requestParameters: CreateManyVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createManyVrf(requestParameters: CreateManyVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createManyVrf(requestParameters: CreateManyVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createManyVrf(requestParameters: CreateManyVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const createManyVrfDto = requestParameters.createManyVrfDto;
+        if (createManyVrfDto === null || createManyVrfDto === undefined) {
+            throw new Error('Required parameter createManyVrfDto was null or undefined when calling createManyVrf.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/vrfs/bulk`,
+            createManyVrfDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Create one Vrf
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createOneVrf(requestParameters: CreateOneVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Vrf>;
+    public createOneVrf(requestParameters: CreateOneVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Vrf>>;
+    public createOneVrf(requestParameters: CreateOneVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Vrf>>;
+    public createOneVrf(requestParameters: CreateOneVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const vrf = requestParameters.vrf;
         if (vrf === null || vrf === undefined) {
-            throw new Error('Required parameter vrf was null or undefined when calling createVrf.');
+            throw new Error('Required parameter vrf was null or undefined when calling createOneVrf.');
         }
 
         let headers = this.defaultHeaders;
@@ -195,17 +269,64 @@ export class V2AppCentricVrfsService {
     }
 
     /**
+     * Delete one Vrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionVrf(requestParameters: DeprovisionVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionVrf(requestParameters: DeprovisionVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionVrf(requestParameters: DeprovisionVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionVrf(requestParameters: DeprovisionVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling deprovisionVrf.');
+    public deleteOneVrf(requestParameters: DeleteOneVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Vrf>;
+    public deleteOneVrf(requestParameters: DeleteOneVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Vrf>>;
+    public deleteOneVrf(requestParameters: DeleteOneVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Vrf>>;
+    public deleteOneVrf(requestParameters: DeleteOneVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteOneVrf.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<Vrf>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Deprovision one Vrf
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deprovisionOneVrf(requestParameters: DeprovisionOneVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneVrf(requestParameters: DeprovisionOneVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneVrf(requestParameters: DeprovisionOneVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneVrf(requestParameters: DeprovisionOneVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneVrf.');
         }
 
         let headers = this.defaultHeaders;
@@ -227,7 +348,7 @@ export class V2AppCentricVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(uuid))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -240,27 +361,38 @@ export class V2AppCentricVrfsService {
     }
 
     /**
+     * Get many Vrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findAllVrf(requestParameters: FindAllVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<VrfPaginationResponse>;
-    public findAllVrf(requestParameters: FindAllVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<VrfPaginationResponse>>;
-    public findAllVrf(requestParameters: FindAllVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<VrfPaginationResponse>>;
-    public findAllVrf(requestParameters: FindAllVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyVrf(requestParameters: GetManyVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyVrfResponseDto>;
+    public getManyVrf(requestParameters: GetManyVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyVrfResponseDto>>;
+    public getManyVrf(requestParameters: GetManyVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyVrfResponseDto>>;
+    public getManyVrf(requestParameters: GetManyVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
+        const join = requestParameters.join;
         const perPage = requestParameters.perPage;
         const page = requestParameters.page;
         const filter = requestParameters.filter;
         const sort = requestParameters.sort;
         const group = requestParameters.group;
-        const select = requestParameters.select;
+        const fields = requestParameters.fields;
+        const limit = requestParameters.limit;
         const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (relations !== undefined && relations !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>relations, 'relations');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
         if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -276,17 +408,27 @@ export class V2AppCentricVrfsService {
                   <any>element, 'filter');
             })
         }
-        if (sort !== undefined && sort !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>sort, 'sort');
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
         }
-        if (group !== undefined && group !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>group, 'group');
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
         }
-        if (select !== undefined && select !== null) {
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>select, 'select');
+            <any>limit, 'limit');
         }
         if (s !== undefined && s !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -313,7 +455,7 @@ export class V2AppCentricVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<VrfPaginationResponse>(`${this.configuration.basePath}/v2/app-centric/vrfs`,
+        return this.httpClient.get<GetManyVrfResponseDto>(`${this.configuration.basePath}/v2/app-centric/vrfs`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -326,24 +468,34 @@ export class V2AppCentricVrfsService {
     }
 
     /**
+     * Get one Vrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findOneVrf(requestParameters: FindOneVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Vrf>;
-    public findOneVrf(requestParameters: FindOneVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Vrf>>;
-    public findOneVrf(requestParameters: FindOneVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Vrf>>;
-    public findOneVrf(requestParameters: FindOneVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling findOneVrf.');
+    public getOneVrf(requestParameters: GetOneVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Vrf>;
+    public getOneVrf(requestParameters: GetOneVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Vrf>>;
+    public getOneVrf(requestParameters: GetOneVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Vrf>>;
+    public getOneVrf(requestParameters: GetOneVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getOneVrf.');
         }
         const relations = requestParameters.relations;
+        const join = requestParameters.join;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (relations !== undefined && relations !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>relations, 'relations');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
 
         let headers = this.defaultHeaders;
@@ -366,7 +518,7 @@ export class V2AppCentricVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Vrf>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.get<Vrf>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -379,17 +531,18 @@ export class V2AppCentricVrfsService {
     }
 
     /**
+     * Provision one Vrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionVrf(requestParameters: ProvisionVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionVrf(requestParameters: ProvisionVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionVrf(requestParameters: ProvisionVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionVrf(requestParameters: ProvisionVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling provisionVrf.');
+    public provisionOneVrf(requestParameters: ProvisionOneVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneVrf(requestParameters: ProvisionOneVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneVrf(requestParameters: ProvisionOneVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneVrf(requestParameters: ProvisionOneVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling provisionOneVrf.');
         }
 
         let headers = this.defaultHeaders;
@@ -411,7 +564,7 @@ export class V2AppCentricVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(uuid))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -424,62 +577,18 @@ export class V2AppCentricVrfsService {
     }
 
     /**
+     * Restore one Vrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public removeVrf(requestParameters: RemoveVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Vrf>;
-    public removeVrf(requestParameters: RemoveVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Vrf>>;
-    public removeVrf(requestParameters: RemoveVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Vrf>>;
-    public removeVrf(requestParameters: RemoveVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling removeVrf.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<Vrf>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(uuid))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public restoreVrf(requestParameters: RestoreVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreVrf(requestParameters: RestoreVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreVrf(requestParameters: RestoreVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreVrf(requestParameters: RestoreVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling restoreVrf.');
+    public restoreOneVrf(requestParameters: RestoreOneVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneVrf(requestParameters: RestoreOneVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneVrf(requestParameters: RestoreOneVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneVrf(requestParameters: RestoreOneVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling restoreOneVrf.');
         }
 
         let headers = this.defaultHeaders;
@@ -501,7 +610,7 @@ export class V2AppCentricVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(uuid))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -514,17 +623,18 @@ export class V2AppCentricVrfsService {
     }
 
     /**
+     * Soft delete one Vrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteVrf(requestParameters: SoftDeleteVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteVrf(requestParameters: SoftDeleteVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteVrf(requestParameters: SoftDeleteVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteVrf(requestParameters: SoftDeleteVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling softDeleteVrf.');
+    public softDeleteOneVrf(requestParameters: SoftDeleteOneVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneVrf(requestParameters: SoftDeleteOneVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneVrf(requestParameters: SoftDeleteOneVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneVrf(requestParameters: SoftDeleteOneVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneVrf.');
         }
 
         let headers = this.defaultHeaders;
@@ -546,7 +656,7 @@ export class V2AppCentricVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(uuid))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -558,21 +668,22 @@ export class V2AppCentricVrfsService {
     }
 
     /**
+     * Update one Vrf
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateVrf(requestParameters: UpdateVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Vrf>;
-    public updateVrf(requestParameters: UpdateVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Vrf>>;
-    public updateVrf(requestParameters: UpdateVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Vrf>>;
-    public updateVrf(requestParameters: UpdateVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling updateVrf.');
+    public updateOneVrf(requestParameters: UpdateOneVrfRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Vrf>;
+    public updateOneVrf(requestParameters: UpdateOneVrfRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Vrf>>;
+    public updateOneVrf(requestParameters: UpdateOneVrfRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Vrf>>;
+    public updateOneVrf(requestParameters: UpdateOneVrfRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateOneVrf.');
         }
         const vrf = requestParameters.vrf;
         if (vrf === null || vrf === undefined) {
-            throw new Error('Required parameter vrf was null or undefined when calling updateVrf.');
+            throw new Error('Required parameter vrf was null or undefined when calling updateOneVrf.');
         }
 
         let headers = this.defaultHeaders;
@@ -604,7 +715,7 @@ export class V2AppCentricVrfsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<Vrf>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.put<Vrf>(`${this.configuration.basePath}/v2/app-centric/vrfs/${encodeURIComponent(String(id))}`,
             vrf,
             {
                 responseType: <any>responseType,

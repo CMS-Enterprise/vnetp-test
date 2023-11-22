@@ -9,14 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { EndpointGroup } from './endpointGroup';
+import { Datacenter } from './datacenter';
 
 
-export interface EndpointGroupPaginationResponse { 
-    data: Array<EndpointGroup>;
-    count: number;
-    total: number;
-    page: number;
-    pageCount: number;
+export interface CreateManyDatacenterDto { 
+    bulk: Array<Datacenter>;
 }
 

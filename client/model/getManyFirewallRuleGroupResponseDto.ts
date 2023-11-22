@@ -13,10 +13,11 @@ import { FirewallRuleGroup } from './firewallRuleGroup';
 
 
 export interface GetManyFirewallRuleGroupResponseDto { 
-    data: Array<FirewallRuleGroup>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<FirewallRuleGroup>;
 }
 
