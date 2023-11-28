@@ -55,15 +55,23 @@ export class FilterComponent implements OnInit {
     advancedSearchAdapter.setServiceName('V2AppCentricFiltersService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
 
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationEnd) {
+    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
+    //     if (match) {
+    //       const uuid = match[0].split('/')[2];
+    //       this.tenantId = uuid;
+    //     }
+    //   }
+    // });
+
+    const match = this.router.routerState.snapshot.url.match(
+      /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
+    );
+    if (match) {
+      const uuid = match[0].split('/')[2];
+      this.tenantId = uuid;
+    }
   }
 
   ngOnInit(): void {

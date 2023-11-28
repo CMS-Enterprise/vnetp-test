@@ -18,7 +18,7 @@ describe('ContractModalComponent', () => {
         ContractModalComponent,
         MockNgxSmartModalComponent,
         MockFontAwesomeComponent,
-        MockComponent({ selector: 'app-subject-modal', inputs: ['contractId'] }),
+        MockComponent({ selector: 'app-subject-modal', inputs: ['contractId', 'tenantId'] }),
         MockIconButtonComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
       ],

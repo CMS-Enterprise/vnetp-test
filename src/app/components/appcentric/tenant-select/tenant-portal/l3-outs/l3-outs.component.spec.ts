@@ -27,7 +27,7 @@ describe('L3OutsComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockImportExportComponent,
         MockIconButtonComponent,
-        MockComponent({ selector: 'app-l3-outs-modal', inputs: ['vrfs'] }),
+        MockComponent({ selector: 'app-l3-outs-modal', inputs: ['vrfs', 'tenantId'] }),
         MockYesNoModalComponent,
       ],
       imports: [RouterTestingModule, HttpClientModule],

@@ -29,7 +29,7 @@ export class SubjectModalComponent implements OnInit {
   public modalMode: ModalMode;
   public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() public tenantId: string;
   @Input() public contractId: string;
   public subjects: GetManySubjectResponseDto;
   public tableComponentDto = new TableComponentDto();

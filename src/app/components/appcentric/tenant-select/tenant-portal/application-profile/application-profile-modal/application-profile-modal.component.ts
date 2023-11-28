@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import {
@@ -38,7 +38,7 @@ export class ApplicationProfileModalComponent implements OnInit {
   public selectedEndpointGroup: EndpointGroup;
   public searchColumns: SearchColumnConfig[] = [];
   public perPage = 5;
-  private tenantId: string;
+  @Input() tenantId;
   public apEndpointGroupModalSubscription: Subscription;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
@@ -61,15 +61,15 @@ export class ApplicationProfileModalComponent implements OnInit {
     private router: Router,
     private tableContextService: TableContextService,
   ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationEnd) {
+    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
+    //     if (match) {
+    //       const uuid = match[0].split('/')[2];
+    //       this.tenantId = uuid;
+    //     }
+    //   }
+    // });
   }
 
   ngOnInit(): void {

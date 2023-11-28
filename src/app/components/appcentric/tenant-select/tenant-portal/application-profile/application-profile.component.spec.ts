@@ -22,7 +22,7 @@ describe('ApplicationProfileComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ApplicationProfileComponent,
-        MockComponent('app-application-profile-modal'),
+        MockComponent({ selector: 'app-application-profile-modal', inputs: ['tenantId'] }),
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockNgxSmartModalComponent,
         MockFontAwesomeComponent,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { V2AppCentricVrfsService, Vrf } from 'client';
@@ -17,7 +17,7 @@ export class VrfModalComponent implements OnInit {
   public vrfId: string;
   public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() public tenantId: string;
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -25,15 +25,15 @@ export class VrfModalComponent implements OnInit {
     private vrfService: V2AppCentricVrfsService,
     private router: Router,
   ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationEnd) {
+    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
+    //     if (match) {
+    //       const uuid = match[0].split('/')[2];
+    //       this.tenantId = uuid;
+    //     }
+    //   }
+    // });
   }
 
   ngOnInit(): void {

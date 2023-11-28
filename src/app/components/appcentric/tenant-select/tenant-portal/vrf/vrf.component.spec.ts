@@ -28,7 +28,7 @@ describe('VrfComponent', () => {
         MockImportExportComponent,
         MockIconButtonComponent,
         MockYesNoModalComponent,
-        MockComponent('app-vrf-modal'),
+        MockComponent({ selector: 'app-vrf-modal', inputs: ['tenantId'] }),
       ],
       imports: [RouterTestingModule, HttpClientModule],
       providers: [MockProvider(NgxSmartModalService)],

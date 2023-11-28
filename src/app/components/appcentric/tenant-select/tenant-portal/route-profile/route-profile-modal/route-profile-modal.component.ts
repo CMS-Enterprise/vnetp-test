@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { RouteProfile, V2AppCentricRouteProfilesService } from 'client';
@@ -16,7 +16,7 @@ export class RouteProfileModalComponent implements OnInit {
   public routeProfileId: string;
   public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() public tenantId: string;
   public isLoading = false;
 
   public dto: RouteProfileModalDto;
@@ -27,15 +27,15 @@ export class RouteProfileModalComponent implements OnInit {
     private routeProfileService: V2AppCentricRouteProfilesService,
     private router: Router,
   ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationEnd) {
+    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
+    //     if (match) {
+    //       const uuid = match[0].split('/')[2];
+    //       this.tenantId = uuid;
+    //     }
+    //   }
+    // });
   }
 
   ngOnInit(): void {

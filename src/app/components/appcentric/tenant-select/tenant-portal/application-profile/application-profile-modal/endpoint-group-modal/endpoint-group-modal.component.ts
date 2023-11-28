@@ -24,7 +24,7 @@ export class EndpointGroupModalComponent implements OnInit {
   public endpointGroupId: string;
   public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() tenantId;
   public perPage = 5;
   public isLoading = false;
   @Input() public applicationProfileId;

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import {
@@ -23,7 +23,7 @@ import SubscriptionUtil from '../../../../../../../utils/SubscriptionUtil';
 })
 export class FilterEntryModalComponent implements OnInit, OnDestroy {
   public filterEntryId: string;
-  public tenantId: string;
+  @Input() public tenantId: string;
   public filterId: string;
   public form: UntypedFormGroup;
   public submitted: boolean;
@@ -44,14 +44,14 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
     private filterEntriesService: V2AppCentricFilterEntriesService,
     private router: Router,
   ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
-        if (match) {
-          this.tenantId = match[1];
-        }
-      }
-    });
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationEnd) {
+    //     const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
+    //     if (match) {
+    //       this.tenantId = match[1];
+    //     }
+    //   }
+    // });
   }
 
   ngOnInit(): void {

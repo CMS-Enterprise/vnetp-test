@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import {
@@ -36,7 +36,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   public bridgeDomainId: string;
   public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() tenantId: string;
 
   private l3OutForRouteProfileSubscription: Subscription;
 
@@ -76,15 +76,15 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     private vrfService: V2AppCentricVrfsService,
     private routeProfileService: V2AppCentricRouteProfilesService,
   ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationEnd) {
+    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
+    //     if (match) {
+    //       const uuid = match[0].split('/')[2];
+    //       this.tenantId = uuid;
+    //     }
+    //   }
+    // });
   }
 
   ngOnInit(): void {
@@ -216,6 +216,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
 
   public save(): void {
     this.submitted = true;
+    console.log('this.form.invalid', this.form);
     if (this.form.invalid) {
       return;
     }

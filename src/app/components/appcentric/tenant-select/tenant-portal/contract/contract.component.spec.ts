@@ -28,7 +28,7 @@ describe('ContractComponent', () => {
         MockImportExportComponent,
         MockIconButtonComponent,
         MockYesNoModalComponent,
-        MockComponent('app-contract-modal'),
+        MockComponent({ selector: 'app-contract-modal', inputs: ['tenantId'] }),
       ],
       imports: [RouterTestingModule, HttpClientModule],
       providers: [MockProvider(NgxSmartModalService)],

@@ -20,7 +20,7 @@ export class L3OutsModalComponent implements OnInit {
   public l3OutId: string;
   public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() public tenantId: string;
   public tableComponentDto = new TableComponentDto();
   public searchColumns: SearchColumnConfig[] = [];
   public perPage = 5;
@@ -49,15 +49,15 @@ export class L3OutsModalComponent implements OnInit {
     private router: Router,
     private vrfService: V2AppCentricVrfsService,
   ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    // this.router.events.subscribe(event => {
+    //   if (event instanceof NavigationEnd) {
+    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
+    //     if (match) {
+    //       const uuid = match[0].split('/')[2];
+    //       this.tenantId = uuid;
+    //     }
+    //   }
+    // });
   }
 
   ngOnInit(): void {
@@ -143,6 +143,7 @@ export class L3OutsModalComponent implements OnInit {
   }
 
   public save(): void {
+    console.log('this.form', this.form);
     this.submitted = true;
     if (this.form.invalid) {
       return;
