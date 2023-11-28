@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { GetManyVrfResponseDto, L3Out, V2AppCentricL3outsService, V2AppCentricVrfsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -48,17 +48,7 @@ export class L3OutsModalComponent implements OnInit {
     private l3OutsService: V2AppCentricL3outsService,
     private router: Router,
     private vrfService: V2AppCentricVrfsService,
-  ) {
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-    //     if (match) {
-    //       const uuid = match[0].split('/')[2];
-    //       this.tenantId = uuid;
-    //     }
-    //   }
-    // });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();

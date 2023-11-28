@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { GetManyRouteProfileResponseDto, RouteProfile, V2AppCentricRouteProfilesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -48,16 +48,6 @@ export class RouteProfileComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private router: Router,
   ) {
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-    //     if (match) {
-    //       const uuid = match[0].split('/')[2];
-    //       this.tenantId = uuid;
-    //     }
-    //   }
-    // });
-
     const match = this.router.routerState.snapshot.url.match(
       /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
     );

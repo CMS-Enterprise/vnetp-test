@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { V2AppCentricContractsService, Contract, V2AppCentricSubjectsService, Subject, GetManySubjectResponseDto } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -55,17 +55,7 @@ export class ContractModalComponent implements OnInit {
     private router: Router,
     private subjectsService: V2AppCentricSubjectsService,
     private tableContextService: TableContextService,
-  ) {
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-    //     if (match) {
-    //       const uuid = match[0].split('/')[2];
-    //       this.tenantId = uuid;
-    //     }
-    //   }
-    // });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();

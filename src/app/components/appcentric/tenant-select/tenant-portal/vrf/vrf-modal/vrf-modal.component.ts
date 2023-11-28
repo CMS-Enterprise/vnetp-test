@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { V2AppCentricVrfsService, Vrf } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { VrfModalDto } from 'src/app/models/appcentric/vrf-modal-dto';
@@ -24,17 +24,7 @@ export class VrfModalComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private vrfService: V2AppCentricVrfsService,
     private router: Router,
-  ) {
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-    //     if (match) {
-    //       const uuid = match[0].split('/')[2];
-    //       this.tenantId = uuid;
-    //     }
-    //   }
-    // });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();

@@ -75,17 +75,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     private l3OutService: V2AppCentricL3outsService,
     private vrfService: V2AppCentricVrfsService,
     private routeProfileService: V2AppCentricRouteProfilesService,
-  ) {
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-    //     if (match) {
-    //       const uuid = match[0].split('/')[2];
-    //       this.tenantId = uuid;
-    //     }
-    //   }
-    // });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -230,7 +220,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     l3OutForRouteProfileId = l3OutForRouteProfileId === '' ? null : l3OutForRouteProfileId;
     routeProfileId = routeProfileId === '' ? null : routeProfileId;
 
-    console.log(routeProfileId, `vrfId`);
+    console.log(routeProfileId, 'vrfId');
 
     const tenantId = this.tenantId;
 

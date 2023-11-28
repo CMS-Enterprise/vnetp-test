@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Filter, GetManyFilterResponseDto, V2AppCentricFiltersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -54,16 +54,6 @@ export class FilterComponent implements OnInit {
     advancedSearchAdapter.setService(this.filterService);
     advancedSearchAdapter.setServiceName('V2AppCentricFiltersService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
-
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-    //     if (match) {
-    //       const uuid = match[0].split('/')[2];
-    //       this.tenantId = uuid;
-    //     }
-    //   }
-    // });
 
     const match = this.router.routerState.snapshot.url.match(
       /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
