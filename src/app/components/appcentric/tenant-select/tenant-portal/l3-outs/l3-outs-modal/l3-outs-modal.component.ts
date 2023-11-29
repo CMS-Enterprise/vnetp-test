@@ -157,6 +157,7 @@ export class L3OutsModalComponent implements OnInit {
       description,
       alias,
       tenantId,
+      vrfId,
     } as L3Out;
 
     if (this.modalMode === ModalMode.Create) {
