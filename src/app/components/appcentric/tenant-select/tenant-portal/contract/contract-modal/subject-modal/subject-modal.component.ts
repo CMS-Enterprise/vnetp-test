@@ -58,19 +58,8 @@ export class SubjectModalComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private subjectsService: V2AppCentricSubjectsService,
-    private router: Router,
     private filterService: V2AppCentricFiltersService,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();

@@ -42,17 +42,7 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private filterEntriesService: V2AppCentricFilterEntriesService,
-    private router: Router,
-  ) {
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //     const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
-    //     if (match) {
-    //       this.tenantId = match[1];
-    //     }
-    //   }
-    // });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();

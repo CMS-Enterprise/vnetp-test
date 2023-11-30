@@ -70,7 +70,6 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private bridgeDomainService: V2AppCentricBridgeDomainsService,
-    private router: Router,
     private tableContextService: TableContextService,
     private l3OutService: V2AppCentricL3outsService,
     private vrfService: V2AppCentricVrfsService,

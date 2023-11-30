@@ -52,7 +52,6 @@ export class ContractModalComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private contractService: V2AppCentricContractsService,
-    private router: Router,
     private subjectsService: V2AppCentricSubjectsService,
     private tableContextService: TableContextService,
   ) {}

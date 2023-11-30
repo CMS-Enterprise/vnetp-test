@@ -25,18 +25,7 @@ export class RouteProfileModalComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private routeProfileService: V2AppCentricRouteProfilesService,
-    private router: Router,
-  ) {
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-    //     if (match) {
-    //       const uuid = match[0].split('/')[2];
-    //       this.tenantId = uuid;
-    //     }
-    //   }
-    // });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();

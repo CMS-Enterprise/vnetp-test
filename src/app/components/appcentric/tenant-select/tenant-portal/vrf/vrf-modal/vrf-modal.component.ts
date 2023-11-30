@@ -19,12 +19,7 @@ export class VrfModalComponent implements OnInit {
   public submitted: boolean;
   @Input() public tenantId: string;
 
-  constructor(
-    private formBuilder: UntypedFormBuilder,
-    private ngx: NgxSmartModalService,
-    private vrfService: V2AppCentricVrfsService,
-    private router: Router,
-  ) {}
+  constructor(private formBuilder: UntypedFormBuilder, private ngx: NgxSmartModalService, private vrfService: V2AppCentricVrfsService) {}
 
   ngOnInit(): void {
     this.buildForm();

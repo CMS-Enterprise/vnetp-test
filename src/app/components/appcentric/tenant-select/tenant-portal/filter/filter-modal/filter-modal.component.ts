@@ -74,19 +74,8 @@ export class FilterModalComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private filterService: V2AppCentricFiltersService,
     private filterEntriesService: V2AppCentricFilterEntriesService,
-    private router: Router,
     private tableContextService: TableContextService,
-  ) {
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-    //     if (match) {
-    //       const uuid = match[0].split('/')[2];
-    //       this.tenantId = uuid;
-    //     }
-    //   }
-    // });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();

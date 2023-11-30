@@ -29,7 +29,7 @@ describe('BridgeDomainComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
         MockComponent({ selector: 'app-bridge-domain-modal', inputs: ['tenantId'] }),
-        MockComponent('app-subnets-modal'),
+        MockComponent({ selector: 'app-subnets-modal', inputs: ['tenantId'] }),
       ],
       imports: [HttpClientModule, RouterTestingModule],
       providers: [MockProvider(NgxSmartModalService)],

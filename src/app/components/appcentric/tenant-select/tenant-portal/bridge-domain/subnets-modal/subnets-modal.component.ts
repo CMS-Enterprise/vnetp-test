@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { AppCentricSubnet, GetManyAppCentricSubnetResponseDto, V2AppCentricAppCentricSubnetsService } from 'client';
@@ -25,7 +25,7 @@ export class SubnetsModalComponent implements OnInit {
   public modalMode: ModalMode;
   public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() public tenantId: string;
   public bridgeDomainId: string;
   public subnets: GetManyAppCentricSubnetResponseDto;
   public tableComponentDto = new TableComponentDto();
@@ -51,19 +51,8 @@ export class SubnetsModalComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private subnetsService: V2AppCentricAppCentricSubnetsService,
-    private router: Router,
     private tableContextService: TableContextService,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();

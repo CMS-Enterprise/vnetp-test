@@ -58,7 +58,6 @@ export class ApplicationProfileModalComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private applicationProfileService: V2AppCentricApplicationProfilesService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
-    private router: Router,
     private tableContextService: TableContextService,
   ) {}
 
