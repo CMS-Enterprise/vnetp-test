@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { V2AppCentricL3outsService, L3Out, V2AppCentricVrfsService, Vrf, GetManyL3OutResponseDto, GetManyVrfResponseDto } from 'client';
+import { V2AppCentricL3outsService, L3Out, V2AppCentricVrfsService, GetManyL3OutResponseDto, GetManyVrfResponseDto } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';

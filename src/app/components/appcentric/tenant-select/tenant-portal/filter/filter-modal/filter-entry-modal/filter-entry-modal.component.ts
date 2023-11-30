@@ -1,6 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
 import {
   FilterEntry,
   FilterEntryArpFlagEnum,

@@ -1,11 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import {
-  Contract,
-  GetManyContractResponseDto,
-  GetManyEndpointGroupResponseDto,
-  V2AppCentricContractsService,
-  V2AppCentricEndpointGroupsService,
-} from 'client';
+import { Contract, GetManyContractResponseDto, V2AppCentricContractsService, V2AppCentricEndpointGroupsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';

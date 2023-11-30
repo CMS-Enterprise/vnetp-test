@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { Router, NavigationEnd } from '@angular/router';
 import { V2AppCentricEndpointGroupsService, EndpointGroup, V2AppCentricBridgeDomainsService, BridgeDomain } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Tab } from 'src/app/common/tabs/tabs.component';

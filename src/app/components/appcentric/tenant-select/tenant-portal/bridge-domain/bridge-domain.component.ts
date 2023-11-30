@@ -1,14 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import {
-  BridgeDomain,
-  GetManyBridgeDomainResponseDto,
-  L3Out,
-  V2AppCentricBridgeDomainsService,
-  V2AppCentricL3outsService,
-  V2AppCentricVrfsService,
-  Vrf,
-} from 'client';
+import { Router } from '@angular/router';
+import { BridgeDomain, GetManyBridgeDomainResponseDto, V2AppCentricBridgeDomainsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
@@ -71,16 +63,6 @@ export class BridgeDomainComponent implements OnInit {
     advancedSearchAdapter.setService(this.bridgeDomainService);
     advancedSearchAdapter.setServiceName('V2AppCentricBridgeDomainsService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
-
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationEnd) {
-    //     const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-    //     if (match) {
-    //       const uuid = match[0].split('/')[2];
-    //       this.tenantId = uuid;
-    //     }
-    //   }
-    // });
 
     const match = this.router.routerState.snapshot.url.match(
       /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
