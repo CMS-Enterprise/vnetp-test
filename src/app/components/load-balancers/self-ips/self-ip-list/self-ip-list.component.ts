@@ -150,7 +150,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         join: ['loadBalancerVlan'],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(

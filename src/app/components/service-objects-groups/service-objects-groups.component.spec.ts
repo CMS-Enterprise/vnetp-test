@@ -193,7 +193,7 @@ describe('ServicesObjectsGroupsComponent', () => {
         .getManyServiceObject({
           filter: [`tierId||eq||${component.currentTier.id}`],
           page: component.svcObjTableComponentDto.page,
-          limit: component.svcObjTableComponentDto.perPage,
+          perPage: component.svcObjTableComponentDto.perPage,
           sort: ['name,ASC'],
         })
         .subscribe(
@@ -223,7 +223,7 @@ describe('ServicesObjectsGroupsComponent', () => {
         .getManyServiceObjectGroup({
           filter: [`tierId||eq||${component.currentTier.id}`],
           page: component.svcObjGrpTableComponentDto.page,
-          limit: component.svcObjGrpTableComponentDto.perPage,
+          perPage: component.svcObjGrpTableComponentDto.perPage,
           sort: ['name,ASC'],
         })
         .subscribe(
