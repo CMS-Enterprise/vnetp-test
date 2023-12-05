@@ -127,7 +127,6 @@ export class SubnetsModalComponent implements OnInit {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
-    console.log(eventParams);
     this.subnetsService
       .getManyAppCentricSubnet({
         filter: [`bridgeDomainId||eq||${this.bridgeDomainId}`, eventParams],

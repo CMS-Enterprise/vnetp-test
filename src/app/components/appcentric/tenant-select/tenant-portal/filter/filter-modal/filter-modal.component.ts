@@ -151,7 +151,7 @@ export class FilterModalComponent implements OnInit {
     this.filterEntriesService
       .getManyFilterEntry({
         filter: [`filterId||eq||${this.filterId}`, eventParams],
-        limit: 1000,
+        perPage: 1000,
         page: 1,
       })
       .subscribe(
