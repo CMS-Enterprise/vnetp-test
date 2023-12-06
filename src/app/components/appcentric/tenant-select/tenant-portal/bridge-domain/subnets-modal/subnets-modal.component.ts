@@ -118,6 +118,8 @@ export class SubnetsModalComponent implements OnInit {
     this.subnetsService
       .getManyAppCentricSubnet({
         filter: [`bridgeDomainId||eq||${this.bridgeDomainId}`, eventParams],
+        page: 1,
+        perPage: 1000,
       })
       .subscribe(
         data => (this.subnets = data),
