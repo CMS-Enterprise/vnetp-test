@@ -135,7 +135,6 @@ export class L3OutsModalComponent implements OnInit {
   }
 
   public save(): void {
-    console.log('this.form', this.form);
     this.submitted = true;
     if (this.form.invalid) {
       return;

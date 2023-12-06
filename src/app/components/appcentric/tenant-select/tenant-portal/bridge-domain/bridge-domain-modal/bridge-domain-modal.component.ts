@@ -204,7 +204,6 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
 
   public save(): void {
     this.submitted = true;
-    console.log('this.form.invalid', this.form);
     if (this.form.invalid) {
       return;
     }
@@ -217,8 +216,6 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     // Check if these fields are empty strings, and if so, set them to null
     l3OutForRouteProfileId = l3OutForRouteProfileId === '' ? null : l3OutForRouteProfileId;
     routeProfileId = routeProfileId === '' ? null : routeProfileId;
-
-    console.log(routeProfileId, 'vrfId');
 
     const tenantId = this.tenantId;
 
