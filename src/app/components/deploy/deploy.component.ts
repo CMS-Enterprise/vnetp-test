@@ -69,7 +69,7 @@ export class DeployComponent implements OnInit {
       .getManyTierGroup({
         filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
         page: 1,
-        limit: 1000,
+        perPage: 1000,
       })
       .subscribe(response => {
         this.tierGroups = response.data;
@@ -85,7 +85,7 @@ export class DeployComponent implements OnInit {
       .getManyTier({
         filter: [`datacenterId||eq||${this.currentDatacenter.id}`, 'deletedAt||isnull'],
         page: 1,
-        limit: 1000,
+        perPage: 1000,
       })
       .subscribe(data => {
         this.tiers = data.data.map(tier => new TableRowWrapper(tier));

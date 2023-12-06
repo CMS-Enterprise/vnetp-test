@@ -107,40 +107,40 @@ export class TiersComponent implements OnInit, OnDestroy {
           filter: [`tierId||eq||${tier.id}`],
           sort: ['updatedAt,ASC'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
         const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
           filter: [`tierId||eq||${tier.id}`],
           sort: ['updatedAt,ASC'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
         const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
           filter: [`tierId||eq||${tier.id}`],
           sort: ['updatedAt,ASC'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
 
         const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
           filter: [`tierId||eq||${tier.id}`],
           sort: ['updatedAt,ASC'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
 
         const firewallRuleGroupRequest = this.firewallRuleGroupService.getManyFirewallRuleGroup({
           filter: [`tierId||eq||${tier.id}`],
           join: ['firewallRules'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
 
         const natRuleGroupRequest = this.natRuleGroupService.getManyNatRuleGroup({
           filter: [`tierId||eq||${tier.id}`],
           join: ['natRules'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
         forkJoin([
           networkObjectRequest,
@@ -197,7 +197,7 @@ export class TiersComponent implements OnInit, OnDestroy {
       .getManyTier({
         filter: [`datacenterId||eq||${this.currentDatacenter.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['updatedAt,ASC'],
       })
       .subscribe(
