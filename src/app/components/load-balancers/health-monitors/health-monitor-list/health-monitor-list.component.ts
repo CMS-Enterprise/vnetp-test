@@ -136,7 +136,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       .getManyLoadBalancerHealthMonitor({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(

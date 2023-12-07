@@ -29,6 +29,7 @@ export class L3OutsModalComponent implements OnInit {
   public create: boolean;
   public dto;
   public vrf;
+  public modalModeEnum = ModalMode;
 
   @ViewChild('vrfSelectTemplate') vrfSelectTemplate: TemplateRef<any>;
 
@@ -98,6 +99,7 @@ export class L3OutsModalComponent implements OnInit {
       this.form.controls.name.disable();
       this.form.controls.description.setValue(l3Outs.description);
       this.form.controls.alias.setValue(l3Outs.alias);
+      this.form.controls.vrfId.setValue(l3Outs.vrfId);
     }
     this.ngx.resetModalData('l3OutsModal');
   }

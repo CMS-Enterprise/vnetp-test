@@ -184,7 +184,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       .getManyNatRule({
         filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['ruleIndex,ASC'],
       })
       .subscribe(
@@ -205,7 +205,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       .getManyNatRule({
         filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],
         page: 1,
-        limit: 1,
+        perPage: 1,
         sort: ['ruleIndex,DESC'],
       })
       .subscribe(response => {
@@ -224,21 +224,21 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
-      limit: 50000,
+      perPage: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
       filter: [`tierId||eq||${this.TierId}`, `deletedAt||isnull`],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
-      limit: 50000,
+      perPage: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
       filter: [`tierId||eq||${this.TierId}`, `deletedAt||isnull`],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
-      limit: 50000,
+      perPage: 50000,
     });
 
     forkJoin([tierRequest, networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest]).subscribe(result => {
