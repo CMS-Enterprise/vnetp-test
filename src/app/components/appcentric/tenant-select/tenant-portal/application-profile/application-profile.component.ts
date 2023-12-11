@@ -16,6 +16,7 @@ import { ApplicationProfileModalDto } from 'src/app/models/appcentric/applicatio
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 @Component({
   selector: 'app-application-profile',
@@ -226,24 +227,42 @@ export class ApplicationProfileComponent implements OnInit {
     });
   }
 
-  public importApplicationProfilesConfig(): void {
-    // const tenantEnding = tenants.length > 1 ? 's' : '';
-    // const modalDto = new YesNoModalDto(
-    //   `Import Tier${tenantEnding}`,
-    //   `Would you like to import ${tenants.length} tier${tenantEnding}?`,
-    //   `Import Tier${tenantEnding}`,
-    //   'Cancel',
-    // );
-    // const onConfirm = () => {
-    //   this.tenantService
-    //     .createManyTier({
-    //       createManyTierDto: { bulk: this.sanitizeTiers(tiers) },
-    //     })
-    //     .subscribe(() => {
-    //       this.getTiers();
-    //     });
-    // };
-    // SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  private sanitizeData(entities) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'ipAddress' && val !== '') {
+        obj[key] = String(val).trim();
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  public importAppProfiles(event): void {
+    console.log('event', event);
+    const dto = this.sanitizeData(event);
+    console.log('dto', dto);
+    this.applicationProfileService.createManyApplicationProfile({ createManyApplicationProfileDto: { bulk: dto } }).subscribe(data => {
+      console.log('data', data);
+    });
   }
 
   public getEndpointGroups(applicationProfileId: string) {
