@@ -3,8 +3,10 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import {
   ApplicationProfile,
   EndpointGroup,
+  GetManyBridgeDomainResponseDto,
   GetManyEndpointGroupResponseDto,
   V2AppCentricApplicationProfilesService,
+  V2AppCentricBridgeDomainsService,
   V2AppCentricEndpointGroupsService,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -17,6 +19,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NameValidator } from 'src/app/validators/name-validator';
 
@@ -39,6 +42,7 @@ export class ApplicationProfileModalComponent implements OnInit {
   public perPage = 5;
   @Input() tenantId;
   public apEndpointGroupModalSubscription: Subscription;
+  public bridgeDomains: GetManyBridgeDomainResponseDto;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -58,10 +62,12 @@ export class ApplicationProfileModalComponent implements OnInit {
     private applicationProfileService: V2AppCentricApplicationProfilesService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
     private tableContextService: TableContextService,
+    private bridgeDomainService: V2AppCentricBridgeDomainsService,
   ) {}
 
   ngOnInit(): void {
     this.buildForm();
+    this.getBridgeDomains();
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -290,5 +296,70 @@ export class ApplicationProfileModalComponent implements OnInit {
         this.getEndpointGroups();
       }
     });
+  }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+      if (key === 'applicationProfileName') {
+        obj.applicationProfileId = this.applicationProfileId;
+        delete obj[key];
+      }
+      if (key === 'bridgeDomainName') {
+        obj[key] = ObjectUtil.getObjectId(val as string, this.bridgeDomains.data);
+        obj.bridgeDomainId = obj[key];
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  public importEndpointGroups(event): void {
+    console.log('event', event);
+    const dto = this.sanitizeData(event);
+    console.log('dto', dto);
+    this.endpointGroupService.createManyEndpointGroup({ createManyEndpointGroupDto: { bulk: dto } }).subscribe(data => {
+      console.log('data', data);
+    });
+  }
+
+  private getBridgeDomains(): void {
+    this.isLoading = true;
+    this.bridgeDomainService
+      .getManyBridgeDomain({
+        filter: [`tenantId||eq||${this.tenantId}`],
+        page: 1,
+        perPage: 1000,
+      })
+      .subscribe(
+        data => {
+          this.bridgeDomains = data;
+        },
+        () => {
+          this.bridgeDomains = null;
+        },
+        () => {
+          this.isLoading = false;
+        },
+      );
   }
 }

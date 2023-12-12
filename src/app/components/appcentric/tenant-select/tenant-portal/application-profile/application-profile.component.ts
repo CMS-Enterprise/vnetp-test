@@ -245,9 +245,6 @@ export class ApplicationProfileComponent implements OnInit {
       if (val === null || val === '') {
         delete obj[key];
       }
-      if (key === 'ipAddress' && val !== '') {
-        obj[key] = String(val).trim();
-      }
       if (key === 'tenantName') {
         obj.tenantId = this.tenantId;
         delete obj[key];

@@ -197,23 +197,41 @@ export class VrfComponent implements OnInit {
     });
   }
 
-  public importVrfsConfig(): void {
-    // const tenantEnding = tenants.length > 1 ? 's' : '';
-    // const modalDto = new YesNoModalDto(
-    //   `Import Tier${tenantEnding}`,
-    //   `Would you like to import ${tenants.length} tier${tenantEnding}?`,
-    //   `Import Tier${tenantEnding}`,
-    //   'Cancel',
-    // );
-    // const onConfirm = () => {
-    //   this.tenantService
-    //     .createManyTier({
-    //       createManyTierDto: { bulk: this.sanitizeTiers(tiers) },
-    //     })
-    //     .subscribe(() => {
-    //       this.getTiers();
-    //     });
-    // };
-    // SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'ipAddress' && val !== '') {
+        obj[key] = String(val).trim();
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  public importVrfs(event): void {
+    console.log('event', event);
+    const dto = this.sanitizeData(event);
+    console.log('dto', dto);
+    this.vrfService.createManyVrf({ createManyVrfDto: { bulk: dto } }).subscribe(data => {
+      console.log('data', data);
+    });
   }
 }

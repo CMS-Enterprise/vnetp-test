@@ -274,4 +274,43 @@ export class ContractModalComponent implements OnInit {
       }
     });
   }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+      if (key === 'contractName') {
+        obj.contractId = this.contractId;
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  public importSubjects(event): void {
+    console.log('event', event);
+    const dto = this.sanitizeData(event);
+    console.log('dto', dto);
+    this.subjectsService.createManySubject({ createManySubjectDto: { bulk: dto } }).subscribe(data => {
+      console.log('data', data);
+    });
+  }
 }

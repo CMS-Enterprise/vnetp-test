@@ -22,6 +22,7 @@ import { TableContextService } from 'src/app/services/table-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { FilterEntryModalDto } from '../../../../../../models/appcentric/filter-entry-modal.dto';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 @Component({
   selector: 'app-filter-modal',
@@ -301,5 +302,46 @@ export class FilterModalComponent implements OnInit {
       delete filter.name;
       this.editFilter(filter);
     }
+  }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+      if (key === 'filterName') {
+        obj.filterId = this.filterId;
+        delete obj[key];
+      }
+    });
+    return obj;
+    /* tslint:disable */
+  };
+  /* tslint:enable */
+
+  public importFilterEntries(event): void {
+    console.log('event', event);
+    const dto = this.sanitizeData(event);
+    console.log('dto', dto);
+    this.filterEntriesService.createManyFilterEntry({ createManyFilterEntryDto: { bulk: dto } }).subscribe(data => {
+      console.log('data', data);
+    });
   }
 }

@@ -8,6 +8,7 @@ import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockN
 import { MockProvider } from 'src/test/mock-providers';
 
 import { ApplicationProfileModalComponent } from './application-profile-modal.component';
+import { V2AppCentricBridgeDomainsService } from 'client';
 
 describe('ApplicationProfileModalComponent', () => {
   let component: ApplicationProfileModalComponent;
@@ -24,7 +25,7 @@ describe('ApplicationProfileModalComponent', () => {
         MockComponent({ selector: 'app-endpoint-group-modal', inputs: ['applicationProfileId', 'tenantId'] }),
       ],
       imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, NgSelectModule, HttpClientModule],
-      providers: [MockProvider(NgxSmartModalService)],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricBridgeDomainsService)],
     }).compileComponents();
   });
 

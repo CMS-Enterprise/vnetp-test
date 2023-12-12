@@ -1,6 +1,12 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { BridgeDomain, GetManyBridgeDomainResponseDto, V2AppCentricBridgeDomainsService } from 'client';
+import {
+  BridgeDomain,
+  GetManyBridgeDomainResponseDto,
+  GetManyVrfResponseDto,
+  V2AppCentricBridgeDomainsService,
+  V2AppCentricVrfsService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
@@ -10,6 +16,7 @@ import { BridgeDomainModalDto } from 'src/app/models/appcentric/bridge-domain-mo
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 @Component({
   selector: 'app-bridge-domain',
@@ -25,6 +32,7 @@ export class BridgeDomainComponent implements OnInit {
   private bridgeDomainModalSubscription: Subscription;
   private subnetsModalSubscription: Subscription;
   public tenantId: string;
+  public vrfs: GetManyVrfResponseDto;
 
   public isLoading = false;
 
@@ -58,6 +66,7 @@ export class BridgeDomainComponent implements OnInit {
     private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
     private router: Router,
+    private vrfService: V2AppCentricVrfsService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<BridgeDomain>();
     advancedSearchAdapter.setService(this.bridgeDomainService);
@@ -75,6 +84,7 @@ export class BridgeDomainComponent implements OnInit {
 
   ngOnInit(): void {
     this.getBridgeDomains();
+    this.getVrfs();
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -232,23 +242,74 @@ export class BridgeDomainComponent implements OnInit {
     });
   }
 
-  public importBridgeDomainsConfig(): void {
-    // const tenantEnding = tenants.length > 1 ? 's' : '';
-    // const modalDto = new YesNoModalDto(
-    //   `Import Tier${tenantEnding}`,
-    //   `Would you like to import ${tenants.length} tier${tenantEnding}?`,
-    //   `Import Tier${tenantEnding}`,
-    //   'Cancel',
-    // );
-    // const onConfirm = () => {
-    //   this.tenantService
-    //     .createManyTier({
-    //       createManyTierDto: { bulk: this.sanitizeTiers(tiers) },
-    //     })
-    //     .subscribe(() => {
-    //       this.getTiers();
-    //     });
-    // };
-    // SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  private sanitizeData(entities) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+      if (key === 'vrfName') {
+        obj[key] = ObjectUtil.getObjectId(val as string, this.vrfs.data);
+        obj.vrfId = obj[key];
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  public importBridgeDomains(event): void {
+    console.log('event', event);
+    const dto = this.sanitizeData(event);
+    console.log('dto', dto);
+    this.bridgeDomainService.createManyBridgeDomain({ createManyBridgeDomainDto: { bulk: dto } }).subscribe(data => {
+      console.log('data', data);
+    });
+  }
+
+  private getVrfs(event?): void {
+    this.isLoading = true;
+    let eventParams;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
+    this.vrfService
+      .getManyVrf({
+        filter: [`tenantId||eq||${this.tenantId}`, eventParams],
+        page: 1,
+        perPage: 1000,
+      })
+      .subscribe(
+        data => {
+          this.vrfs = data;
+        },
+        () => {
+          this.vrfs = null;
+        },
+        () => {
+          this.isLoading = false;
+        },
+      );
   }
 }
