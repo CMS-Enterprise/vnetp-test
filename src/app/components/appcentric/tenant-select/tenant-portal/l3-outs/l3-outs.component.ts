@@ -231,17 +231,17 @@ export class L3OutsComponent implements OnInit {
       }
     });
     return obj;
-    /* tslint:disable */
   };
-  /* tslint:enable */
 
   public importL3Outs(event): void {
-    console.log('event', event);
     const dto = this.sanitizeData(event);
-    console.log('dto', dto);
-    this.l3OutService.createManyL3Out({ createManyL3OutDto: { bulk: dto } }).subscribe(data => {
-      console.log('data', data);
-    });
+    this.l3OutService.createManyL3Out({ createManyL3OutDto: { bulk: dto } }).subscribe(
+      data => {},
+      () => {},
+      () => {
+        this.getL3Outs();
+      },
+    );
   }
 
   public getVrfs(event?): void {

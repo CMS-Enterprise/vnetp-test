@@ -334,12 +334,14 @@ export class ApplicationProfileModalComponent implements OnInit {
   };
 
   public importEndpointGroups(event): void {
-    console.log('event', event);
     const dto = this.sanitizeData(event);
-    console.log('dto', dto);
-    this.endpointGroupService.createManyEndpointGroup({ createManyEndpointGroupDto: { bulk: dto } }).subscribe(data => {
-      console.log('data', data);
-    });
+    this.endpointGroupService.createManyEndpointGroup({ createManyEndpointGroupDto: { bulk: dto } }).subscribe(
+      data => {},
+      () => {},
+      () => {
+        this.getEndpointGroups();
+      },
+    );
   }
 
   private getBridgeDomains(): void {

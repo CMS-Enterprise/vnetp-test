@@ -254,12 +254,14 @@ export class ApplicationProfileComponent implements OnInit {
   };
 
   public importAppProfiles(event): void {
-    console.log('event', event);
     const dto = this.sanitizeData(event);
-    console.log('dto', dto);
-    this.applicationProfileService.createManyApplicationProfile({ createManyApplicationProfileDto: { bulk: dto } }).subscribe(data => {
-      console.log('data', data);
-    });
+    this.applicationProfileService.createManyApplicationProfile({ createManyApplicationProfileDto: { bulk: dto } }).subscribe(
+      data => {},
+      () => {},
+      () => {
+        this.getApplicationProfiles();
+      },
+    );
   }
 
   public getEndpointGroups(applicationProfileId: string) {

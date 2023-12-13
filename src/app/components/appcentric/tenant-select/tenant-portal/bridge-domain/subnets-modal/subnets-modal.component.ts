@@ -209,4 +209,45 @@ export class SubnetsModalComponent implements OnInit {
       }
     });
   }
+
+  private sanitizeData(entities) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'bridgeDomainName') {
+        obj.bridgeDomainId = this.bridgeDomainId;
+        delete obj[key];
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  public importSubnets(event) {
+    const dto = this.sanitizeData(event);
+    this.subnetsService.createManyAppCentricSubnet({ createManyAppCentricSubnetDto: { bulk: dto } }).subscribe(
+      data => {},
+      () => {},
+      () => {
+        this.getSubnets();
+      },
+    );
+  }
 }

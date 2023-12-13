@@ -3,7 +3,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import {
+  MockComponent,
+  MockFontAwesomeComponent,
+  MockIconButtonComponent,
+  MockImportExportComponent,
+  MockNgxSmartModalComponent,
+} from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 
 import { SubnetsModalComponent } from './subnets-modal.component';
@@ -20,6 +26,7 @@ describe('SubnetsModalComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
+        MockImportExportComponent,
         MockComponent({ selector: 'app-subnets-edit-modal', inputs: ['bridgeDomainId', 'tenantId'] }),
       ],
       imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule],

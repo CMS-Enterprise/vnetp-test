@@ -221,11 +221,13 @@ export class ContractComponent implements OnInit {
   };
 
   public importContracts(event): void {
-    console.log('event', event);
     const dto = this.sanitizeData(event);
-    console.log('dto', dto);
-    this.contractService.createManyContract({ createManyContractDto: { bulk: dto } }).subscribe(data => {
-      console.log('data', data);
-    });
+    this.contractService.createManyContract({ createManyContractDto: { bulk: dto } }).subscribe(
+      data => {},
+      () => {},
+      () => {
+        this.getContracts();
+      },
+    );
   }
 }

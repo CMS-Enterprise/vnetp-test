@@ -274,12 +274,14 @@ export class BridgeDomainComponent implements OnInit {
   };
 
   public importBridgeDomains(event): void {
-    console.log('event', event);
     const dto = this.sanitizeData(event);
-    console.log('dto', dto);
-    this.bridgeDomainService.createManyBridgeDomain({ createManyBridgeDomainDto: { bulk: dto } }).subscribe(data => {
-      console.log('data', data);
-    });
+    this.bridgeDomainService.createManyBridgeDomain({ createManyBridgeDomainDto: { bulk: dto } }).subscribe(
+      data => {},
+      () => {},
+      () => {
+        this.getBridgeDomains();
+      },
+    );
   }
 
   private getVrfs(event?): void {
