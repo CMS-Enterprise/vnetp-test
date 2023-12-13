@@ -4,7 +4,13 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { MockNgxSmartModalComponent, MockFontAwesomeComponent, MockComponent, MockIconButtonComponent } from 'src/test/mock-components';
+import {
+  MockNgxSmartModalComponent,
+  MockFontAwesomeComponent,
+  MockComponent,
+  MockIconButtonComponent,
+  MockImportExportComponent,
+} from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 
 import { BridgeDomainModalComponent } from './bridge-domain-modal.component';
@@ -21,6 +27,7 @@ describe('BridgeDomainModalComponent', () => {
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockIconButtonComponent,
+        MockImportExportComponent,
       ],
       imports: [NgSelectModule, FormsModule, ReactiveFormsModule, RouterTestingModule, HttpClientModule],
       providers: [MockProvider(NgxSmartModalService)],

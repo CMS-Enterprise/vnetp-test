@@ -271,7 +271,6 @@ export class SubjectModalComponent implements OnInit {
   }
 
   mapToCsv = obj => {
-    console.log('obj', obj);
     Object.entries(obj).forEach(([key, val]) => {
       if (val === 'false' || val === 'f') {
         obj[key] = false;
