@@ -15,6 +15,7 @@ import { SubjectModalDto } from 'src/app/models/appcentric/subject-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NameValidator } from 'src/app/validators/name-validator';
 
@@ -260,5 +261,54 @@ export class SubjectModalComponent implements OnInit {
         );
     };
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  }
+
+  private sanitizeData(entities) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    console.log('obj', obj);
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'filterName') {
+        obj.filterId = ObjectUtil.getObjectId(val as string, this.filters);
+        delete obj[key];
+      }
+      if (key === 'subjectName') {
+        obj.subjectId = this.subjectId;
+        delete obj[key];
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  public importSubjectFilterRelation(event): void {
+    const dto = this.sanitizeData(event);
+    console.log('dto', dto);
+    dto.map(relation => {
+      this.subjectsService.addFilterToSubjectSubject(relation).subscribe(
+        data => {},
+        () => {},
+        () => {
+          this.getFiltertableData();
+        },
+      );
+    });
   }
 }

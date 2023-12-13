@@ -4,7 +4,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import {
+  MockComponent,
+  MockFontAwesomeComponent,
+  MockIconButtonComponent,
+  MockImportExportComponent,
+  MockNgxSmartModalComponent,
+} from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { SubjectModalComponent } from './subject-modal.component';
 
@@ -20,6 +26,7 @@ describe('SubjectModalComponent', () => {
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockIconButtonComponent,
+        MockImportExportComponent,
       ],
       imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule, NgSelectModule, FormsModule],
       providers: [MockProvider(NgxSmartModalService)],
