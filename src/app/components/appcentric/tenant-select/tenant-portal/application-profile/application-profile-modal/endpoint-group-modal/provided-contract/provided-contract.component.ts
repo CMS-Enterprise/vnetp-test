@@ -5,6 +5,7 @@ import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.compone
 import { TableConfig } from 'src/app/common/table/table.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
@@ -125,5 +126,52 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
     if (this.selectedContract) {
       this.selectedContract = null;
     }
+  }
+
+  private sanitizeData(entities) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'providedContractName') {
+        obj.contractId = ObjectUtil.getObjectId(val as string, this.contracts);
+        delete obj[key];
+      }
+      if (key === 'endpointGroupName') {
+        obj.endpointGroupId = this.endpointGroupId;
+        delete obj[key];
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  public importProvidedContractEpgRelation(event): void {
+    const dto = this.sanitizeData(event);
+    dto.map(relation => {
+      this.endpointGroupsService.addProvidedContractToEndpointGroupEndpointGroup(relation).subscribe(
+        data => {},
+        () => {},
+        () => {
+          this.getProvidedContracts();
+        },
+      );
+    });
   }
 }

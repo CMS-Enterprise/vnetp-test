@@ -187,7 +187,6 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   }
 
   private editBridgeDomain(bridgeDomain: BridgeDomain): void {
-    console.log('bridgeDomain', bridgeDomain);
     bridgeDomain.name = null;
     bridgeDomain.tenantId = null;
     bridgeDomain.vrfId = null;
@@ -205,7 +204,6 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   }
 
   public save(): void {
-    console.log('save?');
     this.submitted = true;
     if (this.form.invalid) {
       return;
