@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
@@ -10,7 +10,7 @@ describe('StaticRouteModalComponent', () => {
   let component: StaticRouteModalComponent;
   let fixture: ComponentFixture<StaticRouteModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [StaticRouteModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
@@ -22,7 +22,7 @@ describe('StaticRouteModalComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

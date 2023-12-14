@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipModule } from '../../common/tooltip/tooltip.module';
-import { D3PieChartModule } from '../../common/d3-pie-chart/d3-pie-chart.module';
 import { AppcentricNavbarComponent } from './appcentric-navbar/appcentric-navbar.component';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { AppcentricDashboardComponent } from './appcentric-dashboard/appcentric-dashboard.component';

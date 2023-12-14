@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SearchBarComponent, SearchColumnConfig } from './search-bar.component';
+import { SearchBarComponent } from './search-bar.component';
 import { TableContextService } from '../../services/table-context.service';
-import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 
@@ -13,13 +12,11 @@ describe('SearchBarComponent', () => {
     addSearchLocalStorage: jest.fn(),
     removeSearchLocalStorage: jest.fn(),
     addFilteredResultsLocalStorage: jest.fn(),
-    getSearchLocalStorage: jest.fn(() => {
-      return {
-        searchColumn: 'name',
-        searchText: 'John',
-        filteredResults: true,
-      };
-    }),
+    getSearchLocalStorage: jest.fn(() => ({
+      searchColumn: 'name',
+      searchText: 'John',
+      filteredResults: true,
+    })),
     removeAdvancedSearchLocalStorage: jest.fn(),
   };
 
@@ -86,13 +83,11 @@ describe('SearchBarComponent', () => {
 
   describe('ngOnInit', () => {
     it('should set searchColumn to defaultSearch.propertyName when previousSearchColumn is not present', () => {
-      tableContextServiceMock.getSearchLocalStorage = jest.fn(() => {
-        return {
-          searchColumn: undefined,
-          searchText: 'John',
-          filteredResults: true,
-        };
-      });
+      tableContextServiceMock.getSearchLocalStorage = jest.fn(() => ({
+        searchColumn: undefined,
+        searchText: 'John',
+        filteredResults: true,
+      }));
 
       const testComponent = new SearchBarComponent(tableContextServiceMock as any);
       testComponent.columns = [
@@ -108,13 +103,11 @@ describe('SearchBarComponent', () => {
     });
 
     it('should set filteredResults when previous filteredResults is true', () => {
-      tableContextServiceMock.getSearchLocalStorage = jest.fn(() => {
-        return {
-          searchColumn: 'name',
-          searchText: 'John',
-          filteredResults: true,
-        };
-      });
+      tableContextServiceMock.getSearchLocalStorage = jest.fn(() => ({
+        searchColumn: 'name',
+        searchText: 'John',
+        filteredResults: true,
+      }));
 
       const testComponent = new SearchBarComponent(tableContextServiceMock as any);
       testComponent.columns = [

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeployComponent } from './deploy.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -50,7 +50,7 @@ describe('DeployComponent', () => {
 
   const datacenterSubject = new Subject();
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     const datacenterService = {
       currentDatacenter: datacenterSubject.asObservable(),
     };
@@ -76,7 +76,7 @@ describe('DeployComponent', () => {
         };
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -134,7 +134,7 @@ describe('DeployComponent', () => {
     });
 
     it('should call to deploys tiers after confirming', () => {
-      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn, closeFn) => {
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn) => {
         confirmFn();
         return of().subscribe();
       });

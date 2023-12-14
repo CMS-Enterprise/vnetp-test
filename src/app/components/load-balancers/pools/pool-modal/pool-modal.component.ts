@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { PoolModalHelpText } from 'src/app/helptext/help-text-networking';
 import {
   LoadBalancerHealthMonitor,
@@ -10,8 +10,6 @@ import {
   LoadBalancerPoolDefaultHealthMonitorsEnum,
   LoadBalancerPoolLoadBalancingMethodEnum,
   Tier,
-  V1LoadBalancerHealthMonitorsService,
-  V1LoadBalancerNodesService,
   V1LoadBalancerPoolsService,
   V1TiersService,
 } from 'client';
@@ -30,7 +28,7 @@ import { methodsLookup } from 'src/app/lookups/load-balancing-method.lookup';
   templateUrl: './pool-modal.component.html',
 })
 export class PoolModalComponent implements OnInit {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public modalMode: ModalMode;
   public submitted: boolean;
   public ModalMode = ModalMode;
@@ -49,9 +47,7 @@ export class PoolModalComponent implements OnInit {
     LoadBalancerPoolDefaultHealthMonitorsEnum.Udp,
   ];
   public methods: LoadBalancerPoolLoadBalancingMethodEnum[] = Object.keys(LoadBalancerPoolLoadBalancingMethodEnum)
-    .map(k => {
-      return LoadBalancerPoolLoadBalancingMethodEnum[k];
-    })
+    .map(k => LoadBalancerPoolLoadBalancingMethodEnum[k])
     .sort();
   public methodsLookup = methodsLookup;
 
@@ -59,7 +55,7 @@ export class PoolModalComponent implements OnInit {
   private tierId: string;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private poolService: V1LoadBalancerPoolsService,
     public helpText: PoolModalHelpText,
@@ -221,7 +217,7 @@ export class PoolModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const dto: PoolModalDto = Object.assign({}, this.ngx.getModalData('poolModal'));
+    const dto: PoolModalDto = Object.assign({}, this.ngx.getModalData('poolModal')) as any;
     const { pool, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = pool ? ModalMode.Edit : ModalMode.Create;

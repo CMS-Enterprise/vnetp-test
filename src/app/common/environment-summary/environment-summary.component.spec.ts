@@ -1,6 +1,5 @@
-/* tslint:disable:no-string-literal */
-
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+/* eslint-disable */
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EnvironmentSummaryComponent } from './environment-summary.component';
 import { MockComponent, MockFontAwesomeComponent } from 'src/test/mock-components';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -11,7 +10,7 @@ describe('NetworkSummaryComponent', () => {
   let component: EnvironmentSummaryComponent;
   let fixture: ComponentFixture<EnvironmentSummaryComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         EnvironmentSummaryComponent,
@@ -20,7 +19,7 @@ describe('NetworkSummaryComponent', () => {
       ],
       imports: [RouterTestingModule, HttpClientTestingModule],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EnvironmentSummaryComponent);
@@ -33,7 +32,7 @@ describe('NetworkSummaryComponent', () => {
   });
 
   it('should get get tenants on table event', () => {
-    spyOn(component, 'getTenants');
+    jest.spyOn(component, 'getTenants');
     component.onTableEvent({ type: 'onSearch' } as any);
     expect(component.getTenants).toHaveBeenCalled();
   });

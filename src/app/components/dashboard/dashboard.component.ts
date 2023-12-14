@@ -16,7 +16,6 @@ import {
   Datacenter,
 } from 'client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
-import { PieChartData } from 'src/app/common/d3-pie-chart/d3-pie-chart.component';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from '../../utils/SubscriptionUtil';
@@ -75,7 +74,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       { name: 'Action', property: 'actionType' },
       { name: 'Object Type', property: 'entityType' },
       { name: 'Tier Name', property: 'tierName' },
-      // { name: 'Object Name', template: () => this.entityAfterTemplate },
       { name: 'User', property: 'changedBy' },
       { name: 'Timestamp', property: 'timestamp' },
     ],
@@ -92,15 +90,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   pendingJobs = 0;
   cancelledJobs = 0;
   runningJobs = 0;
-  pieChartData: Array<PieChartData>;
 
   dashboardPoller: any;
 
   ngOnInit() {
-    this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
-
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
-      // console.log('cd',cd);
       if (cd) {
         this.currentDatacenter = cd;
       }

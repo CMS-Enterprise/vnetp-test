@@ -13,8 +13,8 @@
 <app-table
   [config]="config"
   [data]="contractTableData"
-  (clearResults)="getConsumedContracts($event)"
-  (searchParams)="getConsumedContracts($event)"
+  (clearResults)="getConsumedContracts()"
+  (searchParams)="getConsumedContracts()"
   [searchColumns]="searchColumns"
   [(itemsPerPage)]="perPage"
   (tableEvent)="onTableEvent($event)"

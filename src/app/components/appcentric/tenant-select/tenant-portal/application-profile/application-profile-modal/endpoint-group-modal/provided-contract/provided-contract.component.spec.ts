@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, async, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -11,7 +11,7 @@ describe('ProvidedContractsComponent', () => {
   let component: ProvidedContractComponent;
   let fixture: ComponentFixture<ProvidedContractComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         ProvidedContractComponent,
@@ -22,7 +22,7 @@ describe('ProvidedContractsComponent', () => {
       imports: [HttpClientModule, NgSelectModule, FormsModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ProvidedContractComponent);

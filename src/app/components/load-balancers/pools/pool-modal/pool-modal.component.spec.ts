@@ -54,17 +54,15 @@ describe('PoolModalComponent', () => {
     service = TestBed.inject(V1LoadBalancerPoolsService);
   });
 
-  const createPool = (): LoadBalancerPool => {
-    return {
-      defaultHealthMonitors: [],
-      healthMonitors: [],
-      id: '2',
-      loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.DynamicRatioMember,
-      name: 'Pool2',
-      nodes: [],
-      tierId: '1',
-    };
-  };
+  const createPool = (): LoadBalancerPool => ({
+    defaultHealthMonitors: [],
+    healthMonitors: [],
+    id: '2',
+    loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.DynamicRatioMember,
+    name: 'Pool2',
+    nodes: [],
+    tierId: '1',
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

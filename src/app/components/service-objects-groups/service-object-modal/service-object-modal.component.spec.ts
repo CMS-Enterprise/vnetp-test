@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
@@ -14,7 +14,7 @@ describe('ServiceObjectModalComponent', () => {
   let component: ServiceObjectModalComponent;
   let fixture: ComponentFixture<ServiceObjectModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [ServiceObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
@@ -28,7 +28,7 @@ describe('ServiceObjectModalComponent', () => {
         component.ServiceObjectId = '2';
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -148,20 +148,18 @@ describe('ServiceObjectModalComponent', () => {
   });
 
   describe('getData', () => {
-    const createServiceObjectModalDto = (): ServiceObjectModalDto => {
-      return {
-        TierId: '1',
-        ServiceObject: {
-          tierId: '1',
-          id: '2',
-          name: 'ServiceObject',
-          protocol: ServiceObjectProtocolEnum.Ip,
-          destinationPorts: 'any',
-          sourcePorts: 'any',
-        },
-        ModalMode: ModalMode.Edit,
-      };
-    };
+    const createServiceObjectModalDto = (): ServiceObjectModalDto => ({
+      TierId: '1',
+      ServiceObject: {
+        tierId: '1',
+        id: '2',
+        name: 'ServiceObject',
+        protocol: ServiceObjectProtocolEnum.Ip,
+        destinationPorts: 'any',
+        sourcePorts: 'any',
+      },
+      ModalMode: ModalMode.Edit,
+    });
 
     it('should enable the name, protocol, source ports and destination ports when creating a new service object', () => {
       const ngx = TestBed.inject(NgxSmartModalService);

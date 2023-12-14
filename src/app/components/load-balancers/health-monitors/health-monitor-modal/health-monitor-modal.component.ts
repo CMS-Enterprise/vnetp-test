@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { HealthMonitorModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerHealthMonitor, LoadBalancerHealthMonitorTypeEnum, V1LoadBalancerHealthMonitorsService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -13,7 +13,7 @@ import { RangeValidator } from 'src/app/validators/range-validator';
   templateUrl: './health-monitor-modal.component.html',
 })
 export class HealthMonitorModalComponent implements OnInit {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
 
   public healthMonitorTypes: LoadBalancerHealthMonitorTypeEnum[] = [
@@ -27,7 +27,7 @@ export class HealthMonitorModalComponent implements OnInit {
   private tierId: string;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private healthMonitorService: V1LoadBalancerHealthMonitorsService,
     private ngx: NgxSmartModalService,
     public helpText: HealthMonitorModalHelpText,
@@ -72,7 +72,7 @@ export class HealthMonitorModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const dto: HealthMonitorModalDto = Object.assign({}, this.ngx.getModalData('healthMonitorModal'));
+    const dto: HealthMonitorModalDto = Object.assign({}, this.ngx.getModalData('healthMonitorModal')) as any;
     const { healthMonitor, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = healthMonitor ? ModalMode.Edit : ModalMode.Create;

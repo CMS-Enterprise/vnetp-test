@@ -203,6 +203,7 @@ export class TableComponent<T> implements AfterViewInit {
     });
   }
 
+  /* eslint-disable-next-line */
   openAdvancedSearch(event?) {
     this.subscribeToAdvancedSearch();
     this.ngx.getModal('advancedSearch').open();

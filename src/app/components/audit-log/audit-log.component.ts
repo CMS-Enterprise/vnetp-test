@@ -1,6 +1,6 @@
+/* eslint-disable */
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
-  AuditLog,
   AuditLogActionTypeEnum,
   Datacenter,
   NetworkObject,
@@ -17,7 +17,7 @@ import {
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { forkJoin, Subscription } from 'rxjs';
-import { audit, first } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
@@ -124,22 +124,14 @@ export class AuditLogComponent implements OnInit {
                         return;
                       }
                       if (entityBefore[key]) {
-                        beforeList = entityBefore[key].map(obj => {
-                          return obj.loadBalancerNode.name;
-                        });
+                        beforeList = entityBefore[key].map(obj => obj.loadBalancerNode.name);
                       }
                       if (entityAfter[key]) {
-                        afterList = entityAfter[key].map(obj => {
-                          return obj.loadBalancerNode.name;
-                        });
+                        afterList = entityAfter[key].map(obj => obj.loadBalancerNode.name);
                       }
                     } else {
-                      beforeList = entityBefore[key].map(obj => {
-                        return obj.name;
-                      });
-                      afterList = entityAfter[key].map(obj => {
-                        return obj.name;
-                      });
+                      beforeList = entityBefore[key].map(obj => obj.name);
+                      afterList = entityAfter[key].map(obj => obj.name);
                     }
 
                     if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {

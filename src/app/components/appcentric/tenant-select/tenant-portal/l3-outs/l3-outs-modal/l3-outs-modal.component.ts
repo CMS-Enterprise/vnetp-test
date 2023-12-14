@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { GetManyVrfResponseDto, L3Out, V2AppCentricL3outsService, V2AppCentricVrfsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -18,9 +18,9 @@ import { NameValidator } from 'src/app/validators/name-validator';
 export class L3OutsModalComponent implements OnInit {
   public modalMode: ModalMode;
   public l3OutId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() public tenantId: string;
   public tableComponentDto = new TableComponentDto();
   public searchColumns: SearchColumnConfig[] = [];
   public perPage = 5;
@@ -44,22 +44,12 @@ export class L3OutsModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private l3OutsService: V2AppCentricL3outsService,
     private router: Router,
     private vrfService: V2AppCentricVrfsService,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();

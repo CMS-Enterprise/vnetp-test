@@ -134,13 +134,11 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(
         response => {
           this.policies = response;
-          this.policies.data = (this.policies.data as PolicyView[]).map(p => {
-            return {
-              ...p,
-              nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
-              state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-            };
-          });
+          this.policies.data = (this.policies.data as PolicyView[]).map(p => ({
+            ...p,
+            nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
+            state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+          }));
         },
         () => {
           this.isLoading = false;

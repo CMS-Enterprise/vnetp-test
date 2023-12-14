@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { V1NetworkSubnetsService, Subnet, Vlan, V1NetworkVlansService, GetManyVlanResponseDto } from 'client';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { V1NetworkSubnetsService, Subnet, Vlan, V1NetworkVlansService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { SubnetModalHelpText } from 'src/app/helptext/help-text-networking';
@@ -16,12 +16,12 @@ export class SubnetModalComponent implements OnInit {
   public ModalMode: ModalMode;
   public SubnetId: string;
   public TierId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public vlans: Vlan[];
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private subnetService: V1NetworkSubnetsService,
     public helpText: SubnetModalHelpText,

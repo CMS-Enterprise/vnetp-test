@@ -1,12 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  MockFontAwesomeComponent,
-  MockTooltipComponent,
-  MockNgxSmartModalComponent,
-  MockNgSelectComponent,
-} from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { SubnetModalComponent } from './subnet-modal.component';
 import TestUtil from 'src/test/TestUtil';
@@ -20,7 +15,7 @@ describe('SubnetModalComponent', () => {
   let component: SubnetModalComponent;
   let fixture: ComponentFixture<SubnetModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, NgSelectModule],
       declarations: [SubnetModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
@@ -34,7 +29,7 @@ describe('SubnetModalComponent', () => {
         component.SubnetId = '2';
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -173,22 +168,20 @@ describe('SubnetModalComponent', () => {
   });
 
   describe('getData', () => {
-    const createSubnetModalDto = (): SubnetModalDto => {
-      return {
-        TierId: '1',
-        Subnet: {
-          id: '2',
-          name: 'Subnet',
-          network: '255.255.255.255/32',
-          gateway: '255.255.255.255',
-          vlanId: '3',
-          tierId: '1',
-          sharedBetweenVrfs: false,
-        },
-        Vlans: { data: [], count: 0, total: 0, page: 0, pageCount: 0, totalPages: 0 },
-        ModalMode: ModalMode.Edit,
-      };
-    };
+    const createSubnetModalDto = (): SubnetModalDto => ({
+      TierId: '1',
+      Subnet: {
+        id: '2',
+        name: 'Subnet',
+        network: '255.255.255.255/32',
+        gateway: '255.255.255.255',
+        vlanId: '3',
+        tierId: '1',
+        sharedBetweenVrfs: false,
+      },
+      Vlans: { data: [], count: 0, total: 0, page: 0, pageCount: 0, totalPages: 0 },
+      ModalMode: ModalMode.Edit,
+    });
 
     it('should enable the name, gateway, network and vlan when creating a new subnet', () => {
       const ngx = TestBed.inject(NgxSmartModalService);

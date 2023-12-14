@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TooltipComponent } from './tooltip.component';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { By } from '@angular/platform-browser';
@@ -7,11 +7,11 @@ describe('TooltipComponent', () => {
   let component: TooltipComponent;
   let fixture: ComponentFixture<TooltipComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [TooltipComponent, MockFontAwesomeComponent],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TooltipComponent);
@@ -28,7 +28,7 @@ describe('TooltipComponent', () => {
       component.message = 'A'.repeat(20);
 
       const tooltipElement = fixture.debugElement.query(By.css('.tooltip')).nativeElement;
-      spyOn(tooltipElement, 'getBoundingClientRect').and.returnValue({ left: 100, bottom: 200 });
+      jest.spyOn(tooltipElement, 'getBoundingClientRect').mockReturnValue({ left: 100, bottom: 200 });
 
       Object.defineProperty(document.body, 'clientWidth', { value: 1200 });
       Object.defineProperty(document.body, 'clientHeight', { value: 800 });
@@ -42,7 +42,7 @@ describe('TooltipComponent', () => {
       component.message = 'A'.repeat(20);
 
       const tooltipElement = fixture.debugElement.query(By.css('.tooltip')).nativeElement;
-      spyOn(tooltipElement, 'getBoundingClientRect').and.returnValue({ left: 900, bottom: 200 });
+      jest.spyOn(tooltipElement, 'getBoundingClientRect').mockReturnValue({ left: 900, bottom: 200 });
 
       Object.defineProperty(document.body, 'clientWidth', { value: 1200 });
       Object.defineProperty(document.body, 'clientHeight', { value: 800 });
@@ -58,7 +58,7 @@ describe('TooltipComponent', () => {
     it('should set tooltipMsgStyle based on message length and tooltip position (3)', () => {
       component.message = 'A'.repeat(800);
 
-      spyOn(component.tooltip.nativeElement, 'getBoundingClientRect').and.returnValue({ left: 100, bottom: 200 });
+      jest.spyOn(component.tooltip.nativeElement, 'getBoundingClientRect').mockReturnValue({ left: 100, bottom: 200 });
 
       component.showTooltip(true);
       expect(component.tooltipMsgStyle).toEqual({ left: '0px', maxWidth: '600px', top: '-20px' });
@@ -68,7 +68,7 @@ describe('TooltipComponent', () => {
       component.message = 'A'.repeat(800);
 
       const tooltipElement = fixture.debugElement.query(By.css('.tooltip')).nativeElement;
-      spyOn(tooltipElement, 'getBoundingClientRect').and.returnValue({ left: 100, bottom: 200 });
+      jest.spyOn(tooltipElement, 'getBoundingClientRect').mockReturnValue({ left: 100, bottom: 200 });
 
       Object.defineProperty(document.body, 'clientWidth', { value: 1200 });
       Object.defineProperty(document.body, 'clientHeight', { value: 800 });
@@ -85,7 +85,7 @@ describe('TooltipComponent', () => {
     it('should set tooltipMsgStyle based on message length and tooltip position (5)', () => {
       component.message = 'A'.repeat(100);
 
-      spyOn(component.tooltip.nativeElement, 'getBoundingClientRect').and.returnValue({ left: 100, bottom: 200 });
+      jest.spyOn(component.tooltip.nativeElement, 'getBoundingClientRect').mockReturnValue({ left: 100, bottom: 200 });
 
       component.showTooltip(true);
       expect(component.tooltipMsgStyle).toEqual({ left: '0px' });
@@ -95,7 +95,7 @@ describe('TooltipComponent', () => {
       component.message = 'A'.repeat(750);
 
       const tooltipElement = fixture.debugElement.query(By.css('.tooltip')).nativeElement;
-      spyOn(tooltipElement, 'getBoundingClientRect').and.returnValue({ left: 100, bottom: 200 });
+      jest.spyOn(tooltipElement, 'getBoundingClientRect').mockReturnValue({ left: 100, bottom: 200 });
 
       Object.defineProperty(document.body, 'clientWidth', { value: 1200 });
       Object.defineProperty(document.body, 'clientHeight', { value: 800 });

@@ -1,10 +1,10 @@
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 
-function ValidName(control: FormControl): { invalidName: boolean } | null {
+function ValidName(control: UntypedFormControl): { invalidName: boolean } | null {
   return ValidateName(control, /^[A-Za-z0-9-_:.]*$/);
 }
 
-function ValidateName(control: FormControl, regex) {
+function ValidateName(control: UntypedFormControl, regex) {
   if (!control || !control.value) {
     return null;
   }
@@ -17,6 +17,5 @@ function ValidateName(control: FormControl, regex) {
   return { invalidName: true };
 }
 
-export const NameValidator = (minLength = 3, maxLength = 100) => {
-  return Validators.compose([Validators.required, Validators.minLength(minLength), Validators.maxLength(maxLength), ValidName]);
-};
+export const NameValidator = (minLength = 3, maxLength = 100) =>
+  Validators.compose([Validators.required, Validators.minLength(minLength), Validators.maxLength(maxLength), ValidName]);

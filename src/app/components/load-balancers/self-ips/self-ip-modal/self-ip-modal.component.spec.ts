@@ -36,15 +36,13 @@ describe('SelfIpModalComponent', () => {
     ngx = TestBed.inject(NgxSmartModalService);
   });
 
-  const createSelfIp = (): LoadBalancerSelfIp => {
-    return {
-      tierId: '1',
-      id: '2',
-      name: 'SelfIp2',
-      ipAddress: '192.168.1.1',
-      loadBalancerVlanId: '3',
-    };
-  };
+  const createSelfIp = (): LoadBalancerSelfIp => ({
+    tierId: '1',
+    id: '2',
+    name: 'SelfIp2',
+    ipAddress: '192.168.1.1',
+    loadBalancerVlanId: '3',
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

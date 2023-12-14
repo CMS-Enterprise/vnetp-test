@@ -1,5 +1,5 @@
-import { Component, enableProdMode, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   ApplicationProfile,
   GetManyApplicationProfileResponseDto,
@@ -66,15 +66,13 @@ export class ApplicationProfileComponent implements OnInit {
     advancedSearchAdapter.setServiceName('V2AppCentricApplicationProfilesService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
 
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    const match = this.router.routerState.snapshot.url.match(
+      /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
+    );
+    if (match) {
+      const uuid = match[0].split('/')[2];
+      this.tenantId = uuid;
+    }
   }
 
   ngOnInit(): void {
@@ -228,7 +226,7 @@ export class ApplicationProfileComponent implements OnInit {
     });
   }
 
-  public importApplicationProfilesConfig(applicationProfiles: ApplicationProfile[]): void {
+  public importApplicationProfilesConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

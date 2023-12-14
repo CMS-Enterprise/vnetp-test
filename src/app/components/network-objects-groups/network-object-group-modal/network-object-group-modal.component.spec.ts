@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectGroupModalComponent } from './network-object-group-modal.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ describe('NetworkObjectGroupModalComponent', () => {
   let component: NetworkObjectGroupModalComponent;
   let fixture: ComponentFixture<NetworkObjectGroupModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -33,7 +33,7 @@ describe('NetworkObjectGroupModalComponent', () => {
         MockProvider(V1TiersService),
       ],
     });
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NetworkObjectGroupModalComponent);

@@ -29,17 +29,15 @@ describe('HealthMonitorModalComponent', () => {
     ngx = TestBed.inject(NgxSmartModalService);
   });
 
-  const createHealthMonitor = (): LoadBalancerHealthMonitor => {
-    return {
-      tierId: '1',
-      id: '2',
-      name: 'HealthMonitor2',
-      type: LoadBalancerHealthMonitorTypeEnum.Http,
-      servicePort: 5,
-      interval: 5,
-      timeout: 5,
-    };
-  };
+  const createHealthMonitor = (): LoadBalancerHealthMonitor => ({
+    tierId: '1',
+    id: '2',
+    name: 'HealthMonitor2',
+    type: LoadBalancerHealthMonitorTypeEnum.Http,
+    servicePort: 5,
+    interval: 5,
+    timeout: 5,
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

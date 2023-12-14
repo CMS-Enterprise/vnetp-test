@@ -9,10 +9,10 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { GetManyLoadBalancerNodeResponseDto, LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'client';
+import { LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'client';
 import { NodeListComponent, ImportNode, NodeView } from './node-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
@@ -58,8 +58,8 @@ describe('NodeListComponent', () => {
   });
 
   it('should map nodes', () => {
-    jest.spyOn(service, 'getManyLoadBalancerNode').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerNode').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'Node1', provisionedAt: {}, autoPopulate: true, fqdn: 'www.google.com' },
           { id: '2', name: 'Node2', ipAddress: '192.168.1.1' },
@@ -68,8 +68,8 @@ describe('NodeListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

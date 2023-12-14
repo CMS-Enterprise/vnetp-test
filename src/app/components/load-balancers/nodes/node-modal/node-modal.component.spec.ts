@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NodeModalComponent } from './node-modal.component';
@@ -28,17 +28,15 @@ describe('NodeModalComponent', () => {
     ngx = TestBed.inject(NgxSmartModalService);
   });
 
-  const createNode = (): LoadBalancerNode => {
-    return {
-      tierId: '1',
-      id: '2',
-      name: 'Node2',
-      autoPopulate: true,
-      fqdn: 'www.google.com',
-      ipAddress: null,
-      type: LoadBalancerNodeTypeEnum.Fqdn,
-    };
-  };
+  const createNode = (): LoadBalancerNode => ({
+    tierId: '1',
+    id: '2',
+    name: 'Node2',
+    autoPopulate: true,
+    fqdn: 'www.google.com',
+    ipAddress: null,
+    type: LoadBalancerNodeTypeEnum.Fqdn,
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

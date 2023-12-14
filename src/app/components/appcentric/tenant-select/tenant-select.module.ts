@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 import { TenantPortalComponent } from './tenant-portal/tenant-portal.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TenantPortalModule } from './tenant-portal/tenant-portal.module';
 import { TableModule } from 'src/app/common/table/table.module';
 import { ImportExportModule } from 'src/app/common/import-export/import-export.module';

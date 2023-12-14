@@ -1,4 +1,4 @@
-/* tslint:disable:no-string-literal */
+/* eslint-disable */
 
 import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';

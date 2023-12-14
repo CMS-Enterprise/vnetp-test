@@ -1,5 +1,5 @@
 import { ModalMode } from '../other/modal-mode';
-import { GetManyVlanResponseDto, Subnet, Vlan } from 'client';
+import { GetManyVlanResponseDto, Subnet } from 'client';
 
 export class SubnetModalDto {
   TierId: string;

@@ -114,14 +114,14 @@ export class LoginComponent implements OnInit {
                 }
                 this.showTenantButton = true;
               },
-              error => {
+              () => {
                 this.toastr.error('Error getting tenants');
                 this.errorMessage = 'Error getting tenants';
                 this.loading = false;
               },
             );
         },
-        error => {
+        () => {
           this.toastr.error('Invalid Username/Password');
           this.errorMessage = 'Invalid Username/Password';
           this.loading = false;

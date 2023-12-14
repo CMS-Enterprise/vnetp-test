@@ -12,8 +12,8 @@
     <app-table
       [config]="config"
       [data]="tenants"
-      (clearResults)="getTenants($event)"
-      (searchParams)="getTenants($event)"
+      (clearResults)="getTenants()"
+      (searchParams)="getTenants()"
       [searchColumns]="searchColumns"
       [(itemsPerPage)]="perPage"
       (tableEvent)="onTableEvent($event)"
@@ -23,7 +23,6 @@
         [exportObject]="tenants"
         exportFileName="tenants"
         [disableJson]="false"
-        (import)="importTenantsConfig($event)"
       ></app-import-export>
     </section>
   </ng-container>

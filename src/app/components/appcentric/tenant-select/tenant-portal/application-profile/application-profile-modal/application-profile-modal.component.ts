@@ -1,6 +1,5 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {
   ApplicationProfile,
   EndpointGroup,
@@ -30,7 +29,7 @@ export class ApplicationProfileModalComponent implements OnInit {
   public modalMode: ModalMode;
   public ModalMode = ModalMode;
   public applicationProfileId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public endpointGroups: GetManyEndpointGroupResponseDto;
   public isLoading = false;
@@ -38,7 +37,7 @@ export class ApplicationProfileModalComponent implements OnInit {
   public selectedEndpointGroup: EndpointGroup;
   public searchColumns: SearchColumnConfig[] = [];
   public perPage = 5;
-  private tenantId: string;
+  @Input() tenantId;
   public apEndpointGroupModalSubscription: Subscription;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
@@ -54,23 +53,12 @@ export class ApplicationProfileModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private applicationProfileService: V2AppCentricApplicationProfilesService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
-    private router: Router,
     private tableContextService: TableContextService,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Vlan, V1NetworkVlansService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
@@ -14,11 +14,11 @@ export class VlanModalComponent implements OnInit {
   public ModalMode: ModalMode;
   public TierId: string;
   public VlanId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public vlans: Vlan[];
 
-  constructor(private formBuilder: FormBuilder, private ngx: NgxSmartModalService, private vlanService: V1NetworkVlansService) {}
+  constructor(private formBuilder: UntypedFormBuilder, private ngx: NgxSmartModalService, private vlanService: V1NetworkVlansService) {}
 
   get f() {
     return this.form.controls;

@@ -45,11 +45,7 @@ export class AuthService {
       .get<any>(environment.apiBase + '/v1/auth/tenants', {
         headers: new HttpHeaders({ Authorization: `Bearer ${token}` }),
       })
-      .pipe(
-        map(tenants => {
-          return tenants;
-        }),
-      );
+      .pipe(map(tenants => tenants));
   }
 
   login(userpass: UserPass) {
