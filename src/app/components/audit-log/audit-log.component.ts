@@ -237,19 +237,19 @@ export class AuditLogComponent implements OnInit {
   getObjects(): void {
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
       fields: ['id,name'],
-      limit: 50000,
+      perPage: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
       fields: ['id,name'],
-      limit: 50000,
+      perPage: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
       fields: ['id,name'],
-      limit: 50000,
+      perPage: 50000,
     });
     const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
       fields: ['id,name'],
-      limit: 50000,
+      perPage: 50000,
     });
     forkJoin([networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest, serviceObjectGroupRequest]).subscribe(
       (result: unknown) => {
@@ -264,12 +264,13 @@ export class AuditLogComponent implements OnInit {
 
   public getTiers(): void {
     this.tierService
-      .getManyDatacenterTier({
-        datacenterId: this.currentDatacenter.id,
-        limit: 50000,
+      .getManyTier({
+        filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
+        page: 1,
+        perPage: 1000,
       })
-      .subscribe((data: unknown) => {
-        this.tiers = data as Tier[];
+      .subscribe(data => {
+        this.tiers = data.data;
         this.getObjects();
       });
   }

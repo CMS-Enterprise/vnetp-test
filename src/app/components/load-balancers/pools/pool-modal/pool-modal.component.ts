@@ -127,7 +127,7 @@ export class PoolModalComponent implements OnInit {
         });
     } else {
       this.poolService
-        .addNodeToPoolLoadBalancerPoolHealthMonitor({
+        .addHealthMonitorToPoolLoadBalancerPool({
           poolId: this.poolId,
           healthMonitorId: this.f.selectedHealthMonitor.value,
         })
@@ -145,7 +145,7 @@ export class PoolModalComponent implements OnInit {
     }
 
     this.poolService
-      .addNodeToPoolLoadBalancerPoolNode({
+      .addNodeToPoolLoadBalancerPool({
         poolId: this.poolId,
         nodeId: selectedNode.id,
         servicePort,
@@ -186,7 +186,7 @@ export class PoolModalComponent implements OnInit {
           });
       } else {
         this.poolService
-          .removeNodeFromPoolLoadBalancerPoolHealthMonitor({
+          .removeHealthMonitorFromPoolLoadBalancerPool({
             poolId: this.poolId,
             healthMonitorId,
           })
@@ -208,7 +208,7 @@ export class PoolModalComponent implements OnInit {
     );
     const onConfirm = () => {
       this.poolService
-        .removeNodeFromPoolLoadBalancerPoolNode({
+        .removeNodeFromPoolLoadBalancerPool({
           poolId: this.poolId,
           nodeId: nodeToPool.loadBalancerNode.id,
           servicePort: nodeToPool.servicePort,

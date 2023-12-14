@@ -1,5 +1,11 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { Contract, ContractPaginationResponse, V2AppCentricContractsService, V2AppCentricEndpointGroupsService } from 'client';
+import {
+  Contract,
+  GetManyContractResponseDto,
+  GetManyEndpointGroupResponseDto,
+  V2AppCentricContractsService,
+  V2AppCentricEndpointGroupsService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -13,7 +19,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 })
 export class ConsumedContractComponent implements OnInit, OnChanges {
   @Input() public endpointGroupId: string;
-  public contractTableData: ContractPaginationResponse;
+  public contractTableData: GetManyContractResponseDto;
   public contracts: Contract[];
   public selectedContract: Contract;
 
@@ -88,12 +94,12 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
 
   public getConsumedContracts(event?): void {
     this.endpointGroupsService
-      .findOneEndpointGroup({
-        uuid: this.endpointGroupId,
-        relations: 'consumedContracts',
+      .getOneEndpointGroup({
+        id: this.endpointGroupId,
+        relations: ['consumedContracts'],
       })
       .subscribe(data => {
-        const contractPagResponse = {} as ContractPaginationResponse;
+        const contractPagResponse = {} as GetManyContractResponseDto;
         contractPagResponse.count = data.consumedContracts.length;
         contractPagResponse.page = 1;
         contractPagResponse.pageCount = 1;
@@ -105,7 +111,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
 
   public getContracts(): void {
     this.contractsService
-      .findAllContract({
+      .getManyContract({
         filter: [`tenantId||eq||${this.tenantId}`],
         page: 1,
         perPage: 1000,

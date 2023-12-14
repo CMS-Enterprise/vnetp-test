@@ -104,7 +104,7 @@ export class SelfIpModalComponent implements OnInit {
         filter: [`tierId||eq||${this.tierId}`],
         // review what to do in this scenario. currently it is a unique issue but
         // if we carry this functionality over to LB-pools it will share the same issue
-        limit: 10000,
+        perPage: 10000,
         page: 1,
       })
       .subscribe(response => {

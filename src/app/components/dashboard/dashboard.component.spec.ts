@@ -26,7 +26,7 @@ describe('DashboardComponent', () => {
 
   beforeEach(async(() => {
     const datacenterService = {
-      getManyDatacenters: jest.fn(() => of({ total: 1 })),
+      getManyDatacenter: jest.fn(() => of({ total: 1 })),
     };
 
     const tierService = {
@@ -85,7 +85,7 @@ describe('DashboardComponent', () => {
 
     component.ngOnInit();
 
-    expect(datacenterService.getManyDatacenters).toHaveBeenCalledWith({ page: 1, limit: 1 });
-    expect(tierService.getManyTier).toHaveBeenCalledWith({ page: 1, limit: 1 });
+    expect(datacenterService.getManyDatacenter).toHaveBeenCalledWith({ page: 1, perPage: 1 });
+    expect(tierService.getManyTier).toHaveBeenCalledWith({ page: 1, perPage: 1 });
   });
 });

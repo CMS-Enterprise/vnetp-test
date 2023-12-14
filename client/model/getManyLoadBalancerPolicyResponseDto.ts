@@ -13,10 +13,11 @@ import { LoadBalancerPolicy } from './loadBalancerPolicy';
 
 
 export interface GetManyLoadBalancerPolicyResponseDto { 
-    data: Array<LoadBalancerPolicy>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<LoadBalancerPolicy>;
 }
 

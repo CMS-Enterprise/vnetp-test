@@ -129,7 +129,7 @@ export class EndpointGroupModalComponent implements OnInit {
   }
 
   private createEndpointGroup(endpointGroup: EndpointGroup): void {
-    this.endpointGroupService.createEndpointGroup({ endpointGroup }).subscribe(
+    this.endpointGroupService.createOneEndpointGroup({ endpointGroup }).subscribe(
       () => {
         this.closeModal();
       },
@@ -142,8 +142,8 @@ export class EndpointGroupModalComponent implements OnInit {
     endpointGroup.tenantId = null;
     endpointGroup.applicationProfileId = null;
     this.endpointGroupService
-      .updateEndpointGroup({
-        uuid: this.endpointGroupId,
+      .updateOneEndpointGroup({
+        id: this.endpointGroupId,
         endpointGroup,
       })
       .subscribe(
@@ -184,7 +184,7 @@ export class EndpointGroupModalComponent implements OnInit {
   public getBridgeDomains(event?): void {
     this.isLoading = true;
     this.bridgeDomainService
-      .findAllBridgeDomain({
+      .getManyBridgeDomain({
         filter: [`tenantId||eq||${this.tenantId}`],
         page: 1,
         perPage: 1000,

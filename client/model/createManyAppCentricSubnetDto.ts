@@ -9,14 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Subject } from './subject';
+import { AppCentricSubnet } from './appCentricSubnet';
 
 
-export interface SubjectPaginationResponse { 
-    data: Array<Subject>;
-    count: number;
-    total: number;
-    page: number;
-    pageCount: number;
+export interface CreateManyAppCentricSubnetDto { 
+    bulk: Array<AppCentricSubnet>;
 }
 

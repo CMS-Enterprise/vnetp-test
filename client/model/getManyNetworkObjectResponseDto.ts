@@ -13,10 +13,11 @@ import { NetworkObject } from './networkObject';
 
 
 export interface GetManyNetworkObjectResponseDto { 
-    data: Array<NetworkObject>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<NetworkObject>;
 }
 

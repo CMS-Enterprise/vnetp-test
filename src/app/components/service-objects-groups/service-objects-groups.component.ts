@@ -205,7 +205,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       .getManyServiceObject({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.svcObjTableComponentDto.page,
-        limit: this.svcObjTableComponentDto.perPage,
+        perPage: this.svcObjTableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -243,7 +243,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         join: ['serviceObjects'],
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.svcObjGrpTableComponentDto.page,
-        limit: this.svcObjGrpTableComponentDto.perPage,
+        perPage: this.svcObjGrpTableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -489,7 +489,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       serviceObjectRelationsDto.serviceObjectRelations = event;
 
       this.serviceObjectGroupService
-        .bulkImportRelationsServiceObjectGroupServiceObject({
+        .bulkImportRelationsServiceObjectGroup({
           serviceObjectGroupRelationBulkImportCollectionDto: serviceObjectRelationsDto,
         })
         .subscribe(() => {

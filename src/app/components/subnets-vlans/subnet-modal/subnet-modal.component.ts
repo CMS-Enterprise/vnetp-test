@@ -65,7 +65,7 @@ export class SubnetModalComponent implements OnInit {
         filter: [`tierId||eq||${this.TierId}`],
         sort: ['updatedAt,ASC'],
         page: 1,
-        limit: 10000,
+        perPage: 10000,
       })
       .subscribe(
         response => {

@@ -185,7 +185,7 @@ describe('SubnetModalComponent', () => {
           tierId: '1',
           sharedBetweenVrfs: false,
         },
-        Vlans: { data: [], count: 0, total: 0, page: 0, pageCount: 0 },
+        Vlans: { data: [], count: 0, total: 0, page: 0, pageCount: 0, totalPages: 0 },
         ModalMode: ModalMode.Edit,
       };
     };

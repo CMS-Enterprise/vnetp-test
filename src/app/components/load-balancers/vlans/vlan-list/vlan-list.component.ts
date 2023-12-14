@@ -120,7 +120,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
       .getManyLoadBalancerVlan({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(

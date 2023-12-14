@@ -58,18 +58,19 @@
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
-      <app-table
-        *ngIf="!dto?.l3Out?.vrfId"
-        [config]="config"
-        [data]="vrfs"
-        (clearResults)="getVrfs($event)"
-        (searchParams)="getVrfs($event)"
-        [searchColumns]="searchColumns"
-        [(itemsPerPage)]="perPage"
-        (tableEvent)="onTableEvent($event)"
-      ></app-table>
-      <div *ngIf="f.vrfId.errors" class="invalid-feedback">
-        <div *ngIf="f.vrfId.errors.required">Vrf is required</div>
+      <div *ngIf="modalMode === modalModeEnum.Create">
+        <app-table
+          [config]="config"
+          [data]="vrfs"
+          (clearResults)="getVrfs($event)"
+          (searchParams)="getVrfs($event)"
+          [searchColumns]="searchColumns"
+          [(itemsPerPage)]="perPage"
+          (tableEvent)="onTableEvent($event)"
+        ></app-table>
+        <div *ngIf="f.vrfId.errors" class="invalid-feedback">
+          <div *ngIf="f.vrfId.errors.required">Vrf is required</div>
+        </div>
       </div>
     </div>
 

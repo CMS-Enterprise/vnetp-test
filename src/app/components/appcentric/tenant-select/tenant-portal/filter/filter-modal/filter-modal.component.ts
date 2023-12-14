@@ -2,7 +2,6 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import {
-  FilterEntryPaginationResponse,
   FilterEntry,
   Filter,
   V2AppCentricFilterEntriesService,
@@ -10,6 +9,7 @@ import {
   FilterEntryArpFlagEnum,
   FilterEntryIpProtocolEnum,
   V2AppCentricFiltersService,
+  GetManyFilterEntryResponseDto,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -37,7 +37,7 @@ export class FilterModalComponent implements OnInit {
   public submitted: boolean;
   public tenantId: string;
   public filterId: string;
-  public filterEntries: FilterEntryPaginationResponse;
+  public filterEntries: GetManyFilterEntryResponseDto;
   public tableComponentDto = new TableComponentDto();
   public perPage = 20;
 
@@ -149,8 +149,10 @@ export class FilterModalComponent implements OnInit {
       }
     }
     this.filterEntriesService
-      .findAllFilterEntry({
+      .getManyFilterEntry({
         filter: [`filterId||eq||${this.filterId}`, eventParams],
+        perPage: 1000,
+        page: 1,
       })
       .subscribe(
         data => (this.filterEntries = data),
@@ -166,8 +168,8 @@ export class FilterModalComponent implements OnInit {
       );
       const onConfirm = () => {
         this.filterEntriesService
-          .removeFilterEntry({
-            uuid: filterEntry.id,
+          .deleteOneFilterEntry({
+            id: filterEntry.id,
           })
           .subscribe(() => {
             const params = this.tableContextService.getSearchLocalStorage();
@@ -187,8 +189,8 @@ export class FilterModalComponent implements OnInit {
       );
       const onConfirm = () => {
         this.filterEntriesService
-          .softDeleteFilterEntry({
-            uuid: filterEntry.id,
+          .softDeleteOneFilterEntry({
+            id: filterEntry.id,
           })
           .subscribe(() => {
             const params = this.tableContextService.getSearchLocalStorage();
@@ -209,8 +211,8 @@ export class FilterModalComponent implements OnInit {
       return;
     }
     this.filterEntriesService
-      .restoreFilterEntry({
-        uuid: filterEntry.id,
+      .restoreOneFilterEntry({
+        id: filterEntry.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
@@ -266,7 +268,7 @@ export class FilterModalComponent implements OnInit {
   }
 
   private createFilter(filter: Filter): void {
-    this.filterService.createFilter({ filter }).subscribe(
+    this.filterService.createOneFilter({ filter }).subscribe(
       () => {
         this.closeModal();
       },
@@ -277,8 +279,8 @@ export class FilterModalComponent implements OnInit {
   private editFilter(filter: Filter): void {
     filter.name = null;
     this.filterService
-      .updateFilter({
-        uuid: this.filterId,
+      .updateOneFilter({
+        id: this.filterId,
         filter,
       })
       .subscribe(

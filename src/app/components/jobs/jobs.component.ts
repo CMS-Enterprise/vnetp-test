@@ -24,8 +24,8 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   getJobs() {
-    this.jobsService.getManyJob({ limit: 100, sort: ['createdAt,DESC'] }).subscribe(data => {
-      this.jobs = data;
+    this.jobsService.getManyJob({ perPage: 100, page: 1, sort: ['createdAt,DESC'] }).subscribe(response => {
+      this.jobs = response.data;
     });
   }
 }

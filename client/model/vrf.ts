@@ -15,13 +15,15 @@ import { BridgeDomain } from './bridgeDomain';
 
 export interface Vrf { 
     readonly id?: string;
+    readonly createdAt?: string;
+    readonly updatedAt?: string;
+    readonly version?: number;
+    readonly deletedAt?: string;
+    readonly provisionedAt?: string;
+    readonly provisionedVersion?: number;
     name?: string;
     alias?: string;
     description?: string;
-    readonly createdAt?: string;
-    readonly updatedAt?: string;
-    readonly deletedAt?: string;
-    readonly provisionedAt?: string;
     /**
      * Default True, Security rules (contracts) will be enforced.
      */

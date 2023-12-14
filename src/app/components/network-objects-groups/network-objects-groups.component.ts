@@ -207,7 +207,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       .getManyNetworkObject({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.netObjTableComponentDto.page,
-        limit: this.netObjTableComponentDto.perPage,
+        perPage: this.netObjTableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -243,7 +243,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         join: ['networkObjects'],
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.netObjGrpTableComponentDto.page,
-        limit: this.netObjGrpTableComponentDto.perPage,
+        perPage: this.netObjGrpTableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -317,7 +317,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       } else if (advancesSearch) {
         const param = {
           page: this.netObjTableComponentDto.page,
-          limit: this.netObjTableComponentDto.perPage,
+          perPage: this.netObjTableComponentDto.perPage,
           sort: ['name,ASC'],
         };
         if (advancesSearch.searchOperator === 'and') {
@@ -512,7 +512,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       networkObjectRelationsDto.networkObjectRelations = event;
 
       this.networkObjectGroupService
-        .bulkImportRelationsNetworkObjectGroupNetworkObject({
+        .bulkImportRelationsNetworkObjectGroup({
           networkObjectGroupRelationBulkImportCollectionDto: networkObjectRelationsDto,
         })
         .subscribe(() => {

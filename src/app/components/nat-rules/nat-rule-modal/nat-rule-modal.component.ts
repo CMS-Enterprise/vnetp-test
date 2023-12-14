@@ -5,6 +5,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import {
+  NatRule,
   NatRuleDirectionEnum,
   NatRuleOriginalDestinationAddressTypeEnum,
   NatRuleOriginalServiceTypeEnum,
