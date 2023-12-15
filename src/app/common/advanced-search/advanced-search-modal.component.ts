@@ -105,7 +105,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
     for (const field in values) {
       if (values.hasOwnProperty(field)) {
         const value = values[field];
-        if (value !== '') {
+        if (value !== '' && value !== null && value !== undefined) {
           const searchColumn = this.formInputs.find(column => column.propertyName === field);
           const searchOperator = searchColumn && searchColumn.searchOperator ? searchColumn.searchOperator : 'eq';
           params.join = searchColumn.join;
