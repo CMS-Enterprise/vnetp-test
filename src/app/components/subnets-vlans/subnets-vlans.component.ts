@@ -428,7 +428,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         join: ['vlan'],
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.subnetTableComponentDto.page,
-        limit: this.subnetTableComponentDto.perPage,
+        perPage: this.subnetTableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -466,7 +466,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       .getManyVlan({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.vlanTableComponentDto.page,
-        limit: this.vlanTableComponentDto.perPage,
+        perPage: this.vlanTableComponentDto.perPage,
         sort: ['vlanNumber,ASC'],
       })
       .subscribe(

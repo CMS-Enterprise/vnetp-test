@@ -90,10 +90,10 @@ describe('DeployComponent', () => {
 
     expect(tiersService.getManyTier).toHaveBeenCalledWith({
       page: 1,
-      limit: 1000,
+      perPage: 1000,
       filter: [`datacenterId||eq||${testData.datacenter.id}`, 'deletedAt||isnull'],
     });
-    expect(tierGroupService.getManyTierGroup).toHaveBeenCalledWith({ filter: ['datacenterId||eq||1'], page: 1, limit: 1000 });
+    expect(tierGroupService.getManyTierGroup).toHaveBeenCalledWith({ filter: ['datacenterId||eq||1'], page: 1, perPage: 1000 });
     expect(component.tiers.length).toBe(1);
   });
 

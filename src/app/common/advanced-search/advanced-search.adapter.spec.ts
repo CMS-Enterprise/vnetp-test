@@ -40,7 +40,7 @@ describe('AdvancedSearchAdapter', () => {
     const mockServiceInstance = new MockService();
     adapter.setService(mockServiceInstance);
 
-    const params = { limit: 10, page: 1 };
+    const params = { perPage: 10, page: 1 };
     adapter.getMany(params).subscribe(data => {
       expect(mockServiceInstance.getManyWithPagination).toHaveBeenCalledWith(params);
       expect(data).toEqual(mockData);

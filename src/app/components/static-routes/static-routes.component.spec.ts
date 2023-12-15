@@ -37,7 +37,7 @@ describe('StaticRoutesComponent', () => {
     expect(loadTiersSpy).toHaveBeenCalledWith({
       filter: ['datacenterId||eq||1'],
       join: ['staticRoutes'],
-      limit: 1000,
+      perPage: 1000,
       page: 1,
     });
   });

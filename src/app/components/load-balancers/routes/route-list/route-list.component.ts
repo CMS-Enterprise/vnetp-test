@@ -126,7 +126,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       .getManyLoadBalancerRoute({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(

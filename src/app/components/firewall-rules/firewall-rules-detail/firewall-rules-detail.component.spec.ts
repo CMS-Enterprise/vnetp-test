@@ -108,7 +108,7 @@ describe('FirewallRulesDetailComponent', () => {
         .getManyFirewallRule({
           filter: ['', ''],
           page: 1,
-          limit: 1,
+          perPage: 1,
           sort: ['ruleIndex,ASC'],
         })
         .subscribe(

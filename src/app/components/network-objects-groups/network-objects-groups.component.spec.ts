@@ -129,7 +129,7 @@ describe('NetworkObjectsGroupsComponent', () => {
         .getManyNetworkObject({
           filter: [`tierId||eq||${component.currentTier.id}`],
           page: component.netObjTableComponentDto.page,
-          limit: component.netObjTableComponentDto.perPage,
+          perPage: component.netObjTableComponentDto.perPage,
           sort: ['name,ASC'],
         })
         .subscribe(
@@ -159,7 +159,7 @@ describe('NetworkObjectsGroupsComponent', () => {
         .getManyNetworkObjectGroup({
           filter: [`tierId||eq||${component.currentTier.id}`],
           page: component.netObjGrpTableComponentDto.page,
-          limit: component.netObjGrpTableComponentDto.perPage,
+          perPage: component.netObjGrpTableComponentDto.perPage,
           sort: ['name,ASC'],
         })
         .subscribe(
