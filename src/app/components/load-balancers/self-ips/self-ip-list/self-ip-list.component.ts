@@ -38,7 +38,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
     { displayName: 'IpAddress', propertyName: 'ipAddress', join: ['loadBalancerVlan'] },
 
     // TODO: Revisit this search param, grand child search params are not supported in api
-    // { displayName: 'Vlan', propertyName: 'loadBalancerVlan.name', searchOperator: 'cont', join: ['loadBalancerVlan'] },
+    { displayName: 'Vlan', propertyName: 'loadBalancerVlan.name', searchOperator: 'cont', join: ['loadBalancerVlan'] },
   ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
