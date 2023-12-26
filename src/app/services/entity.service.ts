@@ -11,9 +11,17 @@ export class EntityService {
   constructor(private ngx: NgxSmartModalService) {}
 
   public deleteEntity(entity: Entity, config: DeleteEntityConfig): Subscription {
-    if (entity.provisionedAt) {
-      throw new Error('Cannot delete provisioned object');
-    }
+    // TODO : find efficient way to use toastr service here without breaking tests
+
+    // if (entity.provisionedAt) {
+    //   this.toastr.error('Cannot soft-delete a provisioned object')
+    //   return null;
+    // }
+
+    // TODO : or maybe we don't need this at all and let API validation show the message?
+    // if (entity.provisionedAt) {
+    //   throw new Error('Cannot delete provisioned object');
+    // }
 
     const { deletedAt, name } = entity;
     const { entityName, delete$, softDelete$, onSuccess } = config;
