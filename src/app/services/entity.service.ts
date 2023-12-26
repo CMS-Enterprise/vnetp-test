@@ -19,9 +19,9 @@ export class EntityService {
     // }
 
     // TODO : or maybe we don't need this at all and let API validation show the message?
-    // if (entity.provisionedAt) {
-    //   throw new Error('Cannot delete provisioned object');
-    // }
+    if (entity.provisionedAt) {
+      throw new Error('Cannot delete provisioned object');
+    }
 
     const { deletedAt, name } = entity;
     const { entityName, delete$, softDelete$, onSuccess } = config;
