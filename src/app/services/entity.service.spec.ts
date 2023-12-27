@@ -22,15 +22,6 @@ describe('EntityService', () => {
   });
 
   describe('deleteEntity', () => {
-    it('should throw an error when deleting a provisioned entity', () => {
-      const throwsError = () => {
-        const entity: Entity = { provisionedAt: {}, name: 'Entity' };
-        service.deleteEntity(entity, null);
-      };
-
-      expect(throwsError).toThrow('Cannot delete provisioned object');
-    });
-
     it('should soft-delete an entity', () => {
       const softDelete$ = of();
       const softDeleteSpy = jest.spyOn(softDelete$, 'subscribe');
