@@ -140,9 +140,11 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     });
   }
 
-  public checkObjectsParents(svcObjId) {
-    this.serviceObjectService.checkUsedObjectsServiceObject(svcObjId).subscribe(data => {
+  public checkObjectsParents(svcObj) {
+    this.serviceObjectService.checkUsedObjectsServiceObject(svcObj).subscribe(data => {
       this.usedObjectsParents.data = data;
+      this.usedObjectsParents.name = svcObj.name;
+      this.usedObjectsParents.objType = 'Service Object';
       this.openUsedObjectsParentsModal();
     });
   }
