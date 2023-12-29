@@ -3,6 +3,9 @@
     "dcsLocations": [
       { "name": "East - Ashburn", "url": "http://localhost-east:4200" },
       { "name": "West - Kent", "url": "http://localhost-west:4200" }
-    ]
+    ],
+    "dcsVersion": "3.0",
+    "wikiBase": "https://confluenceent.cms.gov/pages/viewpage.action?pageId=297825631",
+    "snowBase": "https://cmsitsm.servicenowservices.com/"
   }
 }

@@ -18,7 +18,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public tenantAccountNumber: string;
   private currentUserSubscription: Subscription;
   private currentTenantSubscription: Subscription;
-  public dcsVersion: string = environment?.environment?.dcsVersion;
+  public environment = environment;
+  public dcsVersion: string = environment.dynamic.dcsVersion;
 
   constructor(private ngx: NgxSmartModalService, private auth: AuthService) {}
 

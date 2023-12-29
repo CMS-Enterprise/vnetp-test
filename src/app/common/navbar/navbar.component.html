@@ -136,10 +136,10 @@
             queryParamsHandling="merge"
             >Audit Log</a
           >
-          <a id="ticket-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://jiraent.cms.gov/"
+          <a id="ticket-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="{{ environment?.dynamic?.snowBase }}"
             >Ticketing System</a
           >
-          <a id="documentation-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="http://wiki.draas.cdsvdc.lcl/"
+          <a id="documentation-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="{{ environment?.dynamic?.wikiBase}}"
             >Documentation</a
           >
           <a tabindex="0" (keyup.enter)="openLogoutModal()" name="logout-link" class="dropdown-item" (click)="openLogoutModal()">Logout</a>
