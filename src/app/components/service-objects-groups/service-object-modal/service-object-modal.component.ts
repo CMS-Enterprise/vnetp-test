@@ -112,8 +112,9 @@ export class ServiceObjectModalComponent implements OnInit {
   }
 
   private editServiceObject(serviceObject: ServiceObject): void {
-    serviceObject.name = null;
-    serviceObject.protocol = null;
+    delete serviceObject.name;
+    delete serviceObject.protocol;
+    delete serviceObject.tierId;
     this.serviceObjectsService
       .updateOneServiceObject({
         id: this.ServiceObjectId,

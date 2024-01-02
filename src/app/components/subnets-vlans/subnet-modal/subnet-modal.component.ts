@@ -135,11 +135,11 @@ export class SubnetModalComponent implements OnInit {
   }
 
   private editSubnet(subnet: Subnet): void {
-    subnet.name = null;
-    subnet.network = null;
-    subnet.gateway = null;
-    subnet.tierId = null;
-    subnet.vlanId = null;
+    delete subnet.name;
+    delete subnet.network;
+    delete subnet.gateway;
+    delete subnet.tierId;
+    delete subnet.vlanId;
     this.subnetService.updateOneSubnet({ id: this.SubnetId, subnet }).subscribe(
       () => {
         this.closeModal();

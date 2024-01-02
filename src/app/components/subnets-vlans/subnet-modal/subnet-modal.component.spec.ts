@@ -156,12 +156,7 @@ describe('SubnetModalComponent', () => {
     expect(updateSubnetSpy).toHaveBeenCalledWith({
       id: '2',
       subnet: {
-        name: null,
-        tierId: null,
         description: 'Description stays',
-        network: null,
-        gateway: null,
-        vlanId: null,
         sharedBetweenVrfs: null,
       },
     });

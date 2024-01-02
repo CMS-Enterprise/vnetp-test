@@ -119,8 +119,6 @@ describe('IRuleModalComponent', () => {
     expect(spy).toHaveBeenCalledWith({
       id: '2',
       loadBalancerIrule: {
-        tierId: null,
-        name: undefined,
         content: 'New Content',
         description: 'New Description',
       },

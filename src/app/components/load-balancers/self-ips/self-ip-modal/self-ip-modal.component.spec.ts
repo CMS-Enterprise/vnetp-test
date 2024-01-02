@@ -124,7 +124,6 @@ describe('SelfIpModalComponent', () => {
         loadBalancerVlanId: '3',
         ipAddress: '192.168.1.2',
         name: 'NewName',
-        tierId: null,
       },
     });
   });

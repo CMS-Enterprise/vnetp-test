@@ -267,7 +267,7 @@ export class PoolModalComponent implements OnInit {
   }
 
   private updatePool(loadBalancerPool: LoadBalancerPool): void {
-    loadBalancerPool.tierId = null;
+    delete loadBalancerPool.tierId;
     this.poolService
       .updateOneLoadBalancerPool({
         id: this.poolId,
