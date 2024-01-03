@@ -129,30 +129,39 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     modalNatRule.translatedDestinationNetworkObjectGroupId = null;
     if (modalNatRule.originalServiceType === NatRuleOriginalServiceTypeEnum.ServiceObject) {
       modalNatRule.originalServiceObjectId = modalNatRule.originalServiceObject;
-      modalNatRule.originalServiceObject = null;
+      delete modalNatRule.originalServiceObject;
     }
     if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressTypeEnum.NetworkObject) {
       modalNatRule.originalSourceNetworkObjectId = modalNatRule.originalSourceNetworkObject;
+      delete modalNatRule.originalSourceNetworkObject;
     } else if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.originalSourceNetworkObjectGroupId = modalNatRule.originalSourceNetworkObjectGroup;
+      delete modalNatRule.originalSourceNetworkObjectGroup;
     }
     if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressTypeEnum.NetworkObject) {
       modalNatRule.originalDestinationNetworkObjectId = modalNatRule.originalDestinationNetworkObject;
+      delete modalNatRule.originalDestinationNetworkObject;
     } else if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.originalDestinationNetworkObjectGroupId = modalNatRule.originalDestinationNetworkObjectGroup;
+      delete modalNatRule.originalDestinationNetworkObjectGroup;
     }
     if (modalNatRule.translatedServiceType === NatRuleTranslatedServiceTypeEnum.ServiceObject) {
       modalNatRule.translatedServiceObjectId = modalNatRule.translatedServiceObject;
+      delete modalNatRule.translatedServiceObject;
     }
     if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressTypeEnum.NetworkObject) {
       modalNatRule.translatedSourceNetworkObjectId = modalNatRule.translatedSourceNetworkObject;
+      delete modalNatRule.translatedSourceNetworkObject;
     } else if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.translatedSourceNetworkObjectGroupId = modalNatRule.translatedSourceNetworkObjectGroup;
+      delete modalNatRule.translatedSourceNetworkObjectGroup;
     }
     if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressTypeEnum.NetworkObject) {
       modalNatRule.translatedDestinationNetworkObjectId = modalNatRule.translatedDestinationNetworkObject;
+      delete modalNatRule.translatedDestinationNetworkObject;
     } else if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.translatedDestinationNetworkObjectGroupId = modalNatRule.translatedDestinationNetworkObjectGroup;
+      delete modalNatRule.translatedDestinationNetworkObjectGroup;
     }
 
     if (this.modalMode === ModalMode.Create) {
