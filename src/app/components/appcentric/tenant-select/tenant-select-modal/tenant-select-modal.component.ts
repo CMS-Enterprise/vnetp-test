@@ -80,7 +80,7 @@ export class TenantSelectModalComponent implements OnInit {
   }
 
   private editTenant(tenant: Tenant): void {
-    tenant.name = null;
+    delete tenant.name;
     this.tenantService
       .updateOneTenant({
         id: this.TenantId,

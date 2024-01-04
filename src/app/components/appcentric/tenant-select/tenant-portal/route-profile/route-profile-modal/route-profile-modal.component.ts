@@ -83,8 +83,8 @@ export class RouteProfileModalComponent implements OnInit {
   }
 
   private editRouteProfile(routeProfile: RouteProfile): void {
-    routeProfile.name = null;
-    routeProfile.tenantId = null;
+    delete routeProfile.name;
+    delete routeProfile.tenantId;
     this.routeProfileService
       .updateOneRouteProfile({
         id: this.routeProfileId,

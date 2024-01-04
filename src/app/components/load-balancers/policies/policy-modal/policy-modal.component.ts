@@ -122,8 +122,9 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
   }
 
   private updatePolicy(loadBalancerPolicy: LoadBalancerPolicy): void {
-    loadBalancerPolicy.tierId = null;
-    loadBalancerPolicy.type = undefined;
+    delete loadBalancerPolicy.name;
+    delete loadBalancerPolicy.tierId;
+    delete loadBalancerPolicy.type;
     this.policyService
       .updateOneLoadBalancerPolicy({
         id: this.policyId,

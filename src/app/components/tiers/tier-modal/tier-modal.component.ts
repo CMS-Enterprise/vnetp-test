@@ -119,8 +119,8 @@ export class TierModalComponent implements OnInit {
   }
 
   private editTier(tier: Tier): void {
-    tier.name = null;
-    tier.datacenterId = null;
+    delete tier.name;
+    delete tier.datacenterId;
     this.tierService
       .updateOneTier({
         id: this.TierId,

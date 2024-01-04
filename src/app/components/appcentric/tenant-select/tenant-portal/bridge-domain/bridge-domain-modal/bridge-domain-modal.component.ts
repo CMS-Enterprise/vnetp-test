@@ -186,9 +186,9 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   }
 
   private editBridgeDomain(bridgeDomain: BridgeDomain): void {
-    bridgeDomain.name = null;
-    bridgeDomain.tenantId = null;
-    bridgeDomain.vrfId = null;
+    delete bridgeDomain.name;
+    delete bridgeDomain.tenantId;
+    delete bridgeDomain.vrfId;
     this.bridgeDomainService
       .updateOneBridgeDomain({
         id: this.bridgeDomainId,

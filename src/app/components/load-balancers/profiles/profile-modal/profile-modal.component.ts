@@ -145,8 +145,8 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   }
 
   private updateProfile(loadBalancerProfile: LoadBalancerProfile): void {
-    loadBalancerProfile.tierId = null;
-    loadBalancerProfile.type = undefined;
+    delete loadBalancerProfile.tierId;
+    delete loadBalancerProfile.type;
     this.profileService
       .updateOneLoadBalancerProfile({
         id: this.profileId,

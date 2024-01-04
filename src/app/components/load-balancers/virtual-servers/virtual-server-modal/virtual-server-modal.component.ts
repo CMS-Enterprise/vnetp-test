@@ -314,7 +314,7 @@ export class VirtualServerModalComponent implements OnInit {
   }
 
   private updateVirtualServer(loadBalancerVirtualServer: LoadBalancerVirtualServer): void {
-    loadBalancerVirtualServer.tierId = null;
+    delete loadBalancerVirtualServer.tierId;
     this.virtualServerService
       .updateOneLoadBalancerVirtualServer({
         id: this.virtualServerId,

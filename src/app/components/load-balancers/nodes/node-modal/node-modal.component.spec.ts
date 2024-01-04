@@ -147,8 +147,6 @@ describe('NodeModalComponent', () => {
         autoPopulate: null,
         fqdn: null,
         ipAddress: '192.168.1.2',
-        name: undefined,
-        tierId: null,
         type: LoadBalancerNodeTypeEnum.IpAddress,
       },
     });

@@ -248,8 +248,9 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
   }
 
   private editFilterEntry(filterEntry: FilterEntry): void {
-    filterEntry.name = null;
-    filterEntry.tenantId = null;
+    delete filterEntry.name;
+    delete filterEntry.filterId;
+    delete filterEntry.tenantId;
     this.filterEntriesService
       .updateOneFilterEntry({
         id: this.filterEntryId,
@@ -306,9 +307,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
     if (this.modalMode === ModalMode.Create) {
       this.createFilterEntry(filterEntry);
     } else {
-      delete filterEntry.tenantId;
-      delete filterEntry.filterId;
-      delete filterEntry.name;
       this.editFilterEntry(filterEntry);
     }
   }
