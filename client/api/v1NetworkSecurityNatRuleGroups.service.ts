@@ -48,9 +48,11 @@ export interface GetManyNatRuleGroupRequestParams {
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Number of entities to return per page. */
+    /** Number of entities to return per page.      If page is not passed, a number of entities up to this parameter will be returned. Default 20. */
     perPage?: number;
-    /** Page of entities to return based on the perPage value and total number of entities in the database. */
+    /** Alias for perPage. If perPage is also passed this parameter will be ignored. */
+    limit?: number;
+    /** Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination. */
     page?: number;
     /** Filter condition to apply to the query. */
     filter?: Array<string>;
@@ -60,8 +62,6 @@ export interface GetManyNatRuleGroupRequestParams {
     group?: Array<string>;
     /** Properties to select. */
     fields?: Array<string>;
-    /** Alias for perPage. Number of entities to return per page. */
-    limit?: number;
     /** Where object for advanced AND/OR queries. */
     s?: string;
 }
@@ -163,10 +163,10 @@ export class V1NetworkSecurityNatRuleGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createManyNatRuleGroup(requestParameters: CreateManyNatRuleGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public createManyNatRuleGroup(requestParameters: CreateManyNatRuleGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public createManyNatRuleGroup(requestParameters: CreateManyNatRuleGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public createManyNatRuleGroup(requestParameters: CreateManyNatRuleGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public createManyNatRuleGroup(requestParameters: CreateManyNatRuleGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<NatRuleGroup>>;
+    public createManyNatRuleGroup(requestParameters: CreateManyNatRuleGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<NatRuleGroup>>>;
+    public createManyNatRuleGroup(requestParameters: CreateManyNatRuleGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<NatRuleGroup>>>;
+    public createManyNatRuleGroup(requestParameters: CreateManyNatRuleGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const createManyNatRuleGroupDto = requestParameters.createManyNatRuleGroupDto;
         if (createManyNatRuleGroupDto === null || createManyNatRuleGroupDto === undefined) {
             throw new Error('Required parameter createManyNatRuleGroupDto was null or undefined when calling createManyNatRuleGroup.');
@@ -178,6 +178,7 @@ export class V1NetworkSecurityNatRuleGroupsService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -200,7 +201,7 @@ export class V1NetworkSecurityNatRuleGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/network-security/nat-rule-groups/bulk`,
+        return this.httpClient.post<Array<NatRuleGroup>>(`${this.configuration.basePath}/v1/network-security/nat-rule-groups/bulk`,
             createManyNatRuleGroupDto,
             {
                 responseType: <any>responseType,
@@ -373,12 +374,12 @@ export class V1NetworkSecurityNatRuleGroupsService {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
+        const limit = requestParameters.limit;
         const page = requestParameters.page;
         const filter = requestParameters.filter;
         const sort = requestParameters.sort;
         const group = requestParameters.group;
         const fields = requestParameters.fields;
-        const limit = requestParameters.limit;
         const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -397,6 +398,10 @@ export class V1NetworkSecurityNatRuleGroupsService {
         if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>perPage, 'perPage');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
         }
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -425,10 +430,6 @@ export class V1NetworkSecurityNatRuleGroupsService {
                 queryParameters = this.addToHttpParams(queryParameters,
                   <any>element, 'fields');
             })
-        }
-        if (limit !== undefined && limit !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
         }
         if (s !== undefined && s !== null) {
           queryParameters = this.addToHttpParams(queryParameters,

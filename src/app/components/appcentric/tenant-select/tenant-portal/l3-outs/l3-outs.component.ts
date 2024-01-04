@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { V2AppCentricL3outsService, L3Out, V2AppCentricVrfsService, Vrf, GetManyL3OutResponseDto, GetManyVrfResponseDto } from 'client';
+import { Router } from '@angular/router';
+import { V2AppCentricL3outsService, L3Out, V2AppCentricVrfsService, GetManyL3OutResponseDto, GetManyVrfResponseDto } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
@@ -57,15 +57,13 @@ export class L3OutsComponent implements OnInit {
     advancedSearchAdapter.setServiceName('V2AppCentricL3outsService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
 
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    const match = this.router.routerState.snapshot.url.match(
+      /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
+    );
+    if (match) {
+      const uuid = match[0].split('/')[2];
+      this.tenantId = uuid;
+    }
   }
 
   ngOnInit(): void {
@@ -199,7 +197,7 @@ export class L3OutsComponent implements OnInit {
     });
   }
 
-  public importL3OutsConfig(l3Out: L3Out[]): void {
+  public importL3OutsConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

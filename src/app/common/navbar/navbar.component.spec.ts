@@ -1,4 +1,4 @@
-/* tslint:disable:no-string-literal */
+/* eslint-disable */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavbarComponent } from './navbar.component';
 import { AuthService } from 'src/app/services/auth.service';
@@ -46,9 +46,20 @@ describe('NavbarComponent', () => {
   });
 
   describe('logout', () => {
+    const mockResponse = jest.fn();
+    Object.defineProperty(window, 'location', {
+      value: {
+        hash: {
+          endsWith: mockResponse,
+          includes: mockResponse,
+        },
+        assign: mockResponse,
+      },
+      writable: true,
+    });
     it('should close the logoutModal and call auth.logout', () => {
-      spyOn(component['ngx'], 'close');
-      spyOn(component['auth'], 'logout');
+      jest.spyOn(component['ngx'], 'close');
+      jest.spyOn(component['auth'], 'logout');
       component.logout();
       expect(component['ngx'].close).toHaveBeenCalledWith('logoutModal');
       expect(component['auth'].logout).toHaveBeenCalled();

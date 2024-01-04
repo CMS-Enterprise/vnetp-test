@@ -1,6 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {
   FilterEntry,
   FilterEntryArpFlagEnum,
@@ -23,9 +22,9 @@ import SubscriptionUtil from '../../../../../../../utils/SubscriptionUtil';
 })
 export class FilterEntryModalComponent implements OnInit, OnDestroy {
   public filterEntryId: string;
-  public tenantId: string;
+  @Input() public tenantId: string;
   public filterId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public modalMode: ModalMode;
 
@@ -39,20 +38,10 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
   public ipProtocolOptions = Object.values(FilterEntryIpProtocolEnum);
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private filterEntriesService: V2AppCentricFilterEntriesService,
-    private router: Router,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\//);
-        if (match) {
-          this.tenantId = match[1];
-        }
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -259,8 +248,9 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
   }
 
   private editFilterEntry(filterEntry: FilterEntry): void {
-    filterEntry.name = null;
-    filterEntry.tenantId = null;
+    delete filterEntry.name;
+    delete filterEntry.filterId;
+    delete filterEntry.tenantId;
     this.filterEntriesService
       .updateOneFilterEntry({
         id: this.filterEntryId,
@@ -317,9 +307,6 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
     if (this.modalMode === ModalMode.Create) {
       this.createFilterEntry(filterEntry);
     } else {
-      delete filterEntry.tenantId;
-      delete filterEntry.filterId;
-      delete filterEntry.name;
       this.editFilterEntry(filterEntry);
     }
   }

@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router, NavigationEnd } from '@angular/router';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { V2AppCentricEndpointGroupsService, EndpointGroup, V2AppCentricBridgeDomainsService, BridgeDomain } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Tab } from 'src/app/common/tabs/tabs.component';
@@ -22,9 +21,9 @@ export class EndpointGroupModalComponent implements OnInit {
 
   public ModalMode: ModalMode;
   public endpointGroupId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() tenantId;
   public perPage = 5;
   public isLoading = false;
   @Input() public applicationProfileId;
@@ -38,27 +37,14 @@ export class EndpointGroupModalComponent implements OnInit {
   @ViewChild('providedContract', { static: false })
   providedContractRef: ProvidedContractComponent;
 
-  public tabs: Tab[] = tabs.map(t => {
-    return { name: t.name };
-  });
+  public tabs: Tab[] = tabs.map(t => ({ name: t.name }));
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
-    private router: Router,
     private bridgeDomainService: V2AppCentricBridgeDomainsService,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -138,9 +124,9 @@ export class EndpointGroupModalComponent implements OnInit {
   }
 
   private editEndpointGroup(endpointGroup: EndpointGroup): void {
-    endpointGroup.name = null;
-    endpointGroup.tenantId = null;
-    endpointGroup.applicationProfileId = null;
+    delete endpointGroup.name;
+    delete endpointGroup.tenantId;
+    delete endpointGroup.applicationProfileId;
     this.endpointGroupService
       .updateOneEndpointGroup({
         id: this.endpointGroupId,
@@ -181,7 +167,7 @@ export class EndpointGroupModalComponent implements OnInit {
     }
   }
 
-  public getBridgeDomains(event?): void {
+  public getBridgeDomains(): void {
     this.isLoading = true;
     this.bridgeDomainService
       .getManyBridgeDomain({

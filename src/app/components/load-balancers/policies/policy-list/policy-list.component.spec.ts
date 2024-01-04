@@ -9,17 +9,10 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import {
-  GetManyLoadBalancerPolicyRequestParams,
-  GetManyLoadBalancerPolicyResponseDto,
-  LoadBalancerPolicy,
-  LoadBalancerPolicyTypeEnum,
-  Tier,
-  V1LoadBalancerPoliciesService,
-} from 'client';
+import { LoadBalancerPolicy, LoadBalancerPolicyTypeEnum, Tier, V1LoadBalancerPoliciesService } from 'client';
 import { PolicyListComponent, ImportPolicy, PolicyView } from './policy-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
@@ -65,8 +58,8 @@ describe('PolicyListComponent', () => {
   });
 
   it('should map policies', () => {
-    jest.spyOn(service, 'getManyLoadBalancerPolicy').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerPolicy').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'Policy1', provisionedAt: {}, type: LoadBalancerPolicyTypeEnum.Apm },
           { id: '2', name: 'Policy2' },
@@ -75,8 +68,8 @@ describe('PolicyListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

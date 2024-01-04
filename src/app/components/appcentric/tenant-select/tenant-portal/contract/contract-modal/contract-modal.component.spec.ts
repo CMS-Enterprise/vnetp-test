@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -12,20 +12,20 @@ describe('ContractModalComponent', () => {
   let component: ContractModalComponent;
   let fixture: ComponentFixture<ContractModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         ContractModalComponent,
         MockNgxSmartModalComponent,
         MockFontAwesomeComponent,
-        MockComponent({ selector: 'app-subject-modal', inputs: ['contractId'] }),
+        MockComponent({ selector: 'app-subject-modal', inputs: ['contractId', 'tenantId'] }),
         MockIconButtonComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
       ],
       imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ContractModalComponent);

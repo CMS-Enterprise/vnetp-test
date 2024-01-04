@@ -1,9 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { V2AppCentricTenantsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { TableContextService } from 'src/app/services/table-context.service';
 import {
   MockComponent,
   MockFontAwesomeComponent,
@@ -19,7 +18,7 @@ describe('TenantSelectComponent', () => {
   let component: TenantSelectComponent;
   let fixture: ComponentFixture<TenantSelectComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         TenantSelectComponent,
@@ -33,7 +32,7 @@ describe('TenantSelectComponent', () => {
       imports: [RouterModule, RouterTestingModule],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricTenantsService)],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TenantSelectComponent);

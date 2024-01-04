@@ -128,8 +128,6 @@ export class TierContextService {
       return false;
     }
 
-    const oldTierId = this.currentTierValue ? this.currentTierValue.id : null;
-
     this.currentTierSubject.next(tier);
     this.ignoreNextQueryParamEvent = true;
     this.router.navigate([], {

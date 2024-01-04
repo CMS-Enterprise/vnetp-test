@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Tier } from 'client/model/tier';
 import {
-  V1TiersService,
   ServiceObject,
   V1NetworkSecurityServiceObjectsService,
   ServiceObjectGroup,

@@ -106,20 +106,16 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
       })
       .subscribe(
         response => {
-          const getTotal = <T>(array: T[]) => {
-            return array ? array.length : 0;
-          };
+          const getTotal = <T>(array: T[]) => (array ? array.length : 0);
           this.pools = response;
-          this.pools.data = this.pools.data.map(p => {
-            return {
-              ...p,
-              nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
-              methodName: methodsLookup[p.loadBalancingMethod],
-              state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-              totalNodes: getTotal(p.nodes),
-              totalHealthMonitors: getTotal(p.healthMonitors) + getTotal(p.defaultHealthMonitors),
-            };
-          });
+          this.pools.data = this.pools.data.map(p => ({
+            ...p,
+            nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
+            methodName: methodsLookup[p.loadBalancingMethod],
+            state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+            totalNodes: getTotal(p.nodes),
+            totalHealthMonitors: getTotal(p.healthMonitors) + getTotal(p.defaultHealthMonitors),
+          }));
         },
         () => {
           this.pools = null;

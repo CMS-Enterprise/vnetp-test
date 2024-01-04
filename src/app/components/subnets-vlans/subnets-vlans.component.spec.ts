@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   MockFontAwesomeComponent,
   MockTooltipComponent,
@@ -25,7 +25,7 @@ describe('SubnetsVlansComponent', () => {
   let component: SubnetsVlansComponent;
   let fixture: ComponentFixture<SubnetsVlansComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
@@ -53,7 +53,7 @@ describe('SubnetsVlansComponent', () => {
         MockProvider(V1TiersService),
       ],
     });
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubnetsVlansComponent);

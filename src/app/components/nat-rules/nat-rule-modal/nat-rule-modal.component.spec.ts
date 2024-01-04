@@ -1,5 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {
   MockComponent,
   MockFontAwesomeComponent,
@@ -34,7 +34,7 @@ describe('NatRuleModalComponent', () => {
   let component: NatRuleModalComponent;
   let fixture: ComponentFixture<NatRuleModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
@@ -63,7 +63,7 @@ describe('NatRuleModalComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   const getFormControl = (name: string) => component.f[name];
   const testRequiredFields = (options: {
@@ -163,7 +163,7 @@ describe('NatRuleModalComponent', () => {
       expect(TestUtil.isFormControlRequired(originalDestinationAddressType)).toBe(true);
     });
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line
     it('should not require "Original Destination Network Object" and "Original Destination Network Object Group" when set to "None"', () => {
       testRequiredFields({
         field: 'originalDestinationAddressType',
@@ -198,6 +198,7 @@ describe('NatRuleModalComponent', () => {
       expect(TestUtil.isFormControlRequired(translationType)).toBe(true);
     });
 
+    // eslint-disable-next-line
     it('should require "Translated Source Address Type", "Translated Destination Address Type" and "Translated Service Type" when set to "Static"', () => {
       testRequiredFields({
         field: 'translationType',
@@ -207,6 +208,7 @@ describe('NatRuleModalComponent', () => {
       });
     });
 
+    // eslint-disable-next-line
     it('should require "Translated Source Address Type", "Translated Destination Address Type" and "Translated Service Type" and "biDirectional" should be false when set to "DynamicIp"', () => {
       testRequiredFields({
         field: 'translationType',
@@ -217,6 +219,7 @@ describe('NatRuleModalComponent', () => {
       });
     });
 
+    // eslint-disable-next-line
     it('should require "Translated Source Address Type", "Translated Destination Address Type" and "Translated Service Type" and "biDirectional" should be false when set to "DynamicIpAndPort"', () => {
       testRequiredFields({
         field: 'translationType',
@@ -300,7 +303,7 @@ describe('NatRuleModalComponent', () => {
       component.f.translationType.setValue(NatRuleTranslationTypeEnum.Static);
     });
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line
     it('should not require "Translated Destination Network Object" and "Translated Destination Network Object Group" when set to "None"', () => {
       testRequiredFields({
         field: 'translatedDestinationAddressType',

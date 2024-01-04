@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { LoadBalancerPolicy, LoadBalancerPolicyTypeEnum, V1LoadBalancerPoliciesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
@@ -14,7 +14,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   templateUrl: './policy-modal.component.html',
 })
 export class PolicyModalComponent implements OnInit, OnDestroy {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public PolicyType = LoadBalancerPolicyTypeEnum;
 
@@ -23,7 +23,11 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
   private tierId: string;
   private typeChanges: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private policyService: V1LoadBalancerPoliciesService) {}
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: UntypedFormBuilder,
+    private policyService: V1LoadBalancerPoliciesService,
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -63,7 +67,7 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
   }
 
   public getData(): void {
-    const dto: PolicyModalDto = Object.assign({}, this.ngx.getModalData('policyModal'));
+    const dto: PolicyModalDto = Object.assign({}, this.ngx.getModalData('policyModal')) as any;
     const { policy, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = policy ? ModalMode.Edit : ModalMode.Create;
@@ -118,8 +122,9 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
   }
 
   private updatePolicy(loadBalancerPolicy: LoadBalancerPolicy): void {
-    loadBalancerPolicy.tierId = null;
-    loadBalancerPolicy.type = undefined;
+    delete loadBalancerPolicy.name;
+    delete loadBalancerPolicy.tierId;
+    delete loadBalancerPolicy.type;
     this.policyService
       .updateOneLoadBalancerPolicy({
         id: this.policyId,

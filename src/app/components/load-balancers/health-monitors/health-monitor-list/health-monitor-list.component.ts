@@ -142,13 +142,11 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       .subscribe(
         response => {
           this.healthMonitors = response;
-          this.healthMonitors.data = (this.healthMonitors.data as HealthMonitorView[]).map(h => {
-            return {
-              ...h,
-              nameView: h.name.length >= 20 ? h.name.slice(0, 19) + '...' : h.name,
-              state: h.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-            };
-          });
+          this.healthMonitors.data = (this.healthMonitors.data as HealthMonitorView[]).map(h => ({
+            ...h,
+            nameView: h.name.length >= 20 ? h.name.slice(0, 19) + '...' : h.name,
+            state: h.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+          }));
         },
         () => {
           this.isLoading = false;

@@ -21,7 +21,6 @@
         [exportObject]="l3Outs"
         exportFileName="l3Outs"
         [disableJson]="false"
-        (import)="importL3OutsConfig($event)"
       ></app-import-export>
     </section>
   </ng-container>
@@ -57,5 +56,5 @@
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>
 
-<app-l3-outs-modal [vrfs]="vrfs"></app-l3-outs-modal>
+<app-l3-outs-modal [tenantId]="tenantId" [vrfs]="vrfs"></app-l3-outs-modal>
 <app-yes-no-modal></app-yes-no-modal>

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockFontAwesomeComponent } from 'src/test/mock-components';
 import { By } from '@angular/platform-browser';
 import { IconButtonComponent } from './icon-button.component';
@@ -7,7 +7,7 @@ describe('IconButtonComponent', () => {
   let component: IconButtonComponent;
   let fixture: ComponentFixture<IconButtonComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [IconButtonComponent, MockFontAwesomeComponent],
     })
@@ -17,7 +17,7 @@ describe('IconButtonComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

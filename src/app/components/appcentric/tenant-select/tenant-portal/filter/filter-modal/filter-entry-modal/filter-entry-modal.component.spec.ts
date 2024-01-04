@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -13,13 +13,13 @@ describe('FilterEntryModalComponent', () => {
   let component: FilterEntryModalComponent;
   let fixture: ComponentFixture<FilterEntryModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [FilterEntryModalComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent],
       imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule, NgSelectModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FilterEntryModalComponent);

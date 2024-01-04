@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
@@ -14,7 +14,7 @@ export class YesNoModalComponent {
   public cancelText = 'No';
   public confirmButtonType: 'primary' | 'danger' | 'success' = 'primary';
   public confirmText = 'Yes';
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public modalBody = 'Title';
   public modalTitle = 'Body';
   public submitted: boolean;

@@ -7,7 +7,6 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockProvider } from 'src/test/mock-providers';
-import { AdvancedSearchModule } from '../advanced-search/advanced-search-modal.module';
 import { AdvancedSearchComponent } from '../advanced-search/advanced-search-modal.component';
 
 interface Data {

@@ -1,5 +1,5 @@
-/* tslint:disable:no-string-literal */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+/* eslint-disable */
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { FirewallRuleModalComponent } from './firewall-rule-modal.component';
@@ -24,7 +24,7 @@ describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
   let fixture: ComponentFixture<FirewallRuleModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -50,7 +50,7 @@ describe('FirewallRuleModalComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
   const isRequired = (prop: string): boolean => {

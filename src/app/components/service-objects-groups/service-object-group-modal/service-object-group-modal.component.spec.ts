@@ -1,5 +1,5 @@
-/* tslint:disable:no-string-literal */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+/* eslint-disable */
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -15,7 +15,6 @@ import { V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'cli
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { of, Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 describe('ServiceObjectGroupModalComponent', () => {
   let component: ServiceObjectGroupModalComponent;
@@ -23,7 +22,7 @@ describe('ServiceObjectGroupModalComponent', () => {
   let onConfirm: jest.Mock;
   let subscriptionUtilSubscribeToYesNoModalSpy: jest.SpyInstance;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -46,12 +45,11 @@ describe('ServiceObjectGroupModalComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-
-    beforeEach(() => {
-      onConfirm = jest.fn();
-      subscriptionUtilSubscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockReturnValue(new Subscription());
-    });
-  }));
+  });
+  beforeEach(() => {
+    onConfirm = jest.fn();
+    subscriptionUtilSubscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockReturnValue(new Subscription());
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -176,9 +174,7 @@ describe('ServiceObjectGroupModalComponent', () => {
         expect(component['serviceObjectGroupService'].updateOneServiceObjectGroup).toHaveBeenCalledWith({
           id: 'test-id',
           serviceObjectGroup: {
-            name: 'test',
             description: 'test',
-            type: null,
           },
         });
       });
@@ -186,7 +182,7 @@ describe('ServiceObjectGroupModalComponent', () => {
   });
 
   it('should call the reset function when the cancelled', () => {
-    spyOn(component, 'reset');
+    jest.spyOn(component, 'reset');
     component.cancel();
     expect(component.reset).toHaveBeenCalled();
   });

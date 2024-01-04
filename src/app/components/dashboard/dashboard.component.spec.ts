@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockComponent } from 'src/test/mock-components';
 import {
@@ -24,7 +24,7 @@ describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     const datacenterService = {
       getManyDatacenter: jest.fn(() => of({ total: 1 })),
     };
@@ -44,7 +44,6 @@ describe('DashboardComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         DashboardComponent,
-        MockComponent({ selector: 'app-d3-pie-chart', inputs: ['data', 'width', 'height', 'radius'] }),
         MockTooltipComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
@@ -72,7 +71,7 @@ describe('DashboardComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -81,7 +80,6 @@ describe('DashboardComponent', () => {
   it('should load data on init', () => {
     const datacenterService = TestBed.inject(V1DatacentersService);
     const tierService = TestBed.inject(V1TiersService);
-    const loadBalancerService = TestBed.inject(V1LoadBalancerVirtualServersService);
 
     component.ngOnInit();
 

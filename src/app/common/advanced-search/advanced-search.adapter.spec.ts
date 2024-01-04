@@ -22,6 +22,7 @@ describe('AdvancedSearchAdapter', () => {
   });
 
   it('should set service correctly', () => {
+    /* eslint-disable-next-line */
     expect(adapter['service']).toEqual(mockService);
   });
 

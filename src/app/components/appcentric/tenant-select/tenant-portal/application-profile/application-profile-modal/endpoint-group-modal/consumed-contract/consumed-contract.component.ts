@@ -1,11 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import {
-  Contract,
-  GetManyContractResponseDto,
-  GetManyEndpointGroupResponseDto,
-  V2AppCentricContractsService,
-  V2AppCentricEndpointGroupsService,
-} from 'client';
+import { Contract, GetManyContractResponseDto, V2AppCentricContractsService, V2AppCentricEndpointGroupsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -67,7 +61,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getConsumedContracts(event);
+    this.getConsumedContracts();
   }
 
   public addContract(): void {
@@ -76,7 +70,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
         endpointGroupId: this.endpointGroupId,
         contractId: this.selectedContract.id,
       })
-      .subscribe(data => this.getConsumedContracts());
+      .subscribe(() => this.getConsumedContracts());
   }
 
   public removeContract(contract: Contract): void {
@@ -87,12 +81,12 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
           endpointGroupId: this.endpointGroupId,
           contractId: contract.id,
         })
-        .subscribe(data => this.getConsumedContracts());
+        .subscribe(() => this.getConsumedContracts());
     };
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  public getConsumedContracts(event?): void {
+  public getConsumedContracts(): void {
     this.endpointGroupsService
       .getOneEndpointGroup({
         id: this.endpointGroupId,
@@ -122,7 +116,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
           const usedFilters = this.contractTableData?.data.map(contract => contract.id);
           this.contracts = allContracts.filter(contract => !usedFilters?.includes(contract.id));
         },
-        err => (this.contracts = null),
+        () => (this.contracts = null),
       );
   }
 

@@ -100,8 +100,8 @@ describe('AdvancedSearchModalComponent', () => {
 
   describe('searchThis', () => {
     it('should call advancedSearchOr when orActive is true', () => {
-      spyOn(component, 'getBaseSearchProperty').and.returnValue('test');
-      spyOn(component, 'getBaseSearchValue').and.returnValue('test');
+      jest.spyOn(component, 'getBaseSearchProperty').mockReturnValue('test');
+      jest.spyOn(component, 'getBaseSearchValue').mockReturnValue('test');
       const advancedSearchOrSpy = jest.spyOn(component, 'advancedSearch');
       component.orActive = true;
       component.searchThis();
@@ -112,8 +112,8 @@ describe('AdvancedSearchModalComponent', () => {
     });
 
     it('should call advancedSearchAnd when orActive is false', () => {
-      spyOn(component, 'getBaseSearchProperty').and.returnValue('test');
-      spyOn(component, 'getBaseSearchValue').and.returnValue('test');
+      jest.spyOn(component, 'getBaseSearchProperty').mockReturnValue('test');
+      jest.spyOn(component, 'getBaseSearchValue').mockReturnValue('test');
       const advancedSearchAndSpy = jest.spyOn(component, 'advancedSearch');
       component.orActive = false;
       component.searchThis();

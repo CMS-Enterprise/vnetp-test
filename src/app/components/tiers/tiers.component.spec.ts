@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   MockComponent,
   MockFontAwesomeComponent,
@@ -31,7 +31,7 @@ describe('TiersComponent', () => {
   let component: TiersComponent;
   let fixture: ComponentFixture<TiersComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NgxSmartModalModule, NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
@@ -59,7 +59,7 @@ describe('TiersComponent', () => {
         MockProvider(V1NetworkSecurityServiceObjectGroupsService),
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TiersComponent);

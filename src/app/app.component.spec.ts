@@ -1,4 +1,4 @@
-import { TestBed, async, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { MockComponent } from 'src/test/mock-components';
@@ -12,7 +12,7 @@ describe('AppComponent', () => {
 
   const routerEvents = new Subject<Event>();
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     const activatedRoute = { data: of({ title: 'test' }), outlet: 'primary' };
 
     const router = {
@@ -38,7 +38,7 @@ describe('AppComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
