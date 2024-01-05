@@ -15,7 +15,7 @@ describe('EntityService', () => {
 
     service = TestBed.inject(EntityService);
 
-    jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn, closeFn) => {
+    jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn) => {
       confirmFn();
       return of().subscribe();
     });

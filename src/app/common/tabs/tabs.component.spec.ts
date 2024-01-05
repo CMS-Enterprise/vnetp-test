@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockTooltipComponent } from 'src/test/mock-components';
 import { By } from '@angular/platform-browser';
 import { TabsComponent } from './tabs.component';
@@ -7,7 +7,7 @@ describe('TabsComponent', () => {
   let component: TabsComponent;
   let fixture: ComponentFixture<TabsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [TabsComponent, MockTooltipComponent],
     })
@@ -18,7 +18,7 @@ describe('TabsComponent', () => {
         component.tabs = [{ name: '1' }, { name: '2' }];
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

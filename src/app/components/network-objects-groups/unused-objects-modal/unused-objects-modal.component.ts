@@ -25,7 +25,7 @@ export class UnusedObjectsModalComponent {
 
   constructor(private ngx: NgxSmartModalService, private networkObjectService: V1NetworkSecurityNetworkObjectsService) {}
   public softDeleteNetworkObject(objToDelete) {
-    const modalDto = new YesNoModalDto('Soft Delete', `Are you sure you would like to soft delete this network object?`);
+    const modalDto = new YesNoModalDto('Soft Delete', 'Are you sure you would like to soft delete this network object?');
     const onConfirm = () => {
       this.networkObjectService.softDeleteOneNetworkObject({ id: objToDelete.id }).subscribe(data => {
         this.unusedObjectsInput.data = this.unusedObjectsInput.data.filter(obj => {

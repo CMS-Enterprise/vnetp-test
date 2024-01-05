@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router, NavigationEnd } from '@angular/router';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import {
   V2AppCentricSubjectsService,
   Subject,
@@ -10,14 +9,12 @@ import {
   GetManyFilterResponseDto,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { SubjectModalDto } from 'src/app/models/appcentric/subject-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { TableContextService } from 'src/app/services/table-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NameValidator } from 'src/app/validators/name-validator';
 
@@ -29,16 +26,13 @@ import { NameValidator } from 'src/app/validators/name-validator';
 export class SubjectModalComponent implements OnInit {
   public isLoading = false;
   public modalMode: ModalMode;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() public tenantId: string;
   @Input() public contractId: string;
   public subjects: GetManySubjectResponseDto;
   public tableComponentDto = new TableComponentDto();
   public perPage = 20;
-
-  private addFilterModalSubscription: Subscription;
-  private subjectEditModalSubscription: Subscription;
 
   public filters: Filter[];
   public selectedFilter: Filter;
@@ -60,23 +54,11 @@ export class SubjectModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private subjectsService: V2AppCentricSubjectsService,
-    private router: Router,
-    private tableContextService: TableContextService,
     private filterService: V2AppCentricFiltersService,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -150,9 +132,9 @@ export class SubjectModalComponent implements OnInit {
   }
 
   private updateSubject(subject: Subject): void {
-    subject.name = null;
-    subject.tenantId = null;
-    subject.contractId = null;
+    delete subject.name;
+    delete subject.tenantId;
+    delete subject.contractId;
     this.subjectsService
       .updateOneSubject({
         id: this.subjectId,

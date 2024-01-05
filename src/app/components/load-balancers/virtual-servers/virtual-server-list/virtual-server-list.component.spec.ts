@@ -9,16 +9,10 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import {
-  GetManyLoadBalancerVirtualServerResponseDto,
-  LoadBalancerVirtualServer,
-  Tier,
-  V1LoadBalancerVirtualServersService,
-  VirtualServerImportDto,
-} from 'client';
+import { LoadBalancerVirtualServer, Tier, V1LoadBalancerVirtualServersService, VirtualServerImportDto } from 'client';
 import { VirtualServerListComponent, VirtualServerView } from './virtual-server-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
@@ -65,8 +59,8 @@ describe('VirtualServerListComponent', () => {
 
   it('should map virtual servers', () => {
     const virtualServerService = TestBed.inject(V1LoadBalancerVirtualServersService);
-    const spy = jest.spyOn(virtualServerService, 'getManyLoadBalancerVirtualServer').mockImplementation(() => {
-      return of({
+    jest.spyOn(virtualServerService, 'getManyLoadBalancerVirtualServer').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'VirtualServer1', provisionedAt: {}, defaultPool: { name: 'Pool1' } },
           { id: '2', name: 'VirtualServer2' },
@@ -75,8 +69,8 @@ describe('VirtualServerListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

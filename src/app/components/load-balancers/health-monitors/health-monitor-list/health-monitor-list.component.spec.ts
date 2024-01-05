@@ -9,10 +9,10 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { GetManyLoadBalancerHealthMonitorResponseDto, LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'client';
-import { HealthMonitorListComponent, HealthMonitorView, ImportHealthMonitor } from './health-monitor-list.component';
+import { LoadBalancerHealthMonitor, Tier, V1LoadBalancerHealthMonitorsService } from 'client';
+import { HealthMonitorListComponent, ImportHealthMonitor } from './health-monitor-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { By } from '@angular/platform-browser';
@@ -58,8 +58,8 @@ describe('HealthMonitorListComponent', () => {
   });
 
   it('should map health monitors', () => {
-    jest.spyOn(service, 'getManyLoadBalancerHealthMonitor').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerHealthMonitor').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'HealthMonitor1', provisionedAt: {} },
           { id: '2', name: 'HealthMonitor2' },
@@ -68,8 +68,8 @@ describe('HealthMonitorListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

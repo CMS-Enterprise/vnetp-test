@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Observable } from 'rxjs';
 
 export interface IBaseAdapter<T> {

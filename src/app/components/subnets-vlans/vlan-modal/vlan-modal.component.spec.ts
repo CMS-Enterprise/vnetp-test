@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockTooltipComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
@@ -14,7 +14,7 @@ describe('VlanModalComponent', () => {
   let component: VlanModalComponent;
   let fixture: ComponentFixture<VlanModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [VlanModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
@@ -28,7 +28,7 @@ describe('VlanModalComponent', () => {
         component.VlanId = '2';
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -147,8 +147,6 @@ describe('VlanModalComponent', () => {
       expect(updateVlanSpy).toHaveBeenCalledWith({
         id: '2',
         vlan: {
-          name: null,
-          vlanNumber: null,
           description: 'Description stays',
           vcdVlanType: 'Dev',
         },
@@ -157,20 +155,18 @@ describe('VlanModalComponent', () => {
   });
 
   describe('getData', () => {
-    const createDto = (): VlanModalDto => {
-      return {
-        TierId: '1',
-        Vlan: {
-          tierId: '1',
-          id: '2',
-          name: 'Vlan',
-          vlanNumber: 400,
-          vcdVlanType: VlanVcdVlanTypeEnum.Dev,
-          description: 'Optional!',
-        },
-        ModalMode: ModalMode.Edit,
-      };
-    };
+    const createDto = (): VlanModalDto => ({
+      TierId: '1',
+      Vlan: {
+        tierId: '1',
+        id: '2',
+        name: 'Vlan',
+        vlanNumber: 400,
+        vcdVlanType: VlanVcdVlanTypeEnum.Dev,
+        description: 'Optional!',
+      },
+      ModalMode: ModalMode.Edit,
+    });
 
     it('should enable the name and vlan number when creating a new vlan', () => {
       const service = TestBed.inject(NgxSmartModalService);

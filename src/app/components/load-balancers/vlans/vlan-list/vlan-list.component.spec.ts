@@ -9,9 +9,9 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { GetManyLoadBalancerVlanResponseDto, LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'client';
+import { LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'client';
 import { EntityService } from 'src/app/services/entity.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { ImportVlan, VlanListComponent, VlanView } from './vlan-list.component';
 import { By } from '@angular/platform-browser';
 import { TierContextService } from 'src/app/services/tier-context.service';
@@ -58,8 +58,8 @@ describe('VlanListComponent', () => {
   });
 
   it('should map vlans', () => {
-    jest.spyOn(service, 'getManyLoadBalancerVlan').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerVlan').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'VLAN1', provisionedAt: {} },
           { id: '2', name: 'VLAN2' },
@@ -68,8 +68,8 @@ describe('VlanListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

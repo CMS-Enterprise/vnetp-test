@@ -26,7 +26,7 @@ describe('RouteProfilesComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockImportExportComponent,
         MockIconButtonComponent,
-        MockComponent({ selector: 'app-route-profile-modal' }),
+        MockComponent({ selector: 'app-route-profile-modal', inputs: ['tenantId'] }),
         MockYesNoModalComponent,
       ],
       imports: [RouterTestingModule, HttpClientModule],

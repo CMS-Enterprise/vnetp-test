@@ -24,7 +24,6 @@ export class ContractComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
   private contractModalSubscription: Subscription;
   public tenantId: string;
-  private subjectModalSubscription: Subscription;
 
   public isLoading = false;
 
@@ -57,15 +56,13 @@ export class ContractComponent implements OnInit {
     advancedSearchAdapter.setServiceName('V2AppCentricContractsService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
 
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    const match = this.router.routerState.snapshot.url.match(
+      /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
+    );
+    if (match) {
+      const uuid = match[0].split('/')[2];
+      this.tenantId = uuid;
+    }
   }
 
   ngOnInit(): void {
@@ -197,7 +194,7 @@ export class ContractComponent implements OnInit {
     });
   }
 
-  public importContractsConfig(contract: Contract[]): void {
+  public importContractsConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

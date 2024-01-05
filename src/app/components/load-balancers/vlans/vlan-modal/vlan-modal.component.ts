@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { LoadBalancerVlan, V1LoadBalancerVlansService } from 'client';
@@ -12,14 +12,18 @@ import { RangeValidator } from 'src/app/validators/range-validator';
   templateUrl: './vlan-modal.component.html',
 })
 export class VlanModalComponent implements OnInit {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
 
   private vlanId: string;
   private modalMode: ModalMode;
   private tierId: string;
 
-  constructor(private formBuilder: FormBuilder, private ngx: NgxSmartModalService, private vlansService: V1LoadBalancerVlansService) {}
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private ngx: NgxSmartModalService,
+    private vlansService: V1LoadBalancerVlansService,
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -58,7 +62,7 @@ export class VlanModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const dto: VlanModalDto = Object.assign({}, this.ngx.getModalData('vlanModal'));
+    const dto: VlanModalDto = Object.assign({}, this.ngx.getModalData('vlanModal')) as any;
     const { tierId, vlan } = dto;
     this.tierId = tierId;
     this.modalMode = vlan ? ModalMode.Edit : ModalMode.Create;

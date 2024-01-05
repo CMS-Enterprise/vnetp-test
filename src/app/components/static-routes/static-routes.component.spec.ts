@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StaticRoutesComponent } from './static-routes.component';
 import { MockComponent, MockFontAwesomeComponent } from 'src/test/mock-components';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -10,13 +10,13 @@ describe('StaticRoutesComponent', () => {
   let component: StaticRoutesComponent;
   let fixture: ComponentFixture<StaticRoutesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes([])],
       declarations: [StaticRoutesComponent, MockFontAwesomeComponent, MockComponent({ selector: 'app-table', inputs: ['config', 'data'] })],
       providers: [MockProvider(DatacenterContextService), MockProvider(V1TiersService)],
     });
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StaticRoutesComponent);

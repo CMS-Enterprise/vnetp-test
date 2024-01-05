@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { GetManyLoadBalancerVlanResponseDto, GetManyVlanResponseDto, LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'client';
+import { GetManyLoadBalancerVlanResponseDto, LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -126,13 +126,11 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(
         response => {
           this.vlans = response;
-          this.vlans.data = (this.vlans.data as VlanView[]).map(v => {
-            return {
-              ...v,
-              nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
-              state: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-            };
-          });
+          this.vlans.data = (this.vlans.data as VlanView[]).map(v => ({
+            ...v,
+            nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
+            state: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+          }));
         },
         () => {
           this.isLoading = false;

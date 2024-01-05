@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StaticRouteDetailComponent } from './static-route-detail.component';
 import { MockFontAwesomeComponent, MockIconButtonComponent, MockComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ describe('StaticRouteDetailComponent', () => {
   let component: StaticRouteDetailComponent;
   let fixture: ComponentFixture<StaticRouteDetailComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, RouterTestingModule.withRoutes([]), ReactiveFormsModule],
       declarations: [
@@ -41,7 +41,7 @@ describe('StaticRouteDetailComponent', () => {
         },
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StaticRouteDetailComponent);

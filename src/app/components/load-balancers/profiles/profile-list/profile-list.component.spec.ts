@@ -9,10 +9,10 @@ import {
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { GetManyLoadBalancerProfileResponseDto, LoadBalancerProfile, Tier, V1LoadBalancerProfilesService } from 'client';
+import { LoadBalancerProfile, Tier, V1LoadBalancerProfilesService } from 'client';
 import { ProfileListComponent, ImportProfile, ProfileView } from './profile-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
@@ -58,8 +58,8 @@ describe('ProfileListComponent', () => {
   });
 
   it('should map profiles', () => {
-    jest.spyOn(service, 'getManyLoadBalancerProfile').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerProfile').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'Profile1', provisionedAt: {}, reverseProxy: 'Explicit' },
           { id: '2', name: 'Profile2' },
@@ -68,8 +68,8 @@ describe('ProfileListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 

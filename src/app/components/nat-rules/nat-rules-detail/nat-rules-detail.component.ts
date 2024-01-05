@@ -220,21 +220,21 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   getObjects(): void {
     const tierRequest = this.tierService.getOneTier({ id: this.TierId });
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
-      filter: [`tierId||eq||${this.TierId}`, `deletedAt||isnull`],
+      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
       perPage: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
-      filter: [`tierId||eq||${this.TierId}`, `deletedAt||isnull`],
+      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
       perPage: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
-      filter: [`tierId||eq||${this.TierId}`, `deletedAt||isnull`],
+      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
@@ -390,7 +390,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.ngx.getModal('previewModal').open();
 
     const previewImportSubscription = this.ngx.getModal('previewModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData: PreviewModalDto<NatRule> = modal.getData();
+      const modalData: PreviewModalDto<NatRule> = modal.getData() as any;
       modal.removeData();
       if (modalData && modalData.confirm) {
         const natConfirmDto: NatRuleImportCollectionDto = {

@@ -1,7 +1,7 @@
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 export default class FormUtil {
-  public static findInvalidControls(form: FormGroup) {
+  public static findInvalidControls(form: UntypedFormGroup) {
     const invalid = [];
     const controls = form.controls;
     for (const name in controls) {
