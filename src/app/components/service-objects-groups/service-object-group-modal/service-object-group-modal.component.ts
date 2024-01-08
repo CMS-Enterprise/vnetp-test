@@ -59,7 +59,8 @@ export class ServiceObjectGroupModalComponent implements OnInit {
           () => {},
         );
     } else {
-      modalServiceObjectGroup.type = null;
+      delete modalServiceObjectGroup.type;
+      delete modalServiceObjectGroup.name;
       this.serviceObjectGroupService
         .updateOneServiceObjectGroup({
           id: this.ServiceObjectGroupId,

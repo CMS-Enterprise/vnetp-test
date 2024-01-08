@@ -174,9 +174,7 @@ describe('ServiceObjectGroupModalComponent', () => {
         expect(component['serviceObjectGroupService'].updateOneServiceObjectGroup).toHaveBeenCalledWith({
           id: 'test-id',
           serviceObjectGroup: {
-            name: 'test',
             description: 'test',
-            type: null,
           },
         });
       });

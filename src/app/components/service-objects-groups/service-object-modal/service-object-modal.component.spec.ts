@@ -139,8 +139,6 @@ describe('ServiceObjectModalComponent', () => {
     expect(updateServiceObjectSpy).toHaveBeenCalledWith({
       id: '2',
       serviceObject: {
-        name: null,
-        protocol: null,
         destinationPorts: 'any',
         sourcePorts: 'any',
       },

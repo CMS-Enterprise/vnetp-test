@@ -124,9 +124,9 @@ export class EndpointGroupModalComponent implements OnInit {
   }
 
   private editEndpointGroup(endpointGroup: EndpointGroup): void {
-    endpointGroup.name = null;
-    endpointGroup.tenantId = null;
-    endpointGroup.applicationProfileId = null;
+    delete endpointGroup.name;
+    delete endpointGroup.tenantId;
+    delete endpointGroup.applicationProfileId;
     this.endpointGroupService
       .updateOneEndpointGroup({
         id: this.endpointGroupId,

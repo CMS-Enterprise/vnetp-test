@@ -103,8 +103,8 @@ export class VlanModalComponent implements OnInit {
   }
 
   private updateVlan(vlan: Vlan): void {
-    vlan.name = null;
-    vlan.vlanNumber = null;
+    delete vlan.name;
+    delete vlan.vlanNumber;
     this.vlanService.updateOneVlan({ id: this.VlanId, vlan }).subscribe(
       () => {
         this.closeModal();

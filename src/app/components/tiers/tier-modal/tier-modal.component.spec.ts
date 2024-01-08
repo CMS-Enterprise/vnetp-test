@@ -160,8 +160,6 @@ describe('TierModalComponent', () => {
     expect(updateTierSpy).toHaveBeenCalledWith({
       id: '2',
       tier: {
-        name: null,
-        datacenterId: null,
         description: 'Description',
         tierGroupId: '2',
         tierType: 'Presentation',

@@ -133,7 +133,8 @@ export class NodeModalComponent implements OnInit, OnDestroy {
   }
 
   private updateNode(loadBalancerNode: LoadBalancerNode): void {
-    loadBalancerNode.tierId = null;
+    delete loadBalancerNode.tierId;
+    delete loadBalancerNode.name;
     this.nodeService
       .updateOneLoadBalancerNode({
         id: this.nodeId,

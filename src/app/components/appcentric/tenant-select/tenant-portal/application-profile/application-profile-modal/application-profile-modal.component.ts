@@ -122,8 +122,8 @@ export class ApplicationProfileModalComponent implements OnInit {
   }
 
   private editApplicationProfile(applicationProfile: ApplicationProfile): void {
-    applicationProfile.name = null;
-    applicationProfile.tenantId = null;
+    delete applicationProfile.name;
+    delete applicationProfile.tenantId;
 
     this.applicationProfileService
       .updateOneApplicationProfile({

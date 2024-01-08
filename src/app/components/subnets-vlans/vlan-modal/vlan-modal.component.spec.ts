@@ -147,8 +147,6 @@ describe('VlanModalComponent', () => {
       expect(updateVlanSpy).toHaveBeenCalledWith({
         id: '2',
         vlan: {
-          name: null,
-          vlanNumber: null,
           description: 'Description stays',
           vcdVlanType: 'Dev',
         },

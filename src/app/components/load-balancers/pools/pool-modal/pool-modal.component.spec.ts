@@ -158,8 +158,6 @@ describe('PoolModalComponent', () => {
         defaultHealthMonitors: [],
         healthMonitors: [],
         loadBalancingMethod: LoadBalancerPoolLoadBalancingMethodEnum.PredictiveMember,
-        name: undefined,
-        tierId: null,
       },
     });
   });

@@ -120,7 +120,7 @@ export class SelfIpModalComponent implements OnInit {
   }
 
   private updateSelfIp(loadBalancerSelfIp: LoadBalancerSelfIp): void {
-    loadBalancerSelfIp.tierId = null;
+    delete loadBalancerSelfIp.tierId;
     this.selfIpService
       .updateOneLoadBalancerSelfIp({
         id: this.selfIpId,
