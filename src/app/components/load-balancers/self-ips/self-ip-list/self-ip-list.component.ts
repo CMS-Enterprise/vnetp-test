@@ -36,8 +36,6 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
     { displayName: 'IpAddress', propertyName: 'ipAddress', join: ['loadBalancerVlan'] },
-
-    // TODO: Revisit this search param, grand child search params are not supported in api
     { displayName: 'Vlan', propertyName: 'loadBalancerVlan.name', searchOperator: 'cont', join: ['loadBalancerVlan'] },
   ];
 
