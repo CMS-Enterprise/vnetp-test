@@ -21661,7 +21661,7 @@
               }
             ]
           },
-          "vrfName": {
+          "tierName": {
             "type": "string"
           },
           "firewallRuleGroupType": {
@@ -21680,7 +21680,7 @@
           "destinationAddressType",
           "serviceType",
           "firewallRuleGroupId",
-          "vrfName",
+          "tierName",
           "firewallRuleGroupType"
         ]
       },
@@ -21738,14 +21738,14 @@
             "type": "string",
             "description": "Service Object that is being added or removed from group membership."
           },
-          "vrfName": {
+          "tierName": {
             "type": "string"
           }
         },
         "required": [
           "serviceObjectGroupId",
           "serviceObjectId",
-          "vrfName"
+          "tierName"
         ]
       },
       "ServiceObjectGroupRelationBulkImportCollectionDto": {
@@ -21777,14 +21777,14 @@
             "type": "string",
             "description": "Network Object that is being added or removed from group membership."
           },
-          "vrfName": {
+          "tierName": {
             "type": "string"
           }
         },
         "required": [
           "networkObjectGroupId",
           "networkObjectId",
-          "vrfName"
+          "tierName"
         ]
       },
       "NetworkObjectGroupRelationBulkImportCollectionDto": {
@@ -22024,7 +22024,7 @@
               }
             ]
           },
-          "vrfName": {
+          "tierName": {
             "type": "string"
           },
           "natRuleGroupType": {
@@ -22045,7 +22045,7 @@
           "originalServiceType",
           "translatedServiceType",
           "natRuleGroupId",
-          "vrfName",
+          "tierName",
           "natRuleGroupType"
         ]
       },
@@ -22151,7 +22151,7 @@
           "tierId": {
             "type": "string"
           },
-          "vrfName": {
+          "tierName": {
             "type": "string"
           }
         },
@@ -22161,7 +22161,7 @@
           "gateway",
           "vlanId",
           "tierId",
-          "vrfName"
+          "tierName"
         ]
       },
       "SubnetImportCollectionDto": {
@@ -22286,7 +22286,7 @@
           "tierId": {
             "type": "string"
           },
-          "vrfName": {
+          "tierName": {
             "type": "string"
           },
           "iruleNames": {
@@ -22319,7 +22319,7 @@
           "type",
           "servicePort",
           "tierId",
-          "vrfName",
+          "tierName",
           "iruleNames",
           "policyNames",
           "profileNames",
@@ -22436,7 +22436,7 @@
           "tierId": {
             "type": "string"
           },
-          "vrfName": {
+          "tierName": {
             "type": "string"
           },
           "healthMonitorNames": {
@@ -22463,7 +22463,7 @@
           "loadBalancingMethod",
           "defaultHealthMonitors",
           "tierId",
-          "vrfName",
+          "tierName",
           "healthMonitorNames",
           "defaultHealthMonitorNames",
           "nodeNames"
