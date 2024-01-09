@@ -372,7 +372,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       e.vlanNumber = Number(e.vlanNumber);
 
       /* eslint:disable-next-line */
-      e.tierId = this.getTierId(e.tierName);
+      e.tierId = this.getTierId(e['tierName']);
     });
     const onConfirm = () => {
       this.vlanService.createManyVlan({ createManyVlanDto: { bulk: event } }).subscribe(() => {
