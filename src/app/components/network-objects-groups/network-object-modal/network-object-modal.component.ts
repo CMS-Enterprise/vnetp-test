@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IpAddressIpValidator, ValidatePortRange, IpAddressAnyValidator, FqdnValidator } from 'src/app/validators/network-form-validators';
 import { NetworkObjectModalDto } from 'src/app/models/network-objects/network-object-modal-dto';
@@ -15,7 +15,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   templateUrl: './network-object-modal.component.html',
 })
 export class NetworkObjectModalComponent implements OnInit, OnDestroy {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted: boolean;
   networkTypeSubscription: Subscription;
   natSubscription: Subscription;
@@ -26,7 +26,7 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     public helpText: NetworkObjectModalHelpText,
     private networkObjectService: V1NetworkSecurityNetworkObjectsService,
   ) {}

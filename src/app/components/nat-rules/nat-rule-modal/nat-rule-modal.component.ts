@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -38,7 +38,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   serviceObjects: Array<ServiceObject>;
 
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted = false;
   public modalMode: ModalMode;
   public natRuleGroupId: string;
@@ -58,7 +58,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   private objectInfoSubscription: Subscription;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private natRuleService: V1NetworkSecurityNatRulesService,
     public helpText: NatRuleModalHelpText,
@@ -129,30 +129,39 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     modalNatRule.translatedDestinationNetworkObjectGroupId = null;
     if (modalNatRule.originalServiceType === NatRuleOriginalServiceTypeEnum.ServiceObject) {
       modalNatRule.originalServiceObjectId = modalNatRule.originalServiceObject;
-      modalNatRule.originalServiceObject = null;
+      delete modalNatRule.originalServiceObject;
     }
     if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressTypeEnum.NetworkObject) {
       modalNatRule.originalSourceNetworkObjectId = modalNatRule.originalSourceNetworkObject;
+      delete modalNatRule.originalSourceNetworkObject;
     } else if (modalNatRule.originalSourceAddressType === NatRuleOriginalSourceAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.originalSourceNetworkObjectGroupId = modalNatRule.originalSourceNetworkObjectGroup;
+      delete modalNatRule.originalSourceNetworkObjectGroup;
     }
     if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressTypeEnum.NetworkObject) {
       modalNatRule.originalDestinationNetworkObjectId = modalNatRule.originalDestinationNetworkObject;
+      delete modalNatRule.originalDestinationNetworkObject;
     } else if (modalNatRule.originalDestinationAddressType === NatRuleOriginalDestinationAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.originalDestinationNetworkObjectGroupId = modalNatRule.originalDestinationNetworkObjectGroup;
+      delete modalNatRule.originalDestinationNetworkObjectGroup;
     }
     if (modalNatRule.translatedServiceType === NatRuleTranslatedServiceTypeEnum.ServiceObject) {
       modalNatRule.translatedServiceObjectId = modalNatRule.translatedServiceObject;
+      delete modalNatRule.translatedServiceObject;
     }
     if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressTypeEnum.NetworkObject) {
       modalNatRule.translatedSourceNetworkObjectId = modalNatRule.translatedSourceNetworkObject;
+      delete modalNatRule.translatedSourceNetworkObject;
     } else if (modalNatRule.translatedSourceAddressType === NatRuleTranslatedSourceAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.translatedSourceNetworkObjectGroupId = modalNatRule.translatedSourceNetworkObjectGroup;
+      delete modalNatRule.translatedSourceNetworkObjectGroup;
     }
     if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressTypeEnum.NetworkObject) {
       modalNatRule.translatedDestinationNetworkObjectId = modalNatRule.translatedDestinationNetworkObject;
+      delete modalNatRule.translatedDestinationNetworkObject;
     } else if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.translatedDestinationNetworkObjectGroupId = modalNatRule.translatedDestinationNetworkObjectGroup;
+      delete modalNatRule.translatedDestinationNetworkObjectGroup;
     }
 
     if (this.modalMode === ModalMode.Create) {
@@ -334,13 +343,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   // when the translation type is updated, update the appropriate form controls
   private subscribeToTranslationTypeChanges(): Subscription {
-    const {
-      biDirectional,
-      originalSourceAddressType,
-      translatedDestinationAddressType,
-      translatedSourceAddressType,
-      translationType,
-    } = this.form.controls;
+    const { biDirectional, originalSourceAddressType, translatedDestinationAddressType, translatedSourceAddressType, translationType } =
+      this.form.controls;
 
     const requireTranslatedFields = () => {
       if (translatedSourceAddressType.value === NatRuleTranslatedSourceAddressTypeEnum.NetworkObjectGroup) {
@@ -414,12 +418,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   // when the translated service type is updated, update the appropriate form controls
   private subscribeToTranslatedSourceAddressTypeChanges(): Subscription {
-    const {
-      translatedSourceAddressType,
-      originalSourceAddressType,
-      translatedSourceNetworkObject,
-      translatedSourceNetworkObjectGroup,
-    } = this.form.controls;
+    const { translatedSourceAddressType, originalSourceAddressType, translatedSourceNetworkObject, translatedSourceNetworkObjectGroup } =
+      this.form.controls;
 
     const handler: Record<NatRuleTranslatedSourceAddressTypeEnum, () => void> = {
       [NatRuleTranslatedSourceAddressTypeEnum.None]: () => {
@@ -613,6 +613,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
             const memberDetails = members.map(member => {
               let returnValue = `Name: ${member.name} ---`;
 
+              // eslint-disable-next-line
               returnValue += `Protocol: ${member.protocol}, Source Ports: ${member.sourcePorts}, Destination Ports: ${member.destinationPorts}`;
 
               return returnValue;

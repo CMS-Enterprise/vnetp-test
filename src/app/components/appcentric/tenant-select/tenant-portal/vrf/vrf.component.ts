@@ -1,8 +1,9 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { V2AppCentricVrfsService, Vrf, VrfPaginationResponse } from 'client';
+import { Router } from '@angular/router';
+import { GetManyVrfResponseDto, V2AppCentricVrfsService, Vrf } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { VrfModalDto } from 'src/app/models/appcentric/vrf-modal-dto';
@@ -19,7 +20,7 @@ export class VrfComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentVrfPage = 1;
   public perPage = 20;
-  public vrfs = {} as VrfPaginationResponse;
+  public vrfs = {} as GetManyVrfResponseDto;
   public tableComponentDto = new TableComponentDto();
   private vrfModalSubscription: Subscription;
   public tenantId: string;
@@ -28,7 +29,12 @@ export class VrfComponent implements OnInit {
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
+    { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
+    { displayName: 'Policy Control Enforced', propertyName: 'policyControlEnforced', propertyType: 'boolean' },
+    { displayName: 'Policy Control Enforcement Ingress', propertyName: 'policyControlEnforcementIngress', propertyType: 'boolean' },
+  ];
 
   public config: TableConfig<any> = {
     description: 'Vrfs',
@@ -48,15 +54,18 @@ export class VrfComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private router: Router,
   ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    const advancedSearchAdapter = new AdvancedSearchAdapter<Vrf>();
+    advancedSearchAdapter.setService(this.vrfService);
+    advancedSearchAdapter.setServiceName('V2AppCentricVrfsService');
+    this.config.advancedSearchAdapter = advancedSearchAdapter;
+
+    const match = this.router.routerState.snapshot.url.match(
+      /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
+    );
+    if (match) {
+      const uuid = match[0].split('/')[2];
+      this.tenantId = uuid;
+    }
   }
 
   ngOnInit(): void {
@@ -81,7 +90,7 @@ export class VrfComponent implements OnInit {
       }
     }
     this.vrfService
-      .findAllVrf({
+      .getManyVrf({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -101,7 +110,7 @@ export class VrfComponent implements OnInit {
 
   public deleteVrf(vrf: Vrf): void {
     if (vrf.deletedAt) {
-      this.vrfService.removeVrf({ uuid: vrf.id }).subscribe(() => {
+      this.vrfService.deleteOneVrf({ id: vrf.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -115,8 +124,8 @@ export class VrfComponent implements OnInit {
       });
     } else {
       this.vrfService
-        .softDeleteVrf({
-          uuid: vrf.id,
+        .softDeleteOneVrf({
+          id: vrf.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -139,8 +148,8 @@ export class VrfComponent implements OnInit {
     }
 
     this.vrfService
-      .restoreVrf({
-        uuid: vrf.id,
+      .restoreOneVrf({
+        id: vrf.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
@@ -188,7 +197,7 @@ export class VrfComponent implements OnInit {
     });
   }
 
-  public importVrfsConfig(vrf: Vrf[]): void {
+  public importVrfsConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

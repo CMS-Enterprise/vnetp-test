@@ -5,38 +5,32 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { Router } from '@angular/router';
 
-const MockNgxSmartModalService = () => {
-  return {
-    getModal: jest.fn(() => {
-      return {
-        open: jest.fn(),
-        getData: jest.fn(),
-        setData: jest.fn(),
-        close: jest.fn(),
-        isVisible: jest.fn(),
-        onOpen: of({}),
-        onAnyCloseEvent: of({
-          getData: jest.fn(() => {}),
-        }),
-        onCloseFinished: of({
-          getData: jest.fn(() => {}),
-        }),
-      };
-    }),
-    close: jest.fn(),
-    setModalData: jest.fn(),
-    getModalData: jest.fn(),
-    resetModalData: jest.fn(),
+const MockNgxSmartModalService = () => ({
+  getModal: jest.fn(() => ({
     open: jest.fn(),
-  };
-};
+    getData: jest.fn(),
+    setData: jest.fn(),
+    close: jest.fn(),
+    isVisible: jest.fn(),
+    onOpen: of({}),
+    onAnyCloseEvent: of({
+      getData: jest.fn(() => {}),
+    }),
+    onCloseFinished: of({
+      getData: jest.fn(() => {}),
+    }),
+  })),
+  close: jest.fn(),
+  setModalData: jest.fn(),
+  getModalData: jest.fn(),
+  resetModalData: jest.fn(),
+  open: jest.fn(),
+});
 
-const MockToastrService = () => {
-  return {
-    success: jest.fn(),
-    error: jest.fn(),
-  };
-};
+const MockToastrService = () => ({
+  success: jest.fn(),
+  error: jest.fn(),
+});
 
 const MockDatacenterContextService = () => {
   const datacenter = {
@@ -54,20 +48,16 @@ const MockDatacenterContextService = () => {
   };
 };
 
-const MockTierContextService = () => {
-  return {
-    lockTier: jest.fn(),
-    unlockTier: jest.fn(),
-    switchTier: jest.fn(),
-    currentTier: of({ id: '2' }),
-  };
-};
+const MockTierContextService = () => ({
+  lockTier: jest.fn(),
+  unlockTier: jest.fn(),
+  switchTier: jest.fn(),
+  currentTier: of({ id: '2' }),
+});
 
-const MockRouter = () => {
-  return {
-    navigateByUrl: jest.fn(),
-  };
-};
+const MockRouter = () => ({
+  navigateByUrl: jest.fn(),
+});
 
 const MockProviders = new Map<any, () => object>([
   [NgxSmartModalService, MockNgxSmartModalService],

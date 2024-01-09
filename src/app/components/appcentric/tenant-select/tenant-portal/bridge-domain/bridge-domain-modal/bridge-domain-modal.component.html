@@ -111,8 +111,8 @@
           </button>
         </div>
 
-        <app-table [config]="config" [data]="l3OutsTableData" (clearResults)="getL3OutsTableData($event)"
-          (searchParams)="getL3OutsTableData($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage"
+        <app-table [config]="config" [data]="l3OutsTableData" (clearResults)="getL3OutsTableData()"
+          (searchParams)="getL3OutsTableData()" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage"
           (tableEvent)="onTableEvent($event)"></app-table>
       </div>
 

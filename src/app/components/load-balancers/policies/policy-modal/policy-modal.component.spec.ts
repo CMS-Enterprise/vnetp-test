@@ -28,16 +28,14 @@ describe('PolicyModalComponent', () => {
     ngx = TestBed.inject(NgxSmartModalService);
   });
 
-  const createPolicy = (): LoadBalancerPolicy => {
-    return {
-      tierId: '1',
-      id: '2',
-      name: 'Node2',
-      type: LoadBalancerPolicyTypeEnum.Apm,
-      apmContent: 'APM',
-      asmContent: null,
-    };
-  };
+  const createPolicy = (): LoadBalancerPolicy => ({
+    tierId: '1',
+    id: '2',
+    name: 'Node2',
+    type: LoadBalancerPolicyTypeEnum.Apm,
+    apmContent: 'APM',
+    asmContent: null,
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -142,9 +140,6 @@ describe('PolicyModalComponent', () => {
       loadBalancerPolicy: {
         apmContent: 'APM Content',
         asmContent: null,
-        name: undefined,
-        tierId: null,
-        type: undefined,
       },
     });
   });

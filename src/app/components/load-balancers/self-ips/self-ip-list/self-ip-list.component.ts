@@ -18,6 +18,8 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { SelfIpModalDto } from '../self-ip-modal/self-ip-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface SelfIpView extends LoadBalancerSelfIp {
   nameView: string;
@@ -32,20 +34,27 @@ export interface SelfIpView extends LoadBalancerSelfIp {
 export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'IpAddress', propertyName: 'ipAddress', join: ['loadBalancerVlan'] },
+    { displayName: 'Vlan', propertyName: 'loadBalancerVlan.name', searchOperator: 'cont', join: ['loadBalancerVlan'] },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
-  public config: TableConfig<SelfIpView> = {
+  public config: TableConfig<any> = {
     description: 'Self IPs in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'IP Address', property: 'ipAddress' },
-      { name: 'VLAN', property: 'vlanName' },
+      {
+        name: 'VLAN',
+        value: (datum: any) => datum?.loadBalancerVlan?.name,
+      },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
+
   public vlans;
   public selfIps = {} as GetManyLoadBalancerSelfIpResponseDto;
   public tableComponentDto = new TableComponentDto();
@@ -63,7 +72,13 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
     private vlansService: V1LoadBalancerVlansService,
-  ) {}
+    public filteredHelpText: FilteredCount,
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerSelfIp>();
+    advancedSearchAdapterObject.setService(this.selfIpsService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerSelfIpsService');
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
@@ -122,8 +137,11 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'ipAddress') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -132,7 +150,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         join: ['loadBalancerVlan'],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -154,7 +172,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.selfIps = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

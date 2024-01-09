@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { LoadBalancerProfile, LoadBalancerProfileTypeEnum, V1LoadBalancerProfilesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
@@ -15,13 +15,11 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './profile-modal.component.html',
 })
 export class ProfileModalComponent implements OnInit, OnDestroy {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public ProfileType = LoadBalancerProfileTypeEnum;
 
-  public reverseProxyTypes: ProfileReverseProxyType[] = Object.keys(ProfileReverseProxyType).map(k => {
-    return ProfileReverseProxyType[k];
-  });
+  public reverseProxyTypes: ProfileReverseProxyType[] = Object.keys(ProfileReverseProxyType).map(k => ProfileReverseProxyType[k]);
   public privateKeyCipher: string;
 
   private profileId: string;
@@ -30,7 +28,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   private typeChanges: Subscription;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private profileService: V1LoadBalancerProfilesService,
     private toastr: ToastrService,
@@ -76,7 +74,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   }
 
   public getData(): void {
-    const dto: ProfileModalDto = Object.assign({}, this.ngx.getModalData('profileModal'));
+    const dto: ProfileModalDto = Object.assign({}, this.ngx.getModalData('profileModal')) as any;
     const { profile, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = profile ? ModalMode.Edit : ModalMode.Create;
@@ -147,8 +145,8 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   }
 
   private updateProfile(loadBalancerProfile: LoadBalancerProfile): void {
-    loadBalancerProfile.tierId = null;
-    loadBalancerProfile.type = undefined;
+    delete loadBalancerProfile.tierId;
+    delete loadBalancerProfile.type;
     this.profileService
       .updateOneLoadBalancerProfile({
         id: this.profileId,
@@ -206,9 +204,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   private isUnencryptedPrivateKey(result: string): boolean {
     try {
       const isKey = result.toUpperCase().includes('KEY');
-      const base64IsKey = atob(result)
-        .toUpperCase()
-        .includes('KEY');
+      const base64IsKey = atob(result).toUpperCase().includes('KEY');
       return isKey || base64IsKey;
     } catch {
       return false;

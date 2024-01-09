@@ -15,13 +15,15 @@ import { Filter } from './filter';
 
 export interface FilterEntry { 
     readonly id?: string;
+    readonly createdAt?: string;
+    readonly updatedAt?: string;
+    readonly version?: number;
+    readonly deletedAt?: string;
+    readonly provisionedAt?: string;
+    readonly provisionedVersion?: number;
     name?: string;
     alias?: string;
     description?: string;
-    readonly createdAt?: string;
-    readonly updatedAt?: string;
-    readonly deletedAt?: string;
-    readonly provisionedAt?: string;
     /**
      * The EtherType of the filter entry.
      */

@@ -17,6 +17,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { PoolModalDto } from '../pool-modal/pool-modal.dto';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface PoolView extends LoadBalancerPool {
   nameView: string;
@@ -41,7 +42,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<PoolView> = {
     description: 'Pools in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Load Balancing Method', property: 'methodName' },
       { name: 'Nodes', property: 'totalNodes' },
       { name: 'Health Monitors', property: 'totalHealthMonitors' },
@@ -63,7 +64,11 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     private poolsService: V1LoadBalancerPoolsService,
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerPool>();
+    advancedSearchAdapterObject.setService(this.poolsService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
@@ -101,20 +106,16 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
       })
       .subscribe(
         response => {
-          const getTotal = <T>(array: T[]) => {
-            return array ? array.length : 0;
-          };
+          const getTotal = <T>(array: T[]) => (array ? array.length : 0);
           this.pools = response;
-          this.pools.data = this.pools.data.map(p => {
-            return {
-              ...p,
-              nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
-              methodName: methodsLookup[p.loadBalancingMethod],
-              state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-              totalNodes: getTotal(p.nodes),
-              totalHealthMonitors: getTotal(p.healthMonitors) + getTotal(p.defaultHealthMonitors),
-            };
-          });
+          this.pools.data = this.pools.data.map(p => ({
+            ...p,
+            nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
+            methodName: methodsLookup[p.loadBalancingMethod],
+            state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+            totalNodes: getTotal(p.nodes),
+            totalHealthMonitors: getTotal(p.healthMonitors) + getTotal(p.defaultHealthMonitors),
+          }));
         },
         () => {
           this.pools = null;

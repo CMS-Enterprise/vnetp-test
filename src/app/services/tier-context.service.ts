@@ -92,7 +92,7 @@ export class TierContextService {
       }
 
       this.currentDatacenterId = cd.id;
-      this.DatacenterService.getOneDatacenters({
+      this.DatacenterService.getOneDatacenter({
         id: this.currentDatacenterId,
         join: ['tiers'],
       }).subscribe(data => {
@@ -127,8 +127,6 @@ export class TierContextService {
     if (isSameTier) {
       return false;
     }
-
-    const oldTierId = this.currentTierValue ? this.currentTierValue.id : null;
 
     this.currentTierSubject.next(tier);
     this.ignoreNextQueryParamEvent = true;

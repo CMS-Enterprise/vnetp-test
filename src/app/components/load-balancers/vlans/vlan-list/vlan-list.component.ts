@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { GetManyLoadBalancerVlanResponseDto, GetManyVlanResponseDto, LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'client';
+import { GetManyLoadBalancerVlanResponseDto, LoadBalancerVlan, Tier, V1LoadBalancerVlansService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -12,6 +12,8 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { VlanModalDto } from '../vlan-modal/vlan-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface VlanView extends LoadBalancerVlan {
   nameView: string;
@@ -25,14 +27,14 @@ export interface VlanView extends LoadBalancerVlan {
 export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [{ displayName: 'Tag', propertyName: 'tag' }];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<VlanView> = {
     description: 'VLANs in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Tag', property: 'tag' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
@@ -53,7 +55,13 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
-  ) {}
+    public filteredHelpText: FilteredCount,
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerVlan>();
+    advancedSearchAdapterObject.setService(this.vlansService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerVlansService');
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
@@ -102,31 +110,30 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
       if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
+        eventParams = `${propertyName}||eq||${searchText}`;
       }
     }
     this.vlansService
       .getManyLoadBalancerVlan({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
         response => {
           this.vlans = response;
-          this.vlans.data = (this.vlans.data as VlanView[]).map(v => {
-            return {
-              ...v,
-              nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
-              state: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-            };
-          });
+          this.vlans.data = (this.vlans.data as VlanView[]).map(v => ({
+            ...v,
+            nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
+            state: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+          }));
         },
         () => {
-          this.vlans = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;

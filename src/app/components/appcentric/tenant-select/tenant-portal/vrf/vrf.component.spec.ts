@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
@@ -18,7 +18,7 @@ describe('VrfComponent', () => {
   let component: VrfComponent;
   let fixture: ComponentFixture<VrfComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         VrfComponent,
@@ -28,12 +28,12 @@ describe('VrfComponent', () => {
         MockImportExportComponent,
         MockIconButtonComponent,
         MockYesNoModalComponent,
-        MockComponent('app-vrf-modal'),
+        MockComponent({ selector: 'app-vrf-modal', inputs: ['tenantId'] }),
       ],
       imports: [RouterTestingModule, HttpClientModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(VrfComponent);

@@ -20,9 +20,7 @@ export class TenantPortalComponent implements OnInit {
   public initialTabIndex = 0;
   public currentTab: string;
 
-  public tabs: Tab[] = tabs.map(t => {
-    return { name: t.name };
-  });
+  public tabs: Tab[] = tabs.map(t => ({ name: t.name }));
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
 
@@ -46,9 +44,7 @@ export class TenantPortalComponent implements OnInit {
       return 0;
     }
 
-    const tab = tabs.find(t => {
-      return t.route.join('') === page[1];
-    });
+    const tab = tabs.find(t => t.route.join('') === page[1]);
     this.currentTab = tab.name;
     return this.tabs.findIndex(t => t.name === tab.name);
   }

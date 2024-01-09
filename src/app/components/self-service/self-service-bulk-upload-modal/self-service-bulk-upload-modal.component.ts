@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { SubnetImportCollectionDto, V1NetworkSubnetsService, V1NetworkVlansService, V1SelfServiceService, V1TiersService } from 'client';
+import { V1SelfServiceService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -36,8 +36,6 @@ export class SelfServiceBulkUploadModalComponent {
     private selfServiceService: V1SelfServiceService,
   ) {}
 
-  private sanitizeImportData(objects) {}
-
   public handleTabChange(tab) {
     if (this.navIndex === this.tabs.findIndex(t => t.name === tab.name)) {
       return;
@@ -46,9 +44,9 @@ export class SelfServiceBulkUploadModalComponent {
   }
 
   public importObjects() {
-    const modalDto = new YesNoModalDto('Import', `Are you sure you would like to import objects?`);
+    const modalDto = new YesNoModalDto('Import', 'Are you sure you would like to import objects?');
     const onConfirm = () => {
-      this.selfServiceService.bulkUploadSelfService({ selfService: this.selfService }).subscribe(data => {});
+      this.selfServiceService.bulkUploadSelfService({ selfService: this.selfService }).subscribe(() => {});
     };
 
     const onClose = () => {};

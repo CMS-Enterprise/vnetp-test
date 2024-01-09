@@ -1,4 +1,4 @@
-/* tslint:disable:no-string-literal */
+/* eslint-disable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NatRulesDetailComponent } from './nat-rules-detail.component';
 import {
@@ -15,7 +15,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { of, Subject, Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { NatRule, NatRuleImport, NatRulePreview } from 'client';
+import { NatRule, NatRuleImport, NatRulePreview, V1TiersService } from 'client';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
@@ -38,7 +38,7 @@ describe('NatRulesDetailComponent', () => {
     },
   };
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         NatRulesDetailComponent,
@@ -53,12 +53,13 @@ describe('NatRulesDetailComponent', () => {
       ],
       imports: [ApplicationPipesModule, RouterTestingModule.withRoutes([]), HttpClientTestingModule],
       providers: [
+        MockProvider(V1TiersService),
         MockProvider(NgxSmartModalService),
         { provide: 'DatacenterService', useValue: mockDatacenterService },
         { provide: 'ActivatedRoute', useValue: mockActivatedRoute },
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NatRulesDetailComponent);
@@ -71,13 +72,14 @@ describe('NatRulesDetailComponent', () => {
   });
 
   it('should get natRuleGroup on refresh', () => {
-    spyOn(component, 'getNatRuleGroup');
+    jest.spyOn(component, 'getNatRuleGroup');
     component.refresh();
     expect(component.getNatRuleGroup).toHaveBeenCalled();
   });
 
   it('should get natRules on table event', () => {
-    spyOn(component, 'getNatRules');
+    component.NatRuleGroup = { id: 'Test' } as any;
+    jest.spyOn(component, 'getNatRules');
     component.onTableEvent({ page: 1, perPage: 10 } as any);
     expect(component.getNatRules).toHaveBeenCalled();
   });
@@ -87,8 +89,8 @@ describe('NatRulesDetailComponent', () => {
     jest
       .spyOn(component['natRuleGroupService'], 'getOneNatRuleGroup')
       .mockReturnValue(of({ data: { name: 'name', type: 'type', id: 'id', tierId: 'tierId' } } as any));
-    spyOn(component, 'getObjects');
-    spyOn(component, 'getNatRuleLastIndex');
+    jest.spyOn(component, 'getObjects');
+    jest.spyOn(component, 'getNatRuleLastIndex');
 
     component.getNatRuleGroup();
     expect(component['natRuleGroupService'].getOneNatRuleGroup).toHaveBeenCalled();
@@ -131,12 +133,12 @@ describe('NatRulesDetailComponent', () => {
     const networkObjectGroupResponse = { data: ['networkObjectGroup1', 'networkObjectGroup2'] };
     const serviceObjectResponse = { data: ['serviceObject1', 'serviceObject2'] };
 
-    spyOn(component['tierService'], 'getOneTier').and.returnValue(of(tierResponse));
-    spyOn(component['networkObjectService'], 'getManyNetworkObject').and.returnValue(of(networkObjectResponse));
-    spyOn(component['networkObjectGroupService'], 'getManyNetworkObjectGroup').and.returnValue(of(networkObjectGroupResponse));
-    spyOn(component['serviceObjectService'], 'getManyServiceObject').and.returnValue(of(serviceObjectResponse));
+    jest.spyOn(component['tierService'], 'getOneTier').mockReturnValue(of(tierResponse) as any);
+    jest.spyOn(component['networkObjectService'], 'getManyNetworkObject').mockReturnValue(of(networkObjectResponse) as any);
+    jest.spyOn(component['networkObjectGroupService'], 'getManyNetworkObjectGroup').mockReturnValue(of(networkObjectGroupResponse) as any);
+    jest.spyOn(component['serviceObjectService'], 'getManyServiceObject').mockReturnValue(of(serviceObjectResponse) as any);
 
-    spyOn(component, 'getNatRules');
+    jest.spyOn(component, 'getNatRules');
 
     component.getObjects();
 
@@ -149,7 +151,7 @@ describe('NatRulesDetailComponent', () => {
   });
 
   it('should open nat rule modal in create mode', () => {
-    spyOn(component, 'openNatRuleModal');
+    jest.spyOn(component, 'openNatRuleModal');
     component.createNatRule();
     expect(component.openNatRuleModal).toHaveBeenCalledWith(ModalMode.Create);
   });
@@ -162,10 +164,10 @@ describe('NatRulesDetailComponent', () => {
       component.networkObjects = [];
       component.serviceObjects = [];
       component.latestRuleIndex = 1;
-      spyOn(component, 'subscribeToNatRuleModal');
-      spyOn(component['ngx'], 'setModalData');
+      jest.spyOn(component, 'subscribeToNatRuleModal');
+      jest.spyOn(component['ngx'], 'setModalData');
       const onCloseFinished = new Subject<void>();
-      spyOn(component['ngx'], 'getModal').and.returnValue({ open: jest.fn(), onCloseFinished });
+      jest.spyOn(component['ngx'], 'getModal').mockReturnValue({ open: jest.fn(), onCloseFinished } as any);
     });
 
     it('should throw an error if Edit mode is called without a nat rule', () => {
@@ -217,14 +219,14 @@ describe('NatRulesDetailComponent', () => {
 
   describe('subscribeToNatRuleModal', () => {
     beforeEach(() => {
-      spyOn(component, 'getNatRuleGroup');
-      spyOn(component['ngx'], 'resetModalData');
+      jest.spyOn(component, 'getNatRuleGroup');
+      jest.spyOn(component['ngx'], 'resetModalData');
     });
 
     it('should subscribe to natRuleModal onCloseFinished event', () => {
       const onCloseFinished = new Subject<void>();
       const mockModal = { onCloseFinished, open: jest.fn() };
-      spyOn(component['ngx'], 'getModal').and.returnValue(mockModal);
+      jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
 
       component.subscribeToNatRuleModal();
 
@@ -243,7 +245,7 @@ describe('NatRulesDetailComponent', () => {
     const serviceName = 'testServiceName';
     component.serviceObjects = [{ id: serviceObjectId, name: serviceName } as any];
 
-    spyOn(ObjectUtil, 'getObjectName').and.callThrough();
+    jest.spyOn(ObjectUtil, 'getObjectName');
 
     const result = component.getServiceObjectName(serviceObjectId);
 
@@ -256,7 +258,7 @@ describe('NatRulesDetailComponent', () => {
     const networkObjectName = 'testNetworkObjectName';
     component.networkObjects = [{ id: networkObjectId, name: networkObjectName } as any];
 
-    spyOn(ObjectUtil, 'getObjectName').and.callThrough();
+    jest.spyOn(ObjectUtil, 'getObjectName');
 
     const result = component.getNetworkObjectName(networkObjectId);
 
@@ -269,7 +271,7 @@ describe('NatRulesDetailComponent', () => {
     const networkObjectGroupName = 'testNetworkObjectGroupName';
     component.networkObjectGroups = [{ id: networkObjectGroupId, name: networkObjectGroupName } as any];
 
-    spyOn(ObjectUtil, 'getObjectName').and.callThrough();
+    jest.spyOn(ObjectUtil, 'getObjectName');
 
     const result = component.getNetworkObjectGroupName(networkObjectGroupId);
 
@@ -310,7 +312,7 @@ describe('NatRulesDetailComponent', () => {
         return new Subscription();
       });
 
-      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
       const getNatRuleSpy = jest.spyOn(component, 'getNatRules');
 
@@ -326,8 +328,8 @@ describe('NatRulesDetailComponent', () => {
     it('should restore without filtered results', () => {
       component.NatRuleGroup = { id: 'testNatRuleGroupId' } as any;
       const natRule = { id: '1', deletedAt: true } as any;
-      spyOn(component['natRuleService'], 'restoreOneNatRule').and.returnValue(of({} as any));
-      spyOn(component, 'getNatRules');
+      jest.spyOn(component['natRuleService'], 'restoreOneNatRule').mockReturnValue(of({} as any));
+      jest.spyOn(component, 'getNatRules');
       component.restoreNatRule(natRule);
       expect(component['natRuleService'].restoreOneNatRule).toHaveBeenCalledWith({ id: natRule.id });
       expect(component.getNatRules).toHaveBeenCalled();
@@ -336,10 +338,10 @@ describe('NatRulesDetailComponent', () => {
     it('should restore with filtered results', () => {
       component.NatRuleGroup = { id: 'testNatRuleGroupId' } as any;
       const natRule = { id: '1', deletedAt: true } as any;
-      spyOn(component['natRuleService'], 'restoreOneNatRule').and.returnValue(of({} as any));
+      jest.spyOn(component['natRuleService'], 'restoreOneNatRule').mockReturnValue(of({} as any));
 
       const getNatRulesSpy = jest.spyOn(component, 'getNatRules');
-      const params = { filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
       component.restoreNatRule(natRule);

@@ -1,6 +1,6 @@
+/* eslint-disable */
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
-  AuditLog,
   AuditLogActionTypeEnum,
   Datacenter,
   NetworkObject,
@@ -17,7 +17,7 @@ import {
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { forkJoin, Subscription } from 'rxjs';
-import { audit, first } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
@@ -124,22 +124,14 @@ export class AuditLogComponent implements OnInit {
                         return;
                       }
                       if (entityBefore[key]) {
-                        beforeList = entityBefore[key].map(obj => {
-                          return obj.loadBalancerNode.name;
-                        });
+                        beforeList = entityBefore[key].map(obj => obj.loadBalancerNode.name);
                       }
                       if (entityAfter[key]) {
-                        afterList = entityAfter[key].map(obj => {
-                          return obj.loadBalancerNode.name;
-                        });
+                        afterList = entityAfter[key].map(obj => obj.loadBalancerNode.name);
                       }
                     } else {
-                      beforeList = entityBefore[key].map(obj => {
-                        return obj.name;
-                      });
-                      afterList = entityAfter[key].map(obj => {
-                        return obj.name;
-                      });
+                      beforeList = entityBefore[key].map(obj => obj.name);
+                      afterList = entityAfter[key].map(obj => obj.name);
                     }
 
                     if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {
@@ -237,19 +229,19 @@ export class AuditLogComponent implements OnInit {
   getObjects(): void {
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
       fields: ['id,name'],
-      limit: 50000,
+      perPage: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
       fields: ['id,name'],
-      limit: 50000,
+      perPage: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
       fields: ['id,name'],
-      limit: 50000,
+      perPage: 50000,
     });
     const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
       fields: ['id,name'],
-      limit: 50000,
+      perPage: 50000,
     });
     forkJoin([networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest, serviceObjectGroupRequest]).subscribe(
       (result: unknown) => {
@@ -264,12 +256,13 @@ export class AuditLogComponent implements OnInit {
 
   public getTiers(): void {
     this.tierService
-      .getManyDatacenterTier({
-        datacenterId: this.currentDatacenter.id,
-        limit: 50000,
+      .getManyTier({
+        filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
+        page: 1,
+        perPage: 1000,
       })
-      .subscribe((data: unknown) => {
-        this.tiers = data as Tier[];
+      .subscribe(data => {
+        this.tiers = data.data;
         this.getObjects();
       });
   }

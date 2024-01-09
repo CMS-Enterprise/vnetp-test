@@ -1,10 +1,9 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {
   ApplicationProfile,
   EndpointGroup,
-  EndpointGroupPaginationResponse,
+  GetManyEndpointGroupResponseDto,
   V2AppCentricApplicationProfilesService,
   V2AppCentricEndpointGroupsService,
 } from 'client';
@@ -30,15 +29,15 @@ export class ApplicationProfileModalComponent implements OnInit {
   public modalMode: ModalMode;
   public ModalMode = ModalMode;
   public applicationProfileId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
-  public endpointGroups: EndpointGroupPaginationResponse;
+  public endpointGroups: GetManyEndpointGroupResponseDto;
   public isLoading = false;
   public tableComponentDto = new TableComponentDto();
   public selectedEndpointGroup: EndpointGroup;
   public searchColumns: SearchColumnConfig[] = [];
   public perPage = 5;
-  private tenantId: string;
+  @Input() tenantId;
   public apEndpointGroupModalSubscription: Subscription;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
@@ -54,23 +53,12 @@ export class ApplicationProfileModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private applicationProfileService: V2AppCentricApplicationProfilesService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
-    private router: Router,
     private tableContextService: TableContextService,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -125,7 +113,7 @@ export class ApplicationProfileModalComponent implements OnInit {
   }
 
   private createApplicationProfile(applicationProfile: ApplicationProfile): void {
-    this.applicationProfileService.createApplicationProfile({ applicationProfile }).subscribe(
+    this.applicationProfileService.createOneApplicationProfile({ applicationProfile }).subscribe(
       () => {
         this.closeModal();
       },
@@ -134,12 +122,12 @@ export class ApplicationProfileModalComponent implements OnInit {
   }
 
   private editApplicationProfile(applicationProfile: ApplicationProfile): void {
-    applicationProfile.name = null;
-    applicationProfile.tenantId = null;
+    delete applicationProfile.name;
+    delete applicationProfile.tenantId;
 
     this.applicationProfileService
-      .updateApplicationProfile({
-        uuid: this.applicationProfileId,
+      .updateOneApplicationProfile({
+        id: this.applicationProfileId,
         applicationProfile,
       })
       .subscribe(
@@ -185,7 +173,7 @@ export class ApplicationProfileModalComponent implements OnInit {
       }
     }
     this.endpointGroupService
-      .findAllEndpointGroup({
+      .getManyEndpointGroup({
         filter: [`applicationProfileId||eq||${this.applicationProfileId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -210,7 +198,7 @@ export class ApplicationProfileModalComponent implements OnInit {
         `Are you sure you want to permanently delete this endpoint group ${endpointGroup.name}?`,
       );
       const onConfirm = () => {
-        this.endpointGroupService.removeEndpointGroup({ uuid: endpointGroup.id }).subscribe(() => {
+        this.endpointGroupService.deleteOneEndpointGroup({ id: endpointGroup.id }).subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
           const { filteredResults } = params;
 
@@ -231,8 +219,8 @@ export class ApplicationProfileModalComponent implements OnInit {
       );
       const onConfirm = () => {
         this.endpointGroupService
-          .softDeleteEndpointGroup({
-            uuid: endpointGroup.id,
+          .softDeleteOneEndpointGroup({
+            id: endpointGroup.id,
           })
           .subscribe(() => {
             const params = this.tableContextService.getSearchLocalStorage();
@@ -257,8 +245,8 @@ export class ApplicationProfileModalComponent implements OnInit {
     }
 
     this.endpointGroupService
-      .restoreEndpointGroup({
-        uuid: endpointGroup.id,
+      .restoreOneEndpointGroup({
+        id: endpointGroup.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

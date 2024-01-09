@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Tenant, TenantPaginationResponse, V2AppCentricTenantsService } from 'client';
+import { Tenant, GetManyTenantResponseDto, V2AppCentricTenantsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -17,7 +17,7 @@ export class TenantSelectComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentTenantsPage = 1;
   public perPage = 20;
-  public tenants = {} as TenantPaginationResponse;
+  public tenants = {} as GetManyTenantResponseDto;
   public tableComponentDto = new TableComponentDto();
   private tenantModalSubscription: Subscription;
 
@@ -50,23 +50,23 @@ export class TenantSelectComponent implements OnInit {
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getTenants(event);
+    this.getTenants();
   }
 
-  public getTenants(event?): void {
+  public getTenants(): void {
     this.isLoading = true;
-    let eventParams;
-    if (event) {
-      this.tableComponentDto.page = event.page ? event.page : 1;
-      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
-      const { searchText } = event;
-      const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
-      }
-    }
+    // let eventParams;
+    // if (event) {
+    //   this.tableComponentDto.page = event.page ? event.page : 1;
+    //   this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+    //   const { searchText } = event;
+    //   const propertyName = event.searchColumn ? event.searchColumn : null;
+    //   if (propertyName) {
+    //     eventParams = `${propertyName}||cont||${searchText}`;
+    //   }
+    // }
     this.tenantService
-      .findAllTenant({
+      .getManyTenant({
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })
@@ -99,22 +99,22 @@ export class TenantSelectComponent implements OnInit {
 
   public deleteTenant(tenant: Tenant): void {
     if (tenant.deletedAt) {
-      this.tenantService.removeTenant({ uuid: tenant.id }).subscribe(() => {
+      this.tenantService.deleteOneTenant({ id: tenant.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getTenants(params);
+          this.getTenants();
         } else {
           this.getTenants();
         }
       });
     } else {
       this.tenantService
-        .softDeleteTenant({
-          uuid: tenant.id,
+        .softDeleteOneTenant({
+          id: tenant.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -123,7 +123,7 @@ export class TenantSelectComponent implements OnInit {
           // if filtered results boolean is true, apply search params in the
           // subsequent get call
           if (filteredResults) {
-            this.getTenants(params);
+            this.getTenants();
           } else {
             this.getTenants();
           }
@@ -137,8 +137,8 @@ export class TenantSelectComponent implements OnInit {
     }
 
     this.tenantService
-      .restoreTenant({
-        uuid: tenant.id,
+      .restoreOneTenant({
+        id: tenant.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
@@ -147,14 +147,14 @@ export class TenantSelectComponent implements OnInit {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getTenants(params);
+          this.getTenants();
         } else {
           this.getTenants();
         }
       });
   }
 
-  public importTenantsConfig(tenants: Tenant[]): void {
+  public importTenantsConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,
@@ -185,7 +185,7 @@ export class TenantSelectComponent implements OnInit {
       // if filtered results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.getTenants(params);
+        this.getTenants();
       } else {
         this.getTenants();
       }

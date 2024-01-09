@@ -1,16 +1,15 @@
 import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router, NavigationEnd } from '@angular/router';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import {
   V2AppCentricBridgeDomainsService,
   BridgeDomain,
   Vrf,
-  L3OutPaginationResponse,
   L3Out,
   V2AppCentricL3outsService,
   V2AppCentricVrfsService,
   V2AppCentricRouteProfilesService,
   RouteProfile,
+  GetManyL3OutResponseDto,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -34,9 +33,9 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   public isLoading = false;
   public modalMode: ModalMode;
   public bridgeDomainId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() tenantId: string;
 
   private l3OutForRouteProfileSubscription: Subscription;
 
@@ -46,7 +45,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   public filteredL3Outs: L3Out[];
   public vrfs: Vrf[];
   public routeProfiles: RouteProfile[];
-  public l3OutsTableData: L3OutPaginationResponse;
+  public l3OutsTableData: GetManyL3OutResponseDto;
 
   public selectedL3Out: L3Out;
 
@@ -67,25 +66,14 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private bridgeDomainService: V2AppCentricBridgeDomainsService,
-    private router: Router,
     private tableContextService: TableContextService,
     private l3OutService: V2AppCentricL3outsService,
     private vrfService: V2AppCentricVrfsService,
     private routeProfileService: V2AppCentricRouteProfilesService,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -99,7 +87,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getL3OutsTableData(event);
+    this.getL3OutsTableData();
   }
 
   get f() {
@@ -189,7 +177,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   }
 
   private createBridgeDomain(bridgeDomain: BridgeDomain): void {
-    this.bridgeDomainService.createBridgeDomain({ bridgeDomain }).subscribe(
+    this.bridgeDomainService.createOneBridgeDomain({ bridgeDomain }).subscribe(
       () => {
         this.closeModal();
       },
@@ -198,12 +186,12 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   }
 
   private editBridgeDomain(bridgeDomain: BridgeDomain): void {
-    bridgeDomain.name = null;
-    bridgeDomain.tenantId = null;
-    bridgeDomain.vrfId = null;
+    delete bridgeDomain.name;
+    delete bridgeDomain.tenantId;
+    delete bridgeDomain.vrfId;
     this.bridgeDomainService
-      .updateBridgeDomain({
-        uuid: this.bridgeDomainId,
+      .updateOneBridgeDomain({
+        id: this.bridgeDomainId,
         bridgeDomain,
       })
       .subscribe(
@@ -220,19 +208,18 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const {
-      name,
-      description,
-      alias,
-      unicastRouting,
-      arpFlooding,
-      bdMacAddress,
-      limitLocalIpLearning,
-      epMoveDetectionModeGarp,
-      vrfId,
-      l3OutForRouteProfileId,
-      routeProfileId,
-    } = this.form.value;
+    const { name, description, alias, unicastRouting, arpFlooding, bdMacAddress, limitLocalIpLearning, epMoveDetectionModeGarp, vrfId } =
+      this.form.value;
+
+    let { l3OutForRouteProfileId, routeProfileId } = this.form.value;
+    // Check if these fields are empty strings, and if so, set them to null
+    l3OutForRouteProfileId = l3OutForRouteProfileId === '' ? null : l3OutForRouteProfileId;
+    routeProfileId = routeProfileId === '' ? null : routeProfileId;
+
+    // fixes condition where the l3Out dropdown
+    if (l3OutForRouteProfileId === null) {
+      routeProfileId = null;
+    }
 
     const tenantId = this.tenantId;
 
@@ -258,17 +245,16 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       this.editBridgeDomain(bridgeDomain);
     }
   }
-
   public getL3OutsTableData(event?): void {
     this.isLoading = true;
     this.bridgeDomainService
-      .findOneBridgeDomain({
-        uuid: this.bridgeDomainId,
-        relations: 'l3outs',
+      .getOneBridgeDomain({
+        id: this.bridgeDomainId,
+        relations: ['l3outs'],
       })
       .subscribe(
         data => {
-          const l3PagResponse = {} as L3OutPaginationResponse;
+          const l3PagResponse = {} as GetManyL3OutResponseDto;
           l3PagResponse.count = data.l3outs.length;
           l3PagResponse.page = 1;
           l3PagResponse.pageCount = 1;
@@ -276,7 +262,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
           l3PagResponse.data = data.l3outs;
           this.l3OutsTableData = l3PagResponse;
         },
-        err => (this.l3OutsTableData = null),
+        () => (this.l3OutsTableData = null),
         () => (this.isLoading = false),
       );
   }
@@ -284,7 +270,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   public getL3Outs(): void {
     this.isLoading = true;
     this.l3OutService
-      .findAllL3Out({
+      .getManyL3Out({
         filter: [`tenantId||eq||${this.tenantId}`],
         page: 1,
         perPage: 1000,
@@ -305,7 +291,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   public getVrfs(): void {
     this.isLoading = true;
     this.vrfService
-      .findAllVrf({
+      .getManyVrf({
         filter: [`tenantId||eq||${this.tenantId}`],
         page: 1,
         perPage: 1000,
@@ -322,7 +308,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   public getRouteProfiles(): void {
     this.isLoading = true;
     this.routeProfileService
-      .findAllRouteProfile({
+      .getManyRouteProfile({
         filter: [`tenantId||eq||${this.tenantId}`],
         page: 1,
         perPage: 1000,
@@ -349,7 +335,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
         // if filtered results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getL3OutsTableData(params);
+          this.getL3OutsTableData();
         } else {
           this.getL3OutsTableData();
         }
@@ -374,7 +360,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
             // if filtered results boolean is true, apply search params in the
             // subsequent get call
             if (filteredResults) {
-              this.getL3OutsTableData(params);
+              this.getL3OutsTableData();
             } else {
               this.getL3OutsTableData();
             }

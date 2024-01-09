@@ -34,7 +34,7 @@ export class TierSelectComponent implements OnInit, OnDestroy {
 
   public getTiers(): void {
     this.datacenterService
-      .getOneDatacenters({
+      .getOneDatacenter({
         id: this.datacenterId,
         join: ['tiers'],
       })

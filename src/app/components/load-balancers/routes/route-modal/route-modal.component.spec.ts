@@ -29,15 +29,13 @@ describe('RouteModalComponent', () => {
     ngx = TestBed.inject(NgxSmartModalService);
   });
 
-  const createRoute = (): LoadBalancerRoute => {
-    return {
-      tierId: '1',
-      id: '2',
-      name: 'Route2',
-      destination: '192.168.1.1/11',
-      gateway: '192.168.1.1',
-    };
-  };
+  const createRoute = (): LoadBalancerRoute => ({
+    tierId: '1',
+    id: '2',
+    name: 'Route2',
+    destination: '192.168.1.1/11',
+    gateway: '192.168.1.1',
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

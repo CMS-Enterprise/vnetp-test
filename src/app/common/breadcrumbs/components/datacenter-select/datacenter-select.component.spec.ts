@@ -8,7 +8,6 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { By } from '@angular/platform-browser';
 import { MockProvider } from 'src/test/mock-providers';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Router } from '@angular/router';
 
 describe('DatacenterSelectComponent', () => {
   let component: DatacenterSelectComponent;
@@ -32,11 +31,9 @@ describe('DatacenterSelectComponent', () => {
   it('should call to open the datacenter switch modal on click', () => {
     const ngx = TestBed.inject(NgxSmartModalService) as any;
     const openSpy = jest.fn();
-    jest.spyOn(ngx, 'getModal').mockImplementation(() => {
-      return {
-        open: openSpy,
-      };
-    });
+    jest.spyOn(ngx, 'getModal').mockImplementation(() => ({
+      open: openSpy,
+    }));
 
     const openButton = fixture.debugElement.query(By.css('.btn.btn-primary'));
     openButton.triggerEventHandler('click', 'getModal');
