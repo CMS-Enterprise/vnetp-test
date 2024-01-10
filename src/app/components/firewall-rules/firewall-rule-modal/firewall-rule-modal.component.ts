@@ -14,6 +14,7 @@ import {
   FirewallRuleDestinationAddressTypeEnum,
   FirewallRuleServiceTypeEnum,
   FirewallRule,
+  Zone,
   V1NetworkSecurityFirewallRulesService,
   V1NetworkSecurityNetworkObjectGroupsService,
   V1NetworkSecurityNetworkObjectsService,
@@ -49,6 +50,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   ModalMode: ModalMode;
   NetworkObjectId: string;
   FirewallRuleId: string;
+  zones: Zone[];
+  selectedToZones: Zone[] = [];
+  selectedFromZones: Zone[] = [];
+  firewallRuleGroupType: string;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -190,10 +195,16 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     modalFirewallRule.name = this.form.controls.name.value;
     modalFirewallRule.action = this.form.controls.action.value;
     modalFirewallRule.protocol = this.form.controls.protocol.value;
-    modalFirewallRule.direction = this.form.controls.direction.value;
     modalFirewallRule.logging = this.form.controls.logging.value;
     modalFirewallRule.enabled = this.form.controls.enabled.value;
     modalFirewallRule.ruleIndex = this.form.controls.ruleIndex.value;
+
+    if (this.firewallRuleGroupType === 'ZoneBased') {
+      modalFirewallRule.toZone = this.selectedToZones;
+      modalFirewallRule.fromZone = this.selectedFromZones;
+    } else {
+      modalFirewallRule.direction = this.form.controls.direction.value;
+    }
 
     modalFirewallRule.sourceAddressType = this.form.controls.sourceNetworkType.value;
 
@@ -271,6 +282,13 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     const dto = this.ngx.getModalData('firewallRuleModal') as FirewallRuleModalDto;
     this.ModalMode = dto.ModalMode;
 
+    this.firewallRuleGroupType = dto.GroupType;
+
+    if (this.firewallRuleGroupType === 'ZoneBased') {
+      this.selectedToZones = dto.FirewallRule.toZone;
+      this.selectedFromZones = dto.FirewallRule.fromZone;
+    }
+
     if (this.ModalMode === ModalMode.Edit) {
       this.FirewallRuleId = dto.FirewallRule.id;
     }
@@ -281,6 +299,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     this.networkObjectGroups = dto.NetworkObjectGroups;
     this.serviceObjects = dto.ServiceObjects;
     this.serviceObjectGroups = dto.ServiceObjectGroups;
+    this.zones = dto.Zones;
 
     const firewallRule = dto.FirewallRule;
 
@@ -482,6 +501,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       action: ['', Validators.required],
       protocol: ['', Validators.required],
       direction: ['', Validators.required],
+      selectedToZone: [''],
+      selectedFromZone: [''],
       ruleIndex: [1, Validators.compose([Validators.required, Validators.min(1)])],
 
       // Source Network Info
@@ -508,6 +529,26 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       logging: [false],
       enabled: [true],
     });
+  }
+
+  addZone(type: 'from' | 'to') {
+    const zoneId = type === 'from' ? this.form.controls.selectedFromZone.value : this.form.controls.selectedToZone.value;
+    const zone = this.zones.find(z => z.id === zoneId);
+    if (type === 'from') {
+      this.form.controls.selectedFromZone.setValue(null);
+      this.selectedFromZones.push(zone);
+    } else if (type === 'to') {
+      this.form.controls.selectedToZone.setValue(null);
+      this.selectedToZones.push(zone);
+    }
+  }
+
+  removeZone(type: 'from' | 'to', id: string) {
+    if (type === 'from') {
+      this.selectedFromZones = this.selectedFromZones.filter(z => z.id !== id);
+    } else if (type === 'to') {
+      this.selectedToZones = this.selectedToZones.filter(z => z.id !== id);
+    }
   }
 
   private unsubAll() {

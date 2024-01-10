@@ -16,6 +16,7 @@ import {
   V1TiersService,
   V1NetworkSecurityFirewallRulesService,
   Tier,
+  Zone,
   FirewallRuleImportCollectionDto,
   V1NetworkSecurityNetworkObjectsService,
   V1NetworkSecurityNetworkObjectGroupsService,
@@ -26,6 +27,7 @@ import {
   GetManyFirewallRuleResponseDto,
   FirewallRuleDirectionEnum,
   FirewallRuleProtocolEnum,
+  V1NetworkSecurityZonesService,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
@@ -71,6 +73,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   serviceObjects: ServiceObject[];
   serviceObjectGroups: ServiceObjectGroup[];
   tiers: Tier[];
+  zones: Zone[];
 
   firewallRuleModalSubscription: Subscription;
 
@@ -134,6 +137,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private datacenterService: DatacenterContextService,
+    private zoneService: V1NetworkSecurityZonesService,
     private tableContextService: TableContextService,
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<FirewallRule>();
@@ -207,16 +211,14 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     this.firewallRuleService
       .getManyFirewallRule({
         filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`, eventParams],
+        join: ['fromZone', 'toZone'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
         sort: ['ruleIndex,ASC'],
       })
       .subscribe(
         response => {
-          // TODO: Review this approach, see if we can resolve
-          // this in the generated client.
           this.firewallRules = response;
-          // this.totalFirewallRules = result.total;
         },
         () => {
           this.isLoading = false;
@@ -236,8 +238,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         sort: ['ruleIndex,DESC'],
       })
       .subscribe(response => {
-        // TODO: Review this approach, see if we can resolve
-        // this in the generated client.
         if (response.data[0]) {
           this.latestRuleIndex = response.data[0].ruleIndex;
         }
@@ -274,18 +274,32 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       page: 1,
       perPage: 50000,
     });
+    const zoneRequest = this.zoneService.getManyZone({
+      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
+      fields: ['id,name'],
+      sort: ['updatedAt,ASC'],
+      page: 1,
+      perPage: 50000,
+    });
 
-    forkJoin([tierRequest, networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest, serviceObjectGroupRequest]).subscribe(
-      result => {
-        this.TierName = result[0].name;
-        this.networkObjects = result[1].data;
-        this.networkObjectGroups = result[2].data;
-        this.serviceObjects = result[3].data;
-        this.serviceObjectGroups = result[4].data;
+    // TODO: Optionally make the zoneRequest if the rule group is ZoneBased.
+    forkJoin([
+      tierRequest,
+      networkObjectRequest,
+      networkObjectGroupRequest,
+      serviceObjectRequest,
+      serviceObjectGroupRequest,
+      zoneRequest,
+    ]).subscribe(result => {
+      this.TierName = result[0].name;
+      this.networkObjects = result[1].data;
+      this.networkObjectGroups = result[2].data;
+      this.serviceObjects = result[3].data;
+      this.serviceObjectGroups = result[4].data;
+      this.zones = result[5].data;
 
-        this.getFirewallRules();
-      },
-    );
+      this.getFirewallRules();
+    });
   }
 
   createFirewallRule(): void {
@@ -305,6 +319,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     dto.NetworkObjectGroups = this.networkObjectGroups;
     dto.ServiceObjects = this.serviceObjects;
     dto.ServiceObjectGroups = this.serviceObjectGroups;
+    dto.Zones = this.zones;
+    dto.GroupType = this.FirewallRuleGroup.type;
 
     if (modalMode === ModalMode.Edit) {
       dto.FirewallRule = firewallRule;
