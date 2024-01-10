@@ -17,10 +17,11 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CreateManyServiceObjectGroupDto } from '../model/models';
-import { GetManyServiceObjectGroupResponseDto } from '../model/models';
+import { CreateManyZoneDto } from '../model/models';
+import { GetManyZoneResponseDto } from '../model/models';
 import { ServiceObjectGroup } from '../model/models';
 import { ServiceObjectGroupRelationBulkImportCollectionDto } from '../model/models';
+import { Zone } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -37,25 +38,25 @@ export interface BulkImportRelationsServiceObjectGroupRequestParams {
     serviceObjectGroupRelationBulkImportCollectionDto: ServiceObjectGroupRelationBulkImportCollectionDto;
 }
 
-export interface CreateManyServiceObjectGroupRequestParams {
-    createManyServiceObjectGroupDto: CreateManyServiceObjectGroupDto;
+export interface CreateManyZoneRequestParams {
+    createManyZoneDto: CreateManyZoneDto;
 }
 
-export interface CreateOneServiceObjectGroupRequestParams {
-    serviceObjectGroup: ServiceObjectGroup;
+export interface CreateOneZoneRequestParams {
+    zone: Zone;
 }
 
-export interface DeleteOneServiceObjectGroupRequestParams {
+export interface DeleteOneZoneRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface DeprovisionOneServiceObjectGroupRequestParams {
+export interface DeprovisionOneZoneRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface GetManyServiceObjectGroupRequestParams {
+export interface GetManyZoneRequestParams {
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -78,7 +79,7 @@ export interface GetManyServiceObjectGroupRequestParams {
     s?: string;
 }
 
-export interface GetOneServiceObjectGroupRequestParams {
+export interface GetOneZoneRequestParams {
     /** UUID. */
     id: string;
     /** Comma-seperated array of relations to join. */
@@ -87,7 +88,7 @@ export interface GetOneServiceObjectGroupRequestParams {
     join?: Array<string>;
 }
 
-export interface ProvisionOneServiceObjectGroupRequestParams {
+export interface ProvisionOneZoneRequestParams {
     /** UUID. */
     id: string;
 }
@@ -99,20 +100,20 @@ export interface RemoveServiceObjectFromGroupServiceObjectGroupRequestParams {
     serviceObjectId: string;
 }
 
-export interface RestoreOneServiceObjectGroupRequestParams {
+export interface RestoreOneZoneRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface SoftDeleteOneServiceObjectGroupRequestParams {
+export interface SoftDeleteOneZoneRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface UpdateOneServiceObjectGroupRequestParams {
+export interface UpdateOneZoneRequestParams {
     /** UUID. */
     id: string;
-    serviceObjectGroup: ServiceObjectGroup;
+    zone: Zone;
 }
 
 
@@ -283,18 +284,18 @@ export class V1NetworkSecurityServiceObjectGroupsService {
     }
 
     /**
-     * Create many ServiceObjectGroup
+     * Create many Zone
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createManyServiceObjectGroup(requestParameters: CreateManyServiceObjectGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ServiceObjectGroup>>;
-    public createManyServiceObjectGroup(requestParameters: CreateManyServiceObjectGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ServiceObjectGroup>>>;
-    public createManyServiceObjectGroup(requestParameters: CreateManyServiceObjectGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ServiceObjectGroup>>>;
-    public createManyServiceObjectGroup(requestParameters: CreateManyServiceObjectGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const createManyServiceObjectGroupDto = requestParameters.createManyServiceObjectGroupDto;
-        if (createManyServiceObjectGroupDto === null || createManyServiceObjectGroupDto === undefined) {
-            throw new Error('Required parameter createManyServiceObjectGroupDto was null or undefined when calling createManyServiceObjectGroup.');
+    public createManyZone(requestParameters: CreateManyZoneRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Zone>>;
+    public createManyZone(requestParameters: CreateManyZoneRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Zone>>>;
+    public createManyZone(requestParameters: CreateManyZoneRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Zone>>>;
+    public createManyZone(requestParameters: CreateManyZoneRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const createManyZoneDto = requestParameters.createManyZoneDto;
+        if (createManyZoneDto === null || createManyZoneDto === undefined) {
+            throw new Error('Required parameter createManyZoneDto was null or undefined when calling createManyZone.');
         }
 
         let headers = this.defaultHeaders;
@@ -326,8 +327,8 @@ export class V1NetworkSecurityServiceObjectGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<ServiceObjectGroup>>(`${this.configuration.basePath}/v1/network-security/service-object-groups/bulk`,
-            createManyServiceObjectGroupDto,
+        return this.httpClient.post<Array<Zone>>(`${this.configuration.basePath}/v1/network-security/service-object-groups/bulk`,
+            createManyZoneDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -339,18 +340,18 @@ export class V1NetworkSecurityServiceObjectGroupsService {
     }
 
     /**
-     * Create one ServiceObjectGroup
+     * Create one Zone
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneServiceObjectGroup(requestParameters: CreateOneServiceObjectGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceObjectGroup>;
-    public createOneServiceObjectGroup(requestParameters: CreateOneServiceObjectGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceObjectGroup>>;
-    public createOneServiceObjectGroup(requestParameters: CreateOneServiceObjectGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceObjectGroup>>;
-    public createOneServiceObjectGroup(requestParameters: CreateOneServiceObjectGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const serviceObjectGroup = requestParameters.serviceObjectGroup;
-        if (serviceObjectGroup === null || serviceObjectGroup === undefined) {
-            throw new Error('Required parameter serviceObjectGroup was null or undefined when calling createOneServiceObjectGroup.');
+    public createOneZone(requestParameters: CreateOneZoneRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Zone>;
+    public createOneZone(requestParameters: CreateOneZoneRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Zone>>;
+    public createOneZone(requestParameters: CreateOneZoneRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Zone>>;
+    public createOneZone(requestParameters: CreateOneZoneRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const zone = requestParameters.zone;
+        if (zone === null || zone === undefined) {
+            throw new Error('Required parameter zone was null or undefined when calling createOneZone.');
         }
 
         let headers = this.defaultHeaders;
@@ -382,8 +383,8 @@ export class V1NetworkSecurityServiceObjectGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<ServiceObjectGroup>(`${this.configuration.basePath}/v1/network-security/service-object-groups`,
-            serviceObjectGroup,
+        return this.httpClient.post<Zone>(`${this.configuration.basePath}/v1/network-security/service-object-groups`,
+            zone,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -395,18 +396,18 @@ export class V1NetworkSecurityServiceObjectGroupsService {
     }
 
     /**
-     * Delete one ServiceObjectGroup
+     * Delete one Zone
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneServiceObjectGroup(requestParameters: DeleteOneServiceObjectGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceObjectGroup>;
-    public deleteOneServiceObjectGroup(requestParameters: DeleteOneServiceObjectGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceObjectGroup>>;
-    public deleteOneServiceObjectGroup(requestParameters: DeleteOneServiceObjectGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceObjectGroup>>;
-    public deleteOneServiceObjectGroup(requestParameters: DeleteOneServiceObjectGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public deleteOneZone(requestParameters: DeleteOneZoneRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Zone>;
+    public deleteOneZone(requestParameters: DeleteOneZoneRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Zone>>;
+    public deleteOneZone(requestParameters: DeleteOneZoneRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Zone>>;
+    public deleteOneZone(requestParameters: DeleteOneZoneRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteOneServiceObjectGroup.');
+            throw new Error('Required parameter id was null or undefined when calling deleteOneZone.');
         }
 
         let headers = this.defaultHeaders;
@@ -429,7 +430,7 @@ export class V1NetworkSecurityServiceObjectGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<ServiceObjectGroup>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<Zone>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -441,18 +442,18 @@ export class V1NetworkSecurityServiceObjectGroupsService {
     }
 
     /**
-     * Deprovision one ServiceObjectGroup
+     * Deprovision one Zone
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionOneServiceObjectGroup(requestParameters: DeprovisionOneServiceObjectGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionOneServiceObjectGroup(requestParameters: DeprovisionOneServiceObjectGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionOneServiceObjectGroup(requestParameters: DeprovisionOneServiceObjectGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionOneServiceObjectGroup(requestParameters: DeprovisionOneServiceObjectGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public deprovisionOneZone(requestParameters: DeprovisionOneZoneRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneZone(requestParameters: DeprovisionOneZoneRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneZone(requestParameters: DeprovisionOneZoneRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneZone(requestParameters: DeprovisionOneZoneRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deprovisionOneServiceObjectGroup.');
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneZone.');
         }
 
         let headers = this.defaultHeaders;
@@ -487,15 +488,15 @@ export class V1NetworkSecurityServiceObjectGroupsService {
     }
 
     /**
-     * Get many ServiceObjectGroup
+     * Get many Zone
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getManyServiceObjectGroup(requestParameters: GetManyServiceObjectGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyServiceObjectGroupResponseDto>;
-    public getManyServiceObjectGroup(requestParameters: GetManyServiceObjectGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyServiceObjectGroupResponseDto>>;
-    public getManyServiceObjectGroup(requestParameters: GetManyServiceObjectGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyServiceObjectGroupResponseDto>>;
-    public getManyServiceObjectGroup(requestParameters: GetManyServiceObjectGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyZone(requestParameters: GetManyZoneRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyZoneResponseDto>;
+    public getManyZone(requestParameters: GetManyZoneRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyZoneResponseDto>>;
+    public getManyZone(requestParameters: GetManyZoneRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyZoneResponseDto>>;
+    public getManyZone(requestParameters: GetManyZoneRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
@@ -581,7 +582,7 @@ export class V1NetworkSecurityServiceObjectGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetManyServiceObjectGroupResponseDto>(`${this.configuration.basePath}/v1/network-security/service-object-groups`,
+        return this.httpClient.get<GetManyZoneResponseDto>(`${this.configuration.basePath}/v1/network-security/service-object-groups`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -594,18 +595,18 @@ export class V1NetworkSecurityServiceObjectGroupsService {
     }
 
     /**
-     * Get one ServiceObjectGroup
+     * Get one Zone
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getOneServiceObjectGroup(requestParameters: GetOneServiceObjectGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceObjectGroup>;
-    public getOneServiceObjectGroup(requestParameters: GetOneServiceObjectGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceObjectGroup>>;
-    public getOneServiceObjectGroup(requestParameters: GetOneServiceObjectGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceObjectGroup>>;
-    public getOneServiceObjectGroup(requestParameters: GetOneServiceObjectGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getOneZone(requestParameters: GetOneZoneRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Zone>;
+    public getOneZone(requestParameters: GetOneZoneRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Zone>>;
+    public getOneZone(requestParameters: GetOneZoneRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Zone>>;
+    public getOneZone(requestParameters: GetOneZoneRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getOneServiceObjectGroup.');
+            throw new Error('Required parameter id was null or undefined when calling getOneZone.');
         }
         const relations = requestParameters.relations;
         const join = requestParameters.join;
@@ -644,7 +645,7 @@ export class V1NetworkSecurityServiceObjectGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ServiceObjectGroup>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<Zone>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -657,18 +658,18 @@ export class V1NetworkSecurityServiceObjectGroupsService {
     }
 
     /**
-     * Provision one ServiceObjectGroup
+     * Provision one Zone
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionOneServiceObjectGroup(requestParameters: ProvisionOneServiceObjectGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionOneServiceObjectGroup(requestParameters: ProvisionOneServiceObjectGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionOneServiceObjectGroup(requestParameters: ProvisionOneServiceObjectGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionOneServiceObjectGroup(requestParameters: ProvisionOneServiceObjectGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public provisionOneZone(requestParameters: ProvisionOneZoneRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneZone(requestParameters: ProvisionOneZoneRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneZone(requestParameters: ProvisionOneZoneRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneZone(requestParameters: ProvisionOneZoneRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling provisionOneServiceObjectGroup.');
+            throw new Error('Required parameter id was null or undefined when calling provisionOneZone.');
         }
 
         let headers = this.defaultHeaders;
@@ -753,18 +754,18 @@ export class V1NetworkSecurityServiceObjectGroupsService {
     }
 
     /**
-     * Restore one ServiceObjectGroup
+     * Restore one Zone
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public restoreOneServiceObjectGroup(requestParameters: RestoreOneServiceObjectGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreOneServiceObjectGroup(requestParameters: RestoreOneServiceObjectGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreOneServiceObjectGroup(requestParameters: RestoreOneServiceObjectGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreOneServiceObjectGroup(requestParameters: RestoreOneServiceObjectGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public restoreOneZone(requestParameters: RestoreOneZoneRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneZone(requestParameters: RestoreOneZoneRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneZone(requestParameters: RestoreOneZoneRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneZone(requestParameters: RestoreOneZoneRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling restoreOneServiceObjectGroup.');
+            throw new Error('Required parameter id was null or undefined when calling restoreOneZone.');
         }
 
         let headers = this.defaultHeaders;
@@ -799,18 +800,18 @@ export class V1NetworkSecurityServiceObjectGroupsService {
     }
 
     /**
-     * Soft delete one ServiceObjectGroup
+     * Soft delete one Zone
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteOneServiceObjectGroup(requestParameters: SoftDeleteOneServiceObjectGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteOneServiceObjectGroup(requestParameters: SoftDeleteOneServiceObjectGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteOneServiceObjectGroup(requestParameters: SoftDeleteOneServiceObjectGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteOneServiceObjectGroup(requestParameters: SoftDeleteOneServiceObjectGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public softDeleteOneZone(requestParameters: SoftDeleteOneZoneRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneZone(requestParameters: SoftDeleteOneZoneRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneZone(requestParameters: SoftDeleteOneZoneRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneZone(requestParameters: SoftDeleteOneZoneRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling softDeleteOneServiceObjectGroup.');
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneZone.');
         }
 
         let headers = this.defaultHeaders;
@@ -844,22 +845,22 @@ export class V1NetworkSecurityServiceObjectGroupsService {
     }
 
     /**
-     * Update one ServiceObjectGroup
+     * Update one Zone
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateOneServiceObjectGroup(requestParameters: UpdateOneServiceObjectGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ServiceObjectGroup>;
-    public updateOneServiceObjectGroup(requestParameters: UpdateOneServiceObjectGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ServiceObjectGroup>>;
-    public updateOneServiceObjectGroup(requestParameters: UpdateOneServiceObjectGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ServiceObjectGroup>>;
-    public updateOneServiceObjectGroup(requestParameters: UpdateOneServiceObjectGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public updateOneZone(requestParameters: UpdateOneZoneRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Zone>;
+    public updateOneZone(requestParameters: UpdateOneZoneRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Zone>>;
+    public updateOneZone(requestParameters: UpdateOneZoneRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Zone>>;
+    public updateOneZone(requestParameters: UpdateOneZoneRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateOneServiceObjectGroup.');
+            throw new Error('Required parameter id was null or undefined when calling updateOneZone.');
         }
-        const serviceObjectGroup = requestParameters.serviceObjectGroup;
-        if (serviceObjectGroup === null || serviceObjectGroup === undefined) {
-            throw new Error('Required parameter serviceObjectGroup was null or undefined when calling updateOneServiceObjectGroup.');
+        const zone = requestParameters.zone;
+        if (zone === null || zone === undefined) {
+            throw new Error('Required parameter zone was null or undefined when calling updateOneZone.');
         }
 
         let headers = this.defaultHeaders;
@@ -891,8 +892,8 @@ export class V1NetworkSecurityServiceObjectGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<ServiceObjectGroup>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}`,
-            serviceObjectGroup,
+        return this.httpClient.put<Zone>(`${this.configuration.basePath}/v1/network-security/service-object-groups/${encodeURIComponent(String(id))}`,
+            zone,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

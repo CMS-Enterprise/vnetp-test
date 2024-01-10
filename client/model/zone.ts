@@ -10,9 +10,10 @@
  * Do not edit the class manually.
  */
 import { NatRule } from './natRule';
+import { FirewallRule } from './firewallRule';
 
 
-export interface NatRuleGroup { 
+export interface Zone { 
     readonly id?: string;
     readonly createdAt?: string;
     readonly updatedAt?: string;
@@ -21,16 +22,11 @@ export interface NatRuleGroup {
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
     name: string;
-    type: NatRuleGroupTypeEnum;
+    description?: string;
     tierId: string;
-    readonly natRules?: Array<NatRule>;
+    readonly firewallRulesTo?: Array<FirewallRule>;
+    readonly firewallRulesFrom?: Array<FirewallRule>;
+    readonly natRulesTo?: Array<NatRule>;
+    readonly natRulesFrom?: Array<NatRule>;
 }
-export enum NatRuleGroupTypeEnum {
-    Intravrf = 'Intravrf',
-    Intervrf = 'Intervrf',
-    External = 'External',
-    ZoneBased = 'ZoneBased'
-};
-
-
 

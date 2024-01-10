@@ -2447,15 +2447,15 @@
     },
     "/v1/network-security/service-object-groups": {
       "post": {
-        "operationId": "createOneServiceObjectGroup",
-        "summary": "Create one ServiceObjectGroup",
+        "operationId": "createOneZone",
+        "summary": "Create one Zone",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ServiceObjectGroup"
+                "$ref": "#/components/schemas/Zone"
               }
             }
           }
@@ -2466,7 +2466,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServiceObjectGroup"
+                  "$ref": "#/components/schemas/Zone"
                 }
               }
             }
@@ -2477,8 +2477,8 @@
         ]
       },
       "get": {
-        "operationId": "getManyServiceObjectGroup",
-        "summary": "Get many ServiceObjectGroup",
+        "operationId": "getManyZone",
+        "summary": "Get many Zone",
         "parameters": [
           {
             "name": "relations",
@@ -2595,7 +2595,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "GetManyServiceObjectGroupResponseDto",
+                  "title": "GetManyZoneResponseDto",
                   "type": "object",
                   "properties": {
                     "totalPages": {
@@ -2616,7 +2616,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/ServiceObjectGroup"
+                        "$ref": "#/components/schemas/Zone"
                       }
                     }
                   },
@@ -2640,21 +2640,21 @@
     },
     "/v1/network-security/service-object-groups/bulk": {
       "post": {
-        "operationId": "createManyServiceObjectGroup",
-        "summary": "Create many ServiceObjectGroup",
+        "operationId": "createManyZone",
+        "summary": "Create many Zone",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "title": "CreateManyServiceObjectGroupDto",
+                "title": "CreateManyZoneDto",
                 "type": "object",
                 "properties": {
                   "bulk": {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/ServiceObjectGroup"
+                      "$ref": "#/components/schemas/Zone"
                     }
                   }
                 },
@@ -2673,7 +2673,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ServiceObjectGroup"
+                    "$ref": "#/components/schemas/Zone"
                   }
                 }
               }
@@ -2687,8 +2687,8 @@
     },
     "/v1/network-security/service-object-groups/{id}": {
       "get": {
-        "operationId": "getOneServiceObjectGroup",
-        "summary": "Get one ServiceObjectGroup",
+        "operationId": "getOneZone",
+        "summary": "Get one Zone",
         "parameters": [
           {
             "name": "id",
@@ -2730,7 +2730,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServiceObjectGroup"
+                  "$ref": "#/components/schemas/Zone"
                 }
               }
             }
@@ -2741,8 +2741,8 @@
         ]
       },
       "put": {
-        "operationId": "updateOneServiceObjectGroup",
-        "summary": "Update one ServiceObjectGroup",
+        "operationId": "updateOneZone",
+        "summary": "Update one Zone",
         "parameters": [
           {
             "name": "id",
@@ -2759,7 +2759,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ServiceObjectGroup"
+                "$ref": "#/components/schemas/Zone"
               }
             }
           }
@@ -2770,7 +2770,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServiceObjectGroup"
+                  "$ref": "#/components/schemas/Zone"
                 }
               }
             }
@@ -2781,8 +2781,8 @@
         ]
       },
       "delete": {
-        "operationId": "deleteOneServiceObjectGroup",
-        "summary": "Delete one ServiceObjectGroup",
+        "operationId": "deleteOneZone",
+        "summary": "Delete one Zone",
         "parameters": [
           {
             "name": "id",
@@ -2800,7 +2800,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServiceObjectGroup"
+                  "$ref": "#/components/schemas/Zone"
                 }
               }
             }
@@ -2813,8 +2813,8 @@
     },
     "/v1/network-security/service-object-groups/{id}/soft": {
       "delete": {
-        "operationId": "softDeleteOneServiceObjectGroup",
-        "summary": "Soft delete one ServiceObjectGroup",
+        "operationId": "softDeleteOneZone",
+        "summary": "Soft delete one Zone",
         "parameters": [
           {
             "name": "id",
@@ -2838,8 +2838,8 @@
     },
     "/v1/network-security/service-object-groups/{id}/restore": {
       "patch": {
-        "operationId": "restoreOneServiceObjectGroup",
-        "summary": "Restore one ServiceObjectGroup",
+        "operationId": "restoreOneZone",
+        "summary": "Restore one Zone",
         "parameters": [
           {
             "name": "id",
@@ -2863,8 +2863,8 @@
     },
     "/v1/network-security/service-object-groups/{id}/provision": {
       "put": {
-        "operationId": "provisionOneServiceObjectGroup",
-        "summary": "Provision one ServiceObjectGroup",
+        "operationId": "provisionOneZone",
+        "summary": "Provision one Zone",
         "parameters": [
           {
             "name": "id",
@@ -2888,8 +2888,8 @@
     },
     "/v1/network-security/service-object-groups/{id}/deprovision": {
       "patch": {
-        "operationId": "deprovisionOneServiceObjectGroup",
-        "summary": "Deprovision one ServiceObjectGroup",
+        "operationId": "deprovisionOneZone",
+        "summary": "Deprovision one Zone",
         "parameters": [
           {
             "name": "id",
@@ -19559,259 +19559,6 @@
           "tierId"
         ]
       },
-      "FirewallRule": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 28
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "direction": {
-            "type": "string",
-            "enum": [
-              "In",
-              "Out"
-            ]
-          },
-          "action": {
-            "type": "string",
-            "enum": [
-              "Permit",
-              "Deny"
-            ]
-          },
-          "protocol": {
-            "type": "string",
-            "enum": [
-              "IP",
-              "ICMP",
-              "TCP",
-              "UDP"
-            ]
-          },
-          "logging": {
-            "type": "boolean"
-          },
-          "enabled": {
-            "type": "boolean"
-          },
-          "ruleIndex": {
-            "type": "number",
-            "minimum": 1
-          },
-          "sourceAddressType": {
-            "type": "string",
-            "enum": [
-              "IpAddress",
-              "NetworkObject",
-              "NetworkObjectGroup"
-            ]
-          },
-          "destinationAddressType": {
-            "type": "string",
-            "enum": [
-              "IpAddress",
-              "NetworkObject",
-              "NetworkObjectGroup"
-            ]
-          },
-          "serviceType": {
-            "type": "string",
-            "enum": [
-              "Port",
-              "ServiceObject",
-              "ServiceObjectGroup"
-            ]
-          },
-          "sourceIpAddress": {
-            "type": "string"
-          },
-          "sourceNetworkObjectId": {
-            "type": "string"
-          },
-          "sourceNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "destinationIpAddress": {
-            "type": "string"
-          },
-          "destinationNetworkObjectId": {
-            "type": "string"
-          },
-          "destinationNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "sourcePorts": {
-            "type": "string"
-          },
-          "destinationPorts": {
-            "type": "string"
-          },
-          "serviceObjectId": {
-            "type": "string"
-          },
-          "serviceObjectGroupId": {
-            "type": "string"
-          },
-          "firewallRuleGroupId": {
-            "type": "string"
-          },
-          "sourceNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "sourceNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "destinationNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "destinationNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "serviceObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ServiceObject"
-              }
-            ]
-          },
-          "serviceObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ServiceObjectGroup"
-              }
-            ]
-          }
-        },
-        "required": [
-          "name",
-          "direction",
-          "action",
-          "protocol",
-          "logging",
-          "enabled",
-          "ruleIndex",
-          "sourceAddressType",
-          "destinationAddressType",
-          "serviceType",
-          "firewallRuleGroupId"
-        ]
-      },
-      "FirewallRuleGroup": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "Intravrf",
-              "Intervrf",
-              "External"
-            ]
-          },
-          "tierId": {
-            "type": "string"
-          },
-          "firewallRules": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FirewallRule"
-            }
-          }
-        },
-        "required": [
-          "name",
-          "type",
-          "tierId"
-        ]
-      },
       "NatRule": {
         "type": "object",
         "properties": {
@@ -20030,6 +19777,20 @@
                 "$ref": "#/components/schemas/ServiceObject"
               }
             ]
+          },
+          "toZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
           }
         },
         "required": [
@@ -20046,6 +19807,354 @@
           "originalServiceType",
           "translatedServiceType",
           "natRuleGroupId"
+        ]
+      },
+      "Zone": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string"
+          },
+          "tierId": {
+            "type": "string"
+          },
+          "firewallRulesTo": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          },
+          "firewallRulesFrom": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          },
+          "natRulesTo": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRule"
+            }
+          },
+          "natRulesFrom": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRule"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "tierId"
+        ]
+      },
+      "FirewallRule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 28
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "In",
+              "Out"
+            ]
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "Permit",
+              "Deny"
+            ]
+          },
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "IP",
+              "ICMP",
+              "TCP",
+              "UDP"
+            ]
+          },
+          "logging": {
+            "type": "boolean"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "ruleIndex": {
+            "type": "number",
+            "minimum": 1
+          },
+          "sourceAddressType": {
+            "type": "string",
+            "enum": [
+              "IpAddress",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "destinationAddressType": {
+            "type": "string",
+            "enum": [
+              "IpAddress",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "serviceType": {
+            "type": "string",
+            "enum": [
+              "Port",
+              "ServiceObject",
+              "ServiceObjectGroup"
+            ]
+          },
+          "sourceIpAddress": {
+            "type": "string"
+          },
+          "sourceNetworkObjectId": {
+            "type": "string"
+          },
+          "sourceNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "destinationIpAddress": {
+            "type": "string"
+          },
+          "destinationNetworkObjectId": {
+            "type": "string"
+          },
+          "destinationNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "sourcePorts": {
+            "type": "string"
+          },
+          "destinationPorts": {
+            "type": "string"
+          },
+          "serviceObjectId": {
+            "type": "string"
+          },
+          "serviceObjectGroupId": {
+            "type": "string"
+          },
+          "firewallRuleGroupId": {
+            "type": "string"
+          },
+          "sourceNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "sourceNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "destinationNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "destinationNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "serviceObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObject"
+              }
+            ]
+          },
+          "serviceObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObjectGroup"
+              }
+            ]
+          },
+          "toZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "direction",
+          "action",
+          "protocol",
+          "logging",
+          "enabled",
+          "ruleIndex",
+          "sourceAddressType",
+          "destinationAddressType",
+          "serviceType",
+          "firewallRuleGroupId"
+        ]
+      },
+      "FirewallRuleGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Intravrf",
+              "Intervrf",
+              "External",
+              "ZoneBased"
+            ]
+          },
+          "tierId": {
+            "type": "string"
+          },
+          "firewallRules": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "tierId"
         ]
       },
       "NatRuleGroup": {
@@ -20093,7 +20202,8 @@
             "enum": [
               "Intravrf",
               "Intervrf",
-              "External"
+              "External",
+              "ZoneBased"
             ]
           },
           "tierId": {
@@ -20980,6 +21090,13 @@
               "$ref": "#/components/schemas/NatRuleGroup"
             }
           },
+          "zones": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
           "networkObjects": {
             "readOnly": true,
             "type": "array",
@@ -21661,6 +21778,20 @@
               }
             ]
           },
+          "toZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
           "vrfName": {
             "type": "string"
           },
@@ -22023,6 +22154,20 @@
                 "$ref": "#/components/schemas/ServiceObject"
               }
             ]
+          },
+          "toZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
           },
           "vrfName": {
             "type": "string"

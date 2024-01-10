@@ -79,7 +79,6 @@ model/createManyNetworkObjectDto.ts
 model/createManyNetworkObjectGroupDto.ts
 model/createManyRouteProfileDto.ts
 model/createManyServiceObjectDto.ts
-model/createManyServiceObjectGroupDto.ts
 model/createManyStaticRouteDto.ts
 model/createManySubjectDto.ts
 model/createManySubnetDto.ts
@@ -88,6 +87,7 @@ model/createManyTierDto.ts
 model/createManyTierGroupDto.ts
 model/createManyVlanDto.ts
 model/createManyVrfDto.ts
+model/createManyZoneDto.ts
 model/datacenter.ts
 model/dcsPermissions.ts
 model/endpointGroup.ts
@@ -125,7 +125,6 @@ model/getManyNatRuleResponseDto.ts
 model/getManyNetworkObjectGroupResponseDto.ts
 model/getManyNetworkObjectResponseDto.ts
 model/getManyRouteProfileResponseDto.ts
-model/getManyServiceObjectGroupResponseDto.ts
 model/getManyServiceObjectResponseDto.ts
 model/getManyStaticRouteResponseDto.ts
 model/getManySubjectResponseDto.ts
@@ -135,6 +134,7 @@ model/getManyTierGroupResponseDto.ts
 model/getManyTierResponseDto.ts
 model/getManyVlanResponseDto.ts
 model/getManyVrfResponseDto.ts
+model/getManyZoneResponseDto.ts
 model/job.ts
 model/l3Out.ts
 model/loadBalancerHealthMonitor.ts
@@ -184,4 +184,5 @@ model/virtualServerImportCollectionDto.ts
 model/virtualServerImportDto.ts
 model/vlan.ts
 model/vrf.ts
+model/zone.ts
 variables.ts
