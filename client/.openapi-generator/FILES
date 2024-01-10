@@ -24,6 +24,7 @@ api/v1NetworkSecurityNetworkObjectGroups.service.ts
 api/v1NetworkSecurityNetworkObjects.service.ts
 api/v1NetworkSecurityServiceObjectGroups.service.ts
 api/v1NetworkSecurityServiceObjects.service.ts
+api/v1NetworkSecurityZones.service.ts
 api/v1NetworkStaticRoutes.service.ts
 api/v1NetworkSubnets.service.ts
 api/v1NetworkVlans.service.ts
@@ -79,6 +80,7 @@ model/createManyNetworkObjectDto.ts
 model/createManyNetworkObjectGroupDto.ts
 model/createManyRouteProfileDto.ts
 model/createManyServiceObjectDto.ts
+model/createManyServiceObjectGroupDto.ts
 model/createManyStaticRouteDto.ts
 model/createManySubjectDto.ts
 model/createManySubnetDto.ts
@@ -125,6 +127,7 @@ model/getManyNatRuleResponseDto.ts
 model/getManyNetworkObjectGroupResponseDto.ts
 model/getManyNetworkObjectResponseDto.ts
 model/getManyRouteProfileResponseDto.ts
+model/getManyServiceObjectGroupResponseDto.ts
 model/getManyServiceObjectResponseDto.ts
 model/getManyStaticRouteResponseDto.ts
 model/getManySubjectResponseDto.ts

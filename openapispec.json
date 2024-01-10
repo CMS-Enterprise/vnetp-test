@@ -2447,15 +2447,15 @@
     },
     "/v1/network-security/service-object-groups": {
       "post": {
-        "operationId": "createOneZone",
-        "summary": "Create one Zone",
+        "operationId": "createOneServiceObjectGroup",
+        "summary": "Create one ServiceObjectGroup",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Zone"
+                "$ref": "#/components/schemas/ServiceObjectGroup"
               }
             }
           }
@@ -2466,7 +2466,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Zone"
+                  "$ref": "#/components/schemas/ServiceObjectGroup"
                 }
               }
             }
@@ -2477,8 +2477,8 @@
         ]
       },
       "get": {
-        "operationId": "getManyZone",
-        "summary": "Get many Zone",
+        "operationId": "getManyServiceObjectGroup",
+        "summary": "Get many ServiceObjectGroup",
         "parameters": [
           {
             "name": "relations",
@@ -2595,7 +2595,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "GetManyZoneResponseDto",
+                  "title": "GetManyServiceObjectGroupResponseDto",
                   "type": "object",
                   "properties": {
                     "totalPages": {
@@ -2616,7 +2616,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Zone"
+                        "$ref": "#/components/schemas/ServiceObjectGroup"
                       }
                     }
                   },
@@ -2640,21 +2640,21 @@
     },
     "/v1/network-security/service-object-groups/bulk": {
       "post": {
-        "operationId": "createManyZone",
-        "summary": "Create many Zone",
+        "operationId": "createManyServiceObjectGroup",
+        "summary": "Create many ServiceObjectGroup",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "title": "CreateManyZoneDto",
+                "title": "CreateManyServiceObjectGroupDto",
                 "type": "object",
                 "properties": {
                   "bulk": {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/Zone"
+                      "$ref": "#/components/schemas/ServiceObjectGroup"
                     }
                   }
                 },
@@ -2673,7 +2673,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Zone"
+                    "$ref": "#/components/schemas/ServiceObjectGroup"
                   }
                 }
               }
@@ -2687,8 +2687,8 @@
     },
     "/v1/network-security/service-object-groups/{id}": {
       "get": {
-        "operationId": "getOneZone",
-        "summary": "Get one Zone",
+        "operationId": "getOneServiceObjectGroup",
+        "summary": "Get one ServiceObjectGroup",
         "parameters": [
           {
             "name": "id",
@@ -2730,7 +2730,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Zone"
+                  "$ref": "#/components/schemas/ServiceObjectGroup"
                 }
               }
             }
@@ -2741,8 +2741,8 @@
         ]
       },
       "put": {
-        "operationId": "updateOneZone",
-        "summary": "Update one Zone",
+        "operationId": "updateOneServiceObjectGroup",
+        "summary": "Update one ServiceObjectGroup",
         "parameters": [
           {
             "name": "id",
@@ -2759,7 +2759,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Zone"
+                "$ref": "#/components/schemas/ServiceObjectGroup"
               }
             }
           }
@@ -2770,7 +2770,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Zone"
+                  "$ref": "#/components/schemas/ServiceObjectGroup"
                 }
               }
             }
@@ -2781,8 +2781,8 @@
         ]
       },
       "delete": {
-        "operationId": "deleteOneZone",
-        "summary": "Delete one Zone",
+        "operationId": "deleteOneServiceObjectGroup",
+        "summary": "Delete one ServiceObjectGroup",
         "parameters": [
           {
             "name": "id",
@@ -2800,7 +2800,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Zone"
+                  "$ref": "#/components/schemas/ServiceObjectGroup"
                 }
               }
             }
@@ -2813,8 +2813,8 @@
     },
     "/v1/network-security/service-object-groups/{id}/soft": {
       "delete": {
-        "operationId": "softDeleteOneZone",
-        "summary": "Soft delete one Zone",
+        "operationId": "softDeleteOneServiceObjectGroup",
+        "summary": "Soft delete one ServiceObjectGroup",
         "parameters": [
           {
             "name": "id",
@@ -2838,8 +2838,8 @@
     },
     "/v1/network-security/service-object-groups/{id}/restore": {
       "patch": {
-        "operationId": "restoreOneZone",
-        "summary": "Restore one Zone",
+        "operationId": "restoreOneServiceObjectGroup",
+        "summary": "Restore one ServiceObjectGroup",
         "parameters": [
           {
             "name": "id",
@@ -2863,8 +2863,8 @@
     },
     "/v1/network-security/service-object-groups/{id}/provision": {
       "put": {
-        "operationId": "provisionOneZone",
-        "summary": "Provision one Zone",
+        "operationId": "provisionOneServiceObjectGroup",
+        "summary": "Provision one ServiceObjectGroup",
         "parameters": [
           {
             "name": "id",
@@ -2888,8 +2888,8 @@
     },
     "/v1/network-security/service-object-groups/{id}/deprovision": {
       "patch": {
-        "operationId": "deprovisionOneZone",
-        "summary": "Deprovision one Zone",
+        "operationId": "deprovisionOneServiceObjectGroup",
+        "summary": "Deprovision one ServiceObjectGroup",
         "parameters": [
           {
             "name": "id",
@@ -4514,6 +4514,472 @@
         },
         "tags": [
           "v1/network-security/network-objects"
+        ]
+      }
+    },
+    "/v1/network-security/zones": {
+      "post": {
+        "operationId": "createOneZone",
+        "summary": "Create one Zone",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Zone"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Zone"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      },
+      "get": {
+        "operationId": "getManyZone",
+        "summary": "Get many Zone",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyZoneResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Zone"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/bulk": {
+      "post": {
+        "operationId": "createManyZone",
+        "summary": "Create many Zone",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManyZoneDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Zone"
+                    }
+                  }
+                },
+                "required": [
+                  "bulk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Zone"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}": {
+      "get": {
+        "operationId": "getOneZone",
+        "summary": "Get one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Zone"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneZone",
+        "summary": "Update one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Zone"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Zone"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneZone",
+        "summary": "Delete one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Zone"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneZone",
+        "summary": "Soft delete one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneZone",
+        "summary": "Restore one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}/provision": {
+      "put": {
+        "operationId": "provisionOneZone",
+        "summary": "Provision one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionOneZone",
+        "summary": "Deprovision one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
         ]
       }
     },
