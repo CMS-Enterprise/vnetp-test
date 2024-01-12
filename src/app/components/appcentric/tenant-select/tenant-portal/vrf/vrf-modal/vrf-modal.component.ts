@@ -110,11 +110,10 @@ export class VrfModalComponent implements OnInit {
       name,
       description,
       alias,
+      policyControlEnforced,
+      policyControlEnforcementIngress,
       tenantId,
     } as Vrf;
-
-    vrf.policyControlEnforced = policyControlEnforced === 'true';
-    vrf.policyControlEnforcementIngress = policyControlEnforcementIngress === 'true';
 
     if (this.ModalMode === ModalMode.Create) {
       this.createVrf(vrf);
