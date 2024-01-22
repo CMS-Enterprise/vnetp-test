@@ -53,7 +53,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   zones: Zone[];
   selectedToZones: Zone[] = [];
   selectedFromZones: Zone[] = [];
-  firewallRuleGroupType: string;
+  firewallRuleGroupType = 'Intervrf';
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -202,7 +202,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     if (this.firewallRuleGroupType === 'ZoneBased') {
       modalFirewallRule.toZone = this.selectedToZones;
       modalFirewallRule.fromZone = this.selectedFromZones;
+      modalFirewallRule.direction = null;
     } else {
+      modalFirewallRule.toZone = null;
+      modalFirewallRule.fromZone = null;
       modalFirewallRule.direction = this.form.controls.direction.value;
     }
 
@@ -285,8 +288,17 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     this.firewallRuleGroupType = dto.GroupType;
 
     if (this.firewallRuleGroupType === 'ZoneBased') {
-      this.selectedToZones = dto.FirewallRule.toZone;
-      this.selectedFromZones = dto.FirewallRule.fromZone;
+      this.zones = dto.Zones;
+      if (dto.FirewallRule.toZone != null) {
+        this.selectedToZones = dto.FirewallRule.toZone;
+      } else {
+        this.selectedToZones = [];
+      }
+      if (dto.FirewallRule.fromZone != null) {
+        this.selectedFromZones = dto.FirewallRule.fromZone;
+      } else {
+        this.selectedFromZones = [];
+      }
     }
 
     if (this.ModalMode === ModalMode.Edit) {
@@ -299,7 +311,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     this.networkObjectGroups = dto.NetworkObjectGroups;
     this.serviceObjects = dto.ServiceObjects;
     this.serviceObjectGroups = dto.ServiceObjectGroups;
-    this.zones = dto.Zones;
 
     const firewallRule = dto.FirewallRule;
 
@@ -535,11 +546,15 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     const zoneId = type === 'from' ? this.form.controls.selectedFromZone.value : this.form.controls.selectedToZone.value;
     const zone = this.zones.find(z => z.id === zoneId);
     if (type === 'from') {
+      if (!this.selectedFromZones.find(z => z.id === zone.id)) {
+        this.selectedFromZones.push(zone);
+      }
       this.form.controls.selectedFromZone.setValue(null);
-      this.selectedFromZones.push(zone);
     } else if (type === 'to') {
+      if (!this.selectedToZones.find(z => z.id === zone.id)) {
+        this.selectedToZones.push(zone);
+      }
       this.form.controls.selectedToZone.setValue(null);
-      this.selectedToZones.push(zone);
     }
   }
 
