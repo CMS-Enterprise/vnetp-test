@@ -26,7 +26,6 @@ export interface Zone {
     tierId: string;
     readonly firewallRulesTo?: Array<FirewallRule>;
     readonly firewallRulesFrom?: Array<FirewallRule>;
-    readonly natRulesTo?: Array<NatRule>;
     readonly natRulesFrom?: Array<NatRule>;
 }
 

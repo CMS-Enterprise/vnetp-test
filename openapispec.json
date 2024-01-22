@@ -20164,6 +20164,9 @@
           "translatedServiceObjectId": {
             "type": "string"
           },
+          "toZoneId": {
+            "type": "string"
+          },
           "originalSourceNetworkObject": {
             "readOnly": true,
             "allOf": [
@@ -20245,11 +20248,12 @@
             ]
           },
           "toZone": {
-            "readOnly": false,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Zone"
-            }
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Zone"
+              }
+            ]
           },
           "fromZone": {
             "readOnly": false,
@@ -20333,13 +20337,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/FirewallRule"
-            }
-          },
-          "natRulesTo": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NatRule"
             }
           },
           "natRulesFrom": {
@@ -22541,6 +22538,9 @@
           "translatedServiceObjectId": {
             "type": "string"
           },
+          "toZoneId": {
+            "type": "string"
+          },
           "originalSourceNetworkObject": {
             "readOnly": true,
             "allOf": [
@@ -22622,11 +22622,12 @@
             ]
           },
           "toZone": {
-            "readOnly": false,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Zone"
-            }
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Zone"
+              }
+            ]
           },
           "fromZone": {
             "readOnly": false,

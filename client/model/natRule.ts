@@ -45,6 +45,7 @@ export interface NatRule {
     translatedDestinationNetworkObjectGroupId?: string;
     originalServiceObjectId?: string;
     translatedServiceObjectId?: string;
+    toZoneId?: string;
     readonly originalSourceNetworkObject?: NetworkObject;
     readonly originalSourceNetworkObjectGroup?: NetworkObjectGroup;
     readonly translatedSourceNetworkObject?: NetworkObject;
@@ -55,7 +56,7 @@ export interface NatRule {
     readonly translatedDestinationNetworkObjectGroup?: NetworkObjectGroup;
     readonly originalServiceObject?: ServiceObject;
     readonly translatedServiceObject?: ServiceObject;
-    toZone?: Array<Zone>;
+    readonly toZone?: Zone;
     fromZone?: Array<Zone>;
 }
 export enum NatRuleTranslationTypeEnum {
