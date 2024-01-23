@@ -156,9 +156,11 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.ngx.getModal('unusedObjectsModal').open();
   }
 
-  public checkObjectsParents(netObjId) {
-    this.networkObjectService.checkUsedObjectsNetworkObject(netObjId).subscribe(data => {
+  public checkObjectsParents(netObj) {
+    this.networkObjectService.checkUsedObjectsNetworkObject(netObj).subscribe(data => {
       this.usedObjectsParents.data = data;
+      this.usedObjectsParents.name = netObj.name;
+      this.usedObjectsParents.objType = 'Network Object';
       this.openUsedObjectsParentsModal();
     });
   }
