@@ -91,7 +91,6 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
     if (this.NatRuleGroupType === 'ZoneBased') {
       this.zones = dto.Zones;
-      console.log(dto.natRule.fromZone);
       if (dto.natRule.fromZone != null) {
         this.selectedFromZones = dto.natRule.fromZone;
       } else {
