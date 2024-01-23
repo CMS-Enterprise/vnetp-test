@@ -239,6 +239,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadProfiles();
       }
       this.ngx.resetModalData('profileModal');
+      this.profileChanges.unsubscribe();
     });
   }
 }

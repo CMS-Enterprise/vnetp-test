@@ -64,6 +64,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   subscribeToObjectInfoModal() {
     this.objectInfoSubscription = this.ngx.getModal('firewallRuleObjectInfoModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('firewallRuleObjectInfoModal');
+      this.objectInfoSubscription.unsubscribe();
     });
   }
 

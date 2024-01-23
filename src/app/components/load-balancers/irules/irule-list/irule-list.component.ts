@@ -223,6 +223,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadIRules();
       }
       this.ngx.resetModalData('iRuleModal');
+      this.iRuleChanges.unsubscribe();
     });
   }
 }

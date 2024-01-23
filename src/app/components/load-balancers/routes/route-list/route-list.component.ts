@@ -234,6 +234,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadRoutes();
       }
       this.ngx.resetModalData('routeModal');
+      this.routeChanges.unsubscribe();
     });
   }
 }

@@ -266,6 +266,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadSelfIps();
       }
       this.ngx.resetModalData('selfIpModal');
+      this.selfIpChanges.unsubscribe();
     });
   }
 }

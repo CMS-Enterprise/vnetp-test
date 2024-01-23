@@ -228,6 +228,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadPolicies();
       }
       this.ngx.resetModalData('policyModal');
+      this.policyChanges.unsubscribe();
     });
   }
 }

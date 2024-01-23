@@ -239,6 +239,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadNodes();
       }
       this.ngx.resetModalData('nodeModal');
+      this.nodeChanges.unsubscribe();
     });
   }
 }

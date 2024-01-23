@@ -230,6 +230,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
         this.loadVirtualServers();
       }
       this.ngx.resetModalData('virtualServerModal');
+      this.virtualServerChanges.unsubscribe();
     });
   }
 }

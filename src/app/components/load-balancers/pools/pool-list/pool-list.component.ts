@@ -170,6 +170,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.ngx.getModal('poolModal').onCloseFinished.subscribe(() => {
       this.loadPools();
       this.ngx.resetModalData('poolModal');
+      this.poolChanges.unsubscribe();
     });
   }
 }

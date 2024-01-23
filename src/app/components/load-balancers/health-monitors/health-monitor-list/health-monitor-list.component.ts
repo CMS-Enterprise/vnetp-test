@@ -236,6 +236,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
         this.loadHealthMonitors();
       }
       this.ngx.resetModalData('healthMonitorModal');
+      this.healthMonitorChanges.unsubscribe();
     });
   }
 }

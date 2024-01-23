@@ -224,6 +224,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadVlans();
       }
       this.ngx.resetModalData('vlanModal');
+      this.vlanChanges.unsubscribe();
     });
   }
 }
