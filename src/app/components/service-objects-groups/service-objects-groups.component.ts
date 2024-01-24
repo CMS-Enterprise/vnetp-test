@@ -318,7 +318,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         this.getServiceObjects();
       }
       this.ngx.resetModalData('serviceObjectModal');
-      this.serviceObjectGroupModalSubscription.unsubscribe();
+      this.serviceObjectModalSubscription.unsubscribe();
       this.datacenterContextService.unlockDatacenter();
     });
   }
