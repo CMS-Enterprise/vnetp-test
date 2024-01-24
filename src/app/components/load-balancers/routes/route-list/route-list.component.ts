@@ -24,7 +24,7 @@ export interface RouteView extends LoadBalancerRoute {
   selector: 'app-route-list',
   templateUrl: './route-list.component.html',
 })
-export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class RouteListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
@@ -69,10 +69,6 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.routeChanges = this.subscribeToRouteModal();
   }
 
   ngOnDestroy(): void {
@@ -181,6 +177,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       route,
     };
+    this.subscribeToRouteModal();
     this.ngx.setModalData(dto, 'routeModal');
     this.ngx.open('routeModal');
   }
@@ -218,8 +215,8 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToRouteModal(): Subscription {
-    return this.ngx.getModal('routeModal').onCloseFinished.subscribe(() => {
+  private subscribeToRouteModal(): void {
+    this.routeChanges = this.ngx.getModal('routeModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;

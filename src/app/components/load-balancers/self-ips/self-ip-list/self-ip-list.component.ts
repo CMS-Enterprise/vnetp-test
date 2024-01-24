@@ -31,7 +31,7 @@ export interface SelfIpView extends LoadBalancerSelfIp {
   selector: 'app-self-ip-list',
   templateUrl: './self-ip-list.component.html',
 })
-export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class SelfIpListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
@@ -82,10 +82,6 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.selfIpChanges = this.subscribeToSelfIpModal();
   }
 
   ngOnDestroy(): void {
@@ -212,6 +208,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       selfIp,
     };
+    this.subscribeToSelfIpModal();
     this.ngx.setModalData(dto, 'selfIpModal');
     this.ngx.open('selfIpModal');
   }
@@ -250,8 +247,8 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToSelfIpModal(): Subscription {
-    return this.ngx.getModal('selfIpModal').onCloseFinished.subscribe(() => {
+  private subscribeToSelfIpModal(): void {
+    this.selfIpChanges = this.ngx.getModal('selfIpModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;

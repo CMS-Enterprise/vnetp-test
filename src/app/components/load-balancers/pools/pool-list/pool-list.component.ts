@@ -31,7 +31,7 @@ export interface PoolView extends LoadBalancerPool {
   selector: 'app-pool-list',
   templateUrl: './pool-list.component.html',
 })
-export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PoolListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public datacenterId: string;
   public tiers: Tier[] = [];
@@ -72,10 +72,6 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.poolChanges = this.subscribeToPoolModal();
   }
 
   ngOnDestroy(): void {
@@ -142,6 +138,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       pool,
     };
+    this.subscribeToPoolModal();
     this.ngx.setModalData(dto, 'poolModal');
     this.ngx.open('poolModal');
   }
@@ -166,8 +163,8 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToPoolModal(): Subscription {
-    return this.ngx.getModal('poolModal').onCloseFinished.subscribe(() => {
+  private subscribeToPoolModal(): void {
+    this.poolChanges = this.ngx.getModal('poolModal').onCloseFinished.subscribe(() => {
       this.loadPools();
       this.ngx.resetModalData('poolModal');
       this.poolChanges.unsubscribe();

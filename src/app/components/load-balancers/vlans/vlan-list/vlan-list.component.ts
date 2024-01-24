@@ -24,7 +24,7 @@ export interface VlanView extends LoadBalancerVlan {
   selector: 'app-vlan-list',
   templateUrl: './vlan-list.component.html',
 })
-export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class VlanListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [{ displayName: 'Tag', propertyName: 'tag' }];
@@ -65,10 +65,6 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.vlanChanges = this.subscribeToVlanModal();
   }
 
   ngOnDestroy(): void {
@@ -171,6 +167,7 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       vlan,
     };
+    this.subscribeToVlanModal();
     this.ngx.setModalData(dto, 'vlanModal');
     this.ngx.open('vlanModal');
   }
@@ -208,8 +205,8 @@ export class VlanListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToVlanModal(): Subscription {
-    return this.ngx.getModal('vlanModal').onCloseFinished.subscribe(() => {
+  private subscribeToVlanModal(): void {
+    this.vlanChanges = this.ngx.getModal('vlanModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;

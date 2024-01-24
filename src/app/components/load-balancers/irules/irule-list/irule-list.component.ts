@@ -25,7 +25,7 @@ export interface IRuleView extends LoadBalancerIrule {
   selector: 'app-irule-list',
   templateUrl: './irule-list.component.html',
 })
-export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class IRuleListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [];
@@ -67,10 +67,6 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.iRuleChanges = this.subscribeToIRuleModal();
   }
 
   ngOnDestroy(): void {
@@ -170,6 +166,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       iRule,
     };
+    this.subscribeToIRuleModal();
     this.ngx.setModalData(dto, 'iRuleModal');
     this.ngx.open('iRuleModal');
   }
@@ -207,8 +204,8 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToIRuleModal(): Subscription {
-    return this.ngx.getModal('iRuleModal').onCloseFinished.subscribe(() => {
+  private subscribeToIRuleModal(): void {
+    this.iRuleChanges = this.ngx.getModal('iRuleModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
