@@ -99,7 +99,6 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   public closeModal(): void {
     this.ngx.close('natRuleModal');
-    this.reset();
   }
 
   public reset(): void {

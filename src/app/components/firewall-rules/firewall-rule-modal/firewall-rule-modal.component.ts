@@ -256,12 +256,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   closeModal() {
     this.ngx.close('firewallRuleModal');
-    this.reset();
   }
 
   cancel() {
     this.ngx.close('firewallRuleModal');
-    this.reset();
   }
 
   get f() {
