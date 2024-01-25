@@ -154,11 +154,10 @@ export class EndpointGroupModalComponent implements OnInit {
       description,
       alias,
       tenantId,
+      intraEpgIsolation,
       applicationProfileId,
       bridgeDomainId: bridgeDomain,
     } as EndpointGroup;
-
-    endpointGroup.intraEpgIsolation = intraEpgIsolation === 'true';
 
     if (this.ModalMode === ModalMode.Create) {
       this.createEndpointGroup(endpointGroup);
