@@ -140,12 +140,14 @@ describe('FirewallRulesDetailComponent', () => {
     const networkObjectGroupResponse = { data: ['networkObjectGroup1', 'networkObjectGroup2'] };
     const serviceObjectResponse = { data: ['serviceObject1', 'serviceObject2'] };
     const serviceObjectGroupResponse = { data: ['serviceObjectGroup1', 'serviceObjectGroup2'] };
+    const zoneServiceResponse = { data: ['zone1', 'zone2'] };
 
     jest.spyOn(component['tierService'], 'getOneTier').mockReturnValue(of(tierResponse) as any);
     jest.spyOn(component['networkObjectService'], 'getManyNetworkObject').mockReturnValue(of(networkObjectResponse) as any);
     jest.spyOn(component['networkObjectGroupService'], 'getManyNetworkObjectGroup').mockReturnValue(of(networkObjectGroupResponse) as any);
     jest.spyOn(component['serviceObjectService'], 'getManyServiceObject').mockReturnValue(of(serviceObjectResponse) as any);
     jest.spyOn(component['serviceObjectGroupService'], 'getManyServiceObjectGroup').mockReturnValue(of(serviceObjectGroupResponse) as any);
+    jest.spyOn(component['zoneService'], 'getManyZone').mockReturnValue(of(zoneServiceResponse) as any);
 
     jest.spyOn(component, 'getFirewallRules');
 
@@ -156,6 +158,7 @@ describe('FirewallRulesDetailComponent', () => {
     expect(component.networkObjectGroups).toEqual(networkObjectGroupResponse.data);
     expect(component.serviceObjects).toEqual(serviceObjectResponse.data);
     expect(component.serviceObjectGroups).toEqual(serviceObjectGroupResponse.data);
+    expect(component.zones).toEqual(zoneServiceResponse.data);
 
     expect(component.getFirewallRules).toHaveBeenCalled();
   });

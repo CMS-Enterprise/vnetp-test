@@ -24,6 +24,7 @@ import {
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import FormUtils from '../../../utils/FormUtils';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -174,6 +175,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   save() {
     this.submitted = true;
     if (this.form.invalid) {
+      console.log('form invalid');
+      console.log(new FormUtils().findInvalidControlsRecursive(this.form));
       return;
     }
 
@@ -511,7 +514,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       description: [''],
       action: ['', Validators.required],
       protocol: ['', Validators.required],
-      direction: ['', Validators.required],
+      direction: [''],
       selectedToZone: [''],
       selectedFromZone: [''],
       ruleIndex: [1, Validators.compose([Validators.required, Validators.min(1)])],
