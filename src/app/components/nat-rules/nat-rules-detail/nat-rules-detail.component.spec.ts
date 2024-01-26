@@ -223,10 +223,12 @@ describe('NatRulesDetailComponent', () => {
       jest.spyOn(component['ngx'], 'resetModalData');
     });
 
-    it('should subscribe to natRuleModal onCloseFinished event', () => {
+    it('should subscribe to natRuleModal onCloseFinished event and unsubscribe afterwards', () => {
       const onCloseFinished = new Subject<void>();
       const mockModal = { onCloseFinished, open: jest.fn() };
       jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
+
+      const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
 
       component.subscribeToNatRuleModal();
 
@@ -237,6 +239,8 @@ describe('NatRulesDetailComponent', () => {
 
       expect(component.getNatRuleGroup).toHaveBeenCalled();
       expect(component['ngx'].resetModalData).toHaveBeenCalledWith('natRuleModal');
+
+      expect(unsubscribeSpy).toHaveBeenCalled();
     });
   });
 
