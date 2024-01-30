@@ -167,6 +167,31 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   describe('openFirewallRuleModal', () => {
+    beforeEach(() => {
+      jest.spyOn(component, 'getFirewallRuleGroup');
+      jest.spyOn(component['ngx'], 'resetModalData');
+    });
+
+    it('should subscribe to firewallRuleModal onCloseFinished event and unsubscribe afterwards', () => {
+      const onCloseFinished = new Subject<void>();
+      const mockModal = { onCloseFinished, open: jest.fn() };
+      jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
+
+      const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
+
+      component.subscribeToFirewallRuleModal();
+
+      expect(component['ngx'].getModal).toHaveBeenCalledWith('firewallRuleModal');
+      expect(component.firewallRuleModalSubscription).toBeDefined();
+
+      onCloseFinished.next();
+
+      expect(component.getFirewallRuleGroup).toHaveBeenCalled();
+      expect(component['ngx'].resetModalData).toHaveBeenCalledWith('firewallRuleModal');
+
+      expect(unsubscribeSpy).toHaveBeenCalled();
+    });
+
     it('should open firewall rule modal with correct data in Create mode', () => {
       component.Id = 'testGroupId';
       component.TierId = 'testTierId';

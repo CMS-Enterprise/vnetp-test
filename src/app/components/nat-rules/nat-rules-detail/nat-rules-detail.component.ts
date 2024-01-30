@@ -283,6 +283,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.natRuleModalSubscription = this.ngx.getModal('natRuleModal').onCloseFinished.subscribe(() => {
       this.getNatRuleGroup();
       this.ngx.resetModalData('natRuleModal');
+      this.natRuleModalSubscription.unsubscribe();
     });
   }
 

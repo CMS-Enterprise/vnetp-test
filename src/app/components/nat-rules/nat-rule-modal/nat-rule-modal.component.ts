@@ -99,7 +99,6 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   public closeModal(): void {
     this.ngx.close('natRuleModal');
-    this.reset();
   }
 
   public reset(): void {
@@ -532,6 +531,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   subscribeToObjectInfoModal() {
     this.objectInfoSubscription = this.ngx.getModal('natRuleObjectInfoModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('natRuleObjectInfoModal');
+      this.objectInfoSubscription.unsubscribe();
     });
   }
 

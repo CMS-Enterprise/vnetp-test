@@ -43,8 +43,8 @@
           id="description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.description.errors.maxlength">Name must be 100 characters or less.</div>
+          <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
+          <div *ngIf="f.description.errors.maxlength">Description must be 100 characters or less.</div>
         </div>
       </div>
 
