@@ -59,7 +59,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   ModalMode = ModalMode;
   filteredResults: boolean;
 
-  firewallRuleGroup: FirewallRuleGroup;
   firewallRules = {} as GetManyFirewallRuleResponseDto;
   latestRuleIndex;
 
@@ -82,23 +81,10 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   FirewallRuleGroup: FirewallRuleGroup;
   currentDatacenterSubscription: Subscription;
 
-  tableHeaders: string[] = [
-    'Name',
-    'Action',
-    'Protocol',
-    'Direction',
-    'Source Address',
-    'Destination Address',
-    'Service',
-    'Log',
-    'Enabled',
-    'Rule Index',
-    '',
-  ];
-
   public isLoading = false;
 
   // Templates
+  @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
   @ViewChild('sourceAddress') sourceAddressTemplate: TemplateRef<any>;
   @ViewChild('destinationAddress') destinationAddressTemplate: TemplateRef<any>;
   @ViewChild('serviceType') serviceTemplate: TemplateRef<any>;
@@ -110,7 +96,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       { name: 'Name', property: 'name' },
       { name: 'Action', property: 'action' },
       { name: 'Protocol', property: 'protocol' },
-      { name: 'Direction', property: 'direction' },
+      { name: 'Direction', template: () => this.directionZoneTemplate },
       { name: 'Source Address', template: () => this.sourceAddressTemplate },
       { name: 'Destination Address', template: () => this.destinationAddressTemplate },
       { name: 'Service Type', template: () => this.serviceTemplate },
@@ -461,5 +447,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       }
       previewImportSubscription.unsubscribe();
     });
+  }
+
+  getZoneNames(zones: any[]): string {
+    return zones.map(zone => zone.name).join(', ');
   }
 }

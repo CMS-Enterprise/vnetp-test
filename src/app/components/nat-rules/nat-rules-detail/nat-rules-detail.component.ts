@@ -57,7 +57,6 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   filteredResults: boolean;
   public currentTier: Tier;
 
-  natRuleGroup: NatRuleGroup;
   natRules = {} as GetManyNatRuleResponseDto;
   latestRuleIndex;
   perPage = 50;
@@ -76,6 +75,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   currentDatacenterSubscription: Subscription;
 
   // Templates
+  @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
   @ViewChild('originalServiceType') originalServiceTemplate: TemplateRef<any>;
   @ViewChild('originalSourceAddress') originalSourceAddressTemplate: TemplateRef<any>;
   @ViewChild('originalDestinationAddress') originalDestinationAddressTemplate: TemplateRef<any>;
@@ -88,7 +88,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     description: 'NAT Rules for the currently selected Tier',
     columns: [
       { name: 'Name', property: 'name' },
-      { name: 'Direction', property: 'direction' },
+      { name: 'Direction', template: () => this.directionZoneTemplate },
       { name: 'BiDirectional', property: 'biDirectional' },
       { name: 'Original Service Type', template: () => this.originalServiceTemplate },
       { name: 'Original Source Address', template: () => this.originalSourceAddressTemplate },
@@ -187,7 +187,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.natRuleService
       .getManyNatRule({
         filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`, eventParams],
-        join: ['fromZone'],
+        join: ['fromZone', 'toZone'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
         sort: ['ruleIndex,ASC'],
@@ -423,5 +423,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       }
       previewImportSubscription.unsubscribe();
     });
+  }
+
+  getZoneNames(zones: any[]): string {
+    return zones.map(zone => zone.name).join(', ');
   }
 }
