@@ -51,7 +51,7 @@
           </div>
         </div>
 
-        <div class="form-group col-md-2" *ngIf="firewallRuleGroupType != 'ZoneBased'">
+        <div class="form-group col-md-2" *ngIf="firewallRuleGroupType !== 'ZoneBased'">
           <label for="direction">Direction</label>
           <tooltip [message]="helpText.Direction"></tooltip>
           <select
@@ -147,7 +147,7 @@
 
       <hr />
 
-      <div class="form-row" *ngIf="firewallRuleGroupType == 'ZoneBased'">
+      <div class="form-row" *ngIf="firewallRuleGroupType === 'ZoneBased'">
         <div class="form-group col-md-6">
           <table class="table table-striped table-sm table-bordered">
             <thead>

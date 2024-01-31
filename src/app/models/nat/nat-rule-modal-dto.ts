@@ -1,5 +1,5 @@
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { NatRule, NetworkObject, NetworkObjectGroup, ServiceObject, Zone } from '../../../../client';
+import { NatRule, NatRuleGroupTypeEnum, NetworkObject, NetworkObjectGroup, ServiceObject, Zone } from '../../../../client';
 
 export class NatRuleModalDto {
   tierId: string;
@@ -12,5 +12,5 @@ export class NatRuleModalDto {
   NetworkObjectGroups: NetworkObjectGroup[];
   ServiceObjects: ServiceObject[];
   Zones: Zone[];
-  GroupType: string;
+  GroupType: NatRuleGroupTypeEnum;
 }

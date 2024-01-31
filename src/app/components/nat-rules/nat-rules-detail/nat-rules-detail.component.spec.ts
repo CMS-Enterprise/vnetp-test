@@ -15,7 +15,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { of, Subject, Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { NatRule, NatRuleImport, NatRulePreview, V1TiersService } from 'client';
+import { NatRule, NatRuleGroupTypeEnum, NatRuleImport, NatRulePreview, V1TiersService } from 'client';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
@@ -155,7 +155,7 @@ describe('NatRulesDetailComponent', () => {
 
   it('should open nat rule modal in create mode', () => {
     jest.spyOn(component, 'openNatRuleModal');
-    component.NatRuleGroup = { id: 'testNatRuleGroupId', type: 'Intervrf' } as any;
+    component.NatRuleGroup = { id: 'testNatRuleGroupId', type: NatRuleGroupTypeEnum.Intervrf } as any;
     component.createNatRule();
     expect(component.openNatRuleModal).toHaveBeenCalledWith(ModalMode.Create);
   });
@@ -181,11 +181,11 @@ describe('NatRulesDetailComponent', () => {
 
     it('should open Nat Rule modal with correct data in Create mode', () => {
       const mm = ModalMode.Create;
-      component.NatRuleGroup = { id: 'testNatRuleGroupId', type: 'Intervrf' } as any;
+      component.NatRuleGroup = { id: 'testNatRuleGroupId', type: NatRuleGroupTypeEnum.Intervrf } as any;
       component.openNatRuleModal(mm);
 
       const expectedDto = {
-        GroupType: 'Intervrf',
+        GroupType: NatRuleGroupTypeEnum.Intervrf,
         tierId: component.TierId,
         natRuleGroupId: component.Id,
         Zones: undefined,
@@ -203,13 +203,13 @@ describe('NatRulesDetailComponent', () => {
 
     it('should open Nat Rule modal with correct data in Edit mode', () => {
       const mm = ModalMode.Edit;
-      component.NatRuleGroup = { id: 'testNatRuleGroupId', type: 'Intervrf' } as any;
+      component.NatRuleGroup = { id: 'testNatRuleGroupId', type: NatRuleGroupTypeEnum.Intervrf } as any;
       const nr: NatRule = { id: 'testNatRuleId', ruleIndex: 2 } as any;
 
       component.openNatRuleModal(mm, nr);
 
       const expectedDto = {
-        GroupType: 'Intervrf',
+        GroupType: NatRuleGroupTypeEnum.Intervrf,
         tierId: component.TierId,
         natRuleGroupId: component.Id,
         Zones: undefined,

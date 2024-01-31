@@ -20,6 +20,7 @@ import {
   V1NetworkSecurityNetworkObjectsService,
   V1NetworkSecurityServiceObjectGroupsService,
   V1NetworkSecurityServiceObjectsService,
+  FirewallRuleGroupTypeEnum,
 } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
@@ -54,7 +55,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   zones: Zone[];
   selectedToZones: Zone[] = [];
   selectedFromZones: Zone[] = [];
-  firewallRuleGroupType = 'Intervrf';
+  firewallRuleGroupType = FirewallRuleGroupTypeEnum.Intervrf;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -202,7 +203,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     modalFirewallRule.enabled = this.form.controls.enabled.value;
     modalFirewallRule.ruleIndex = this.form.controls.ruleIndex.value;
 
-    if (this.firewallRuleGroupType === 'ZoneBased') {
+    if (this.firewallRuleGroupType === FirewallRuleGroupTypeEnum.ZoneBased) {
       modalFirewallRule.toZone = this.selectedToZones;
       modalFirewallRule.fromZone = this.selectedFromZones;
       modalFirewallRule.direction = null;
@@ -290,7 +291,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
     this.firewallRuleGroupType = dto.GroupType;
 
-    if (this.firewallRuleGroupType === 'ZoneBased') {
+    if (this.firewallRuleGroupType === FirewallRuleGroupTypeEnum.ZoneBased) {
       this.zones = dto.Zones;
       if (dto.FirewallRule.toZone != null) {
         this.selectedToZones = dto.FirewallRule.toZone;

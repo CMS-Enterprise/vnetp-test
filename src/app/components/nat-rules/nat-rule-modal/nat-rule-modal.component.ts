@@ -6,6 +6,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription } from 'rxjs';
 import {
   NatRuleDirectionEnum,
+  NatRuleGroupTypeEnum,
   NatRuleOriginalDestinationAddressTypeEnum,
   NatRuleOriginalServiceTypeEnum,
   NatRuleOriginalSourceAddressTypeEnum,
@@ -56,7 +57,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   public NatRuleTranslatedDestinationAddressType = NatRuleTranslatedDestinationAddressTypeEnum;
   public NatRuleOriginalServiceType = NatRuleOriginalServiceTypeEnum;
   public NatRuleTranslatedServiceType = NatRuleTranslatedServiceTypeEnum;
-  public NatRuleGroupType = 'Intervrf';
+  public NatRuleGroupType = NatRuleGroupTypeEnum.Intervrf;
 
   private subscriptions: Subscription[] = [];
   private objectInfoSubscription: Subscription;
@@ -89,7 +90,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     this.modalMode = dto.modalMode;
     this.NatRuleGroupType = dto.GroupType;
 
-    if (this.NatRuleGroupType === 'ZoneBased') {
+    if (this.NatRuleGroupType === NatRuleGroupTypeEnum.ZoneBased) {
       this.zones = dto.Zones;
       if (dto.natRule.fromZone != null) {
         this.selectedFromZones = dto.natRule.fromZone;
@@ -189,7 +190,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       delete modalNatRule.translatedDestinationNetworkObjectGroup;
     }
 
-    if (this.NatRuleGroupType === 'ZoneBased') {
+    if (this.NatRuleGroupType === NatRuleGroupTypeEnum.ZoneBased) {
       modalNatRule.toZoneId = modalNatRule.toZone;
       delete modalNatRule.toZone;
       modalNatRule.fromZone = this.selectedFromZones;

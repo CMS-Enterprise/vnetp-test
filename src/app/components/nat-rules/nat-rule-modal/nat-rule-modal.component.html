@@ -43,7 +43,7 @@
 
       <div class="form-row">
         <!-- NAT Direction -->
-        <div class="form-group col-md-3" *ngIf="NatRuleGroupType != 'ZoneBased'">
+        <div class="form-group col-md-3" *ngIf="NatRuleGroupType !== 'ZoneBased'">
           <label for="direction">NAT Direction</label>
           <tooltip [message]="helpText.Direction"></tooltip>
           <select id="direction" formControlName="direction" class="form-control" [class.is-invalid]="submitted && f.direction.errors">
@@ -109,7 +109,7 @@
 
       <hr />
       
-      <div class="form-row" *ngIf="NatRuleGroupType == 'ZoneBased'">
+      <div class="form-row" *ngIf="NatRuleGroupType === 'ZoneBased'">
         <div class="form-group col-md-6">
           <table class="table table-striped table-sm table-bordered">
             <thead>
