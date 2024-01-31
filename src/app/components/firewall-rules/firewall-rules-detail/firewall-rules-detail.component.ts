@@ -268,7 +268,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       perPage: 50000,
     });
 
-    // TODO: Optionally make the zoneRequest if the rule group is ZoneBased.
     forkJoin([
       tierRequest,
       networkObjectRequest,

@@ -259,6 +259,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       this.networkObjectGroups = result[2].data;
       this.serviceObjects = result[3].data;
       this.zones = result[4].data;
+
       this.getNatRules();
     });
   }
