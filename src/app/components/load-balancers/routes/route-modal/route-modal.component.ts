@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { LoadBalancerRoute, V1LoadBalancerRoutesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
@@ -12,14 +12,18 @@ import { IpAddressCidrValidator, IpAddressIpValidator } from 'src/app/validators
   templateUrl: './route-modal.component.html',
 })
 export class RouteModalComponent implements OnInit {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
 
   private routeId: string;
   private modalMode: ModalMode;
   private tierId: string;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private routeService: V1LoadBalancerRoutesService) {}
+  constructor(
+    private ngx: NgxSmartModalService,
+    private formBuilder: UntypedFormBuilder,
+    private routeService: V1LoadBalancerRoutesService,
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -58,7 +62,7 @@ export class RouteModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const dto: RouteModalDto = Object.assign({}, this.ngx.getModalData('routeModal'));
+    const dto: RouteModalDto = Object.assign({}, this.ngx.getModalData('routeModal')) as any;
     const { route, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = route ? ModalMode.Edit : ModalMode.Create;

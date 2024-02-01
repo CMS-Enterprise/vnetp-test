@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
@@ -11,13 +11,13 @@ describe('SubnetsEditModalComponent', () => {
   let component: SubnetsEditModalComponent;
   let fixture: ComponentFixture<SubnetsEditModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [SubnetsEditModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent, MockIconButtonComponent],
       imports: [ReactiveFormsModule, HttpClientModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SubnetsEditModalComponent);

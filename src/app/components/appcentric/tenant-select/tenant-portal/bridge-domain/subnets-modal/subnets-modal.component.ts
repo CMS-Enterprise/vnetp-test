@@ -1,7 +1,6 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
-import { AppCentricSubnet, AppCentricSubnetPaginationResponse, V2AppCentricAppCentricSubnetsService } from 'client';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AppCentricSubnet, GetManyAppCentricSubnetResponseDto, V2AppCentricAppCentricSubnetsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -23,11 +22,11 @@ export class SubnetsModalComponent implements OnInit {
   public isLoading = false;
   public ModalMode = ModalMode;
   public modalMode: ModalMode;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() public tenantId: string;
   public bridgeDomainId: string;
-  public subnets: AppCentricSubnetPaginationResponse;
+  public subnets: GetManyAppCentricSubnetResponseDto;
   public tableComponentDto = new TableComponentDto();
   public perPage = 20;
   private subnetsEditModalSubscription: Subscription;
@@ -48,22 +47,11 @@ export class SubnetsModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private subnetsService: V2AppCentricAppCentricSubnetsService,
-    private router: Router,
     private tableContextService: TableContextService,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -128,8 +116,10 @@ export class SubnetsModalComponent implements OnInit {
       }
     }
     this.subnetsService
-      .findAllAppCentricSubnet({
+      .getManyAppCentricSubnet({
         filter: [`bridgeDomainId||eq||${this.bridgeDomainId}`, eventParams],
+        page: 1,
+        perPage: 1000,
       })
       .subscribe(
         data => (this.subnets = data),
@@ -140,8 +130,8 @@ export class SubnetsModalComponent implements OnInit {
   public removeSubnet(subnet: AppCentricSubnet) {
     if (subnet.deletedAt) {
       this.subnetsService
-        .removeAppCentricSubnet({
-          uuid: subnet.id,
+        .deleteOneAppCentricSubnet({
+          id: subnet.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -154,8 +144,8 @@ export class SubnetsModalComponent implements OnInit {
         });
     } else {
       this.subnetsService
-        .softDeleteAppCentricSubnet({
-          uuid: subnet.id,
+        .softDeleteOneAppCentricSubnet({
+          id: subnet.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -175,8 +165,8 @@ export class SubnetsModalComponent implements OnInit {
     }
 
     this.subnetsService
-      .restoreAppCentricSubnet({
-        uuid: subnet.id,
+      .restoreOneAppCentricSubnet({
+        id: subnet.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

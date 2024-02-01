@@ -34,11 +34,11 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
 
   ngOnInit() {
-    environment.environment.dcsLocations.map(location => {
+    environment.dynamic.dcsLocations.map(location => {
       this.availableLocations.push(location.name);
     });
     const currentUrl = location.href;
-    environment.environment.dcsLocations.map(location => {
+    environment.dynamic.dcsLocations.map(location => {
       if (currentUrl.includes(location.url.toLowerCase())) {
         this.showLogin = true;
         this.selectedLocation = location.name;
@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit {
   }
 
   navToLocation() {
-    const match = environment.environment.dcsLocations.find(location => location.name === this.selectedLocation);
+    const match = environment.dynamic.dcsLocations.find(location => location.name === this.selectedLocation);
     if (match) {
       const currentURL = location.href;
       if (!currentURL.includes(match.url)) {
@@ -114,14 +114,14 @@ export class LoginComponent implements OnInit {
                 }
                 this.showTenantButton = true;
               },
-              error => {
+              () => {
                 this.toastr.error('Error getting tenants');
                 this.errorMessage = 'Error getting tenants';
                 this.loading = false;
               },
             );
         },
-        error => {
+        () => {
           this.toastr.error('Invalid Username/Password');
           this.errorMessage = 'Invalid Username/Password';
           this.loading = false;

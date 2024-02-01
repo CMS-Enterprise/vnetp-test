@@ -1,15 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  V1TiersService,
-  Tier,
-  Datacenter,
-  V1TierGroupsService,
-  TierGroup,
-  V1JobsService,
-  Job,
-  FirewallRuleGroupTypeEnum,
-  NatRuleGroupTypeEnum,
-} from 'client';
+import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup, V1JobsService, Job } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Subscription } from 'rxjs';
 import { TableRowWrapper } from 'src/app/models/other/table-row-wrapper';
@@ -69,7 +59,7 @@ export class DeployComponent implements OnInit {
       .getManyTierGroup({
         filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
         page: 1,
-        limit: 1000,
+        perPage: 1000,
       })
       .subscribe(response => {
         this.tierGroups = response.data;
@@ -82,14 +72,13 @@ export class DeployComponent implements OnInit {
 
   private getTiers(): void {
     this.tierService
-      .getManyDatacenterTier({
-        datacenterId: this.currentDatacenter.id,
+      .getManyTier({
+        filter: [`datacenterId||eq||${this.currentDatacenter.id}`, 'deletedAt||isnull'],
         page: 1,
-        limit: 1000,
-        filter: [`deletedAt||isnull`],
+        perPage: 1000,
       })
-      .subscribe(response => {
-        this.tiers = response.data.map(tier => new TableRowWrapper(tier));
+      .subscribe(data => {
+        this.tiers = data.data.map(tier => new TableRowWrapper(tier));
       });
   }
 

@@ -1,7 +1,7 @@
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { isFQDN, isIP, isMACAddress } from 'validator';
 
-export function IpAddressAnyValidator(control: FormControl): { invalidIpAny: boolean } {
+export function IpAddressAnyValidator(control: UntypedFormControl): { invalidIpAny: boolean } {
   if (!control || !control.value) {
     return null;
   }
@@ -22,7 +22,7 @@ export function IpAddressAnyValidator(control: FormControl): { invalidIpAny: boo
   return { invalidIpAny: true };
 }
 
-export function IpAddressCidrValidator(control: FormControl): { invalidIpCidr: boolean } {
+export function IpAddressCidrValidator(control: UntypedFormControl): { invalidIpCidr: boolean } {
   if (!control || !control.value) {
     return null;
   }
@@ -40,7 +40,7 @@ export function IpAddressCidrValidator(control: FormControl): { invalidIpCidr: b
   return { invalidIpCidr: true };
 }
 
-export function IpAddressIpValidator(control: FormControl): { invalidIpAddress: boolean } {
+export function IpAddressIpValidator(control: UntypedFormControl): { invalidIpAddress: boolean } {
   if (!control || !control.value) {
     return null;
   }
@@ -58,7 +58,7 @@ export function IpAddressIpValidator(control: FormControl): { invalidIpAddress: 
   return { invalidIpAddress: true };
 }
 
-export function FqdnValidator(control: FormControl): { invalidFqdn: boolean } {
+export function FqdnValidator(control: UntypedFormControl): { invalidFqdn: boolean } {
   if (!control || !control.value) {
     return null;
   }
@@ -71,7 +71,7 @@ export function FqdnValidator(control: FormControl): { invalidFqdn: boolean } {
   return { invalidFqdn: true };
 }
 
-export function MacAddressValidator(control: FormControl): { invalidMacAddress: boolean } {
+export function MacAddressValidator(control: UntypedFormControl): { invalidMacAddress: boolean } {
   if (!control || !control.value) {
     return null;
   }
@@ -84,7 +84,7 @@ export function MacAddressValidator(control: FormControl): { invalidMacAddress: 
   return { invalidMacAddress: true };
 }
 
-export function ValidatePortRange(control: FormControl): { invalidPortNumber: boolean } | { invalidPortRange: boolean } {
+export function ValidatePortRange(control: UntypedFormControl): { invalidPortNumber: boolean } | { invalidPortRange: boolean } {
   if (!control || !control.value) {
     return null;
   }

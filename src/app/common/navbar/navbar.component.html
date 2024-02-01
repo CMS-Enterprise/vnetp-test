@@ -19,6 +19,7 @@
     <ul class="navbar-nav mr-auto">
       <li class="nav-item dropdown">
         <a
+          tabindex="0"
           class="nav-link dropdown-toggle"
           id="networkingNavbarDropdown"
           role="button"
@@ -113,6 +114,7 @@
       </li>
       <li class="nav-item dropdown">
         <a
+          tabindex="0"
           class="nav-link dropdown-toggle"
           id="userNavbarDropdown"
           role="button"
@@ -134,13 +136,13 @@
             queryParamsHandling="merge"
             >Audit Log</a
           >
-          <a id="ticket-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://jiraent.cms.gov/"
+          <a id="ticket-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="{{ environment?.dynamic?.snowBase }}"
             >Ticketing System</a
           >
-          <a id="documentation-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="http://wiki.draas.cdsvdc.lcl/"
+          <a id="documentation-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="{{ environment?.dynamic?.wikiBase}}"
             >Documentation</a
           >
-          <a name="logout-link" class="dropdown-item" (click)="openLogoutModal()">Logout</a>
+          <a tabindex="0" (keyup.enter)="openLogoutModal()" name="logout-link" class="dropdown-item" (click)="openLogoutModal()">Logout</a>
           <div class="dropdown-divider" *ngIf="dcsVersion"></div>
           <a name="version" class="dropdown-item" target="_blank" rel="noopener noreferrer" *ngIf="dcsVersion">v{{ dcsVersion }}</a>
         </div>

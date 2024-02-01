@@ -7,7 +7,7 @@ import {
   V2AppCentricContractsService,
 } from 'client';
 import { Subscription } from 'rxjs';
-import { AppcentricDashboardHelpText, DashboardHelpText } from 'src/app/helptext/help-text-networking';
+import { AppcentricDashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { AuthService } from 'src/app/services/auth.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
@@ -51,8 +51,8 @@ export class AppcentricDashboardComponent implements OnInit, OnDestroy {
         this.userRoles = this.user.dcsPermissions.map(p => p.roles).flat();
       });
     }
-    this.loadDashboard(this.userRoles);
-    this.dashboardPoller = setInterval(() => this.loadDashboard(this.userRoles), 1000 * 300);
+    this.loadDashboard();
+    this.dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
   }
 
   ngOnDestroy() {
@@ -61,7 +61,7 @@ export class AppcentricDashboardComponent implements OnInit, OnDestroy {
   }
 
   // only fetch the dashboard entities that the user has the correct permissions to view
-  private loadDashboard(roles?: string[]): void {
+  private loadDashboard(): void {
     this.getTenantCount();
     this.getVrfCount();
     this.getBridgeDomainCount();
@@ -70,7 +70,7 @@ export class AppcentricDashboardComponent implements OnInit, OnDestroy {
 
   private getTenantCount(): void {
     this.tenantsService
-      .findAllTenant({
+      .getManyTenant({
         page: 1,
         perPage: 1,
       })
@@ -80,19 +80,19 @@ export class AppcentricDashboardComponent implements OnInit, OnDestroy {
   }
 
   private getVrfCount(): void {
-    this.vrfsService.findAllVrf({ page: 1, perPage: 1 }).subscribe(data => {
+    this.vrfsService.getManyVrf({ page: 1, perPage: 1 }).subscribe(data => {
       this.vrfs = data.total;
     });
   }
 
   private getBridgeDomainCount(): void {
-    this.bridgeDomainsService.findAllBridgeDomain({ page: 1, perPage: 1 }).subscribe(data => {
+    this.bridgeDomainsService.getManyBridgeDomain({ page: 1, perPage: 1 }).subscribe(data => {
       this.bridgeDomains = data.total;
     });
   }
 
   private getContractCount(): void {
-    this.contractsService.findAllContract({ page: 1, perPage: 1 }).subscribe(data => {
+    this.contractsService.getManyContract({ page: 1, perPage: 1 }).subscribe(data => {
       this.contracts = data.total;
     });
   }

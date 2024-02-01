@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ViewFieldComponent } from './view-field.component';
 
@@ -6,7 +6,7 @@ describe('ViewFieldComponent', () => {
   let component: ViewFieldComponent;
   let fixture: ComponentFixture<ViewFieldComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ViewFieldComponent],
     })
@@ -16,7 +16,7 @@ describe('ViewFieldComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -24,6 +24,8 @@ import {
   FirewallRuleImport,
   FirewallRulePreview,
   GetManyFirewallRuleResponseDto,
+  FirewallRuleDirectionEnum,
+  FirewallRuleProtocolEnum,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
@@ -33,17 +35,27 @@ import { EntityService } from 'src/app/services/entity.service';
 import { SearchColumnConfig } from '../../../common/search-bar/search-bar.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 @Component({
   selector: 'app-firewall-rules-detail',
   templateUrl: './firewall-rules-detail.component.html',
 })
 export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Direction', propertyName: 'direction', propertyType: FirewallRuleDirectionEnum },
+    { displayName: 'Protocol', propertyName: 'protocol', propertyType: FirewallRuleProtocolEnum },
+    { displayName: 'Enabled', propertyName: 'enabled', propertyType: 'boolean' },
+    { displayName: 'Source Address', propertyName: 'sourceIpAddress' },
+    { displayName: 'Destination Address', propertyName: 'destinationIpAddress' },
+    { displayName: 'Source Port', propertyName: 'sourcePorts', searchOperator: 'cont' },
+    { displayName: 'Destination Port', propertyName: 'destinationPorts', searchOperator: 'cont' },
+  ];
   Id = '';
   TierName = '';
   currentTierIds: string[];
   ModalMode = ModalMode;
+  filteredResults: boolean;
 
   firewallRuleGroup: FirewallRuleGroup;
   firewallRules = {} as GetManyFirewallRuleResponseDto;
@@ -112,7 +124,12 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private datacenterService: DatacenterContextService,
     private tableContextService: TableContextService,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<FirewallRule>();
+    advancedSearchAdapterObject.setService(this.firewallRuleService);
+    advancedSearchAdapterObject.setServiceName('V1NetworkSecurityFirewallRulesService');
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   subscribeToObjectInfoModal() {
     this.objectInfoSubscription = this.ngx.getModal('firewallRuleObjectInfoModal').onCloseFinished.subscribe(() => {
@@ -265,6 +282,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   getFirewallRules(event?): void {
+    this.filteredResults = false;
     this.isLoading = true;
     let eventParams;
     if (event) {
@@ -272,8 +290,10 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 50;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'sourcePorts' || propertyName === 'destinationPorts' || propertyName === 'name') {
         eventParams = propertyName + '||cont||' + searchText;
+      } else if (propertyName) {
+        eventParams = propertyName + '||eq||' + searchText;
       }
     } else {
       this.tableComponentDto.perPage = this.perPage;
@@ -282,7 +302,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       .getManyFirewallRule({
         filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['ruleIndex,ASC'],
       })
       .subscribe(
@@ -293,7 +313,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           // this.totalFirewallRules = result.total;
         },
         () => {
-          this.firewallRules = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;
@@ -306,7 +326,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       .getManyFirewallRule({
         filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`],
         page: 1,
-        limit: 1,
+        perPage: 1,
         sort: ['ruleIndex,DESC'],
       })
       .subscribe(response => {
@@ -321,32 +341,32 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   getObjects(): void {
     const tierRequest = this.tierService.getOneTier({ id: this.TierId });
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
-      filter: [`tierId||eq||${this.TierId}`, `deletedAt||isnull`],
+      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
-      limit: 50000,
+      perPage: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
-      filter: [`tierId||eq||${this.TierId}`, `deletedAt||isnull`],
+      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
-      limit: 50000,
+      perPage: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
-      filter: [`tierId||eq||${this.TierId}`, `deletedAt||isnull`],
+      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
-      limit: 50000,
+      perPage: 50000,
     });
     const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
-      filter: [`tierId||eq||${this.TierId}`, `deletedAt||isnull`],
+      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
-      limit: 50000,
+      perPage: 50000,
     });
 
     forkJoin([tierRequest, networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest, serviceObjectGroupRequest]).subscribe(
@@ -396,6 +416,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     this.firewallRuleModalSubscription = this.ngx.getModal('firewallRuleModal').onCloseFinished.subscribe(() => {
       this.getFirewallRuleGroup();
       this.ngx.resetModalData('firewallRuleModal');
+      this.firewallRuleModalSubscription.unsubscribe();
     });
   }
 
@@ -479,7 +500,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   public createPreview(data: FirewallRulePreview, firewallRules: FirewallRuleImport[]): void {
-    const { firewallRulesToBeUploaded, firewallRulesToBeDeleted } = data;
+    const { firewallRulesToBeUploaded } = data;
     const fwData = { data: firewallRulesToBeUploaded };
     const tableConfig: TableConfig<FirewallRule> = {
       description: 'Firewall Rules Import Preview',
@@ -500,7 +521,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     this.ngx.getModal('previewModal').open();
 
     const previewImportSubscription = this.ngx.getModal('previewModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData: PreviewModalDto<FirewallRule> = modal.getData();
+      const modalData: PreviewModalDto<FirewallRule> = modal.getData() as any;
       modal.removeData();
       if (modalData && modalData.confirm) {
         const firewallConfirmDto: FirewallRuleImportCollectionDto = {

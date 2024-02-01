@@ -17,62 +17,82 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { CreateManyRouteProfileDto } from '../model/models';
+import { GetManyRouteProfileResponseDto } from '../model/models';
 import { RouteProfile } from '../model/models';
-import { RouteProfilePaginationResponse } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateRouteProfileRequestParams {
+export interface CreateManyRouteProfileRequestParams {
+    createManyRouteProfileDto: CreateManyRouteProfileDto;
+}
+
+export interface CreateOneRouteProfileRequestParams {
     routeProfile: RouteProfile;
 }
 
-export interface DeprovisionRouteProfileRequestParams {
-    uuid: string;
+export interface DeleteOneRouteProfileRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface FindAllRouteProfileRequestParams {
+export interface DeprovisionOneRouteProfileRequestParams {
+    /** UUID. */
+    id: string;
+}
+
+export interface GetManyRouteProfileRequestParams {
     /** Comma-seperated array of relations to join. */
-    relations?: string;
-    /** Number of entities to return per page. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
+    /** Number of entities to return per page.      If page is not passed, a number of entities up to this parameter will be returned. Default 20. */
     perPage?: number;
-    /** Page of entities to return based on the perPage value and total number of entities in the database. */
+    /** Alias for perPage. If perPage is also passed this parameter will be ignored. */
+    limit?: number;
+    /** Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination. */
     page?: number;
     /** Filter condition to apply to the query. */
     filter?: Array<string>;
     /** Properties to sort the response by. */
-    sort?: string;
+    sort?: Array<string>;
     /** Properties to group the response by. */
-    group?: string;
+    group?: Array<string>;
     /** Properties to select. */
-    select?: string;
+    fields?: Array<string>;
+    /** Where object for advanced AND/OR queries. */
+    s?: string;
 }
 
-export interface FindOneRouteProfileRequestParams {
-    uuid: string;
+export interface GetOneRouteProfileRequestParams {
+    /** UUID. */
+    id: string;
     /** Comma-seperated array of relations to join. */
-    relations?: string;
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
 }
 
-export interface ProvisionRouteProfileRequestParams {
-    uuid: string;
+export interface ProvisionOneRouteProfileRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface RemoveRouteProfileRequestParams {
-    uuid: string;
+export interface RestoreOneRouteProfileRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface RestoreRouteProfileRequestParams {
-    uuid: string;
+export interface SoftDeleteOneRouteProfileRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface SoftDeleteRouteProfileRequestParams {
-    uuid: string;
-}
-
-export interface UpdateRouteProfileRequestParams {
-    uuid: string;
+export interface UpdateOneRouteProfileRequestParams {
+    /** UUID. */
+    id: string;
     routeProfile: RouteProfile;
 }
 
@@ -138,17 +158,74 @@ export class V2AppCentricRouteProfilesService {
     }
 
     /**
+     * Create many RouteProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createRouteProfile(requestParameters: CreateRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteProfile>;
-    public createRouteProfile(requestParameters: CreateRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteProfile>>;
-    public createRouteProfile(requestParameters: CreateRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteProfile>>;
-    public createRouteProfile(requestParameters: CreateRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createManyRouteProfile(requestParameters: CreateManyRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<RouteProfile>>;
+    public createManyRouteProfile(requestParameters: CreateManyRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<RouteProfile>>>;
+    public createManyRouteProfile(requestParameters: CreateManyRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<RouteProfile>>>;
+    public createManyRouteProfile(requestParameters: CreateManyRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const createManyRouteProfileDto = requestParameters.createManyRouteProfileDto;
+        if (createManyRouteProfileDto === null || createManyRouteProfileDto === undefined) {
+            throw new Error('Required parameter createManyRouteProfileDto was null or undefined when calling createManyRouteProfile.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<Array<RouteProfile>>(`${this.configuration.basePath}/v2/app-centric/route-profiles/bulk`,
+            createManyRouteProfileDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Create one RouteProfile
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createOneRouteProfile(requestParameters: CreateOneRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteProfile>;
+    public createOneRouteProfile(requestParameters: CreateOneRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteProfile>>;
+    public createOneRouteProfile(requestParameters: CreateOneRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteProfile>>;
+    public createOneRouteProfile(requestParameters: CreateOneRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const routeProfile = requestParameters.routeProfile;
         if (routeProfile === null || routeProfile === undefined) {
-            throw new Error('Required parameter routeProfile was null or undefined when calling createRouteProfile.');
+            throw new Error('Required parameter routeProfile was null or undefined when calling createOneRouteProfile.');
         }
 
         let headers = this.defaultHeaders;
@@ -193,17 +270,64 @@ export class V2AppCentricRouteProfilesService {
     }
 
     /**
+     * Delete one RouteProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionRouteProfile(requestParameters: DeprovisionRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionRouteProfile(requestParameters: DeprovisionRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionRouteProfile(requestParameters: DeprovisionRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionRouteProfile(requestParameters: DeprovisionRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling deprovisionRouteProfile.');
+    public deleteOneRouteProfile(requestParameters: DeleteOneRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteProfile>;
+    public deleteOneRouteProfile(requestParameters: DeleteOneRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteProfile>>;
+    public deleteOneRouteProfile(requestParameters: DeleteOneRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteProfile>>;
+    public deleteOneRouteProfile(requestParameters: DeleteOneRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteOneRouteProfile.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Deprovision one RouteProfile
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deprovisionOneRouteProfile(requestParameters: DeprovisionOneRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneRouteProfile(requestParameters: DeprovisionOneRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneRouteProfile(requestParameters: DeprovisionOneRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneRouteProfile(requestParameters: DeprovisionOneRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneRouteProfile.');
         }
 
         let headers = this.defaultHeaders;
@@ -225,7 +349,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -238,30 +362,46 @@ export class V2AppCentricRouteProfilesService {
     }
 
     /**
+     * Get many RouteProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findAllRouteProfile(requestParameters: FindAllRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteProfilePaginationResponse>;
-    public findAllRouteProfile(requestParameters: FindAllRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteProfilePaginationResponse>>;
-    public findAllRouteProfile(requestParameters: FindAllRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteProfilePaginationResponse>>;
-    public findAllRouteProfile(requestParameters: FindAllRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyRouteProfile(requestParameters: GetManyRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyRouteProfileResponseDto>;
+    public getManyRouteProfile(requestParameters: GetManyRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyRouteProfileResponseDto>>;
+    public getManyRouteProfile(requestParameters: GetManyRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyRouteProfileResponseDto>>;
+    public getManyRouteProfile(requestParameters: GetManyRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
+        const join = requestParameters.join;
         const perPage = requestParameters.perPage;
+        const limit = requestParameters.limit;
         const page = requestParameters.page;
         const filter = requestParameters.filter;
         const sort = requestParameters.sort;
         const group = requestParameters.group;
-        const select = requestParameters.select;
+        const fields = requestParameters.fields;
+        const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (relations !== undefined && relations !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>relations, 'relations');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
         if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>perPage, 'perPage');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
         }
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -273,17 +413,27 @@ export class V2AppCentricRouteProfilesService {
                   <any>element, 'filter');
             })
         }
-        if (sort !== undefined && sort !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>sort, 'sort');
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
         }
-        if (group !== undefined && group !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>group, 'group');
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
         }
-        if (select !== undefined && select !== null) {
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (s !== undefined && s !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>select, 'select');
+            <any>s, 's');
         }
 
         let headers = this.defaultHeaders;
@@ -306,7 +456,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<RouteProfilePaginationResponse>(`${this.configuration.basePath}/v2/app-centric/route-profiles`,
+        return this.httpClient.get<GetManyRouteProfileResponseDto>(`${this.configuration.basePath}/v2/app-centric/route-profiles`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -319,24 +469,34 @@ export class V2AppCentricRouteProfilesService {
     }
 
     /**
+     * Get one RouteProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findOneRouteProfile(requestParameters: FindOneRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteProfile>;
-    public findOneRouteProfile(requestParameters: FindOneRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteProfile>>;
-    public findOneRouteProfile(requestParameters: FindOneRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteProfile>>;
-    public findOneRouteProfile(requestParameters: FindOneRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling findOneRouteProfile.');
+    public getOneRouteProfile(requestParameters: GetOneRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteProfile>;
+    public getOneRouteProfile(requestParameters: GetOneRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteProfile>>;
+    public getOneRouteProfile(requestParameters: GetOneRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteProfile>>;
+    public getOneRouteProfile(requestParameters: GetOneRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getOneRouteProfile.');
         }
         const relations = requestParameters.relations;
+        const join = requestParameters.join;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (relations !== undefined && relations !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>relations, 'relations');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
 
         let headers = this.defaultHeaders;
@@ -359,7 +519,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.get<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -372,17 +532,18 @@ export class V2AppCentricRouteProfilesService {
     }
 
     /**
+     * Provision one RouteProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionRouteProfile(requestParameters: ProvisionRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionRouteProfile(requestParameters: ProvisionRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionRouteProfile(requestParameters: ProvisionRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionRouteProfile(requestParameters: ProvisionRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling provisionRouteProfile.');
+    public provisionOneRouteProfile(requestParameters: ProvisionOneRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneRouteProfile(requestParameters: ProvisionOneRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneRouteProfile(requestParameters: ProvisionOneRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneRouteProfile(requestParameters: ProvisionOneRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling provisionOneRouteProfile.');
         }
 
         let headers = this.defaultHeaders;
@@ -404,7 +565,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -417,62 +578,18 @@ export class V2AppCentricRouteProfilesService {
     }
 
     /**
+     * Restore one RouteProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public removeRouteProfile(requestParameters: RemoveRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteProfile>;
-    public removeRouteProfile(requestParameters: RemoveRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteProfile>>;
-    public removeRouteProfile(requestParameters: RemoveRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteProfile>>;
-    public removeRouteProfile(requestParameters: RemoveRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling removeRouteProfile.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public restoreRouteProfile(requestParameters: RestoreRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreRouteProfile(requestParameters: RestoreRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreRouteProfile(requestParameters: RestoreRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreRouteProfile(requestParameters: RestoreRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling restoreRouteProfile.');
+    public restoreOneRouteProfile(requestParameters: RestoreOneRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneRouteProfile(requestParameters: RestoreOneRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneRouteProfile(requestParameters: RestoreOneRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneRouteProfile(requestParameters: RestoreOneRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling restoreOneRouteProfile.');
         }
 
         let headers = this.defaultHeaders;
@@ -494,7 +611,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -507,17 +624,18 @@ export class V2AppCentricRouteProfilesService {
     }
 
     /**
+     * Soft delete one RouteProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteRouteProfile(requestParameters: SoftDeleteRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteRouteProfile(requestParameters: SoftDeleteRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteRouteProfile(requestParameters: SoftDeleteRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteRouteProfile(requestParameters: SoftDeleteRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling softDeleteRouteProfile.');
+    public softDeleteOneRouteProfile(requestParameters: SoftDeleteOneRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneRouteProfile(requestParameters: SoftDeleteOneRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneRouteProfile(requestParameters: SoftDeleteOneRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneRouteProfile(requestParameters: SoftDeleteOneRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneRouteProfile.');
         }
 
         let headers = this.defaultHeaders;
@@ -539,7 +657,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -551,21 +669,22 @@ export class V2AppCentricRouteProfilesService {
     }
 
     /**
+     * Update one RouteProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateRouteProfile(requestParameters: UpdateRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteProfile>;
-    public updateRouteProfile(requestParameters: UpdateRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteProfile>>;
-    public updateRouteProfile(requestParameters: UpdateRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteProfile>>;
-    public updateRouteProfile(requestParameters: UpdateRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling updateRouteProfile.');
+    public updateOneRouteProfile(requestParameters: UpdateOneRouteProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteProfile>;
+    public updateOneRouteProfile(requestParameters: UpdateOneRouteProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteProfile>>;
+    public updateOneRouteProfile(requestParameters: UpdateOneRouteProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteProfile>>;
+    public updateOneRouteProfile(requestParameters: UpdateOneRouteProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateOneRouteProfile.');
         }
         const routeProfile = requestParameters.routeProfile;
         if (routeProfile === null || routeProfile === undefined) {
-            throw new Error('Required parameter routeProfile was null or undefined when calling updateRouteProfile.');
+            throw new Error('Required parameter routeProfile was null or undefined when calling updateOneRouteProfile.');
         }
 
         let headers = this.defaultHeaders;
@@ -597,7 +716,7 @@ export class V2AppCentricRouteProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.put<RouteProfile>(`${this.configuration.basePath}/v2/app-centric/route-profiles/${encodeURIComponent(String(id))}`,
             routeProfile,
             {
                 responseType: <any>responseType,

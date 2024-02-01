@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Tier, V1TiersService, V1TierGroupsService, TierGroup } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
@@ -14,12 +14,12 @@ export class TierModalComponent implements OnInit {
   public DatacenterId: string;
   public ModalMode: ModalMode;
   public TierId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public tierGroups: TierGroup[] = [];
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private tierGroupService: V1TierGroupsService,
     private tierService: V1TiersService,
@@ -95,7 +95,7 @@ export class TierModalComponent implements OnInit {
 
   private getTierGroups(): void {
     this.tierGroupService.getManyTierGroup({ filter: [`datacenterId||eq||${this.DatacenterId}`] }).subscribe(response => {
-      this.tierGroups = response.data as TierGroup[];
+      this.tierGroups = response.data;
     });
   }
 
@@ -119,8 +119,8 @@ export class TierModalComponent implements OnInit {
   }
 
   private editTier(tier: Tier): void {
-    tier.name = null;
-    tier.datacenterId = null;
+    delete tier.name;
+    delete tier.datacenterId;
     this.tierService
       .updateOneTier({
         id: this.TierId,

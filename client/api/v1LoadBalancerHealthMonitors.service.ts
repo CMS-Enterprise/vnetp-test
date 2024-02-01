@@ -34,64 +34,64 @@ export interface CreateOneLoadBalancerHealthMonitorRequestParams {
 }
 
 export interface DeleteOneLoadBalancerHealthMonitorRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface DeprovisionOneLoadBalancerHealthMonitorRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface GetManyLoadBalancerHealthMonitorRequestParams {
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds search condition. */
-    s?: string;
-    /** Adds filter condition. */
-    filter?: Array<string>;
-    /** Adds OR condition. */
-    or?: Array<string>;
-    /** Adds sort by field. */
-    sort?: Array<string>;
-    /** Adds relational resources. */
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Limit amount of resources. */
+    /** Number of entities to return per page.      If page is not passed, a number of entities up to this parameter will be returned. Default 20. */
+    perPage?: number;
+    /** Alias for perPage. If perPage is also passed this parameter will be ignored. */
     limit?: number;
-    /** Offset amount of resources. */
-    offset?: number;
-    /** Page portion of resources. */
+    /** Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination. */
     page?: number;
-    /** Reset cache (if was enabled). */
-    cache?: number;
+    /** Filter condition to apply to the query. */
+    filter?: Array<string>;
+    /** Properties to sort the response by. */
+    sort?: Array<string>;
+    /** Properties to group the response by. */
+    group?: Array<string>;
+    /** Properties to select. */
+    fields?: Array<string>;
+    /** Where object for advanced AND/OR queries. */
+    s?: string;
 }
 
 export interface GetOneLoadBalancerHealthMonitorRequestParams {
+    /** UUID. */
     id: string;
-    /** Selects resource fields. */
-    fields?: Array<string>;
-    /** Adds relational resources. */
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Reset cache (if was enabled). */
-    cache?: number;
 }
 
 export interface ProvisionOneLoadBalancerHealthMonitorRequestParams {
+    /** UUID. */
     id: string;
-}
-
-export interface ReplaceOneLoadBalancerHealthMonitorRequestParams {
-    id: string;
-    loadBalancerHealthMonitor: LoadBalancerHealthMonitor;
 }
 
 export interface RestoreOneLoadBalancerHealthMonitorRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface SoftDeleteOneLoadBalancerHealthMonitorRequestParams {
+    /** UUID. */
     id: string;
 }
 
 export interface UpdateOneLoadBalancerHealthMonitorRequestParams {
+    /** UUID. */
     id: string;
     loadBalancerHealthMonitor: LoadBalancerHealthMonitor;
 }
@@ -275,10 +275,10 @@ export class V1LoadBalancerHealthMonitorsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneLoadBalancerHealthMonitor(requestParameters: DeleteOneLoadBalancerHealthMonitorRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deleteOneLoadBalancerHealthMonitor(requestParameters: DeleteOneLoadBalancerHealthMonitorRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deleteOneLoadBalancerHealthMonitor(requestParameters: DeleteOneLoadBalancerHealthMonitorRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deleteOneLoadBalancerHealthMonitor(requestParameters: DeleteOneLoadBalancerHealthMonitorRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public deleteOneLoadBalancerHealthMonitor(requestParameters: DeleteOneLoadBalancerHealthMonitorRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerHealthMonitor>;
+    public deleteOneLoadBalancerHealthMonitor(requestParameters: DeleteOneLoadBalancerHealthMonitorRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerHealthMonitor>>;
+    public deleteOneLoadBalancerHealthMonitor(requestParameters: DeleteOneLoadBalancerHealthMonitorRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerHealthMonitor>>;
+    public deleteOneLoadBalancerHealthMonitor(requestParameters: DeleteOneLoadBalancerHealthMonitorRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling deleteOneLoadBalancerHealthMonitor.');
@@ -290,6 +290,7 @@ export class V1LoadBalancerHealthMonitorsService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -303,7 +304,7 @@ export class V1LoadBalancerHealthMonitorsService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/load-balancer/health-monitors/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<LoadBalancerHealthMonitor>(`${this.configuration.basePath}/v1/load-balancer/health-monitors/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -315,7 +316,7 @@ export class V1LoadBalancerHealthMonitorsService {
     }
 
     /**
-     * Deprovisions an Entity.
+     * Deprovision one LoadBalancerHealthMonitor
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -361,7 +362,7 @@ export class V1LoadBalancerHealthMonitorsService {
     }
 
     /**
-     * Retrieve many LoadBalancerHealthMonitor
+     * Get many LoadBalancerHealthMonitor
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -370,42 +371,22 @@ export class V1LoadBalancerHealthMonitorsService {
     public getManyLoadBalancerHealthMonitor(requestParameters: GetManyLoadBalancerHealthMonitorRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyLoadBalancerHealthMonitorResponseDto>>;
     public getManyLoadBalancerHealthMonitor(requestParameters: GetManyLoadBalancerHealthMonitorRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyLoadBalancerHealthMonitorResponseDto>>;
     public getManyLoadBalancerHealthMonitor(requestParameters: GetManyLoadBalancerHealthMonitorRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const relations = requestParameters.relations;
+        const join = requestParameters.join;
+        const perPage = requestParameters.perPage;
+        const limit = requestParameters.limit;
+        const page = requestParameters.page;
+        const filter = requestParameters.filter;
+        const sort = requestParameters.sort;
+        const group = requestParameters.group;
         const fields = requestParameters.fields;
         const s = requestParameters.s;
-        const filter = requestParameters.filter;
-        const or = requestParameters.or;
-        const sort = requestParameters.sort;
-        const join = requestParameters.join;
-        const limit = requestParameters.limit;
-        const offset = requestParameters.offset;
-        const page = requestParameters.page;
-        const cache = requestParameters.cache;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
-        }
-        if (s !== undefined && s !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>s, 's');
-        }
-        if (filter) {
-            filter.forEach((element) => {
+        if (relations) {
+            relations.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'filter');
-            })
-        }
-        if (or) {
-            or.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'or');
-            })
-        }
-        if (sort) {
-            sort.forEach((element) => {
-                queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'sort');
+                  <any>element, 'relations');
             })
         }
         if (join) {
@@ -414,21 +395,45 @@ export class V1LoadBalancerHealthMonitorsService {
                   <any>element, 'join');
             })
         }
+        if (perPage !== undefined && perPage !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>perPage, 'perPage');
+        }
         if (limit !== undefined && limit !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>limit, 'limit');
-        }
-        if (offset !== undefined && offset !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>offset, 'offset');
         }
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>page, 'page');
         }
-        if (cache !== undefined && cache !== null) {
+        if (filter) {
+            filter.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'filter');
+            })
+        }
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
+        }
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
+        }
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (s !== undefined && s !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
+            <any>s, 's');
         }
 
         let headers = this.defaultHeaders;
@@ -464,7 +469,7 @@ export class V1LoadBalancerHealthMonitorsService {
     }
 
     /**
-     * Retrieve one LoadBalancerHealthMonitor
+     * Get one LoadBalancerHealthMonitor
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -477,24 +482,21 @@ export class V1LoadBalancerHealthMonitorsService {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getOneLoadBalancerHealthMonitor.');
         }
-        const fields = requestParameters.fields;
+        const relations = requestParameters.relations;
         const join = requestParameters.join;
-        const cache = requestParameters.cache;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (fields) {
-            queryParameters = this.addToHttpParams(queryParameters,
-                fields.join(COLLECTION_FORMATS['csv']), 'fields');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
         }
         if (join) {
             join.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
                   <any>element, 'join');
             })
-        }
-        if (cache !== undefined && cache !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>cache, 'cache');
         }
 
         let headers = this.defaultHeaders;
@@ -530,7 +532,7 @@ export class V1LoadBalancerHealthMonitorsService {
     }
 
     /**
-     * Provisions an Entity.
+     * Provision one LoadBalancerHealthMonitor
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -576,67 +578,7 @@ export class V1LoadBalancerHealthMonitorsService {
     }
 
     /**
-     * Replace one LoadBalancerHealthMonitor
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public replaceOneLoadBalancerHealthMonitor(requestParameters: ReplaceOneLoadBalancerHealthMonitorRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoadBalancerHealthMonitor>;
-    public replaceOneLoadBalancerHealthMonitor(requestParameters: ReplaceOneLoadBalancerHealthMonitorRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoadBalancerHealthMonitor>>;
-    public replaceOneLoadBalancerHealthMonitor(requestParameters: ReplaceOneLoadBalancerHealthMonitorRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoadBalancerHealthMonitor>>;
-    public replaceOneLoadBalancerHealthMonitor(requestParameters: ReplaceOneLoadBalancerHealthMonitorRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling replaceOneLoadBalancerHealthMonitor.');
-        }
-        const loadBalancerHealthMonitor = requestParameters.loadBalancerHealthMonitor;
-        if (loadBalancerHealthMonitor === null || loadBalancerHealthMonitor === undefined) {
-            throw new Error('Required parameter loadBalancerHealthMonitor was null or undefined when calling replaceOneLoadBalancerHealthMonitor.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.put<LoadBalancerHealthMonitor>(`${this.configuration.basePath}/v1/load-balancer/health-monitors/${encodeURIComponent(String(id))}`,
-            loadBalancerHealthMonitor,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Restores a Soft-Deleted Entity.
+     * Restore one LoadBalancerHealthMonitor
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -682,7 +624,7 @@ export class V1LoadBalancerHealthMonitorsService {
     }
 
     /**
-     * Soft deletes an Entity.
+     * Soft delete one LoadBalancerHealthMonitor
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -774,7 +716,7 @@ export class V1LoadBalancerHealthMonitorsService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<LoadBalancerHealthMonitor>(`${this.configuration.basePath}/v1/load-balancer/health-monitors/${encodeURIComponent(String(id))}`,
+        return this.httpClient.put<LoadBalancerHealthMonitor>(`${this.configuration.basePath}/v1/load-balancer/health-monitors/${encodeURIComponent(String(id))}`,
             loadBalancerHealthMonitor,
             {
                 responseType: <any>responseType,

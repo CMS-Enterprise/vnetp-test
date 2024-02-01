@@ -35,20 +35,17 @@ describe('SubscriptionUtil', () => {
   });
 
   describe('subscribeToYesNoModal', () => {
-    const initNgx = (open = jest.fn(), confirmData = {}) => {
-      return {
+    const initNgx = (open = jest.fn(), confirmData = {}) =>
+      ({
         setModalData: jest.fn(),
-        getModal: jest.fn(() => {
-          return {
-            open,
-            onCloseFinished: of({
-              getData: jest.fn(() => confirmData),
-              removeData: jest.fn(),
-            }),
-          };
-        }),
-      } as any;
-    };
+        getModal: jest.fn(() => ({
+          open,
+          onCloseFinished: of({
+            getData: jest.fn(() => confirmData),
+            removeData: jest.fn(),
+          }),
+        })),
+      } as any);
 
     it('should open "yesNoModal"', () => {
       const openSpy = jest.fn();

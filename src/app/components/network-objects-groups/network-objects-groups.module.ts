@@ -7,6 +7,7 @@ import { NetworkObjectGroupModalComponent } from './network-object-group-modal/n
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { UnusedObjectsModalComponent } from './unused-objects-modal/unused-objects-modal.component';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { IconButtonModule } from '../../common/icon-button/icon-button.module';
 import { TooltipModule } from '../../common/tooltip/tooltip.module';
@@ -15,6 +16,7 @@ import { ImportExportModule } from 'src/app/common/import-export/import-export.m
 import { TableModule } from 'src/app/common/table/table.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TierSelectModule } from 'src/app/common/tier-select/tier-select.module';
+import { UsedObjectsParentsModalModule } from 'src/app/common/used-objects-parents-modal/used-objects-parents-modal.module';
 
 const routes: Routes = [
   {
@@ -39,7 +41,8 @@ const routes: Routes = [
     TableModule,
     TabsModule,
     TierSelectModule,
+    UsedObjectsParentsModalModule,
   ],
-  declarations: [NetworkObjectsGroupsComponent, NetworkObjectGroupModalComponent, NetworkObjectModalComponent],
+  declarations: [NetworkObjectsGroupsComponent, NetworkObjectGroupModalComponent, NetworkObjectModalComponent, UnusedObjectsModalComponent],
 })
 export class NetworkObjectsGroupsModule {}

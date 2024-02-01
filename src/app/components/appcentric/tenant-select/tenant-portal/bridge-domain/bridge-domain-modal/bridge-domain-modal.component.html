@@ -51,8 +51,8 @@
           <select id="unicastRouting" formControlName="unicastRouting" class="form-control"
             [class.is-invalid]="submitted && f.unicastRouting.errors" aria-label="Unicast Routing">
             <option></option>
-            <option value="true">True</option>
-            <option value="false">False</option>
+            <option [ngValue]="true">True</option>
+            <option [ngValue]="false">False</option>
           </select>
         </div>
 
@@ -61,8 +61,8 @@
           <select id="arpFlooding" formControlName="arpFlooding" class="form-control"
             [class.is-invalid]="submitted && f.arpFlooding.errors" aria-label="Arp Flooding">
             <option></option>
-            <option value="true">True</option>
-            <option value="false">False</option>
+            <option [ngValue]="true">True</option>
+            <option [ngValue]="false">False</option>
           </select>
         </div>
       </div>
@@ -73,8 +73,8 @@
           <select id="limitLocalIpLearning" formControlName="limitLocalIpLearning" class="form-control"
             [class.is-invalid]="submitted && f.limitLocalIpLearning.errors" aria-label="Limit Local Ip Learning">
             <option></option>
-            <option value="true">True</option>
-            <option value="false">False</option>
+            <option [ngValue]="true">True</option>
+            <option [ngValue]="false">False</option>
           </select>
         </div>
 
@@ -83,8 +83,8 @@
           <select id="epMoveDetectionModeGarp" formControlName="epMoveDetectionModeGarp" class="form-control"
             [class.is-invalid]="submitted && f.epMoveDetectionModeGarp.errors" aria-label="Ep Move Detection Mode Garp">
             <option></option>
-            <option value="true">True</option>
-            <option value="false">False</option>
+            <option [ngValue]="true">True</option>
+            <option [ngValue]="false">False</option>
           </select>
         </div>
       </div>
@@ -111,8 +111,8 @@
           </button>
         </div>
 
-        <app-table [config]="config" [data]="l3OutsTableData" (clearResults)="getL3OutsTableData($event)"
-          (searchParams)="getL3OutsTableData($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage"
+        <app-table [config]="config" [data]="l3OutsTableData" (clearResults)="getL3OutsTableData()"
+          (searchParams)="getL3OutsTableData()" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage"
           (tableEvent)="onTableEvent($event)"></app-table>
       </div>
 

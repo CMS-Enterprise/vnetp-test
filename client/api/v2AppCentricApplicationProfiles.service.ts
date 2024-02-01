@@ -18,61 +18,81 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { ApplicationProfile } from '../model/models';
-import { ApplicationProfilePaginationResponse } from '../model/models';
+import { CreateManyApplicationProfileDto } from '../model/models';
+import { GetManyApplicationProfileResponseDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateApplicationProfileRequestParams {
+export interface CreateManyApplicationProfileRequestParams {
+    createManyApplicationProfileDto: CreateManyApplicationProfileDto;
+}
+
+export interface CreateOneApplicationProfileRequestParams {
     applicationProfile: ApplicationProfile;
 }
 
-export interface DeprovisionApplicationProfileRequestParams {
-    uuid: string;
+export interface DeleteOneApplicationProfileRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface FindAllApplicationProfileRequestParams {
+export interface DeprovisionOneApplicationProfileRequestParams {
+    /** UUID. */
+    id: string;
+}
+
+export interface GetManyApplicationProfileRequestParams {
     /** Comma-seperated array of relations to join. */
-    relations?: string;
-    /** Number of entities to return per page. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
+    /** Number of entities to return per page.      If page is not passed, a number of entities up to this parameter will be returned. Default 20. */
     perPage?: number;
-    /** Page of entities to return based on the perPage value and total number of entities in the database. */
+    /** Alias for perPage. If perPage is also passed this parameter will be ignored. */
+    limit?: number;
+    /** Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination. */
     page?: number;
     /** Filter condition to apply to the query. */
     filter?: Array<string>;
     /** Properties to sort the response by. */
-    sort?: string;
+    sort?: Array<string>;
     /** Properties to group the response by. */
-    group?: string;
+    group?: Array<string>;
     /** Properties to select. */
-    select?: string;
+    fields?: Array<string>;
+    /** Where object for advanced AND/OR queries. */
+    s?: string;
 }
 
-export interface FindOneApplicationProfileRequestParams {
-    uuid: string;
+export interface GetOneApplicationProfileRequestParams {
+    /** UUID. */
+    id: string;
     /** Comma-seperated array of relations to join. */
-    relations?: string;
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
 }
 
-export interface ProvisionApplicationProfileRequestParams {
-    uuid: string;
+export interface ProvisionOneApplicationProfileRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface RemoveApplicationProfileRequestParams {
-    uuid: string;
+export interface RestoreOneApplicationProfileRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface RestoreApplicationProfileRequestParams {
-    uuid: string;
+export interface SoftDeleteOneApplicationProfileRequestParams {
+    /** UUID. */
+    id: string;
 }
 
-export interface SoftDeleteApplicationProfileRequestParams {
-    uuid: string;
-}
-
-export interface UpdateApplicationProfileRequestParams {
-    uuid: string;
+export interface UpdateOneApplicationProfileRequestParams {
+    /** UUID. */
+    id: string;
     applicationProfile: ApplicationProfile;
 }
 
@@ -138,17 +158,74 @@ export class V2AppCentricApplicationProfilesService {
     }
 
     /**
+     * Create many ApplicationProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createApplicationProfile(requestParameters: CreateApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApplicationProfile>;
-    public createApplicationProfile(requestParameters: CreateApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApplicationProfile>>;
-    public createApplicationProfile(requestParameters: CreateApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApplicationProfile>>;
-    public createApplicationProfile(requestParameters: CreateApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createManyApplicationProfile(requestParameters: CreateManyApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ApplicationProfile>>;
+    public createManyApplicationProfile(requestParameters: CreateManyApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ApplicationProfile>>>;
+    public createManyApplicationProfile(requestParameters: CreateManyApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ApplicationProfile>>>;
+    public createManyApplicationProfile(requestParameters: CreateManyApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const createManyApplicationProfileDto = requestParameters.createManyApplicationProfileDto;
+        if (createManyApplicationProfileDto === null || createManyApplicationProfileDto === undefined) {
+            throw new Error('Required parameter createManyApplicationProfileDto was null or undefined when calling createManyApplicationProfile.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<Array<ApplicationProfile>>(`${this.configuration.basePath}/v2/app-centric/application-profiles/bulk`,
+            createManyApplicationProfileDto,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Create one ApplicationProfile
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createOneApplicationProfile(requestParameters: CreateOneApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApplicationProfile>;
+    public createOneApplicationProfile(requestParameters: CreateOneApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApplicationProfile>>;
+    public createOneApplicationProfile(requestParameters: CreateOneApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApplicationProfile>>;
+    public createOneApplicationProfile(requestParameters: CreateOneApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const applicationProfile = requestParameters.applicationProfile;
         if (applicationProfile === null || applicationProfile === undefined) {
-            throw new Error('Required parameter applicationProfile was null or undefined when calling createApplicationProfile.');
+            throw new Error('Required parameter applicationProfile was null or undefined when calling createOneApplicationProfile.');
         }
 
         let headers = this.defaultHeaders;
@@ -193,17 +270,64 @@ export class V2AppCentricApplicationProfilesService {
     }
 
     /**
+     * Delete one ApplicationProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionApplicationProfile(requestParameters: DeprovisionApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionApplicationProfile(requestParameters: DeprovisionApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionApplicationProfile(requestParameters: DeprovisionApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionApplicationProfile(requestParameters: DeprovisionApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling deprovisionApplicationProfile.');
+    public deleteOneApplicationProfile(requestParameters: DeleteOneApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApplicationProfile>;
+    public deleteOneApplicationProfile(requestParameters: DeleteOneApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApplicationProfile>>;
+    public deleteOneApplicationProfile(requestParameters: DeleteOneApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApplicationProfile>>;
+    public deleteOneApplicationProfile(requestParameters: DeleteOneApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteOneApplicationProfile.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<ApplicationProfile>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Deprovision one ApplicationProfile
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deprovisionOneApplicationProfile(requestParameters: DeprovisionOneApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneApplicationProfile(requestParameters: DeprovisionOneApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneApplicationProfile(requestParameters: DeprovisionOneApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneApplicationProfile(requestParameters: DeprovisionOneApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneApplicationProfile.');
         }
 
         let headers = this.defaultHeaders;
@@ -225,7 +349,7 @@ export class V2AppCentricApplicationProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(uuid))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -238,30 +362,46 @@ export class V2AppCentricApplicationProfilesService {
     }
 
     /**
+     * Get many ApplicationProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findAllApplicationProfile(requestParameters: FindAllApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApplicationProfilePaginationResponse>;
-    public findAllApplicationProfile(requestParameters: FindAllApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApplicationProfilePaginationResponse>>;
-    public findAllApplicationProfile(requestParameters: FindAllApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApplicationProfilePaginationResponse>>;
-    public findAllApplicationProfile(requestParameters: FindAllApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyApplicationProfile(requestParameters: GetManyApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyApplicationProfileResponseDto>;
+    public getManyApplicationProfile(requestParameters: GetManyApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyApplicationProfileResponseDto>>;
+    public getManyApplicationProfile(requestParameters: GetManyApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyApplicationProfileResponseDto>>;
+    public getManyApplicationProfile(requestParameters: GetManyApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
+        const join = requestParameters.join;
         const perPage = requestParameters.perPage;
+        const limit = requestParameters.limit;
         const page = requestParameters.page;
         const filter = requestParameters.filter;
         const sort = requestParameters.sort;
         const group = requestParameters.group;
-        const select = requestParameters.select;
+        const fields = requestParameters.fields;
+        const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (relations !== undefined && relations !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>relations, 'relations');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
         if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>perPage, 'perPage');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
         }
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -273,17 +413,27 @@ export class V2AppCentricApplicationProfilesService {
                   <any>element, 'filter');
             })
         }
-        if (sort !== undefined && sort !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>sort, 'sort');
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
         }
-        if (group !== undefined && group !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>group, 'group');
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
         }
-        if (select !== undefined && select !== null) {
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (s !== undefined && s !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>select, 'select');
+            <any>s, 's');
         }
 
         let headers = this.defaultHeaders;
@@ -306,7 +456,7 @@ export class V2AppCentricApplicationProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ApplicationProfilePaginationResponse>(`${this.configuration.basePath}/v2/app-centric/application-profiles`,
+        return this.httpClient.get<GetManyApplicationProfileResponseDto>(`${this.configuration.basePath}/v2/app-centric/application-profiles`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -319,24 +469,34 @@ export class V2AppCentricApplicationProfilesService {
     }
 
     /**
+     * Get one ApplicationProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findOneApplicationProfile(requestParameters: FindOneApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApplicationProfile>;
-    public findOneApplicationProfile(requestParameters: FindOneApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApplicationProfile>>;
-    public findOneApplicationProfile(requestParameters: FindOneApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApplicationProfile>>;
-    public findOneApplicationProfile(requestParameters: FindOneApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling findOneApplicationProfile.');
+    public getOneApplicationProfile(requestParameters: GetOneApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApplicationProfile>;
+    public getOneApplicationProfile(requestParameters: GetOneApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApplicationProfile>>;
+    public getOneApplicationProfile(requestParameters: GetOneApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApplicationProfile>>;
+    public getOneApplicationProfile(requestParameters: GetOneApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getOneApplicationProfile.');
         }
         const relations = requestParameters.relations;
+        const join = requestParameters.join;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (relations !== undefined && relations !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>relations, 'relations');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
 
         let headers = this.defaultHeaders;
@@ -359,7 +519,7 @@ export class V2AppCentricApplicationProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ApplicationProfile>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.get<ApplicationProfile>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -372,17 +532,18 @@ export class V2AppCentricApplicationProfilesService {
     }
 
     /**
+     * Provision one ApplicationProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionApplicationProfile(requestParameters: ProvisionApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionApplicationProfile(requestParameters: ProvisionApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionApplicationProfile(requestParameters: ProvisionApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionApplicationProfile(requestParameters: ProvisionApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling provisionApplicationProfile.');
+    public provisionOneApplicationProfile(requestParameters: ProvisionOneApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneApplicationProfile(requestParameters: ProvisionOneApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneApplicationProfile(requestParameters: ProvisionOneApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneApplicationProfile(requestParameters: ProvisionOneApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling provisionOneApplicationProfile.');
         }
 
         let headers = this.defaultHeaders;
@@ -404,7 +565,7 @@ export class V2AppCentricApplicationProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(uuid))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -417,62 +578,18 @@ export class V2AppCentricApplicationProfilesService {
     }
 
     /**
+     * Restore one ApplicationProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public removeApplicationProfile(requestParameters: RemoveApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApplicationProfile>;
-    public removeApplicationProfile(requestParameters: RemoveApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApplicationProfile>>;
-    public removeApplicationProfile(requestParameters: RemoveApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApplicationProfile>>;
-    public removeApplicationProfile(requestParameters: RemoveApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling removeApplicationProfile.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<ApplicationProfile>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(uuid))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public restoreApplicationProfile(requestParameters: RestoreApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreApplicationProfile(requestParameters: RestoreApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreApplicationProfile(requestParameters: RestoreApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreApplicationProfile(requestParameters: RestoreApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling restoreApplicationProfile.');
+    public restoreOneApplicationProfile(requestParameters: RestoreOneApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneApplicationProfile(requestParameters: RestoreOneApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneApplicationProfile(requestParameters: RestoreOneApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneApplicationProfile(requestParameters: RestoreOneApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling restoreOneApplicationProfile.');
         }
 
         let headers = this.defaultHeaders;
@@ -494,7 +611,7 @@ export class V2AppCentricApplicationProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(uuid))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -507,17 +624,18 @@ export class V2AppCentricApplicationProfilesService {
     }
 
     /**
+     * Soft delete one ApplicationProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteApplicationProfile(requestParameters: SoftDeleteApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteApplicationProfile(requestParameters: SoftDeleteApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteApplicationProfile(requestParameters: SoftDeleteApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteApplicationProfile(requestParameters: SoftDeleteApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling softDeleteApplicationProfile.');
+    public softDeleteOneApplicationProfile(requestParameters: SoftDeleteOneApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneApplicationProfile(requestParameters: SoftDeleteOneApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneApplicationProfile(requestParameters: SoftDeleteOneApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneApplicationProfile(requestParameters: SoftDeleteOneApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneApplicationProfile.');
         }
 
         let headers = this.defaultHeaders;
@@ -539,7 +657,7 @@ export class V2AppCentricApplicationProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(uuid))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -551,21 +669,22 @@ export class V2AppCentricApplicationProfilesService {
     }
 
     /**
+     * Update one ApplicationProfile
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateApplicationProfile(requestParameters: UpdateApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApplicationProfile>;
-    public updateApplicationProfile(requestParameters: UpdateApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApplicationProfile>>;
-    public updateApplicationProfile(requestParameters: UpdateApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApplicationProfile>>;
-    public updateApplicationProfile(requestParameters: UpdateApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const uuid = requestParameters.uuid;
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling updateApplicationProfile.');
+    public updateOneApplicationProfile(requestParameters: UpdateOneApplicationProfileRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApplicationProfile>;
+    public updateOneApplicationProfile(requestParameters: UpdateOneApplicationProfileRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApplicationProfile>>;
+    public updateOneApplicationProfile(requestParameters: UpdateOneApplicationProfileRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApplicationProfile>>;
+    public updateOneApplicationProfile(requestParameters: UpdateOneApplicationProfileRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateOneApplicationProfile.');
         }
         const applicationProfile = requestParameters.applicationProfile;
         if (applicationProfile === null || applicationProfile === undefined) {
-            throw new Error('Required parameter applicationProfile was null or undefined when calling updateApplicationProfile.');
+            throw new Error('Required parameter applicationProfile was null or undefined when calling updateOneApplicationProfile.');
         }
 
         let headers = this.defaultHeaders;
@@ -597,7 +716,7 @@ export class V2AppCentricApplicationProfilesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<ApplicationProfile>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(uuid))}`,
+        return this.httpClient.put<ApplicationProfile>(`${this.configuration.basePath}/v2/app-centric/application-profiles/${encodeURIComponent(String(id))}`,
             applicationProfile,
             {
                 responseType: <any>responseType,

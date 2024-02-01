@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -14,7 +14,7 @@ describe('FilterEntryModalComponent', () => {
   let component: FilterModalComponent;
   let fixture: ComponentFixture<FilterModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         FilterModalComponent,
@@ -28,7 +28,7 @@ describe('FilterEntryModalComponent', () => {
       imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule, NgSelectModule, FormsModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FilterModalComponent);
@@ -37,7 +37,8 @@ describe('FilterEntryModalComponent', () => {
   });
 
   const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
-  const isRequired = (prop: string): boolean => {
+  /* eslint-disable-next-line */
+  const isRequired = (prop: string) => {
     const fc = getFormControl(prop);
     fc.setValue(null);
     return !!fc.errors && !!fc.errors.required;

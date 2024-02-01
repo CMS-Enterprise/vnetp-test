@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
@@ -18,7 +18,7 @@ describe('BridgeDomainComponent', () => {
   let component: BridgeDomainComponent;
   let fixture: ComponentFixture<BridgeDomainComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
         BridgeDomainComponent,
@@ -28,13 +28,13 @@ describe('BridgeDomainComponent', () => {
         MockIconButtonComponent,
         MockImportExportComponent,
         MockYesNoModalComponent,
-        MockComponent({ selector: 'app-bridge-domain-modal' }),
-        MockComponent('app-subnets-modal'),
+        MockComponent({ selector: 'app-bridge-domain-modal', inputs: ['tenantId'] }),
+        MockComponent({ selector: 'app-subnets-modal', inputs: ['tenantId'] }),
       ],
       imports: [HttpClientModule, RouterTestingModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BridgeDomainComponent);

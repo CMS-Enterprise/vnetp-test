@@ -1,6 +1,6 @@
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { Component, OnInit, OnDestroy, TemplateRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -90,7 +90,7 @@ export class TiersComponent implements OnInit, OnDestroy {
         filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
       })
       .subscribe(response => {
-        this.tierGroups = response.data as TierGroup[];
+        this.tierGroups = response.data;
 
         if (loadTiers) {
           this.getTiers();
@@ -107,40 +107,40 @@ export class TiersComponent implements OnInit, OnDestroy {
           filter: [`tierId||eq||${tier.id}`],
           sort: ['updatedAt,ASC'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
         const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
           filter: [`tierId||eq||${tier.id}`],
           sort: ['updatedAt,ASC'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
         const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
           filter: [`tierId||eq||${tier.id}`],
           sort: ['updatedAt,ASC'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
 
         const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
           filter: [`tierId||eq||${tier.id}`],
           sort: ['updatedAt,ASC'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
 
         const firewallRuleGroupRequest = this.firewallRuleGroupService.getManyFirewallRuleGroup({
           filter: [`tierId||eq||${tier.id}`],
           join: ['firewallRules'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
 
         const natRuleGroupRequest = this.natRuleGroupService.getManyNatRuleGroup({
           filter: [`tierId||eq||${tier.id}`],
           join: ['natRules'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
         forkJoin([
           networkObjectRequest,
@@ -197,7 +197,7 @@ export class TiersComponent implements OnInit, OnDestroy {
       .getManyTier({
         filter: [`datacenterId||eq||${this.currentDatacenter.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['updatedAt,ASC'],
       })
       .subscribe(
@@ -229,7 +229,7 @@ export class TiersComponent implements OnInit, OnDestroy {
     this.ngx.getModal('tierModal').open();
   }
 
-  public subscribeToTypeDeleteModal(tier) {
+  public subscribeToTypeDeleteModal() {
     this.typeDeletemodalSubscription = this.ngx.getModal('typeDeleteModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('typeDeleteModal');
       this.typeDeletemodalSubscription.unsubscribe();
@@ -239,7 +239,7 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   public openTypeDeleteModal(tier) {
     this.selectedTierToDelete = tier;
-    this.subscribeToTypeDeleteModal(tier);
+    this.subscribeToTypeDeleteModal();
     this.ngx.getModal('typeDeleteModal').open();
   }
 

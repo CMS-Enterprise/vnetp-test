@@ -18,7 +18,7 @@
   <tbody>
     <tr *ngFor="let tier of tiers">
       <td>
-        <input type="checkbox" [(ngModel)]="tier.isSelected" />
+        <input (keyup.enter)="tier.isSelected = !tier.isSelected" type="checkbox" [(ngModel)]="tier.isSelected" />
       </td>
       <td>
         {{ tier?.item?.name }}
@@ -43,7 +43,7 @@
 </table>
 
 <section class="btn-toolbar" role="toolbar">
-  <button class="btn btn-danger" (click)="deployTiers()">
+  <button (keyup.enter)="deployTiers" class="btn btn-danger" (click)="deployTiers()">
     Deploy Selected Tiers
   </button>
 </section>

@@ -13,10 +13,11 @@ import { Vlan } from './vlan';
 
 
 export interface GetManyVlanResponseDto { 
-    data: Array<Vlan>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<Vlan>;
 }
 

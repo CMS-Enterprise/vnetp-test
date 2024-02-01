@@ -1,15 +1,15 @@
-import { Component, enableProdMode, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   ApplicationProfile,
-  ApplicationProfilePaginationResponse,
-  EndpointGroup,
-  EndpointGroupPaginationResponse,
+  GetManyApplicationProfileResponseDto,
+  GetManyEndpointGroupResponseDto,
   V2AppCentricApplicationProfilesService,
   V2AppCentricEndpointGroupsService,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { ApplicationProfileModalDto } from 'src/app/models/appcentric/application-profile-modal-dto';
@@ -26,7 +26,7 @@ export class ApplicationProfileComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentApplicationProfilePage = 1;
   public perPage = 20;
-  public applicationProfiles = {} as ApplicationProfilePaginationResponse;
+  public applicationProfiles = {} as GetManyApplicationProfileResponseDto;
   public tableComponentDto = new TableComponentDto();
   private applicationPofileModalSubscription: Subscription;
   private endpointGroupModalSubscription: Subscription;
@@ -35,11 +35,14 @@ export class ApplicationProfileComponent implements OnInit {
 
   public isLoading = false;
 
-  public endpointGroups: EndpointGroupPaginationResponse;
+  public endpointGroups: GetManyEndpointGroupResponseDto;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
+    { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
+  ];
 
   public config: TableConfig<any> = {
     description: 'Application Profiles',
@@ -58,15 +61,18 @@ export class ApplicationProfileComponent implements OnInit {
     private router: Router,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
   ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    const advancedSearchAdapter = new AdvancedSearchAdapter<ApplicationProfile>();
+    advancedSearchAdapter.setService(this.applicationProfileService);
+    advancedSearchAdapter.setServiceName('V2AppCentricApplicationProfilesService');
+    this.config.advancedSearchAdapter = advancedSearchAdapter;
+
+    const match = this.router.routerState.snapshot.url.match(
+      /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
+    );
+    if (match) {
+      const uuid = match[0].split('/')[2];
+      this.tenantId = uuid;
+    }
   }
 
   ngOnInit(): void {
@@ -91,7 +97,7 @@ export class ApplicationProfileComponent implements OnInit {
       }
     }
     this.applicationProfileService
-      .findAllApplicationProfile({
+      .getManyApplicationProfile({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -111,7 +117,7 @@ export class ApplicationProfileComponent implements OnInit {
 
   public deleteApplicationProfile(applicationProfile: ApplicationProfile): void {
     if (applicationProfile.deletedAt) {
-      this.applicationProfileService.removeApplicationProfile({ uuid: applicationProfile.id }).subscribe(() => {
+      this.applicationProfileService.deleteOneApplicationProfile({ id: applicationProfile.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -125,8 +131,8 @@ export class ApplicationProfileComponent implements OnInit {
       });
     } else {
       this.applicationProfileService
-        .softDeleteApplicationProfile({
-          uuid: applicationProfile.id,
+        .softDeleteOneApplicationProfile({
+          id: applicationProfile.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -149,8 +155,8 @@ export class ApplicationProfileComponent implements OnInit {
     }
 
     this.applicationProfileService
-      .restoreApplicationProfile({
-        uuid: applicationProfile.id,
+      .restoreOneApplicationProfile({
+        id: applicationProfile.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
@@ -220,7 +226,7 @@ export class ApplicationProfileComponent implements OnInit {
     });
   }
 
-  public importApplicationProfilesConfig(applicationProfiles: ApplicationProfile[]): void {
+  public importApplicationProfilesConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,
@@ -243,7 +249,7 @@ export class ApplicationProfileComponent implements OnInit {
   public getEndpointGroups(applicationProfileId: string) {
     this.isLoading = true;
     const endpointGroups = this.endpointGroupService
-      .findAllEndpointGroup({
+      .getManyEndpointGroup({
         filter: [`applicationProfileId||eq||${applicationProfileId}`] as Array<string>,
         page: 1,
         perPage: 5,

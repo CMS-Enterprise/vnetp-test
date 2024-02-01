@@ -1,8 +1,6 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { Router, NavigationEnd } from '@angular/router';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import {
-  FilterEntryPaginationResponse,
   FilterEntry,
   Filter,
   V2AppCentricFilterEntriesService,
@@ -10,6 +8,7 @@ import {
   FilterEntryArpFlagEnum,
   FilterEntryIpProtocolEnum,
   V2AppCentricFiltersService,
+  GetManyFilterEntryResponseDto,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -33,11 +32,11 @@ export class FilterModalComponent implements OnInit {
   public ModalMode = ModalMode;
   public isLoading = false;
   public modalMode: ModalMode;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() public tenantId: string;
   public filterId: string;
-  public filterEntries: FilterEntryPaginationResponse;
+  public filterEntries: GetManyFilterEntryResponseDto;
   public tableComponentDto = new TableComponentDto();
   public perPage = 20;
 
@@ -70,23 +69,12 @@ export class FilterModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private filterService: V2AppCentricFiltersService,
     private filterEntriesService: V2AppCentricFilterEntriesService,
-    private router: Router,
     private tableContextService: TableContextService,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -149,8 +137,10 @@ export class FilterModalComponent implements OnInit {
       }
     }
     this.filterEntriesService
-      .findAllFilterEntry({
+      .getManyFilterEntry({
         filter: [`filterId||eq||${this.filterId}`, eventParams],
+        perPage: 1000,
+        page: 1,
       })
       .subscribe(
         data => (this.filterEntries = data),
@@ -166,8 +156,8 @@ export class FilterModalComponent implements OnInit {
       );
       const onConfirm = () => {
         this.filterEntriesService
-          .removeFilterEntry({
-            uuid: filterEntry.id,
+          .deleteOneFilterEntry({
+            id: filterEntry.id,
           })
           .subscribe(() => {
             const params = this.tableContextService.getSearchLocalStorage();
@@ -187,8 +177,8 @@ export class FilterModalComponent implements OnInit {
       );
       const onConfirm = () => {
         this.filterEntriesService
-          .softDeleteFilterEntry({
-            uuid: filterEntry.id,
+          .softDeleteOneFilterEntry({
+            id: filterEntry.id,
           })
           .subscribe(() => {
             const params = this.tableContextService.getSearchLocalStorage();
@@ -209,8 +199,8 @@ export class FilterModalComponent implements OnInit {
       return;
     }
     this.filterEntriesService
-      .restoreFilterEntry({
-        uuid: filterEntry.id,
+      .restoreOneFilterEntry({
+        id: filterEntry.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
@@ -266,7 +256,7 @@ export class FilterModalComponent implements OnInit {
   }
 
   private createFilter(filter: Filter): void {
-    this.filterService.createFilter({ filter }).subscribe(
+    this.filterService.createOneFilter({ filter }).subscribe(
       () => {
         this.closeModal();
       },
@@ -275,10 +265,11 @@ export class FilterModalComponent implements OnInit {
   }
 
   private editFilter(filter: Filter): void {
-    filter.name = null;
+    delete filter.name;
+    delete filter.tenantId;
     this.filterService
-      .updateFilter({
-        uuid: this.filterId,
+      .updateOneFilter({
+        id: this.filterId,
         filter,
       })
       .subscribe(
@@ -307,8 +298,6 @@ export class FilterModalComponent implements OnInit {
     if (this.modalMode === ModalMode.Create) {
       this.createFilter(filter);
     } else {
-      delete filter.tenantId;
-      delete filter.name;
       this.editFilter(filter);
     }
   }

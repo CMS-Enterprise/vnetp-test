@@ -1,8 +1,9 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Contract, ContractPaginationResponse, V2AppCentricContractsService } from 'client';
+import { Contract, GetManyContractResponseDto, V2AppCentricContractsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { ContractModalDto } from 'src/app/models/appcentric/contract-modal-dto';
@@ -19,17 +20,19 @@ export class ContractComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentContractPage = 1;
   public perPage = 20;
-  public contracts = {} as ContractPaginationResponse;
+  public contracts = {} as GetManyContractResponseDto;
   public tableComponentDto = new TableComponentDto();
   private contractModalSubscription: Subscription;
   public tenantId: string;
-  private subjectModalSubscription: Subscription;
 
   public isLoading = false;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
+    { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
+  ];
 
   public config: TableConfig<any> = {
     description: 'Contracts',
@@ -48,15 +51,18 @@ export class ContractComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private router: Router,
   ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    const advancedSearchAdapter = new AdvancedSearchAdapter<Contract>();
+    advancedSearchAdapter.setService(this.contractService);
+    advancedSearchAdapter.setServiceName('V2AppCentricContractsService');
+    this.config.advancedSearchAdapter = advancedSearchAdapter;
+
+    const match = this.router.routerState.snapshot.url.match(
+      /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
+    );
+    if (match) {
+      const uuid = match[0].split('/')[2];
+      this.tenantId = uuid;
+    }
   }
 
   ngOnInit(): void {
@@ -81,7 +87,7 @@ export class ContractComponent implements OnInit {
       }
     }
     this.contractService
-      .findAllContract({
+      .getManyContract({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -101,7 +107,7 @@ export class ContractComponent implements OnInit {
 
   public deleteContract(contract: Contract): void {
     if (contract.deletedAt) {
-      this.contractService.removeContract({ uuid: contract.id }).subscribe(() => {
+      this.contractService.deleteOneContract({ id: contract.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -115,8 +121,8 @@ export class ContractComponent implements OnInit {
       });
     } else {
       this.contractService
-        .softDeleteContract({
-          uuid: contract.id,
+        .softDeleteOneContract({
+          id: contract.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -139,8 +145,8 @@ export class ContractComponent implements OnInit {
     }
 
     this.contractService
-      .restoreContract({
-        uuid: contract.id,
+      .restoreOneContract({
+        id: contract.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
@@ -188,7 +194,7 @@ export class ContractComponent implements OnInit {
     });
   }
 
-  public importContractsConfig(contract: Contract[]): void {
+  public importContractsConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

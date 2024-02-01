@@ -1,4 +1,4 @@
-/* tslint:disable:no-string-literal */
+/* eslint-disable */
 import { TestBed } from '@angular/core/testing';
 import { DatacenterContextService } from './datacenter-context.service';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -65,16 +65,14 @@ describe('DatacenterContextService', () => {
         { id: 'dc1', name: 'Datacenter 1' },
         { id: 'dc2', name: 'Datacenter 2' },
       ];
-      const getManyDatacentersSpy = jest
-        .spyOn(datacenterService, 'getManyDatacenters')
-        .mockReturnValue(of({ data: datacentersMock } as any));
+      const getManyDatacenterSpy = jest.spyOn(datacenterService, 'getManyDatacenter').mockReturnValue(of({ data: datacentersMock } as any));
 
       const switchDatacenterSpy = jest.spyOn(service, 'switchDatacenter').mockImplementation(() => true);
 
       service['getDatacenters']('dc1');
 
       setTimeout(() => {
-        expect(getManyDatacentersSpy).toHaveBeenCalled();
+        expect(getManyDatacenterSpy).toHaveBeenCalled();
         expect(service['datacentersSubject'].value).toEqual(datacentersMock);
         expect(switchDatacenterSpy).toHaveBeenCalledWith('dc1');
         done();
@@ -100,16 +98,13 @@ describe('DatacenterContextService', () => {
 
     it('should fetch datacenters and auto-select the single available datacenter', done => {
       const datacentersMock = [{ id: 'dc1', name: 'Datacenter 1' }];
-      const getManyDatacentersSpy = jest
-        .spyOn(datacenterService, 'getManyDatacenters')
-        .mockReturnValue(of({ data: datacentersMock } as any));
-
+      const getManyDatacenterSpy = jest.spyOn(datacenterService, 'getManyDatacenter').mockReturnValue(of({ data: datacentersMock } as any));
       const switchDatacenterSpy = jest.spyOn(service, 'switchDatacenter').mockImplementation(() => true);
 
       service['getDatacenters']();
 
       setTimeout(() => {
-        expect(getManyDatacentersSpy).toHaveBeenCalled();
+        expect(getManyDatacenterSpy).toHaveBeenCalled();
         expect(service['datacentersSubject'].value).toEqual(datacentersMock);
         expect(switchDatacenterSpy).toHaveBeenCalledWith('dc1');
         done();
@@ -121,16 +116,14 @@ describe('DatacenterContextService', () => {
         { id: 'dc1', name: 'Datacenter 1' },
         { id: 'dc2', name: 'Datacenter 2' },
       ];
-      const getManyDatacentersSpy = jest
-        .spyOn(datacenterService, 'getManyDatacenters')
-        .mockReturnValue(of({ data: datacentersMock } as any));
+      const getManyDatacenterSpy = jest.spyOn(datacenterService, 'getManyDatacenter').mockReturnValue(of({ data: datacentersMock } as any));
 
       const switchDatacenterSpy = jest.spyOn(service, 'switchDatacenter').mockImplementation(() => true);
 
       service['getDatacenters']();
 
       setTimeout(() => {
-        expect(getManyDatacentersSpy).toHaveBeenCalled();
+        expect(getManyDatacenterSpy).toHaveBeenCalled();
         expect(service['datacentersSubject'].value).toEqual(datacentersMock);
         expect(switchDatacenterSpy).not.toHaveBeenCalled();
         done();
@@ -148,14 +141,14 @@ describe('DatacenterContextService', () => {
 
       service['currentDatacenterSubject'].next(currentDatacenterMock);
 
-      const getManyDatacentersSpy = jest
-        .spyOn(service['datacenterService'], 'getManyDatacenters')
+      const getManyDatacenterSpy = jest
+        .spyOn(service['datacenterService'], 'getManyDatacenter')
         .mockReturnValue(of({ data: datacentersMock } as any));
 
       service.refreshDatacenter();
 
       setTimeout(() => {
-        expect(getManyDatacentersSpy).toHaveBeenCalled();
+        expect(getManyDatacenterSpy).toHaveBeenCalled();
         expect(service['datacentersSubject'].value).toEqual(datacentersMock);
 
         const currentDatacenter = service['currentDatacenterSubject'].value;

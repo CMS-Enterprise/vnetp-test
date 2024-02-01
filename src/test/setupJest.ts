@@ -1,4 +1,6 @@
-import 'jest-preset-angular';
+/* eslint-disable */
+import 'zone.js/dist/zone-node';
+import 'jest-preset-angular/setup-jest';
 
 /* global mocks for jsdom */
 const mock = () => {
@@ -22,10 +24,8 @@ Object.defineProperty(window, 'getComputedStyle', {
 });
 
 Object.defineProperty(document.body.style, 'transform', {
-  value: () => {
-    return {
-      enumerable: true,
-      configurable: true,
-    };
-  },
+  value: () => ({
+    enumerable: true,
+    configurable: true,
+  }),
 });

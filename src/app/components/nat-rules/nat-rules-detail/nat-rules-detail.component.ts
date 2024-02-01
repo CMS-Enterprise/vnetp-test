@@ -20,6 +20,7 @@ import {
   NatRuleImport,
   NatRulePreview,
   GetManyNatRuleResponseDto,
+  NatRuleDirectionEnum,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
@@ -30,13 +31,18 @@ import { PreviewModalDto } from '../../../models/other/preview-modal-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 @Component({
   selector: 'app-nat-rules-detail',
   templateUrl: './nat-rules-detail.component.html',
 })
 export class NatRulesDetailComponent implements OnInit, OnDestroy {
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Direction', propertyName: 'direction', propertyType: NatRuleDirectionEnum },
+    { displayName: 'BiDirectional', propertyName: 'biDirectional', propertyType: 'boolean' },
+    { displayName: 'Enabled', propertyName: 'enabled', propertyType: 'boolean' },
+  ];
 
   public tableComponentDto = new TableComponentDto();
 
@@ -46,6 +52,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   TierName = '';
   currentTierIds: string[];
   ModalMode = ModalMode;
+  filteredResults: boolean;
   public currentTier: Tier;
 
   natRuleGroup: NatRuleGroup;
@@ -107,7 +114,12 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private datacenterService: DatacenterContextService,
     private tableContextService: TableContextService,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<NatRule>();
+    advancedSearchAdapterObject.setService(this.natRuleService);
+    advancedSearchAdapterObject.setServiceName('V1NetworkSecurityNatRulesService');
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
@@ -155,6 +167,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   getNatRules(event?): void {
+    this.filteredResults = false;
     this.isLoading = true;
     let eventParams;
     if (event) {
@@ -162,8 +175,10 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 50;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'name') {
         eventParams = propertyName + '||cont||' + searchText;
+      } else if (propertyName) {
+        eventParams = propertyName + '||eq||' + searchText;
       }
     } else {
       this.tableComponentDto.perPage = this.perPage;
@@ -172,7 +187,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       .getManyNatRule({
         filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['ruleIndex,ASC'],
       })
       .subscribe(
@@ -180,7 +195,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
           this.natRules = response;
         },
         () => {
-          this.natRules = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;
@@ -193,7 +208,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       .getManyNatRule({
         filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],
         page: 1,
-        limit: 1,
+        perPage: 1,
         sort: ['ruleIndex,DESC'],
       })
       .subscribe(response => {
@@ -208,25 +223,25 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   getObjects(): void {
     const tierRequest = this.tierService.getOneTier({ id: this.TierId });
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
-      filter: [`tierId||eq||${this.TierId}`, `deletedAt||isnull`],
+      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
-      limit: 50000,
+      perPage: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
-      filter: [`tierId||eq||${this.TierId}`, `deletedAt||isnull`],
+      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
-      limit: 50000,
+      perPage: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
-      filter: [`tierId||eq||${this.TierId}`, `deletedAt||isnull`],
+      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
-      limit: 50000,
+      perPage: 50000,
     });
 
     forkJoin([tierRequest, networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest]).subscribe(result => {
@@ -271,6 +286,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.natRuleModalSubscription = this.ngx.getModal('natRuleModal').onCloseFinished.subscribe(() => {
       this.getNatRuleGroup();
       this.ngx.resetModalData('natRuleModal');
+      this.natRuleModalSubscription.unsubscribe();
     });
   }
 
@@ -378,7 +394,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.ngx.getModal('previewModal').open();
 
     const previewImportSubscription = this.ngx.getModal('previewModal').onCloseFinished.subscribe((modal: NgxSmartModalComponent) => {
-      const modalData: PreviewModalDto<NatRule> = modal.getData();
+      const modalData: PreviewModalDto<NatRule> = modal.getData() as any;
       modal.removeData();
       if (modalData && modalData.confirm) {
         const natConfirmDto: NatRuleImportCollectionDto = {

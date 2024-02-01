@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
@@ -30,7 +30,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   templateUrl: './firewall-rule-modal.component.html',
 })
 export class FirewallRuleModalComponent implements OnInit, OnDestroy {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted: boolean;
   TierId: string;
 
@@ -38,6 +38,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   destinationNetworkTypeSubscription: Subscription;
   serviceTypeSubscription: Subscription;
   objectInfoSubscription: Subscription;
+  protocolChangeSubscription: Subscription;
 
   networkObjects: Array<NetworkObject>;
   networkObjectGroups: Array<NetworkObjectGroup>;
@@ -51,7 +52,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private firewallRuleService: V1NetworkSecurityFirewallRulesService,
     public helpText: FirewallRuleModalHelpText,
     private networkObjectService: V1NetworkSecurityNetworkObjectsService,
@@ -63,6 +64,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   subscribeToObjectInfoModal() {
     this.objectInfoSubscription = this.ngx.getModal('firewallRuleObjectInfoModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('firewallRuleObjectInfoModal');
+      this.objectInfoSubscription.unsubscribe();
     });
   }
 
@@ -143,7 +145,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
             const members = data.serviceObjects;
             const memberDetails = members.map(member => {
               let returnValue = `Name: ${member.name} ---`;
-
+              // eslint-disable-next-line
               returnValue += `Protocol: ${member.protocol}, Source Ports: ${member.sourcePorts}, Destination Ports: ${member.destinationPorts}`;
 
               return returnValue;
@@ -254,12 +256,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   closeModal() {
     this.ngx.close('firewallRuleModal');
-    this.reset();
   }
 
   cancel() {
     this.ngx.close('firewallRuleModal');
-    this.reset();
   }
 
   get f() {
@@ -446,6 +446,32 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       serviceObject.updateValueAndValidity();
       serviceObjectGroup.updateValueAndValidity();
     });
+
+    const formServiceType = this.form.controls.serviceType;
+
+    this.protocolChangeSubscription = this.form.controls.protocol.valueChanges.subscribe(protocol => {
+      if (protocol === 'ICMP' || protocol === 'IP') {
+        if (
+          (!sourcePorts.value || sourcePorts.value.trim() === '' || !destinationPorts.value || destinationPorts.value.trim() === '') &&
+          (!serviceObject.value || serviceObject.value.trim() === '') &&
+          (!serviceObjectGroup.value || serviceObjectGroup.value.trim() === '')
+        ) {
+          formServiceType.setValue('Port');
+          sourcePorts.setValue('any');
+          destinationPorts.setValue('any');
+        }
+        formServiceType.disable();
+        sourcePorts.disable();
+        destinationPorts.disable();
+      } else {
+        formServiceType.enable();
+        sourcePorts.enable();
+        destinationPorts.enable();
+      }
+      formServiceType.updateValueAndValidity();
+      sourcePorts.updateValueAndValidity();
+      destinationPorts.updateValueAndValidity();
+    });
   }
 
   private buildForm() {
@@ -488,6 +514,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       this.sourceNetworkTypeSubscription,
       this.destinationNetworkTypeSubscription,
       this.serviceTypeSubscription,
+      this.protocolChangeSubscription,
     ]);
   }
 

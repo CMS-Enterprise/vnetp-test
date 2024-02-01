@@ -13,10 +13,11 @@ import { LoadBalancerRoute } from './loadBalancerRoute';
 
 
 export interface GetManyLoadBalancerRouteResponseDto { 
-    data: Array<LoadBalancerRoute>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<LoadBalancerRoute>;
 }
 

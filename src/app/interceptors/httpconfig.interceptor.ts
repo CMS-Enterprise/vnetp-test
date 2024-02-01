@@ -50,10 +50,7 @@ export class HttpConfigInterceptor {
     }
 
     if (request.params.get('join') && request.params.get('join').split(',').length > 1) {
-      const queryStingReplacement = request.params
-        .get('join')
-        .split(',')
-        .join('&join=');
+      const queryStingReplacement = request.params.get('join').split(',').join('&join=');
       const requestUrl = `${request.url}?join=${queryStingReplacement}`;
       request = request.clone({
         url: requestUrl,
@@ -62,10 +59,7 @@ export class HttpConfigInterceptor {
     }
 
     if (request.params.get('filter') && request.params.get('filter').split(',').length > 1) {
-      const queryStingReplacement = request.params
-        .get('filter')
-        .split(',')
-        .join('&filter=');
+      const queryStingReplacement = request.params.get('filter').split(',').join('&filter=');
       const requestUrl = `${request.url}?filter=${queryStingReplacement}`;
       request = request.clone({
         url: requestUrl,
@@ -93,7 +87,7 @@ export class HttpConfigInterceptor {
                 toastrMessage = `Bad Request - ${errorResponse?.error?.description}`;
               } else {
                 // TODO: Adding this temporarily to capture errors without description.
-                console.log(errorResponse);
+                // console.log(errorResponse);
                 toastrMessage = 'Unhandled Error Response';
               }
               break;
@@ -106,12 +100,13 @@ export class HttpConfigInterceptor {
           }
         }
 
+        /* eslint-disable-next-line */
         const data = {
           error: errorResponse,
           status: errorResponse.status,
         };
 
-        console.error(data);
+        // console.error(data);
 
         this.toastr.error(toastrMessage);
         return throwError(errorResponse);

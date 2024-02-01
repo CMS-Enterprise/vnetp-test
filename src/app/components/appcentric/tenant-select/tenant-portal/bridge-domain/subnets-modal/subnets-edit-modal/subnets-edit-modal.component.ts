@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AppCentricSubnet, V2AppCentricAppCentricSubnetsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { AppcentricSubnetDto } from 'src/app/models/appcentric/appcentric-subnet-dto';
@@ -14,14 +14,14 @@ import { IpAddressCidrValidator } from 'src/app/validators/network-form-validato
 })
 export class SubnetsEditModalComponent implements OnInit {
   public subnetId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public modalMode: ModalMode;
   @Input() public bridgeDomainId: string;
   @Input() public tenantId: string;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private subnetsService: V2AppCentricAppCentricSubnetsService,
   ) {}
@@ -107,7 +107,7 @@ export class SubnetsEditModalComponent implements OnInit {
   }
 
   private createSubnets(appCentricSubnet: AppCentricSubnet): void {
-    this.subnetsService.createAppCentricSubnet({ appCentricSubnet }).subscribe(
+    this.subnetsService.createOneAppCentricSubnet({ appCentricSubnet }).subscribe(
       () => undefined,
       () => undefined,
       () => this.closeModal(),
@@ -115,13 +115,13 @@ export class SubnetsEditModalComponent implements OnInit {
   }
 
   private editSubnet(appCentricSubnet: AppCentricSubnet): void {
-    appCentricSubnet.name = null;
-    appCentricSubnet.gatewayIp = null;
-    appCentricSubnet.tenantId = null;
-    appCentricSubnet.bridgeDomainId = null;
+    delete appCentricSubnet.name;
+    delete appCentricSubnet.gatewayIp;
+    delete appCentricSubnet.tenantId;
+    delete appCentricSubnet.bridgeDomainId;
     this.subnetsService
-      .updateAppCentricSubnet({
-        uuid: this.subnetId,
+      .updateOneAppCentricSubnet({
+        id: this.subnetId,
         appCentricSubnet,
       })
       .subscribe(
