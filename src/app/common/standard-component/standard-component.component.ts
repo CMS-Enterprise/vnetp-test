@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
 @Component({
@@ -12,44 +12,64 @@ export class StandardComponentComponent {
   @Input() objectSearchColumns;
   @Input() tableItemsPerPage;
   @Input() objectType;
-
   @Output() clearResultsFunc = new EventEmitter<any>();
   @Output() openObjectModalFunc = new EventEmitter<any>();
   @Output() tableEventFunc = new EventEmitter<any>();
   @Output() searchParamsFunc = new EventEmitter<any>();
   @Output() importObjectsFunc = new EventEmitter<any>();
+  @Output() restoreObjectsFunc = new EventEmitter<any>();
+  @Output() deleteObjectsFunc = new EventEmitter<any>();
 
   currentTier;
+  ModalMode;
+
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   constructor() {}
 
   searchParamsGetTableObjects(event?) {
+    console.log('event', event);
     console.log('hit get table objects');
-    this.searchParamsFunc.emit();
+    this.searchParamsFunc.emit(event);
   }
 
   onTableEvent(event?) {
+    console.log('event', event);
     console.log('hit on table event');
     this.tableEventFunc.emit();
   }
 
   importObjectsConfigFunction(event?) {
+    console.log('event', event);
     console.log('hit import objects config');
     this.importObjectsFunc.emit();
   }
 
-  clearResultsFunction() {
+  clearResultsFunction(event?) {
+    console.log('event', event);
     console.log('hit clear results func');
     this.clearResultsFunc.emit();
   }
 
-  openObjectModal() {
+  openObjectModal(modalMode, obj?) {
+    console.log('modalMode', modalMode);
     console.log('hit openObjectModal func');
     this.openObjectModalFunc.emit();
   }
 
-  tableEventFunction() {
+  tableEventFunction(event?) {
+    console.log('event', event);
     console.log('hit tableEventFunction func');
     this.tableEventFunc.emit();
+  }
+
+  restoreObjectFunction(event?) {
+    console.log('event', event);
+    this.restoreObjectsFunc.emit();
+  }
+
+  deleteObjectFunction(event?) {
+    console.log('event', event);
+    this.deleteObjectsFunc.emit();
   }
 }

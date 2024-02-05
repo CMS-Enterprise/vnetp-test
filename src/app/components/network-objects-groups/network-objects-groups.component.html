@@ -4,11 +4,13 @@
 
 <h1 *ngIf="navIndex === 1">Network Object Groups</h1>
 
-<ng-container *ngIf="currentTier; else warningMessage">
+<ng-container *ngIf="navIndex === 0">
+  <app-standard-component (importObjectsConfigFunction)="importNetworkObjectsConfig($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="objectSearchColumns" [tableData]="networkObjects" [tableConfig]="networkObjectConfig" (openObjectModalFunc)="openNetworkObjectModal(ModalMode.Create)" (clearResultsFunc)="getNetworkObjects($event)" (searchParamsFunc)="getNetworkObjects($event)" (tableEventFunc)="getNetworkObjects($event)"></app-standard-component>
+</ng-container>
+<!-- <ng-container *ngIf="currentTier; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
   <div *ngIf="navIndex === 0">
     <section class="btn-toolbar" role="toolbar">
-      <!-- Create Network Object -->
       <button type="button" class="btn btn-success" (click)="openNetworkObjectModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Network Object</span>
@@ -84,7 +86,6 @@
 
   <div *ngIf="navIndex === 1">
     <section class="btn-toolbar" role="toolbar">
-      <!-- Create Network Object Group -->
       <button type="button" class="btn btn-success" (click)="openNetworkObjectGroupModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Network Object Group</span>
@@ -157,7 +158,7 @@
       (import)="importNetworkObjectGroupRelationsConfig($event)"
     ></app-import-export>
   </section>
-</ng-container>
+</ng-container> -->
 <app-network-object-group-modal></app-network-object-group-modal>
 <app-network-object-modal></app-network-object-modal>
 <app-unused-objects-modal [unusedObjectsInput]="unusedObjects"></app-unused-objects-modal>
@@ -166,4 +167,31 @@
 <app-yes-no-modal [allowEmptyTier]="showRadio"></app-yes-no-modal>
 <ng-template #warningMessage>
   <p>Select a Tier to display Network Objects & Groups details</p>
+</ng-template>
+
+<ng-template #actionsTemplate let-netObj="datum">
+  <section class="table__actions">
+    <app-icon-button (click)="checkObjectsParents(netObj)" icon="search"></app-icon-button>
+    <app-icon-button
+          *ngIf="!netObj?.deletedAt"
+          icon="edit"
+          label="Edit Network Object"
+          (handleClick)="openNetworkObjectModal(ModalMode.Edit, netObj)"
+        ></app-icon-button>
+
+        <app-icon-button
+          *ngIf="netObj?.deletedAt"
+          icon="undo"
+          label="Restore Network Object"
+          type="success"
+          (handleClick)="restoreNetworkObject(netObj)"
+        ></app-icon-button>
+
+        <app-icon-button
+          icon="delete"
+          label="Soft-Delete/Delete Network Object"
+          [type]="netObj?.deletedAt ? 'danger' : 'default'"
+          (handleClick)="deleteNetworkObject(netObj)"
+        ></app-icon-button>
+  </section>
 </ng-template>

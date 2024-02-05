@@ -17,6 +17,7 @@ import { TableModule } from 'src/app/common/table/table.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TierSelectModule } from 'src/app/common/tier-select/tier-select.module';
 import { UsedObjectsParentsModalModule } from 'src/app/common/used-objects-parents-modal/used-objects-parents-modal.module';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -42,6 +43,7 @@ const routes: Routes = [
     TabsModule,
     TierSelectModule,
     UsedObjectsParentsModalModule,
+    StandardComponentModule,
   ],
   declarations: [NetworkObjectsGroupsComponent, NetworkObjectGroupModalComponent, NetworkObjectModalComponent, UnusedObjectsModalComponent],
 })
