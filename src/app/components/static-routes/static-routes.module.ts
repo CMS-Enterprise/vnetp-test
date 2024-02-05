@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { TableModule } from '../../common/table/table.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -38,6 +39,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     TableModule,
     YesNoModalModule,
+    StandardComponentModule,
   ],
   declarations: [StaticRoutesComponent, StaticRouteModalComponent, StaticRouteDetailComponent],
   exports: [StaticRoutesComponent, StaticRouteModalComponent, StaticRouteDetailComponent],

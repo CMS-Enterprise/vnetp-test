@@ -24,6 +24,7 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
   public searchColumns: SearchColumnConfig[] = [];
   public perPage = 20;
   public tableComponentDto = new TableComponentDto();
+  objectType = 'Static Route';
 
   private currentDatacenterSubscription: Subscription;
   private staticRouteModalSubscription: Subscription;
