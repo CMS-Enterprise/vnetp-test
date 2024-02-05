@@ -3,12 +3,15 @@
 <h1 *ngIf="navIndex === 0">Network Objects</h1>
 
 <h1 *ngIf="navIndex === 1">Network Object Groups</h1>
+<app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
-<ng-container *ngIf="navIndex === 0">
-  <app-standard-component (importObjectsConfigFunction)="importNetworkObjectsConfig($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="objectSearchColumns" [tableData]="networkObjects" [tableConfig]="networkObjectConfig" (openObjectModalFunc)="openNetworkObjectModal(ModalMode.Create)" (clearResultsFunc)="getNetworkObjects($event)" (searchParamsFunc)="getNetworkObjects($event)" (tableEventFunc)="getNetworkObjects($event)"></app-standard-component>
+<ng-container>
+  <section *ngIf="navIndex === 0">
+    <app-standard-component (importObjectsFunc)="importNetworkObjectsConfig($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="objectSearchColumns" [tableData]="networkObjects" [tableConfig]="networkObjectConfig" (openObjectModalFunc)="openNetworkObjectModal(ModalMode.Create)" (clearResultsFunc)="getNetworkObjects($event)" (searchParamsFunc)="getNetworkObjects($event)" (tableEventFunc)="getNetworkObjects($event)"></app-standard-component>
+
+  </section>
 </ng-container>
 <!-- <ng-container *ngIf="currentTier; else warningMessage">
-  <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
   <div *ngIf="navIndex === 0">
     <section class="btn-toolbar" role="toolbar">
       <button type="button" class="btn btn-success" (click)="openNetworkObjectModal(ModalMode.Create)">
@@ -193,5 +196,13 @@
           [type]="netObj?.deletedAt ? 'danger' : 'default'"
           (handleClick)="deleteNetworkObject(netObj)"
         ></app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #addressTemplate let-netObj="datum">
+  <section>
+    <span *ngIf="netObj?.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
+    <span *ngIf="netObj?.type === 'Range'"> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
+    <span *ngIf="netObj?.type === 'Fqdn'"> {{ netObj?.fqdn }}</span>
   </section>
 </ng-template>

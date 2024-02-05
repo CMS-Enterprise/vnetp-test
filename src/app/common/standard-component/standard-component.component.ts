@@ -42,7 +42,7 @@ export class StandardComponentComponent {
   importObjectsConfigFunction(event?) {
     console.log('event', event);
     console.log('hit import objects config');
-    this.importObjectsFunc.emit();
+    this.importObjectsFunc.emit(event);
   }
 
   clearResultsFunction(event?) {

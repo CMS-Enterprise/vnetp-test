@@ -484,7 +484,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   importNetworkObjectsConfig(event: NetworkObject[]): void {
-    console.log('event', event);
     const modalDto = new YesNoModalDto(
       'Import Network Objects',
       `Are you sure you would like to import ${event.length} network object${event.length > 1 ? 's' : ''}?`,
