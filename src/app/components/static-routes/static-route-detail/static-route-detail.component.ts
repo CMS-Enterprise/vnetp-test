@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Tier, V1TiersService, StaticRoute, V1NetworkStaticRoutesService, GetManyStaticRouteResponseDto } from 'client';
@@ -30,6 +30,8 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
   private staticRouteModalSubscription: Subscription;
 
   public isLoading = false;
+
+  @Output() formFields = ['destinationNetwork', 'nextHop', 'metric'];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('stateTemplate') stateTemplate: TemplateRef<any>;
@@ -73,17 +75,25 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
     }
 
     this.subscribeToStaticRouteModal();
-    this.ngx.setModalData(dto, 'staticRouteModal');
-    this.ngx.getModal('staticRouteModal').open();
+    this.ngx.setModalData(dto, 'standardFormModal');
+    this.ngx.getModal('standardFormModal').open();
   }
 
   subscribeToStaticRouteModal() {
-    this.staticRouteModalSubscription = this.ngx.getModal('staticRouteModal').onCloseFinished.subscribe(() => {
+    this.staticRouteModalSubscription = this.ngx.getModal('standardFormModal').onCloseFinished.subscribe(() => {
       this.getStaticRoutes();
-      this.ngx.resetModalData('staticRouteModal');
+      this.ngx.resetModalData('standardFormModal');
       this.staticRouteModalSubscription.unsubscribe();
     });
   }
+
+  // subscribeToStaticRouteModal() {
+  //   this.staticRouteModalSubscription = this.ngx.getModal('staticRouteModal').onCloseFinished.subscribe(() => {
+  //     this.getStaticRoutes();
+  //     this.ngx.resetModalData('staticRouteModal');
+  //     this.staticRouteModalSubscription.unsubscribe();
+  //   });
+  // }
 
   public deleteStaticRoute(staticRoute: StaticRoute): void {
     this.entityService.deleteEntity(staticRoute, {

@@ -13,6 +13,7 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { TableModule } from '../../common/table/table.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
+import { StandardFormModalModule } from 'src/app/common/standard-form-modal/standard-form-modal.module';
 
 const routes: Routes = [
   {
@@ -40,6 +41,7 @@ const routes: Routes = [
     TableModule,
     YesNoModalModule,
     StandardComponentModule,
+    StandardFormModalModule,
   ],
   declarations: [StaticRoutesComponent, StaticRouteModalComponent, StaticRouteDetailComponent],
   exports: [StaticRoutesComponent, StaticRouteModalComponent, StaticRouteDetailComponent],

@@ -26,6 +26,10 @@ describe('StaticRouteDetailComponent', () => {
           selector: 'app-standard-component',
           inputs: ['tableData', 'tableConfig', 'objectSearchColumns', 'tableItemsPerPage', 'objectType'],
         }),
+        MockComponent({
+          selector: 'app-standard-form-modal',
+          inputs: ['formInputs'],
+        }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,
