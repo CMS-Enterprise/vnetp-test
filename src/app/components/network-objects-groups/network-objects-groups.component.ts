@@ -43,6 +43,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   ModalMode = ModalMode;
   filteredResults: boolean;
   objectType = 'Network Object';
+  objectGroupType = 'Network Object Group';
 
   networkObjects = {} as GetManyNetworkObjectResponseDto;
   networkObjectGroups = {} as GetManyNetworkObjectGroupResponseDto;
@@ -67,6 +68,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   public isLoadingGroups = false;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+  @ViewChild('groupActionsTemplate') groupActionsTemplate: TemplateRef<any>;
   @ViewChild('membersTemplate') membersTemplate: TemplateRef<any>;
   @ViewChild('addressTemplate') addressTemplate: TemplateRef<any>;
   @ViewChild('natServiceTemplate') natServiceTemplate: TemplateRef<any>;
@@ -104,7 +106,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       { name: 'Name', property: 'name' },
       { name: 'Members', template: () => this.membersTemplate },
       { name: 'State', template: () => this.groupStateTemplate },
-      { name: '', template: () => this.actionsTemplate },
+      { name: '', template: () => this.groupActionsTemplate },
     ],
     hideAdvancedSearch: true,
   };

@@ -5,10 +5,31 @@
 <h1 *ngIf="navIndex === 1">Network Object Groups</h1>
 <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
-<ng-container>
-  <section *ngIf="navIndex === 0">
+<ng-container *ngIf="currentTier">
+  <div *ngIf="navIndex === 0">
+    <section class="btn-toolbar" role="toolbar">
+      <button type="button" class="btn btn-link" (click)="checkObjectUsage()">
+        <span>Unused Objects</span>
+      </button>
+    </section>
     <app-standard-component (importObjectsFunc)="importNetworkObjectsConfig($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="objectSearchColumns" [tableData]="networkObjects" [tableConfig]="networkObjectConfig" (openObjectModalFunc)="openNetworkObjectModal(ModalMode.Create)" (clearResultsFunc)="getNetworkObjects($event)" (searchParamsFunc)="getNetworkObjects($event)" (tableEventFunc)="getNetworkObjects($event)"></app-standard-component>
 
+  </div>
+  <div *ngIf="navIndex === 1">
+    <app-standard-component (importObjectsFunc)="importNetworkObjectGroupsConfig($event)" [objectType]="objectGroupType" [tableItemsPerPage]="perPage" [objectSearchColumns]="groupSearchColumns" [tableData]="networkObjectGroups" [tableConfig]="networkObjectGroupConfig" (openObjectModalFunc)="openNetworkObjectGroupModal(ModalMode.Create)" (clearResultsFunc)="getNetworkObjectGroups($event)" (searchParamsFunc)="getNetworkObjectGroups($event)" (tableEventFunc)="getNetworkObjectGroups($event)"></app-standard-component>
+
+  </div>
+
+  <div *ngIf="navIndex === 2">
+    <label class="mt-3 ml-3">Click the import CSV button to add network object group relations</label>
+  </div>
+
+  <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 2">
+    <app-import-export
+      [disableExport]="true"
+      [disableJson]="false"
+      (import)="importNetworkObjectGroupRelationsConfig($event)"
+    ></app-import-export>
   </section>
 </ng-container>
 <!-- <ng-container *ngIf="currentTier; else warningMessage">
@@ -199,10 +220,64 @@
   </section>
 </ng-template>
 
+<ng-template #groupActionsTemplate let-netObjGroup="datum">
+  <section class="table__actions">
+    <app-icon-button
+          *ngIf="!netObjGroup?.deletedAt"
+          icon="edit"
+          label="Edit Network Object Group"
+          (handleClick)="openNetworkObjectGroupModal(ModalMode.Edit, netObjGroup)"
+        ></app-icon-button>
+
+        <app-icon-button
+          *ngIf="netObjGroup?.deletedAt"
+          icon="undo"
+          label="Restore Network Object Group"
+          type="success"
+          (handleClick)="restoreNetworkObjectGroup(netObjGroup)"
+        ></app-icon-button>
+
+        <app-icon-button
+          icon="delete"
+          label="Soft-Delete/Delete Network Object Group"
+          [type]="netObjGroup?.deletedAt ? 'danger' : 'default'"
+          (handleClick)="deleteNetworkObjectGroup(netObjGroup)"
+        ></app-icon-button>
+  </section>
+</ng-template>
+
 <ng-template #addressTemplate let-netObj="datum">
   <section>
     <span *ngIf="netObj?.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
     <span *ngIf="netObj?.type === 'Range'"> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
     <span *ngIf="netObj?.type === 'Fqdn'"> {{ netObj?.fqdn }}</span>
+  </section>
+</ng-template>
+
+<ng-template #natServiceTemplate let-netObj="datum">
+  <section>
+    <span *ngIf="netObj?.natService"> {{ netObj?.natSourcePort }} : {{ netObj?.natTranslatedPort }} </span>
+  </section>
+</ng-template>
+
+<ng-template #objStateTemplate let-netObj="datum">
+  <section>
+    <span>{{ netObj.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<ng-template #membersTemplate let-netObjGroup="datum">
+  <section>
+    <span> {{ netObjGroup.networkObjects?.length }}</span>
+  </section>
+</ng-template>
+
+<ng-template #groupStateTemplate let-netObjGroup="datum">
+  <section>
+    <span>{{ netObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
   </section>
 </ng-template>
