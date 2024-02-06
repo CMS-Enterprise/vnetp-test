@@ -40,6 +40,7 @@ export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    console.log('here?');
     this.advancedSearchAdapterSubscription = this.advancedSearchAdapterSubject.subscribe((advancedSearchAdapter: any) => {
       if (advancedSearchAdapter) {
         this.advancedSearchAdapter = advancedSearchAdapter;

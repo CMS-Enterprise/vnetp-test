@@ -197,6 +197,7 @@ export class TableComponent<T> implements AfterViewInit {
   }
 
   subscribeToAdvancedSearch() {
+    console.log('hit?', this.advancedSearchComponent.orActive);
     this.advancedSearchSubscription = this.ngx.getModal('advancedSearch').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('advancedSearch');
       this.advancedSearchSubscription.unsubscribe();

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
 @Component({
@@ -6,7 +6,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
   templateUrl: './standard-component.component.html',
   styleUrls: ['./standard-component.component.css'],
 })
-export class StandardComponentComponent {
+export class StandardComponentComponent implements OnInit, AfterViewInit {
   @Input() tableData;
   @Input() tableConfig;
   @Input() objectSearchColumns;
@@ -26,6 +26,12 @@ export class StandardComponentComponent {
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   constructor() {}
+  ngAfterViewInit(): void {
+    console.log('after view init');
+  }
+  ngOnInit(): void {
+    console.log('on init?', this.tableConfig);
+  }
 
   searchParamsGetTableObjects(event?) {
     console.log('event', event);

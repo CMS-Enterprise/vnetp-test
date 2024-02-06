@@ -3,9 +3,10 @@
 <h1 *ngIf="navIndex === 0">Network Objects</h1>
 
 <h1 *ngIf="navIndex === 1">Network Object Groups</h1>
-<app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
 <ng-container *ngIf="currentTier">
+  <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
+
   <div *ngIf="navIndex === 0">
     <section class="btn-toolbar" role="toolbar">
       <button type="button" class="btn btn-link" (click)="checkObjectUsage()">
