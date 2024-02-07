@@ -87,8 +87,11 @@
   </section>
 </ng-container>
 
-<app-advanced-search-modal
+<ng-container *ngIf="!config.hideAdvancedSearch">
+  <app-advanced-search-modal
   [advancedSearchAdapterSubject]="advancedSearchAdapterSubject"
   (advancedSearchResults)="setAdvancedSearchData($event)"
   [formInputs]="searchColumns"
 ></app-advanced-search-modal>
+</ng-container>
+

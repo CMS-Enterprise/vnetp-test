@@ -21,6 +21,7 @@ export class UnusedObjectsModalComponent {
       },
       { name: '', template: () => this.actionsTemplate },
     ],
+    hideAdvancedSearch: true,
   };
 
   constructor(private ngx: NgxSmartModalService, private networkObjectService: V1NetworkSecurityNetworkObjectsService) {}

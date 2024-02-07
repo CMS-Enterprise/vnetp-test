@@ -6,7 +6,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
   templateUrl: './standard-component.component.html',
   styleUrls: ['./standard-component.component.css'],
 })
-export class StandardComponentComponent implements OnInit, AfterViewInit {
+export class StandardComponentComponent implements OnInit {
   @Input() tableData;
   @Input() tableConfig;
   @Input() objectSearchColumns;
@@ -26,9 +26,7 @@ export class StandardComponentComponent implements OnInit, AfterViewInit {
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   constructor() {}
-  ngAfterViewInit(): void {
-    console.log('after view init');
-  }
+
   ngOnInit(): void {
     console.log('on init?', this.tableConfig);
   }

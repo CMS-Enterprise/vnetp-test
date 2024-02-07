@@ -15,5 +15,6 @@ export class UsedObjectsParentsModalComponent {
         property: 'name',
       },
     ],
+    hideAdvancedSearch: true,
   };
 }
