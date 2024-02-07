@@ -18,6 +18,7 @@ import { ImportExportModule } from 'src/app/common/import-export/import-export.m
 import { TierSelectModule } from 'src/app/common/tier-select/tier-select.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { UsedObjectsParentsModalModule } from 'src/app/common/used-objects-parents-modal/used-objects-parents-modal.module';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -44,6 +45,7 @@ const routes: Routes = [
     TierSelectModule,
     YesNoModalModule,
     UsedObjectsParentsModalModule,
+    StandardComponentModule,
   ],
   declarations: [ServiceObjectsGroupsComponent, ServiceObjectGroupModalComponent, ServiceObjectModalComponent, UnusedObjectsModalComponent],
   exports: [ServiceObjectsGroupsComponent, ServiceObjectGroupModalComponent, ServiceObjectModalComponent],

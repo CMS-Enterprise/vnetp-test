@@ -51,6 +51,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
 
   navIndex = 0;
   showRadio = false;
+  objectType = 'Service Object';
+  objectGroupType = 'Service Object Group';
 
   public tabs: Tab[] = [{ name: 'Service Objects' }, { name: 'Service Object Groups' }, { name: 'Service Object Group Relations' }];
   public objectSearchColumns: SearchColumnConfig[] = [

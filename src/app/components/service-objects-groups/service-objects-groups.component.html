@@ -6,11 +6,42 @@
 
 <h1 *ngIf="navIndex === 1">Service Object Groups</h1>
 
-<ng-container *ngIf="currentTier; else warningMessage">
+
+<ng-container *ngIf="currentTier">
+  <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
+
+  <div *ngIf="navIndex === 0">
+    <section class="btn-toolbar" role="toolbar">
+      <button type="button" class="btn btn-link" (click)="checkObjectUsage()">
+        <span>Unused Objects</span>
+      </button>
+    </section>
+    <app-standard-component (importObjectsFunc)="importServiceObjectsConfig($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="objectSearchColumns" [tableData]="serviceObjects" [tableConfig]="serviceObjectConfig" (openObjectModalFunc)="openServiceObjectModal(ModalMode.Create)" (clearResultsFunc)="getServiceObjects($event)" (searchParamsFunc)="getServiceObjects($event)" (tableEventFunc)="getServiceObjects($event)"></app-standard-component>
+
+  </div>
+  <div *ngIf="navIndex === 1">
+    <app-standard-component (importObjectsFunc)="importServiceObjectGroupsConfig($event)" [objectType]="objectGroupType" [tableItemsPerPage]="perPage" [objectSearchColumns]="groupSearchColumns" [tableData]="serviceObjectGroups" [tableConfig]="serviceObjectGroupConfig" (openObjectModalFunc)="openServiceObjectGroupModal(ModalMode.Create)" (clearResultsFunc)="getServiceObjectGroups($event)" (searchParamsFunc)="getServiceObjectGroups($event)" (tableEventFunc)="getServiceObjectGroups($event)"></app-standard-component>
+
+  </div>
+
+  <div *ngIf="navIndex === 2">
+    <label class="mt-3 ml-3">Click the import CSV button to add service object group relations</label>
+  </div>
+
+  <section class="btn-toolbar" role="toolbar" *ngIf="navIndex === 2">
+    <app-import-export
+      [disableExport]="true"
+      [disableJson]="false"
+      (import)="importServiceObjectGroupRelationsConfig($event)"
+    ></app-import-export>
+  </section>
+</ng-container>
+
+
+<!-- <ng-container *ngIf="currentTier; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
   <div *ngIf="navIndex === 0">
     <section class="btn-toolbar" role="toolbar">
-      <!-- Create Service Object -->
       <button type="button" class="btn btn-success" (click)="openServiceObjectModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Service Object</span>
@@ -72,7 +103,6 @@
 
   <div *ngIf="navIndex === 1">
     <section class="btn-toolbar" role="toolbar">
-      <!-- Create Service Object Group -->
       <button type="button" class="btn btn-success" (click)="openServiceObjectGroupModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Service Object Group</span>
@@ -145,7 +175,7 @@
       (import)="importServiceObjectGroupRelationsConfig($event)"
     ></app-import-export>
   </section>
-</ng-container>
+</ng-container> -->
 <app-service-object-group-modal></app-service-object-group-modal>
 <app-service-object-modal></app-service-object-modal>
 <app-unused-objects-modal [unusedObjectsInput]="unusedObjects"></app-unused-objects-modal>
@@ -155,4 +185,84 @@
 <app-yes-no-modal [allowEmptyTier]="showRadio"></app-yes-no-modal>
 <ng-template #warningMessage>
   <p>Select a Tier to display Service Objects & Groups details</p>
+</ng-template>
+
+
+
+
+
+<ng-template #objStateTemplate let-serviceObj="datum">
+  <section>
+    <span>{{ serviceObj.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+  </section>
+</ng-template>
+
+<ng-template #actionsTemplate let-serviceObj="datum">
+  <section class="table__actions">
+    <app-icon-button (click)="checkObjectsParents(serviceObj)" icon="search"></app-icon-button>
+    <app-icon-button
+          *ngIf="!serviceObj?.deletedAt"
+          icon="edit"
+          label="Edit Service Object"
+          (handleClick)="openServiceObjectModal(ModalMode.Edit, serviceObj)"
+        ></app-icon-button>
+
+        <app-icon-button
+          *ngIf="serviceObj?.deletedAt"
+          icon="undo"
+          label="Restore Service Object"
+          type="success"
+          (handleClick)="restoreServiceObject(serviceObj)"
+        ></app-icon-button>
+
+        <app-icon-button
+          icon="delete"
+          label="Soft-Delete/Delete Service Object"
+          [type]="serviceObj?.deletedAt ? 'danger' : 'default'"
+          (handleClick)="deleteServiceObject(serviceObj)"
+        ></app-icon-button>
+  </section>
+</ng-template>
+
+
+<ng-template #membersTemplate let-serviceObjGroup="datum">
+  <section>
+    <span> {{ serviceObjGroup.serviceObjects?.length }}</span>
+  </section>
+</ng-template>
+
+<ng-template #groupStateTemplate let-serviceObjGroup="datum">
+  <section>
+    <span>{{ serviceObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<ng-template #actionsTemplate let-serviceObjGroup="datum">
+  <section class="table__actions">
+    <app-icon-button
+          *ngIf="!serviceObjGroup?.deletedAt"
+          icon="edit"
+          label="Edit Service Object Group"
+          (handleClick)="openServiceObjectGroupModal(ModalMode.Edit, serviceObjGroup)"
+        ></app-icon-button>
+
+        <app-icon-button
+          *ngIf="serviceObjGroup?.deletedAt"
+          icon="undo"
+          label="Restore Service Object Group"
+          type="success"
+          (handleClick)="restoreServiceObjectGroup(serviceObjGroup)"
+        ></app-icon-button>
+
+        <app-icon-button
+          icon="delete"
+          label="Soft-Delete/Delete Service Object Group"
+          [type]="serviceObjGroup?.deletedAt ? 'danger' : 'default'"
+          (handleClick)="deleteServiceObjectGroup(serviceObjGroup)"
+        ></app-icon-button>
+  </section>
 </ng-template>
