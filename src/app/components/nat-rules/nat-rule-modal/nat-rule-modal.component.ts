@@ -46,7 +46,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   public natRuleGroupId: string;
   public natRuleId: string;
   public zones: Zone[] = [];
-  public selectedFromZones: Zone[] = [];
+  public selectedFromZones: Zone[];
 
   // Enums
   public NatRuleDirection = NatRuleDirectionEnum;
@@ -94,8 +94,6 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       this.zones = dto.Zones;
       if (dto.natRule.fromZone != null) {
         this.selectedFromZones = dto.natRule.fromZone;
-      } else {
-        this.selectedFromZones = [];
       }
       this.form.controls.direction.setValidators(null);
       this.form.controls.direction.updateValueAndValidity();
@@ -131,6 +129,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   public reset(): void {
     SubscriptionUtil.unsubscribe(this.subscriptions);
     this.ngx.resetModalData('natRuleModal');
+    this.selectedFromZones = [];
     this.submitted = false;
     this.initForm();
   }

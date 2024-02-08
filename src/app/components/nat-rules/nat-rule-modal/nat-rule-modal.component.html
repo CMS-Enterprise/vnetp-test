@@ -107,7 +107,7 @@
         </div>
       </div>
 
-      <hr />
+      <hr *ngIf="NatRuleGroupType === 'ZoneBased'"/>
       
       <div class="form-row" *ngIf="NatRuleGroupType === 'ZoneBased'">
         <div class="form-group col-md-6">

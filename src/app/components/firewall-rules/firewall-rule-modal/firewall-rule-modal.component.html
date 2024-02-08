@@ -144,8 +144,7 @@
         </div>
       </div>
 
-
-      <hr />
+      <hr *ngIf="firewallRuleGroupType === 'ZoneBased'"/>
 
       <div class="form-row" *ngIf="firewallRuleGroupType === 'ZoneBased'">
         <div class="form-group col-md-6">
@@ -200,7 +199,7 @@
         </div>
 
       </div>
-      <div class="form-row">
+      <div class="form-row" *ngIf="firewallRuleGroupType === 'ZoneBased'">
         <div class="form-group col-md-6">
           <div class="input-group align-items-center">
             <select id="availableFromZones" class="form-control mr-3" formControlName="selectedFromZone">

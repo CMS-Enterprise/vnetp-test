@@ -53,8 +53,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   NetworkObjectId: string;
   FirewallRuleId: string;
   zones: Zone[];
-  selectedToZones: Zone[] = [];
-  selectedFromZones: Zone[] = [];
+  selectedToZones: Zone[];
+  selectedFromZones: Zone[];
   firewallRuleGroupType = FirewallRuleGroupTypeEnum.Intervrf;
 
   constructor(
@@ -295,13 +295,9 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       this.zones = dto.Zones;
       if (dto.FirewallRule.toZone != null) {
         this.selectedToZones = dto.FirewallRule.toZone;
-      } else {
-        this.selectedToZones = [];
       }
       if (dto.FirewallRule.fromZone != null) {
         this.selectedFromZones = dto.FirewallRule.fromZone;
-      } else {
-        this.selectedFromZones = [];
       }
     }
 
@@ -582,6 +578,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   public reset() {
     this.unsubAll();
     this.TierId = null;
+    this.selectedFromZones = this.selectedToZones = [];
     this.submitted = false;
     this.buildForm();
     this.setFormValidators();
