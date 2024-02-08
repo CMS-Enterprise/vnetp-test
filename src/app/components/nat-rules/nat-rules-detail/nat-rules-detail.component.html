@@ -5,23 +5,25 @@
 
 <h1>{{ TierName }} - {{ NatRuleGroup?.name }} Nat Rules</h1>
 
-<section class="btn-toolbar" role="toolbar">
-  <!-- Add Nat Rule -->
+<!-- <section class="btn-toolbar" role="toolbar">
   <button type="button" class="btn btn-success" (click)="createNatRule()">
     <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
     <span>Add Nat Rule</span>
   </button>
 
-  <!-- Refresh -->
   <button type="button" class="btn btn-info" (click)="refresh()">
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
-</section>
+</section> -->
 
 <ng-container *ngIf="!isLoading; else loading">
-  <app-table [config]="config" [data]="natRules" (clearResults)="getNatRules($event)" (searchParams)="getNatRules($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+  <app-standard-component (importObjectsFunc)="importNatRulesConfig($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="natRules" [tableConfig]="config" (openObjectModalFunc)="openNatRuleModal(ModalMode.Create)" (clearResultsFunc)="getNatRules($event)" (searchParamsFunc)="getNatRules($event)" (tableEventFunc)="getNatRules($event)"></app-standard-component>
 </ng-container>
+
+<!-- <ng-container *ngIf="!isLoading; else loading">
+  <app-table [config]="config" [data]="natRules" (clearResults)="getNatRules($event)" (searchParams)="getNatRules($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+</ng-container> -->
 
 <ng-template #actionsTemplate let-natRule="datum">
   <section class="table__actions">

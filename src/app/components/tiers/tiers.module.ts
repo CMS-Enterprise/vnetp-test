@@ -12,6 +12,7 @@ import { ImportExportModule } from 'src/app/common/import-export/import-export.m
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
 import { TypeDeleteModalComponent } from './type-delete-modal/type-delete-modal.component';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     FontAwesomeModule,
     ApplicationPipesModule,
+    StandardComponentModule,
   ],
   declarations: [TiersComponent, TierModalComponent, TypeDeleteModalComponent],
   exports: [TiersComponent, TierModalComponent, TypeDeleteModalComponent],

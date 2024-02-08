@@ -72,6 +72,8 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   NatRuleGroup: NatRuleGroup;
   currentDatacenterSubscription: Subscription;
 
+  objectType = 'Nat Rule';
+
   // Templates
   @ViewChild('originalServiceType') originalServiceTemplate: TemplateRef<any>;
   @ViewChild('originalSourceAddress') originalSourceAddressTemplate: TemplateRef<any>;

@@ -47,6 +47,10 @@ describe('NatRulesDetailComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockComponent('app-nat-rule-modal'),
         MockComponent('app-preview-modal'),
+        MockComponent({
+          selector: 'app-standard-component',
+          inputs: ['tableData', 'tableConfig', 'objectSearchColumns', 'tableItemsPerPage', 'objectType'],
+        }),
         MockNgxSmartModalComponent,
         MockImportExportComponent,
         MockYesNoModalComponent,

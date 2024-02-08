@@ -44,6 +44,8 @@ export class StaticRouteDetailComponent implements OnInit, OnDestroy {
       { name: 'State', template: () => this.stateTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
+    hideAdvancedSearch: true,
+    hideSearchBar: true,
   };
 
   constructor(

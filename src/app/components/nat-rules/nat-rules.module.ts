@@ -20,6 +20,7 @@ import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.modul
 import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
 import { TierSelectModule } from 'src/app/common/tier-select/tier-select.module';
 import { NatRuleObjectInfoModalComponent } from './nat-rule-modal/nat-rule-object-info-modal/nat-rule-object-info-modal.component';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -54,6 +55,7 @@ const routes: Routes = [
     YesNoModalModule,
     ImportExportModule,
     TierSelectModule,
+    StandardComponentModule,
   ],
   declarations: [NatRulesComponent, NatRuleModalComponent, NatRulesDetailComponent, NatRuleObjectInfoModalComponent],
 })

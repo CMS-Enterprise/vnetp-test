@@ -79,6 +79,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   FirewallRuleGroup: FirewallRuleGroup;
   currentDatacenterSubscription: Subscription;
 
+  objectType = 'Firewall Rule';
+
   tableHeaders: string[] = [
     'Name',
     'Action',

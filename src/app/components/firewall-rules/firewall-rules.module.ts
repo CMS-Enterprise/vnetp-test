@@ -20,6 +20,7 @@ import { FirewallRuleModalComponent } from './firewall-rule-modal/firewall-rule-
 import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.module';
 // eslint-disable-next-line max-len
 import { FirewallRuleObjectInfoModalComponent } from './firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -53,6 +54,7 @@ const routes: Routes = [
     TooltipModule,
     NgSelectModule,
     PreviewModalModule,
+    StandardComponentModule,
   ],
   declarations: [FirewallRulesComponent, FirewallRulesDetailComponent, FirewallRuleModalComponent, FirewallRuleObjectInfoModalComponent],
 })
