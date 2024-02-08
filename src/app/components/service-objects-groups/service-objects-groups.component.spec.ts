@@ -46,7 +46,7 @@ describe('ServicesObjectsGroupsComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockComponent({
           selector: 'app-standard-component',
-          inputs: ['tableData', 'tableConfig', 'objectSearchColumns', 'tableItemsPerPage', 'objectType'],
+          inputs: ['unusedObjectsButton', 'tableData', 'tableConfig', 'objectSearchColumns', 'tableItemsPerPage', 'objectType'],
         }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
@@ -123,6 +123,7 @@ describe('ServicesObjectsGroupsComponent', () => {
           { name: 'State', template: expect.any(Function) },
           { name: '', template: expect.any(Function) },
         ],
+        hideAdvancedSearch: true,
       };
 
       delete component.serviceObjectGroupConfig.advancedSearchAdapter;

@@ -4,9 +4,10 @@ import { TableModule } from '../table/table.module';
 import { ImportExportModule } from '../import-export/import-export.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconButtonModule } from '../icon-button/icon-button.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
-  imports: [TableModule, ImportExportModule, FontAwesomeModule, IconButtonModule],
+  imports: [CommonModule, TableModule, ImportExportModule, FontAwesomeModule, IconButtonModule],
   exports: [StandardComponentComponent],
   declarations: [StandardComponentComponent],
 })

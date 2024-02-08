@@ -58,6 +58,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   navIndex = 0;
   showRadio = false;
 
+  subnetType = 'Subnet';
+  vlanType = 'Vlan';
+
   public tabs: Tab[] = [{ name: 'Subnets' }, { name: 'VLANs' }];
 
   public isLoadingSubnets = false;
@@ -71,7 +74,8 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   subnetTableComponentDto = new TableComponentDto();
   vlanTableComponentDto = new TableComponentDto();
 
-  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+  @ViewChild('vlanActionsTemplate') vlanActionsTemplate: TemplateRef<any>;
+  @ViewChild('subnetActionsTemplate') subnetActionsTemplate: TemplateRef<any>;
   @ViewChild('membersTemplate') membersTemplate: TemplateRef<any>;
   @ViewChild('addressTemplate') addressTemplate: TemplateRef<any>;
   @ViewChild('natServiceTemplate') natServiceTemplate: TemplateRef<any>;
@@ -89,7 +93,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       { name: 'Gateway', property: 'gateway' },
       { name: 'State', template: () => this.subnetStateTemplate },
       { name: 'Shared Between VRFs', property: 'sharedBetweenVrfs' },
-      { name: '', template: () => this.actionsTemplate },
+      { name: '', template: () => this.subnetActionsTemplate },
     ],
   };
 
@@ -101,7 +105,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       { name: 'VLAN Number', property: 'vlanNumber' },
       { name: 'VCD VLAN Type', property: 'vcdVlanType' },
       { name: 'State', template: () => this.vlanStateTemplate },
-      { name: '', template: () => this.actionsTemplate },
+      { name: '', template: () => this.vlanActionsTemplate },
     ],
   };
 
@@ -445,6 +449,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   }
 
   public getVlans(getSubnets = false, event?): void {
+    console.log('event', event);
     this.isLoadingVlans = true;
     let eventParams;
     if (event) {
@@ -459,6 +464,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
+    console.log('event', event);
     if (!this.hasCurrentTier()) {
       return;
     }

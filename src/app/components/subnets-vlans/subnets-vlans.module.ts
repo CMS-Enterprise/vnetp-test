@@ -16,6 +16,7 @@ import { ImportExportModule } from 'src/app/common/import-export/import-export.m
 import { TableModule } from 'src/app/common/table/table.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TierSelectModule } from 'src/app/common/tier-select/tier-select.module';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -41,6 +42,7 @@ const routes: Routes = [
     TableModule,
     TabsModule,
     TierSelectModule,
+    StandardComponentModule,
   ],
   declarations: [SubnetsVlansComponent, SubnetModalComponent, VlanModalComponent],
   exports: [SubnetsVlansComponent, SubnetModalComponent, VlanModalComponent],

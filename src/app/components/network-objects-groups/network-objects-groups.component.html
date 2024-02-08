@@ -8,12 +8,12 @@
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
 
   <div *ngIf="navIndex === 0">
-    <section class="btn-toolbar" role="toolbar">
+    <!-- <section class="btn-toolbar" role="toolbar">
       <button type="button" class="btn btn-link" (click)="checkObjectUsage()">
         <span>Unused Objects</span>
       </button>
-    </section>
-    <app-standard-component (importObjectsFunc)="importNetworkObjectsConfig($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="objectSearchColumns" [tableData]="networkObjects" [tableConfig]="networkObjectConfig" (openObjectModalFunc)="openNetworkObjectModal(ModalMode.Create)" (clearResultsFunc)="getNetworkObjects($event)" (searchParamsFunc)="getNetworkObjects($event)" (tableEventFunc)="getNetworkObjects($event)"></app-standard-component>
+    </section> -->
+    <app-standard-component (getUnusedObjectsFunc)="checkObjectUsage()" [unusedObjectsButton]="true" (importObjectsFunc)="importNetworkObjectsConfig($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="objectSearchColumns" [tableData]="networkObjects" [tableConfig]="networkObjectConfig" (openObjectModalFunc)="openNetworkObjectModal(ModalMode.Create)" (clearResultsFunc)="getNetworkObjects($event)" (searchParamsFunc)="getNetworkObjects($event)" (tableEventFunc)="getNetworkObjects($event)"></app-standard-component>
 
   </div>
   <div *ngIf="navIndex === 1">

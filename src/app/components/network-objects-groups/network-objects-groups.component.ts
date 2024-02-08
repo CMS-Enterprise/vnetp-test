@@ -154,7 +154,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private openUnusedObjectsModal(): void {
+  public openUnusedObjectsModal(): void {
     this.subscribeToUnusedObjectsModal();
     this.ngx.getModal('unusedObjectsModal').open();
   }

@@ -11,6 +11,7 @@ export class StandardComponentComponent implements OnInit {
   @Input() objectSearchColumns;
   @Input() tableItemsPerPage;
   @Input() objectType;
+  @Input() unusedObjectsButton;
   @Output() clearResultsFunc = new EventEmitter<any>();
   @Output() openObjectModalFunc = new EventEmitter<any>();
   @Output() tableEventFunc = new EventEmitter<any>();
@@ -18,6 +19,7 @@ export class StandardComponentComponent implements OnInit {
   @Output() importObjectsFunc = new EventEmitter<any>();
   @Output() restoreObjectsFunc = new EventEmitter<any>();
   @Output() deleteObjectsFunc = new EventEmitter<any>();
+  @Output() getUnusedObjectsFunc = new EventEmitter<any>();
 
   currentTier;
   ModalMode;
@@ -28,6 +30,12 @@ export class StandardComponentComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('on init?', this.tableConfig);
+    console.log('this.currentTier', this.currentTier);
+  }
+
+  getUnusedObjects() {
+    console.log('get unused object hit');
+    this.getUnusedObjectsFunc.emit();
   }
 
   searchParamsGetTableObjects(event?) {

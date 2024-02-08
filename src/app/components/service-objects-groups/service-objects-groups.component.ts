@@ -81,6 +81,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   public isLoadingGroups = false;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+  @ViewChild('groupActionsTemplate') groupActionsTemplate: TemplateRef<any>;
   @ViewChild('membersTemplate') membersTemplate: TemplateRef<any>;
   @ViewChild('objStateTemplate') objStateTemplate: TemplateRef<any>;
   @ViewChild('groupStateTemplate') groupStateTemplate: TemplateRef<any>;
@@ -104,8 +105,9 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       { name: 'Type', property: 'type' },
       { name: 'Members', template: () => this.membersTemplate },
       { name: 'State', template: () => this.groupStateTemplate },
-      { name: '', template: () => this.actionsTemplate },
+      { name: '', template: () => this.groupActionsTemplate },
     ],
+    hideAdvancedSearch: true,
   };
 
   constructor(
