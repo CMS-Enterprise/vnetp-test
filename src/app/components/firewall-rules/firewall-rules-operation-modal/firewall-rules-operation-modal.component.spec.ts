@@ -18,12 +18,14 @@ import { DatacenterContextService } from '../../../services/datacenter-context.s
 
 jest.mock('../../../utils/SubscriptionUtil', () => ({
   default: class {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     static subscribeToYesNoModal(dto, ngx, confirmFn, closeFn = () => {}) {
       // Directly invoke the confirm function to simulate confirmation
       confirmFn();
       // Return a mock Subscription if needed, for example:
       return { unsubscribe: jest.fn() };
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     static unsubscribe(subscriptions) {
       // Mock implementation or leave empty if not relevant for the test
     }

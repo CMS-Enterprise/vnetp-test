@@ -11,10 +11,12 @@ import { NatRulesOperationModalComponent } from './nat-rules-operation-modal.com
 
 jest.mock('../../../utils/SubscriptionUtil', () => ({
   default: class {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     static subscribeToYesNoModal(dto, ngx, confirmFn, closeFn = () => {}) {
       confirmFn();
       return { unsubscribe: jest.fn() };
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     static unsubscribe(subscriptions) {}
   },
 }));
