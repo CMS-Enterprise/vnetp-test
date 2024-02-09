@@ -9,13 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Zone } from './zone';
 
 
-export interface RuleOperationDto { 
-    existingRuleId: string;
-    operation: string;
-    destinationGroupId: string;
-    ruleIndex: number;
-    name: string;
+export interface GetManyZoneResponseDto { 
+    totalPages: number;
+    count: number;
+    total: number;
+    page: number;
+    pageCount: number;
+    data: Array<Zone>;
 }
 

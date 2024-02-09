@@ -74,12 +74,10 @@ export class ServiceObjectGroupModalComponent implements OnInit {
 
   private closeModal() {
     this.ngx.close('serviceObjectGroupModal');
-    this.reset();
   }
 
   cancel() {
     this.ngx.close('serviceObjectGroupModal');
-    this.reset();
   }
 
   get f() {

@@ -9,13 +9,8 @@ class Environment extends DynamicEnvironment {
   constructor() {
     super();
     this.production = true;
-    this.dcsLocations = [
-      { name: 'East', url: 'http://localhost-east:4200' },
-      { name: 'West', url: 'http://localhost-west:4200' },
-    ];
     this.apiBase = '/api';
-    this.wikiBase = 'http://wiki.draas.cdsvdc.lcl/index.php/UI';
-    this.dcsVersion = '1.14.3';
+    this.dcsVersion = '3.0';
   }
 }
 

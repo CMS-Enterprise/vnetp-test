@@ -170,3 +170,23 @@
   [networkObjectGroups]="networkObjectGroups"
   [serviceObjects]="serviceObjects"
 ></app-nat-rules-operation-modal>
+
+<app-nat-rules-operation-modal
+  (emitGetRuleGroup)="getNatRuleGroup()"
+  [networkObjects]="networkObjects"
+  [networkObjectGroups]="networkObjectGroups"
+  [serviceObjects]="serviceObjects"
+></app-nat-rules-operation-modal>
+
+<!-- to/from zone/direction template -->
+<ng-template #directionZone let-natRule="datum">
+  <p *ngIf="NatRuleGroup?.type === 'Intervrf' || NatRuleGroup?.type === 'External'" aria-label="Direction">
+    {{ natRule?.direction }}
+  </p>
+  <p *ngIf="NatRuleGroup?.type === 'ZoneBased'" aria-label="From Zone">
+    From: {{ getZoneNames(natRule.fromZone) }}
+  </p>
+  <p *ngIf="NatRuleGroup?.type === 'ZoneBased'" aria-label="To Zone">
+    To: {{ natRule?.toZone?.name }}
+  </p>
+</ng-template>

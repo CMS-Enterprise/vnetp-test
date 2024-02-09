@@ -140,12 +140,14 @@ describe('FirewallRulesDetailComponent', () => {
     const networkObjectGroupResponse = { data: ['networkObjectGroup1', 'networkObjectGroup2'] };
     const serviceObjectResponse = { data: ['serviceObject1', 'serviceObject2'] };
     const serviceObjectGroupResponse = { data: ['serviceObjectGroup1', 'serviceObjectGroup2'] };
+    const zoneServiceResponse = { data: ['zone1', 'zone2'] };
 
     jest.spyOn(component['tierService'], 'getOneTier').mockReturnValue(of(tierResponse) as any);
     jest.spyOn(component['networkObjectService'], 'getManyNetworkObject').mockReturnValue(of(networkObjectResponse) as any);
     jest.spyOn(component['networkObjectGroupService'], 'getManyNetworkObjectGroup').mockReturnValue(of(networkObjectGroupResponse) as any);
     jest.spyOn(component['serviceObjectService'], 'getManyServiceObject').mockReturnValue(of(serviceObjectResponse) as any);
     jest.spyOn(component['serviceObjectGroupService'], 'getManyServiceObjectGroup').mockReturnValue(of(serviceObjectGroupResponse) as any);
+    jest.spyOn(component['zoneService'], 'getManyZone').mockReturnValue(of(zoneServiceResponse) as any);
 
     jest.spyOn(component, 'getFirewallRules');
 
@@ -156,6 +158,7 @@ describe('FirewallRulesDetailComponent', () => {
     expect(component.networkObjectGroups).toEqual(networkObjectGroupResponse.data);
     expect(component.serviceObjects).toEqual(serviceObjectResponse.data);
     expect(component.serviceObjectGroups).toEqual(serviceObjectGroupResponse.data);
+    expect(component.zones).toEqual(zoneServiceResponse.data);
 
     expect(component.getFirewallRules).toHaveBeenCalled();
   });
@@ -167,6 +170,31 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   describe('openFirewallRuleModal', () => {
+    beforeEach(() => {
+      jest.spyOn(component, 'getFirewallRuleGroup');
+      jest.spyOn(component['ngx'], 'resetModalData');
+    });
+
+    it('should subscribe to firewallRuleModal onCloseFinished event and unsubscribe afterwards', () => {
+      const onCloseFinished = new Subject<void>();
+      const mockModal = { onCloseFinished, open: jest.fn() };
+      jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
+
+      const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
+
+      component.subscribeToFirewallRuleModal();
+
+      expect(component['ngx'].getModal).toHaveBeenCalledWith('firewallRuleModal');
+      expect(component.firewallRuleModalSubscription).toBeDefined();
+
+      onCloseFinished.next();
+
+      expect(component.getFirewallRuleGroup).toHaveBeenCalled();
+      expect(component['ngx'].resetModalData).toHaveBeenCalledWith('firewallRuleModal');
+
+      expect(unsubscribeSpy).toHaveBeenCalled();
+    });
+
     it('should open firewall rule modal with correct data in Create mode', () => {
       component.Id = 'testGroupId';
       component.TierId = 'testTierId';

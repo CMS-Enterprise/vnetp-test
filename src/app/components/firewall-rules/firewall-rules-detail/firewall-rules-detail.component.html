@@ -125,6 +125,20 @@
   </p>
 </ng-template>
 
+<!-- to/from zone/direction template -->
+<ng-template #directionZone let-firewallRule="datum">
+  <p *ngIf="FirewallRuleGroup?.type === 'Intervrf' || FirewallRuleGroup?.type === 'External'" aria-label="Direction">
+    {{ firewallRule?.direction }}
+  </p>
+  <p *ngIf="FirewallRuleGroup?.type === 'ZoneBased'" aria-label="From Zone">
+    From: {{ getZoneNames(firewallRule.fromZone) }}
+  </p>
+  <p *ngIf="FirewallRuleGroup?.type === 'ZoneBased'" aria-label="To Zone">
+    To: {{ getZoneNames(firewallRule.toZone) }}
+  </p>
+</ng-template>
+
+
 <app-firewall-rules-operation-modal
   (emitGetRuleGroup)="getFirewallRuleGroup()"
   [networkObjects]="networkObjects"
