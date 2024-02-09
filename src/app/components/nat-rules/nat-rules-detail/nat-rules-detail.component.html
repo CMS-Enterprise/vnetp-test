@@ -20,19 +20,47 @@
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
-  <app-table [config]="config" [data]="natRules" (clearResults)="getNatRules($event)" (searchParams)="getNatRules($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+  <app-table
+    [config]="config"
+    [data]="natRules"
+    (clearResults)="getNatRules($event)"
+    (searchParams)="getNatRules($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
 </ng-container>
 
 <ng-template #actionsTemplate let-natRule="datum">
   <section class="table__actions">
-    <app-icon-button *ngIf="!natRule?.deletedAt" icon="edit" label="Edit Nat Rule"
-      (handleClick)="openNatRuleModal(ModalMode.Edit, natRule)"></app-icon-button>
+    <app-icon-button
+      *ngIf="!natRule?.deletedAt"
+      icon="add"
+      label="Nat Rule Operation"
+      (handleClick)="openNatRuleOperationModal(natRule)"
+    ></app-icon-button>
 
-    <app-icon-button *ngIf="natRule?.deletedAt" icon="undo" label="Restore Nat Rule" type="success"
-      (handleClick)="restoreNatRule(natRule)"></app-icon-button>
+    <app-icon-button
+      *ngIf="!natRule?.deletedAt"
+      icon="edit"
+      label="Edit Nat Rule"
+      (handleClick)="openNatRuleModal(ModalMode.Edit, natRule)"
+    ></app-icon-button>
 
-    <app-icon-button icon="delete" label="Soft-Delete/Delete Appliance"
-      [type]="natRule.deletedAt ? 'danger' : 'default'" (handleClick)="deleteNatRule(natRule)">
+    <app-icon-button
+      *ngIf="natRule?.deletedAt"
+      icon="undo"
+      label="Restore Nat Rule"
+      type="success"
+      (handleClick)="restoreNatRule(natRule)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Appliance"
+      [type]="natRule.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteNatRule(natRule)"
+    >
     </app-icon-button>
   </section>
 </ng-template>
@@ -60,7 +88,7 @@
     {{ natRule.originalServiceType }}
   </p>
   <p *ngIf="natRule.originalServiceType === 'ServiceObject'" aria-label="Service Object">
-    {{ natRule?.originalServiceObjectId | resolve: getServiceObjectName }}
+    {{ natRule?.originalServiceObjectId | resolve : getServiceObjectName }}
     (Object)
   </p>
 </ng-template>
@@ -71,11 +99,11 @@
     {{ natRule.originalSourceAddressType }}
   </p>
   <p *ngIf="natRule.originalSourceAddressType === 'NetworkObject'" aria-label="Network Object">
-    {{ natRule?.originalSourceNetworkObjectId | resolve: getNetworkObjectName }}
+    {{ natRule?.originalSourceNetworkObjectId | resolve : getNetworkObjectName }}
     (Object)
   </p>
   <p *ngIf="natRule.originalSourceAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
-    {{ natRule?.originalSourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
+    {{ natRule?.originalSourceNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
     (Object Group)
   </p>
 </ng-template>
@@ -86,11 +114,11 @@
     {{ natRule.originalDestinationAddressType }}
   </p>
   <p *ngIf="natRule.originalDestinationAddressType === 'NetworkObject'" aria-label="Network Object">
-    {{ natRule?.originalDestinationNetworkObjectId | resolve: getNetworkObjectName }}
+    {{ natRule?.originalDestinationNetworkObjectId | resolve : getNetworkObjectName }}
     (Object)
   </p>
   <p *ngIf="natRule.originalDestinationAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
-    {{ natRule?.originalDestinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
+    {{ natRule?.originalDestinationNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
     (Object Group)
   </p>
 </ng-template>
@@ -101,7 +129,7 @@
     {{ natRule.translatedServiceType }}
   </p>
   <p *ngIf="natRule.translatedServiceType === 'ServiceObject'" aria-label="Service Object">
-    {{ natRule?.translatedServiceObjectId | resolve: getServiceObjectName }}
+    {{ natRule?.translatedServiceObjectId | resolve : getServiceObjectName }}
     (Object)
   </p>
 </ng-template>
@@ -112,11 +140,11 @@
     {{ natRule?.translatedSourceAddressType }}
   </p>
   <p *ngIf="natRule.translatedSourceAddressType === 'NetworkObject'" aria-label="Network Object">
-    {{ natRule?.translatedSourceNetworkObjectId | resolve: getNetworkObjectName }}
+    {{ natRule?.translatedSourceNetworkObjectId | resolve : getNetworkObjectName }}
     (Object)
   </p>
   <p *ngIf="natRule.translatedSourceAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
-    {{ natRule?.translatedSourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
+    {{ natRule?.translatedSourceNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
     (Object Group)
   </p>
 </ng-template>
@@ -127,11 +155,18 @@
     {{ natRule?.translatedDestinationAddressType }}
   </p>
   <p *ngIf="natRule.translatedDestinationAddressType === 'NetworkObject'" aria-label="Network Object">
-    {{ natRule?.translatedDestinationNetworkObjectId | resolve: getNetworkObjectName }}
+    {{ natRule?.translatedDestinationNetworkObjectId | resolve : getNetworkObjectName }}
     (Object)
   </p>
   <p *ngIf="natRule.translatedDestinationAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
-    {{ natRule?.translatedDestinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
+    {{ natRule?.translatedDestinationNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
     (Object Group)
   </p>
 </ng-template>
+
+<app-nat-rules-operation-modal
+  (emitGetRuleGroup)="getNatRuleGroup()"
+  [networkObjects]="networkObjects"
+  [networkObjectGroups]="networkObjectGroups"
+  [serviceObjects]="serviceObjects"
+></app-nat-rules-operation-modal>

@@ -20,19 +20,47 @@
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
-  <app-table [config]="config" [data]="firewallRules" (clearResults)="getFirewallRules($event)" (searchParams)="getFirewallRules($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+  <app-table
+    [config]="config"
+    [data]="firewallRules"
+    (clearResults)="getFirewallRules($event)"
+    (searchParams)="getFirewallRules($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
 </ng-container>
 
 <ng-template #actionsTemplate let-firewallRule="datum">
   <section class="table__actions">
-    <app-icon-button *ngIf="!firewallRule?.deletedAt" icon="edit" label="Edit Firewall Rule"
-      (handleClick)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"></app-icon-button>
+    <app-icon-button
+      *ngIf="!firewallRule?.deletedAt"
+      icon="add"
+      label="Firewall Rule Operation"
+      (handleClick)="openFirewallRuleOperationModal(firewallRule)"
+    ></app-icon-button>
 
-    <app-icon-button *ngIf="firewallRule?.deletedAt" icon="undo" label="Restore Firewall Rule" type="success"
-      (handleClick)="restoreFirewallRule(firewallRule)"></app-icon-button>
+    <app-icon-button
+      *ngIf="!firewallRule?.deletedAt"
+      icon="edit"
+      label="Edit Firewall Rule"
+      (handleClick)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"
+    ></app-icon-button>
 
-    <app-icon-button icon="delete" label="Soft-Delete/Delete Appliance"
-      [type]="firewallRule.deletedAt ? 'danger' : 'default'" (handleClick)="deleteFirewallRule(firewallRule)">
+    <app-icon-button
+      *ngIf="firewallRule?.deletedAt"
+      icon="undo"
+      label="Restore Firewall Rule"
+      type="success"
+      (handleClick)="restoreFirewallRule(firewallRule)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Appliance"
+      [type]="firewallRule.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteFirewallRule(firewallRule)"
+    >
     </app-icon-button>
   </section>
 </ng-template>
@@ -42,9 +70,12 @@
 </ng-template>
 
 <section class="btn-toolbar" role="toolbar">
-  <app-import-export [exportObject]="firewallRules"
+  <app-import-export
+    [exportObject]="firewallRules"
     exportFileName="firewallRules-{{ TierName }}-{{ FirewallRuleGroup?.name }}"
-    (import)="importFirewallRulesConfig($event)" [disableJson]="false"></app-import-export>
+    (import)="importFirewallRulesConfig($event)"
+    [disableJson]="false"
+  ></app-import-export>
 </section>
 
 <app-firewall-rule-modal></app-firewall-rule-modal>
@@ -57,11 +88,11 @@
     {{ firewallRule?.sourceIpAddress }}
   </p>
   <p *ngIf="firewallRule.sourceAddressType === 'NetworkObject'" aria-label="Source Network Object">
-    {{ firewallRule?.sourceNetworkObjectId | resolve: getNetworkObjectName }}
+    {{ firewallRule?.sourceNetworkObjectId | resolve : getNetworkObjectName }}
     (Object)
   </p>
   <p *ngIf="firewallRule.sourceAddressType === 'NetworkObjectGroup'" aria-label="Source Network Object Group">
-    {{ firewallRule?.sourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
+    {{ firewallRule?.sourceNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
     (Object Group)
   </p>
 </ng-template>
@@ -72,11 +103,11 @@
     {{ firewallRule?.destinationIpAddress }}
   </p>
   <p *ngIf="firewallRule.destinationAddressType === 'NetworkObject'" aria-label="Destination Network Object">
-    {{ firewallRule?.destinationNetworkObjectId | resolve: getNetworkObjectName }}
+    {{ firewallRule?.destinationNetworkObjectId | resolve : getNetworkObjectName }}
     (Object)
   </p>
   <p *ngIf="firewallRule.destinationAddressType === 'NetworkObjectGroup'" aria-label="Destination Network Object Group">
-    {{ firewallRule?.destinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
+    {{ firewallRule?.destinationNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
     (Object Group)
   </p>
 </ng-template>
@@ -87,9 +118,17 @@
     Source Ports: {{ firewallRule?.sourcePorts }} - Destination Ports: {{ firewallRule?.destinationPorts }}
   </p>
   <p *ngIf="firewallRule.serviceType === 'ServiceObject'" aria-label="Service Object">
-    {{ firewallRule?.serviceObjectId | resolve: getServiceObjectName }} (Object)
+    {{ firewallRule?.serviceObjectId | resolve : getServiceObjectName }} (Object)
   </p>
   <p *ngIf="firewallRule.serviceType === 'ServiceObjectGroup'" aria-label="Service Object Group">
-    {{ firewallRule?.serviceObjectGroupId | resolve: getServiceObjectGroupName }} (Object Group)
+    {{ firewallRule?.serviceObjectGroupId | resolve : getServiceObjectGroupName }} (Object Group)
   </p>
 </ng-template>
+
+<app-firewall-rules-operation-modal
+  (emitGetRuleGroup)="getFirewallRuleGroup()"
+  [networkObjects]="networkObjects"
+  [networkObjectGroups]="networkObjectGroups"
+  [serviceObjects]="serviceObjects"
+  [serviceObjectGroups]="serviceObjectGroups"
+></app-firewall-rules-operation-modal>

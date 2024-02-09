@@ -32,6 +32,7 @@ import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.compone
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
 
 @Component({
   selector: 'app-nat-rules-detail',
@@ -71,6 +72,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   TierId: string;
   NatRuleGroup: NatRuleGroup;
   currentDatacenterSubscription: Subscription;
+
+  public natRuleOperationModalSubscription: Subscription;
+  public natRuleGroupName: string;
 
   // Templates
   @ViewChild('originalServiceType') originalServiceTemplate: TemplateRef<any>;
@@ -144,6 +148,26 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.getNatRules(event);
   }
 
+  public openNatRuleOperationModal(natRule: NatRule): void {
+    const dto: RuleOperationModalDto = {
+      tierId: this.TierId,
+      ruleId: natRule.id,
+      sourceRuleGroupId: natRule.natRuleGroupId,
+      ruleGroupName: this.natRuleGroupName,
+    };
+    this.subscribeToNatRuleOperationModal();
+    this.ngx.setModalData(dto, 'natRulesOperationModal');
+    this.ngx.open('natRulesOperationModal');
+  }
+
+  private subscribeToNatRuleOperationModal(): void {
+    this.natRuleOperationModalSubscription = this.ngx.getModal('natRulesOperationModal').onCloseFinished.subscribe(() => {
+      this.getNatRuleGroup();
+      this.ngx.resetModalData('natRulesOperationModal');
+      this.natRuleOperationModalSubscription.unsubscribe();
+    });
+  }
+
   getNatRuleGroup(): void {
     this.natRuleGroupService
       .getOneNatRuleGroup({
@@ -157,6 +181,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
         } as NatRuleGroup;
 
         this.TierId = data.tierId;
+        this.natRuleGroupName = data.name;
 
         this.getObjects();
         this.getNatRuleLastIndex();
