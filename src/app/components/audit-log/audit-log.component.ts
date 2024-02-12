@@ -47,6 +47,7 @@ export class AuditLogComponent implements OnInit {
       { name: 'Object Name', template: () => this.entityAfterTemplate },
       { name: 'User', property: 'changedBy' },
       { name: 'Timestamp', property: 'timestamp' },
+      { name: 'Incident', property: 'incident' },
     ],
   };
   public auditLogs;

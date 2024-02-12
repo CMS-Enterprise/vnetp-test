@@ -20345,6 +20345,13 @@
             "items": {
               "$ref": "#/components/schemas/NatRule"
             }
+          },
+          "natRulesTo": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRule"
+            }
           }
         },
         "required": [
@@ -21799,6 +21806,9 @@
             "type": "string"
           },
           "tenantId": {
+            "type": "string"
+          },
+          "incident": {
             "type": "string"
           }
         },
