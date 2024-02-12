@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UserPass } from 'client/model/userPass';
 import { TenantName } from '../../models/other/tenant-name';
 import { environment } from 'src/environments/environment';
+import { IncidentService } from 'src/app/services/incident.service';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +32,13 @@ export class LoginComponent implements OnInit {
 
   selectedMode = 'netcentric';
 
-  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private toastr: ToastrService,
+    private incidentService: IncidentService,
+  ) {}
 
   ngOnInit() {
     environment.dynamic.dcsLocations.map(location => {
@@ -130,6 +137,7 @@ export class LoginComponent implements OnInit {
   }
 
   setTenantAndNavigate(tenant, mode) {
+    this.incidentService.addIncidentNumberLocalStorage('INC123');
     const { tenantQueryParameter } = tenant;
     mode = mode.toLowerCase();
     this.toastr.success(`Welcome ${this.userpass.username}!`);

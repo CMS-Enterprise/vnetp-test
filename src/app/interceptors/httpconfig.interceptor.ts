@@ -6,10 +6,16 @@ import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
+import { IncidentService } from '../services/incident.service';
 
 @Injectable()
 export class HttpConfigInterceptor {
-  constructor(private auth: AuthService, private toastr: ToastrService, private route: ActivatedRoute) {}
+  constructor(
+    private auth: AuthService,
+    private toastr: ToastrService,
+    private route: ActivatedRoute,
+    private incidentService: IncidentService,
+  ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const currentUser = this.auth.currentUserValue;
@@ -35,6 +41,14 @@ export class HttpConfigInterceptor {
         Pragma: 'no-cache',
       });
       request = request.clone({ headers, params: request.params.set('tenant', tenant) });
+    }
+
+    const incident = this.incidentService.getIncidentLocalStorage();
+    console.log('incident', incident);
+    if (incident) {
+      request = request.clone({
+        headers: request.headers.set('Incident', incident),
+      });
     }
 
     if (!request.headers.has('Accept')) {
