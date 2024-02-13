@@ -22,6 +22,7 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { TableComponentDto } from '../../models/other/table-component-dto';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-audit-log',
@@ -35,8 +36,16 @@ export class AuditLogComponent implements OnInit {
 
   private dataChanges: Subscription;
 
-  public perPage = 10;
+  public perPage = 20;
   public tableComponentDto = new TableComponentDto();
+
+  public searchColumns: SearchColumnConfig[] = [
+    {
+      displayName: 'Incident',
+      propertyName: 'incident',
+      propertyType: 'string',
+    },
+  ];
 
   public config: TableConfig<any> = {
     description: 'Audit Log',
@@ -49,6 +58,7 @@ export class AuditLogComponent implements OnInit {
       { name: 'Timestamp', property: 'timestamp' },
       { name: 'Incident', property: 'incident' },
     ],
+    hideAdvancedSearch: true,
   };
   public auditLogs;
   public tiers: Tier[] = [];
@@ -70,14 +80,53 @@ export class AuditLogComponent implements OnInit {
     private ngx: NgxSmartModalService,
   ) {}
 
-  public getAuditLogs(event?): void {
+  public searchAuditLogs(event?) {
+    let eventParams;
     this.isLoading = true;
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 10;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      eventParams = `${propertyName}||cont||${searchText}`;
     } else {
       this.tableComponentDto.perPage = this.perPage;
     }
+    console.log('eventParams', eventParams);
+    this.auditLogService
+      .searchAuditLogAuditLog({
+        filter: eventParams,
+      })
+      .subscribe(data => {
+        console.log('data', data);
+        this.auditLogs = data;
+        this.isLoading = false;
+        this.auditLogs.data.map(log => {
+          this.transformLogs(log);
+        });
+      }),
+      () => {
+        // this.auditLogs = []
+      },
+      () => {
+        console.log('false');
+        this.isLoading = false;
+      };
+  }
+
+  public getAuditLogs(event?): void {
+    let eventParams;
+    this.isLoading = true;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 10;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      eventParams = `${propertyName}||cont||${searchText}`;
+    } else {
+      this.tableComponentDto.perPage = this.perPage;
+    }
+    console.log('eventParams', eventParams);
     this.auditLogService
       .getAuditLogAuditLog({
         datacenterId: `${this.currentDatacenter.id}`,
@@ -89,116 +138,7 @@ export class AuditLogComponent implements OnInit {
           this.auditLogs = data;
           if (this.auditLogs.data) {
             this.auditLogs.data.map(log => {
-              log.tierName = ObjectUtil.getObjectName(log.tierId, this.tiers);
-              // if entityType is firewall rule or nat rule
-              // append the group name to the tier name
-              if (log.entityType === 'FirewallRule' || log.entityType === 'NatRule') {
-                log.tierName = `${log.tierName} - ${log.groupName}`;
-              }
-              // if the action type is of type "update"
-              if (log.actionType === AuditLogActionTypeEnum.Update) {
-                const messageArray = [];
-                const keys = Object.keys(log.entityBefore);
-                // get the entity before and entity after object
-                const { entityBefore, entityAfter } = log;
-                keys.map(key => {
-                  // no need to show this property as a changed value
-                  if (key === 'updatedAt') {
-                    return;
-                  }
-                  // if adding or removing an object from a group, show the before and after object names
-                  if (
-                    key === 'networkObjects' ||
-                    key === 'serviceObjects' ||
-                    key === 'profiles' ||
-                    key === 'policies' ||
-                    key === 'irules' ||
-                    key === 'pools' ||
-                    key === 'healthMonitors' ||
-                    key === 'pools' ||
-                    key === 'nodes' ||
-                    key === 'fromZone' ||
-                    key === 'toZone'
-                  ) {
-                    let beforeList;
-                    let afterList;
-                    if (key === 'nodes') {
-                      if (entityBefore[key] === undefined || entityAfter[key] === undefined) {
-                        return;
-                      }
-                      if (entityBefore[key]) {
-                        beforeList = entityBefore[key].map(obj => obj.loadBalancerNode.name);
-                      }
-                      if (entityAfter[key]) {
-                        afterList = entityAfter[key].map(obj => obj.loadBalancerNode.name);
-                      }
-                    } else {
-                      if (log.entityType === 'NatRule' && key === 'toZone') {
-                        beforeList = entityBefore[key].name;
-                        afterList = entityAfter[key].name;
-                      } else {
-                        beforeList = entityBefore[key].map(obj => obj.name);
-                        afterList = entityAfter[key].map(obj => obj.name);
-                      }
-                    }
-
-                    if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {
-                      return;
-                    }
-                    const message = { propertyName: key, before: beforeList, after: afterList };
-                    messageArray.push(message);
-                    return;
-                  }
-                  // if a property on the "before" entity does not match a property on the "after" entity, we know
-                  // that the value of that property has changed
-                  if (entityBefore[key] !== entityAfter[key]) {
-                    if (key.includes('Id')) {
-                      let beforeMatch;
-                      let afterMatch;
-                      const lowerCaseKey = key.toLocaleLowerCase();
-                      /* tslint:disable */
-                      if (lowerCaseKey.includes('networkobjectid')) {
-                        beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.networkObjects);
-                        beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
-                        entityBefore[key] = beforeMatch;
-                        afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.networkObjects);
-                        afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
-                        entityAfter[key] = afterMatch;
-                      } else if (lowerCaseKey.includes('networkobjectgroupid')) {
-                        beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.networkObjectGroups);
-                        beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
-                        entityBefore[key] = beforeMatch;
-                        afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.networkObjectGroups);
-                        afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
-                        entityAfter[key] = afterMatch;
-                      } else if (lowerCaseKey.includes('serviceobjectid')) {
-                        beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.serviceObjects);
-                        beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
-                        entityBefore[key] = beforeMatch;
-                        afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.serviceObjects);
-                        afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
-                        entityAfter[key] = afterMatch;
-                      } else if (lowerCaseKey.includes('serviceobjectgroupid')) {
-                        beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.serviceObjectGroups);
-                        beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
-                        entityBefore[key] = beforeMatch;
-                        afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.serviceObjectGroups);
-                        afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
-                        entityAfter[key] = afterMatch;
-                      }
-                      /* tslint:enable */
-                    }
-                    // so we create a string message listing the property that was changed and its "before" and "after" values
-                    const message = { propertyName: key, before: entityBefore[key], after: entityAfter[key] };
-                    messageArray.push(message);
-                  }
-                });
-                // sort array of changedProperties by property name for readability
-                // version is now always at bottom of list
-                messageArray.sort((a, b) => a.propertyName.localeCompare(b.propertyName));
-                log.changedProperties = messageArray;
-              } else if (log.actionType === AuditLogActionTypeEnum.Deploy) {
-              }
+              this.transformLogs(log);
             });
           }
         },
@@ -300,5 +240,118 @@ export class AuditLogComponent implements OnInit {
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
     this.getAuditLogs(event);
+  }
+
+  private transformLogs(log) {
+    log.tierName = ObjectUtil.getObjectName(log.tierId, this.tiers);
+    // if entityType is firewall rule or nat rule
+    // append the group name to the tier name
+    if (log.entityType === 'FirewallRule' || log.entityType === 'NatRule') {
+      log.tierName = `${log.tierName} - ${log.groupName}`;
+    }
+    // if the action type is of type "update"
+    if (log.actionType === AuditLogActionTypeEnum.Update) {
+      const messageArray = [];
+      const keys = Object.keys(log.entityBefore);
+      // get the entity before and entity after object
+      const { entityBefore, entityAfter } = log;
+      keys.map(key => {
+        // no need to show this property as a changed value
+        if (key === 'updatedAt') {
+          return;
+        }
+        // if adding or removing an object from a group, show the before and after object names
+        if (
+          key === 'networkObjects' ||
+          key === 'serviceObjects' ||
+          key === 'profiles' ||
+          key === 'policies' ||
+          key === 'irules' ||
+          key === 'pools' ||
+          key === 'healthMonitors' ||
+          key === 'pools' ||
+          key === 'nodes' ||
+          key === 'fromZone' ||
+          key === 'toZone'
+        ) {
+          let beforeList;
+          let afterList;
+          if (key === 'nodes') {
+            if (entityBefore[key] === undefined || entityAfter[key] === undefined) {
+              return;
+            }
+            if (entityBefore[key]) {
+              beforeList = entityBefore[key].map(obj => obj.loadBalancerNode.name);
+            }
+            if (entityAfter[key]) {
+              afterList = entityAfter[key].map(obj => obj.loadBalancerNode.name);
+            }
+          } else {
+            if (log.entityType === 'NatRule' && key === 'toZone') {
+              beforeList = entityBefore[key].name;
+              afterList = entityAfter[key].name;
+            } else {
+              beforeList = entityBefore[key].map(obj => obj.name);
+              afterList = entityAfter[key].map(obj => obj.name);
+            }
+          }
+
+          if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {
+            return;
+          }
+          const message = { propertyName: key, before: beforeList, after: afterList };
+          messageArray.push(message);
+          return;
+        }
+        // if a property on the "before" entity does not match a property on the "after" entity, we know
+        // that the value of that property has changed
+        if (entityBefore[key] !== entityAfter[key]) {
+          if (key.includes('Id')) {
+            let beforeMatch;
+            let afterMatch;
+            const lowerCaseKey = key.toLocaleLowerCase();
+            /* tslint:disable */
+            if (lowerCaseKey.includes('networkobjectid')) {
+              beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.networkObjects);
+              beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
+              entityBefore[key] = beforeMatch;
+              afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.networkObjects);
+              afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
+              entityAfter[key] = afterMatch;
+            } else if (lowerCaseKey.includes('networkobjectgroupid')) {
+              beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.networkObjectGroups);
+              beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
+              entityBefore[key] = beforeMatch;
+              afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.networkObjectGroups);
+              afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
+              entityAfter[key] = afterMatch;
+            } else if (lowerCaseKey.includes('serviceobjectid')) {
+              beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.serviceObjects);
+              beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
+              entityBefore[key] = beforeMatch;
+              afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.serviceObjects);
+              afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
+              entityAfter[key] = afterMatch;
+            } else if (lowerCaseKey.includes('serviceobjectgroupid')) {
+              beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.serviceObjectGroups);
+              beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
+              entityBefore[key] = beforeMatch;
+              afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.serviceObjectGroups);
+              afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
+              entityAfter[key] = afterMatch;
+            }
+            /* tslint:enable */
+          }
+          // so we create a string message listing the property that was changed and its "before" and "after" values
+          const message = { propertyName: key, before: entityBefore[key], after: entityAfter[key] };
+          messageArray.push(message);
+        }
+      });
+      // sort array of changedProperties by property name for readability
+      // version is now always at bottom of list
+      messageArray.sort((a, b) => a.propertyName.localeCompare(b.propertyName));
+      log.changedProperties = messageArray;
+    } else if (log.actionType === AuditLogActionTypeEnum.Deploy) {
+    }
   }
 }

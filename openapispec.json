@@ -13021,6 +13021,50 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditLog"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/audit-log"
+        ]
+      }
+    },
+    "/v1/audit-log/filter": {
+      "get": {
+        "operationId": "searchAuditLogAuditLog",
+        "summary": "",
+        "description": "Get Audit Logs by search",
+        "parameters": [
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "schema": {}
           }
         ],
         "responses": {
@@ -21809,7 +21853,9 @@
             "type": "string"
           },
           "incident": {
-            "type": "string"
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 30
           }
         },
         "required": [

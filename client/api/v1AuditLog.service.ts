@@ -30,6 +30,11 @@ export interface GetAuditLogAuditLogRequestParams {
     entityType?: string;
     actionType?: string;
     tenant?: string;
+    filter?: Array<string>;
+}
+
+export interface SearchAuditLogAuditLogRequestParams {
+    filter?: any;
 }
 
 
@@ -118,6 +123,7 @@ export class V1AuditLogService {
         const entityType = requestParameters.entityType;
         const actionType = requestParameters.actionType;
         const tenant = requestParameters.tenant;
+        const filter = requestParameters.filter;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (datacenterId !== undefined && datacenterId !== null) {
@@ -144,6 +150,12 @@ export class V1AuditLogService {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>perPage, 'perPage');
         }
+        if (filter) {
+            filter.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'filter');
+            })
+        }
 
         let headers = this.defaultHeaders;
 
@@ -166,6 +178,56 @@ export class V1AuditLogService {
         }
 
         return this.httpClient.get<Array<AuditLog>>(`${this.configuration.basePath}/v1/audit-log`,
+            {
+                params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get Audit Logs by search
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public searchAuditLogAuditLog(requestParameters: SearchAuditLogAuditLogRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<AuditLog>>;
+    public searchAuditLogAuditLog(requestParameters: SearchAuditLogAuditLogRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<AuditLog>>>;
+    public searchAuditLogAuditLog(requestParameters: SearchAuditLogAuditLogRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<AuditLog>>>;
+    public searchAuditLogAuditLog(requestParameters: SearchAuditLogAuditLogRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const filter = requestParameters.filter;
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (filter !== undefined && filter !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>filter, 'filter');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<Array<AuditLog>>(`${this.configuration.basePath}/v1/audit-log/filter`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

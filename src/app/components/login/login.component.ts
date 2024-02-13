@@ -137,7 +137,11 @@ export class LoginComponent implements OnInit {
   }
 
   setTenantAndNavigate(tenant, mode) {
+    /* TEMPORARY TO FORCE INCIDENT IN LOCAL STORAGE */
     this.incidentService.addIncidentNumberLocalStorage('INC123');
+
+    // END TEMP
+
     const { tenantQueryParameter } = tenant;
     mode = mode.toLowerCase();
     this.toastr.success(`Welcome ${this.userpass.username}!`);
