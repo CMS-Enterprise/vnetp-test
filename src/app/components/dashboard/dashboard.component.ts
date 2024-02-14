@@ -102,7 +102,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.currentDatacenter = cd;
       }
     });
-
     if (this.auth.currentUser) {
       this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
         this.user = user;

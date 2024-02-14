@@ -4,7 +4,7 @@ import { NavbarComponent } from './navbar.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of } from 'rxjs';
-import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockProvider } from 'src/test/mock-providers';
 import { HttpClientModule } from '@angular/common/http';
@@ -17,7 +17,12 @@ describe('NavbarComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [NavbarComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      declarations: [
+        NavbarComponent,
+        MockFontAwesomeComponent,
+        MockNgxSmartModalComponent,
+        MockComponent({ selector: 'app-change-request-modal' }),
+      ],
       imports: [RouterTestingModule, HttpClientModule],
       providers: [MockProvider(NgxSmartModalService)],
     }).compileComponents();

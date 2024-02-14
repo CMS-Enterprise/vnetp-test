@@ -23,12 +23,17 @@ export class ChangeRequestModalComponent implements OnInit {
   }
 
   public save() {
+    if (this.changeRequest === null || this.changeRequest === undefined) {
+      return null;
+    }
     this.incidentService.addIncidentNumberLocalStorage(this.changeRequest);
+    this.closeModal();
   }
 
   public removeCRFromLocalStorage() {
     this.incidentService.removeIncidentNumberLocalStorage();
     this.getCRNumber();
+    this.closeModal();
   }
 
   private buildForm(): void {

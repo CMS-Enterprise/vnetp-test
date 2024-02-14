@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { UserDto } from '../../../../client';
 import { environment } from 'src/environments/environment';
+import { IncidentService } from 'src/app/services/incident.service';
 
 @Component({
   selector: 'app-navbar',
@@ -20,8 +21,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private currentTenantSubscription: Subscription;
   public environment = environment;
   public dcsVersion: string = this.environment?.dynamic?.dcsVersion;
+  changeRequest: string;
 
-  constructor(private ngx: NgxSmartModalService, private auth: AuthService) {}
+  private changeRequestSubscription: Subscription;
+
+  constructor(private ngx: NgxSmartModalService, private auth: AuthService, private incidentService: IncidentService) {}
 
   public openLogoutModal(): void {
     this.ngx.getModal('logoutModal').open();
@@ -33,6 +37,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.getCRNumber();
     this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
       this.tenant = tenant;
       this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
@@ -60,5 +65,22 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.currentUserSubscription, this.currentTenantSubscription]);
+  }
+
+  public openChangeRequestModal(): void {
+    this.subscribeToChangeRequestModal();
+    this.ngx.getModal('changeRequestModal').open();
+  }
+
+  subscribeToChangeRequestModal() {
+    this.changeRequestSubscription = this.ngx.getModal('changeRequestModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('changeRequestModal');
+      this.changeRequestSubscription.unsubscribe();
+      this.getCRNumber();
+    });
+  }
+
+  public getCRNumber() {
+    this.changeRequest = this.incidentService.getIncidentLocalStorage();
   }
 }
