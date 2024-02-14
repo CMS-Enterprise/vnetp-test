@@ -29,7 +29,9 @@
             }
           }
         },
-        "tags": ["v1/auth"]
+        "tags": [
+          "v1/auth"
+        ]
       }
     },
     "/v1/auth/tenants": {
@@ -43,7 +45,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/auth"]
+        "tags": [
+          "v1/auth"
+        ]
       }
     },
     "/v1/datacenters": {
@@ -73,7 +77,9 @@
             }
           }
         },
-        "tags": ["v1/datacenters"]
+        "tags": [
+          "v1/datacenters"
+        ]
       },
       "get": {
         "operationId": "getManyDatacenter",
@@ -219,13 +225,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/datacenters"]
+        "tags": [
+          "v1/datacenters"
+        ]
       }
     },
     "/v1/datacenters/bulk": {
@@ -248,7 +263,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -268,7 +285,9 @@
             }
           }
         },
-        "tags": ["v1/datacenters"]
+        "tags": [
+          "v1/datacenters"
+        ]
       }
     },
     "/v1/datacenters/{id}": {
@@ -322,7 +341,9 @@
             }
           }
         },
-        "tags": ["v1/datacenters"]
+        "tags": [
+          "v1/datacenters"
+        ]
       },
       "put": {
         "operationId": "updateOneDatacenter",
@@ -360,7 +381,9 @@
             }
           }
         },
-        "tags": ["v1/datacenters"]
+        "tags": [
+          "v1/datacenters"
+        ]
       },
       "delete": {
         "operationId": "deleteOneDatacenter",
@@ -388,7 +411,9 @@
             }
           }
         },
-        "tags": ["v1/datacenters"]
+        "tags": [
+          "v1/datacenters"
+        ]
       }
     },
     "/v1/datacenters/{id}/soft": {
@@ -411,7 +436,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/datacenters"]
+        "tags": [
+          "v1/datacenters"
+        ]
       }
     },
     "/v1/datacenters/{id}/restore": {
@@ -434,7 +461,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/datacenters"]
+        "tags": [
+          "v1/datacenters"
+        ]
       }
     },
     "/v1/tiers/{id}/cascade": {
@@ -457,7 +486,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/tiers"]
+        "tags": [
+          "v1/tiers"
+        ]
       }
     },
     "/v1/tiers": {
@@ -487,7 +518,9 @@
             }
           }
         },
-        "tags": ["v1/tiers"]
+        "tags": [
+          "v1/tiers"
+        ]
       },
       "get": {
         "operationId": "getManyTier",
@@ -633,13 +666,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/tiers"]
+        "tags": [
+          "v1/tiers"
+        ]
       }
     },
     "/v1/tiers/bulk": {
@@ -662,7 +704,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -682,7 +726,9 @@
             }
           }
         },
-        "tags": ["v1/tiers"]
+        "tags": [
+          "v1/tiers"
+        ]
       }
     },
     "/v1/tiers/{id}": {
@@ -736,7 +782,9 @@
             }
           }
         },
-        "tags": ["v1/tiers"]
+        "tags": [
+          "v1/tiers"
+        ]
       },
       "put": {
         "operationId": "updateOneTier",
@@ -774,7 +822,9 @@
             }
           }
         },
-        "tags": ["v1/tiers"]
+        "tags": [
+          "v1/tiers"
+        ]
       },
       "delete": {
         "operationId": "deleteOneTier",
@@ -802,7 +852,9 @@
             }
           }
         },
-        "tags": ["v1/tiers"]
+        "tags": [
+          "v1/tiers"
+        ]
       }
     },
     "/v1/tiers/{id}/soft": {
@@ -825,7 +877,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/tiers"]
+        "tags": [
+          "v1/tiers"
+        ]
       }
     },
     "/v1/tiers/{id}/restore": {
@@ -848,7 +902,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/tiers"]
+        "tags": [
+          "v1/tiers"
+        ]
       }
     },
     "/v1/tiers/{id}/provision": {
@@ -871,7 +927,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/tiers"]
+        "tags": [
+          "v1/tiers"
+        ]
       }
     },
     "/v1/tiers/{id}/deprovision": {
@@ -894,7 +952,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/tiers"]
+        "tags": [
+          "v1/tiers"
+        ]
       }
     },
     "/v1/tier-groups": {
@@ -924,7 +984,9 @@
             }
           }
         },
-        "tags": ["v1/tier-groups"]
+        "tags": [
+          "v1/tier-groups"
+        ]
       },
       "get": {
         "operationId": "getManyTierGroup",
@@ -1070,13 +1132,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/tier-groups"]
+        "tags": [
+          "v1/tier-groups"
+        ]
       }
     },
     "/v1/tier-groups/bulk": {
@@ -1099,7 +1170,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -1119,7 +1192,9 @@
             }
           }
         },
-        "tags": ["v1/tier-groups"]
+        "tags": [
+          "v1/tier-groups"
+        ]
       }
     },
     "/v1/tier-groups/{id}": {
@@ -1173,7 +1248,9 @@
             }
           }
         },
-        "tags": ["v1/tier-groups"]
+        "tags": [
+          "v1/tier-groups"
+        ]
       },
       "put": {
         "operationId": "updateOneTierGroup",
@@ -1211,7 +1288,9 @@
             }
           }
         },
-        "tags": ["v1/tier-groups"]
+        "tags": [
+          "v1/tier-groups"
+        ]
       },
       "delete": {
         "operationId": "deleteOneTierGroup",
@@ -1239,7 +1318,9 @@
             }
           }
         },
-        "tags": ["v1/tier-groups"]
+        "tags": [
+          "v1/tier-groups"
+        ]
       }
     },
     "/v1/tier-groups/{id}/soft": {
@@ -1262,7 +1343,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/tier-groups"]
+        "tags": [
+          "v1/tier-groups"
+        ]
       }
     },
     "/v1/tier-groups/{id}/restore": {
@@ -1285,7 +1368,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/tier-groups"]
+        "tags": [
+          "v1/tier-groups"
+        ]
       }
     },
     "/v1/network-security/firewall-rule-groups": {
@@ -1315,7 +1400,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rule-groups"]
+        "tags": [
+          "v1/network-security/firewall-rule-groups"
+        ]
       },
       "get": {
         "operationId": "getManyFirewallRuleGroup",
@@ -1461,13 +1548,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rule-groups"]
+        "tags": [
+          "v1/network-security/firewall-rule-groups"
+        ]
       }
     },
     "/v1/network-security/firewall-rule-groups/bulk": {
@@ -1490,7 +1586,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -1510,7 +1608,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rule-groups"]
+        "tags": [
+          "v1/network-security/firewall-rule-groups"
+        ]
       }
     },
     "/v1/network-security/firewall-rule-groups/{id}": {
@@ -1564,7 +1664,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rule-groups"]
+        "tags": [
+          "v1/network-security/firewall-rule-groups"
+        ]
       },
       "put": {
         "operationId": "updateOneFirewallRuleGroup",
@@ -1602,7 +1704,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rule-groups"]
+        "tags": [
+          "v1/network-security/firewall-rule-groups"
+        ]
       },
       "delete": {
         "operationId": "deleteOneFirewallRuleGroup",
@@ -1630,7 +1734,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rule-groups"]
+        "tags": [
+          "v1/network-security/firewall-rule-groups"
+        ]
       }
     },
     "/v1/network-security/firewall-rule-groups/{id}/soft": {
@@ -1653,7 +1759,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/firewall-rule-groups"]
+        "tags": [
+          "v1/network-security/firewall-rule-groups"
+        ]
       }
     },
     "/v1/network-security/firewall-rule-groups/{id}/restore": {
@@ -1676,7 +1784,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/firewall-rule-groups"]
+        "tags": [
+          "v1/network-security/firewall-rule-groups"
+        ]
       }
     },
     "/v1/network-security/firewall-rule-groups/{id}/provision": {
@@ -1699,7 +1809,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/firewall-rule-groups"]
+        "tags": [
+          "v1/network-security/firewall-rule-groups"
+        ]
       }
     },
     "/v1/network-security/firewall-rule-groups/{id}/deprovision": {
@@ -1722,7 +1834,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/firewall-rule-groups"]
+        "tags": [
+          "v1/network-security/firewall-rule-groups"
+        ]
       }
     },
     "/v1/network-security/firewall-rules/bulk-import": {
@@ -1766,7 +1880,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rules"]
+        "tags": [
+          "v1/network-security/firewall-rules"
+        ]
       }
     },
     "/v1/network-security/firewall-rules/group/{id}": {
@@ -1800,7 +1916,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rules"]
+        "tags": [
+          "v1/network-security/firewall-rules"
+        ]
       }
     },
     "/v1/network-security/firewall-rules/operation": {
@@ -1831,7 +1949,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rules"]
+        "tags": [
+          "v1/network-security/firewall-rules"
+        ]
       }
     },
     "/v1/network-security/firewall-rules": {
@@ -1861,7 +1981,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rules"]
+        "tags": [
+          "v1/network-security/firewall-rules"
+        ]
       },
       "get": {
         "operationId": "getManyFirewallRule",
@@ -2007,13 +2129,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rules"]
+        "tags": [
+          "v1/network-security/firewall-rules"
+        ]
       }
     },
     "/v1/network-security/firewall-rules/bulk": {
@@ -2036,7 +2167,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -2056,7 +2189,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rules"]
+        "tags": [
+          "v1/network-security/firewall-rules"
+        ]
       }
     },
     "/v1/network-security/firewall-rules/{id}": {
@@ -2110,7 +2245,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rules"]
+        "tags": [
+          "v1/network-security/firewall-rules"
+        ]
       },
       "put": {
         "operationId": "updateOneFirewallRule",
@@ -2148,7 +2285,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rules"]
+        "tags": [
+          "v1/network-security/firewall-rules"
+        ]
       },
       "delete": {
         "operationId": "deleteOneFirewallRule",
@@ -2176,7 +2315,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/firewall-rules"]
+        "tags": [
+          "v1/network-security/firewall-rules"
+        ]
       }
     },
     "/v1/network-security/firewall-rules/{id}/soft": {
@@ -2199,7 +2340,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/firewall-rules"]
+        "tags": [
+          "v1/network-security/firewall-rules"
+        ]
       }
     },
     "/v1/network-security/firewall-rules/{id}/restore": {
@@ -2222,7 +2365,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/firewall-rules"]
+        "tags": [
+          "v1/network-security/firewall-rules"
+        ]
       }
     },
     "/v1/network-security/service-object-groups/{serviceObjectGroupId}/service-objects/{serviceObjectId}": {
@@ -2262,7 +2407,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/service-object-groups"]
+        "tags": [
+          "v1/network-security/service-object-groups"
+        ]
       },
       "delete": {
         "operationId": "removeServiceObjectFromGroupServiceObjectGroup",
@@ -2300,7 +2447,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/service-object-groups"]
+        "tags": [
+          "v1/network-security/service-object-groups"
+        ]
       }
     },
     "/v1/network-security/service-object-groups/bulk-import-relations": {
@@ -2324,7 +2473,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/service-object-groups"]
+        "tags": [
+          "v1/network-security/service-object-groups"
+        ]
       }
     },
     "/v1/network-security/service-object-groups": {
@@ -2354,7 +2505,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/service-object-groups"]
+        "tags": [
+          "v1/network-security/service-object-groups"
+        ]
       },
       "get": {
         "operationId": "getManyServiceObjectGroup",
@@ -2500,13 +2653,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/network-security/service-object-groups"]
+        "tags": [
+          "v1/network-security/service-object-groups"
+        ]
       }
     },
     "/v1/network-security/service-object-groups/bulk": {
@@ -2529,7 +2691,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -2549,7 +2713,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/service-object-groups"]
+        "tags": [
+          "v1/network-security/service-object-groups"
+        ]
       }
     },
     "/v1/network-security/service-object-groups/{id}": {
@@ -2603,7 +2769,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/service-object-groups"]
+        "tags": [
+          "v1/network-security/service-object-groups"
+        ]
       },
       "put": {
         "operationId": "updateOneServiceObjectGroup",
@@ -2641,7 +2809,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/service-object-groups"]
+        "tags": [
+          "v1/network-security/service-object-groups"
+        ]
       },
       "delete": {
         "operationId": "deleteOneServiceObjectGroup",
@@ -2669,7 +2839,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/service-object-groups"]
+        "tags": [
+          "v1/network-security/service-object-groups"
+        ]
       }
     },
     "/v1/network-security/service-object-groups/{id}/soft": {
@@ -2692,7 +2864,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/service-object-groups"]
+        "tags": [
+          "v1/network-security/service-object-groups"
+        ]
       }
     },
     "/v1/network-security/service-object-groups/{id}/restore": {
@@ -2715,7 +2889,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/service-object-groups"]
+        "tags": [
+          "v1/network-security/service-object-groups"
+        ]
       }
     },
     "/v1/network-security/service-object-groups/{id}/provision": {
@@ -2738,7 +2914,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/service-object-groups"]
+        "tags": [
+          "v1/network-security/service-object-groups"
+        ]
       }
     },
     "/v1/network-security/service-object-groups/{id}/deprovision": {
@@ -2761,7 +2939,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/service-object-groups"]
+        "tags": [
+          "v1/network-security/service-object-groups"
+        ]
       }
     },
     "/v1/network-security/service-objects/checkObjectUsage": {
@@ -2784,7 +2964,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/service-objects"]
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
       }
     },
     "/v1/network-security/service-objects/checkUsedObjects/{id}": {
@@ -2807,7 +2989,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/service-objects"]
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
       }
     },
     "/v1/network-security/service-objects": {
@@ -2837,7 +3021,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/service-objects"]
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
       },
       "get": {
         "operationId": "getManyServiceObject",
@@ -2983,13 +3169,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/network-security/service-objects"]
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
       }
     },
     "/v1/network-security/service-objects/bulk": {
@@ -3012,7 +3207,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -3032,7 +3229,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/service-objects"]
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
       }
     },
     "/v1/network-security/service-objects/{id}": {
@@ -3086,7 +3285,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/service-objects"]
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
       },
       "put": {
         "operationId": "updateOneServiceObject",
@@ -3124,7 +3325,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/service-objects"]
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
       },
       "delete": {
         "operationId": "deleteOneServiceObject",
@@ -3152,7 +3355,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/service-objects"]
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
       }
     },
     "/v1/network-security/service-objects/{id}/soft": {
@@ -3175,7 +3380,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/service-objects"]
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
       }
     },
     "/v1/network-security/service-objects/{id}/restore": {
@@ -3198,7 +3405,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/service-objects"]
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
       }
     },
     "/v1/network-security/service-objects/{id}/provision": {
@@ -3221,7 +3430,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/service-objects"]
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
       }
     },
     "/v1/network-security/service-objects/{id}/deprovision": {
@@ -3244,7 +3455,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/service-objects"]
+        "tags": [
+          "v1/network-security/service-objects"
+        ]
       }
     },
     "/v1/network-security/nat-rule-groups": {
@@ -3274,7 +3487,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/nat-rule-groups"]
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
       },
       "get": {
         "operationId": "getManyNatRuleGroup",
@@ -3420,13 +3635,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/network-security/nat-rule-groups"]
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
       }
     },
     "/v1/network-security/nat-rule-groups/bulk": {
@@ -3449,7 +3673,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -3469,7 +3695,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/nat-rule-groups"]
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
       }
     },
     "/v1/network-security/nat-rule-groups/{id}": {
@@ -3523,7 +3751,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/nat-rule-groups"]
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
       },
       "put": {
         "operationId": "updateOneNatRuleGroup",
@@ -3561,7 +3791,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/nat-rule-groups"]
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
       },
       "delete": {
         "operationId": "deleteOneNatRuleGroup",
@@ -3589,7 +3821,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/nat-rule-groups"]
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
       }
     },
     "/v1/network-security/nat-rule-groups/{id}/soft": {
@@ -3612,7 +3846,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/nat-rule-groups"]
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
       }
     },
     "/v1/network-security/nat-rule-groups/{id}/restore": {
@@ -3635,7 +3871,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/nat-rule-groups"]
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
       }
     },
     "/v1/network-security/nat-rule-groups/{id}/provision": {
@@ -3658,7 +3896,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/nat-rule-groups"]
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
       }
     },
     "/v1/network-security/nat-rule-groups/{id}/deprovision": {
@@ -3681,7 +3921,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/nat-rule-groups"]
+        "tags": [
+          "v1/network-security/nat-rule-groups"
+        ]
       }
     },
     "/v1/network-security/network-object-groups/bulk-import-relations": {
@@ -3705,7 +3947,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/network-object-groups"]
+        "tags": [
+          "v1/network-security/network-object-groups"
+        ]
       }
     },
     "/v1/network-security/network-object-groups/{networkObjectGroupId}/network-objects/{networkObjectId}": {
@@ -3745,7 +3989,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/network-object-groups"]
+        "tags": [
+          "v1/network-security/network-object-groups"
+        ]
       },
       "delete": {
         "operationId": "removeNetworkObjectFromGroupNetworkObjectGroup",
@@ -3783,7 +4029,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/network-object-groups"]
+        "tags": [
+          "v1/network-security/network-object-groups"
+        ]
       }
     },
     "/v1/network-security/network-object-groups": {
@@ -3813,7 +4061,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/network-object-groups"]
+        "tags": [
+          "v1/network-security/network-object-groups"
+        ]
       },
       "get": {
         "operationId": "getManyNetworkObjectGroup",
@@ -3959,13 +4209,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/network-security/network-object-groups"]
+        "tags": [
+          "v1/network-security/network-object-groups"
+        ]
       }
     },
     "/v1/network-security/network-object-groups/bulk": {
@@ -3988,7 +4247,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -4008,7 +4269,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/network-object-groups"]
+        "tags": [
+          "v1/network-security/network-object-groups"
+        ]
       }
     },
     "/v1/network-security/network-object-groups/{id}": {
@@ -4062,7 +4325,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/network-object-groups"]
+        "tags": [
+          "v1/network-security/network-object-groups"
+        ]
       },
       "put": {
         "operationId": "updateOneNetworkObjectGroup",
@@ -4100,7 +4365,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/network-object-groups"]
+        "tags": [
+          "v1/network-security/network-object-groups"
+        ]
       },
       "delete": {
         "operationId": "deleteOneNetworkObjectGroup",
@@ -4128,7 +4395,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/network-object-groups"]
+        "tags": [
+          "v1/network-security/network-object-groups"
+        ]
       }
     },
     "/v1/network-security/network-object-groups/{id}/soft": {
@@ -4151,7 +4420,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/network-object-groups"]
+        "tags": [
+          "v1/network-security/network-object-groups"
+        ]
       }
     },
     "/v1/network-security/network-object-groups/{id}/restore": {
@@ -4174,7 +4445,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/network-object-groups"]
+        "tags": [
+          "v1/network-security/network-object-groups"
+        ]
       }
     },
     "/v1/network-security/network-object-groups/{id}/provision": {
@@ -4197,7 +4470,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/network-object-groups"]
+        "tags": [
+          "v1/network-security/network-object-groups"
+        ]
       }
     },
     "/v1/network-security/network-object-groups/{id}/deprovision": {
@@ -4220,7 +4495,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/network-object-groups"]
+        "tags": [
+          "v1/network-security/network-object-groups"
+        ]
       }
     },
     "/v1/network-security/network-objects/checkObjectUsage": {
@@ -4243,7 +4520,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/network-objects"]
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
       }
     },
     "/v1/network-security/network-objects/checkUsedObjects/{id}": {
@@ -4266,7 +4545,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/network-objects"]
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
       }
     },
     "/v1/network-security/network-objects": {
@@ -4296,7 +4577,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/network-objects"]
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
       },
       "get": {
         "operationId": "getManyNetworkObject",
@@ -4442,13 +4725,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/network-security/network-objects"]
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
       }
     },
     "/v1/network-security/network-objects/bulk": {
@@ -4471,7 +4763,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -4491,7 +4785,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/network-objects"]
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
       }
     },
     "/v1/network-security/network-objects/{id}": {
@@ -4545,7 +4841,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/network-objects"]
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
       },
       "put": {
         "operationId": "updateOneNetworkObject",
@@ -4583,7 +4881,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/network-objects"]
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
       },
       "delete": {
         "operationId": "deleteOneNetworkObject",
@@ -4611,7 +4911,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/network-objects"]
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
       }
     },
     "/v1/network-security/network-objects/{id}/soft": {
@@ -4634,7 +4936,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/network-objects"]
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
       }
     },
     "/v1/network-security/network-objects/{id}/restore": {
@@ -4657,7 +4961,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/network-objects"]
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
       }
     },
     "/v1/network-security/network-objects/{id}/provision": {
@@ -4680,7 +4986,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/network-objects"]
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
       }
     },
     "/v1/network-security/network-objects/{id}/deprovision": {
@@ -4703,7 +5011,475 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/network-objects"]
+        "tags": [
+          "v1/network-security/network-objects"
+        ]
+      }
+    },
+    "/v1/network-security/zones": {
+      "post": {
+        "operationId": "createOneZone",
+        "summary": "Create one Zone",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Zone"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Zone"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      },
+      "get": {
+        "operationId": "getManyZone",
+        "summary": "Get many Zone",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyZoneResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Zone"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/bulk": {
+      "post": {
+        "operationId": "createManyZone",
+        "summary": "Create many Zone",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManyZoneDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Zone"
+                    }
+                  }
+                },
+                "required": [
+                  "bulk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Zone"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}": {
+      "get": {
+        "operationId": "getOneZone",
+        "summary": "Get one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Zone"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneZone",
+        "summary": "Update one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Zone"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Zone"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneZone",
+        "summary": "Delete one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Zone"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneZone",
+        "summary": "Soft delete one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneZone",
+        "summary": "Restore one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}/provision": {
+      "put": {
+        "operationId": "provisionOneZone",
+        "summary": "Provision one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionOneZone",
+        "summary": "Deprovision one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
       }
     },
     "/v1/network-security/nat-rules/bulk-import": {
@@ -4747,7 +5523,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/nat-rules"]
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
       }
     },
     "/v1/network-security/nat-rules/group/{id}": {
@@ -4781,7 +5559,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/nat-rules"]
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
       }
     },
     "/v1/network-security/nat-rules/operation": {
@@ -4812,7 +5592,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/nat-rules"]
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
       }
     },
     "/v1/network-security/nat-rules": {
@@ -4842,7 +5624,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/nat-rules"]
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
       },
       "get": {
         "operationId": "getManyNatRule",
@@ -4988,13 +5772,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/network-security/nat-rules"]
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
       }
     },
     "/v1/network-security/nat-rules/bulk": {
@@ -5017,7 +5810,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -5037,7 +5832,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/nat-rules"]
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
       }
     },
     "/v1/network-security/nat-rules/{id}": {
@@ -5091,7 +5888,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/nat-rules"]
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
       },
       "put": {
         "operationId": "updateOneNatRule",
@@ -5129,7 +5928,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/nat-rules"]
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
       },
       "delete": {
         "operationId": "deleteOneNatRule",
@@ -5157,7 +5958,9 @@
             }
           }
         },
-        "tags": ["v1/network-security/nat-rules"]
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
       }
     },
     "/v1/network-security/nat-rules/{id}/soft": {
@@ -5180,7 +5983,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/nat-rules"]
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
       }
     },
     "/v1/network-security/nat-rules/{id}/restore": {
@@ -5203,7 +6008,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-security/nat-rules"]
+        "tags": [
+          "v1/network-security/nat-rules"
+        ]
       }
     },
     "/v1/network/vlans": {
@@ -5233,7 +6040,9 @@
             }
           }
         },
-        "tags": ["v1/network/vlans"]
+        "tags": [
+          "v1/network/vlans"
+        ]
       },
       "get": {
         "operationId": "getManyVlan",
@@ -5379,13 +6188,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/network/vlans"]
+        "tags": [
+          "v1/network/vlans"
+        ]
       }
     },
     "/v1/network/vlans/bulk": {
@@ -5408,7 +6226,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -5428,7 +6248,9 @@
             }
           }
         },
-        "tags": ["v1/network/vlans"]
+        "tags": [
+          "v1/network/vlans"
+        ]
       }
     },
     "/v1/network/vlans/{id}": {
@@ -5482,7 +6304,9 @@
             }
           }
         },
-        "tags": ["v1/network/vlans"]
+        "tags": [
+          "v1/network/vlans"
+        ]
       },
       "put": {
         "operationId": "updateOneVlan",
@@ -5520,7 +6344,9 @@
             }
           }
         },
-        "tags": ["v1/network/vlans"]
+        "tags": [
+          "v1/network/vlans"
+        ]
       },
       "delete": {
         "operationId": "deleteOneVlan",
@@ -5548,7 +6374,9 @@
             }
           }
         },
-        "tags": ["v1/network/vlans"]
+        "tags": [
+          "v1/network/vlans"
+        ]
       }
     },
     "/v1/network/vlans/{id}/soft": {
@@ -5571,7 +6399,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network/vlans"]
+        "tags": [
+          "v1/network/vlans"
+        ]
       }
     },
     "/v1/network/vlans/{id}/restore": {
@@ -5594,7 +6424,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network/vlans"]
+        "tags": [
+          "v1/network/vlans"
+        ]
       }
     },
     "/v1/network/vlans/{id}/provision": {
@@ -5617,7 +6449,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network/vlans"]
+        "tags": [
+          "v1/network/vlans"
+        ]
       }
     },
     "/v1/network/vlans/{id}/deprovision": {
@@ -5640,7 +6474,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network/vlans"]
+        "tags": [
+          "v1/network/vlans"
+        ]
       }
     },
     "/v1/network/subnets/bulk-import": {
@@ -5664,7 +6500,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network/subnets"]
+        "tags": [
+          "v1/network/subnets"
+        ]
       }
     },
     "/v1/network/subnets": {
@@ -5694,7 +6532,9 @@
             }
           }
         },
-        "tags": ["v1/network/subnets"]
+        "tags": [
+          "v1/network/subnets"
+        ]
       },
       "get": {
         "operationId": "getManySubnet",
@@ -5840,13 +6680,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/network/subnets"]
+        "tags": [
+          "v1/network/subnets"
+        ]
       }
     },
     "/v1/network/subnets/bulk": {
@@ -5869,7 +6718,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -5889,7 +6740,9 @@
             }
           }
         },
-        "tags": ["v1/network/subnets"]
+        "tags": [
+          "v1/network/subnets"
+        ]
       }
     },
     "/v1/network/subnets/{id}": {
@@ -5943,7 +6796,9 @@
             }
           }
         },
-        "tags": ["v1/network/subnets"]
+        "tags": [
+          "v1/network/subnets"
+        ]
       },
       "put": {
         "operationId": "updateOneSubnet",
@@ -5981,7 +6836,9 @@
             }
           }
         },
-        "tags": ["v1/network/subnets"]
+        "tags": [
+          "v1/network/subnets"
+        ]
       },
       "delete": {
         "operationId": "deleteOneSubnet",
@@ -6009,7 +6866,9 @@
             }
           }
         },
-        "tags": ["v1/network/subnets"]
+        "tags": [
+          "v1/network/subnets"
+        ]
       }
     },
     "/v1/network/subnets/{id}/soft": {
@@ -6032,7 +6891,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network/subnets"]
+        "tags": [
+          "v1/network/subnets"
+        ]
       }
     },
     "/v1/network/subnets/{id}/restore": {
@@ -6055,7 +6916,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network/subnets"]
+        "tags": [
+          "v1/network/subnets"
+        ]
       }
     },
     "/v1/network/subnets/{id}/provision": {
@@ -6078,7 +6941,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network/subnets"]
+        "tags": [
+          "v1/network/subnets"
+        ]
       }
     },
     "/v1/network/subnets/{id}/deprovision": {
@@ -6101,7 +6966,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network/subnets"]
+        "tags": [
+          "v1/network/subnets"
+        ]
       }
     },
     "/v1/network/static-routes": {
@@ -6131,7 +6998,9 @@
             }
           }
         },
-        "tags": ["v1/network/static-routes"]
+        "tags": [
+          "v1/network/static-routes"
+        ]
       },
       "get": {
         "operationId": "getManyStaticRoute",
@@ -6277,13 +7146,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/network/static-routes"]
+        "tags": [
+          "v1/network/static-routes"
+        ]
       }
     },
     "/v1/network/static-routes/bulk": {
@@ -6306,7 +7184,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -6326,7 +7206,9 @@
             }
           }
         },
-        "tags": ["v1/network/static-routes"]
+        "tags": [
+          "v1/network/static-routes"
+        ]
       }
     },
     "/v1/network/static-routes/{id}": {
@@ -6380,7 +7262,9 @@
             }
           }
         },
-        "tags": ["v1/network/static-routes"]
+        "tags": [
+          "v1/network/static-routes"
+        ]
       },
       "put": {
         "operationId": "updateOneStaticRoute",
@@ -6418,7 +7302,9 @@
             }
           }
         },
-        "tags": ["v1/network/static-routes"]
+        "tags": [
+          "v1/network/static-routes"
+        ]
       },
       "delete": {
         "operationId": "deleteOneStaticRoute",
@@ -6446,7 +7332,9 @@
             }
           }
         },
-        "tags": ["v1/network/static-routes"]
+        "tags": [
+          "v1/network/static-routes"
+        ]
       }
     },
     "/v1/network/static-routes/{id}/soft": {
@@ -6469,7 +7357,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network/static-routes"]
+        "tags": [
+          "v1/network/static-routes"
+        ]
       }
     },
     "/v1/network/static-routes/{id}/restore": {
@@ -6492,7 +7382,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network/static-routes"]
+        "tags": [
+          "v1/network/static-routes"
+        ]
       }
     },
     "/v1/network/static-routes/{id}/provision": {
@@ -6515,7 +7407,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network/static-routes"]
+        "tags": [
+          "v1/network/static-routes"
+        ]
       }
     },
     "/v1/network/static-routes/{id}/deprovision": {
@@ -6538,7 +7432,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/network/static-routes"]
+        "tags": [
+          "v1/network/static-routes"
+        ]
       }
     },
     "/v1/load-balancer/virtual-servers/bulk-import": {
@@ -6562,7 +7458,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       }
     },
     "/v1/load-balancer/virtual-servers/collection": {
@@ -6574,7 +7472,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       }
     },
     "/v1/load-balancer/virtual-servers/{virtualServerId}/profiles/{profileId}": {
@@ -6614,7 +7514,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       },
       "delete": {
         "operationId": "removeProfileFromVirtualServerLoadBalancerVirtualServer",
@@ -6652,7 +7554,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       }
     },
     "/v1/load-balancer/virtual-servers/{virtualServerId}/policies/{policyId}": {
@@ -6692,7 +7596,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       },
       "delete": {
         "operationId": "removePolicyFromVirtualServerLoadBalancerVirtualServer",
@@ -6730,7 +7636,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       }
     },
     "/v1/load-balancer/virtual-servers/{virtualServerId}/irules/{iruleId}": {
@@ -6770,7 +7678,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       },
       "delete": {
         "operationId": "removeIRuleFromVirtualServerLoadBalancerVirtualServer",
@@ -6808,7 +7718,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       }
     },
     "/v1/load-balancer/virtual-servers": {
@@ -6838,7 +7750,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       },
       "get": {
         "operationId": "getManyLoadBalancerVirtualServer",
@@ -6984,13 +7898,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       }
     },
     "/v1/load-balancer/virtual-servers/bulk": {
@@ -7013,7 +7936,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -7033,7 +7958,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       }
     },
     "/v1/load-balancer/virtual-servers/{id}": {
@@ -7087,7 +8014,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       },
       "put": {
         "operationId": "updateOneLoadBalancerVirtualServer",
@@ -7125,7 +8054,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       },
       "delete": {
         "operationId": "deleteOneLoadBalancerVirtualServer",
@@ -7153,7 +8084,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       }
     },
     "/v1/load-balancer/virtual-servers/{id}/soft": {
@@ -7176,7 +8109,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       }
     },
     "/v1/load-balancer/virtual-servers/{id}/restore": {
@@ -7199,7 +8134,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       }
     },
     "/v1/load-balancer/virtual-servers/{id}/provision": {
@@ -7222,7 +8159,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       }
     },
     "/v1/load-balancer/virtual-servers/{id}/deprovision": {
@@ -7245,7 +8184,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/virtual-servers"]
+        "tags": [
+          "v1/load-balancer/virtual-servers"
+        ]
       }
     },
     "/v1/load-balancer/irules": {
@@ -7275,7 +8216,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/irules"]
+        "tags": [
+          "v1/load-balancer/irules"
+        ]
       },
       "get": {
         "operationId": "getManyLoadBalancerIrule",
@@ -7421,13 +8364,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/load-balancer/irules"]
+        "tags": [
+          "v1/load-balancer/irules"
+        ]
       }
     },
     "/v1/load-balancer/irules/bulk": {
@@ -7450,7 +8402,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -7470,7 +8424,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/irules"]
+        "tags": [
+          "v1/load-balancer/irules"
+        ]
       }
     },
     "/v1/load-balancer/irules/{id}": {
@@ -7524,7 +8480,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/irules"]
+        "tags": [
+          "v1/load-balancer/irules"
+        ]
       },
       "put": {
         "operationId": "updateOneLoadBalancerIrule",
@@ -7562,7 +8520,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/irules"]
+        "tags": [
+          "v1/load-balancer/irules"
+        ]
       },
       "delete": {
         "operationId": "deleteOneLoadBalancerIrule",
@@ -7590,7 +8550,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/irules"]
+        "tags": [
+          "v1/load-balancer/irules"
+        ]
       }
     },
     "/v1/load-balancer/irules/{id}/soft": {
@@ -7613,7 +8575,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/irules"]
+        "tags": [
+          "v1/load-balancer/irules"
+        ]
       }
     },
     "/v1/load-balancer/irules/{id}/restore": {
@@ -7636,7 +8600,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/irules"]
+        "tags": [
+          "v1/load-balancer/irules"
+        ]
       }
     },
     "/v1/load-balancer/irules/{id}/provision": {
@@ -7659,7 +8625,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/irules"]
+        "tags": [
+          "v1/load-balancer/irules"
+        ]
       }
     },
     "/v1/load-balancer/irules/{id}/deprovision": {
@@ -7682,7 +8650,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/irules"]
+        "tags": [
+          "v1/load-balancer/irules"
+        ]
       }
     },
     "/v1/load-balancer/profiles": {
@@ -7712,7 +8682,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/profiles"]
+        "tags": [
+          "v1/load-balancer/profiles"
+        ]
       },
       "get": {
         "operationId": "getManyLoadBalancerProfile",
@@ -7858,13 +8830,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/load-balancer/profiles"]
+        "tags": [
+          "v1/load-balancer/profiles"
+        ]
       }
     },
     "/v1/load-balancer/profiles/bulk": {
@@ -7887,7 +8868,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -7907,7 +8890,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/profiles"]
+        "tags": [
+          "v1/load-balancer/profiles"
+        ]
       }
     },
     "/v1/load-balancer/profiles/{id}": {
@@ -7961,7 +8946,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/profiles"]
+        "tags": [
+          "v1/load-balancer/profiles"
+        ]
       },
       "put": {
         "operationId": "updateOneLoadBalancerProfile",
@@ -7999,7 +8986,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/profiles"]
+        "tags": [
+          "v1/load-balancer/profiles"
+        ]
       },
       "delete": {
         "operationId": "deleteOneLoadBalancerProfile",
@@ -8027,7 +9016,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/profiles"]
+        "tags": [
+          "v1/load-balancer/profiles"
+        ]
       }
     },
     "/v1/load-balancer/profiles/{id}/soft": {
@@ -8050,7 +9041,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/profiles"]
+        "tags": [
+          "v1/load-balancer/profiles"
+        ]
       }
     },
     "/v1/load-balancer/profiles/{id}/restore": {
@@ -8073,7 +9066,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/profiles"]
+        "tags": [
+          "v1/load-balancer/profiles"
+        ]
       }
     },
     "/v1/load-balancer/profiles/{id}/provision": {
@@ -8096,7 +9091,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/profiles"]
+        "tags": [
+          "v1/load-balancer/profiles"
+        ]
       }
     },
     "/v1/load-balancer/profiles/{id}/deprovision": {
@@ -8119,7 +9116,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/profiles"]
+        "tags": [
+          "v1/load-balancer/profiles"
+        ]
       }
     },
     "/v1/load-balancer/policies": {
@@ -8149,7 +9148,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/policies"]
+        "tags": [
+          "v1/load-balancer/policies"
+        ]
       },
       "get": {
         "operationId": "getManyLoadBalancerPolicy",
@@ -8295,13 +9296,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/load-balancer/policies"]
+        "tags": [
+          "v1/load-balancer/policies"
+        ]
       }
     },
     "/v1/load-balancer/policies/bulk": {
@@ -8324,7 +9334,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -8344,7 +9356,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/policies"]
+        "tags": [
+          "v1/load-balancer/policies"
+        ]
       }
     },
     "/v1/load-balancer/policies/{id}": {
@@ -8398,7 +9412,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/policies"]
+        "tags": [
+          "v1/load-balancer/policies"
+        ]
       },
       "put": {
         "operationId": "updateOneLoadBalancerPolicy",
@@ -8436,7 +9452,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/policies"]
+        "tags": [
+          "v1/load-balancer/policies"
+        ]
       },
       "delete": {
         "operationId": "deleteOneLoadBalancerPolicy",
@@ -8464,7 +9482,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/policies"]
+        "tags": [
+          "v1/load-balancer/policies"
+        ]
       }
     },
     "/v1/load-balancer/policies/{id}/soft": {
@@ -8487,7 +9507,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/policies"]
+        "tags": [
+          "v1/load-balancer/policies"
+        ]
       }
     },
     "/v1/load-balancer/policies/{id}/restore": {
@@ -8510,7 +9532,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/policies"]
+        "tags": [
+          "v1/load-balancer/policies"
+        ]
       }
     },
     "/v1/load-balancer/policies/{id}/provision": {
@@ -8533,7 +9557,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/policies"]
+        "tags": [
+          "v1/load-balancer/policies"
+        ]
       }
     },
     "/v1/load-balancer/policies/{id}/deprovision": {
@@ -8556,7 +9582,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/policies"]
+        "tags": [
+          "v1/load-balancer/policies"
+        ]
       }
     },
     "/v1/load-balancer/pools/bulk-import": {
@@ -8580,7 +9608,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/pools/bulk-update": {
@@ -8604,7 +9634,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/pools/{id}/tierId": {
@@ -8644,7 +9676,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/pools/{id}/poolId": {
@@ -8668,7 +9702,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/pools": {
@@ -8816,13 +9852,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       },
       "post": {
         "operationId": "createOneLoadBalancerPool",
@@ -8850,7 +9895,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/pools/{poolId}/node/{nodeId}/service-port/{servicePort}/ratio/{ratio}": {
@@ -8906,7 +9953,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/pools/{poolId}/node/{nodeId}/service-port/{servicePort}": {
@@ -8954,7 +10003,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/pools/{poolId}/health-monitor/{healthMonitorId}": {
@@ -8994,7 +10045,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       },
       "delete": {
         "operationId": "removeHealthMonitorFromPoolLoadBalancerPool",
@@ -9032,7 +10085,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/pools/bulk": {
@@ -9055,7 +10110,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -9075,7 +10132,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/pools/{id}": {
@@ -9129,7 +10188,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       },
       "put": {
         "operationId": "updateOneLoadBalancerPool",
@@ -9167,7 +10228,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       },
       "delete": {
         "operationId": "deleteOneLoadBalancerPool",
@@ -9195,7 +10258,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/pools/{id}/soft": {
@@ -9218,7 +10283,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/pools/{id}/restore": {
@@ -9241,7 +10308,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/pools/{id}/provision": {
@@ -9264,7 +10333,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/pools/{id}/deprovision": {
@@ -9287,7 +10358,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/pools"]
+        "tags": [
+          "v1/load-balancer/pools"
+        ]
       }
     },
     "/v1/load-balancer/health-monitors": {
@@ -9317,7 +10390,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/health-monitors"]
+        "tags": [
+          "v1/load-balancer/health-monitors"
+        ]
       },
       "get": {
         "operationId": "getManyLoadBalancerHealthMonitor",
@@ -9463,13 +10538,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/load-balancer/health-monitors"]
+        "tags": [
+          "v1/load-balancer/health-monitors"
+        ]
       }
     },
     "/v1/load-balancer/health-monitors/bulk": {
@@ -9492,7 +10576,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -9512,7 +10598,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/health-monitors"]
+        "tags": [
+          "v1/load-balancer/health-monitors"
+        ]
       }
     },
     "/v1/load-balancer/health-monitors/{id}": {
@@ -9566,7 +10654,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/health-monitors"]
+        "tags": [
+          "v1/load-balancer/health-monitors"
+        ]
       },
       "put": {
         "operationId": "updateOneLoadBalancerHealthMonitor",
@@ -9604,7 +10694,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/health-monitors"]
+        "tags": [
+          "v1/load-balancer/health-monitors"
+        ]
       },
       "delete": {
         "operationId": "deleteOneLoadBalancerHealthMonitor",
@@ -9632,7 +10724,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/health-monitors"]
+        "tags": [
+          "v1/load-balancer/health-monitors"
+        ]
       }
     },
     "/v1/load-balancer/health-monitors/{id}/soft": {
@@ -9655,7 +10749,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/health-monitors"]
+        "tags": [
+          "v1/load-balancer/health-monitors"
+        ]
       }
     },
     "/v1/load-balancer/health-monitors/{id}/restore": {
@@ -9678,7 +10774,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/health-monitors"]
+        "tags": [
+          "v1/load-balancer/health-monitors"
+        ]
       }
     },
     "/v1/load-balancer/health-monitors/{id}/provision": {
@@ -9701,7 +10799,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/health-monitors"]
+        "tags": [
+          "v1/load-balancer/health-monitors"
+        ]
       }
     },
     "/v1/load-balancer/health-monitors/{id}/deprovision": {
@@ -9724,7 +10824,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/health-monitors"]
+        "tags": [
+          "v1/load-balancer/health-monitors"
+        ]
       }
     },
     "/v1/load-balancer/nodes/{id}/tierId": {
@@ -9748,7 +10850,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/nodes"]
+        "tags": [
+          "v1/load-balancer/nodes"
+        ]
       }
     },
     "/v1/load-balancer/nodes/{id}/poolId": {
@@ -9772,7 +10876,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/nodes"]
+        "tags": [
+          "v1/load-balancer/nodes"
+        ]
       }
     },
     "/v1/load-balancer/nodes": {
@@ -9802,7 +10908,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/nodes"]
+        "tags": [
+          "v1/load-balancer/nodes"
+        ]
       },
       "get": {
         "operationId": "getManyLoadBalancerNode",
@@ -9948,13 +11056,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/load-balancer/nodes"]
+        "tags": [
+          "v1/load-balancer/nodes"
+        ]
       }
     },
     "/v1/load-balancer/nodes/bulk": {
@@ -9977,7 +11094,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -9997,7 +11116,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/nodes"]
+        "tags": [
+          "v1/load-balancer/nodes"
+        ]
       }
     },
     "/v1/load-balancer/nodes/{id}": {
@@ -10051,7 +11172,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/nodes"]
+        "tags": [
+          "v1/load-balancer/nodes"
+        ]
       },
       "put": {
         "operationId": "updateOneLoadBalancerNode",
@@ -10089,7 +11212,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/nodes"]
+        "tags": [
+          "v1/load-balancer/nodes"
+        ]
       },
       "delete": {
         "operationId": "deleteOneLoadBalancerNode",
@@ -10117,7 +11242,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/nodes"]
+        "tags": [
+          "v1/load-balancer/nodes"
+        ]
       }
     },
     "/v1/load-balancer/nodes/{id}/soft": {
@@ -10140,7 +11267,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/nodes"]
+        "tags": [
+          "v1/load-balancer/nodes"
+        ]
       }
     },
     "/v1/load-balancer/nodes/{id}/restore": {
@@ -10163,7 +11292,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/nodes"]
+        "tags": [
+          "v1/load-balancer/nodes"
+        ]
       }
     },
     "/v1/load-balancer/nodes/{id}/provision": {
@@ -10186,7 +11317,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/nodes"]
+        "tags": [
+          "v1/load-balancer/nodes"
+        ]
       }
     },
     "/v1/load-balancer/nodes/{id}/deprovision": {
@@ -10209,7 +11342,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/nodes"]
+        "tags": [
+          "v1/load-balancer/nodes"
+        ]
       }
     },
     "/v1/load-balancer/vlans": {
@@ -10239,7 +11374,9 @@
             }
           }
         },
-        "tags": ["/v1/load-balancer/vlans"]
+        "tags": [
+          "/v1/load-balancer/vlans"
+        ]
       },
       "get": {
         "operationId": "getManyLoadBalancerVlan",
@@ -10385,13 +11522,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["/v1/load-balancer/vlans"]
+        "tags": [
+          "/v1/load-balancer/vlans"
+        ]
       }
     },
     "/v1/load-balancer/vlans/bulk": {
@@ -10414,7 +11560,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -10434,7 +11582,9 @@
             }
           }
         },
-        "tags": ["/v1/load-balancer/vlans"]
+        "tags": [
+          "/v1/load-balancer/vlans"
+        ]
       }
     },
     "/v1/load-balancer/vlans/{id}": {
@@ -10488,7 +11638,9 @@
             }
           }
         },
-        "tags": ["/v1/load-balancer/vlans"]
+        "tags": [
+          "/v1/load-balancer/vlans"
+        ]
       },
       "put": {
         "operationId": "updateOneLoadBalancerVlan",
@@ -10526,7 +11678,9 @@
             }
           }
         },
-        "tags": ["/v1/load-balancer/vlans"]
+        "tags": [
+          "/v1/load-balancer/vlans"
+        ]
       },
       "delete": {
         "operationId": "deleteOneLoadBalancerVlan",
@@ -10554,7 +11708,9 @@
             }
           }
         },
-        "tags": ["/v1/load-balancer/vlans"]
+        "tags": [
+          "/v1/load-balancer/vlans"
+        ]
       }
     },
     "/v1/load-balancer/vlans/{id}/soft": {
@@ -10577,7 +11733,9 @@
             "description": ""
           }
         },
-        "tags": ["/v1/load-balancer/vlans"]
+        "tags": [
+          "/v1/load-balancer/vlans"
+        ]
       }
     },
     "/v1/load-balancer/vlans/{id}/restore": {
@@ -10600,7 +11758,9 @@
             "description": ""
           }
         },
-        "tags": ["/v1/load-balancer/vlans"]
+        "tags": [
+          "/v1/load-balancer/vlans"
+        ]
       }
     },
     "/v1/load-balancer/vlans/{id}/provision": {
@@ -10623,7 +11783,9 @@
             "description": ""
           }
         },
-        "tags": ["/v1/load-balancer/vlans"]
+        "tags": [
+          "/v1/load-balancer/vlans"
+        ]
       }
     },
     "/v1/load-balancer/vlans/{id}/deprovision": {
@@ -10646,7 +11808,9 @@
             "description": ""
           }
         },
-        "tags": ["/v1/load-balancer/vlans"]
+        "tags": [
+          "/v1/load-balancer/vlans"
+        ]
       }
     },
     "/v1/load-balancer/self-ips": {
@@ -10676,7 +11840,9 @@
             }
           }
         },
-        "tags": ["/v1/load-balancer/self-ips"]
+        "tags": [
+          "/v1/load-balancer/self-ips"
+        ]
       },
       "get": {
         "operationId": "getManyLoadBalancerSelfIp",
@@ -10822,13 +11988,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["/v1/load-balancer/self-ips"]
+        "tags": [
+          "/v1/load-balancer/self-ips"
+        ]
       }
     },
     "/v1/load-balancer/self-ips/bulk": {
@@ -10851,7 +12026,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -10871,7 +12048,9 @@
             }
           }
         },
-        "tags": ["/v1/load-balancer/self-ips"]
+        "tags": [
+          "/v1/load-balancer/self-ips"
+        ]
       }
     },
     "/v1/load-balancer/self-ips/{id}": {
@@ -10925,7 +12104,9 @@
             }
           }
         },
-        "tags": ["/v1/load-balancer/self-ips"]
+        "tags": [
+          "/v1/load-balancer/self-ips"
+        ]
       },
       "put": {
         "operationId": "updateOneLoadBalancerSelfIp",
@@ -10963,7 +12144,9 @@
             }
           }
         },
-        "tags": ["/v1/load-balancer/self-ips"]
+        "tags": [
+          "/v1/load-balancer/self-ips"
+        ]
       },
       "delete": {
         "operationId": "deleteOneLoadBalancerSelfIp",
@@ -10991,7 +12174,9 @@
             }
           }
         },
-        "tags": ["/v1/load-balancer/self-ips"]
+        "tags": [
+          "/v1/load-balancer/self-ips"
+        ]
       }
     },
     "/v1/load-balancer/self-ips/{id}/soft": {
@@ -11014,7 +12199,9 @@
             "description": ""
           }
         },
-        "tags": ["/v1/load-balancer/self-ips"]
+        "tags": [
+          "/v1/load-balancer/self-ips"
+        ]
       }
     },
     "/v1/load-balancer/self-ips/{id}/restore": {
@@ -11037,7 +12224,9 @@
             "description": ""
           }
         },
-        "tags": ["/v1/load-balancer/self-ips"]
+        "tags": [
+          "/v1/load-balancer/self-ips"
+        ]
       }
     },
     "/v1/load-balancer/self-ips/{id}/provision": {
@@ -11060,7 +12249,9 @@
             "description": ""
           }
         },
-        "tags": ["/v1/load-balancer/self-ips"]
+        "tags": [
+          "/v1/load-balancer/self-ips"
+        ]
       }
     },
     "/v1/load-balancer/self-ips/{id}/deprovision": {
@@ -11083,7 +12274,9 @@
             "description": ""
           }
         },
-        "tags": ["/v1/load-balancer/self-ips"]
+        "tags": [
+          "/v1/load-balancer/self-ips"
+        ]
       }
     },
     "/v1/load-balancer/routes": {
@@ -11113,7 +12306,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/routes"]
+        "tags": [
+          "v1/load-balancer/routes"
+        ]
       },
       "get": {
         "operationId": "getManyLoadBalancerRoute",
@@ -11259,13 +12454,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/load-balancer/routes"]
+        "tags": [
+          "v1/load-balancer/routes"
+        ]
       }
     },
     "/v1/load-balancer/routes/bulk": {
@@ -11288,7 +12492,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -11308,7 +12514,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/routes"]
+        "tags": [
+          "v1/load-balancer/routes"
+        ]
       }
     },
     "/v1/load-balancer/routes/{id}": {
@@ -11362,7 +12570,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/routes"]
+        "tags": [
+          "v1/load-balancer/routes"
+        ]
       },
       "put": {
         "operationId": "updateOneLoadBalancerRoute",
@@ -11400,7 +12610,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/routes"]
+        "tags": [
+          "v1/load-balancer/routes"
+        ]
       },
       "delete": {
         "operationId": "deleteOneLoadBalancerRoute",
@@ -11428,7 +12640,9 @@
             }
           }
         },
-        "tags": ["v1/load-balancer/routes"]
+        "tags": [
+          "v1/load-balancer/routes"
+        ]
       }
     },
     "/v1/load-balancer/routes/{id}/soft": {
@@ -11451,7 +12665,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/routes"]
+        "tags": [
+          "v1/load-balancer/routes"
+        ]
       }
     },
     "/v1/load-balancer/routes/{id}/restore": {
@@ -11474,7 +12690,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/routes"]
+        "tags": [
+          "v1/load-balancer/routes"
+        ]
       }
     },
     "/v1/load-balancer/routes/{id}/provision": {
@@ -11497,7 +12715,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/routes"]
+        "tags": [
+          "v1/load-balancer/routes"
+        ]
       }
     },
     "/v1/load-balancer/routes/{id}/deprovision": {
@@ -11520,7 +12740,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/load-balancer/routes"]
+        "tags": [
+          "v1/load-balancer/routes"
+        ]
       }
     },
     "/v1/jobs": {
@@ -11550,7 +12772,9 @@
             }
           }
         },
-        "tags": ["v1/jobs"]
+        "tags": [
+          "v1/jobs"
+        ]
       },
       "get": {
         "operationId": "getManyJob",
@@ -11696,13 +12920,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v1/jobs"]
+        "tags": [
+          "v1/jobs"
+        ]
       }
     },
     "/v1/jobs/{id}": {
@@ -11756,7 +12989,9 @@
             }
           }
         },
-        "tags": ["v1/jobs"]
+        "tags": [
+          "v1/jobs"
+        ]
       },
       "patch": {
         "operationId": "updateOneJob",
@@ -11794,7 +13029,9 @@
             }
           }
         },
-        "tags": ["v1/jobs"]
+        "tags": [
+          "v1/jobs"
+        ]
       }
     },
     "/v1/audit-log": {
@@ -11867,7 +13104,9 @@
             }
           }
         },
-        "tags": ["v1/audit-log"]
+        "tags": [
+          "v1/audit-log"
+        ]
       }
     },
     "/v2/app-centric/tenants": {
@@ -11897,7 +13136,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/tenants"]
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
       },
       "get": {
         "operationId": "getManyTenant",
@@ -12043,13 +13284,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v2/app-centric/tenants"]
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
       }
     },
     "/v2/app-centric/tenants/bulk": {
@@ -12072,7 +13322,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -12092,7 +13344,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/tenants"]
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
       }
     },
     "/v2/app-centric/tenants/{id}": {
@@ -12146,7 +13400,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/tenants"]
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
       },
       "put": {
         "operationId": "updateOneTenant",
@@ -12184,7 +13440,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/tenants"]
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
       },
       "delete": {
         "operationId": "deleteOneTenant",
@@ -12212,7 +13470,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/tenants"]
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
       }
     },
     "/v2/app-centric/tenants/{id}/soft": {
@@ -12235,7 +13495,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/tenants"]
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
       }
     },
     "/v2/app-centric/tenants/{id}/restore": {
@@ -12258,7 +13520,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/tenants"]
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
       }
     },
     "/v2/app-centric/tenants/{id}/provision": {
@@ -12281,7 +13545,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/tenants"]
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
       }
     },
     "/v2/app-centric/tenants/{id}/deprovision": {
@@ -12304,7 +13570,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/tenants"]
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
       }
     },
     "/v2/app-centric/subjects/{subjectId}/filters/{filterId}": {
@@ -12342,7 +13610,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/subjects"]
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
       },
       "delete": {
         "operationId": "removeFilterFromSubjectSubject",
@@ -12378,7 +13648,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/subjects"]
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
       }
     },
     "/v2/app-centric/subjects": {
@@ -12408,7 +13680,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/subjects"]
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
       },
       "get": {
         "operationId": "getManySubject",
@@ -12554,13 +13828,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v2/app-centric/subjects"]
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
       }
     },
     "/v2/app-centric/subjects/bulk": {
@@ -12583,7 +13866,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -12603,7 +13888,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/subjects"]
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
       }
     },
     "/v2/app-centric/subjects/{id}": {
@@ -12657,7 +13944,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/subjects"]
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
       },
       "put": {
         "operationId": "updateOneSubject",
@@ -12695,7 +13984,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/subjects"]
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
       },
       "delete": {
         "operationId": "deleteOneSubject",
@@ -12723,7 +14014,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/subjects"]
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
       }
     },
     "/v2/app-centric/subjects/{id}/soft": {
@@ -12746,7 +14039,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/subjects"]
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
       }
     },
     "/v2/app-centric/subjects/{id}/restore": {
@@ -12769,7 +14064,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/subjects"]
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
       }
     },
     "/v2/app-centric/subjects/{id}/provision": {
@@ -12792,7 +14089,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/subjects"]
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
       }
     },
     "/v2/app-centric/subjects/{id}/deprovision": {
@@ -12815,7 +14114,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/subjects"]
+        "tags": [
+          "v2/app-centric/subjects"
+        ]
       }
     },
     "/v2/app-centric/filters": {
@@ -12845,7 +14146,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/filters"]
+        "tags": [
+          "v2/app-centric/filters"
+        ]
       },
       "get": {
         "operationId": "getManyFilter",
@@ -12991,13 +14294,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v2/app-centric/filters"]
+        "tags": [
+          "v2/app-centric/filters"
+        ]
       }
     },
     "/v2/app-centric/filters/bulk": {
@@ -13020,7 +14332,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -13040,7 +14354,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/filters"]
+        "tags": [
+          "v2/app-centric/filters"
+        ]
       }
     },
     "/v2/app-centric/filters/{id}": {
@@ -13094,7 +14410,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/filters"]
+        "tags": [
+          "v2/app-centric/filters"
+        ]
       },
       "put": {
         "operationId": "updateOneFilter",
@@ -13132,7 +14450,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/filters"]
+        "tags": [
+          "v2/app-centric/filters"
+        ]
       },
       "delete": {
         "operationId": "deleteOneFilter",
@@ -13160,7 +14480,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/filters"]
+        "tags": [
+          "v2/app-centric/filters"
+        ]
       }
     },
     "/v2/app-centric/filters/{id}/soft": {
@@ -13183,7 +14505,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/filters"]
+        "tags": [
+          "v2/app-centric/filters"
+        ]
       }
     },
     "/v2/app-centric/filters/{id}/restore": {
@@ -13206,7 +14530,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/filters"]
+        "tags": [
+          "v2/app-centric/filters"
+        ]
       }
     },
     "/v2/app-centric/filters/{id}/provision": {
@@ -13229,7 +14555,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/filters"]
+        "tags": [
+          "v2/app-centric/filters"
+        ]
       }
     },
     "/v2/app-centric/filters/{id}/deprovision": {
@@ -13252,7 +14580,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/filters"]
+        "tags": [
+          "v2/app-centric/filters"
+        ]
       }
     },
     "/v2/app-centric/application-profiles": {
@@ -13282,7 +14612,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/application-profiles"]
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
       },
       "get": {
         "operationId": "getManyApplicationProfile",
@@ -13428,13 +14760,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v2/app-centric/application-profiles"]
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
       }
     },
     "/v2/app-centric/application-profiles/bulk": {
@@ -13457,7 +14798,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -13477,7 +14820,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/application-profiles"]
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
       }
     },
     "/v2/app-centric/application-profiles/{id}": {
@@ -13531,7 +14876,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/application-profiles"]
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
       },
       "put": {
         "operationId": "updateOneApplicationProfile",
@@ -13569,7 +14916,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/application-profiles"]
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
       },
       "delete": {
         "operationId": "deleteOneApplicationProfile",
@@ -13597,7 +14946,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/application-profiles"]
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
       }
     },
     "/v2/app-centric/application-profiles/{id}/soft": {
@@ -13620,7 +14971,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/application-profiles"]
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
       }
     },
     "/v2/app-centric/application-profiles/{id}/restore": {
@@ -13643,7 +14996,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/application-profiles"]
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
       }
     },
     "/v2/app-centric/application-profiles/{id}/provision": {
@@ -13666,7 +15021,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/application-profiles"]
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
       }
     },
     "/v2/app-centric/application-profiles/{id}/deprovision": {
@@ -13689,7 +15046,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/application-profiles"]
+        "tags": [
+          "v2/app-centric/application-profiles"
+        ]
       }
     },
     "/v2/app-centric/vrfs": {
@@ -13719,7 +15078,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/vrfs"]
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
       },
       "get": {
         "operationId": "getManyVrf",
@@ -13865,13 +15226,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v2/app-centric/vrfs"]
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
       }
     },
     "/v2/app-centric/vrfs/bulk": {
@@ -13894,7 +15264,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -13914,7 +15286,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/vrfs"]
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
       }
     },
     "/v2/app-centric/vrfs/{id}": {
@@ -13968,7 +15342,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/vrfs"]
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
       },
       "put": {
         "operationId": "updateOneVrf",
@@ -14006,7 +15382,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/vrfs"]
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
       },
       "delete": {
         "operationId": "deleteOneVrf",
@@ -14034,7 +15412,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/vrfs"]
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
       }
     },
     "/v2/app-centric/vrfs/{id}/soft": {
@@ -14057,7 +15437,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/vrfs"]
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
       }
     },
     "/v2/app-centric/vrfs/{id}/restore": {
@@ -14080,7 +15462,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/vrfs"]
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
       }
     },
     "/v2/app-centric/vrfs/{id}/provision": {
@@ -14103,7 +15487,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/vrfs"]
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
       }
     },
     "/v2/app-centric/vrfs/{id}/deprovision": {
@@ -14126,7 +15512,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/vrfs"]
+        "tags": [
+          "v2/app-centric/vrfs"
+        ]
       }
     },
     "/v2/app-centric/bridge-domains/{bridgeDomainId}/l3outs/{l3OutId}": {
@@ -14164,7 +15552,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/bridge-domains"]
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
       },
       "delete": {
         "operationId": "removeL3OutFromBridgeDomainBridgeDomain",
@@ -14200,7 +15590,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/bridge-domains"]
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
       }
     },
     "/v2/app-centric/bridge-domains": {
@@ -14230,7 +15622,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/bridge-domains"]
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
       },
       "get": {
         "operationId": "getManyBridgeDomain",
@@ -14376,13 +15770,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v2/app-centric/bridge-domains"]
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
       }
     },
     "/v2/app-centric/bridge-domains/bulk": {
@@ -14405,7 +15808,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -14425,7 +15830,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/bridge-domains"]
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
       }
     },
     "/v2/app-centric/bridge-domains/{id}": {
@@ -14479,7 +15886,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/bridge-domains"]
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
       },
       "put": {
         "operationId": "updateOneBridgeDomain",
@@ -14517,7 +15926,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/bridge-domains"]
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
       },
       "delete": {
         "operationId": "deleteOneBridgeDomain",
@@ -14545,7 +15956,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/bridge-domains"]
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
       }
     },
     "/v2/app-centric/bridge-domains/{id}/soft": {
@@ -14568,7 +15981,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/bridge-domains"]
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
       }
     },
     "/v2/app-centric/bridge-domains/{id}/restore": {
@@ -14591,7 +16006,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/bridge-domains"]
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
       }
     },
     "/v2/app-centric/bridge-domains/{id}/provision": {
@@ -14614,7 +16031,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/bridge-domains"]
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
       }
     },
     "/v2/app-centric/bridge-domains/{id}/deprovision": {
@@ -14637,7 +16056,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/bridge-domains"]
+        "tags": [
+          "v2/app-centric/bridge-domains"
+        ]
       }
     },
     "/v2/app-centric/l3outs": {
@@ -14667,7 +16088,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/l3outs"]
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
       },
       "get": {
         "operationId": "getManyL3Out",
@@ -14813,13 +16236,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v2/app-centric/l3outs"]
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
       }
     },
     "/v2/app-centric/l3outs/bulk": {
@@ -14842,7 +16274,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -14862,7 +16296,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/l3outs"]
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
       }
     },
     "/v2/app-centric/l3outs/{id}": {
@@ -14916,7 +16352,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/l3outs"]
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
       },
       "put": {
         "operationId": "updateOneL3Out",
@@ -14954,7 +16392,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/l3outs"]
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
       },
       "delete": {
         "operationId": "deleteOneL3Out",
@@ -14982,7 +16422,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/l3outs"]
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
       }
     },
     "/v2/app-centric/l3outs/{id}/soft": {
@@ -15005,7 +16447,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/l3outs"]
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
       }
     },
     "/v2/app-centric/l3outs/{id}/restore": {
@@ -15028,7 +16472,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/l3outs"]
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
       }
     },
     "/v2/app-centric/l3outs/{id}/provision": {
@@ -15051,7 +16497,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/l3outs"]
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
       }
     },
     "/v2/app-centric/l3outs/{id}/deprovision": {
@@ -15074,7 +16522,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/l3outs"]
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
       }
     },
     "/v2/app-centric/contracts": {
@@ -15104,7 +16554,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/contracts"]
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
       },
       "get": {
         "operationId": "getManyContract",
@@ -15250,13 +16702,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v2/app-centric/contracts"]
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
       }
     },
     "/v2/app-centric/contracts/bulk": {
@@ -15279,7 +16740,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -15299,7 +16762,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/contracts"]
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
       }
     },
     "/v2/app-centric/contracts/{id}": {
@@ -15353,7 +16818,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/contracts"]
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
       },
       "put": {
         "operationId": "updateOneContract",
@@ -15391,7 +16858,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/contracts"]
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
       },
       "delete": {
         "operationId": "deleteOneContract",
@@ -15419,7 +16888,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/contracts"]
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
       }
     },
     "/v2/app-centric/contracts/{id}/soft": {
@@ -15442,7 +16913,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/contracts"]
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
       }
     },
     "/v2/app-centric/contracts/{id}/restore": {
@@ -15465,7 +16938,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/contracts"]
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
       }
     },
     "/v2/app-centric/contracts/{id}/provision": {
@@ -15488,7 +16963,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/contracts"]
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
       }
     },
     "/v2/app-centric/contracts/{id}/deprovision": {
@@ -15511,7 +16988,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/contracts"]
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
       }
     },
     "/v2/app-centric/app-centric-subnets": {
@@ -15541,7 +17020,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/app-centric-subnets"]
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
       },
       "get": {
         "operationId": "getManyAppCentricSubnet",
@@ -15687,13 +17168,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v2/app-centric/app-centric-subnets"]
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
       }
     },
     "/v2/app-centric/app-centric-subnets/bulk": {
@@ -15716,7 +17206,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -15736,7 +17228,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/app-centric-subnets"]
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
       }
     },
     "/v2/app-centric/app-centric-subnets/{id}": {
@@ -15790,7 +17284,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/app-centric-subnets"]
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
       },
       "put": {
         "operationId": "updateOneAppCentricSubnet",
@@ -15828,7 +17324,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/app-centric-subnets"]
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
       },
       "delete": {
         "operationId": "deleteOneAppCentricSubnet",
@@ -15856,7 +17354,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/app-centric-subnets"]
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
       }
     },
     "/v2/app-centric/app-centric-subnets/{id}/soft": {
@@ -15879,7 +17379,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/app-centric-subnets"]
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
       }
     },
     "/v2/app-centric/app-centric-subnets/{id}/restore": {
@@ -15902,7 +17404,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/app-centric-subnets"]
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
       }
     },
     "/v2/app-centric/app-centric-subnets/{id}/provision": {
@@ -15925,7 +17429,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/app-centric-subnets"]
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
       }
     },
     "/v2/app-centric/app-centric-subnets/{id}/deprovision": {
@@ -15948,7 +17454,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/app-centric-subnets"]
+        "tags": [
+          "v2/app-centric/app-centric-subnets"
+        ]
       }
     },
     "/v2/app-centric/endpoint-groups/{endpointGroupId}/consumed-contracts/{contractId}": {
@@ -15981,7 +17489,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       },
       "delete": {
         "operationId": "removeConsumedContractToEndpointGroupEndpointGroup",
@@ -16019,7 +17529,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       }
     },
     "/v2/app-centric/endpoint-groups/{endpointGroupId}/provided-contracts/{contractId}": {
@@ -16059,7 +17571,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       },
       "delete": {
         "operationId": "removeProvidedContractToEndpointGroupEndpointGroup",
@@ -16097,7 +17611,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       }
     },
     "/v2/app-centric/endpoint-groups": {
@@ -16127,7 +17643,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       },
       "get": {
         "operationId": "getManyEndpointGroup",
@@ -16273,13 +17791,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       }
     },
     "/v2/app-centric/endpoint-groups/bulk": {
@@ -16302,7 +17829,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -16322,7 +17851,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       }
     },
     "/v2/app-centric/endpoint-groups/{id}": {
@@ -16376,7 +17907,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       },
       "put": {
         "operationId": "updateOneEndpointGroup",
@@ -16414,7 +17947,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       },
       "delete": {
         "operationId": "deleteOneEndpointGroup",
@@ -16442,7 +17977,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       }
     },
     "/v2/app-centric/endpoint-groups/{id}/soft": {
@@ -16465,7 +18002,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       }
     },
     "/v2/app-centric/endpoint-groups/{id}/restore": {
@@ -16488,7 +18027,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       }
     },
     "/v2/app-centric/endpoint-groups/{id}/provision": {
@@ -16511,7 +18052,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       }
     },
     "/v2/app-centric/endpoint-groups/{id}/deprovision": {
@@ -16534,7 +18077,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/endpoint-groups"]
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
       }
     },
     "/v2/app-centric/filter-entries": {
@@ -16564,7 +18109,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/filter-entries"]
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
       },
       "get": {
         "operationId": "getManyFilterEntry",
@@ -16710,13 +18257,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v2/app-centric/filter-entries"]
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
       }
     },
     "/v2/app-centric/filter-entries/bulk": {
@@ -16739,7 +18295,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -16759,7 +18317,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/filter-entries"]
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
       }
     },
     "/v2/app-centric/filter-entries/{id}": {
@@ -16813,7 +18373,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/filter-entries"]
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
       },
       "put": {
         "operationId": "updateOneFilterEntry",
@@ -16851,7 +18413,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/filter-entries"]
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
       },
       "delete": {
         "operationId": "deleteOneFilterEntry",
@@ -16879,7 +18443,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/filter-entries"]
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
       }
     },
     "/v2/app-centric/filter-entries/{id}/soft": {
@@ -16902,7 +18468,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/filter-entries"]
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
       }
     },
     "/v2/app-centric/filter-entries/{id}/restore": {
@@ -16925,7 +18493,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/filter-entries"]
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
       }
     },
     "/v2/app-centric/filter-entries/{id}/provision": {
@@ -16948,7 +18518,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/filter-entries"]
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
       }
     },
     "/v2/app-centric/filter-entries/{id}/deprovision": {
@@ -16971,7 +18543,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/filter-entries"]
+        "tags": [
+          "v2/app-centric/filter-entries"
+        ]
       }
     },
     "/v2/app-centric/route-profiles": {
@@ -17001,7 +18575,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/route-profiles"]
+        "tags": [
+          "v2/app-centric/route-profiles"
+        ]
       },
       "get": {
         "operationId": "getManyRouteProfile",
@@ -17147,13 +18723,22 @@
                       }
                     }
                   },
-                  "required": ["data", "count", "total", "page", "pageCount", "totalPages"]
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["v2/app-centric/route-profiles"]
+        "tags": [
+          "v2/app-centric/route-profiles"
+        ]
       }
     },
     "/v2/app-centric/route-profiles/bulk": {
@@ -17176,7 +18761,9 @@
                     }
                   }
                 },
-                "required": ["bulk"]
+                "required": [
+                  "bulk"
+                ]
               }
             }
           }
@@ -17196,7 +18783,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/route-profiles"]
+        "tags": [
+          "v2/app-centric/route-profiles"
+        ]
       }
     },
     "/v2/app-centric/route-profiles/{id}": {
@@ -17250,7 +18839,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/route-profiles"]
+        "tags": [
+          "v2/app-centric/route-profiles"
+        ]
       },
       "put": {
         "operationId": "updateOneRouteProfile",
@@ -17288,7 +18879,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/route-profiles"]
+        "tags": [
+          "v2/app-centric/route-profiles"
+        ]
       },
       "delete": {
         "operationId": "deleteOneRouteProfile",
@@ -17316,7 +18909,9 @@
             }
           }
         },
-        "tags": ["v2/app-centric/route-profiles"]
+        "tags": [
+          "v2/app-centric/route-profiles"
+        ]
       }
     },
     "/v2/app-centric/route-profiles/{id}/soft": {
@@ -17339,7 +18934,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/route-profiles"]
+        "tags": [
+          "v2/app-centric/route-profiles"
+        ]
       }
     },
     "/v2/app-centric/route-profiles/{id}/restore": {
@@ -17362,7 +18959,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/route-profiles"]
+        "tags": [
+          "v2/app-centric/route-profiles"
+        ]
       }
     },
     "/v2/app-centric/route-profiles/{id}/provision": {
@@ -17385,7 +18984,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/route-profiles"]
+        "tags": [
+          "v2/app-centric/route-profiles"
+        ]
       }
     },
     "/v2/app-centric/route-profiles/{id}/deprovision": {
@@ -17408,7 +19009,9 @@
             "description": ""
           }
         },
-        "tags": ["v2/app-centric/route-profiles"]
+        "tags": [
+          "v2/app-centric/route-profiles"
+        ]
       }
     },
     "/v1/status/tower": {
@@ -17429,7 +19032,9 @@
             }
           }
         },
-        "tags": ["v1/status"]
+        "tags": [
+          "v1/status"
+        ]
       }
     },
     "/v1/status/db": {
@@ -17450,7 +19055,9 @@
             }
           }
         },
-        "tags": ["v1/status"]
+        "tags": [
+          "v1/status"
+        ]
       }
     },
     "/v1/status/api": {
@@ -17471,7 +19078,9 @@
             }
           }
         },
-        "tags": ["v1/status"]
+        "tags": [
+          "v1/status"
+        ]
       }
     },
     "/v1/status/ping": {
@@ -17492,7 +19101,9 @@
             }
           }
         },
-        "tags": ["v1/status"]
+        "tags": [
+          "v1/status"
+        ]
       }
     },
     "/v1/self-service": {
@@ -17525,7 +19136,9 @@
             }
           }
         },
-        "tags": ["v1/self-service"]
+        "tags": [
+          "v1/self-service"
+        ]
       }
     },
     "/v1/self-service/{selfServiceId}": {
@@ -17555,7 +19168,9 @@
             }
           }
         },
-        "tags": ["v1/self-service"]
+        "tags": [
+          "v1/self-service"
+        ]
       },
       "delete": {
         "operationId": "deleteSelfServiceSelfService",
@@ -17576,7 +19191,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/self-service"]
+        "tags": [
+          "v1/self-service"
+        ]
       }
     },
     "/v1/self-service/{selfServiceId}/raw/xml": {
@@ -17599,7 +19216,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/self-service"]
+        "tags": [
+          "v1/self-service"
+        ]
       }
     },
     "/v1/self-service/{selfServiceId}/raw/text": {
@@ -17622,7 +19241,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/self-service"]
+        "tags": [
+          "v1/self-service"
+        ]
       }
     },
     "/v1/self-service/{selfServiceId}/raw/json": {
@@ -17645,7 +19266,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/self-service"]
+        "tags": [
+          "v1/self-service"
+        ]
       }
     },
     "/v1/self-service/asa": {
@@ -17669,7 +19292,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/self-service"]
+        "tags": [
+          "v1/self-service"
+        ]
       }
     },
     "/v1/self-service/pa": {
@@ -17693,7 +19318,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/self-service"]
+        "tags": [
+          "v1/self-service"
+        ]
       }
     },
     "/v1/self-service/{selfServiceId}/replace-config": {
@@ -17726,7 +19353,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/self-service"]
+        "tags": [
+          "v1/self-service"
+        ]
       }
     },
     "/v1/self-service/{selfServiceId}/converted-artifacts": {
@@ -17749,7 +19378,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/self-service"]
+        "tags": [
+          "v1/self-service"
+        ]
       }
     },
     "/v1/self-service/bulkupload": {
@@ -17773,7 +19404,9 @@
             "description": ""
           }
         },
-        "tags": ["v1/self-service"]
+        "tags": [
+          "v1/self-service"
+        ]
       }
     }
   },
@@ -17807,7 +19440,10 @@
             "type": "string"
           }
         },
-        "required": ["username", "password"]
+        "required": [
+          "username",
+          "password"
+        ]
       },
       "DcsPermissions": {
         "type": "object",
@@ -17822,7 +19458,10 @@
             }
           }
         },
-        "required": ["tenant", "roles"]
+        "required": [
+          "tenant",
+          "roles"
+        ]
       },
       "UserDto": {
         "type": "object",
@@ -17861,7 +19500,18 @@
             }
           }
         },
-        "required": ["dn", "uid", "cn", "givenname", "mail", "dcsrole", "ismemberof", "token", "expiresIn", "dcsPermissions"]
+        "required": [
+          "dn",
+          "uid",
+          "cn",
+          "givenname",
+          "mail",
+          "dcsrole",
+          "ismemberof",
+          "token",
+          "expiresIn",
+          "dcsPermissions"
+        ]
       },
       "TierGroup": {
         "type": "object",
@@ -17909,7 +19559,10 @@
             }
           }
         },
-        "required": ["name", "datacenterId"]
+        "required": [
+          "name",
+          "datacenterId"
+        ]
       },
       "Vlan": {
         "type": "object",
@@ -17962,13 +19615,21 @@
           },
           "vcdVlanType": {
             "type": "string",
-            "enum": ["Dev", "Prod", "Both"]
+            "enum": [
+              "Dev",
+              "Prod",
+              "Both"
+            ]
           },
           "tierId": {
             "type": "string"
           }
         },
-        "required": ["name", "vlanNumber", "tierId"]
+        "required": [
+          "name",
+          "vlanNumber",
+          "tierId"
+        ]
       },
       "Subnet": {
         "type": "object",
@@ -18030,7 +19691,13 @@
             "type": "string"
           }
         },
-        "required": ["name", "network", "gateway", "vlanId", "tierId"]
+        "required": [
+          "name",
+          "network",
+          "gateway",
+          "vlanId",
+          "tierId"
+        ]
       },
       "StaticRoute": {
         "type": "object",
@@ -18091,7 +19758,13 @@
             "type": "string"
           }
         },
-        "required": ["name", "destinationNetwork", "nextHop", "metric", "tierId"]
+        "required": [
+          "name",
+          "destinationNetwork",
+          "nextHop",
+          "metric",
+          "tierId"
+        ]
       },
       "NetworkObjectGroup": {
         "type": "object",
@@ -18148,7 +19821,10 @@
             "type": "string"
           }
         },
-        "required": ["name", "tierId"]
+        "required": [
+          "name",
+          "tierId"
+        ]
       },
       "NetworkObject": {
         "type": "object",
@@ -18195,7 +19871,11 @@
           },
           "type": {
             "type": "string",
-            "enum": ["IpAddress", "Range", "Fqdn"]
+            "enum": [
+              "IpAddress",
+              "Range",
+              "Fqdn"
+            ]
           },
           "fqdn": {
             "type": "string"
@@ -18217,18 +19897,29 @@
           },
           "natDirection": {
             "type": "string",
-            "enum": ["In", "Out"]
+            "enum": [
+              "In",
+              "Out"
+            ]
           },
           "natType": {
             "type": "string",
-            "enum": ["Intervrf", "External"]
+            "enum": [
+              "Intervrf",
+              "External"
+            ]
           },
           "natService": {
             "type": "boolean"
           },
           "natProtocol": {
             "type": "string",
-            "enum": ["IP", "ICMP", "TCP", "UDP"]
+            "enum": [
+              "IP",
+              "ICMP",
+              "TCP",
+              "UDP"
+            ]
           },
           "natSourcePort": {
             "type": "string"
@@ -18247,7 +19938,11 @@
             }
           }
         },
-        "required": ["name", "type", "tierId"]
+        "required": [
+          "name",
+          "type",
+          "tierId"
+        ]
       },
       "ServiceObjectGroup": {
         "type": "object",
@@ -18295,7 +19990,11 @@
           },
           "type": {
             "type": "string",
-            "enum": ["TCP", "UDP", "TCPUDP"]
+            "enum": [
+              "TCP",
+              "UDP",
+              "TCPUDP"
+            ]
           },
           "serviceObjects": {
             "readOnly": true,
@@ -18308,7 +20007,11 @@
             "type": "string"
           }
         },
-        "required": ["name", "type", "tierId"]
+        "required": [
+          "name",
+          "type",
+          "tierId"
+        ]
       },
       "ServiceObject": {
         "type": "object",
@@ -18356,7 +20059,12 @@
           },
           "protocol": {
             "type": "string",
-            "enum": ["IP", "ICMP", "TCP", "UDP"]
+            "enum": [
+              "IP",
+              "ICMP",
+              "TCP",
+              "UDP"
+            ]
           },
           "sourcePorts": {
             "type": "string"
@@ -18375,229 +20083,13 @@
             }
           }
         },
-        "required": ["name", "protocol", "sourcePorts", "destinationPorts", "tierId"]
-      },
-      "FirewallRule": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 28
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "direction": {
-            "type": "string",
-            "enum": ["In", "Out"]
-          },
-          "action": {
-            "type": "string",
-            "enum": ["Permit", "Deny"]
-          },
-          "protocol": {
-            "type": "string",
-            "enum": ["IP", "ICMP", "TCP", "UDP"]
-          },
-          "logging": {
-            "type": "boolean"
-          },
-          "enabled": {
-            "type": "boolean"
-          },
-          "ruleIndex": {
-            "type": "number",
-            "minimum": 1
-          },
-          "sourceAddressType": {
-            "type": "string",
-            "enum": ["IpAddress", "NetworkObject", "NetworkObjectGroup"]
-          },
-          "destinationAddressType": {
-            "type": "string",
-            "enum": ["IpAddress", "NetworkObject", "NetworkObjectGroup"]
-          },
-          "serviceType": {
-            "type": "string",
-            "enum": ["Port", "ServiceObject", "ServiceObjectGroup"]
-          },
-          "sourceIpAddress": {
-            "type": "string"
-          },
-          "sourceNetworkObjectId": {
-            "type": "string"
-          },
-          "sourceNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "destinationIpAddress": {
-            "type": "string"
-          },
-          "destinationNetworkObjectId": {
-            "type": "string"
-          },
-          "destinationNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "sourcePorts": {
-            "type": "string"
-          },
-          "destinationPorts": {
-            "type": "string"
-          },
-          "serviceObjectId": {
-            "type": "string"
-          },
-          "serviceObjectGroupId": {
-            "type": "string"
-          },
-          "firewallRuleGroupId": {
-            "type": "string"
-          },
-          "sourceNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "sourceNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "destinationNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "destinationNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "serviceObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ServiceObject"
-              }
-            ]
-          },
-          "serviceObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ServiceObjectGroup"
-              }
-            ]
-          }
-        },
         "required": [
           "name",
-          "direction",
-          "action",
           "protocol",
-          "logging",
-          "enabled",
-          "ruleIndex",
-          "sourceAddressType",
-          "destinationAddressType",
-          "serviceType",
-          "firewallRuleGroupId"
+          "sourcePorts",
+          "destinationPorts",
+          "tierId"
         ]
-      },
-      "FirewallRuleGroup": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "type": {
-            "type": "string",
-            "enum": ["Intravrf", "Intervrf", "External"]
-          },
-          "tierId": {
-            "type": "string"
-          },
-          "firewallRules": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FirewallRule"
-            }
-          }
-        },
-        "required": ["name", "type", "tierId"]
       },
       "NatRule": {
         "type": "object",
@@ -18643,38 +20135,67 @@
           },
           "translationType": {
             "type": "string",
-            "enum": ["Static", "DynamicIp", "DynamicIpAndPort"]
+            "enum": [
+              "Static",
+              "DynamicIp",
+              "DynamicIpAndPort"
+            ]
           },
           "direction": {
             "type": "string",
-            "enum": ["In", "Out"]
+            "enum": [
+              "In",
+              "Out"
+            ]
           },
           "biDirectional": {
             "type": "boolean"
           },
           "originalSourceAddressType": {
             "type": "string",
-            "enum": ["None", "NetworkObject", "NetworkObjectGroup"]
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
           },
           "translatedSourceAddressType": {
             "type": "string",
-            "enum": ["None", "NetworkObject", "NetworkObjectGroup"]
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
           },
           "originalDestinationAddressType": {
             "type": "string",
-            "enum": ["None", "NetworkObject", "NetworkObjectGroup"]
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
           },
           "translatedDestinationAddressType": {
             "type": "string",
-            "enum": ["None", "NetworkObject", "NetworkObjectGroup"]
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
           },
           "originalServiceType": {
             "type": "string",
-            "enum": ["None", "ServiceObject"]
+            "enum": [
+              "None",
+              "ServiceObject"
+            ]
           },
           "translatedServiceType": {
             "type": "string",
-            "enum": ["None", "ServiceObject"]
+            "enum": [
+              "None",
+              "ServiceObject"
+            ]
           },
           "natRuleGroupId": {
             "type": "string"
@@ -18707,6 +20228,9 @@
             "type": "string"
           },
           "translatedServiceObjectId": {
+            "type": "string"
+          },
+          "toZoneId": {
             "type": "string"
           },
           "originalSourceNetworkObject": {
@@ -18788,6 +20312,21 @@
                 "$ref": "#/components/schemas/ServiceObject"
               }
             ]
+          },
+          "toZone": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Zone"
+              }
+            ]
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
           }
         },
         "required": [
@@ -18804,6 +20343,354 @@
           "originalServiceType",
           "translatedServiceType",
           "natRuleGroupId"
+        ]
+      },
+      "Zone": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string"
+          },
+          "tierId": {
+            "type": "string"
+          },
+          "firewallRulesTo": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          },
+          "firewallRulesFrom": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          },
+          "natRulesFrom": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRule"
+            }
+          },
+          "natRulesTo": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRule"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "tierId"
+        ]
+      },
+      "FirewallRule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 28
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "In",
+              "Out"
+            ]
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "Permit",
+              "Deny"
+            ]
+          },
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "IP",
+              "ICMP",
+              "TCP",
+              "UDP"
+            ]
+          },
+          "logging": {
+            "type": "boolean"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "ruleIndex": {
+            "type": "number",
+            "minimum": 1
+          },
+          "sourceAddressType": {
+            "type": "string",
+            "enum": [
+              "IpAddress",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "destinationAddressType": {
+            "type": "string",
+            "enum": [
+              "IpAddress",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "serviceType": {
+            "type": "string",
+            "enum": [
+              "Port",
+              "ServiceObject",
+              "ServiceObjectGroup"
+            ]
+          },
+          "sourceIpAddress": {
+            "type": "string"
+          },
+          "sourceNetworkObjectId": {
+            "type": "string"
+          },
+          "sourceNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "destinationIpAddress": {
+            "type": "string"
+          },
+          "destinationNetworkObjectId": {
+            "type": "string"
+          },
+          "destinationNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "sourcePorts": {
+            "type": "string"
+          },
+          "destinationPorts": {
+            "type": "string"
+          },
+          "serviceObjectId": {
+            "type": "string"
+          },
+          "serviceObjectGroupId": {
+            "type": "string"
+          },
+          "firewallRuleGroupId": {
+            "type": "string"
+          },
+          "sourceNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "sourceNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "destinationNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "destinationNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "serviceObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObject"
+              }
+            ]
+          },
+          "serviceObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObjectGroup"
+              }
+            ]
+          },
+          "toZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "direction",
+          "action",
+          "protocol",
+          "logging",
+          "enabled",
+          "ruleIndex",
+          "sourceAddressType",
+          "destinationAddressType",
+          "serviceType",
+          "firewallRuleGroupId"
+        ]
+      },
+      "FirewallRuleGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Intravrf",
+              "Intervrf",
+              "External",
+              "ZoneBased"
+            ]
+          },
+          "tierId": {
+            "type": "string"
+          },
+          "firewallRules": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "tierId"
         ]
       },
       "NatRuleGroup": {
@@ -18848,7 +20735,12 @@
           },
           "type": {
             "type": "string",
-            "enum": ["Intravrf", "Intervrf", "External"]
+            "enum": [
+              "Intravrf",
+              "Intervrf",
+              "External",
+              "ZoneBased"
+            ]
           },
           "tierId": {
             "type": "string"
@@ -18861,7 +20753,11 @@
             }
           }
         },
-        "required": ["name", "type", "tierId"]
+        "required": [
+          "name",
+          "type",
+          "tierId"
+        ]
       },
       "LoadBalancerNode": {
         "type": "object",
@@ -18909,7 +20805,10 @@
           },
           "type": {
             "type": "string",
-            "enum": ["IpAddress", "Fqdn"]
+            "enum": [
+              "IpAddress",
+              "Fqdn"
+            ]
           },
           "ipAddress": {
             "type": "string"
@@ -18924,7 +20823,14 @@
             "type": "string"
           }
         },
-        "required": ["name", "type", "ipAddress", "fqdn", "autoPopulate", "tierId"]
+        "required": [
+          "name",
+          "type",
+          "ipAddress",
+          "fqdn",
+          "autoPopulate",
+          "tierId"
+        ]
       },
       "LoadBalancerHealthMonitor": {
         "type": "object",
@@ -18972,7 +20878,13 @@
           },
           "type": {
             "type": "string",
-            "enum": ["ICMP", "UDP", "TCP", "HTTP", "HTTPS"]
+            "enum": [
+              "ICMP",
+              "UDP",
+              "TCP",
+              "HTTP",
+              "HTTPS"
+            ]
           },
           "servicePort": {
             "type": "number",
@@ -18993,7 +20905,14 @@
             "type": "string"
           }
         },
-        "required": ["name", "type", "servicePort", "interval", "timeout", "tierId"]
+        "required": [
+          "name",
+          "type",
+          "servicePort",
+          "interval",
+          "timeout",
+          "tierId"
+        ]
       },
       "LoadBalancerPool": {
         "type": "object",
@@ -19076,14 +20995,24 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["UDP", "TCP", "HTTP", "HTTPS"]
+              "enum": [
+                "UDP",
+                "TCP",
+                "HTTP",
+                "HTTPS"
+              ]
             }
           },
           "tierId": {
             "type": "string"
           }
         },
-        "required": ["name", "loadBalancingMethod", "defaultHealthMonitors", "tierId"]
+        "required": [
+          "name",
+          "loadBalancingMethod",
+          "defaultHealthMonitors",
+          "tierId"
+        ]
       },
       "LoadBalancerProfile": {
         "type": "object",
@@ -19131,7 +21060,10 @@
           },
           "type": {
             "type": "string",
-            "enum": ["ClientSSL", "Http"]
+            "enum": [
+              "ClientSSL",
+              "Http"
+            ]
           },
           "properties": {
             "type": "object"
@@ -19149,7 +21081,15 @@
             "type": "string"
           }
         },
-        "required": ["name", "type", "properties", "reverseProxy", "key", "certificate", "tierId"]
+        "required": [
+          "name",
+          "type",
+          "properties",
+          "reverseProxy",
+          "key",
+          "certificate",
+          "tierId"
+        ]
       },
       "LoadBalancerPolicy": {
         "type": "object",
@@ -19197,7 +21137,10 @@
           },
           "type": {
             "type": "string",
-            "enum": ["ASM", "APM"]
+            "enum": [
+              "ASM",
+              "APM"
+            ]
           },
           "asmContent": {
             "type": "string"
@@ -19209,7 +21152,13 @@
             "type": "string"
           }
         },
-        "required": ["name", "type", "asmContent", "apmContent", "tierId"]
+        "required": [
+          "name",
+          "type",
+          "asmContent",
+          "apmContent",
+          "tierId"
+        ]
       },
       "LoadBalancerVirtualServer": {
         "type": "object",
@@ -19295,11 +21244,17 @@
           },
           "sourceAddressTranslation": {
             "type": "string",
-            "enum": ["None", "AutoMap", "SNAT"]
+            "enum": [
+              "None",
+              "AutoMap",
+              "SNAT"
+            ]
           },
           "type": {
             "type": "string",
-            "enum": ["Standard"]
+            "enum": [
+              "Standard"
+            ]
           },
           "servicePort": {
             "type": "number",
@@ -19310,7 +21265,15 @@
             "type": "string"
           }
         },
-        "required": ["name", "sourceIpAddress", "destinationIpAddress", "sourceAddressTranslation", "type", "servicePort", "tierId"]
+        "required": [
+          "name",
+          "sourceIpAddress",
+          "destinationIpAddress",
+          "sourceAddressTranslation",
+          "type",
+          "servicePort",
+          "tierId"
+        ]
       },
       "LoadBalancerIrule": {
         "type": "object",
@@ -19370,7 +21333,11 @@
             "type": "string"
           }
         },
-        "required": ["name", "content", "tierId"]
+        "required": [
+          "name",
+          "content",
+          "tierId"
+        ]
       },
       "LoadBalancerVlan": {
         "type": "object",
@@ -19421,7 +21388,11 @@
             "type": "string"
           }
         },
-        "required": ["name", "tag", "tierId"]
+        "required": [
+          "name",
+          "tag",
+          "tierId"
+        ]
       },
       "LoadBalancerSelfIp": {
         "type": "object",
@@ -19473,7 +21444,12 @@
             "type": "string"
           }
         },
-        "required": ["name", "ipAddress", "loadBalancerVlanId", "tierId"]
+        "required": [
+          "name",
+          "ipAddress",
+          "loadBalancerVlanId",
+          "tierId"
+        ]
       },
       "LoadBalancerRoute": {
         "type": "object",
@@ -19525,7 +21501,12 @@
             "type": "string"
           }
         },
-        "required": ["name", "destination", "gateway", "tierId"]
+        "required": [
+          "name",
+          "destination",
+          "gateway",
+          "tierId"
+        ]
       },
       "Tier": {
         "type": "object",
@@ -19587,11 +21568,28 @@
           },
           "tierType": {
             "type": "string",
-            "enum": ["Presentation", "Application", "Database", "Security", "Management", "Backup", "Other"]
+            "enum": [
+              "Presentation",
+              "Application",
+              "Database",
+              "Security",
+              "Management",
+              "Backup",
+              "Other"
+            ]
           },
           "tierClass": {
             "type": "string",
-            "enum": ["PRD", "DEV", "IMP", "VAL", "TST", "BCK", "MGT", "SEC"]
+            "enum": [
+              "PRD",
+              "DEV",
+              "IMP",
+              "VAL",
+              "TST",
+              "BCK",
+              "MGT",
+              "SEC"
+            ]
           },
           "vlans": {
             "readOnly": true,
@@ -19626,6 +21624,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/NatRuleGroup"
+            }
+          },
+          "zones": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
             }
           },
           "networkObjects": {
@@ -19727,7 +21732,10 @@
             }
           }
         },
-        "required": ["name", "datacenterId"]
+        "required": [
+          "name",
+          "datacenterId"
+        ]
       },
       "Job": {
         "type": "object",
@@ -19765,7 +21773,11 @@
             "type": "string"
           }
         },
-        "required": ["jobType", "definition", "datacenterId"]
+        "required": [
+          "jobType",
+          "definition",
+          "datacenterId"
+        ]
       },
       "AuditLog": {
         "type": "object",
@@ -19775,7 +21787,17 @@
           },
           "actionType": {
             "type": "string",
-            "enum": ["BulkUpload", "Create", "Update", "SoftDelete", "Restore", "Delete", "Deploy", "RuleMove", "RuleClone"]
+            "enum": [
+              "BulkUpload",
+              "Create",
+              "Update",
+              "SoftDelete",
+              "Restore",
+              "Delete",
+              "Deploy",
+              "RuleMove",
+              "RuleClone"
+            ]
           },
           "entityType": {
             "type": "string",
@@ -19855,7 +21877,15 @@
             "type": "string"
           }
         },
-        "required": ["id", "actionType", "entityType", "timestamp", "changedBy", "datacenterId", "tenantId"]
+        "required": [
+          "id",
+          "actionType",
+          "entityType",
+          "timestamp",
+          "changedBy",
+          "datacenterId",
+          "tenantId"
+        ]
       },
       "SelfServiceConvertedArtifactObjects": {
         "type": "object",
@@ -19927,7 +21957,9 @@
             }
           }
         },
-        "required": ["logs"]
+        "required": [
+          "logs"
+        ]
       },
       "SelfServiceConfig": {
         "type": "object",
@@ -19936,7 +21968,9 @@
             "$ref": "#/components/schemas/SelfServiceConvertedArtifactObjects"
           }
         },
-        "required": ["artifact"]
+        "required": [
+          "artifact"
+        ]
       },
       "SelfService": {
         "type": "object",
@@ -20105,7 +22139,9 @@
             ]
           }
         },
-        "required": ["name"]
+        "required": [
+          "name"
+        ]
       },
       "FirewallRuleImport": {
         "type": "object",
@@ -20144,15 +22180,26 @@
           },
           "direction": {
             "type": "string",
-            "enum": ["In", "Out"]
+            "enum": [
+              "In",
+              "Out"
+            ]
           },
           "action": {
             "type": "string",
-            "enum": ["Permit", "Deny"]
+            "enum": [
+              "Permit",
+              "Deny"
+            ]
           },
           "protocol": {
             "type": "string",
-            "enum": ["IP", "ICMP", "TCP", "UDP"]
+            "enum": [
+              "IP",
+              "ICMP",
+              "TCP",
+              "UDP"
+            ]
           },
           "logging": {
             "type": "boolean"
@@ -20166,15 +22213,27 @@
           },
           "sourceAddressType": {
             "type": "string",
-            "enum": ["IpAddress", "NetworkObject", "NetworkObjectGroup"]
+            "enum": [
+              "IpAddress",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
           },
           "destinationAddressType": {
             "type": "string",
-            "enum": ["IpAddress", "NetworkObject", "NetworkObjectGroup"]
+            "enum": [
+              "IpAddress",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
           },
           "serviceType": {
             "type": "string",
-            "enum": ["Port", "ServiceObject", "ServiceObjectGroup"]
+            "enum": [
+              "Port",
+              "ServiceObject",
+              "ServiceObjectGroup"
+            ]
           },
           "sourceIpAddress": {
             "type": "string"
@@ -20257,6 +22316,20 @@
               }
             ]
           },
+          "toZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
           "vrfName": {
             "type": "string"
           },
@@ -20296,7 +22369,11 @@
             "type": "boolean"
           }
         },
-        "required": ["datacenterId", "firewallRules", "dryRun"]
+        "required": [
+          "datacenterId",
+          "firewallRules",
+          "dryRun"
+        ]
       },
       "FirewallRulePreview": {
         "type": "object",
@@ -20314,7 +22391,10 @@
             }
           }
         },
-        "required": ["firewallRulesToBeDeleted", "firewallRulesToBeUploaded"]
+        "required": [
+          "firewallRulesToBeDeleted",
+          "firewallRulesToBeUploaded"
+        ]
       },
       "RuleOperationDto": {
         "type": "object",
@@ -20335,7 +22415,13 @@
             "type": "string"
           }
         },
-        "required": ["existingRuleId", "operation", "destinationGroupId", "ruleIndex", "name"]
+        "required": [
+          "existingRuleId",
+          "operation",
+          "destinationGroupId",
+          "ruleIndex",
+          "name"
+        ]
       },
       "ServiceObjectGroupRelationBulkImportDto": {
         "type": "object",
@@ -20352,7 +22438,11 @@
             "type": "string"
           }
         },
-        "required": ["serviceObjectGroupId", "serviceObjectId", "vrfName"]
+        "required": [
+          "serviceObjectGroupId",
+          "serviceObjectId",
+          "vrfName"
+        ]
       },
       "ServiceObjectGroupRelationBulkImportCollectionDto": {
         "type": "object",
@@ -20367,7 +22457,10 @@
             }
           }
         },
-        "required": ["datacenterId", "serviceObjectRelations"]
+        "required": [
+          "datacenterId",
+          "serviceObjectRelations"
+        ]
       },
       "NetworkObjectGroupRelationBulkImportDto": {
         "type": "object",
@@ -20384,7 +22477,11 @@
             "type": "string"
           }
         },
-        "required": ["networkObjectGroupId", "networkObjectId", "vrfName"]
+        "required": [
+          "networkObjectGroupId",
+          "networkObjectId",
+          "vrfName"
+        ]
       },
       "NetworkObjectGroupRelationBulkImportCollectionDto": {
         "type": "object",
@@ -20399,7 +22496,10 @@
             }
           }
         },
-        "required": ["datacenterId", "networkObjectRelations"]
+        "required": [
+          "datacenterId",
+          "networkObjectRelations"
+        ]
       },
       "NatRuleImport": {
         "type": "object",
@@ -20445,38 +22545,67 @@
           },
           "translationType": {
             "type": "string",
-            "enum": ["Static", "DynamicIp", "DynamicIpAndPort"]
+            "enum": [
+              "Static",
+              "DynamicIp",
+              "DynamicIpAndPort"
+            ]
           },
           "direction": {
             "type": "string",
-            "enum": ["In", "Out"]
+            "enum": [
+              "In",
+              "Out"
+            ]
           },
           "biDirectional": {
             "type": "boolean"
           },
           "originalSourceAddressType": {
             "type": "string",
-            "enum": ["None", "NetworkObject", "NetworkObjectGroup"]
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
           },
           "translatedSourceAddressType": {
             "type": "string",
-            "enum": ["None", "NetworkObject", "NetworkObjectGroup"]
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
           },
           "originalDestinationAddressType": {
             "type": "string",
-            "enum": ["None", "NetworkObject", "NetworkObjectGroup"]
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
           },
           "translatedDestinationAddressType": {
             "type": "string",
-            "enum": ["None", "NetworkObject", "NetworkObjectGroup"]
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
           },
           "originalServiceType": {
             "type": "string",
-            "enum": ["None", "ServiceObject"]
+            "enum": [
+              "None",
+              "ServiceObject"
+            ]
           },
           "translatedServiceType": {
             "type": "string",
-            "enum": ["None", "ServiceObject"]
+            "enum": [
+              "None",
+              "ServiceObject"
+            ]
           },
           "natRuleGroupId": {
             "type": "string"
@@ -20509,6 +22638,9 @@
             "type": "string"
           },
           "translatedServiceObjectId": {
+            "type": "string"
+          },
+          "toZoneId": {
             "type": "string"
           },
           "originalSourceNetworkObject": {
@@ -20591,6 +22723,21 @@
               }
             ]
           },
+          "toZone": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Zone"
+              }
+            ]
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
           "vrfName": {
             "type": "string"
           },
@@ -20632,7 +22779,11 @@
             "type": "boolean"
           }
         },
-        "required": ["datacenterId", "natRules", "dryRun"]
+        "required": [
+          "datacenterId",
+          "natRules",
+          "dryRun"
+        ]
       },
       "NatRulePreview": {
         "type": "object",
@@ -20650,7 +22801,10 @@
             }
           }
         },
-        "required": ["natRulesToBeDeleted", "natRulesToBeUploaded"]
+        "required": [
+          "natRulesToBeDeleted",
+          "natRulesToBeUploaded"
+        ]
       },
       "SubnetImport": {
         "type": "object",
@@ -20715,7 +22869,14 @@
             "type": "string"
           }
         },
-        "required": ["name", "network", "gateway", "vlanId", "tierId", "vrfName"]
+        "required": [
+          "name",
+          "network",
+          "gateway",
+          "vlanId",
+          "tierId",
+          "vrfName"
+        ]
       },
       "SubnetImportCollectionDto": {
         "type": "object",
@@ -20730,7 +22891,10 @@
             }
           }
         },
-        "required": ["datacenterId", "subnets"]
+        "required": [
+          "datacenterId",
+          "subnets"
+        ]
       },
       "VirtualServerImportDto": {
         "type": "object",
@@ -20816,11 +22980,17 @@
           },
           "sourceAddressTranslation": {
             "type": "string",
-            "enum": ["None", "AutoMap", "SNAT"]
+            "enum": [
+              "None",
+              "AutoMap",
+              "SNAT"
+            ]
           },
           "type": {
             "type": "string",
-            "enum": ["Standard"]
+            "enum": [
+              "Standard"
+            ]
           },
           "servicePort": {
             "type": "number",
@@ -20883,7 +23053,10 @@
             }
           }
         },
-        "required": ["datacenterId", "virtualServers"]
+        "required": [
+          "datacenterId",
+          "virtualServers"
+        ]
       },
       "LoadBalancerPoolBulkImportDto": {
         "type": "object",
@@ -20966,7 +23139,12 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["UDP", "TCP", "HTTP", "HTTPS"]
+              "enum": [
+                "UDP",
+                "TCP",
+                "HTTP",
+                "HTTPS"
+              ]
             }
           },
           "tierId": {
@@ -21018,7 +23196,10 @@
             }
           }
         },
-        "required": ["datacenterId", "pools"]
+        "required": [
+          "datacenterId",
+          "pools"
+        ]
       },
       "LoadBalancerNodeBulkImportDto": {
         "type": "object",
@@ -21066,7 +23247,10 @@
           },
           "type": {
             "type": "string",
-            "enum": ["IpAddress", "Fqdn"]
+            "enum": [
+              "IpAddress",
+              "Fqdn"
+            ]
           },
           "ipAddress": {
             "type": "string"
@@ -21093,7 +23277,18 @@
             "type": "number"
           }
         },
-        "required": ["name", "type", "ipAddress", "fqdn", "autoPopulate", "tierId", "vrfName", "poolName", "servicePort", "ratio"]
+        "required": [
+          "name",
+          "type",
+          "ipAddress",
+          "fqdn",
+          "autoPopulate",
+          "tierId",
+          "vrfName",
+          "poolName",
+          "servicePort",
+          "ratio"
+        ]
       },
       "NodeImportCollectionDto": {
         "type": "object",
@@ -21108,7 +23303,10 @@
             }
           }
         },
-        "required": ["datacenterId", "nodes"]
+        "required": [
+          "datacenterId",
+          "nodes"
+        ]
       },
       "Vrf": {
         "type": "object",
@@ -21185,7 +23383,11 @@
             }
           }
         },
-        "required": ["policyControlEnforced", "policyControlEnforcementIngress", "tenantId"]
+        "required": [
+          "policyControlEnforced",
+          "policyControlEnforcementIngress",
+          "tenantId"
+        ]
       },
       "AppCentricSubnet": {
         "type": "object",
@@ -21349,17 +23551,41 @@
           "etherType": {
             "type": "string",
             "description": "The EtherType of the filter entry.",
-            "enum": ["ip", "ipv6", "ipv4", "mplsunicast", "trill", "arp", "fcoe", "macsecurity"]
+            "enum": [
+              "ip",
+              "ipv6",
+              "ipv4",
+              "mplsunicast",
+              "trill",
+              "arp",
+              "fcoe",
+              "macsecurity"
+            ]
           },
           "arpFlag": {
             "type": "string",
             "description": "The Address Resolution Protocol flag for a filter entry. The filter entry is a combination of network traffic classification properties.",
-            "enum": ["arpreply", "arprequest"]
+            "enum": [
+              "arpreply",
+              "arprequest"
+            ]
           },
           "ipProtocol": {
             "type": "string",
             "description": "The IP protocol for a filter entry. The filter entry is a combination of network traffic classification properties.",
-            "enum": ["eigrp", "egp", "icmp", "icmpv6", "igmp", "igp", "l2tp", "ospfigp", "pim", "tcp", "udp"]
+            "enum": [
+              "eigrp",
+              "egp",
+              "icmp",
+              "icmpv6",
+              "igmp",
+              "igp",
+              "l2tp",
+              "ospfigp",
+              "pim",
+              "tcp",
+              "udp"
+            ]
           },
           "matchOnlyFragments": {
             "type": "boolean",
@@ -21403,7 +23629,11 @@
             "type": "string"
           }
         },
-        "required": ["etherType", "filterId", "tenantId"]
+        "required": [
+          "etherType",
+          "filterId",
+          "tenantId"
+        ]
       },
       "Filter": {
         "type": "object",
@@ -21479,7 +23709,9 @@
             }
           }
         },
-        "required": ["tenantId"]
+        "required": [
+          "tenantId"
+        ]
       },
       "Subject": {
         "type": "object",
@@ -21571,7 +23803,13 @@
             }
           }
         },
-        "required": ["applyBothDirections", "reverseFilterPorts", "globalAlias", "tenantId", "contractId"]
+        "required": [
+          "applyBothDirections",
+          "reverseFilterPorts",
+          "globalAlias",
+          "tenantId",
+          "contractId"
+        ]
       },
       "Contract": {
         "type": "object",
@@ -21654,7 +23892,9 @@
             }
           }
         },
-        "required": ["tenantId"]
+        "required": [
+          "tenantId"
+        ]
       },
       "EndpointGroup": {
         "type": "object",
@@ -21756,7 +23996,12 @@
             }
           }
         },
-        "required": ["intraEpgIsolation", "tenantId", "bridgeDomainId", "applicationProfileId"]
+        "required": [
+          "intraEpgIsolation",
+          "tenantId",
+          "bridgeDomainId",
+          "applicationProfileId"
+        ]
       },
       "L3Out": {
         "type": "object",
@@ -21843,7 +24088,10 @@
             "type": "string"
           }
         },
-        "required": ["vrfId", "tenantId"]
+        "required": [
+          "vrfId",
+          "tenantId"
+        ]
       },
       "RouteProfile": {
         "type": "object",
@@ -21912,7 +24160,9 @@
             "type": "string"
           }
         },
-        "required": ["tenantId"]
+        "required": [
+          "tenantId"
+        ]
       },
       "BridgeDomain": {
         "type": "object",
@@ -22245,7 +24495,9 @@
             }
           }
         },
-        "required": ["tenantId"]
+        "required": [
+          "tenantId"
+        ]
       },
       "SelfServiceRawConfig": {
         "type": "object",
@@ -22263,7 +24515,9 @@
             "type": "object"
           }
         },
-        "required": ["type"]
+        "required": [
+          "type"
+        ]
       }
     }
   }
