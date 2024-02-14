@@ -292,6 +292,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
     if (this.firewallRuleGroupType === FirewallRuleGroupTypeEnum.ZoneBased) {
       this.zones = dto.Zones;
+      this.selectedToZones = [];
+      this.selectedFromZones = [];
       if (dto.FirewallRule.toZone != null) {
         this.selectedToZones = dto.FirewallRule.toZone;
       }
@@ -577,7 +579,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   public reset() {
     this.unsubAll();
     this.TierId = null;
-    this.selectedFromZones = this.selectedToZones = [];
+    this.selectedFromZones = [];
+    this.selectedToZones = [];
     this.submitted = false;
     this.buildForm();
     this.setFormValidators();
