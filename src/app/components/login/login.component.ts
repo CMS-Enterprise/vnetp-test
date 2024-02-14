@@ -32,13 +32,7 @@ export class LoginComponent implements OnInit {
 
   selectedMode = 'netcentric';
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private toastr: ToastrService,
-    private incidentService: IncidentService,
-  ) {}
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
 
   ngOnInit() {
     environment.dynamic.dcsLocations.map(location => {
@@ -137,11 +131,6 @@ export class LoginComponent implements OnInit {
   }
 
   setTenantAndNavigate(tenant, mode) {
-    /* TEMPORARY TO FORCE INCIDENT IN LOCAL STORAGE */
-    this.incidentService.addIncidentNumberLocalStorage('INC123');
-
-    // END TEMP
-
     const { tenantQueryParameter } = tenant;
     mode = mode.toLowerCase();
     this.toastr.success(`Welcome ${this.userpass.username}!`);

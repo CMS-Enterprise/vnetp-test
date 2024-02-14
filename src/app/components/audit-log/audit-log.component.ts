@@ -92,26 +92,25 @@ export class AuditLogComponent implements OnInit {
     } else {
       this.tableComponentDto.perPage = this.perPage;
     }
-    console.log('eventParams', eventParams);
     this.auditLogService
       .searchAuditLogAuditLog({
         filter: eventParams,
       })
-      .subscribe(data => {
-        console.log('data', data);
-        this.auditLogs = data;
-        this.isLoading = false;
-        this.auditLogs.data.map(log => {
-          this.transformLogs(log);
-        });
-      }),
-      () => {
-        // this.auditLogs = []
-      },
-      () => {
-        console.log('false');
-        this.isLoading = false;
-      };
+      .subscribe(
+        data => {
+          this.auditLogs = data;
+          this.auditLogs.data.map(log => {
+            this.transformLogs(log);
+          });
+        },
+        () => {
+          this.auditLogs = [];
+        },
+        () => {
+          console.log('false');
+          this.isLoading = false;
+        },
+      );
   }
 
   public getAuditLogs(event?): void {

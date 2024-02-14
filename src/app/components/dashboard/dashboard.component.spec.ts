@@ -19,6 +19,10 @@ import { of } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { MockProvider } from 'src/test/mock-providers';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { IncidentService } from 'src/app/services/incident.service';
+import { ChangeRequestModalComponent } from '../change-request-modal/change-request-modal.component';
+import { ChangeRequestModalModule } from '../change-request-modal/change-request-modal.module';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -47,6 +51,7 @@ describe('DashboardComponent', () => {
         MockTooltipComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockComponent({ selector: 'app-change-request-modal' }),
       ],
       providers: [
         { provide: V1DatacentersService, useValue: datacenterService },
@@ -63,6 +68,7 @@ describe('DashboardComponent', () => {
         MockProvider(V1NetworkSubnetsService),
         MockProvider(V1NetworkVlansService),
         MockProvider(DatacenterContextService),
+        MockProvider(NgxSmartModalService),
       ],
     })
       .compileComponents()

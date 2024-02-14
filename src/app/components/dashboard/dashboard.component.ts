@@ -21,6 +21,7 @@ import { Subscription } from 'rxjs';
 import SubscriptionUtil from '../../utils/SubscriptionUtil';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,6 +33,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public userRoles: string[];
 
   private currentUserSubscription: Subscription;
+  private changeRequestSubscription: Subscription;
 
   currentDatacenter: Datacenter;
   private currentDatacenterSubscription: Subscription;
@@ -52,6 +54,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private natRuleService: V1NetworkSecurityNatRulesService,
     private auditLogService: V1AuditLogService,
     private datacenterContextService: DatacenterContextService,
+    private ngx: NgxSmartModalService,
   ) {}
 
   datacenters: number;
@@ -214,5 +217,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.serviceObjectGroupCount = data.total;
       });
+  }
+
+  public openChangeRequestModal(): void {
+    this.subscribeToChangeRequestModal();
+    this.ngx.getModal('changeRequestModal').open();
+  }
+
+  subscribeToChangeRequestModal() {
+    this.changeRequestSubscription = this.ngx.getModal('changeRequestModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('changeRequestModal');
+      this.changeRequestSubscription.unsubscribe();
+    });
   }
 }

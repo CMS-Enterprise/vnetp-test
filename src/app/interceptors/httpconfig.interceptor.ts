@@ -44,7 +44,6 @@ export class HttpConfigInterceptor {
     }
 
     const incident = this.incidentService.getIncidentLocalStorage();
-    console.log('incident', incident);
     if (incident) {
       request = request.clone({
         headers: request.headers.set('Incident', incident),

@@ -1,0 +1,21 @@
+<ngx-smart-modal #changeRequestModal identifier="changeRequestModal" customClass="mediun-modal">
+    <header class="modal-header">
+        <h4 class="modal-title header">Change Request</h4>
+    </header>
+
+    <main class="modal-body">
+        <textarea placeholder="Change Request #" [(ngModel)]="changeRequest"></textarea>
+    </main>
+
+    <footer class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="save()">
+            Save
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="closeModal()">
+            Close
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="removeCRFromLocalStorage()">
+            Clear CR#
+        </button>
+    </footer>
+</ngx-smart-modal>
