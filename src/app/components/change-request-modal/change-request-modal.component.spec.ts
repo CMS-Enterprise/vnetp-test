@@ -6,16 +6,20 @@ import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 
 describe('ChangeRequestModalComponent', () => {
   let component: ChangeRequestModalComponent;
   let fixture: ComponentFixture<ChangeRequestModalComponent>;
 
   beforeEach(() => {
+    const incidentService = {
+      currentIncident: of({}),
+    };
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [ChangeRequestModalComponent, MockNgxSmartModalComponent],
-      providers: [MockProvider(IncidentService), MockProvider(NgxSmartModalService)],
+      providers: [{ provide: IncidentService, useValue: incidentService }, MockProvider(NgxSmartModalService)],
     });
     fixture = TestBed.createComponent(ChangeRequestModalComponent);
     component = fixture.componentInstance;

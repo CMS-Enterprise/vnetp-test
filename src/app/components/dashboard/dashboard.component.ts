@@ -33,7 +33,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public userRoles: string[];
 
   private currentUserSubscription: Subscription;
-  private changeRequestSubscription: Subscription;
 
   currentDatacenter: Datacenter;
   private currentDatacenterSubscription: Subscription;
@@ -123,10 +122,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getTiers();
     if (roles && roles.includes('admin')) {
       this.getFWRules();
+      console.log('dashboard1');
       this.getNatRules();
+      console.log('dashboard2');
       this.getNetworkObjects();
+      console.log('dashboard3');
       this.getNetworkObjectGroups();
+      console.log('dashboard4');
       this.getServiceObjects();
+      console.log('dashboard5');
       this.getServiceObjectGroups();
       this.getSubnets();
       this.getVlans();
@@ -218,15 +222,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-  public openChangeRequestModal(): void {
-    this.subscribeToChangeRequestModal();
-    this.ngx.getModal('changeRequestModal').open();
-  }
+  // public openChangeRequestModal(): void {
+  //   this.subscribeToChangeRequestModal();
+  //   this.ngx.getModal('changeRequestModal').open();
+  // }
 
-  subscribeToChangeRequestModal() {
-    this.changeRequestSubscription = this.ngx.getModal('changeRequestModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('changeRequestModal');
-      this.changeRequestSubscription.unsubscribe();
-    });
-  }
+  // subscribeToChangeRequestModal() {
+  //   this.changeRequestModalSubscription = this.ngx.getModal('changeRequestModal').onCloseFinished.subscribe(() => {
+  //     this.ngx.resetModalData('changeRequestModal');
+  //     this.changeRequestModalSubscription.unsubscribe();
+  //   });
+  // }
 }

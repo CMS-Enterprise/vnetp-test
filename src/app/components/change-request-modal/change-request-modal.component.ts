@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
 import { IncidentService } from 'src/app/services/incident.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-change-request-modal',
@@ -11,10 +13,13 @@ import { IncidentService } from 'src/app/services/incident.service';
 export class ChangeRequestModalComponent implements OnInit {
   public form: UntypedFormGroup;
   public changeRequest;
+  private changeRequestSubscription: Subscription;
 
   constructor(private formBuilder: UntypedFormBuilder, private incidentService: IncidentService, private ngx: NgxSmartModalService) {}
   ngOnInit(): void {
-    this.getCRNumber();
+    this.changeRequestSubscription = this.incidentService.currentIncident.subscribe(inc => {
+      this.changeRequest = inc;
+    });
     this.buildForm();
   }
 
@@ -26,13 +31,15 @@ export class ChangeRequestModalComponent implements OnInit {
     if (this.changeRequest === null || this.changeRequest === undefined) {
       return null;
     }
-    this.incidentService.addIncidentNumberLocalStorage(this.changeRequest);
+    console.log('this.cr', this.changeRequest);
+    this.incidentService.currentIncidentValue = this.changeRequest;
+
     this.closeModal();
   }
 
   public removeCRFromLocalStorage() {
-    this.incidentService.removeIncidentNumberLocalStorage();
-    this.getCRNumber();
+    this.incidentService.currentIncidentValue = '';
+    this.unsub();
     this.closeModal();
   }
 
@@ -46,7 +53,11 @@ export class ChangeRequestModalComponent implements OnInit {
     this.ngx.close('changeRequestModal');
   }
 
-  public getCRNumber() {
-    this.changeRequest = this.incidentService.getIncidentLocalStorage();
+  public unsub() {
+    SubscriptionUtil.unsubscribe([this.changeRequestSubscription]);
   }
+
+  // public getCRNumber() {
+  //   this.changeRequest = this.incidentService.getIncidentLocalStorage();
+  // }
 }

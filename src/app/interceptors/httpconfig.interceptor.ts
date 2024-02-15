@@ -43,8 +43,8 @@ export class HttpConfigInterceptor {
       request = request.clone({ headers, params: request.params.set('tenant', tenant) });
     }
 
-    const incident = this.incidentService.getIncidentLocalStorage();
-    if (incident) {
+    const incident = this.incidentService.currentIncidentValue;
+    if (incident !== null) {
       request = request.clone({
         headers: request.headers.set('Incident', incident),
       });

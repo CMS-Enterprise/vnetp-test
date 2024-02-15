@@ -23,7 +23,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public dcsVersion: string = this.environment?.dynamic?.dcsVersion;
   changeRequest: string;
 
-  private changeRequestSubscription: Subscription;
+  private changeRequestModalSubscription: Subscription;
+  private currentChangeRequestSubscription: Subscription;
 
   constructor(private ngx: NgxSmartModalService, private auth: AuthService, private incidentService: IncidentService) {}
 
@@ -37,7 +38,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getCRNumber();
+    this.currentChangeRequestSubscription = this.incidentService.currentIncident.subscribe(inc => {
+      this.changeRequest = inc;
+    });
     this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
       this.tenant = tenant;
       this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
@@ -64,7 +67,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.currentUserSubscription, this.currentTenantSubscription]);
+    SubscriptionUtil.unsubscribe([this.currentUserSubscription, this.currentTenantSubscription, this.currentChangeRequestSubscription]);
   }
 
   public openChangeRequestModal(): void {
@@ -73,14 +76,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   subscribeToChangeRequestModal() {
-    this.changeRequestSubscription = this.ngx.getModal('changeRequestModal').onCloseFinished.subscribe(() => {
+    this.changeRequestModalSubscription = this.ngx.getModal('changeRequestModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('changeRequestModal');
-      this.changeRequestSubscription.unsubscribe();
-      this.getCRNumber();
+      this.changeRequestModalSubscription.unsubscribe();
+      // this.getCRNumber();
     });
   }
 
   public getCRNumber() {
-    this.changeRequest = this.incidentService.getIncidentLocalStorage();
+    this.currentChangeRequestSubscription = this.incidentService.currentIncident.subscribe(inc => {
+      this.changeRequest = inc;
+    });
   }
 }
