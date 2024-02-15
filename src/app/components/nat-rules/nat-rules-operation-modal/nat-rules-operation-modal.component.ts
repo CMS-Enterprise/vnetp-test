@@ -12,6 +12,7 @@ import {
   V1TiersService,
   V1NetworkSecurityNatRulesService,
   RuleOperationDto,
+  NatRuleGroupTypeEnum,
 } from '../../../../../client';
 import { ModalMode } from '../../../models/other/modal-mode';
 import { YesNoModalDto } from '../../../models/other/yes-no-modal-dto';
@@ -112,6 +113,12 @@ export class NatRulesOperationModalComponent implements OnInit {
       .subscribe(data => {
         const allNatRuleGroups = data.natRuleGroups;
         this.natRuleGroups = allNatRuleGroups.filter(natRuleGroup => natRuleGroup.name !== 'Intravrf');
+        const sourceNatRuleGroupType = this.natRuleGroups.find(natRuleGroup => natRuleGroup.id === this.sourceNatRuleGroupId).type;
+        if (sourceNatRuleGroupType === NatRuleGroupTypeEnum.ZoneBased) {
+          this.natRuleGroups = this.natRuleGroups.filter(natRuleGroup => natRuleGroup.type === NatRuleGroupTypeEnum.ZoneBased);
+        } else {
+          this.natRuleGroups = this.natRuleGroups.filter(natRuleGroup => natRuleGroup.type !== NatRuleGroupTypeEnum.ZoneBased);
+        }
       });
   }
 

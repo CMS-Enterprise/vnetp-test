@@ -13,6 +13,7 @@ import {
   V1TiersService,
   V1NetworkSecurityFirewallRulesService,
   RuleOperationDto,
+  FirewallRuleGroupTypeEnum,
 } from '../../../../../client';
 import { ModalMode } from '../../../models/other/modal-mode';
 import { YesNoModalDto } from '../../../models/other/yes-no-modal-dto';
@@ -114,6 +115,18 @@ export class FirewallRulesOperationModalComponent implements OnInit {
       .subscribe(data => {
         const allFirewallRuleGroups = data.firewallRuleGroups;
         this.firewallRuleGroups = allFirewallRuleGroups.filter(firewallRuleGroup => firewallRuleGroup.name !== 'Intravrf');
+        const sourceFirewallRuleGroupType = this.firewallRuleGroups.find(
+          firewallRuleGroups => firewallRuleGroups.id === this.sourceFirewallRuleGroupId,
+        ).type;
+        if (sourceFirewallRuleGroupType === FirewallRuleGroupTypeEnum.ZoneBased) {
+          this.firewallRuleGroups = this.firewallRuleGroups.filter(
+            firewallRuleGroup => firewallRuleGroup.type === FirewallRuleGroupTypeEnum.ZoneBased,
+          );
+        } else {
+          this.firewallRuleGroups = this.firewallRuleGroups.filter(
+            firewallRuleGroup => firewallRuleGroup.type !== FirewallRuleGroupTypeEnum.ZoneBased,
+          );
+        }
       });
   }
 
