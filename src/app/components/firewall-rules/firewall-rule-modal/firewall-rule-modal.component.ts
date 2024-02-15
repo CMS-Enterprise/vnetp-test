@@ -483,15 +483,9 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
     this.protocolChangeSubscription = this.form.controls.protocol.valueChanges.subscribe(protocol => {
       if (protocol === 'ICMP' || protocol === 'IP') {
-        if (
-          (!sourcePorts.value || sourcePorts.value.trim() === '' || !destinationPorts.value || destinationPorts.value.trim() === '') &&
-          (!serviceObject.value || serviceObject.value.trim() === '') &&
-          (!serviceObjectGroup.value || serviceObjectGroup.value.trim() === '')
-        ) {
-          formServiceType.setValue('Port');
-          sourcePorts.setValue('any');
-          destinationPorts.setValue('any');
-        }
+        formServiceType.setValue('Port');
+        sourcePorts.setValue('any');
+        destinationPorts.setValue('any');
         formServiceType.disable();
         sourcePorts.disable();
         destinationPorts.disable();
