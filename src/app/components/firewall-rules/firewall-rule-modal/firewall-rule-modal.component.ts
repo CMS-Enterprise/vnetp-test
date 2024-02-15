@@ -490,6 +490,9 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         sourcePorts.disable();
         destinationPorts.disable();
       } else {
+        formServiceType.setValue('Port');
+        sourcePorts.setValue(null);
+        destinationPorts.setValue(null);
         formServiceType.enable();
         sourcePorts.enable();
         destinationPorts.enable();

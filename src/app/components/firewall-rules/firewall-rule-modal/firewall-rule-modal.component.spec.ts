@@ -218,7 +218,7 @@ describe('FirewallRuleModalComponent', () => {
     expect(serviceType.value).toBe('Port');
   });
 
-  it('service inputs should be remain if protocol changes from UDP to TCP', () => {
+  it('service inputs should be cleared when protocol changes to UDP', () => {
     const protocol = getFormControl('protocol');
     protocol.setValue('UDP');
 
@@ -229,14 +229,15 @@ describe('FirewallRuleModalComponent', () => {
     destinationPorts.setValue('80');
     sourcePorts.setValue('80');
 
-    protocol.setValue('TCP');
+    protocol.setValue('IP');
+    protocol.setValue('UDP');
 
-    expect(sourcePorts.value).toBe('80');
-    expect(destinationPorts.value).toBe('80');
+    expect(sourcePorts.value).toBe(null);
+    expect(destinationPorts.value).toBe(null);
     expect(serviceType.value).toBe('Port');
   });
 
-  it('service inputs should be remain if protocol changes from TCP to UDP', () => {
+  it('service inputs should be cleared when protocol changes to TCP', () => {
     const protocol = getFormControl('protocol');
     protocol.setValue('TCP');
 
@@ -247,10 +248,11 @@ describe('FirewallRuleModalComponent', () => {
     destinationPorts.setValue('80');
     sourcePorts.setValue('80');
 
-    protocol.setValue('UDP');
+    protocol.setValue('IP');
+    protocol.setValue('TCP');
 
-    expect(sourcePorts.value).toBe('80');
-    expect(destinationPorts.value).toBe('80');
+    expect(sourcePorts.value).toBe(null);
+    expect(destinationPorts.value).toBe(null);
     expect(serviceType.value).toBe('Port');
   });
 
