@@ -218,6 +218,42 @@ describe('FirewallRuleModalComponent', () => {
     expect(serviceType.value).toBe('Port');
   });
 
+  it('service inputs should be remain if protocol changes from UDP to TCP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('UDP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('TCP');
+
+    expect(sourcePorts.value).toBe('80');
+    expect(destinationPorts.value).toBe('80');
+    expect(serviceType.value).toBe('Port');
+  });
+
+  it('service inputs should be remain if protocol changes from TCP to UDP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('TCP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('UDP');
+
+    expect(sourcePorts.value).toBe('80');
+    expect(destinationPorts.value).toBe('80');
+    expect(serviceType.value).toBe('Port');
+  });
+
   describe('Name', () => {
     it('should have a minimum length of 3 and maximum length of 100', () => {
       const { name } = component.form.controls;
