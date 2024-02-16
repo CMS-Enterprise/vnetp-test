@@ -14,6 +14,7 @@ import { StaticRoute } from './staticRoute';
 import { LoadBalancerIrule } from './loadBalancerIrule';
 import { LoadBalancerRoute } from './loadBalancerRoute';
 import { LoadBalancerVlan } from './loadBalancerVlan';
+import { Zone } from './zone';
 import { LoadBalancerNode } from './loadBalancerNode';
 import { LoadBalancerHealthMonitor } from './loadBalancerHealthMonitor';
 import { LoadBalancerSelfIp } from './loadBalancerSelfIp';
@@ -51,6 +52,7 @@ export interface Tier {
     readonly staticRoutes?: Array<StaticRoute>;
     readonly firewallRuleGroups?: Array<FirewallRuleGroup>;
     readonly natRuleGroups?: Array<NatRuleGroup>;
+    readonly zones?: Array<Zone>;
     readonly networkObjects?: Array<NetworkObject>;
     readonly networkObjectGroups?: Array<NetworkObjectGroup>;
     readonly serviceObjects?: Array<ServiceObject>;
