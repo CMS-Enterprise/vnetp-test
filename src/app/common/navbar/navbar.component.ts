@@ -67,7 +67,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.currentUserSubscription, this.currentTenantSubscription, this.currentChangeRequestSubscription]);
+    SubscriptionUtil.unsubscribe([
+      this.currentUserSubscription,
+      this.currentTenantSubscription,
+      this.currentChangeRequestSubscription,
+      this.changeRequestModalSubscription,
+    ]);
   }
 
   public openChangeRequestModal(): void {
@@ -79,13 +84,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.changeRequestModalSubscription = this.ngx.getModal('changeRequestModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('changeRequestModal');
       this.changeRequestModalSubscription.unsubscribe();
-      // this.getCRNumber();
-    });
-  }
-
-  public getCRNumber() {
-    this.currentChangeRequestSubscription = this.incidentService.currentIncident.subscribe(inc => {
-      this.changeRequest = inc;
     });
   }
 }

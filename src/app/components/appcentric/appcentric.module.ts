@@ -10,6 +10,7 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { AppcentricDashboardComponent } from './appcentric-dashboard/appcentric-dashboard.component';
 import { TenantSelectModule } from './tenant-select/tenant-select.module';
 import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module';
+import { ChangeRequestModalModule } from '../change-request-modal/change-request-modal.module';
 
 const routes: Routes = [
   {
@@ -48,6 +49,7 @@ const routes: Routes = [
     NgxSmartModalModule,
     TenantSelectModule,
     BreadcrumbsModule,
+    ChangeRequestModalModule,
   ],
 })
 export class AppcentricModule {}

@@ -3,6 +3,7 @@ import { UserDto } from 'client/model/userDto';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthService } from 'src/app/services/auth.service';
+import { IncidentService } from 'src/app/services/incident.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
@@ -17,10 +18,16 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
   public tenantAccountNumber: string;
   private currentUserSubscription: Subscription;
   private currentTenantSubscription: Subscription;
+  private changeRequestModalSubscription: Subscription;
+  private currentChangeRequestSubscription: Subscription;
+  changeRequest: string;
 
-  constructor(private ngx: NgxSmartModalService, private auth: AuthService) {}
+  constructor(private ngx: NgxSmartModalService, private auth: AuthService, private incidentService: IncidentService) {}
 
   ngOnInit(): void {
+    this.currentChangeRequestSubscription = this.incidentService.currentIncident.subscribe(inc => {
+      this.changeRequest = inc;
+    });
     this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
       this.tenant = tenant;
       this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
@@ -56,6 +63,23 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.currentUserSubscription, this.currentTenantSubscription]);
+    SubscriptionUtil.unsubscribe([
+      this.currentUserSubscription,
+      this.currentTenantSubscription,
+      this.changeRequestModalSubscription,
+      this.currentChangeRequestSubscription,
+    ]);
+  }
+
+  public openChangeRequestModal(): void {
+    this.subscribeToChangeRequestModal();
+    this.ngx.getModal('changeRequestModal').open();
+  }
+
+  subscribeToChangeRequestModal() {
+    this.changeRequestModalSubscription = this.ngx.getModal('changeRequestModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('changeRequestModal');
+      this.changeRequestModalSubscription.unsubscribe();
+    });
   }
 }

@@ -46,6 +46,11 @@
           <span *ngIf="tenant">Appcentric - {{ tenant }}</span>
         </a>
       </li>
+      <li (click)="openChangeRequestModal()" id="changeRequestNumber" class="nav-item">
+        <a>
+          <span *ngIf="changeRequest" style="color: lime;">{{ changeRequest }}</span>
+        </a>
+      </li>
     </ul>
 
     <ul class="navbar-nav ml-auto align-items-lg-center">
@@ -93,3 +98,5 @@
     </button>
   </footer>
 </ngx-smart-modal>
+
+<app-change-request-modal></app-change-request-modal>
