@@ -107,26 +107,26 @@ export class NatRulePacketTracerComponent implements OnInit {
     return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3];
   }
 
-  // TO DO : IPv6
-  convertIpv6(ipv6): void {
-    // const ipv6Subnet = '2001:db8:0:0:8d3::/64';
-    // simulate your address.binaryZeroPad(); method
-    const parts = [];
-    ipv6.split(':').forEach(it => {
-      let bin = parseInt(it, 16).toString(2);
-      while (bin.length < 16) {
-        bin = '0' + bin;
-      }
-      parts.push(bin);
-    });
-    const bin = parts.join('');
+  // // TO DO : IPv6
+  // convertIpv6(ipv6): void {
+  //   // const ipv6Subnet = '2001:db8:0:0:8d3::/64';
+  //   // simulate your address.binaryZeroPad(); method
+  //   const parts = [];
+  //   ipv6.split(':').forEach(it => {
+  //     let bin = parseInt(it, 16).toString(2);
+  //     while (bin.length < 16) {
+  //       bin = '0' + bin;
+  //     }
+  //     parts.push(bin);
+  //   });
+  //   const bin = parts.join('');
 
-    // Use BigInteger library
-    // var dec = BigInt(bin).toString()
-    // var dec2 = parseInt(dec, 2)
-    // var dec3 = BigInt(dec2)
-    console.log(bin);
-  }
+  //   // Use BigInteger library
+  //   // var dec = BigInt(bin).toString()
+  //   // var dec2 = parseInt(dec, 2)
+  //   // var dec3 = BigInt(dec2)
+  //   console.log(bin);
+  // }
 
   // TO DO : IPv6 Searches
   async search() {
