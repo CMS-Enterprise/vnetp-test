@@ -141,11 +141,11 @@ describe('HelpTextService', () => {
     });
 
     it('should have correct help text for Network', () => {
-      expect(subnetModalHelpText.Network).toEqual('CIDR Address (X.X.X.X/YY) of the Subnet.');
+      expect(subnetModalHelpText.Network).toEqual('CIDR Address of the Subnet. (IPv4/IPv6)');
     });
 
     it('should have correct help text for Gateway', () => {
-      expect(subnetModalHelpText.Gateway).toEqual('Gateway Address of the Subnet.');
+      expect(subnetModalHelpText.Gateway).toEqual('Gateway Address of the Subnet. (IPv4/IPv6)');
     });
 
     it('should have correct help text for Vlan', () => {
@@ -254,7 +254,7 @@ describe('HelpTextService', () => {
     });
 
     it('should have the correct IpNetworkType help text', () => {
-      expect(firewallRuleModalHelpText.IpNetworkType).toEqual('IP address of a single host (X.X.X.X) or subnet (X.X.X.X/YY).');
+      expect(firewallRuleModalHelpText.IpNetworkType).toEqual('IP address of a single host or subnet. (IPv4/IPv6)');
     });
 
     it('should have the correct NetworkObjectType help text', () => {
@@ -400,11 +400,13 @@ describe('HelpTextService', () => {
     });
 
     it('should have the correct StartIpAddress help text', () => {
-      expect(networkObjectModalHelpText.StartIpAddress).toEqual('Start Address (X.X.X.X) of Range Network Object.');
+      expect(networkObjectModalHelpText.StartIpAddress).toEqual('Start Address of Range Network Object. (IPv4/IPv6)');
     });
 
     it('should have the correct EndIpAddress help text', () => {
-      expect(networkObjectModalHelpText.EndIpAddress).toEqual('End Address (X.X.X.X) of Range Network Object.');
+      expect(networkObjectModalHelpText.EndIpAddress).toEqual(
+        'End Address of Range Network Object, must be greater than StartIpAddress. (IPv4/IPv6)',
+      );
     });
 
     it('should have the correct Nat help text', () => {
@@ -633,18 +635,6 @@ describe('HelpTextService', () => {
 
     it('should have the correct LbVirtualServers help text', () => {
       expect(dashboardHelpText.LbVirtualServers).toEqual('Total Load Balancer Virtual Servers within the current tenant.');
-    });
-
-    it('should have the correct VMwareVms help text', () => {
-      expect(dashboardHelpText.VMwareVms).toEqual('Total VMware Virtual Machines within the current tenant.');
-    });
-
-    it('should have the correct ZvmLpars help text', () => {
-      expect(dashboardHelpText.ZvmLpars).toEqual('Total z/VM LPARs within the current tenant.');
-    });
-
-    it('should have the correct ZosLpars help text', () => {
-      expect(dashboardHelpText.ZosLpars).toEqual('Total z/OS LPARs within the current tenant.');
     });
   });
 });

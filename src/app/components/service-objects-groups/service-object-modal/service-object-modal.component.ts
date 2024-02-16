@@ -32,7 +32,6 @@ export class ServiceObjectModalComponent implements OnInit {
 
   public closeModal(): void {
     this.ngx.close('serviceObjectModal');
-    this.reset();
   }
 
   public getData(): void {

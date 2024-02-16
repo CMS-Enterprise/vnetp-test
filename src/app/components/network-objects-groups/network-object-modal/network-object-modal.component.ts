@@ -107,12 +107,10 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
 
   private closeModal() {
     this.ngx.close('networkObjectModal');
-    this.reset();
   }
 
   cancel() {
     this.ngx.close('networkObjectModal');
-    this.reset();
   }
 
   get f() {

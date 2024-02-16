@@ -1,4 +1,12 @@
-import { FirewallRule, NetworkObjectGroup, NetworkObject, ServiceObject, ServiceObjectGroup } from 'client';
+import {
+  FirewallRule,
+  NetworkObjectGroup,
+  NetworkObject,
+  ServiceObject,
+  ServiceObjectGroup,
+  Zone,
+  FirewallRuleGroupTypeEnum,
+} from 'client';
 import { ModalMode } from '../other/modal-mode';
 
 export class FirewallRuleModalDto {
@@ -9,5 +17,7 @@ export class FirewallRuleModalDto {
   NetworkObjectGroups: NetworkObjectGroup[];
   ServiceObjects: ServiceObject[];
   ServiceObjectGroups: ServiceObjectGroup[];
+  Zones: Zone[];
   ModalMode: ModalMode;
+  GroupType: FirewallRuleGroupTypeEnum;
 }
