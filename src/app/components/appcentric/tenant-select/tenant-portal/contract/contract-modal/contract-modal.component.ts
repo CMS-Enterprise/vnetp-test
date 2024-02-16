@@ -1,7 +1,7 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router, NavigationEnd } from '@angular/router';
-import { V2AppCentricContractsService, Contract, V2AppCentricSubjectsService, SubjectPaginationResponse, Subject } from 'client';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { V2AppCentricContractsService, Contract, V2AppCentricSubjectsService, Subject, GetManySubjectResponseDto } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -25,12 +25,12 @@ export class ContractModalComponent implements OnInit {
   public ModalMode = ModalMode;
   public modalMode: ModalMode;
   public contractId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() tenantId;
 
   public tableComponentDto = new TableComponentDto();
-  public subjects: SubjectPaginationResponse;
+  public subjects: GetManySubjectResponseDto;
   private subjectModalSubscription: Subscription;
   public perPage = 20;
 
@@ -49,23 +49,12 @@ export class ContractModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private contractService: V2AppCentricContractsService,
-    private router: Router,
     private subjectsService: V2AppCentricSubjectsService,
     private tableContextService: TableContextService,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -121,7 +110,7 @@ export class ContractModalComponent implements OnInit {
   }
 
   private createContract(contract: Contract): void {
-    this.contractService.createContract({ contract }).subscribe(
+    this.contractService.createOneContract({ contract }).subscribe(
       () => {
         this.closeModal();
       },
@@ -130,11 +119,11 @@ export class ContractModalComponent implements OnInit {
   }
 
   private editContract(contract: Contract): void {
-    contract.name = null;
-    contract.tenantId = null;
+    delete contract.name;
+    delete contract.tenantId;
     this.contractService
-      .updateContract({
-        uuid: this.contractId,
+      .updateOneContract({
+        id: this.contractId,
         contract,
       })
       .subscribe(
@@ -151,7 +140,7 @@ export class ContractModalComponent implements OnInit {
       return;
     }
 
-    const { name, description, alias, scope } = this.form.value;
+    const { name, description, alias } = this.form.value;
     const tenantId = this.tenantId;
     const contract = {
       name,
@@ -180,11 +169,15 @@ export class ContractModalComponent implements OnInit {
       }
     }
     this.subjectsService
-      .findAllSubject({
+      .getManySubject({
+        page: 1,
+        perPage: 1000,
         filter: [`contractId||eq||${this.contractId}`, eventParams],
       })
       .subscribe(
-        data => (this.subjects = data),
+        data => {
+          this.subjects = data;
+        },
         () => (this.subjects = null),
       );
   }
@@ -194,8 +187,8 @@ export class ContractModalComponent implements OnInit {
       const modalDto = new YesNoModalDto('Delete Subject', `Are you sure you want to permanently delete this subject ${subject.name}?`);
       const onConfirm = () => {
         this.subjectsService
-          .removeSubject({
-            uuid: subject.id,
+          .deleteOneSubject({
+            id: subject.id,
           })
           .subscribe(() => {
             const params = this.tableContextService.getSearchLocalStorage();
@@ -212,8 +205,8 @@ export class ContractModalComponent implements OnInit {
       const modalDto = new YesNoModalDto('Delete Subject', `Are you sure you want to soft delete this subject ${subject.name}?`);
       const onConfirm = () => {
         this.subjectsService
-          .softDeleteSubject({
-            uuid: subject.id,
+          .softDeleteOneSubject({
+            id: subject.id,
           })
           .subscribe(() => {
             const params = this.tableContextService.getSearchLocalStorage();
@@ -235,8 +228,8 @@ export class ContractModalComponent implements OnInit {
     }
 
     this.subjectsService
-      .restoreSubject({
-        uuid: subject.id,
+      .restoreOneSubject({
+        id: subject.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();

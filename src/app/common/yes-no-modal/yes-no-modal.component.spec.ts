@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -10,7 +10,7 @@ describe('YesNoModalComponent', () => {
   let component: YesNoModalComponent;
   let fixture: ComponentFixture<YesNoModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [YesNoModalComponent, MockNgxSmartModalComponent],
@@ -22,7 +22,7 @@ describe('YesNoModalComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -86,9 +86,7 @@ describe('YesNoModalComponent', () => {
     it('should default the modal title to "Title"', () => {
       const service = TestBed.inject(NgxSmartModalService);
 
-      jest.spyOn(service, 'getModalData').mockImplementation(() => {
-        return {};
-      });
+      jest.spyOn(service, 'getModalData').mockImplementation(() => ({}));
 
       component.getData();
       fixture.detectChanges();
@@ -103,12 +101,10 @@ describe('YesNoModalComponent', () => {
     it('should update the modal title and body', () => {
       const service = TestBed.inject(NgxSmartModalService);
 
-      jest.spyOn(service, 'getModalData').mockImplementation(() => {
-        return {
-          modalTitle: 'Custom Title',
-          modalBody: 'Custom Body',
-        };
-      });
+      jest.spyOn(service, 'getModalData').mockImplementation(() => ({
+        modalTitle: 'Custom Title',
+        modalBody: 'Custom Body',
+      }));
 
       component.getData();
       fixture.detectChanges();

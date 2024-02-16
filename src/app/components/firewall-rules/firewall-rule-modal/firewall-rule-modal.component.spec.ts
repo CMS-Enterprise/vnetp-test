@@ -1,5 +1,5 @@
-/* tslint:disable:no-string-literal */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+/* eslint-disable */
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { FirewallRuleModalComponent } from './firewall-rule-modal.component';
@@ -24,7 +24,7 @@ describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
   let fixture: ComponentFixture<FirewallRuleModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -50,7 +50,7 @@ describe('FirewallRuleModalComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
   const isRequired = (prop: string): boolean => {
@@ -68,7 +68,6 @@ describe('FirewallRuleModalComponent', () => {
       'name',
       'action',
       'protocol',
-      'direction',
       'ruleIndex',
       'sourceIpAddress',
       'sourcePorts',
@@ -77,6 +76,7 @@ describe('FirewallRuleModalComponent', () => {
     ];
     const optionalFields = [
       'description',
+      'direction',
       'logging',
       'sourceNetworkType',
       'sourceNetworkObject',
@@ -180,6 +180,80 @@ describe('FirewallRuleModalComponent', () => {
     serviceType.setValue('Port');
 
     expect(isRequired('destinationPorts')).toBe(true);
+  });
+
+  it('service inputs should be reset if protocol changes to IP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('TCP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('IP');
+
+    expect(sourcePorts.value).toBe('any');
+    expect(destinationPorts.value).toBe('any');
+    expect(serviceType.value).toBe('Port');
+  });
+
+  it('service inputs should be reset if protocol changes to ICMP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('TCP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('ICMP');
+
+    expect(sourcePorts.value).toBe('any');
+    expect(destinationPorts.value).toBe('any');
+    expect(serviceType.value).toBe('Port');
+  });
+
+  it('service inputs should be cleared when protocol changes to UDP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('UDP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('IP');
+    protocol.setValue('UDP');
+
+    expect(sourcePorts.value).toBe(null);
+    expect(destinationPorts.value).toBe(null);
+    expect(serviceType.value).toBe('Port');
+  });
+
+  it('service inputs should be cleared when protocol changes to TCP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('TCP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('IP');
+    protocol.setValue('TCP');
+
+    expect(sourcePorts.value).toBe(null);
+    expect(destinationPorts.value).toBe(null);
+    expect(serviceType.value).toBe('Port');
   });
 
   describe('Name', () => {

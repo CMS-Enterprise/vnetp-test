@@ -13,10 +13,11 @@ import { LoadBalancerHealthMonitor } from './loadBalancerHealthMonitor';
 
 
 export interface GetManyLoadBalancerHealthMonitorResponseDto { 
-    data: Array<LoadBalancerHealthMonitor>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<LoadBalancerHealthMonitor>;
 }
 

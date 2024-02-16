@@ -1,14 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {
-  LoadBalancerSelfIp,
-  LoadBalancerVlan,
-  Tier,
-  V1LoadBalancerSelfIpsService,
-  V1LoadBalancerVlansService,
-  V1TiersService,
-} from 'client';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { LoadBalancerSelfIp, LoadBalancerVlan, V1LoadBalancerSelfIpsService, V1LoadBalancerVlansService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { SelfIpModalDto } from './self-ip-modal.dto';
@@ -20,7 +13,7 @@ import { IpAddressIpValidator } from 'src/app/validators/network-form-validators
 })
 export class SelfIpModalComponent implements OnInit {
   public availableVlans: LoadBalancerVlan[] = [];
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
 
   private selfIpId: string;
@@ -29,10 +22,9 @@ export class SelfIpModalComponent implements OnInit {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private selfIpService: V1LoadBalancerSelfIpsService,
     private vlansService: V1LoadBalancerVlansService,
-    private tiersService: V1TiersService,
   ) {}
 
   ngOnInit(): void {
@@ -72,7 +64,7 @@ export class SelfIpModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const dto: SelfIpModalDto = Object.assign({}, this.ngx.getModalData('selfIpModal'));
+    const dto: SelfIpModalDto = Object.assign({}, this.ngx.getModalData('selfIpModal')) as any;
     const { selfIp, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = selfIp ? ModalMode.Edit : ModalMode.Create;
@@ -104,11 +96,11 @@ export class SelfIpModalComponent implements OnInit {
         filter: [`tierId||eq||${this.tierId}`],
         // review what to do in this scenario. currently it is a unique issue but
         // if we carry this functionality over to LB-pools it will share the same issue
-        limit: 10000,
+        perPage: 10000,
         page: 1,
       })
       .subscribe(response => {
-        this.availableVlans = response.data as LoadBalancerVlan[];
+        this.availableVlans = response.data;
       });
   }
 
@@ -128,7 +120,7 @@ export class SelfIpModalComponent implements OnInit {
   }
 
   private updateSelfIp(loadBalancerSelfIp: LoadBalancerSelfIp): void {
-    loadBalancerSelfIp.tierId = null;
+    delete loadBalancerSelfIp.tierId;
     this.selfIpService
       .updateOneLoadBalancerSelfIp({
         id: this.selfIpId,

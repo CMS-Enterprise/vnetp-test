@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Tier, V1DatacentersService, V1SelfServiceService, V1TiersService } from 'client';
+import { Component, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Tier, V1SelfServiceService, V1TiersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -14,7 +14,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
   templateUrl: './self-service-modal.component.html',
 })
 export class SelfServiceModalComponent implements OnInit {
-  initialForm: FormGroup;
+  initialForm: UntypedFormGroup;
   submittedInitialForm: boolean;
   submittedSecondForm: boolean;
   showSecondForm: boolean;
@@ -40,7 +40,7 @@ export class SelfServiceModalComponent implements OnInit {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private datacenterContextService: DatacenterContextService,
     private selfServiceService: V1SelfServiceService,
     private tiersService: V1TiersService,
@@ -221,7 +221,7 @@ export class SelfServiceModalComponent implements OnInit {
     // if the namespace for a selected tier matches another host, we fail the form submission
     // and tell the user to change one of the namespaces
 
-    // tslint:disable-next-line
+    // eslint-disable-next-line
     for (let i = 0; i < this.selectedTiers.length; i++) {
       const tier = this.selectedTiers[i];
       this.selectedTiers.map(selectedTier => {
@@ -381,7 +381,7 @@ export class SelfServiceModalComponent implements OnInit {
             hostname = hostname.split(' ')[1];
             // add newly mapped hostname to hostnameIndexes array
             // tslint:disable-next-line
-            hostnameIndexes.push({ hostname: hostname, hostnameIndex: hostnameIndex });
+            hostnameIndexes.push({ hostname, hostnameIndex });
             // add the hostname to the list of tiers extracted from the device config
             this.tiersFromConfig.push(hostname);
           }
@@ -424,7 +424,7 @@ export class SelfServiceModalComponent implements OnInit {
       const index = file.indexOf(' ' + val + '\r', offset + 1);
       if (index !== -1) {
         // tslint:disable-next-line
-        this.asaInterfacesWithIndex.push({ interface: val, index: index });
+        this.asaInterfacesWithIndex.push({ interface: val, index });
         this.recursivelyGetIndexes(val, file, index);
       } else {
         return;
@@ -434,7 +434,7 @@ export class SelfServiceModalComponent implements OnInit {
       const index = file.indexOf(' ' + val + '\r');
       if (index !== -1) {
         // tslint:disable-next-line
-        this.asaInterfacesWithIndex.push({ interface: val, index: index });
+        this.asaInterfacesWithIndex.push({ interface: val, index });
         this.recursivelyGetIndexes(val, file, index);
       } else {
         return;
@@ -486,7 +486,6 @@ export class SelfServiceModalComponent implements OnInit {
     reader.readAsText(file);
     reader.onload = () => {
       const readableText = reader.result.toString();
-      const splitFileByLine = readableText.split('\n');
       this.f.intervrfSubnets.setValue(readableText);
     };
   }
@@ -507,13 +506,14 @@ export class SelfServiceModalComponent implements OnInit {
 
   public getTiers(): void {
     this.tiersService
-      .getManyDatacenterTier({
-        limit: 1000,
-        datacenterId: this.datacenterId,
+      .getManyTier({
+        filter: [`datacenterId||eq||${this.datacenterId}`],
         join: ['firewallRuleGroups', 'natRuleGroups'],
+        perPage: 1000,
+        page: 1,
       })
-      .subscribe(returnedData => {
-        this.tiers = returnedData as any;
+      .subscribe(data => {
+        this.tiers = data.data;
       });
   }
 
@@ -532,9 +532,7 @@ export class SelfServiceModalComponent implements OnInit {
         type: natRuleGroup.type,
       };
     });
-    this.natRuleGroupData = this.natRuleGroupData.filter(natRuleGroup => {
-      return natRuleGroup !== undefined;
-    });
+    this.natRuleGroupData = this.natRuleGroupData.filter(natRuleGroup => natRuleGroup !== undefined);
     return this.natRuleGroupData;
   }
 
@@ -553,9 +551,7 @@ export class SelfServiceModalComponent implements OnInit {
         type: fwRuleGroup.type,
       };
     });
-    this.firewallRuleGroupData = this.firewallRuleGroupData.filter(fwRuleGroup => {
-      return fwRuleGroup !== undefined;
-    });
+    this.firewallRuleGroupData = this.firewallRuleGroupData.filter(fwRuleGroup => fwRuleGroup !== undefined);
     return this.firewallRuleGroupData;
   }
 
@@ -563,9 +559,11 @@ export class SelfServiceModalComponent implements OnInit {
     // `this.selectedTiers` holds all of the mapped objects that we want to use in the conversion script
     const mappedObjects = this.selectedTiers;
     // make object types the same regardless of device type for reusability
-    const filteredMappedObjects = mappedObjects.map(obj => {
-      return { hostname: obj.hostname, interfaceMatrix: obj.interfaceMatrix, namespace: obj.namespace ? obj.namespace : null };
-    });
+    const filteredMappedObjects = mappedObjects.map(obj => ({
+      hostname: obj.hostname,
+      interfaceMatrix: obj.interfaceMatrix,
+      namespace: obj.namespace ? obj.namespace : null,
+    }));
     // create configDto
     const configDto = {
       datacenterId: '',
@@ -607,7 +605,7 @@ export class SelfServiceModalComponent implements OnInit {
     this.showFooter = false;
     if (this.f.deviceType.value === 'ASA') {
       this.selfServiceService.processAsaConfigSelfService({ selfService: configDto }).subscribe(
-        returnedSelfServiceEntity => {
+        () => {
           this.showSpinner = false;
           this.receivedConfig = true;
           this.onClose();
@@ -617,7 +615,7 @@ export class SelfServiceModalComponent implements OnInit {
     } else if (this.f.deviceType.value === 'PA') {
       configDto.intervrfSubnets = this.f.intervrfSubnets.value;
       this.selfServiceService.processPAConfigSelfService({ selfService: configDto }).subscribe(
-        returnedSelfServiceEntity => {
+        () => {
           this.showSpinner = false;
           this.receivedConfig = true;
           this.onClose();

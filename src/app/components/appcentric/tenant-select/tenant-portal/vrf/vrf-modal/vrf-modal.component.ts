@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { V2AppCentricVrfsService, Vrf } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { VrfModalDto } from 'src/app/models/appcentric/vrf-modal-dto';
@@ -15,26 +14,11 @@ import { NameValidator } from 'src/app/validators/name-validator';
 export class VrfModalComponent implements OnInit {
   public ModalMode: ModalMode;
   public vrfId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() public tenantId: string;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private ngx: NgxSmartModalService,
-    private vrfService: V2AppCentricVrfsService,
-    private router: Router,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
-  }
+  constructor(private formBuilder: UntypedFormBuilder, private ngx: NgxSmartModalService, private vrfService: V2AppCentricVrfsService) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -90,7 +74,7 @@ export class VrfModalComponent implements OnInit {
   }
 
   private createVrf(vrf: Vrf): void {
-    this.vrfService.createVrf({ vrf }).subscribe(
+    this.vrfService.createOneVrf({ vrf }).subscribe(
       () => {
         this.closeModal();
       },
@@ -99,11 +83,11 @@ export class VrfModalComponent implements OnInit {
   }
 
   private editVrf(vrf: Vrf): void {
-    vrf.name = null;
-    vrf.tenantId = null;
+    delete vrf.name;
+    delete vrf.tenantId;
     this.vrfService
-      .updateVrf({
-        uuid: this.vrfId,
+      .updateOneVrf({
+        id: this.vrfId,
         vrf,
       })
       .subscribe(
@@ -126,11 +110,10 @@ export class VrfModalComponent implements OnInit {
       name,
       description,
       alias,
+      policyControlEnforced,
+      policyControlEnforcementIngress,
       tenantId,
     } as Vrf;
-
-    vrf.policyControlEnforced = policyControlEnforced === 'true';
-    vrf.policyControlEnforcementIngress = policyControlEnforcementIngress === 'true';
 
     if (this.ModalMode === ModalMode.Create) {
       this.createVrf(vrf);

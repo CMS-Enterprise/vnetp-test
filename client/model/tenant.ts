@@ -23,13 +23,15 @@ import { Subject } from './subject';
 
 export interface Tenant { 
     readonly id?: string;
+    readonly createdAt?: string;
+    readonly updatedAt?: string;
+    readonly version?: number;
+    readonly deletedAt?: string;
+    readonly provisionedAt?: string;
+    readonly provisionedVersion?: number;
     name?: string;
     alias?: string;
     description?: string;
-    readonly createdAt?: string;
-    readonly updatedAt?: string;
-    readonly deletedAt?: string;
-    readonly provisionedAt?: string;
     readonly applicationProfiles?: Array<ApplicationProfile>;
     readonly bridgeDomains?: Array<BridgeDomain>;
     readonly contracts?: Array<Contract>;

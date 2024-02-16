@@ -1,17 +1,9 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import {
-  BridgeDomain,
-  BridgeDomainPaginationResponse,
-  L3Out,
-  L3OutPaginationResponse,
-  V2AppCentricBridgeDomainsService,
-  V2AppCentricL3outsService,
-  V2AppCentricVrfsService,
-  Vrf,
-} from 'client';
+import { Router } from '@angular/router';
+import { BridgeDomain, GetManyBridgeDomainResponseDto, V2AppCentricBridgeDomainsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { BridgeDomainModalDto } from 'src/app/models/appcentric/bridge-domain-modal-dto';
@@ -28,7 +20,7 @@ export class BridgeDomainComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentBridgeDomainPage = 1;
   public perPage = 20;
-  public bridgeDomains = {} as BridgeDomainPaginationResponse;
+  public bridgeDomains = {} as GetManyBridgeDomainResponseDto;
   public tableComponentDto = new TableComponentDto();
   private bridgeDomainModalSubscription: Subscription;
   private subnetsModalSubscription: Subscription;
@@ -38,7 +30,14 @@ export class BridgeDomainComponent implements OnInit {
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
+    { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
+    { displayName: 'Mac Address', propertyName: 'bdMacAddress' },
+    { displayName: 'Arp Flooding', propertyName: 'arpFlooding', propertyType: 'boolean' },
+    { displayName: 'Limit Local IP Learning', propertyName: 'limitLocalIpLearning', propertyType: 'boolean' },
+    { displayName: 'Move Detection Mode Garp', propertyName: 'epMoveDetectionModeGarp', propertyType: 'boolean' },
+  ];
 
   public config: TableConfig<any> = {
     description: 'Bridge Domains',
@@ -59,18 +58,19 @@ export class BridgeDomainComponent implements OnInit {
     private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
     private router: Router,
-    private vrfService: V2AppCentricVrfsService,
-    private l3OutsService: V2AppCentricL3outsService,
   ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    const advancedSearchAdapter = new AdvancedSearchAdapter<BridgeDomain>();
+    advancedSearchAdapter.setService(this.bridgeDomainService);
+    advancedSearchAdapter.setServiceName('V2AppCentricBridgeDomainsService');
+    this.config.advancedSearchAdapter = advancedSearchAdapter;
+
+    const match = this.router.routerState.snapshot.url.match(
+      /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
+    );
+    if (match) {
+      const uuid = match[0].split('/')[2];
+      this.tenantId = uuid;
+    }
   }
 
   ngOnInit(): void {
@@ -90,12 +90,14 @@ export class BridgeDomainComponent implements OnInit {
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'name' || propertyName === 'alias' || propertyName === 'description') {
         eventParams = `${propertyName}||cont||${searchText}`;
+      } else if (propertyName) {
+        eventParams = `${propertyName}||eq||${searchText}`;
       }
     }
     this.bridgeDomainService
-      .findAllBridgeDomain({
+      .getManyBridgeDomain({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -115,7 +117,7 @@ export class BridgeDomainComponent implements OnInit {
 
   public deleteBridgeDomain(bridgeDomain: BridgeDomain): void {
     if (bridgeDomain.deletedAt) {
-      this.bridgeDomainService.removeBridgeDomain({ uuid: bridgeDomain.id }).subscribe(() => {
+      this.bridgeDomainService.deleteOneBridgeDomain({ id: bridgeDomain.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -129,8 +131,8 @@ export class BridgeDomainComponent implements OnInit {
       });
     } else {
       this.bridgeDomainService
-        .softDeleteBridgeDomain({
-          uuid: bridgeDomain.id,
+        .softDeleteOneBridgeDomain({
+          id: bridgeDomain.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -153,8 +155,8 @@ export class BridgeDomainComponent implements OnInit {
     }
 
     this.bridgeDomainService
-      .restoreBridgeDomain({
-        uuid: bridgeDomain.id,
+      .restoreOneBridgeDomain({
+        id: bridgeDomain.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
@@ -230,7 +232,7 @@ export class BridgeDomainComponent implements OnInit {
     });
   }
 
-  public importBridgeDomainsConfig(bridgeDomain: BridgeDomain[]): void {
+  public importBridgeDomainsConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

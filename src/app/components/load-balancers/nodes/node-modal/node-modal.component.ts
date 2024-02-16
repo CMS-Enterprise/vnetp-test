@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NodeModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerNode, LoadBalancerNodeTypeEnum, V1LoadBalancerNodesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -17,14 +17,12 @@ import { nodeTypeLookup } from 'src/app/lookups/load-balancer-node-type.lookup';
   templateUrl: './node-modal.component.html',
 })
 export class NodeModalComponent implements OnInit, OnDestroy {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
 
   public NodeType = LoadBalancerNodeTypeEnum;
   public nodeTypeLookup = nodeTypeLookup;
-  public nodeTypes: LoadBalancerNodeTypeEnum[] = Object.keys(LoadBalancerNodeTypeEnum).map(k => {
-    return LoadBalancerNodeTypeEnum[k];
-  });
+  public nodeTypes: LoadBalancerNodeTypeEnum[] = Object.keys(LoadBalancerNodeTypeEnum).map(k => LoadBalancerNodeTypeEnum[k]);
 
   private nodeId: string;
   private modalMode: ModalMode;
@@ -33,7 +31,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private nodeService: V1LoadBalancerNodesService,
     public helpText: NodeModalHelpText,
   ) {}
@@ -73,7 +71,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
   }
 
   public getData(): void {
-    const dto: NodeModalDto = Object.assign({}, this.ngx.getModalData('nodeModal'));
+    const dto: NodeModalDto = Object.assign({}, this.ngx.getModalData('nodeModal')) as any;
     const { node, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = node ? ModalMode.Edit : ModalMode.Create;
@@ -135,7 +133,8 @@ export class NodeModalComponent implements OnInit, OnDestroy {
   }
 
   private updateNode(loadBalancerNode: LoadBalancerNode): void {
-    loadBalancerNode.tierId = null;
+    delete loadBalancerNode.tierId;
+    delete loadBalancerNode.name;
     this.nodeService
       .updateOneLoadBalancerNode({
         id: this.nodeId,

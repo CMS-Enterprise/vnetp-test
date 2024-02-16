@@ -1,8 +1,9 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { Filter, FilterPaginationResponse, V2AppCentricFiltersService } from 'client';
+import { Router } from '@angular/router';
+import { Filter, GetManyFilterResponseDto, V2AppCentricFiltersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { FilterModalDto } from 'src/app/models/appcentric/filter-modal-dto';
@@ -19,17 +20,19 @@ export class FilterComponent implements OnInit {
   public ModalMode = ModalMode;
   public currentFilterPage = 1;
   public perPage = 20;
-  public filters = {} as FilterPaginationResponse;
+  public filters = {} as GetManyFilterResponseDto;
   public tableComponentDto = new TableComponentDto();
   private filterModalSubscription: Subscription;
-  private filterEntryModalSubscription: Subscription;
   public tenantId: string;
 
   public isLoading = false;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
+    { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
+  ];
 
   public config: TableConfig<any> = {
     description: 'Filters',
@@ -47,15 +50,18 @@ export class FilterComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private router: Router,
   ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
+    const advancedSearchAdapter = new AdvancedSearchAdapter<Filter>();
+    advancedSearchAdapter.setService(this.filterService);
+    advancedSearchAdapter.setServiceName('V2AppCentricFiltersService');
+    this.config.advancedSearchAdapter = advancedSearchAdapter;
+
+    const match = this.router.routerState.snapshot.url.match(
+      /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
+    );
+    if (match) {
+      const uuid = match[0].split('/')[2];
+      this.tenantId = uuid;
+    }
   }
 
   ngOnInit(): void {
@@ -80,7 +86,7 @@ export class FilterComponent implements OnInit {
       }
     }
     this.filterService
-      .findAllFilter({
+      .getManyFilter({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -100,7 +106,7 @@ export class FilterComponent implements OnInit {
 
   public deleteFilter(filter: Filter): void {
     if (filter.deletedAt) {
-      this.filterService.removeFilter({ uuid: filter.id }).subscribe(() => {
+      this.filterService.deleteOneFilter({ id: filter.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -114,8 +120,8 @@ export class FilterComponent implements OnInit {
       });
     } else {
       this.filterService
-        .softDeleteFilter({
-          uuid: filter.id,
+        .softDeleteOneFilter({
+          id: filter.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
@@ -138,8 +144,8 @@ export class FilterComponent implements OnInit {
     }
 
     this.filterService
-      .restoreFilter({
-        uuid: filter.id,
+      .restoreOneFilter({
+        id: filter.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
@@ -187,7 +193,7 @@ export class FilterComponent implements OnInit {
     });
   }
 
-  public importFiltersConfig(filter: Filter[]): void {
+  public importFiltersConfig(): void {
     // const tenantEnding = tenants.length > 1 ? 's' : '';
     // const modalDto = new YesNoModalDto(
     //   `Import Tier${tenantEnding}`,

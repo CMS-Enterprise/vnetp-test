@@ -1,7 +1,6 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
-import { RouteProfile, V2AppCentricRouteProfilesService, V2AppCentricVrfsService, Vrf, VrfPaginationResponse } from 'client';
+import { Component, Input, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { RouteProfile, V2AppCentricRouteProfilesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
@@ -14,29 +13,18 @@ import { RouteProfileModalDto } from '../../../../../../models/appcentric/route-
 export class RouteProfileModalComponent implements OnInit {
   public modalMode: ModalMode;
   public routeProfileId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
-  public tenantId: string;
+  @Input() public tenantId: string;
   public isLoading = false;
 
   public dto: RouteProfileModalDto;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private routeProfileService: V2AppCentricRouteProfilesService,
-    private router: Router,
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        const match = event.url.match(/tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/);
-        if (match) {
-          const uuid = match[0].split('/')[2];
-          this.tenantId = uuid;
-        }
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -86,7 +74,7 @@ export class RouteProfileModalComponent implements OnInit {
   }
 
   private createRouteProfile(routeProfile: RouteProfile): void {
-    this.routeProfileService.createRouteProfile({ routeProfile }).subscribe(
+    this.routeProfileService.createOneRouteProfile({ routeProfile }).subscribe(
       () => {
         this.closeModal();
       },
@@ -95,11 +83,11 @@ export class RouteProfileModalComponent implements OnInit {
   }
 
   private editRouteProfile(routeProfile: RouteProfile): void {
-    routeProfile.name = null;
-    routeProfile.tenantId = null;
+    delete routeProfile.name;
+    delete routeProfile.tenantId;
     this.routeProfileService
-      .updateRouteProfile({
-        uuid: this.routeProfileId,
+      .updateOneRouteProfile({
+        id: this.routeProfileId,
         routeProfile,
       })
       .subscribe(

@@ -17,6 +17,8 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { VirtualServerModalDto } from '../virtual-server-modal/virtual-server-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 export interface VirtualServerView extends LoadBalancerVirtualServer {
   nameView: string;
@@ -28,11 +30,14 @@ export interface VirtualServerView extends LoadBalancerVirtualServer {
   selector: 'app-virtual-server-list',
   templateUrl: './virtual-server-list.component.html',
 })
-export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class VirtualServerListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public datacenterId: string;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Destination Address', propertyName: 'destinationIpAddress' },
+    { displayName: 'Service Port', propertyName: 'servicePort' },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('defaultPoolTemplate') defaultPoolTemplate: TemplateRef<any>;
@@ -40,7 +45,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
   public config: TableConfig<VirtualServerView> = {
     description: 'Virtual Servers in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
       { name: 'Destination Address', property: 'destinationIpAddress' },
       { name: 'Service Port', property: 'servicePort' },
@@ -64,14 +69,16 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
-  ) {}
+    public filteredHelpText: FilteredCount,
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerVirtualServer>();
+    advancedSearchAdapterObject.setService(this.virtualServersService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerVirutalServersService');
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.virtualServerChanges = this.subscribeToVirtualServerModal();
   }
 
   ngOnDestroy(): void {
@@ -113,9 +120,12 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
+      if (propertyName === 'name') {
+        eventParams = propertyName + '||cont||' + searchText;
+      } else if (propertyName) {
+        eventParams = propertyName + '||eq||' + searchText;
       }
     }
     this.virtualServersService
@@ -123,27 +133,25 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
         join: ['irules,defaultPool'],
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
         response => {
           this.virtualServers = response;
-          this.virtualServers.data = (this.virtualServers.data as VirtualServerView[]).map(v => {
-            return {
-              ...v,
-              nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
-              defaultPoolName: v.defaultPool
-                ? v.defaultPool.name.length >= 20
-                  ? v.defaultPool.name.slice(0, 19) + '...'
-                  : v.defaultPool.name
-                : undefined,
-              state: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-            };
-          });
+          this.virtualServers.data = (this.virtualServers.data as VirtualServerView[]).map(v => ({
+            ...v,
+            nameView: v.name.length >= 20 ? v.name.slice(0, 19) + '...' : v.name,
+            defaultPoolName: v.defaultPool
+              ? v.defaultPool.name.length >= 20
+                ? v.defaultPool.name.slice(0, 19) + '...'
+                : v.defaultPool.name
+              : undefined,
+            state: v.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+          }));
         },
         () => {
-          this.virtualServers = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;
@@ -164,6 +172,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
       tierId: this.currentTier.id,
       virtualServer,
     };
+    this.subscribeToVirtualServerModal();
     this.ngx.setModalData(dto, 'virtualServerModal');
     this.ngx.open('virtualServerModal');
   }
@@ -202,8 +211,8 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
     });
   }
 
-  private subscribeToVirtualServerModal(): Subscription {
-    return this.ngx.getModal('virtualServerModal').onCloseFinished.subscribe(() => {
+  private subscribeToVirtualServerModal(): void {
+    this.virtualServerChanges = this.ngx.getModal('virtualServerModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
@@ -218,6 +227,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy, AfterViewI
         this.loadVirtualServers();
       }
       this.ngx.resetModalData('virtualServerModal');
+      this.virtualServerChanges.unsubscribe();
     });
   }
 }

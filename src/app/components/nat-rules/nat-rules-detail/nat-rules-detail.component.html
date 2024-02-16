@@ -3,7 +3,7 @@
   <span>Back</span>
 </a>
 
-<h1>{{ TierName }} - {{ NatRuleGroup?.name }} Nat Rules ({{ natRules?.total }} items)</h1>
+<h1>{{ TierName }} - {{ NatRuleGroup?.name }} Nat Rules</h1>
 
 <section class="btn-toolbar" role="toolbar">
   <!-- Add Nat Rule -->
@@ -138,5 +138,18 @@
   </p>
 </ng-template>
 
+
+<!-- to/from zone/direction template -->
+<ng-template #directionZone let-natRule="datum">
+  <p *ngIf="NatRuleGroup?.type === 'Intervrf' || NatRuleGroup?.type === 'External'" aria-label="Direction">
+    {{ natRule?.direction }}
+  </p>
+  <p *ngIf="NatRuleGroup?.type === 'ZoneBased'" aria-label="From Zone">
+    From: {{ getZoneNames(natRule.fromZone) }}
+  </p>
+  <p *ngIf="NatRuleGroup?.type === 'ZoneBased'" aria-label="To Zone">
+    To: {{ natRule?.toZone?.name }}
+  </p>
+</ng-template>
 
 <app-nat-rule-packet-tracer [objects]="packetTracerObjects"></app-nat-rule-packet-tracer>

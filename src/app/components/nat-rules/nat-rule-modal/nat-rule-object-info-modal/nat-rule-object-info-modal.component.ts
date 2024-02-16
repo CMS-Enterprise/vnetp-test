@@ -13,7 +13,7 @@ export class NatRuleObjectInfoModalComponent implements OnInit {
   ngOnInit(): void {}
 
   getData() {
-    const modalData = this.ngx.getModalData('natRuleObjectInfoModal');
+    const modalData = this.ngx.getModalData('natRuleObjectInfoModal') as any;
     this.modalTitle = modalData.modalTitle;
     this.modalBody = modalData.modalBody;
   }

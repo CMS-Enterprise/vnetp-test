@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TierSelectComponent } from './tier-select.component';
 import { FormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -17,7 +17,7 @@ describe('TierSelectComponent', () => {
   let component: TierSelectComponent;
   let fixture: ComponentFixture<TierSelectComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     const authService = {
       currentUser: of({}),
     };
@@ -40,7 +40,7 @@ describe('TierSelectComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     // const datacenterService = TestBed.inject(V1DatacentersService);
@@ -54,11 +54,9 @@ describe('TierSelectComponent', () => {
   it('should open the tier modal when clicked', () => {
     const ngx = TestBed.inject(NgxSmartModalService) as any;
     const openSpy = jest.fn();
-    jest.spyOn(ngx, 'getModal').mockImplementation(() => {
-      return {
-        open: openSpy,
-      };
-    });
+    jest.spyOn(ngx, 'getModal').mockImplementation(() => ({
+      open: openSpy,
+    }));
 
     const openButton = fixture.debugElement.query(By.css('button'));
     openButton.nativeElement.click();

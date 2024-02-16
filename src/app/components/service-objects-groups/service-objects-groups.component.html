@@ -1,8 +1,10 @@
 <app-tier-select></app-tier-select>
 
-<h1 *ngIf="navIndex === 0">Service Objects ({{serviceObjects?.total}} items)</h1>
+<tooltip *ngIf="navIndex === 0 && filteredResults" [message]="filteredHelpText?.FilteredResults"></tooltip>
 
-<h1 *ngIf="navIndex === 1">Service Object Groups ({{serviceObjectGroups?.total}} items)</h1>
+<h1 *ngIf="navIndex === 0">Service Objects</h1>
+
+<h1 *ngIf="navIndex === 1">Service Object Groups</h1>
 
 <ng-container *ngIf="currentTier; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
@@ -12,6 +14,9 @@
       <button type="button" class="btn btn-success" (click)="openServiceObjectModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Service Object</span>
+      </button>
+      <button type="button" class="btn btn-link" (click)="checkObjectUsage()">
+        Unused Objects
       </button>
     </section>
 
@@ -35,6 +40,7 @@
 
     <ng-template #actionsTemplate let-serviceObj="datum">
       <section class="table__actions">
+        <app-icon-button (click)="checkObjectsParents(serviceObj)" icon="search"></app-icon-button>
         <app-icon-button
               *ngIf="!serviceObj?.deletedAt"
               icon="edit"
@@ -142,6 +148,10 @@
 </ng-container>
 <app-service-object-group-modal></app-service-object-group-modal>
 <app-service-object-modal></app-service-object-modal>
+<app-unused-objects-modal [unusedObjectsInput]="unusedObjects"></app-unused-objects-modal>
+
+<app-used-objects-parents-modal [usedObjectsParentsInput]="usedObjectsParents"></app-used-objects-parents-modal>
+
 <app-yes-no-modal [allowEmptyTier]="showRadio"></app-yes-no-modal>
 <ng-template #warningMessage>
   <p>Select a Tier to display Service Objects & Groups details</p>

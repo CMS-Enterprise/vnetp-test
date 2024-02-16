@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeployComponent } from './deploy.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -33,7 +33,7 @@ describe('DeployComponent', () => {
       },
       isSelected: true,
     },
-    getManyDatacenterTierResponse: {
+    getManyTierResponse: {
       data: [
         {
           id: '1',
@@ -50,7 +50,7 @@ describe('DeployComponent', () => {
 
   const datacenterSubject = new Subject();
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     const datacenterService = {
       currentDatacenter: datacenterSubject.asObservable(),
     };
@@ -62,7 +62,7 @@ describe('DeployComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(V1JobsService),
         MockProvider(V1TierGroupsService),
-        MockProvider(V1TiersService, { getManyDatacenterTier: of(testData.getManyDatacenterTierResponse) }),
+        MockProvider(V1TiersService, { getManyTier: of(testData.getManyTierResponse) }),
         { provide: DatacenterContextService, useValue: datacenterService },
       ],
     })
@@ -76,7 +76,7 @@ describe('DeployComponent', () => {
         };
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -88,13 +88,12 @@ describe('DeployComponent', () => {
 
     datacenterSubject.next(testData.datacenter);
 
-    expect(tiersService.getManyDatacenterTier).toHaveBeenCalledWith({
-      datacenterId: '1',
+    expect(tiersService.getManyTier).toHaveBeenCalledWith({
       page: 1,
-      limit: 1000,
-      filter: [`deletedAt||isnull`],
+      perPage: 1000,
+      filter: [`datacenterId||eq||${testData.datacenter.id}`, 'deletedAt||isnull'],
     });
-    expect(tierGroupService.getManyTierGroup).toHaveBeenCalledWith({ filter: ['datacenterId||eq||1'], page: 1, limit: 1000 });
+    expect(tierGroupService.getManyTierGroup).toHaveBeenCalledWith({ filter: ['datacenterId||eq||1'], page: 1, perPage: 1000 });
     expect(component.tiers.length).toBe(1);
   });
 
@@ -135,7 +134,7 @@ describe('DeployComponent', () => {
     });
 
     it('should call to deploys tiers after confirming', () => {
-      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn, closeFn) => {
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn) => {
         confirmFn();
         return of().subscribe();
       });

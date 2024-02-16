@@ -2,9 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
-  V1DatacentersService,
-  V1LoadBalancerVirtualServersService,
-  V1TiersService,
   V2AppCentricBridgeDomainsService,
   V2AppCentricContractsService,
   V2AppCentricTenantsService,
@@ -24,19 +21,19 @@ describe('AppcentricDashboardComponent', () => {
 
   beforeEach(async(() => {
     const tenantsService = {
-      findAllTenant: jest.fn(() => of({ total: 1 })),
+      getManyTenant: jest.fn(() => of({ total: 1 })),
     };
 
     const vrfsService = {
-      findAllVrf: jest.fn(() => of({ total: 1 })),
+      getManyVrf: jest.fn(() => of({ total: 1 })),
     };
 
     const bridgeDomainsService = {
-      findAllBridgeDomain: jest.fn(() => of({ total: 1 })),
+      getManyBridgeDomain: jest.fn(() => of({ total: 1 })),
     };
 
     const contractsService = {
-      findAllContract: jest.fn(() => of({ total: 1 })),
+      getManyContract: jest.fn(() => of({ total: 1 })),
     };
 
     const authService = {

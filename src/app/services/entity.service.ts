@@ -11,10 +11,6 @@ export class EntityService {
   constructor(private ngx: NgxSmartModalService) {}
 
   public deleteEntity(entity: Entity, config: DeleteEntityConfig): Subscription {
-    if (entity.provisionedAt) {
-      throw new Error('Cannot delete provisioned object');
-    }
-
     const { deletedAt, name } = entity;
     const { entityName, delete$, softDelete$, onSuccess } = config;
 

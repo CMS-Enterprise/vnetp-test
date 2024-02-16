@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { ServiceObject, V1NetworkSecurityServiceObjectsService } from 'client';
 import { ServiceObjectModalDto } from 'src/app/models/service-objects/service-object-modal-dto';
@@ -13,7 +13,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   templateUrl: './service-object-modal.component.html',
 })
 export class ServiceObjectModalComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted: boolean;
   ModalMode: ModalMode;
   TierId: string;
@@ -21,7 +21,7 @@ export class ServiceObjectModalComponent implements OnInit {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     public helpText: ServiceObjectModalHelpText,
     private serviceObjectsService: V1NetworkSecurityServiceObjectsService,
   ) {}
@@ -32,7 +32,6 @@ export class ServiceObjectModalComponent implements OnInit {
 
   public closeModal(): void {
     this.ngx.close('serviceObjectModal');
-    this.reset();
   }
 
   public getData(): void {
@@ -112,8 +111,9 @@ export class ServiceObjectModalComponent implements OnInit {
   }
 
   private editServiceObject(serviceObject: ServiceObject): void {
-    serviceObject.name = null;
-    serviceObject.protocol = null;
+    delete serviceObject.name;
+    delete serviceObject.protocol;
+    delete serviceObject.tierId;
     this.serviceObjectsService
       .updateOneServiceObject({
         id: this.ServiceObjectId,

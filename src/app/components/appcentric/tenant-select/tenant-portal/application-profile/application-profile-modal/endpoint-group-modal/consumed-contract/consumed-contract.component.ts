@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { Contract, ContractPaginationResponse, V2AppCentricContractsService, V2AppCentricEndpointGroupsService } from 'client';
+import { Contract, GetManyContractResponseDto, V2AppCentricContractsService, V2AppCentricEndpointGroupsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -13,7 +13,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 })
 export class ConsumedContractComponent implements OnInit, OnChanges {
   @Input() public endpointGroupId: string;
-  public contractTableData: ContractPaginationResponse;
+  public contractTableData: GetManyContractResponseDto;
   public contracts: Contract[];
   public selectedContract: Contract;
 
@@ -61,7 +61,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getConsumedContracts(event);
+    this.getConsumedContracts();
   }
 
   public addContract(): void {
@@ -70,7 +70,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
         endpointGroupId: this.endpointGroupId,
         contractId: this.selectedContract.id,
       })
-      .subscribe(data => this.getConsumedContracts());
+      .subscribe(() => this.getConsumedContracts());
   }
 
   public removeContract(contract: Contract): void {
@@ -81,19 +81,19 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
           endpointGroupId: this.endpointGroupId,
           contractId: contract.id,
         })
-        .subscribe(data => this.getConsumedContracts());
+        .subscribe(() => this.getConsumedContracts());
     };
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  public getConsumedContracts(event?): void {
+  public getConsumedContracts(): void {
     this.endpointGroupsService
-      .findOneEndpointGroup({
-        uuid: this.endpointGroupId,
-        relations: 'consumedContracts',
+      .getOneEndpointGroup({
+        id: this.endpointGroupId,
+        relations: ['consumedContracts'],
       })
       .subscribe(data => {
-        const contractPagResponse = {} as ContractPaginationResponse;
+        const contractPagResponse = {} as GetManyContractResponseDto;
         contractPagResponse.count = data.consumedContracts.length;
         contractPagResponse.page = 1;
         contractPagResponse.pageCount = 1;
@@ -105,7 +105,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
 
   public getContracts(): void {
     this.contractsService
-      .findAllContract({
+      .getManyContract({
         filter: [`tenantId||eq||${this.tenantId}`],
         page: 1,
         perPage: 1000,
@@ -116,7 +116,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
           const usedFilters = this.contractTableData?.data.map(contract => contract.id);
           this.contracts = allContracts.filter(contract => !usedFilters?.includes(contract.id));
         },
-        err => (this.contracts = null),
+        () => (this.contracts = null),
       );
   }
 

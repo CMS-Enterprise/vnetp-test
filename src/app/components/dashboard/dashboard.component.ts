@@ -16,7 +16,6 @@ import {
   Datacenter,
 } from 'client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
-import { PieChartData } from 'src/app/common/d3-pie-chart/d3-pie-chart.component';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from '../../utils/SubscriptionUtil';
@@ -75,7 +74,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       { name: 'Action', property: 'actionType' },
       { name: 'Object Type', property: 'entityType' },
       { name: 'Tier Name', property: 'tierName' },
-      // { name: 'Object Name', template: () => this.entityAfterTemplate },
       { name: 'User', property: 'changedBy' },
       { name: 'Timestamp', property: 'timestamp' },
     ],
@@ -92,15 +90,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   pendingJobs = 0;
   cancelledJobs = 0;
   runningJobs = 0;
-  pieChartData: Array<PieChartData>;
 
   dashboardPoller: any;
 
   ngOnInit() {
-    this.pieChartData = [{ value: 1, color: '#f2f2f2' }];
-
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
-      // console.log('cd',cd);
       if (cd) {
         this.currentDatacenter = cd;
       }
@@ -138,7 +132,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getDatacenters(): void {
-    this.datacenterService.getManyDatacenters({ page: 1, limit: 1 }).subscribe(data => {
+    this.datacenterService.getManyDatacenter({ page: 1, perPage: 1 }).subscribe(data => {
       const paged: any = data;
       this.datacenters = paged.total;
       try {
@@ -148,32 +142,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getTiers(): void {
-    this.tierService.getManyTier({ page: 1, limit: 1 }).subscribe(data => {
+    this.tierService.getManyTier({ page: 1, perPage: 1 }).subscribe(data => {
       const paged: any = data;
       this.tiers = paged.total;
     });
   }
 
   private getFWRules(): void {
-    this.firewallRuleService.getManyFirewallRule({ page: 1, limit: 1 }).subscribe(data => {
+    this.firewallRuleService.getManyFirewallRule({ page: 1, perPage: 1 }).subscribe(data => {
       this.firewallRuleCount = data.total;
     });
   }
 
   private getNatRules(): void {
-    this.natRuleService.getManyNatRule({ page: 1, limit: 1 }).subscribe(data => {
+    this.natRuleService.getManyNatRule({ page: 1, perPage: 1 }).subscribe(data => {
       this.natRuleCount = data.total;
     });
   }
 
   private getSubnets(): void {
-    this.subnetService.getManySubnet({ page: 1, limit: 1 }).subscribe(data => {
+    this.subnetService.getManySubnet({ page: 1, perPage: 1 }).subscribe(data => {
       this.subnetCount = data.total;
     });
   }
 
   private getVlans(): void {
-    this.vlanService.getManyVlan({ page: 1, limit: 1 }).subscribe(data => {
+    this.vlanService.getManyVlan({ page: 1, perPage: 1 }).subscribe(data => {
       this.vlanCount = data.total;
     });
   }
@@ -182,7 +176,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.networkObjectService
       .getManyNetworkObject({
         page: 1,
-        limit: 1,
+        perPage: 1,
       })
       .subscribe(data => {
         this.networkObjectCount = data.total;
@@ -193,7 +187,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.networkObjectGroupService
       .getManyNetworkObjectGroup({
         page: 1,
-        limit: 1,
+        perPage: 1,
       })
       .subscribe(data => {
         this.networkObjectGroupCount = data.total;
@@ -204,7 +198,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.serviceObjectService
       .getManyServiceObject({
         page: 1,
-        limit: 1,
+        perPage: 1,
       })
       .subscribe(data => {
         this.serviceObjectCount = data.total;
@@ -215,7 +209,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.serviceObjectGroupService
       .getManyServiceObjectGroup({
         page: 1,
-        limit: 1,
+        perPage: 1,
       })
       .subscribe(data => {
         this.serviceObjectGroupCount = data.total;

@@ -58,8 +58,8 @@ describe('PreviewModalComponent', () => {
   });
 
   it('should cancel the preview modal and close it', () => {
-    const resetModalDataSpy = spyOn(ngxSmartModalService, 'resetModalData');
-    const closeSpy = spyOn(ngxSmartModalService, 'close');
+    const resetModalDataSpy = jest.spyOn(ngxSmartModalService, 'resetModalData');
+    const closeSpy = jest.spyOn(ngxSmartModalService, 'close');
 
     component.cancel();
 
@@ -78,8 +78,8 @@ describe('PreviewModalComponent', () => {
         { prop1: 'Value 2A', prop2: 'Value 2B' },
       ],
     };
-    spyOn(ngxSmartModalService, 'getModalData').and.returnValue(mockModalData);
-    const resetModalDataSpy = spyOn(ngxSmartModalService, 'resetModalData');
+    jest.spyOn(ngxSmartModalService, 'getModalData').mockReturnValue(mockModalData);
+    const resetModalDataSpy = jest.spyOn(ngxSmartModalService, 'resetModalData');
 
     component.getData();
 

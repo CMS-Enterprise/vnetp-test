@@ -19,6 +19,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FirewallRulePacketTracerComponent } from './firewall-rule-packet-tracer/firewall-rule-packet-tracer.component';
 import { FirewallRuleModalComponent } from './firewall-rule-modal/firewall-rule-modal.component';
 import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.module';
+// eslint-disable-next-line max-len
 import { FirewallRuleObjectInfoModalComponent } from './firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
 
 const routes: Routes = [

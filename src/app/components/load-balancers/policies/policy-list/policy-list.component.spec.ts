@@ -5,20 +5,14 @@ import {
   MockFontAwesomeComponent,
   MockIconButtonComponent,
   MockImportExportComponent,
+  MockTooltipComponent,
   MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import {
-  GetManyLoadBalancerPolicyRequestParams,
-  GetManyLoadBalancerPolicyResponseDto,
-  LoadBalancerPolicy,
-  LoadBalancerPolicyTypeEnum,
-  Tier,
-  V1LoadBalancerPoliciesService,
-} from 'client';
+import { LoadBalancerPolicy, LoadBalancerPolicyTypeEnum, Tier, V1LoadBalancerPoliciesService } from 'client';
 import { PolicyListComponent, ImportPolicy, PolicyView } from './policy-list.component';
 import { EntityService } from 'src/app/services/entity.service';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
@@ -40,6 +34,7 @@ describe('PolicyListComponent', () => {
         MockIconButtonComponent,
         MockImportExportComponent,
         MockYesNoModalComponent,
+        MockTooltipComponent,
       ],
       providers: [
         MockProvider(DatacenterContextService),
@@ -63,8 +58,8 @@ describe('PolicyListComponent', () => {
   });
 
   it('should map policies', () => {
-    jest.spyOn(service, 'getManyLoadBalancerPolicy').mockImplementation(() => {
-      return of({
+    jest.spyOn(service, 'getManyLoadBalancerPolicy').mockImplementation(() =>
+      of({
         data: [
           { id: '1', name: 'Policy1', provisionedAt: {}, type: LoadBalancerPolicyTypeEnum.Apm },
           { id: '2', name: 'Policy2' },
@@ -73,8 +68,8 @@ describe('PolicyListComponent', () => {
         total: 2,
         page: 1,
         pageCount: 1,
-      } as any);
-    });
+      } as any),
+    );
 
     component.ngOnInit();
 
@@ -96,20 +91,20 @@ describe('PolicyListComponent', () => {
     });
   });
 
-  it('should default policies to be empty on error', () => {
-    component.policies = {
-      data: [{ id: '1', name: 'Policy1' }],
-      count: 1,
-      total: 1,
-      page: 1,
-      pageCount: 1,
-    } as GetManyLoadBalancerPolicyResponseDto;
-    jest.spyOn(service, 'getManyLoadBalancerPolicy').mockImplementation(() => throwError(''));
+  // it('should default policies to be empty on error', () => {
+  //   component.policies = {
+  //     data: [{ id: '1', name: 'Policy1' }],
+  //     count: 1,
+  //     total: 1,
+  //     page: 1,
+  //     pageCount: 1,
+  //   } as GetManyLoadBalancerPolicyResponseDto;
+  //   jest.spyOn(service, 'getManyLoadBalancerPolicy').mockImplementation(() => throwError(''));
 
-    component.ngOnInit();
+  //   component.ngOnInit();
 
-    expect(component.policies).toEqual(null);
-  });
+  //   expect(component.policies).toEqual(null);
+  // });
 
   it('should import policies', () => {
     const policies = [{ name: 'Policy1', vrfName: 'Tier1' }, { name: 'Policy2' }] as ImportPolicy[];

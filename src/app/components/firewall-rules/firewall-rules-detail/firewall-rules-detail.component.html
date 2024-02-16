@@ -3,7 +3,7 @@
   <span>Back</span>
 </a>
 
-<h1>{{ TierName }} - {{ FirewallRuleGroup?.name }} Firewall Rules ({{ firewallRules?.total }} items)</h1>
+<h1>{{ TierName }} - {{ FirewallRuleGroup?.name }} FW Rules</h1>
 
 <section class="btn-toolbar" role="toolbar">
   <!-- Add Firewall Rule -->
@@ -93,6 +93,19 @@
   </p>
   <p *ngIf="firewallRule.serviceType === 'ServiceObjectGroup'" aria-label="Service Object Group">
     {{ firewallRule?.serviceObjectGroupId | resolve: getServiceObjectGroupName }} (Object Group)
+  </p>
+</ng-template>
+
+<!-- to/from zone/direction template -->
+<ng-template #directionZone let-firewallRule="datum">
+  <p *ngIf="FirewallRuleGroup?.type === 'Intervrf' || FirewallRuleGroup?.type === 'External'" aria-label="Direction">
+    {{ firewallRule?.direction }}
+  </p>
+  <p *ngIf="FirewallRuleGroup?.type === 'ZoneBased'" aria-label="From Zone">
+    From: {{ getZoneNames(firewallRule.fromZone) }}
+  </p>
+  <p *ngIf="FirewallRuleGroup?.type === 'ZoneBased'" aria-label="To Zone">
+    To: {{ getZoneNames(firewallRule.toZone) }}
   </p>
 </ng-template>
 

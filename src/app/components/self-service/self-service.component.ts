@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { EntityService } from 'src/app/services/entity.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 @Component({
   selector: 'app-self-service',
@@ -72,15 +71,14 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
     this.selfServiceService.getSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(response => {
       this.selectedSelfService = response;
       this.openingModal = false;
-      const modalDto = new YesNoModalDto('Import', `Are you sure you would like to bulk import the converted objects?`);
+      const modalDto = new YesNoModalDto('Import', 'Are you sure you would like to bulk import the converted objects?');
       const onConfirm = () => {
+        // eslint-disable-next-line
         this.selfServiceService.bulkUploadSelfService({ selfService: this.selectedSelfService }).subscribe(data => {
           this.getSelfServices();
           return data;
         }),
-          // tslint:disable-next-line
           () => {},
-          // tslint:disable-next-line
           () => {
             this.getSelfServices();
           };
@@ -135,7 +133,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
   public async deleteSelfService(selfService) {
     this.selfServiceService.getSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(data => {
       this.selectedSelfService = data;
-      const dto = new YesNoModalDto(`Delete Self Service`, `Error(s): "${this.selectedSelfService.convertedConfig.artifact.error}"`);
+      const dto = new YesNoModalDto('Delete Self Service', `Error(s): "${this.selectedSelfService.convertedConfig.artifact.error}"`);
       const onConfirm = () => {
         this.selfServiceService.deleteSelfServiceSelfService({ selfServiceId: selfService.id }).subscribe(() => {
           this.getSelfServices();
