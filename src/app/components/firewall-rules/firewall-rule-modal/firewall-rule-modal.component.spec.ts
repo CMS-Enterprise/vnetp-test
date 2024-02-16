@@ -182,6 +182,80 @@ describe('FirewallRuleModalComponent', () => {
     expect(isRequired('destinationPorts')).toBe(true);
   });
 
+  it('service inputs should be reset if protocol changes to IP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('TCP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('IP');
+
+    expect(sourcePorts.value).toBe('any');
+    expect(destinationPorts.value).toBe('any');
+    expect(serviceType.value).toBe('Port');
+  });
+
+  it('service inputs should be reset if protocol changes to ICMP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('TCP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('ICMP');
+
+    expect(sourcePorts.value).toBe('any');
+    expect(destinationPorts.value).toBe('any');
+    expect(serviceType.value).toBe('Port');
+  });
+
+  it('service inputs should be cleared when protocol changes to UDP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('UDP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('IP');
+    protocol.setValue('UDP');
+
+    expect(sourcePorts.value).toBe(null);
+    expect(destinationPorts.value).toBe(null);
+    expect(serviceType.value).toBe('Port');
+  });
+
+  it('service inputs should be cleared when protocol changes to TCP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('TCP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('IP');
+    protocol.setValue('TCP');
+
+    expect(sourcePorts.value).toBe(null);
+    expect(destinationPorts.value).toBe(null);
+    expect(serviceType.value).toBe('Port');
+  });
+
   describe('Name', () => {
     it('should have a minimum length of 3 and maximum length of 100', () => {
       const { name } = component.form.controls;
