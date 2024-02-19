@@ -43,7 +43,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   // takes an ipAddress to search for and another IP Subnet and determines if the ip to search
   // falls within range
-  calculateSubnet(ipToSearch, ipAddress) {
+  calculateSubnet(ipToSearch, ipAddress?) {
     const split = ipAddress.split('/');
     // determine if there is a CIDR
     const [ip, cidr] = split;
@@ -53,13 +53,15 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     const ipToSearchNum = this.dot2num(ipToSearch);
 
     // sends all parameters to function that determins the range of IPs
-    return this.ipToRange(ipToSearchNum, ipNumber, cidr);
 
     // if we ever want to display all subnets
     // const subnets = [];
     // for (let i = 32; i >= 0; i--) {
     //   subnets.push(this.num2dot(2 ** 32 - 2 ** i));
     // }
+    // console.log('subnets', subnets)
+
+    return this.ipToRange(ipToSearchNum, ipNumber, cidr);
   }
 
   cidrSize(cidrSlash): number {
@@ -164,8 +166,139 @@ export class FirewallRulePacketTracerComponent implements OnInit {
           protocolMatch: false,
           enabledMatch: false,
         };
-        // if rule source is ip address
+
+        // if search value is a subnet
+        if (searchDto.sourceIpLookup.split('/').length > 1) {
+          const baseSearchSubnetInfo = this.calculateSubnet('192.168.0.1', searchDto.sourceIpLookup);
+          console.log('baseSearchSubnetInfo', baseSearchSubnetInfo);
+          console.log('rule', rule);
+          // if rule sourceType is IpAddress
+          if (rule.sourceAddressType === 'IpAddress') {
+            // see if the sourceIpAddress is a subnet
+            const split = rule.sourceIpAddress.split('/');
+
+            // if it is a subnet, calculate the range and see if there is any overlap with searchSubnetInfo
+            if (split.length > 1) {
+              // both searchValue and sourceIpValue are subnets, so we need to loop through and see if there is any overlap
+
+              // loop through each ipAddress in the searchSubnet and use those IPs for further evaluation
+              for (let i = 0; i < baseSearchSubnetInfo.size; i++) {
+                // get startIp of searchSubnet
+                const startIp = baseSearchSubnetInfo.startIpStr;
+
+                // convert startIp to array
+                const startIpBreakUp = startIp.split('.');
+
+                // replace last value in array with "i"
+                startIpBreakUp.splice(-1, 1, i);
+
+                // convert array to string
+                const newIp = startIpBreakUp.toString();
+
+                // replace commas with dots to get back to ipAddress form
+                const fixedString = newIp.replaceAll(',', '.');
+
+                // calculate if this ipAddress (in the searchSubnet) falls within the sourceIpSubnet
+                const sourceSubnetInfo = this.calculateSubnet(fixedString, rule.sourceIpAddress);
+
+                // if so, this sourceSubnet is in range of the searchSubnet
+                if (sourceSubnetInfo.inRange) {
+                  checkList.sourceInRange = true;
+                }
+              }
+            }
+
+            // else if sourceIp is NOT a subnet but just a staticIP...
+            else {
+              // calculate if this ipAddress (the sourceIpAddress) falls within the searchSubnet
+              const searchSubnetInfo = this.calculateSubnet(rule.sourceIpAddress, searchDto.sourceIpLookup);
+              if (searchSubnetInfo.inRange) {
+                checkList.sourceInRange = true;
+              }
+            }
+          } else if (rule.sourceAddressType === 'NetworkObject') {
+            const sourceNetworkObject = await this.getNetworkObjectInfo(rule.sourceNetworkObjectId);
+            // if networkObject is an IP/Subnet
+            if (sourceNetworkObject.type === 'IpAddress') {
+              // get networkObjectIP
+              const ruleSourceIp = sourceNetworkObject.ipAddress;
+              const split = ruleSourceIp.split('/');
+
+              // see if networkObjectIP is a subnet
+              if (split.length > 1) {
+                // both searchValue and sourceNetworkObjectValue are subnets, so we need to loop through each one and see if there is any overlap
+
+                // loop through each ipAddress in the searchSubnet and use those IPs for further evaluation
+                for (let i = 0; i < baseSearchSubnetInfo.size; i++) {
+                  const startIp = baseSearchSubnetInfo.startIpStr;
+
+                  // convert startIp to array
+                  const startIpBreakUp = startIp.split('.');
+
+                  // replace last value in array with "i"
+                  startIpBreakUp.splice(-1, 1, i);
+                  const newIp = startIpBreakUp.toString();
+                  const fixedString = newIp.replaceAll(',', '.');
+                  const sourceSubnetInfo = this.calculateSubnet(fixedString, ruleSourceIp);
+
+                  console.log('sourceSubnetInfo-netobj', sourceSubnetInfo);
+                  console.log('rule', rule);
+
+                  if (sourceSubnetInfo.inRange) {
+                    checkList.sourceInRange = true;
+                  }
+                }
+              } else {
+                const searchSubnetInfo = this.calculateSubnet(ruleSourceIp, searchDto.sourceIpLookup);
+                console.log('searchSubnetInfo-netObjStaticIp', searchSubnetInfo);
+                if (searchSubnetInfo.inRange) {
+                  checkList.sourceInRange = true;
+                }
+              }
+            }
+
+            // if networkObject is a range of IPs
+            else if (sourceNetworkObject.type === 'Range') {
+              for (let i = 0; i < baseSearchSubnetInfo.size; i++) {
+                const startIp = baseSearchSubnetInfo.startIpStr;
+
+                // convert startIp to array
+                const startIpBreakUp = startIp.split('.');
+
+                // replace last value in array with "i"
+                startIpBreakUp.splice(-1, 1, i);
+                // console.log('startIpBreakUp', startIpBreakUp)
+                const newIp = startIpBreakUp.toString();
+                // console.log('newIp', newIp)
+                const fixedString = newIp.replaceAll(',', '.');
+
+                // convert startIp (of sourceNetworkObject) to num
+                const startIpNum = this.dot2num(sourceNetworkObject.startIpAddress);
+
+                // convert endIp (of sourceNetworkObject) to num
+                const endIpNum = this.dot2num(sourceNetworkObject.endIpAddress);
+
+                // convert searchIp (of this ip within the searchSubnet) to num
+                const searchIpNum = this.dot2num(fixedString);
+
+                // if the searchIpNum falls in between the startIpNum and endIpNum
+                // we know it is within the range provided
+                console.log('startIpNum-netObjRange', startIpNum);
+                console.log('endIpNum-netObjRange', endIpNum);
+                console.log('searchIpNum-netObjRange', searchIpNum);
+                if (startIpNum <= searchIpNum && endIpNum >= searchIpNum) {
+                  checkList.sourceInRange = true;
+                }
+              }
+            }
+          }
+        }
+
         if (rule.sourceAddressType === 'IpAddress') {
+          // if there is an exact match on the search value and the rule.sourceIpAddress value
+          if (searchDto.sourceIpLookup === rule.sourceIpAddress) {
+            checkList.sourceInRange = true;
+          }
           // see if the sourceIpAddress is a subnet
           const split = rule.sourceIpAddress.split('/');
 
@@ -178,11 +311,11 @@ export class FirewallRulePacketTracerComponent implements OnInit {
           }
 
           // if sourceIpAddress is an IP and not a subnet, just check for a complete match
-          else {
-            if (searchDto.sourceIpLookup === rule.sourceIpAddress) {
-              checkList.sourceInRange = true;
-            }
-          }
+          // else {
+          //   if (searchDto.sourceIpLookup === rule.sourceIpAddress) {
+          //     checkList.sourceInRange = true;
+          //   }
+          // }
         }
 
         // if rule source is network object
