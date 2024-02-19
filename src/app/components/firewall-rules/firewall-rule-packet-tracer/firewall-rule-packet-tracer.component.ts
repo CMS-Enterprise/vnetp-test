@@ -352,7 +352,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
               // see if networkObjectIP is a subnet
               if (split.length > 1) {
-                // both searchValue and sourceNetworkObjectValue are subnets, so we need to loop through each one and see if there is any overlap
+                // both searchValue and sourceNetworkObjectValue are subnets,
+                // so we need to loop through each one and see if there is any overlap
 
                 // loop through each ipAddress in the searchSubnet and use those IPs for further evaluation
                 for (let i = 0; i < baseSearchSubnetInfo.size; i++) {
