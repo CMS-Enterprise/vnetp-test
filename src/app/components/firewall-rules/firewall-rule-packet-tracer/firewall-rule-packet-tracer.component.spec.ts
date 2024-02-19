@@ -160,17 +160,17 @@ describe('FirewallRulesPacketTracerComponent', () => {
       enabled: true,
     });
 
-    jest.spyOn(netObjService, 'getOneNetworkObject').mockImplementation(() => {
-      return of({
+    jest.spyOn(netObjService, 'getOneNetworkObject').mockImplementation(() =>
+      of({
         name: 'net-obj-ip1',
         type: 'IpAddress',
         ipAddress: '192.168.0.25',
         id: '1',
-      } as any);
-    });
+      } as any),
+    );
 
-    jest.spyOn(netObjGroupService, 'getOneNetworkObjectGroup').mockImplementation(() => {
-      return of({
+    jest.spyOn(netObjGroupService, 'getOneNetworkObjectGroup').mockImplementation(() =>
+      of({
         name: 'net-obj-group1',
         id: '1',
         networkObjects: [
@@ -181,8 +181,8 @@ describe('FirewallRulesPacketTracerComponent', () => {
             id: '1',
           },
         ],
-      } as any);
-    });
+      } as any),
+    );
 
     await component.search();
     const matchingRules = component.rulesHit;

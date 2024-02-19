@@ -226,7 +226,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
               // see if networkObjectIP is a subnet
               if (split.length > 1) {
-                // both searchValue and sourceNetworkObjectValue are subnets, so we need to loop through each one and see if there is any overlap
+                // both searchValue and sourceNetworkObjectValue are subnets,
+                // so we need to loop through each one and see if there is any overlap
 
                 // loop through each ipAddress in the searchSubnet and use those IPs for further evaluation
                 for (let i = 0; i < baseSearchSubnetInfo.size; i++) {
@@ -288,6 +289,131 @@ export class FirewallRulePacketTracerComponent implements OnInit {
                 console.log('searchIpNum-netObjRange', searchIpNum);
                 if (startIpNum <= searchIpNum && endIpNum >= searchIpNum) {
                   checkList.sourceInRange = true;
+                }
+              }
+            }
+          }
+        }
+
+        // if search value is a subnet
+        if (searchDto.destIpLookup.split('/').length > 1) {
+          const baseSearchSubnetInfo = this.calculateSubnet('192.168.0.1', searchDto.destIpLookup);
+          // if rule sourceType is IpAddress
+          if (rule.destinationAddressType === 'IpAddress') {
+            // see if the sourceIpAddress is a subnet
+            const split = rule.destinationIpAddress.split('/');
+
+            // if it is a subnet, calculate the range and see if there is any overlap with searchSubnetInfo
+            if (split.length > 1) {
+              // both searchValue and sourceIpValue are subnets, so we need to loop through and see if there is any overlap
+
+              // loop through each ipAddress in the searchSubnet and use those IPs for further evaluation
+              for (let i = 0; i < baseSearchSubnetInfo.size; i++) {
+                // get startIp of searchSubnet
+                const startIp = baseSearchSubnetInfo.startIpStr;
+
+                // convert startIp to array
+                const startIpBreakUp = startIp.split('.');
+
+                // replace last value in array with "i"
+                startIpBreakUp.splice(-1, 1, i);
+
+                // convert array to string
+                const newIp = startIpBreakUp.toString();
+
+                // replace commas with dots to get back to ipAddress form
+                const fixedString = newIp.replaceAll(',', '.');
+
+                // calculate if this ipAddress (in the searchSubnet) falls within the sourceIpSubnet
+                const destSubnetInfo = this.calculateSubnet(fixedString, rule.destinationIpAddress);
+
+                // if so, this sourceSubnet is in range of the searchSubnet
+                if (destSubnetInfo.inRange) {
+                  checkList.destInRange = true;
+                }
+              }
+            }
+
+            // else if sourceIp is NOT a subnet but just a staticIP...
+            else {
+              // calculate if this ipAddress (the sourceIpAddress) falls within the searchSubnet
+              const searchSubnetInfo = this.calculateSubnet(rule.destinationIpAddress, searchDto.destIpLookup);
+              if (searchSubnetInfo.inRange) {
+                checkList.destInRange = true;
+              }
+            }
+          } else if (rule.destinationAddressType === 'NetworkObject') {
+            const destNetworkObject = await this.getNetworkObjectInfo(rule.destinationNetworkObjectId);
+            // if networkObject is an IP/Subnet
+            if (destNetworkObject.type === 'IpAddress') {
+              // get networkObjectIP
+              const ruleSourceIp = destNetworkObject.ipAddress;
+              const split = ruleSourceIp.split('/');
+
+              // see if networkObjectIP is a subnet
+              if (split.length > 1) {
+                // both searchValue and sourceNetworkObjectValue are subnets, so we need to loop through each one and see if there is any overlap
+
+                // loop through each ipAddress in the searchSubnet and use those IPs for further evaluation
+                for (let i = 0; i < baseSearchSubnetInfo.size; i++) {
+                  const startIp = baseSearchSubnetInfo.startIpStr;
+
+                  // convert startIp to array
+                  const startIpBreakUp = startIp.split('.');
+
+                  // replace last value in array with "i"
+                  startIpBreakUp.splice(-1, 1, i);
+                  const newIp = startIpBreakUp.toString();
+                  const fixedString = newIp.replaceAll(',', '.');
+                  const destSubnetInfo = this.calculateSubnet(fixedString, ruleSourceIp);
+
+                  console.log('destSubnetInfo-netobj', destSubnetInfo);
+                  console.log('rule', rule);
+
+                  if (destSubnetInfo.inRange) {
+                    checkList.destInRange = true;
+                  }
+                }
+              } else {
+                const searchSubnetInfo = this.calculateSubnet(ruleSourceIp, searchDto.destIpLookup);
+                console.log('searchSubnetInfo-netObjStaticIp', searchSubnetInfo);
+                if (searchSubnetInfo.inRange) {
+                  checkList.destInRange = true;
+                }
+              }
+            }
+
+            // if networkObject is a range of IPs
+            else if (destNetworkObject.type === 'Range') {
+              for (let i = 0; i < baseSearchSubnetInfo.size; i++) {
+                const startIp = baseSearchSubnetInfo.startIpStr;
+
+                // convert startIp to array
+                const startIpBreakUp = startIp.split('.');
+
+                // replace last value in array with "i"
+                startIpBreakUp.splice(-1, 1, i);
+                // console.log('startIpBreakUp', startIpBreakUp)
+                const newIp = startIpBreakUp.toString();
+                // console.log('newIp', newIp)
+                const fixedString = newIp.replaceAll(',', '.');
+
+                // convert startIp (of sourceNetworkObject) to num
+                const startIpNum = this.dot2num(destNetworkObject.startIpAddress);
+
+                // convert endIp (of sourceNetworkObject) to num
+                const endIpNum = this.dot2num(destNetworkObject.endIpAddress);
+
+                // convert searchIp (of this ip within the searchSubnet) to num
+                const searchIpNum = this.dot2num(fixedString);
+
+                // if the searchIpNum falls in between the startIpNum and endIpNum
+                // we know it is within the range provided
+                console.log('startIpNum-netObjRange', startIpNum);
+                console.log('endIpNum-netObjRange', endIpNum);
+                console.log('searchIpNum-netObjRange', searchIpNum);
+                if (startIpNum <= searchIpNum && endIpNum >= searchIpNum) {
+                  checkList.destInRange = true;
                 }
               }
             }
