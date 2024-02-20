@@ -71,7 +71,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
 
   natRuleModalSubscription: Subscription;
   packetTracerSubscription: Subscription;
-  packetTracerObjects = { networkObjects: [], networkObjectGroups: [], serviceObjects: [], natRules: [] };
+  packetTracerObjects = { natRules: [] as NatRule[] };
 
   TierId: string;
   NatRuleGroup: NatRuleGroup;
@@ -263,9 +263,6 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       this.serviceObjects = result[3].data;
       this.zones = result[4].data;
 
-      this.packetTracerObjects.networkObjects = this.networkObjects;
-      this.packetTracerObjects.networkObjectGroups = this.networkObjectGroups;
-      this.packetTracerObjects.serviceObjects = this.serviceObjects;
       this.getNatRules();
     });
   }
@@ -449,13 +446,11 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
 
   getAllRules() {
     this.natRuleService
-      .getManyNatRule({
-        filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],
-        limit: 50000,
-        sort: ['ruleIndex,ASC'],
+      .getNatRulesNatRule({
+        id: this.NatRuleGroup.id,
       })
       .subscribe(response => {
-        this.packetTracerObjects.natRules = response as any;
+        this.packetTracerObjects.natRules = response;
       });
   }
   getZoneNames(zones: any[]): string {

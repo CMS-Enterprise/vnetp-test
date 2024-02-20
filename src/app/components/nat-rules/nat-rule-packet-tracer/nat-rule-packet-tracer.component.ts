@@ -168,7 +168,7 @@ export class NatRulePacketTracerComponent implements OnInit {
 
         // if rule source is network object
         if (rule.originalSourceAddressType === 'NetworkObject') {
-          const originalSourceNetworkObject = await this.getNetworkObjectInfo(rule.originalSourceNetworkObjectId);
+          const originalSourceNetworkObject = rule.originalSourceNetworkObject;
           // if networkObject is an IP/Subnet
           if (originalSourceNetworkObject.type === 'IpAddress') {
             // get networkObjectIP
@@ -207,7 +207,7 @@ export class NatRulePacketTracerComponent implements OnInit {
             }
           }
         } else if (rule.originalSourceAddressType === 'NetworkObjectGroup') {
-          const originalSourceNetworkObjectGroup = await this.getNetworkObjectGroupInfo(rule.originalSourceNetworkObjectGroupId);
+          const originalSourceNetworkObjectGroup = rule.originalSourceNetworkObjectGroup;
           const networkObjectMembers = originalSourceNetworkObjectGroup.networkObjects;
           networkObjectMembers.map(originalSourceMember => {
             if (originalSourceMember.type === 'IpAddress') {
@@ -250,7 +250,7 @@ export class NatRulePacketTracerComponent implements OnInit {
         }
         // if rule destination is a network object
         if (rule.originalDestinationAddressType === 'NetworkObject') {
-          const originalDestNetworkObject = await this.getNetworkObjectInfo(rule.originalDestinationNetworkObjectId);
+          const originalDestNetworkObject = rule.originalDestinationNetworkObject;
           // if destNetworkObject is an IP/subnet
           if (originalDestNetworkObject.type === 'IpAddress') {
             const ruleDestIp = originalDestNetworkObject.ipAddress;
@@ -288,8 +288,8 @@ export class NatRulePacketTracerComponent implements OnInit {
           }
         }
         if (rule.originalDestinationAddressType === 'NetworkObjectGroup') {
-          const origianlDestNetworkObjectGroup = await this.getNetworkObjectGroupInfo(rule.originalDestinationNetworkObjectGroupId);
-          const networkObjectMembers = origianlDestNetworkObjectGroup.networkObjects;
+          const originalDestinationNetworkObjectGroup = rule.originalDestinationNetworkObjectGroup;
+          const networkObjectMembers = originalDestinationNetworkObjectGroup.networkObjects;
           networkObjectMembers.map(originalDestMember => {
             if (originalDestMember.type === 'IpAddress') {
               // get networkObjectIP
@@ -331,7 +331,7 @@ export class NatRulePacketTracerComponent implements OnInit {
         }
 
         if (rule.translatedSourceAddressType === 'NetworkObject') {
-          const translatedSourceNetworkObject = await this.getNetworkObjectInfo(rule.translatedSourceNetworkObjectId);
+          const translatedSourceNetworkObject = rule.translatedSourceNetworkObject;
           // if networkObject is an IP/Subnet
           if (translatedSourceNetworkObject.type === 'IpAddress') {
             // get networkObjectIP
@@ -372,8 +372,8 @@ export class NatRulePacketTracerComponent implements OnInit {
         }
 
         if (rule.translatedSourceAddressType === 'NetworkObjectGroup') {
-          const translatedSouceNetworkObjectGroup = await this.getNetworkObjectGroupInfo(rule.translatedSourceNetworkObjectGroupId);
-          const networkObjectMembers = translatedSouceNetworkObjectGroup.networkObjects;
+          const translatedSourceNetworkObjectGroup = rule.translatedSourceNetworkObjectGroup;
+          const networkObjectMembers = translatedSourceNetworkObjectGroup.networkObjects;
           networkObjectMembers.map(translatedSourceMember => {
             if (translatedSourceMember.type === 'IpAddress') {
               // get networkObjectIP
@@ -414,7 +414,7 @@ export class NatRulePacketTracerComponent implements OnInit {
           });
         }
         if (rule.translatedDestinationAddressType === 'NetworkObject') {
-          const translatedDestinationNetworkObject = await this.getNetworkObjectInfo(rule.translatedDestinationNetworkObjectId);
+          const translatedDestinationNetworkObject = rule.translatedDestinationNetworkObject;
           // if networkObject is an IP/Subnet
           if (translatedDestinationNetworkObject.type === 'IpAddress') {
             // get networkObjectIP
@@ -455,10 +455,8 @@ export class NatRulePacketTracerComponent implements OnInit {
         }
 
         if (rule.translatedDestinationAddressType === 'NetworkObjectGroup') {
-          const translatedDestinatioNetworkObjectGroup = await this.getNetworkObjectGroupInfo(
-            rule.translatedDestinationNetworkObjectGroupId,
-          );
-          const networkObjectMembers = translatedDestinatioNetworkObjectGroup.networkObjects;
+          const translatedDestinationNetworkObjectGroup = rule.translatedDestinationNetworkObjectGroup;
+          const networkObjectMembers = translatedDestinationNetworkObjectGroup.networkObjects;
           networkObjectMembers.map(translatedDestMember => {
             if (translatedDestMember.type === 'IpAddress') {
               // get networkObjectIP
@@ -511,14 +509,14 @@ export class NatRulePacketTracerComponent implements OnInit {
         }
 
         if (rule.originalServiceType === 'ServiceObject') {
-          const originalServiceObject = await this.getServiceObjectInfo(rule.originalServiceObjectId);
+          const originalServiceObject = rule.originalServiceObject;
           if (originalServiceObject.sourcePorts === searchDto.originalPortLookup) {
             checkList.originalPortMatch = true;
           }
         }
 
         if (rule.translatedServiceType === 'ServiceObject') {
-          const translatedServiceObject = await this.getServiceObjectInfo(rule.translatedServiceObjectId);
+          const translatedServiceObject = rule.translatedServiceObject;
           if (translatedServiceObject.sourcePorts === searchDto.translatedPortLookup) {
             checkList.translatedPortMatch = true;
           }
@@ -566,18 +564,6 @@ export class NatRulePacketTracerComponent implements OnInit {
 
   get f() {
     return this.form.controls;
-  }
-
-  async getServiceObjectInfo(serviceObjectId) {
-    return this.serviceObjectService.getOneServiceObject({ id: serviceObjectId }).toPromise();
-  }
-
-  async getNetworkObjectInfo(networkObjectId) {
-    return this.networkObjectService.getOneNetworkObject({ id: networkObjectId }).toPromise();
-  }
-
-  async getNetworkObjectGroupInfo(networkObjectGroupId) {
-    return this.networkObjectGroupService.getOneNetworkObjectGroup({ id: networkObjectGroupId, join: ['networkObjects'] }).toPromise();
   }
 
   private buildForm(): void {
