@@ -1,9 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   MockFontAwesomeComponent,
   MockTooltipComponent,
   MockIconButtonComponent,
-  MockComponent,
   MockNgxSmartModalComponent,
 } from 'src/test/mock-components';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,15 +16,11 @@ import {
   V1NetworkSecurityNetworkObjectGroupsService,
   V1NetworkSecurityServiceObjectsService,
 } from 'client';
-import { of } from 'rxjs';
 import { NatRulePacketTracerComponent } from './nat-rule-packet-tracer.component';
 
 describe('NatRulesPacketTracerComponent', () => {
   let component: NatRulePacketTracerComponent;
   let fixture: ComponentFixture<NatRulePacketTracerComponent>;
-  let netObjService: V1NetworkSecurityNetworkObjectsService;
-  let netObjGroupService: V1NetworkSecurityNetworkObjectGroupsService;
-  let serviceObjectService: V1NetworkSecurityServiceObjectsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -63,11 +58,47 @@ describe('NatRulesPacketTracerComponent', () => {
         originalServiceType: 'ServiceObject',
         translatedServiceType: 'ServiceObject',
         originalSourceNetworkObjectId: '1',
+        originalSourceNetworkObject: {
+          name: 'net-obj-ip1',
+          type: 'IpAddress',
+          ipAddress: '192.168.0.25',
+          id: '1',
+        },
         translatedSourceNetworkObjectId: '1',
+        translatedSourceNetworkObject: {
+          name: 'net-obj-ip1',
+          type: 'IpAddress',
+          ipAddress: '192.168.0.25',
+          id: '1',
+        },
         originalDestinationNetworkObjectId: '1',
+        originalDestinationNetworkObject: {
+          name: 'net-obj-ip1',
+          type: 'IpAddress',
+          ipAddress: '192.168.0.25',
+          id: '1',
+        },
         translatedDestinationNetworkObjectId: '1',
+        translatedDestinationNetworkObject: {
+          name: 'net-obj-ip1',
+          type: 'IpAddress',
+          ipAddress: '192.168.0.25',
+          id: '1',
+        },
         originalServiceObjectId: '1',
+        originalServiceObject: {
+          name: 'ser-obj1',
+          type: 'TCP',
+          sourcePorts: '2',
+          destinationPorts: '2',
+        },
         translatedServiceObjectId: '1',
+        translatedServiceObject: {
+          name: 'ser-obj1',
+          type: 'TCP',
+          sourcePorts: '2',
+          destinationPorts: '2',
+        },
       },
       {
         id: 2,
@@ -85,11 +116,47 @@ describe('NatRulesPacketTracerComponent', () => {
         originalServiceType: 'ServiceObject',
         translatedServiceType: 'ServiceObject',
         originalSourceNetworkObjectId: '1',
+        originalSourceNetworkObject: {
+          name: 'net-obj-ip1',
+          type: 'IpAddress',
+          ipAddress: '192.168.0.25',
+          id: '1',
+        },
         translatedSourceNetworkObjectId: '1',
+        translatedSourceNetworkObject: {
+          name: 'net-obj-ip1',
+          type: 'IpAddress',
+          ipAddress: '192.168.0.25',
+          id: '1',
+        },
         originalDestinationNetworkObjectId: '1',
+        originalDestinationNetworkObject: {
+          name: 'net-obj-ip1',
+          type: 'IpAddress',
+          ipAddress: '192.168.0.25',
+          id: '1',
+        },
         translatedDestinationNetworkObjectId: '1',
+        translatedDestinationNetworkObject: {
+          name: 'net-obj-ip1',
+          type: 'IpAddress',
+          ipAddress: '192.168.0.25',
+          id: '1',
+        },
         originalServiceObjectId: '1',
+        originalServiceObject: {
+          name: 'ser-obj1',
+          type: 'TCP',
+          sourcePorts: '2',
+          destinationPorts: '2',
+        },
         translatedServiceObjectId: '1',
+        translatedServiceObject: {
+          name: 'ser-obj1',
+          type: 'TCP',
+          sourcePorts: '2',
+          destinationPorts: '2',
+        },
       },
       {
         id: 3,
@@ -107,20 +174,77 @@ describe('NatRulesPacketTracerComponent', () => {
         originalServiceType: 'ServiceObject',
         translatedServiceType: 'ServiceObject',
         originalSourceNetworkObjectGroupId: '1',
+        originalSourceNetworkObjectGroup: {
+          name: 'net-obj-group1',
+          id: '1',
+          networkObjects: [
+            {
+              name: 'net-obj-ip1',
+              type: 'IpAddress',
+              ipAddress: '192.168.0.25',
+              id: '1',
+            },
+          ],
+        },
         translatedSourceNetworkObjectGroupId: '1',
+        translatedSourceNetworkObjectGroup: {
+          name: 'net-obj-group1',
+          id: '1',
+          networkObjects: [
+            {
+              name: 'net-obj-ip1',
+              type: 'IpAddress',
+              ipAddress: '192.168.0.25',
+              id: '1',
+            },
+          ],
+        },
         originalDestinationNetworkObjectGroupId: '1',
+        originalDestinationNetworkObjectGroup: {
+          name: 'net-obj-group1',
+          id: '1',
+          networkObjects: [
+            {
+              name: 'net-obj-ip1',
+              type: 'IpAddress',
+              ipAddress: '192.168.0.25',
+              id: '1',
+            },
+          ],
+        },
         translatedDestinationNetworkObjectGroupId: '1',
+        translatedDestinationNetworkObjectGroup: {
+          name: 'net-obj-group1',
+          id: '1',
+          networkObjects: [
+            {
+              name: 'net-obj-ip1',
+              type: 'IpAddress',
+              ipAddress: '192.168.0.25',
+              id: '1',
+            },
+          ],
+        },
         originalServiceObjectId: '1',
+        originalServiceObject: {
+          name: 'ser-obj1',
+          type: 'TCP',
+          sourcePorts: '2',
+          destinationPorts: '2',
+        },
         translatedServiceObjectId: '1',
+        translatedServiceObject: {
+          name: 'ser-obj1',
+          type: 'TCP',
+          sourcePorts: '2',
+          destinationPorts: '2',
+        },
       },
     ];
 
     fixture = TestBed.createComponent(NatRulePacketTracerComponent);
     component = fixture.componentInstance;
     component.objects = { natRules };
-    netObjService = TestBed.inject(V1NetworkSecurityNetworkObjectsService);
-    netObjGroupService = TestBed.inject(V1NetworkSecurityNetworkObjectGroupsService);
-    serviceObjectService = TestBed.inject(V1NetworkSecurityServiceObjectsService);
     fixture.detectChanges();
   });
 
@@ -133,7 +257,6 @@ describe('NatRulesPacketTracerComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-    // console.log('component', component)
   });
 
   it('should have these required by default', () => {
@@ -160,60 +283,8 @@ describe('NatRulesPacketTracerComponent', () => {
       enabled: true,
     });
 
-    jest.spyOn(netObjService, 'getOneNetworkObject').mockImplementation(() =>
-      of({
-        name: 'net-obj-ip1',
-        type: 'IpAddress',
-        ipAddress: '192.168.0.25',
-        id: '1',
-      } as any),
-    );
-
-    jest.spyOn(netObjGroupService, 'getOneNetworkObjectGroup').mockImplementation(() =>
-      of({
-        name: 'net-obj-group1',
-        id: '1',
-        networkObjects: [
-          {
-            name: 'net-obj-ip1',
-            type: 'IpAddress',
-            ipAddress: '192.168.0.25',
-            id: '1',
-          },
-        ],
-      } as any),
-    );
-
-    jest.spyOn(serviceObjectService, 'getOneServiceObject').mockImplementation(() =>
-      of({
-        name: 'ser-obj1',
-        type: 'TCP',
-        sourcePorts: '2',
-        destinationPorts: '2',
-      } as any),
-    );
-
     await component.search();
     const matchingRules = component.rulesHit;
-    const partialMatches = component.partialMatches;
     expect(matchingRules).toEqual(['nat-rule1', 'nat-rule2', 'nat-rule3']);
-    // expect(partialMatches).toEqual([
-    //   {
-    //     checkList: {
-    //       originalSourceInRange: true,
-    //       originalDestInRange: true,
-    //       directionMatch: true,
-    //       biDirectionalMatch: true,
-
-    //       translatedSourceInRange: true,
-    //       translatedDestInRange: true,
-
-    //       originalPortMatch: true,
-    //       translatedPortMatch: true,
-
-    //     },
-    //     name: 'fw-rule4',
-    //   },
-    // ]);
   });
 });

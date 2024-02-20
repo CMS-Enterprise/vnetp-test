@@ -2,12 +2,6 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  V1NetworkSecurityNetworkObjectGroupsService,
-  V1NetworkSecurityNetworkObjectsService,
-  V1NetworkSecurityServiceObjectGroupsService,
-  V1NetworkSecurityServiceObjectsService,
-} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
@@ -28,14 +22,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   showPartials = false;
   doneSearching = false;
   protocolSubscription: Subscription;
-  constructor(
-    private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
-    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
-    private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
-    private serviceObjectService: V1NetworkSecurityServiceObjectsService,
-    private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
-  ) {}
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.buildForm();

@@ -462,7 +462,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   subscribeToPacketTracer() {
     this.packetTracerSubscription = this.ngx.getModal('firewallRulePacketTracer').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('firewallRulePacketTracer');
-      this.getFirewallRuleGroup();
       this.packetTracerSubscription.unsubscribe();
     });
   }

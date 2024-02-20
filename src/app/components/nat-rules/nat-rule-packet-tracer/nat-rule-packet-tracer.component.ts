@@ -1,11 +1,6 @@
 /* tslint:disable */
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  V1NetworkSecurityNetworkObjectGroupsService,
-  V1NetworkSecurityNetworkObjectsService,
-  V1NetworkSecurityServiceObjectsService,
-} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
@@ -25,13 +20,7 @@ export class NatRulePacketTracerComponent implements OnInit {
   partialMatches = [];
   showPartials = false;
   protocolSubscription: Subscription;
-  constructor(
-    private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
-    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
-    private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
-    private serviceObjectService: V1NetworkSecurityServiceObjectsService,
-  ) {}
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.buildForm();
