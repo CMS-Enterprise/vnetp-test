@@ -447,6 +447,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
         // if rule source is network object
         else if (rule.sourceAddressType === 'NetworkObject') {
+          console.log('rule', rule);
           const sourceNetworkObject = rule.sourceNetworkObject;
           // if networkObject is an IP/Subnet
           if (sourceNetworkObject.type === 'IpAddress') {

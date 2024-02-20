@@ -98,6 +98,12 @@ describe('FirewallRulesPacketTracerComponent', () => {
         destinationAddressType: 'IpAddress',
         serviceType: 'Port',
         sourceNetworkObjectId: '1',
+        sourceNetworkObject: {
+          id: '1',
+          type: 'IpAddress',
+          ipAddress: '192.168.0.25',
+          name: 'static-ip-net-obj',
+        },
         destinationIpAddress: '10.0.0.0/10',
         sourcePorts: '2',
         destinationPorts: '5',
@@ -116,6 +122,18 @@ describe('FirewallRulesPacketTracerComponent', () => {
         destinationAddressType: 'IpAddress',
         serviceType: 'Port',
         sourceNetworkObjectGroupId: '1',
+        sourceNetworkObjectGroup: {
+          name: 'net-obj-group1',
+          id: '1',
+          networkObjects: [
+            {
+              name: 'net-obj-ip1',
+              type: 'IpAddress',
+              ipAddress: '192.168.0.25',
+              id: '1',
+            },
+          ],
+        },
         destinationIpAddress: '10.0.0.9',
         sourcePorts: '2',
         destinationPorts: '5',
