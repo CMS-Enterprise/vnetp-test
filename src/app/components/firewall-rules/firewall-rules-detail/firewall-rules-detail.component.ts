@@ -218,13 +218,11 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
   getAllRules() {
     this.firewallRuleService
-      .getManyFirewallRule({
-        filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`],
-        limit: 50000,
-        sort: ['ruleIndex,ASC'],
+      .getFirewallRulesFirewallRule({
+        id: this.FirewallRuleGroup.id,
       })
       .subscribe(response => {
-        this.packetTracerObjects.firewallRules = response as any;
+        this.packetTracerObjects.firewallRules = response;
       });
   }
 

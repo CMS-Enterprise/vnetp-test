@@ -217,7 +217,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
               }
             }
           } else if (rule.sourceAddressType === 'NetworkObject') {
-            const sourceNetworkObject = await this.getNetworkObjectInfo(rule.sourceNetworkObjectId);
+            const sourceNetworkObject = rule.sourceNetworkObject;
             // if networkObject is an IP/Subnet
             if (sourceNetworkObject.type === 'IpAddress') {
               // get networkObjectIP
@@ -343,7 +343,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
               }
             }
           } else if (rule.destinationAddressType === 'NetworkObject') {
-            const destNetworkObject = await this.getNetworkObjectInfo(rule.destinationNetworkObjectId);
+            const destNetworkObject = rule.destinationNetworkObject;
             // if networkObject is an IP/Subnet
             if (destNetworkObject.type === 'IpAddress') {
               // get networkObjectIP
@@ -447,7 +447,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
         // if rule source is network object
         else if (rule.sourceAddressType === 'NetworkObject') {
-          const sourceNetworkObject = await this.getNetworkObjectInfo(rule.sourceNetworkObjectId);
+          const sourceNetworkObject = rule.sourceNetworkObject;
           // if networkObject is an IP/Subnet
           if (sourceNetworkObject.type === 'IpAddress') {
             // get networkObjectIP
@@ -486,7 +486,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
             }
           }
         } else if (rule.sourceAddressType === 'NetworkObjectGroup') {
-          const sourceNetworkObjectGroup = await this.getNetworkObjectGroupInfo(rule.sourceNetworkObjectGroupId);
+          const sourceNetworkObjectGroup = rule.sourceNetworkObjectGroup;
           const networkObjectMembers = sourceNetworkObjectGroup.networkObjects;
           networkObjectMembers.forEach(sourceMember => {
             if (sourceMember.type === 'IpAddress') {
@@ -550,7 +550,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
         // if rule destination is a network object
         if (rule.destinationAddressType === 'NetworkObject') {
-          const destNetworkObject = await this.getNetworkObjectInfo(rule.destinationNetworkObjectId);
+          const destNetworkObject = rule.destinationNetworkObject;
           // if destNetworkObject is an IP/subnet
           if (destNetworkObject.type === 'IpAddress') {
             const ruleDestIp = destNetworkObject.ipAddress;
@@ -588,7 +588,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
           }
         }
         if (rule.destinationAddressType === 'NetworkObjectGroup') {
-          const destNetworkObjectGroup = await this.getNetworkObjectGroupInfo(rule.destinationNetworkObjectGroupId);
+          const destNetworkObjectGroup = rule.destinationNetworkObjectGroup;
           const networkObjectMembers = destNetworkObjectGroup.networkObjects;
           networkObjectMembers.forEach(destMember => {
             if (destMember.type === 'IpAddress') {
@@ -653,7 +653,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         }
 
         if (rule.serviceType === 'ServiceObject') {
-          const serviceObject = await this.getServiceObjectInfo(rule.serviceObjectId);
+          const serviceObject = rule.serviceObject;
           if (serviceObject.sourcePorts === searchDto.sourcePortsLookup) {
             checkList.sourcePortMatch = true;
           }
@@ -663,7 +663,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         }
 
         if (rule.serviceType === 'ServiceObjectGroup') {
-          const serviceObjectGroup = await this.getServiceObjectGroupInfo(rule.serviceObjectGroupId);
+          const serviceObjectGroup = rule.serviceObjectGroup;
           serviceObjectGroup.serviceObjects.forEach(svcObj => {
             if (svcObj.sourcePorts === searchDto.sourcePortsLookup) {
               checkList.sourcePortMatch = true;
@@ -746,22 +746,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   get f() {
     return this.form.controls;
-  }
-
-  getServiceObjectInfo(serviceObjectId) {
-    return this.serviceObjectService.getOneServiceObject({ id: serviceObjectId }).toPromise();
-  }
-
-  getServiceObjectGroupInfo(serviceObjectGroupId) {
-    return this.serviceObjectGroupService.getOneServiceObjectGroup({ id: serviceObjectGroupId, join: ['serviceObjects'] }).toPromise();
-  }
-
-  getNetworkObjectInfo(networkObjectId) {
-    return this.networkObjectService.getOneNetworkObject({ id: networkObjectId }).toPromise();
-  }
-
-  getNetworkObjectGroupInfo(networkObjectGroupId) {
-    return this.networkObjectGroupService.getOneNetworkObjectGroup({ id: networkObjectGroupId, join: ['networkObjects'] }).toPromise();
   }
 
   private buildForm(): void {
