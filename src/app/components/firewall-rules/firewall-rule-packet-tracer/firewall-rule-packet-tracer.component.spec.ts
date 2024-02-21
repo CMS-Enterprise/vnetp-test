@@ -256,6 +256,22 @@ describe('FirewallRulesPacketTracerComponent', () => {
       const result = component.dot2num(ipAddress);
       expect(result).toEqual(expectedDecimal);
     });
+
+    it('should call serviceObjectPortMatch if passed a service object', () => {
+      const rule = { destinationPorts: '80', serviceType: 'ServiceObject' };
+      const control = { value: '80' } as AbstractControl;
+      const serviceObjectPortMatchSpy = jest.spyOn(component, 'serviceObjectPortMatch').mockImplementation();
+      component.handlePortMatch(rule, 'destination', control);
+      expect(serviceObjectPortMatchSpy).toBeCalled();
+    });
+
+    it('should call serviceObjectGroupPortMatch if passed a service object group', () => {
+      const rule = { destinationPorts: '80', serviceType: 'ServiceObjectGroup' };
+      const control = { value: '80' } as AbstractControl;
+      const serviceObjectGroupPortMatchSpy = jest.spyOn(component, 'serviceObjectGroupPortMatch').mockImplementation();
+      component.handlePortMatch(rule, 'destination', control);
+      expect(serviceObjectGroupPortMatchSpy).toBeCalled();
+    });
   });
 
   describe('applyFilter', () => {
@@ -398,6 +414,190 @@ describe('FirewallRulesPacketTracerComponent', () => {
       const rule = { sourceIpAddress: '192.168.1.0/24' }; // Example rule
       const control = { value: '10.0.0.0' } as AbstractControl;
       const result = component.ipLookup(rule, 'source', control);
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('networkObjectLookup', () => {
+    let mockNetmask: any;
+
+    beforeEach(() => {
+      mockNetmask = {
+        // Mock the 'contains' method
+        contains: jest.fn(),
+      };
+
+      // Replace Netmask with our mock
+      jest.mock('netmask', () => jest.fn().mockImplementation(() => mockNetmask));
+    });
+
+    it('should handle Network Object type "IpAddress"', () => {
+      const rule = {
+        destinationNetworkObject: { type: 'IpAddress', ipAddress: '192.168.1.0/24' },
+      };
+      const control = { value: '192.168.1.100' } as AbstractControl;
+      mockNetmask.contains.mockReturnValue(true);
+
+      const result = component.networkObjectLookup(rule, 'destination', control);
+      expect(result).toBe(true);
+    });
+
+    it('should handle Network Object type "Range"', () => {
+      const rule = {
+        sourceNetworkObject: {
+          type: 'Range',
+          startIpAddress: '10.0.0.10',
+          endIpAddress: '10.0.0.20',
+        },
+      };
+      const control = { value: '10.0.0.15' } as AbstractControl;
+
+      // Assuming you need to mock/stub 'this.dot2num'
+      jest.spyOn(component, 'dot2num').mockImplementation(() => 10); // Replace 10 with appropriate logic
+
+      const result = component.networkObjectLookup(rule, 'source', control);
+      expect(result).toBe(true);
+    });
+
+    it('should return false for IP outside of Network Object Range', () => {
+      const rule = {
+        sourceNetworkObject: {
+          type: 'Range',
+          startIpAddress: '10.0.0.10',
+          endIpAddress: '10.0.0.20',
+        },
+      };
+      const control = { value: '192.168.0.5' } as AbstractControl;
+
+      const result = component.networkObjectLookup(rule, 'source', control);
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('networkObjectGroupLookup', () => {
+    let mockNetmask: any;
+
+    beforeEach(() => {
+      mockNetmask = {
+        // Mock the 'contains' method
+        contains: jest.fn(),
+      };
+
+      // Replace Netmask with our mock
+      jest.mock('netmask', () => jest.fn().mockImplementation(() => mockNetmask));
+    });
+
+    it('should return true if any member matches', () => {
+      const rule = {
+        sourceNetworkObjectGroup: {
+          networkObjects: [
+            { type: 'IpAddress', ipAddress: '10.0.0.5' }, // Non-matching member
+            { type: 'Range', startIpAddress: '192.168.1.10', endIpAddress: '192.168.1.50' }, // Matching member
+          ],
+        },
+      };
+      const control = { value: '192.168.1.20' } as AbstractControl;
+
+      const result = component.networkObjectGroupLookup(rule, 'source', control);
+      expect(result).toBe(true);
+    });
+
+    it('should return false if no members match', () => {
+      // ... set up with a Network Object Group where no members match
+      const rule = {
+        destinationNetworkObjectGroup: {
+          networkObjects: [
+            { type: 'IpAddress', ipAddress: '10.0.0.5' }, // Non-matching member
+            { type: 'Range', startIpAddress: '10.0.0.5', endIpAddress: '10.0.0.6' }, // Matching member
+          ],
+        },
+      };
+      const control = { value: '192.168.1.20' } as AbstractControl;
+      const result = component.networkObjectGroupLookup(rule, 'destination', control);
+      expect(result).toBe(false);
+    });
+
+    it('should handle errors gracefully within individual member checks', () => {
+      // Set up a member that causes an error in Netmask or dot2num
+      // ...
+      const rule = {
+        sourceNetworkObjectGroup: {
+          networkObjects: [
+            { type: 'IpAddress', ipAddress: 'not an ip' }, // Non-matching member
+            { type: 'Range', startIpAddress: '10.0.0.5', endIpAddress: '10.0.0.6' }, // Matching member
+          ],
+        },
+      };
+      const control = { value: '192.168.1.20' } as AbstractControl;
+
+      mockNetmask.contains.mockImplementationOnce(() => {
+        throw new Error('Test Error');
+      });
+
+      const result = component.networkObjectGroupLookup(rule, 'source', control);
+      expect(result).toBe(false);
+    });
+
+    it('should return true if a member matches (IpAddress with form IP within subnet)', () => {
+      const rule = {
+        sourceNetworkObjectGroup: {
+          networkObjects: [
+            // ... other members
+            { type: 'IpAddress', ipAddress: '192.168.1.0/24' }, // Member with matching subnet
+          ],
+        },
+      };
+      const control = { value: '192.168.1.50' } as AbstractControl;
+      mockNetmask.contains.mockReturnValue(true);
+
+      const result = component.networkObjectGroupLookup(rule, 'source', control);
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('serviceObjectPortMatch', () => {
+    it('should return true for matching port values', () => {
+      const rule = {
+        serviceObject: { sourcePorts: '80' },
+      };
+      const control = { value: '80' } as AbstractControl;
+
+      const result = component.serviceObjectPortMatch(rule, 'source', control);
+      expect(result).toBe(true);
+    });
+
+    it('should return false for non-matching port values', () => {
+      const rule = {
+        serviceObject: { destinationPorts: '8080' },
+      };
+      const control = { value: '80' } as AbstractControl;
+
+      const result = component.serviceObjectPortMatch(rule, 'destination', control);
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('serviceObjectGroupPortMatch', () => {
+    it('should return true if any service object within the group matches', () => {
+      const rule = {
+        serviceObjectGroup: {
+          serviceObjects: [{ sourcePorts: '8080' }, { destinationPorts: '80' }],
+        },
+      };
+      const control = { value: '80' } as AbstractControl;
+
+      const result = component.serviceObjectGroupPortMatch(rule, 'destination', control);
+      expect(result).toBe(true);
+    });
+
+    it('should return false if no service object matches', () => {
+      const rule = {
+        serviceObjectGroup: {
+          serviceObjects: [{ sourcePorts: '8080' }],
+        },
+      };
+      const control = { value: '80' } as AbstractControl;
+      const result = component.serviceObjectGroupPortMatch(rule, 'source', control);
       expect(result).toBe(false);
     });
   });
