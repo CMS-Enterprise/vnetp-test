@@ -41,7 +41,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const clickedElement = event.target as HTMLElement; // Cast to HTMLElement
-    console.log('Event:', event);
     if (!clickedElement.closest('.dropdown')) {
       this.dropdownOpen = false;
     }
@@ -206,10 +205,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
             // If the form IP is within the rule's IP range or matches the IP
             return true;
           }
-        } catch (error) {
-          console.error('Error with IP calculations:', error);
-          // If there's an error (e.g., invalid IP or subnet), just skip this iteration
-        }
+        } catch (error) {}
       } else if (sourceMember.type === 'Range') {
         const startIpNum = this.dot2num(sourceMember.startIpAddress);
         const endIpNum = this.dot2num(sourceMember.endIpAddress);
