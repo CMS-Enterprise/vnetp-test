@@ -40,6 +40,24 @@ export function IpAddressCidrValidator(control: UntypedFormControl): { invalidIp
   return { invalidIpCidr: true };
 }
 
+export function IsIpV4NoSubnetValidator(control: UntypedFormControl): { invalidIpNoSubnet: boolean } | { invalidIp: boolean } {
+  if (!control || !control.value) {
+    return null;
+  }
+
+  if (control.value.includes('/')) {
+    return { invalidIpNoSubnet: true };
+  }
+
+  const isValid = isIP(control.value, 4);
+
+  if (isValid) {
+    return null;
+  }
+
+  return { invalidIp: true };
+}
+
 export function IpAddressIpValidator(control: UntypedFormControl): { invalidIpAddress: boolean } {
   if (!control || !control.value) {
     return null;

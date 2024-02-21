@@ -3,7 +3,7 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { IpAddressAnyValidator, ValidatePortNumber } from 'src/app/validators/network-form-validators';
+import { IsIpV4NoSubnetValidator, ValidatePortNumber } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
 
 @Component({
@@ -247,8 +247,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       direction: [''],
       protocol: [''],
       enabled: [true],
-      sourceIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
-      destinationIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
+      sourceIpAddress: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
+      destinationIpAddress: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
 
       sourcePorts: ['', ValidatePortNumber],
       destinationPorts: ['', ValidatePortNumber],
