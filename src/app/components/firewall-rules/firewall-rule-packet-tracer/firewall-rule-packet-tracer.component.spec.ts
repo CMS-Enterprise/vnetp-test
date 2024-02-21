@@ -489,13 +489,21 @@ describe('FirewallRulesPacketTracerComponent', () => {
 
     it('should return true if any member matches', () => {
       const rule = {
-        sourceNetworkObjectGroup: {
-          networkObjects: [
-            { type: 'IpAddress', ipAddress: '10.0.0.5' }, // Non-matching member
-            { type: 'Range', startIpAddress: '192.168.1.10', endIpAddress: '192.168.1.50' }, // Matching member
-          ],
-        },
+        sourceNetworkObjectGroupId: 'test-id',
       };
+
+      const networkObjectGroup = {
+        id: 'test-id',
+        networkObjects: [
+          { type: 'IpAddress', ipAddress: '10.0.0.5' }, // Non-matching member
+          { type: 'Range', startIpAddress: '192.168.1.10', endIpAddress: '192.168.1.50' }, // Matching member
+        ],
+      };
+
+      component.objects = {
+        networkObjectGroups: [networkObjectGroup],
+      };
+
       const control = { value: '192.168.1.20' } as AbstractControl;
 
       const result = component.networkObjectGroupLookup(rule, 'source', control);
@@ -505,13 +513,21 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should return false if no members match', () => {
       // ... set up with a Network Object Group where no members match
       const rule = {
-        destinationNetworkObjectGroup: {
-          networkObjects: [
-            { type: 'IpAddress', ipAddress: '10.0.0.5' }, // Non-matching member
-            { type: 'Range', startIpAddress: '10.0.0.5', endIpAddress: '10.0.0.6' }, // Matching member
-          ],
-        },
+        destinationNetworkObjectGroupId: 'test-id',
       };
+
+      const networkObjectGroup = {
+        id: 'test-id',
+        networkObjects: [
+          { type: 'IpAddress', ipAddress: '10.0.0.5' }, // Non-matching member
+          { type: 'Range', startIpAddress: '10.0.0.5', endIpAddress: '10.0.0.6' }, // Matching member
+        ],
+      };
+
+      component.objects = {
+        networkObjectGroups: [networkObjectGroup],
+      };
+
       const control = { value: '192.168.1.20' } as AbstractControl;
       const result = component.networkObjectGroupLookup(rule, 'destination', control);
       expect(result).toBe(false);
@@ -521,13 +537,21 @@ describe('FirewallRulesPacketTracerComponent', () => {
       // Set up a member that causes an error in Netmask or dot2num
       // ...
       const rule = {
-        sourceNetworkObjectGroup: {
-          networkObjects: [
-            { type: 'IpAddress', ipAddress: 'not an ip' }, // Non-matching member
-            { type: 'Range', startIpAddress: '10.0.0.5', endIpAddress: '10.0.0.6' }, // Matching member
-          ],
-        },
+        sourceNetworkObjectGroupId: 'test-id',
       };
+
+      const networkObjectGroup = {
+        id: 'test-id',
+        networkObjects: [
+          { type: 'IpAddress', ipAddress: 'not an ip' }, // Non-matching member
+          { type: 'Range', startIpAddress: '10.0.0.5', endIpAddress: '10.0.0.6' }, // Matching member
+        ],
+      };
+
+      component.objects = {
+        networkObjectGroups: [networkObjectGroup],
+      };
+
       const control = { value: '192.168.1.20' } as AbstractControl;
 
       mockNetmask.contains.mockImplementationOnce(() => {
@@ -540,13 +564,20 @@ describe('FirewallRulesPacketTracerComponent', () => {
 
     it('should return true if a member matches (IpAddress with form IP within subnet)', () => {
       const rule = {
-        sourceNetworkObjectGroup: {
-          networkObjects: [
-            // ... other members
-            { type: 'IpAddress', ipAddress: '192.168.1.0/24' }, // Member with matching subnet
-          ],
-        },
+        sourceNetworkObjectGroupId: 'test-id',
       };
+
+      const networkObjectGroup = {
+        id: 'test-id',
+        networkObjects: [
+          { type: 'IpAddress', ipAddress: '192.168.1.0/24' }, // Member with matching subnet
+        ],
+      };
+
+      component.objects = {
+        networkObjectGroups: [networkObjectGroup],
+      };
+
       const control = { value: '192.168.1.50' } as AbstractControl;
       mockNetmask.contains.mockReturnValue(true);
 
@@ -580,10 +611,21 @@ describe('FirewallRulesPacketTracerComponent', () => {
   describe('serviceObjectGroupPortMatch', () => {
     it('should return true if any service object within the group matches', () => {
       const rule = {
-        serviceObjectGroup: {
-          serviceObjects: [{ sourcePorts: '8080' }, { destinationPorts: '80' }],
-        },
+        serviceObjectGroupId: 'test-id',
       };
+
+      const serviceObjectGroup = {
+        id: 'test-id',
+        serviceObjects: [
+          { destinationPorts: '80' }, // Non-matching member
+          { destinationPorts: '8080' }, // Matching member
+        ],
+      };
+
+      component.objects = {
+        serviceObjectGroups: [serviceObjectGroup],
+      };
+
       const control = { value: '80' } as AbstractControl;
 
       const result = component.serviceObjectGroupPortMatch(rule, 'destination', control);
@@ -592,10 +634,20 @@ describe('FirewallRulesPacketTracerComponent', () => {
 
     it('should return false if no service object matches', () => {
       const rule = {
-        serviceObjectGroup: {
-          serviceObjects: [{ sourcePorts: '8080' }],
-        },
+        serviceObjectGroupId: 'test-id',
       };
+
+      const serviceObjectGroup = {
+        id: 'test-id',
+        serviceObjects: [
+          { sourcePorts: '8080' }, // Non-matching member
+        ],
+      };
+
+      component.objects = {
+        serviceObjectGroups: [serviceObjectGroup],
+      };
+
       const control = { value: '80' } as AbstractControl;
       const result = component.serviceObjectGroupPortMatch(rule, 'source', control);
       expect(result).toBe(false);
