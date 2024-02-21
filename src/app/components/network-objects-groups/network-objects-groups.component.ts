@@ -210,7 +210,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.netObjTableComponentDto.page,
         perPage: this.netObjTableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -246,7 +246,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.netObjGrpTableComponentDto.page,
         perPage: this.netObjGrpTableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {

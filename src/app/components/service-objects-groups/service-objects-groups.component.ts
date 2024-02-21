@@ -207,7 +207,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.svcObjTableComponentDto.page,
         perPage: this.svcObjTableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -245,7 +245,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.svcObjGrpTableComponentDto.page,
         perPage: this.svcObjGrpTableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {

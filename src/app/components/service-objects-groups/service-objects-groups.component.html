@@ -99,7 +99,9 @@
 
     <ng-template #groupStateTemplate let-serviceObjGroup="datum">
       <section>
-        <span>{{ serviceObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+        <span>{{ serviceObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }} 
+          {{ (serviceObjGroup.provisionedVersion !== null && serviceObjGroup.version > serviceObjGroup.provisionedVersion) ? '- Outdated' : '' }}
+        </span>
       </section>
     </ng-template>
 
