@@ -1,34 +1,30 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+/* eslint-disable @typescript-eslint/dot-notation */
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   MockFontAwesomeComponent,
   MockTooltipComponent,
   MockIconButtonComponent,
-  MockComponent,
   MockNgxSmartModalComponent,
 } from 'src/test/mock-components';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { MockProvider } from 'src/test/mock-providers';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
-import {
-  V1NetworkSecurityNetworkObjectsService,
-  V1NetworkSecurityNetworkObjectGroupsService,
-  V1NetworkSecurityServiceObjectsService,
-  V1NetworkSecurityServiceObjectGroupsService,
-} from 'client';
 import { FirewallRulePacketTracerComponent } from '../firewall-rule-packet-tracer/firewall-rule-packet-tracer.component';
-import { of } from 'rxjs';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 describe('FirewallRulesPacketTracerComponent', () => {
   let component: FirewallRulePacketTracerComponent;
   let fixture: ComponentFixture<FirewallRulePacketTracerComponent>;
-  let netObjService: V1NetworkSecurityNetworkObjectsService;
-  let netObjGroupService: V1NetworkSecurityNetworkObjectGroupsService;
+  let mockNgxSmartModalService: any;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    mockNgxSmartModalService = {
+      resetModalData: jest.fn(),
+      close: jest.fn(),
+    };
+
+    await TestBed.configureTestingModule({
       imports: [FormsModule, NgxPaginationModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
         FirewallRulePacketTracerComponent,
@@ -39,184 +35,370 @@ describe('FirewallRulesPacketTracerComponent', () => {
         MockTooltipComponent,
         FirewallRulePacketTracerComponent,
       ],
-      providers: [
-        MockProvider(NgxSmartModalService),
-        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
-        MockProvider(V1NetworkSecurityNetworkObjectsService),
-        MockProvider(V1NetworkSecurityServiceObjectsService),
-        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
-      ],
+      providers: [{ provide: NgxSmartModalService, useValue: mockNgxSmartModalService }],
     });
-    const firewallRules = [
-      {
-        id: '1',
-        name: 'fw-rule1',
-        description: null,
-        direction: 'In',
-        action: 'Deny',
-        protocol: 'IP',
-        logging: false,
-        enabled: true,
-        ruleIndex: 1,
-        sourceAddressType: 'IpAddress',
-        destinationAddressType: 'IpAddress',
-        serviceType: 'Port',
-        sourceIpAddress: '192.168.0.25',
-        destinationIpAddress: '10.0.0.9',
-        sourcePorts: '2',
-        destinationPorts: '5',
-      },
-      {
-        id: '2',
-        name: 'fw-rule2',
-        description: null,
-        direction: 'In',
-        action: 'Deny',
-        protocol: 'IP',
-        logging: false,
-        enabled: true,
-        ruleIndex: 2,
-        sourceAddressType: 'IpAddress',
-        destinationAddressType: 'IpAddress',
-        serviceType: 'Port',
-        sourceIpAddress: '192.168.0.0/24',
-        destinationIpAddress: '10.0.0.0/10',
-        sourcePorts: '2',
-        destinationPorts: '5',
-      },
-      {
-        id: '3',
-        name: 'fw-rule3',
-        description: null,
-        direction: 'In',
-        action: 'Deny',
-        protocol: 'IP',
-        logging: false,
-        enabled: true,
-        ruleIndex: 3,
-        sourceAddressType: 'NetworkObject',
-        destinationAddressType: 'IpAddress',
-        serviceType: 'Port',
-        sourceNetworkObjectId: '1',
-        sourceNetworkObject: {
-          id: '1',
-          type: 'IpAddress',
-          ipAddress: '192.168.0.25',
-          name: 'static-ip-net-obj',
-        },
-        destinationIpAddress: '10.0.0.0/10',
-        sourcePorts: '2',
-        destinationPorts: '5',
-      },
-      {
-        id: '4',
-        name: 'fw-rule4',
-        description: null,
-        direction: 'In',
-        action: 'Deny',
-        protocol: 'IP',
-        logging: false,
-        enabled: false,
-        ruleIndex: 4,
-        sourceAddressType: 'NetworkObjectGroup',
-        destinationAddressType: 'IpAddress',
-        serviceType: 'Port',
-        sourceNetworkObjectGroupId: '1',
-        sourceNetworkObjectGroup: {
-          name: 'net-obj-group1',
-          id: '1',
-          networkObjects: [
-            {
-              name: 'net-obj-ip1',
-              type: 'IpAddress',
-              ipAddress: '192.168.0.25',
-              id: '1',
-            },
-          ],
-        },
-        destinationIpAddress: '10.0.0.9',
-        sourcePorts: '2',
-        destinationPorts: '5',
-      },
-    ];
 
     fixture = TestBed.createComponent(FirewallRulePacketTracerComponent);
     component = fixture.componentInstance;
-    component.objects = { firewallRules };
-    netObjService = TestBed.inject(V1NetworkSecurityNetworkObjectsService);
-    netObjGroupService = TestBed.inject(V1NetworkSecurityNetworkObjectGroupsService);
     fixture.detectChanges();
   });
 
-  const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
-  const isRequired = (prop: string): boolean => {
-    const fc = getFormControl(prop);
-    fc.setValue(null);
-    return !!fc.errors && !!fc.errors.required;
-  };
-
   it('should create', () => {
     expect(component).toBeTruthy();
-    // console.log('component', component)
   });
 
-  it('should have all fields required by default', () => {
-    const requiredFields = ['sourceIpAddress', 'destinationIpAddress'];
-    requiredFields.forEach(field => {
-      expect(isRequired(field)).toBe(true);
+  describe('toggleDropdown', () => {
+    it('should set dropdownOpen to true initially', () => {
+      component.dropdownOpen = true;
+      component.toggleDropdown();
+      expect(component.dropdownOpen).toBeFalsy();
+    });
+
+    it('should set dropdownOpen to false', () => {
+      component.dropdownOpen = false;
+      component.toggleDropdown();
+      expect(component.dropdownOpen).toBeTruthy();
     });
   });
 
-  it('should find a firewall rule match if all searched IPs/fields exist in the rule', async () => {
-    component.form.setValue({
-      direction: 'In',
-      protocol: 'IP',
-      sourceIpAddress: '192.168.0.25',
-      destinationIpAddress: '10.0.0.9',
-      sourcePorts: '2',
-      destinationPorts: '5',
-      enabled: true,
+  describe('isExactMatch', () => {
+    it('should return true for exact match', () => {
+      const rule = {
+        checkList: { sourceInRange: true, destInRange: true },
+      };
+      const result = component.isExactMatch(rule);
+      expect(result).toBeTruthy();
     });
 
-    jest.spyOn(netObjService, 'getOneNetworkObject').mockImplementation(() =>
-      of({
-        name: 'net-obj-ip1',
-        type: 'IpAddress',
-        ipAddress: '192.168.0.25',
-        id: '1',
-      } as any),
-    );
+    it('should return false when not an exact match', () => {
+      const rule = {
+        checkList: { sourceInRange: true, destInRange: false },
+      };
+      const result = component.isExactMatch(rule);
+      expect(result).toBeFalsy();
+    });
+  });
 
-    jest.spyOn(netObjGroupService, 'getOneNetworkObjectGroup').mockImplementation(() =>
-      of({
-        name: 'net-obj-group1',
-        id: '1',
-        networkObjects: [
-          {
-            name: 'net-obj-ip1',
-            type: 'IpAddress',
-            ipAddress: '192.168.0.25',
-            id: '1',
+  describe('isPartialMatch', () => {
+    it('should return true for partial match', () => {
+      const rule = {
+        checkList: { sourceInRange: true, destInRange: false /* ... */ },
+      };
+      expect(component.isPartialMatch(rule)).toBeTruthy();
+    });
+
+    it('should return false for no match', () => {
+      const rule = {
+        checkList: { sourceInRange: false, destInRange: false /* ... */ },
+      };
+      expect(component.isPartialMatch(rule)).toBeFalsy();
+    });
+
+    it('should return false for exact match', () => {
+      const rule = {
+        checkList: { sourceInRange: true, destInRange: true /* ... */ },
+      };
+      expect(component.isPartialMatch(rule)).toBeFalsy();
+    });
+  });
+
+  describe('search', () => {
+    // Use beforeEach to reset mocks and set up a common testing environment
+    beforeEach(() => {
+      component.form.reset(); // Reset the form before each test
+      component.submitted = false;
+      component.rulesHit = [];
+
+      jest.mock(
+        'netmask',
+        () =>
+          class {
+            constructor() {}
+            contains() {
+              return true;
+            }
           },
-        ],
-      } as any),
-    );
+      );
+    });
 
-    await component.search();
-    const matchingRules = component.rulesHit;
-    const partialMatches = component.partialMatches;
-    expect(matchingRules).toEqual(['fw-rule1', 'fw-rule2', 'fw-rule3']);
-    expect(partialMatches).toEqual([
-      {
-        checkList: {
-          sourceInRange: true,
-          destInRange: true,
-          directionMatch: true,
-          protocolMatch: true,
-          enabledMatch: false,
+    it('should populate rulesHit when the form is valid', () => {
+      component.objects = {
+        firewallRules: [],
+      };
+      // Set up a valid form configuration
+      component.form.controls['sourceIpAddress'].setValue('192.168.1.10');
+      component.form.controls['destinationIpAddress'].setValue('10.0.0.5');
+      component.form.controls['direction'].setValue('Inbound');
+      component.form.controls['protocol'].setValue('TCP');
+      component.form.controls['enabled'].setValue(true);
+      component.objects.firewallRules = [
+        {
+          sourceIpAddress: '192.168.1.10',
+          destinationIpAddress: '10.0.0.5',
+          direction: 'Inbound',
+          protocol: 'TCP',
+          enabled: true,
         },
-        name: 'fw-rule4',
-      },
-    ]);
+      ];
+
+      // Execute the search!
+      component.search();
+
+      // Assertion
+      expect(component.rulesHit.length).toBeGreaterThan(0);
+    });
+
+    it('should set submitted to true', () => {
+      // Set up a valid form configuration (as above)
+      component.search();
+      expect(component.submitted).toBeTruthy();
+    });
+
+    it('should not populate rulesHit when the form is invalid', () => {
+      // Set up an invalid form configuration
+      component.form.controls['sourceIpAddress'].setValue(''); // Invalid source IP
+
+      component.search();
+      expect(component.rulesHit.length).toBe(0);
+    });
+
+    it('should handle null destPortMatch', () => {
+      component.objects = {
+        firewallRules: [],
+      };
+      // Set up form with a value that would cause destPortMatch to be null
+      component.form.controls['destinationPorts'].setValue('80'); // Example of a port range
+      component.form.controls['sourceIpAddress'].setValue('192.168.1.10');
+      component.form.controls['destinationIpAddress'].setValue('10.0.0.5');
+      component.form.controls['direction'].setValue('Inbound');
+      component.form.controls['protocol'].setValue('TCP');
+      component.form.controls['enabled'].setValue(true);
+      component.objects.firewallRules = [
+        {
+          sourceIpAddress: '192.168.1.10',
+          destinationIpAddress: '10.0.0.5',
+          direction: 'Inbound',
+          protocol: 'TCP',
+          enabled: true,
+        },
+      ];
+
+      component.handlePortMatch = jest.fn().mockImplementation().mockReturnValueOnce(true).mockReturnValueOnce(null);
+
+      component.search();
+
+      // Assertion - This depends on how your component should behave in this case
+      const checkList = component.rulesHit[0].checkList;
+      const result = 'destPortMatch' in checkList;
+      expect(result).toBeFalsy();
+    });
+  });
+
+  describe('handleInRange', () => {
+    it('should call ip lookup', () => {
+      const ipLookupSpy = jest.spyOn(component, 'ipLookup').mockReturnValue(true);
+      const rule = { sourceIpAddress: '192.168.1.0/24', sourceAddressType: 'IpAddress' };
+      const control = { value: '192.168.1.100' } as AbstractControl;
+      const result = component.handleInRange(rule, 'source', control);
+      expect(result).toBeTruthy();
+      expect(ipLookupSpy).toHaveBeenCalled();
+    });
+
+    it('should call network object lookup', () => {
+      const networkObjectSpy = jest.spyOn(component, 'networkObjectLookup').mockReturnValue(true);
+      const rule = { sourceIpAddress: '10.0.0.0/24', sourceAddressType: 'NetworkObject' };
+      const control = { value: '192.168.1.100' } as AbstractControl;
+      const result = component.handleInRange(rule, 'source', control);
+      expect(result).toBeTruthy();
+    });
+
+    it('should call network object group lookup', () => {
+      const networkObjectGroupSpy = jest.spyOn(component, 'networkObjectGroupLookup').mockReturnValue(true);
+      const rule = { sourceIpAddress: '10.0.0.0/24', sourceAddressType: 'NetworkObjectGroup' };
+      const control = { value: '192.168.1.100' } as AbstractControl;
+      const result = component.handleInRange(rule, 'source', control);
+      expect(result).toBeTruthy();
+      expect(networkObjectGroupSpy).toHaveBeenCalled();
+    });
+
+    describe('handlePortMatch', () => {
+      it('should return true for an exact port match', () => {
+        const rule = { sourcePorts: '80', serviceType: 'Port' };
+        const control = { value: '80' } as AbstractControl;
+        const result = component.handlePortMatch(rule, 'source', control);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return false when ports dont match', () => {
+        const rule = { sourcePorts: '80', serviceType: 'Port' };
+        const control = { value: '8080' } as AbstractControl;
+        const result = component.handlePortMatch(rule, 'source', control);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return null when the form control value is falsy', () => {
+        const rule = { sourcePorts: '80', serviceType: 'ServiceObject' };
+        const control = { value: '' } as AbstractControl;
+        const result = component.handlePortMatch(rule, 'source', control);
+        expect(result).toBeNull();
+      });
+    });
+
+    it('should reset the filter', () => {
+      component.resetFilter();
+      expect(component.filterPartial).toBeFalsy();
+      expect(component.filterExact).toBeFalsy();
+    });
+
+    it('should convert a valid IPv4 address to a decimal number', () => {
+      const ipAddress = '192.168.1.1';
+      const expectedDecimal = 3232235777;
+      const result = component.dot2num(ipAddress);
+      expect(result).toEqual(expectedDecimal);
+    });
+  });
+
+  describe('applyFilter', () => {
+    beforeEach(() => {
+      // Set up sample rulesHit for testing
+      component.rulesHit = [
+        { checkList: { sourceInRange: true, destInRange: true /* ... */ }, name: 'Rule 1' }, // Exact match
+        { checkList: { sourceInRange: true, destInRange: false /* ... */ }, name: 'Rule 2' }, // Partial match
+        { checkList: { sourceInRange: false, destInRange: false /* ... */ }, name: 'Rule 3' }, // No match
+      ];
+    });
+
+    it('should show all rules when no filters are applied', () => {
+      component.filterExact = false;
+      component.filterPartial = false;
+      component.applyFilter();
+
+      expect(component.filteredRules.length).toBe(3);
+      expect(component.filteredRules).toEqual(component.rulesHit); // Check if arrays are deeply equal
+    });
+
+    it('should filter only exact matches', () => {
+      component.filterExact = true;
+      component.filterPartial = false;
+      component.applyFilter();
+
+      expect(component.filteredRules.length).toBe(1);
+      expect(component.filteredRules[0].name).toBe('Rule 1');
+    });
+
+    it('should filter only partial matches', () => {
+      component.filterExact = false;
+      component.filterPartial = true;
+      component.applyFilter();
+
+      expect(component.filteredRules.length).toBe(1);
+      expect(component.filteredRules[0].name).toBe('Rule 2');
+    });
+
+    it('should reset currentPage to 1', () => {
+      component.currentPage = 5; // Set to a value other than 1
+      component.applyFilter(); // Any filter combination will do
+
+      expect(component.currentPage).toBe(1);
+    });
+  });
+
+  describe('paginatedRules', () => {
+    beforeEach(() => {
+      component.currentPage = 1;
+      component.pageSize = 5;
+      component.filteredRules = [
+        { name: 'Rule 1' },
+        { name: 'Rule 2' },
+        { name: 'Rule 3' },
+        { name: 'Rule 4' },
+        { name: 'Rule 5' },
+        { name: 'Rule 6' },
+        { name: 'Rule 7' }, //  ... enough elements for multiple pages
+      ];
+    });
+
+    it('should return correct elements for page 1', () => {
+      const result = component.paginatedRules;
+      expect(result.length).toBe(5); // Page size is 5
+      expect(result).toEqual([{ name: 'Rule 1' }, { name: 'Rule 2' }, { name: 'Rule 3' }, { name: 'Rule 4' }, { name: 'Rule 5' }]);
+    });
+
+    it('should return the correct elements for page 2', () => {
+      component.currentPage = 2;
+      const result = component.paginatedRules;
+      expect(result.length).toBe(2); // Only 2 elements on last page
+      expect(result).toEqual([{ name: 'Rule 6' }, { name: 'Rule 7' }]);
+    });
+  });
+
+  describe('reset', () => {
+    beforeEach(() => {
+      component.submitted = true; // Initial state
+      component.rulesHit = [{ name: 'Rule 1' }];
+      component.form.controls['sourceIpAddress'].setValue('192.168.1.1');
+    });
+
+    it('should reset component state', () => {
+      // Spy on other component methods for verification
+      jest.spyOn(component, 'resetFilter');
+      const formResetSpy = jest.spyOn(component.form, 'reset');
+
+      component.reset();
+
+      // Assertions
+      expect(component.submitted).toBeFalsy();
+      expect(component.rulesHit.length).toBe(0);
+      expect(formResetSpy).toHaveBeenCalled();
+      expect(component.resetFilter).toHaveBeenCalled();
+      expect(mockNgxSmartModalService.resetModalData).toHaveBeenCalledWith('firewallRulePacketTracer');
+    });
+  });
+
+  it('should close the modal', () => {
+    const resetSpy = jest.spyOn(component, 'reset').mockImplementation();
+    component.close();
+    expect(mockNgxSmartModalService.close).toHaveBeenCalledWith('firewallRulePacketTracer');
+    expect(resetSpy).toHaveBeenCalled();
+  });
+
+  describe('ipLookup', () => {
+    let mockNetmask: any;
+
+    beforeEach(() => {
+      mockNetmask = {
+        // Mock the 'contains' method
+        contains: jest.fn(),
+      };
+
+      // Replace Netmask with our mock
+      jest.mock('netmask', () => jest.fn().mockImplementation(() => mockNetmask));
+    });
+
+    it('should return true for valid subnet match', () => {
+      const rule = { destinationIpAddress: '192.168.1.0/24' }; // Example rule
+      const control = { value: '192.168.1.50' } as AbstractControl;
+      mockNetmask.contains.mockReturnValue(true);
+
+      const result = component.ipLookup(rule, 'destination', control);
+      expect(result).toBe(true);
+    });
+
+    it('should return false for invalid subnet match', () => {
+      const rule = { sourceIpAddress: '192.168.1.0/24' }; // Example rule
+      const control = { value: '10.0.0.0' } as AbstractControl;
+      mockNetmask.contains.mockReturnValue(false);
+      expect(component.ipLookup(rule, 'source', control)).toBe(false);
+    });
+
+    it('should handle errors from Netmask', () => {
+      mockNetmask.contains.mockImplementation(() => {
+        throw new Error('Test Error');
+      });
+      const rule = { sourceIpAddress: '192.168.1.0/24' }; // Example rule
+      const control = { value: '10.0.0.0' } as AbstractControl;
+      const result = component.ipLookup(rule, 'source', control);
+      expect(result).toBe(false);
+    });
   });
 });

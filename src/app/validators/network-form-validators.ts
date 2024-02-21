@@ -125,6 +125,26 @@ export function ValidatePortRange(control: UntypedFormControl): { invalidPortNum
   return null;
 }
 
+export function ValidatePortNumber(control: UntypedFormControl): { invalidPortNumber: boolean } | { portRangeNotAllowed: boolean } {
+  if (!control || !control.value) {
+    return null;
+  }
+
+  if (control.value === 'any') {
+    return null;
+  }
+
+  if (control.value.includes('-')) {
+    return { portRangeNotAllowed: true };
+  }
+
+  if (!isValidPortNumber(Number(control.value))) {
+    return { invalidPortNumber: true };
+  }
+
+  return null;
+}
+
 function isValidPortNumber(portNumber: number): boolean {
   return !Number.isNaN(portNumber) && portNumber > 0 && portNumber <= 65535;
 }

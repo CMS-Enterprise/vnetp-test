@@ -3,7 +3,7 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
+import { IpAddressAnyValidator, ValidatePortNumber } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
 
 @Component({
@@ -41,7 +41,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const clickedElement = event.target as HTMLElement; // Cast to HTMLElement
-
+    console.log('Event:', event);
     if (!clickedElement.closest('.dropdown')) {
       this.dropdownOpen = false;
     }
@@ -61,7 +61,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     } else {
       this.filteredRules = this.rulesHit.filter(rule => {
         const isExact = this.isExactMatch(rule);
-        return (this.filterExact && isExact) || (this.filterPartial && !isExact);
+        const isPartial = this.isPartialMatch(rule);
+        return (this.filterExact && isExact) || (this.filterPartial && isPartial);
       });
     }
     this.currentPage = 1;
@@ -135,12 +136,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     // Determine the appropriate port value from the rule based on the location
     const rulePortValue = location === 'source' ? rule.sourcePorts : rule.destinationPorts;
 
-    // Disallow port ranges in the form port value; return null for this invalid condition
-    if (formPortValue.includes('-')) {
-      control.setErrors({ portRangeNotAllowed: true });
-      return null;
-    }
-
     // Delegate to specific handlers based on the service type and return their results
     if (rule.serviceType === 'ServiceObject') {
       return this.serviceObjectPortMatch(rule, location, control);
@@ -162,9 +157,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       if (block.contains(formIpValue)) {
         return true; // The form IP is within the rule's IP range
       }
-    } catch (error) {
-      console.error('Error with IP calculations:', error);
-    }
+    } catch (error) {}
 
     // Fallback to exact match if needed
     return formIpValue === ruleIpValue;
@@ -182,9 +175,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         if (block.contains(formIpValue)) {
           return true; // The form IP is within the rule's IP range
         }
-      } catch (error) {
-        console.error('Error with IP calculations:', error);
-      }
+      } catch (error) {}
     }
     // Handle if networkObject is a range of IPs
     else if (ruleNetworkObject.type === 'Range') {
@@ -261,8 +252,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       sourceIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
       destinationIpAddress: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
 
-      sourcePorts: ['', ValidatePortRange],
-      destinationPorts: ['', ValidatePortRange],
+      sourcePorts: ['', ValidatePortNumber],
+      destinationPorts: ['', ValidatePortNumber],
     });
   }
 
