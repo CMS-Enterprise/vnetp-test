@@ -205,7 +205,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     });
 
     it('should call network object lookup', () => {
-      const networkObjectSpy = jest.spyOn(component, 'networkObjectLookup').mockReturnValue(true);
+      jest.spyOn(component, 'networkObjectLookup').mockReturnValue(true);
       const rule = { sourceIpAddress: '10.0.0.0/24', sourceAddressType: 'NetworkObject' };
       const control = { value: '192.168.1.100' } as AbstractControl;
       const result = component.handleInRange(rule, 'source', control);
