@@ -193,7 +193,9 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   networkObjectGroupLookup(rule, location: 'source' | 'destination', control: AbstractControl) {
     const formIpValue = control.value;
-    const ruleNetworkObjectGroup = location === 'source' ? rule.sourceNetworkObjectGroup : rule.destinationNetworkObjectGroup;
+    const ruleNetworkObjectGroupId = location === 'source' ? rule.sourceNetworkObjectGroupId : rule.destinationNetworkObjectGroupId;
+    const ruleNetworkObjectGroup = this.getNetworkObjectGroup(ruleNetworkObjectGroupId);
+
     const networkObjectMembers = ruleNetworkObjectGroup.networkObjects;
 
     return networkObjectMembers.some(sourceMember => {
@@ -228,7 +230,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   }
 
   serviceObjectGroupPortMatch(rule, location: 'source' | 'destination', control: AbstractControl): boolean {
-    const serviceObjectGroup = rule.serviceObjectGroup;
+    const serviceObjectGroup = this.getServiceObjectGroup(rule.serviceObjectGroupId);
 
     return serviceObjectGroup.serviceObjects.some(svcObj => {
       const rulePortValue = location === 'source' ? svcObj.sourcePorts : svcObj.destinationPorts;
@@ -265,5 +267,12 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   close(): void {
     this.reset();
     this.ngx.close('firewallRulePacketTracer');
+  }
+
+  getNetworkObjectGroup(id) {
+    return this.objects.networkObjectGroups.find(obj => obj.id === id);
+  }
+  getServiceObjectGroup(id) {
+    return this.objects.serviceObjectGroups.find(obj => obj.id === id);
   }
 }

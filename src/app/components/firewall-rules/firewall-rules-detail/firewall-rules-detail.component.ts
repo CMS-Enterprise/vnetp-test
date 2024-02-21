@@ -72,7 +72,11 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   serviceObjects: ServiceObject[];
   serviceObjectGroups: ServiceObjectGroup[];
   tiers: Tier[];
-  packetTracerObjects = { firewallRules: [] as FirewallRule[] };
+  packetTracerObjects = {
+    firewallRules: [] as FirewallRule[],
+    networkObjectGroups: [] as NetworkObjectGroup[],
+    serviceObjectGroups: [] as ServiceObjectGroup[],
+  };
   zones: Zone[];
 
   firewallRuleModalSubscription: Subscription;
@@ -468,10 +472,38 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   openPacketTracer() {
     this.getAllRules();
+    this.getAllNetworkObjectGroups();
+    this.getAllServiceObjectGroups();
     this.subscribeToPacketTracer();
     this.ngx.getModal('firewallRulePacketTracer').open();
   }
   getZoneNames(zones: any[]): string {
     return zones.map(zone => zone.name).join(', ');
+  }
+
+  getAllNetworkObjectGroups() {
+    this.networkObjectGroupService
+      .getManyNetworkObjectGroup({
+        filter: [`tierId||eq||${this.TierId}`],
+        join: ['networkObjects'],
+        page: 1,
+        perPage: 50000,
+      })
+      .subscribe(response => {
+        this.packetTracerObjects.networkObjectGroups = response.data;
+      });
+  }
+
+  getAllServiceObjectGroups() {
+    this.serviceObjectGroupService
+      .getManyServiceObjectGroup({
+        filter: [`tierId||eq||${this.TierId}`],
+        join: ['serviceObjects'],
+        page: 1,
+        perPage: 50000,
+      })
+      .subscribe(response => {
+        this.packetTracerObjects.serviceObjectGroups = response.data;
+      });
   }
 }
