@@ -117,6 +117,7 @@ export class AppModule {
       faUpload,
       faSearchPlus,
       faFilter,
+      faExclamationTriangle,
     );
   }
 }

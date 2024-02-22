@@ -99,6 +99,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         directionMatch: this.form.controls.direction.value === rule.direction,
         protocolMatch: this.form.controls.protocol.value === rule.protocol,
         enabledMatch: this.form.controls.enabled.value === rule.enabled,
+        // softDeleted: Boolean(rule.softDeleted),
       };
 
       if (checkList.sourcePortMatch === null || checkList.destPortMatch === null) {

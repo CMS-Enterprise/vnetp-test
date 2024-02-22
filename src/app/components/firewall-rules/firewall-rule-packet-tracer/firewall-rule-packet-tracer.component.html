@@ -43,10 +43,14 @@
           <tr *ngIf="paginatedRules && paginatedRules?.length === 0" class="text-center">
             <td [attr.colspan]="8">No Matches</td>
           </tr>
-          <tr *ngFor="let rule of paginatedRules | paginate: { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }">
+          <tr *ngFor="let rule of paginatedRules | paginate : { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }">
             <td>
-              <span>
+              <span class="d-flex">
                 {{ rule.name }}
+                <!-- <div *ngIf="rule.checkList.softDeleted">
+                  &nbsp;
+                  <fa-icon class="icon" [icon]="['fas', 'exclamation-triangle']"></fa-icon>
+                </div> -->
               </span>
             </td>
             <td>
@@ -88,7 +92,7 @@
         </tbody>
         <tfoot>
           <td [attr.colspan]="8">
-            <pagination-controls id="rulesMatch" (pageChange)="currentPage = $event;"></pagination-controls>
+            <pagination-controls id="rulesMatch" (pageChange)="currentPage = $event"></pagination-controls>
           </td>
         </tfoot>
       </table>
