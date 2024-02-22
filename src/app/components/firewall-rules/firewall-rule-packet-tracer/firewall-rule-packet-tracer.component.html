@@ -40,10 +40,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngIf="paginatedRules && paginatedRules?.length === 0" class="text-center">
+          <tr *ngIf="filteredRules && filteredRules?.length === 0" class="text-center">
             <td [attr.colspan]="8">No Matches</td>
           </tr>
-          <tr *ngFor="let rule of paginatedRules | paginate : { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }">
+          <tr *ngFor="let rule of filteredRules | paginate : { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }">
             <td>
               <span class="d-flex">
                 {{ rule.name }}

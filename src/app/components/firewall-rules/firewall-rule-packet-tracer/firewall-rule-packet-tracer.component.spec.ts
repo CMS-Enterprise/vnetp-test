@@ -318,35 +318,6 @@ describe('FirewallRulesPacketTracerComponent', () => {
     });
   });
 
-  describe('paginatedRules', () => {
-    beforeEach(() => {
-      component.currentPage = 1;
-      component.pageSize = 5;
-      component.filteredRules = [
-        { name: 'Rule 1' },
-        { name: 'Rule 2' },
-        { name: 'Rule 3' },
-        { name: 'Rule 4' },
-        { name: 'Rule 5' },
-        { name: 'Rule 6' },
-        { name: 'Rule 7' }, //  ... enough elements for multiple pages
-      ];
-    });
-
-    it('should return correct elements for page 1', () => {
-      const result = component.paginatedRules;
-      expect(result.length).toBe(5); // Page size is 5
-      expect(result).toEqual([{ name: 'Rule 1' }, { name: 'Rule 2' }, { name: 'Rule 3' }, { name: 'Rule 4' }, { name: 'Rule 5' }]);
-    });
-
-    it('should return the correct elements for page 2', () => {
-      component.currentPage = 2;
-      const result = component.paginatedRules;
-      expect(result.length).toBe(2); // Only 2 elements on last page
-      expect(result).toEqual([{ name: 'Rule 6' }, { name: 'Rule 7' }]);
-    });
-  });
-
   describe('reset', () => {
     beforeEach(() => {
       component.submitted = true; // Initial state

@@ -441,19 +441,34 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   openPacketTracer() {
-    this.getAllRules();
+    this.getAllNatRules();
     this.getAllNetworkObjectGroups();
     this.subscribeToPacketTracer();
     this.ngx.getModal('natRulePacketTracer').open();
   }
 
-  getAllRules() {
+  getAllNatRules() {
     this.natRuleService
-      .getNatRulesNatRule({
-        id: this.NatRuleGroup.id,
+      .getManyNatRule({
+        filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],
+        join: [
+          'originalSourceNetworkObject',
+          'originalSourceNetworkObjectGroup',
+          'translatedSourceNetworkObject',
+          'translatedSourceNetworkObjectGroup',
+          'originalDestinationNetworkObject',
+          'originalDestinationNetworkObjectGroup',
+          'translatedDestinationNetworkObject',
+          'translatedDestinationNetworkObjectGroup',
+          'originalServiceObject',
+          'translatedServiceObject',
+        ],
+        sort: ['ruleIndex,ASC'],
+        page: 1,
+        perPage: 50000,
       })
       .subscribe(response => {
-        this.packetTracerObjects.natRules = response;
+        this.packetTracerObjects.natRules = response.data;
       });
   }
   getZoneNames(zones: any[]): string {

@@ -8,9 +8,13 @@ import { Netmask } from 'netmask';
 @Component({
   selector: 'app-nat-rule-packet-tracer',
   templateUrl: './nat-rule-packet-tracer.component.html',
+  styleUrls: ['./nat-rule-packet-tracer.component.css'],
 })
 export class NatRulePacketTracerComponent implements OnInit {
-  @Input() objects;
+  @Input() objects = {
+    natRules: [],
+    networkObjectGroups: [],
+  };
   form: FormGroup;
   submitted: boolean;
 
@@ -44,11 +48,15 @@ export class NatRulePacketTracerComponent implements OnInit {
   }
 
   isExactMatch(rule): boolean {
-    return Object.values(rule.checkList).every(value => value === true);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { softDeleted, ...otherValues } = rule.checkList;
+    return Object.values(otherValues).every(value => value === true);
   }
 
   isPartialMatch(rule): boolean {
-    return Object.values(rule.checkList).some(value => value === true) && !this.isExactMatch(rule);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { softDeleted, ...otherValues } = rule.checkList;
+    return Object.values(otherValues).some(value => value === true) && !this.isExactMatch(rule);
   }
 
   applyFilter(): void {
@@ -69,17 +77,13 @@ export class NatRulePacketTracerComponent implements OnInit {
     this.filterPartial = false;
   }
 
-  get paginatedRules() {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    return this.filteredRules.slice(startIndex, startIndex + this.pageSize);
-  }
-
   handleInRange(
     rule,
     location: 'originalSource' | 'originalDestination' | 'translatedSource' | 'translatedDestination',
     control: AbstractControl,
   ) {
     let lookupType;
+    const formIpValue = control.value;
 
     switch (location) {
       case 'originalSource':
@@ -95,6 +99,15 @@ export class NatRulePacketTracerComponent implements OnInit {
         lookupType = rule.translatedDestinationAddressType;
         break;
     }
+
+    if (lookupType === 'None' && !formIpValue) {
+      return true;
+    }
+
+    if (lookupType === 'None') {
+      return false;
+    }
+
     if (lookupType === 'NetworkObject') {
       return this.networkObjectLookup(rule, location, control);
     } else if (lookupType === 'NetworkObjectGroup') {
@@ -205,6 +218,90 @@ export class NatRulePacketTracerComponent implements OnInit {
     return this.objects.networkObjectGroups.find(obj => obj.id === id);
   }
 
+  handleServiceObjectPortMatch(
+    rule: any, // Assuming rule is of a type that has originalServiceObject and translatedServiceObject properties
+    translation: 'original' | 'translated',
+    location: 'source' | 'destination',
+    control: AbstractControl,
+  ): boolean {
+    const formPortValue = control.value;
+
+    // Determine which service object to use based on the translation parameter
+    const serviceObject = translation === 'original' ? rule?.originalServiceObject : rule?.translatedServiceObject;
+
+    // Check if both service object and form port value are absent, return true as they match in absence
+    if (!serviceObject && !formPortValue) {
+      return true;
+    }
+
+    // If one is present but the other is not, return false
+    if (!serviceObject || !formPortValue) {
+      return false;
+    }
+
+    // Determine which port value to use based on the location parameter
+    const serviceObjectPortValue = location === 'source' ? serviceObject.sourcePorts : serviceObject.destinationPorts;
+
+    // Compare the form port value to the service object port value
+    return formPortValue === serviceObjectPortValue;
+  }
+
+  // takes an ipAddress to search for and another IP Subnet and determines if the ip to search
+  // falls within range
+  calculateSubnet(ipToSearch, ipAddress) {
+    const split = ipAddress.split('/');
+    // determine if there is a CIDR
+    const [ip, cidr] = split;
+
+    // converts all IP addresses into decimal format
+    const ipNumber = this.dot2num(ip);
+    const ipToSearchNum = this.dot2num(ipToSearch);
+
+    // sends all parameters to function that determins the range of IPs
+    return this.ipToRange(ipToSearchNum, ipNumber, cidr);
+  }
+
+  cidrSize(cidrSlash): number {
+    return Math.pow(2, 32 - cidrSlash);
+  }
+
+  // caluculates whether an IP falls within a subnet or not
+  ipToRange(ipToSearchNum, ip, cidr) {
+    const size = this.cidrSize(cidr);
+    const startIpNum = ip - (ip % size);
+    const endIpNum = startIpNum + size - 1;
+    let inRange = false;
+
+    // if ipToCheck is inbetween our startIp and endIp
+    // we know that ipToCheck falls within range
+    if (startIpNum <= ipToSearchNum && endIpNum >= ipToSearchNum) {
+      inRange = true;
+    }
+
+    // converts back to IP addresses
+    const ipToCheckStr = this.num2dot(ipToSearchNum);
+    const startIpStr = this.num2dot(startIpNum);
+    const endIpStr = this.num2dot(endIpNum);
+    return {
+      ipToCheckStr,
+      cidr,
+      size,
+      startIpStr,
+      endIpStr,
+      inRange,
+    };
+  }
+
+  // converts decimal IPs back to octect format
+  num2dot(num) {
+    let d: any = num % 256;
+    for (let i = 3; i > 0; i--) {
+      num = Math.floor(num / 256);
+      d = (num % 256) + '.' + d;
+    }
+    return d;
+  }
+
   // converts octect IPs to decimals
   dot2num(dot): number {
     const d = dot.split('.');
@@ -220,13 +317,30 @@ export class NatRulePacketTracerComponent implements OnInit {
 
     this.objects.natRules.forEach(rule => {
       const checkList = {
-        originalSourceInRange: this.handleInRange(rule, 'originalSource', this.form.controls.originalSourceIp),
-        originalDestInRange: this.handleInRange(rule, 'originalDestination', this.form.controls.originalDestinationIp),
-        translatedSourceInRange: this.handleInRange(rule, 'translatedSource', this.form.controls.translatedSourceIp),
-        translatedDestInRange: this.handleInRange(rule, 'translatedDestination', this.form.controls.translatedDestinationIp),
+        originalSourceIPInRange: this.handleInRange(rule, 'originalSource', this.form.controls.originalSourceIp),
+        originalDestIPInRange: this.handleInRange(rule, 'originalDestination', this.form.controls.originalDestinationIp),
+        translatedSourceIPInRange: this.handleInRange(rule, 'translatedSource', this.form.controls.translatedSourceIp),
+        translatedDestIPInRange: this.handleInRange(rule, 'translatedDestination', this.form.controls.translatedDestinationIp),
+
+        originalSourcePortMatch: this.handleServiceObjectPortMatch(rule, 'original', 'source', this.form.controls.originalSourcePort),
+        originalDestPortMatch: this.handleServiceObjectPortMatch(
+          rule,
+          'original',
+          'destination',
+          this.form.controls.originalDestinationPort,
+        ),
+        translatedSourcePortMatch: this.handleServiceObjectPortMatch(rule, 'translated', 'source', this.form.controls.translatedSourcePort),
+        translatedDestPortMatch: this.handleServiceObjectPortMatch(
+          rule,
+          'translated',
+          'destination',
+          this.form.controls.translatedDestinationPort,
+        ),
+
         directionMatch: this.form.controls.direction.value === rule.direction,
         biDirectionalMatch: this.form.controls.biDirectional.value === rule.biDirectional,
         enabledMatch: this.form.controls.enabled.value === rule.enabled,
+        softDeleted: Boolean(rule.deletedAt),
       };
       this.rulesHit.push({ checkList, name: rule.name });
     });
@@ -247,11 +361,13 @@ export class NatRulePacketTracerComponent implements OnInit {
 
       originalSourceIp: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
       originalDestinationIp: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
-      originalPort: ['', ValidatePortRange],
+      originalSourcePort: ['', ValidatePortRange],
+      originalDestinationPort: ['', ValidatePortRange],
 
       translatedSourceIp: ['', IpAddressAnyValidator],
       translatedDestinationIp: ['', IpAddressAnyValidator],
-      translatedPort: ['', ValidatePortRange],
+      translatedSourcePort: ['', ValidatePortRange],
+      translatedDestinationPort: ['', ValidatePortRange],
     });
   }
 
