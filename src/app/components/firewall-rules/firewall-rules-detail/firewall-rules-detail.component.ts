@@ -220,15 +220,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         },
       );
   }
-  getAllRules() {
-    this.firewallRuleService
-      .getFirewallRulesFirewallRule({
-        id: this.FirewallRuleGroup.id,
-      })
-      .subscribe(response => {
-        this.packetTracerObjects.firewallRules = response;
-      });
-  }
 
   getFirewallRuleLastIndex(): void {
     this.firewallRuleService
@@ -471,7 +462,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   openPacketTracer() {
-    this.getAllRules();
+    this.getAllFirewallRules();
     this.getAllNetworkObjectGroups();
     this.getAllServiceObjectGroups();
     this.subscribeToPacketTracer();
@@ -479,6 +470,27 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
   getZoneNames(zones: any[]): string {
     return zones.map(zone => zone.name).join(', ');
+  }
+
+  getAllFirewallRules() {
+    this.firewallRuleService
+      .getManyFirewallRule({
+        filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`],
+        sort: ['ruleIndex,ASC'],
+        join: [
+          'sourceNetworkObject',
+          'destinationNetworkObject',
+          'sourceNetworkObjectGroup',
+          'destinationNetworkObjectGroup',
+          'serviceObject',
+          'serviceObjectGroup',
+        ],
+        page: 1,
+        perPage: 50000,
+      })
+      .subscribe(response => {
+        this.packetTracerObjects.firewallRules = response.data;
+      });
   }
 
   getAllNetworkObjectGroups() {
