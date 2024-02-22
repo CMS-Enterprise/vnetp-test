@@ -44,10 +44,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngIf="paginatedRules && paginatedRules?.length === 0" class="text-center">
-            <td [attr.colspan]="8">No Matches</td>
+          <tr *ngIf="filteredRules && filteredRules?.length === 0" class="text-center">
+            <td [attr.colspan]="12">No Matches</td>
           </tr>
-          <tr *ngFor="let rule of paginatedRules | paginate: { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }">
+          <tr *ngFor="let rule of filteredRules | paginate: { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }">
             <td>
               <span>
                 {{ rule.name }}
@@ -288,13 +288,11 @@
     </div>
 
     <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="close()">
-        Cancel
-      </button>
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="close()">Cancel</button>
 
-      <button class="btn btn-success" data-dismiss="modal">
-        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
-        <span>Save</span>
+      <button class="btn btn-primary" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'search']"></fa-icon>
+        <span>Search</span>
       </button>
     </footer>
   </form>

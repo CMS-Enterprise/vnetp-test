@@ -4,11 +4,11 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
-import { NatRule, NetworkObjectGroup } from '../../../../../client';
 
 @Component({
   selector: 'app-nat-rule-packet-tracer',
   templateUrl: './nat-rule-packet-tracer.component.html',
+  styleUrls: ['./nat-rule-packet-tracer.component.css'],
 })
 export class NatRulePacketTracerComponent implements OnInit {
   @Input() objects = {
@@ -48,11 +48,15 @@ export class NatRulePacketTracerComponent implements OnInit {
   }
 
   isExactMatch(rule): boolean {
-    return Object.values(rule.checkList).every(value => value === true);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { softDeleted, ...otherValues } = rule.checkList;
+    return Object.values(otherValues).every(value => value === true);
   }
 
   isPartialMatch(rule): boolean {
-    return Object.values(rule.checkList).some(value => value === true) && !this.isExactMatch(rule);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { softDeleted, ...otherValues } = rule.checkList;
+    return Object.values(otherValues).some(value => value === true) && !this.isExactMatch(rule);
   }
 
   applyFilter(): void {
@@ -71,11 +75,6 @@ export class NatRulePacketTracerComponent implements OnInit {
   resetFilter(): void {
     this.filterExact = false;
     this.filterPartial = false;
-  }
-
-  get paginatedRules() {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    return this.filteredRules.slice(startIndex, startIndex + this.pageSize);
   }
 
   handleInRange(
@@ -347,7 +346,6 @@ export class NatRulePacketTracerComponent implements OnInit {
     });
     this.resetFilter();
     this.applyFilter();
-    console.log('Rules Hit:', this.rulesHit);
     return this.rulesHit;
   }
 
