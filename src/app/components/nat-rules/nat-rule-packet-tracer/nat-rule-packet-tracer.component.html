@@ -40,6 +40,7 @@
             <th scope="col">Translated Dest Port</th>
             <th scope="col">Direction Match</th>
             <th scope="col">biDirectional Match</th>
+            <th scope="col">Enabled Match</th>
           </tr>
         </thead>
         <tbody>
@@ -104,6 +105,11 @@
             <td>
               <span [ngStyle]="{ 'font-weight': rule.checkList.biDirectionalMatch === false ? 'bold' : 'normal' }">
                 {{ rule.checkList.biDirectionalMatch }}
+              </span>
+            </td>
+            <td>
+              <span [ngStyle]="{ 'font-weight': rule.checkList.enabledMatch === false ? 'bold' : 'normal' }">
+                {{ rule.checkList.enabledMatch }}
               </span>
             </td>
           </tr>

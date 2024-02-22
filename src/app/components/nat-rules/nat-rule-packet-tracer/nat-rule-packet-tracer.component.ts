@@ -320,10 +320,10 @@ export class NatRulePacketTracerComponent implements OnInit {
           'destination',
           this.form.controls.originalDestinationPort,
         ),
-        translatedSourcePortMatch: this.handleServiceObjectPortMatch(rule, 'original', 'source', this.form.controls.translatedSourcePort),
+        translatedSourcePortMatch: this.handleServiceObjectPortMatch(rule, 'translated', 'source', this.form.controls.translatedSourcePort),
         translatedDestPortMatch: this.handleServiceObjectPortMatch(
           rule,
-          'original',
+          'translated',
           'destination',
           this.form.controls.translatedDestinationPort,
         ),
