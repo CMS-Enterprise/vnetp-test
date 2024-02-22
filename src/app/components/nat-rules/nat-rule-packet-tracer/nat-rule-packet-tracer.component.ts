@@ -338,6 +338,7 @@ export class NatRulePacketTracerComponent implements OnInit {
     this.rulesHit = [];
     this.showPartials = false;
     this.form.reset();
+    this.resetFilter();
     this.ngx.resetModalData('natRulePacketTracer');
     this.buildForm();
   }
