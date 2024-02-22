@@ -224,6 +224,9 @@ export class NatRulePacketTracerComponent implements OnInit {
         originalDestInRange: this.handleInRange(rule, 'originalDestination', this.form.controls.originalDestinationIp),
         translatedSourceInRange: this.handleInRange(rule, 'translatedSource', this.form.controls.translatedSourceIp),
         translatedDestInRange: this.handleInRange(rule, 'translatedDestination', this.form.controls.translatedDestinationIp),
+        directionMatch: this.form.controls.direction.value === rule.direction,
+        biDirectionalMatch: this.form.controls.biDirectional.value === rule.biDirectional,
+        enabledMatch: this.form.controls.enabled.value === rule.enabled,
       };
       this.rulesHit.push({ checkList, name: rule.name });
     });
