@@ -18,13 +18,13 @@ describe('FirewallRulesPacketTracerComponent', () => {
   let fixture: ComponentFixture<FirewallRulePacketTracerComponent>;
   let mockNgxSmartModalService: any;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockNgxSmartModalService = {
       resetModalData: jest.fn(),
       close: jest.fn(),
     };
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [FormsModule, NgxPaginationModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
         FirewallRulePacketTracerComponent,
@@ -113,7 +113,6 @@ describe('FirewallRulesPacketTracerComponent', () => {
         'netmask',
         () =>
           class {
-            constructor() {}
             contains() {
               return true;
             }

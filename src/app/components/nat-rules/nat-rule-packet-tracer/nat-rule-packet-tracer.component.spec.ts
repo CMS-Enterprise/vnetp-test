@@ -524,4 +524,71 @@ describe('NatRulesPacketTracerComponent', () => {
 
     expect(controls.name).toBeInstanceOf(FormControl);
   });
+
+  describe('search', () => {
+    beforeEach(() => {
+      jest.mock(
+        'netmask',
+        () =>
+          class {
+            contains() {
+              return true;
+            }
+          },
+      );
+
+      component.form.reset();
+      component.submitted = false;
+      component.rulesHit = [];
+      component.showPartials = false;
+    });
+
+    it('should populate rulesHit when the form is valid', () => {
+      const natRules = [
+        {
+          name: 'Test NAT Rule',
+          originalSource: '192.168.1.10',
+          originalDestination: '10.0.0.5',
+          translatedSource: '172.16.1.10',
+          translatedDestination: '10.1.0.5',
+        },
+      ];
+
+      component.objects = { natRules };
+
+      // Set up a valid form configuration
+      component.form.controls['originalSourceIp'].setValue('192.168.1.10');
+      component.form.controls['originalDestinationIp'].setValue('10.0.0.5');
+      component.form.controls['translatedSourceIp'].setValue('172.16.1.10');
+      component.form.controls['translatedDestinationIp'].setValue('10.1.0.5');
+
+      // Execute the search
+      component.search();
+
+      // Assertions
+      expect(component.rulesHit.length).toBeGreaterThan(0);
+    });
+
+    it('should set submitted to true', () => {
+      // Execute the search
+      component.search();
+
+      // Verify `submitted` is true
+      expect(component.submitted).toBeTruthy();
+    });
+
+    it('should not populate rulesHit when the form is invalid', () => {
+      // Set up an invalid form configuration by not setting any values
+      component.form.controls['originalSourceIp'].setValue('');
+      component.form.controls['originalDestinationIp'].setValue('');
+      component.form.controls['translatedSourceIp'].setValue('');
+      component.form.controls['translatedDestinationIp'].setValue('');
+
+      // Execute the search
+      component.search();
+
+      // Assertions
+      expect(component.rulesHit.length).toBe(0);
+    });
+  });
 });

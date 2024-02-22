@@ -2,7 +2,6 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
 import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
 
@@ -14,13 +13,9 @@ export class NatRulePacketTracerComponent implements OnInit {
   @Input() objects;
   form: FormGroup;
   submitted: boolean;
-  modalBody;
-  modalTitle;
 
   rulesHit = [];
   filteredRules = [];
-  showPartials = false;
-  protocolSubscription: Subscription;
   currentPage = 1;
   pageSize = 10;
 
@@ -210,94 +205,18 @@ export class NatRulePacketTracerComponent implements OnInit {
     return this.objects.networkObjectGroups.find(obj => obj.id === id);
   }
 
-  serviceObjectPortMatch(rule, location: 'source' | 'destination', control: AbstractControl): boolean {
-    const serviceObjectPortValue = location === 'source' ? rule.serviceObject.sourcePorts : rule.serviceObject.destinationPorts;
-    return control.value === serviceObjectPortValue;
-  }
-
-  // takes an ipAddress to search for and another IP Subnet and determines if the ip to search
-  // falls within range
-  calculateSubnet(ipToSearch, ipAddress) {
-    const split = ipAddress.split('/');
-    // determine if there is a CIDR
-    const [ip, cidr] = split;
-
-    // converts all IP addresses into decimal format
-    const ipNumber = this.dot2num(ip);
-    const ipToSearchNum = this.dot2num(ipToSearch);
-
-    // sends all parameters to function that determins the range of IPs
-    return this.ipToRange(ipToSearchNum, ipNumber, cidr);
-  }
-
-  cidrSize(cidrSlash): number {
-    return Math.pow(2, 32 - cidrSlash);
-  }
-
-  // caluculates whether an IP falls within a subnet or not
-  ipToRange(ipToSearchNum, ip, cidr) {
-    const size = this.cidrSize(cidr);
-    const startIpNum = ip - (ip % size);
-    const endIpNum = startIpNum + size - 1;
-    let inRange = false;
-
-    // if ipToCheck is inbetween our startIp and endIp
-    // we know that ipToCheck falls within range
-    if (startIpNum <= ipToSearchNum && endIpNum >= ipToSearchNum) {
-      inRange = true;
-    }
-
-    // converts back to IP addresses
-    const ipToCheckStr = this.num2dot(ipToSearchNum);
-    const startIpStr = this.num2dot(startIpNum);
-    const endIpStr = this.num2dot(endIpNum);
-    return {
-      ipToCheckStr,
-      cidr,
-      size,
-      startIpStr,
-      endIpStr,
-      inRange,
-    };
-  }
-
-  // converts decimal IPs back to octect format
-  num2dot(num) {
-    let d: any = num % 256;
-    for (let i = 3; i > 0; i--) {
-      num = Math.floor(num / 256);
-      d = (num % 256) + '.' + d;
-    }
-    return d;
-  }
-
   // converts octect IPs to decimals
   dot2num(dot): number {
     const d = dot.split('.');
     return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3];
   }
 
-  // TO DO : IPv6 Searches
-  async search() {
+  search() {
     this.rulesHit = [];
-    this.showPartials = false;
     this.submitted = true;
     if (this.form.invalid) {
       return;
     }
-    const searchDto = {
-      directionLookup: this.form.controls.direction.value,
-      biDirectionalLookup: this.form.controls.biDirectional.value,
-      enabledLookup: this.form.controls.enabled.value,
-
-      originalSourceIpLookup: this.form.controls.originalSourceIp.value,
-      originalDestIpLookup: this.form.controls.originalDestinationIp.value,
-      originalPortLookup: this.form.controls.originalPort.value,
-
-      translatedSourceIpLookup: this.form.controls.translatedSourceIp.value,
-      translatedDestIpLookup: this.form.controls.translatedDestinationIp.value,
-      translatedPortLookup: this.form.controls.translatedPort.value,
-    };
 
     this.objects.natRules.forEach(rule => {
       const checkList = {
@@ -336,7 +255,6 @@ export class NatRulePacketTracerComponent implements OnInit {
   reset(): void {
     this.submitted = false;
     this.rulesHit = [];
-    this.showPartials = false;
     this.form.reset();
     this.resetFilter();
     this.ngx.resetModalData('natRulePacketTracer');
