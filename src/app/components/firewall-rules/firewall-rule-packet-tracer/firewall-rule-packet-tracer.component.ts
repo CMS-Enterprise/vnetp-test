@@ -12,7 +12,7 @@ import { Netmask } from 'netmask';
   styleUrls: ['./firewall-rule-packet-tracer.component.css'],
 })
 export class FirewallRulePacketTracerComponent implements OnInit {
-  @Input() objects;
+  @Input() objects; // TODO: Use Type
   form: FormGroup;
   submitted: boolean;
 
@@ -98,7 +98,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         directionMatch: this.form.controls.direction.value === rule.direction,
         protocolMatch: this.form.controls.protocol.value === rule.protocol,
         enabledMatch: this.form.controls.enabled.value === rule.enabled,
-        // softDeleted: Boolean(rule.softDeleted),
+        softDeleted: Boolean(rule.deletedAt),
       };
 
       if (checkList.sourcePortMatch === null || checkList.destPortMatch === null) {
