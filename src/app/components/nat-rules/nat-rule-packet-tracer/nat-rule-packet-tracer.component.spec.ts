@@ -513,6 +513,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
 
       component.objects = {
+        natRules: [],
         networkObjectGroups: [networkObjectGroup],
       };
 
@@ -536,6 +537,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
 
       component.objects = {
+        natRules: [],
         networkObjectGroups: [networkObjectGroup],
       };
 
@@ -560,6 +562,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
 
       component.objects = {
+        natRules: [],
         networkObjectGroups: [networkObjectGroup],
       };
 
@@ -583,6 +586,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
 
       component.objects = {
+        natRules: [],
         networkObjectGroups: [networkObjectGroup],
       };
 
@@ -607,6 +611,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
 
       component.objects = {
+        natRules: [],
         networkObjectGroups: [networkObjectGroup],
       };
 
@@ -633,6 +638,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
 
       component.objects = {
+        natRules: [],
         networkObjectGroups: [networkObjectGroup],
       };
 
@@ -640,6 +646,79 @@ describe('NatRulesPacketTracerComponent', () => {
       mockNetmask.contains.mockReturnValue(true);
 
       const result = component.networkObjectGroupLookup(rule, 'originalSource', control);
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('serviceObjectLookup', () => {
+    it('should return false no service object is present but a form port value was passed', () => {
+      const rule = {};
+
+      const control = { value: '80' } as AbstractControl;
+      const result = component.handleServiceObjectPortMatch(rule, 'original', 'source', control);
+      expect(result).toBe(false);
+    });
+
+    it('should return false if a service object is present but a form port value was not passed', () => {
+      const rule = {
+        originalServiceObject: {
+          id: 'test-id',
+          protocol: 'TCP',
+          sourcePorts: '80',
+          destinationPorts: 'any',
+        },
+      };
+
+      const control = { value: '' } as AbstractControl;
+      const result = component.handleServiceObjectPortMatch(rule, 'original', 'source', control);
+      expect(result).toBe(false);
+    });
+
+    it('should return true if no service object is present and no form port value was passed', () => {
+      const rule = {};
+
+      const control = { value: '' } as AbstractControl;
+      const result = component.handleServiceObjectPortMatch(rule, 'original', 'source', control);
+      expect(result).toBe(true);
+    });
+
+    it('should return true if original service object source port matches', () => {
+      const rule = {
+        originalServiceObject: {
+          id: 'test-id',
+          protocol: 'TCP',
+          sourcePorts: '80',
+          destinationPorts: 'any',
+        },
+      };
+
+      component.objects = {
+        natRules: [],
+        networkObjectGroups: [],
+      };
+
+      const control = { value: '80' } as AbstractControl;
+      const result = component.handleServiceObjectPortMatch(rule, 'original', 'source', control);
+      expect(result).toBe(true);
+    });
+
+    it('should return true if original service object destination port matches', () => {
+      const rule = {
+        originalServiceObject: {
+          id: 'test-id',
+          protocol: 'TCP',
+          sourcePorts: 'any',
+          destinationPorts: '80',
+        },
+      };
+
+      component.objects = {
+        natRules: [],
+        networkObjectGroups: [],
+      };
+
+      const control = { value: '80' } as AbstractControl;
+      const result = component.handleServiceObjectPortMatch(rule, 'original', 'destination', control);
       expect(result).toBe(true);
     });
   });
@@ -711,7 +790,7 @@ describe('NatRulesPacketTracerComponent', () => {
         },
       ];
 
-      component.objects = { natRules };
+      component.objects = { natRules, networkObjectGroups: [] };
 
       // Set up a valid form configuration
       component.form.controls['originalSourceIp'].setValue('192.168.1.10');
@@ -751,7 +830,7 @@ describe('NatRulesPacketTracerComponent', () => {
 
   it('should getNetworkObjectGroup on matching id', () => {
     const networkObjectGroup = { id: 'testId' };
-    component.objects = { networkObjectGroups: [networkObjectGroup] };
+    component.objects = { networkObjectGroups: [networkObjectGroup], natRules: [] };
     component.getNetworkObjectGroup('testId');
 
     expect(component.getNetworkObjectGroup('testId')).toEqual(networkObjectGroup);
