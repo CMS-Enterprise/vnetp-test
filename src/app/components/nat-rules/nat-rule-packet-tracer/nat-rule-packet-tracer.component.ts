@@ -84,6 +84,7 @@ export class NatRulePacketTracerComponent implements OnInit {
     control: AbstractControl,
   ) {
     let lookupType;
+    const formIpValue = control.value;
 
     switch (location) {
       case 'originalSource':
@@ -99,6 +100,15 @@ export class NatRulePacketTracerComponent implements OnInit {
         lookupType = rule.translatedDestinationAddressType;
         break;
     }
+
+    if (lookupType === 'None' && !formIpValue) {
+      return true;
+    }
+
+    if (lookupType === 'None') {
+      return false;
+    }
+
     if (lookupType === 'NetworkObject') {
       return this.networkObjectLookup(rule, location, control);
     } else if (lookupType === 'NetworkObjectGroup') {
@@ -349,7 +359,6 @@ export class NatRulePacketTracerComponent implements OnInit {
     this.form = this.formBuilder.group({
       direction: [''],
       biDirectional: [''],
-      protocol: [''],
       enabled: [true],
 
       originalSourceIp: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
