@@ -540,7 +540,6 @@ describe('NatRulesPacketTracerComponent', () => {
       component.form.reset();
       component.submitted = false;
       component.rulesHit = [];
-      component.showPartials = false;
     });
 
     it('should populate rulesHit when the form is valid', () => {
@@ -590,5 +589,13 @@ describe('NatRulesPacketTracerComponent', () => {
       // Assertions
       expect(component.rulesHit.length).toBe(0);
     });
+  });
+
+  it('should getNetworkObjectGroup on matching id', () => {
+    const networkObjectGroup = { id: 'testId' };
+    component.objects = { networkObjectGroups: [networkObjectGroup] };
+    component.getNetworkObjectGroup('testId');
+
+    expect(component.getNetworkObjectGroup('testId')).toEqual(networkObjectGroup);
   });
 });
