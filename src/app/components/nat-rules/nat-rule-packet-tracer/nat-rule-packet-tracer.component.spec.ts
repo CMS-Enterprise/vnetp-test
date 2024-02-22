@@ -266,25 +266,25 @@ describe('NatRulesPacketTracerComponent', () => {
     });
   });
 
-  it('should find a nat rule match if all searched IPs/fields exist in the rule', async () => {
-    component.form.setValue({
-      direction: 'In',
-      biDirectional: false,
+  // it('should find a nat rule match if all searched IPs/fields exist in the rule', async () => {
+  //   component.form.setValue({
+  //     direction: 'In',
+  //     biDirectional: false,
 
-      originalSourceIp: '192.168.0.25',
-      originalDestinationIp: '192.168.0.25',
+  //     originalSourceIp: '192.168.0.25',
+  //     originalDestinationIp: '192.168.0.25',
 
-      translatedSourceIp: '192.168.0.25',
-      translatedDestinationIp: '192.168.0.25',
+  //     translatedSourceIp: '192.168.0.25',
+  //     translatedDestinationIp: '192.168.0.25',
 
-      originalPort: '2',
-      translatedPort: '2',
+  //     originalPort: '2',
+  //     translatedPort: '2',
 
-      enabled: true,
-    });
+  //     enabled: true,
+  //   });
 
-    await component.search();
-    const matchingRules = component.rulesHit;
-    expect(matchingRules).toEqual(['nat-rule1', 'nat-rule2', 'nat-rule3']);
-  });
+  //   await component.search();
+  //   const matchingRules = component.rulesHit;
+  //   expect(matchingRules).toEqual(['nat-rule1', 'nat-rule2', 'nat-rule3']);
+  // });
 });

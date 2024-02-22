@@ -1,157 +1,98 @@
-<ngx-smart-modal #natRulePacketTracer identifier="natRulePacketTracer"
-  (onClose)="reset()" [dismissable]="false" customClass="large-modal">
+<ngx-smart-modal
+  #natRulePacketTracer
+  identifier="natRulePacketTracer"
+  (onClose)="reset()"
+  [dismissable]="false"
+  customClass="medium-modal"
+>
   <header class="modal-header">
-    <h4 class="modal-title">Nat Rule Advanced Search</h4>
+    <h4 class="modal-title">Nat Rule Packet Tracer</h4>
   </header>
-
   <div *ngIf="rulesHit.length > 0">
-    <b>Total matches : {{rulesHit}}</b>
-  </div>
-  <br>
-
-  <div *ngIf="partialMatches.length > 0">
-    <a style="color: blue; cursor: pointer;" (click)="showPartials = !showPartials">Show Partials</a>
-  </div>
-  <div *ngIf="showPartials">
-    <table class="table table-striped">
-      <caption>Partial Matches</caption>
+    <div class="dropdown">
+      <app-icon-button id="dropdownToggle" icon="filter" label="Filter" (handleClick)="toggleDropdown()"></app-icon-button>
+      <div class="dropdown-menu" *ngIf="dropdownOpen" id="dropdownMenu">
+        <div class="form-check">
+          <input type="checkbox" id="exactMatchCheckbox" [(ngModel)]="filterExact" (change)="applyFilter()" />
+          <label for="exactMatchCheckbox">Exact Matches</label>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" id="partialMatchCheckbox" [(ngModel)]="filterPartial" (change)="applyFilter()" />
+          <label for="partialMatchCheckbox">Partial Matches</label>
+        </div>
+      </div>
+    </div>
+    <div>
+      <table class="table table-striped">
+        <caption>
+          Matches
+        </caption>
         <thead>
-  
-          <th scope="col">Rule Name</th>
-          <th scope="col">Original Source In Range</th>
-          <th scope="col">Original Dest In Range</th>
-          <th scope="col">Translated Source In Range</th>
-          <th scope="col">Translated Dest In Range</th>
-          <th scope="col">Direction Match</th>
-          <th scope="col">biDirectional Match</th>
+          <tr>
+            <th scope="col">Rule Name</th>
+            <th scope="col">Original Source In Range</th>
+            <th scope="col">Original Dest In Range</th>
+            <th scope="col">Translated Source In Range</th>
+            <th scope="col">Translated Dest In Range</th>
+            <th scope="col">Direction Match</th>
+            <th scope="col">biDirectional Match</th>
+          </tr>
         </thead>
-  
         <tbody>
-          <tr *ngFor="let partial of partialMatches">  
+          <tr *ngIf="paginatedRules && paginatedRules?.length === 0" class="text-center">
+            <td [attr.colspan]="8">No Matches</td>
+          </tr>
+          <tr *ngFor="let rule of paginatedRules | paginate: { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }">
             <td>
-              {{partial.name}}
+              <span>
+                {{ rule.name }}
+              </span>
             </td>
             <td>
-              <span *ngIf="partial.checkList.originalSourceInRange === false">
-                <b>{{partial.checkList.originalSourceInRange}}</b>
+              <span [ngStyle]="{ 'font-weight': rule.checkList.originalSourceInRange === false ? 'bold' : 'normal' }">
+                {{ rule.checkList.originalSourceInRange }}
               </span>
-
-              <span *ngIf="partial.checkList.originalSourceInRange === true">
-                {{partial.checkList.originalSourceInRange}}
-              </span>
-              
             </td>
-  
             <td>
-              
-              <span *ngIf="partial.checkList.originalDestInRange === false">
-                <b>{{partial.checkList.originalDestInRange}}</b>
+              <span [ngStyle]="{ 'font-weight': rule.checkList.originalDestInRange === false ? 'bold' : 'normal' }">
+                {{ rule.checkList.originalDestInRange }}
               </span>
-
-              <span *ngIf="partial.checkList.originalDestInRange === true">
-                {{partial.checkList.originalDestInRange}}
-              </span>
-  
             </td>
-  
             <td>
-              <span *ngIf="partial.checkList.translatedSourceInRange === false">
-                <b>{{partial.checkList.translatedSourceInRange}}</b>
+              <span [ngStyle]="{ 'font-weight': rule.checkList.translatedSourceInRange === false ? 'bold' : 'normal' }">
+                {{ rule.checkList.translatedSourceInRange }}
               </span>
-
-              <span *ngIf="partial.checkList.translatedSourceInRange === true">
-                {{partial.checkList.translatedSourceInRange}}
-              </span>  
             </td>
-  
             <td>
-              <span *ngIf="partial.checkList.translatedDestInRange === false">
-                <b>{{partial.checkList.translatedDestInRange}}</b>
+              <span [ngStyle]="{ 'font-weight': rule.checkList.translatedDestInRange === false ? 'bold' : 'normal' }">
+                {{ rule.checkList.translatedDestInRange }}
               </span>
-
-              <span *ngIf="partial.checkList.translatedDestInRange === true">
-                {{partial.checkList.translatedDestInRange}}
-              </span>
-  
             </td>
-  
             <td>
-              <span *ngIf="partial.checkList.directionMatch === false">
-                <b>{{partial.checkList.directionMatch}}</b>
+              <span [ngStyle]="{ 'font-weight': rule.checkList.directionMatch === false ? 'bold' : 'normal' }">
+                {{ rule.checkList.directionMatch }}
               </span>
-
-              <span *ngIf="partial.checkList.directionMatch === true">
-                {{partial.checkList.directionMatch}}
-              </span>
-  
             </td>
-
             <td>
-              <span *ngIf="partial.checkList.biDirectionalMatch === false">
-                <b>{{partial.checkList.biDirectionalMatch}}</b>
-              </span>
-
-              <span *ngIf="partial.checkList.biDirectionalMatch === true">
-                {{partial.checkList.biDirectionalMatch}}
+              <span [ngStyle]="{ 'font-weight': rule.checkList.biDirectionalMatch === false ? 'bold' : 'normal' }">
+                {{ rule.checkList.biDirectionalMatch }}
               </span>
             </td>
-  
-            <!-- <td>
-              <span *ngIf="partial.checkList.originalPortMatch === false">
-                <b>{{partial.checkList.originalPortMatch}}</b>
-              </span>
-
-              <span *ngIf="partial.checkList.originalPortMatch === true">
-                {{partial.checkList.originalPortMatch}}
-              </span>
-  
-            </td>
-  
-            <td>
-              <span *ngIf="partial.checkList.translatedPortMatch === false">
-                <b>{{partial.checkList.translatedPortMatch}}</b>
-              </span>
-
-              <span *ngIf="partial.checkList.translatedPortMatch === true">
-                {{partial.checkList.translatedPortMatch}}
-              </span>  
-            </td>
-
-            <td>
-              
-              <span *ngIf="partial.checkList.enabledMatch === false">
-                <b>{{partial.checkList.enabledMatch}}</b>
-              </span>
-
-              <span *ngIf="partial.checkList.enabledMatch === true">
-                {{partial.checkList.enabledMatch}}
-              </span>              
-            </td> -->
-  
           </tr>
         </tbody>
         <tfoot>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td [attr.colspan]="8">
+            <pagination-controls id="rulesMatch" (pageChange)="currentPage = $event;"></pagination-controls>
+          </td>
         </tfoot>
       </table>
+    </div>
   </div>
-
 
   <form [formGroup]="form" (ngSubmit)="search()">
     <div class="modal-body">
 
       <div class="form-row">
-
-
         <div class="form-group col-md-2">
             <label for="biDirectional">biDirectional</label>
             <select id="biDirectional" formControlName="biDirectional" class="form-control"
@@ -165,7 +106,7 @@
             </div>
           </div>
 
-          
+
 
         <div class="form-group col-md-2">
           <label for="direction">Direction</label>
@@ -286,7 +227,7 @@
   
       </div> -->
 
-      
+
     </div>
 
     <footer class="modal-footer">
