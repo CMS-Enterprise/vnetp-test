@@ -73,7 +73,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   serviceObjects: ServiceObject[];
   serviceObjectGroups: ServiceObjectGroup[];
   tiers: Tier[];
-  packetTracerObjects: FirewallRulePacketTracerDto;
+  packetTracerObjects = new FirewallRulePacketTracerDto();
   zones: Zone[];
 
   firewallRuleModalSubscription: Subscription;
