@@ -12,7 +12,7 @@ import { Netmask } from 'netmask';
   styleUrls: ['./firewall-rule-packet-tracer.component.css'],
 })
 export class FirewallRulePacketTracerComponent implements OnInit {
-  @Input() objects;
+  @Input() objects; // TODO: Use Type
   form: FormGroup;
   submitted: boolean;
 
@@ -47,11 +47,15 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   }
 
   isExactMatch(rule): boolean {
-    return Object.values(rule.checkList).every(value => value === true);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { softDeleted, ...otherValues } = rule.checkList;
+    return Object.values(otherValues).every(value => value === true);
   }
 
   isPartialMatch(rule): boolean {
-    return Object.values(rule.checkList).some(value => value === true) && !this.isExactMatch(rule);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { softDeleted, ...otherValues } = rule.checkList;
+    return Object.values(otherValues).some(value => value === true) && !this.isExactMatch(rule);
   }
 
   applyFilter(): void {
@@ -70,11 +74,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   resetFilter(): void {
     this.filterExact = false;
     this.filterPartial = false;
-  }
-
-  get paginatedRules() {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    return this.filteredRules.slice(startIndex, startIndex + this.pageSize);
   }
 
   // converts octect IPs to decimals
@@ -99,7 +98,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         directionMatch: this.form.controls.direction.value === rule.direction,
         protocolMatch: this.form.controls.protocol.value === rule.protocol,
         enabledMatch: this.form.controls.enabled.value === rule.enabled,
-        // softDeleted: Boolean(rule.softDeleted),
+        softDeleted: Boolean(rule.deletedAt),
       };
 
       if (checkList.sourcePortMatch === null || checkList.destPortMatch === null) {

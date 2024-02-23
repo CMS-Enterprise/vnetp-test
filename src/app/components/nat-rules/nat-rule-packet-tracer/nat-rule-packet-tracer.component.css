@@ -1,0 +1,38 @@
+.dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-toggle {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .dropdown-toggle:focus {
+    outline: none;
+  }
+  
+  .dropdown-menu {
+    display: block;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .form-check {
+    padding: 10px 20px;
+  }
+  
+  .form-check input {
+    margin-right: 10px;
+  }
+  
+  .form-check label {
+    margin-bottom: 0;
+  }
