@@ -72,7 +72,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
 
   natRuleModalSubscription: Subscription;
   packetTracerSubscription: Subscription;
-  packetTracerObjects = NatRulePacketTracerDto;
+  packetTracerObjects: NatRulePacketTracerDto;
   TierId: string;
   NatRuleGroup: NatRuleGroup;
   currentDatacenterSubscription: Subscription;
