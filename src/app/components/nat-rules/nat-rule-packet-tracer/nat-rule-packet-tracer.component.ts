@@ -4,13 +4,33 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
+import { NatRule, NetworkObjectGroup } from '../../../../../client';
+
+export type NatRulePacketTracerInput = {
+  natRules: NatRule[];
+  networkObjectGroups: NetworkObjectGroup[];
+};
+
+export type NatRulePacketTracerOutput = {
+  checkList: NatRulePacketTracerCheckList;
+  name: string;
+};
+
+export type NatRulePacketTracerCheckList = {
+  originalSourceInRange: boolean;
+  originalDestInRange: boolean;
+  translatedSourceInRange: boolean;
+  translatedDestInRange: boolean;
+};
+
+export type NatRulePacketTracerLocation = 'originalSource' | 'originalDestination' | 'translatedSource' | 'translatedDestination';
 
 @Component({
   selector: 'app-nat-rule-packet-tracer',
   templateUrl: './nat-rule-packet-tracer.component.html',
 })
 export class NatRulePacketTracerComponent implements OnInit {
-  @Input() objects;
+  @Input() objects: NatRulePacketTracerInput;
   form: FormGroup;
   submitted: boolean;
 
@@ -36,18 +56,18 @@ export class NatRulePacketTracerComponent implements OnInit {
   }
 
   @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
+  onDocumentClick(event: MouseEvent): void {
     const clickedElement = event.target as HTMLElement; // Cast to HTMLElement
     if (!clickedElement.closest('.dropdown')) {
       this.dropdownOpen = false;
     }
   }
 
-  isExactMatch(rule): boolean {
+  isExactMatch(rule: NatRulePacketTracerOutput): boolean {
     return Object.values(rule.checkList).every(value => value === true);
   }
 
-  isPartialMatch(rule): boolean {
+  isPartialMatch(rule: NatRulePacketTracerOutput): boolean {
     return Object.values(rule.checkList).some(value => value === true) && !this.isExactMatch(rule);
   }
 
@@ -74,11 +94,7 @@ export class NatRulePacketTracerComponent implements OnInit {
     return this.filteredRules.slice(startIndex, startIndex + this.pageSize);
   }
 
-  handleInRange(
-    rule,
-    location: 'originalSource' | 'originalDestination' | 'translatedSource' | 'translatedDestination',
-    control: AbstractControl,
-  ) {
+  handleInRange(rule: NatRule, location: NatRulePacketTracerLocation, control: AbstractControl) {
     let lookupType;
 
     switch (location) {
@@ -102,11 +118,7 @@ export class NatRulePacketTracerComponent implements OnInit {
     }
   }
 
-  networkObjectLookup(
-    rule,
-    location: 'originalSource' | 'originalDestination' | 'translatedSource' | 'translatedDestination',
-    control: AbstractControl,
-  ) {
+  networkObjectLookup(rule: NatRule, location: NatRulePacketTracerLocation, control: AbstractControl) {
     const formIpValue = control.value;
     let ruleNetworkObject;
     switch (location) {
