@@ -7,14 +7,13 @@ import { IsIpV4NoSubnetValidator, ValidatePortNumber } from 'src/app/validators/
 import { Netmask } from 'netmask';
 import { FirewallRule, NetworkObjectGroup, ServiceObjectGroup } from '../../../../../client';
 import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-rule-packet-tracer-dto';
-import { NatRulePacketTracerCheckList } from '../../nat-rules/nat-rule-packet-tracer/nat-rule-packet-tracer.component';
 
-export type FirewallRulePacketTracerOutput = {
-  checkList: NatRulePacketTracerCheckList;
+type FirewallRulePacketTracerOutput = {
+  checkList: FirewallRulePacketTracerChecklist;
   name: string;
 };
 
-export type FirewallRulePacketTracerChecklist = {
+type FirewallRulePacketTracerChecklist = {
   sourceInRange: boolean;
   destInRange: boolean;
   sourcePortMatch: boolean;
