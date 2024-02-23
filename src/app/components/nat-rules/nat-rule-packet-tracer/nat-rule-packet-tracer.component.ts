@@ -11,12 +11,12 @@ export type NatRulePacketTracerInput = {
   networkObjectGroups: NetworkObjectGroup[];
 };
 
-export type NatRulePacketTracerOutput = {
+type NatRulePacketTracerOutput = {
   checkList: NatRulePacketTracerCheckList;
   name: string;
 };
 
-export type NatRulePacketTracerCheckList = {
+type NatRulePacketTracerCheckList = {
   originalSourceIPInRange: boolean;
   originalDestIPInRange: boolean;
   translatedSourceIPInRange: boolean;
@@ -31,7 +31,7 @@ export type NatRulePacketTracerCheckList = {
   softDeleted: boolean;
 };
 
-export type NatRulePacketTracerLocation = 'originalSource' | 'originalDestination' | 'translatedSource' | 'translatedDestination';
+type NatRulePacketTracerLocation = 'originalSource' | 'originalDestination' | 'translatedSource' | 'translatedDestination';
 
 @Component({
   selector: 'app-nat-rule-packet-tracer',
