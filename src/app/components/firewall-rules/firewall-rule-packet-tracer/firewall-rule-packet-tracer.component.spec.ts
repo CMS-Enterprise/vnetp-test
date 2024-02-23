@@ -12,6 +12,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { FirewallRulePacketTracerComponent } from '../firewall-rule-packet-tracer/firewall-rule-packet-tracer.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { FirewallRule, FirewallRuleDirectionEnum, FirewallRuleProtocolEnum } from '../../../../../client';
 
 describe('FirewallRulesPacketTracerComponent', () => {
   let component: FirewallRulePacketTracerComponent;
@@ -65,7 +66,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should return true for exact match', () => {
       const rule = {
         checkList: { sourceInRange: true, destInRange: true },
-      };
+      } as any;
       const result = component.isExactMatch(rule);
       expect(result).toBeTruthy();
     });
@@ -73,7 +74,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should return false when not an exact match', () => {
       const rule = {
         checkList: { sourceInRange: true, destInRange: false },
-      };
+      } as any;
       const result = component.isExactMatch(rule);
       expect(result).toBeFalsy();
     });
@@ -83,21 +84,21 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should return true for partial match', () => {
       const rule = {
         checkList: { sourceInRange: true, destInRange: false /* ... */ },
-      };
+      } as any;
       expect(component.isPartialMatch(rule)).toBeTruthy();
     });
 
     it('should return false for no match', () => {
       const rule = {
         checkList: { sourceInRange: false, destInRange: false /* ... */ },
-      };
+      } as any;
       expect(component.isPartialMatch(rule)).toBeFalsy();
     });
 
     it('should return false for exact match', () => {
       const rule = {
         checkList: { sourceInRange: true, destInRange: true /* ... */ },
-      };
+      } as any;
       expect(component.isPartialMatch(rule)).toBeFalsy();
     });
   });
@@ -123,21 +124,21 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should populate rulesHit when the form is valid', () => {
       component.objects = {
         firewallRules: [],
-      };
+      } as any;
       // Set up a valid form configuration
       component.form.controls['sourceIpAddress'].setValue('192.168.1.10');
       component.form.controls['destinationIpAddress'].setValue('10.0.0.5');
-      component.form.controls['direction'].setValue('Inbound');
+      component.form.controls['direction'].setValue('In');
       component.form.controls['protocol'].setValue('TCP');
       component.form.controls['enabled'].setValue(true);
       component.objects.firewallRules = [
         {
           sourceIpAddress: '192.168.1.10',
           destinationIpAddress: '10.0.0.5',
-          direction: 'Inbound',
-          protocol: 'TCP',
+          direction: FirewallRuleDirectionEnum.In,
+          protocol: FirewallRuleProtocolEnum.Tcp,
           enabled: true,
-        },
+        } as any,
       ];
 
       // Execute the search!
@@ -164,22 +165,22 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should handle null destPortMatch', () => {
       component.objects = {
         firewallRules: [],
-      };
+      } as any;
       // Set up form with a value that would cause destPortMatch to be null
       component.form.controls['destinationPorts'].setValue('80'); // Example of a port range
       component.form.controls['sourceIpAddress'].setValue('192.168.1.10');
       component.form.controls['destinationIpAddress'].setValue('10.0.0.5');
-      component.form.controls['direction'].setValue('Inbound');
+      component.form.controls['direction'].setValue('In');
       component.form.controls['protocol'].setValue('TCP');
       component.form.controls['enabled'].setValue(true);
       component.objects.firewallRules = [
         {
           sourceIpAddress: '192.168.1.10',
           destinationIpAddress: '10.0.0.5',
-          direction: 'Inbound',
-          protocol: 'TCP',
+          direction: FirewallRuleDirectionEnum.In,
+          protocol: FirewallRuleProtocolEnum.Tcp,
           enabled: true,
-        },
+        } as any,
       ];
 
       component.handlePortMatch = jest.fn().mockImplementation().mockReturnValueOnce(true).mockReturnValueOnce(null);
@@ -196,7 +197,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
   describe('handleInRange', () => {
     it('should call ip lookup', () => {
       const ipLookupSpy = jest.spyOn(component, 'ipLookup').mockReturnValue(true);
-      const rule = { sourceIpAddress: '192.168.1.0/24', sourceAddressType: 'IpAddress' };
+      const rule = { sourceIpAddress: '192.168.1.0/24', sourceAddressType: 'IpAddress' } as any;
       const control = { value: '192.168.1.100' } as AbstractControl;
       const result = component.handleInRange(rule, 'source', control);
       expect(result).toBeTruthy();
@@ -205,7 +206,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
 
     it('should call network object lookup', () => {
       jest.spyOn(component, 'networkObjectLookup').mockReturnValue(true);
-      const rule = { sourceIpAddress: '10.0.0.0/24', sourceAddressType: 'NetworkObject' };
+      const rule = { sourceIpAddress: '10.0.0.0/24', sourceAddressType: 'NetworkObject' } as any;
       const control = { value: '192.168.1.100' } as AbstractControl;
       const result = component.handleInRange(rule, 'source', control);
       expect(result).toBeTruthy();
@@ -213,7 +214,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
 
     it('should call network object group lookup', () => {
       const networkObjectGroupSpy = jest.spyOn(component, 'networkObjectGroupLookup').mockReturnValue(true);
-      const rule = { sourceIpAddress: '10.0.0.0/24', sourceAddressType: 'NetworkObjectGroup' };
+      const rule = { sourceIpAddress: '10.0.0.0/24', sourceAddressType: 'NetworkObjectGroup' } as any;
       const control = { value: '192.168.1.100' } as AbstractControl;
       const result = component.handleInRange(rule, 'source', control);
       expect(result).toBeTruthy();
@@ -222,21 +223,21 @@ describe('FirewallRulesPacketTracerComponent', () => {
 
     describe('handlePortMatch', () => {
       it('should return true for an exact port match', () => {
-        const rule = { sourcePorts: '80', serviceType: 'Port' };
+        const rule = { sourcePorts: '80', serviceType: 'Port' } as any;
         const control = { value: '80' } as AbstractControl;
         const result = component.handlePortMatch(rule, 'source', control);
         expect(result).toBeTruthy();
       });
 
       it('should return false when ports dont match', () => {
-        const rule = { sourcePorts: '80', serviceType: 'Port' };
+        const rule = { sourcePorts: '80', serviceType: 'Port' } as any;
         const control = { value: '8080' } as AbstractControl;
         const result = component.handlePortMatch(rule, 'source', control);
         expect(result).toBeFalsy();
       });
 
       it('should return null when the form control value is falsy', () => {
-        const rule = { sourcePorts: '80', serviceType: 'ServiceObject' };
+        const rule = { sourcePorts: '80', serviceType: 'ServiceObject' } as any;
         const control = { value: '' } as AbstractControl;
         const result = component.handlePortMatch(rule, 'source', control);
         expect(result).toBeNull();
@@ -257,7 +258,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     });
 
     it('should call serviceObjectPortMatch if passed a service object', () => {
-      const rule = { destinationPorts: '80', serviceType: 'ServiceObject' };
+      const rule = { destinationPorts: '80', serviceType: 'ServiceObject' } as any;
       const control = { value: '80' } as AbstractControl;
       const serviceObjectPortMatchSpy = jest.spyOn(component, 'serviceObjectPortMatch').mockImplementation();
       component.handlePortMatch(rule, 'destination', control);
@@ -265,7 +266,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     });
 
     it('should call serviceObjectGroupPortMatch if passed a service object group', () => {
-      const rule = { destinationPorts: '80', serviceType: 'ServiceObjectGroup' };
+      const rule = { destinationPorts: '80', serviceType: 'ServiceObjectGroup' } as any;
       const control = { value: '80' } as AbstractControl;
       const serviceObjectGroupPortMatchSpy = jest.spyOn(component, 'serviceObjectGroupPortMatch').mockImplementation();
       component.handlePortMatch(rule, 'destination', control);
@@ -362,7 +363,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     });
 
     it('should return true for valid subnet match', () => {
-      const rule = { destinationIpAddress: '192.168.1.0/24' }; // Example rule
+      const rule = { destinationIpAddress: '192.168.1.0/24' } as any; // Example rule
       const control = { value: '192.168.1.50' } as AbstractControl;
       mockNetmask.contains.mockReturnValue(true);
 
@@ -371,7 +372,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     });
 
     it('should return false for invalid subnet match', () => {
-      const rule = { sourceIpAddress: '192.168.1.0/24' }; // Example rule
+      const rule = { sourceIpAddress: '192.168.1.0/24' } as any; // Example rule
       const control = { value: '10.0.0.0' } as AbstractControl;
       mockNetmask.contains.mockReturnValue(false);
       expect(component.ipLookup(rule, 'source', control)).toBe(false);
@@ -381,7 +382,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
       mockNetmask.contains.mockImplementation(() => {
         throw new Error('Test Error');
       });
-      const rule = { sourceIpAddress: '192.168.1.0/24' }; // Example rule
+      const rule = { sourceIpAddress: '192.168.1.0/24' } as any; // Example rule
       const control = { value: '10.0.0.0' } as AbstractControl;
       const result = component.ipLookup(rule, 'source', control);
       expect(result).toBe(false);
@@ -404,7 +405,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should handle Network Object type "IpAddress"', () => {
       const rule = {
         destinationNetworkObject: { type: 'IpAddress', ipAddress: '192.168.1.0/24' },
-      };
+      } as any;
       const control = { value: '192.168.1.100' } as AbstractControl;
       mockNetmask.contains.mockReturnValue(true);
 
@@ -419,7 +420,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
           startIpAddress: '10.0.0.10',
           endIpAddress: '10.0.0.20',
         },
-      };
+      } as any;
       const control = { value: '10.0.0.15' } as AbstractControl;
 
       // Assuming you need to mock/stub 'this.dot2num'
@@ -436,7 +437,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
           startIpAddress: '10.0.0.10',
           endIpAddress: '10.0.0.20',
         },
-      };
+      } as any;
       const control = { value: '192.168.0.5' } as AbstractControl;
 
       const result = component.networkObjectLookup(rule, 'source', control);
@@ -460,7 +461,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should return true if any member matches', () => {
       const rule = {
         sourceNetworkObjectGroupId: 'test-id',
-      };
+      } as any;
 
       const networkObjectGroup = {
         id: 'test-id',
@@ -468,11 +469,11 @@ describe('FirewallRulesPacketTracerComponent', () => {
           { type: 'IpAddress', ipAddress: '10.0.0.5' }, // Non-matching member
           { type: 'Range', startIpAddress: '192.168.1.10', endIpAddress: '192.168.1.50' }, // Matching member
         ],
-      };
+      } as any;
 
       component.objects = {
         networkObjectGroups: [networkObjectGroup],
-      };
+      } as any;
 
       const control = { value: '192.168.1.20' } as AbstractControl;
 
@@ -484,7 +485,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
       // ... set up with a Network Object Group where no members match
       const rule = {
         destinationNetworkObjectGroupId: 'test-id',
-      };
+      } as any;
 
       const networkObjectGroup = {
         id: 'test-id',
@@ -492,11 +493,11 @@ describe('FirewallRulesPacketTracerComponent', () => {
           { type: 'IpAddress', ipAddress: '10.0.0.5' }, // Non-matching member
           { type: 'Range', startIpAddress: '10.0.0.5', endIpAddress: '10.0.0.6' }, // Matching member
         ],
-      };
+      } as any;
 
       component.objects = {
         networkObjectGroups: [networkObjectGroup],
-      };
+      } as any;
 
       const control = { value: '192.168.1.20' } as AbstractControl;
       const result = component.networkObjectGroupLookup(rule, 'destination', control);
@@ -508,7 +509,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
       // ...
       const rule = {
         sourceNetworkObjectGroupId: 'test-id',
-      };
+      } as any;
 
       const networkObjectGroup = {
         id: 'test-id',
@@ -516,11 +517,11 @@ describe('FirewallRulesPacketTracerComponent', () => {
           { type: 'IpAddress', ipAddress: 'not an ip' }, // Non-matching member
           { type: 'Range', startIpAddress: '10.0.0.5', endIpAddress: '10.0.0.6' }, // Matching member
         ],
-      };
+      } as any;
 
       component.objects = {
         networkObjectGroups: [networkObjectGroup],
-      };
+      } as any;
 
       const control = { value: '192.168.1.20' } as AbstractControl;
 
@@ -535,18 +536,18 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should return true if a member matches (IpAddress with form IP within subnet)', () => {
       const rule = {
         sourceNetworkObjectGroupId: 'test-id',
-      };
+      } as any;
 
       const networkObjectGroup = {
         id: 'test-id',
         networkObjects: [
           { type: 'IpAddress', ipAddress: '192.168.1.0/24' }, // Member with matching subnet
         ],
-      };
+      } as any;
 
       component.objects = {
         networkObjectGroups: [networkObjectGroup],
-      };
+      } as any;
 
       const control = { value: '192.168.1.50' } as AbstractControl;
       mockNetmask.contains.mockReturnValue(true);
@@ -560,7 +561,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should return true for matching port values', () => {
       const rule = {
         serviceObject: { sourcePorts: '80' },
-      };
+      } as any;
       const control = { value: '80' } as AbstractControl;
 
       const result = component.serviceObjectPortMatch(rule, 'source', control);
@@ -570,7 +571,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should return false for non-matching port values', () => {
       const rule = {
         serviceObject: { destinationPorts: '8080' },
-      };
+      } as any;
       const control = { value: '80' } as AbstractControl;
 
       const result = component.serviceObjectPortMatch(rule, 'destination', control);
@@ -582,7 +583,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should return true if any service object within the group matches', () => {
       const rule = {
         serviceObjectGroupId: 'test-id',
-      };
+      } as any;
 
       const serviceObjectGroup = {
         id: 'test-id',
@@ -590,11 +591,11 @@ describe('FirewallRulesPacketTracerComponent', () => {
           { destinationPorts: '80' }, // Non-matching member
           { destinationPorts: '8080' }, // Matching member
         ],
-      };
+      } as any;
 
       component.objects = {
         serviceObjectGroups: [serviceObjectGroup],
-      };
+      } as any;
 
       const control = { value: '80' } as AbstractControl;
 
@@ -605,18 +606,18 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should return false if no service object matches', () => {
       const rule = {
         serviceObjectGroupId: 'test-id',
-      };
+      } as any;
 
       const serviceObjectGroup = {
         id: 'test-id',
         serviceObjects: [
           { sourcePorts: '8080' }, // Non-matching member
         ],
-      };
+      } as any;
 
       component.objects = {
         serviceObjectGroups: [serviceObjectGroup],
-      };
+      } as any;
 
       const control = { value: '80' } as AbstractControl;
       const result = component.serviceObjectGroupPortMatch(rule, 'source', control);

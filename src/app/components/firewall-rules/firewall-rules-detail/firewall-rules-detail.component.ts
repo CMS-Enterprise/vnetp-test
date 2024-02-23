@@ -38,6 +38,7 @@ import { SearchColumnConfig } from '../../../common/search-bar/search-bar.compon
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-rule-packet-tracer-dto';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -72,11 +73,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   serviceObjects: ServiceObject[];
   serviceObjectGroups: ServiceObjectGroup[];
   tiers: Tier[];
-  packetTracerObjects = {
-    firewallRules: [] as FirewallRule[],
-    networkObjectGroups: [] as NetworkObjectGroup[],
-    serviceObjectGroups: [] as ServiceObjectGroup[],
-  };
+  packetTracerObjects: FirewallRulePacketTracerDto;
   zones: Zone[];
 
   firewallRuleModalSubscription: Subscription;

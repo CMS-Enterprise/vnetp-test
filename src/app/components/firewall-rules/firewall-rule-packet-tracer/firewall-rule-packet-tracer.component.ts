@@ -5,6 +5,25 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { IsIpV4NoSubnetValidator, ValidatePortNumber } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
+import { FirewallRule, NetworkObjectGroup, ServiceObjectGroup } from '../../../../../client';
+import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-rule-packet-tracer-dto';
+import { NatRulePacketTracerCheckList } from '../../nat-rules/nat-rule-packet-tracer/nat-rule-packet-tracer.component';
+
+export type FirewallRulePacketTracerOutput = {
+  checkList: NatRulePacketTracerCheckList;
+  name: string;
+};
+
+export type FirewallRulePacketTracerChecklist = {
+  sourceInRange: boolean;
+  destInRange: boolean;
+  sourcePortMatch: boolean;
+  destPortMatch: boolean;
+  directionMatch: boolean;
+  protocolMatch: boolean;
+  enabledMatch: boolean;
+  softDeleted: boolean;
+};
 
 @Component({
   selector: 'app-firewall-rule-packet-tracer',
@@ -12,7 +31,7 @@ import { Netmask } from 'netmask';
   styleUrls: ['./firewall-rule-packet-tracer.component.css'],
 })
 export class FirewallRulePacketTracerComponent implements OnInit {
-  @Input() objects; // TODO: Use Type
+  @Input() objects: FirewallRulePacketTracerDto;
   form: FormGroup;
   submitted: boolean;
 
@@ -46,13 +65,13 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     }
   }
 
-  isExactMatch(rule): boolean {
+  isExactMatch(rule: FirewallRulePacketTracerOutput): boolean {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { softDeleted, ...otherValues } = rule.checkList;
     return Object.values(otherValues).every(value => value === true);
   }
 
-  isPartialMatch(rule): boolean {
+  isPartialMatch(rule: FirewallRulePacketTracerOutput): boolean {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { softDeleted, ...otherValues } = rule.checkList;
     return Object.values(otherValues).some(value => value === true) && !this.isExactMatch(rule);
@@ -82,7 +101,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3];
   }
 
-  search() {
+  search(): void {
     this.rulesHit = [];
     this.submitted = true;
     if (this.form.invalid) {
@@ -112,7 +131,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.applyFilter();
   }
 
-  handleInRange(rule, location: 'source' | 'destination', control: AbstractControl) {
+  handleInRange(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean {
     const lookupType = location === 'source' ? rule.sourceAddressType : rule.destinationAddressType;
 
     if (lookupType === 'IpAddress') {
@@ -124,7 +143,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     }
   }
 
-  handlePortMatch(rule, location: 'source' | 'destination', control: AbstractControl): boolean | null {
+  handlePortMatch(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean | null {
     const formPortValue = control.value;
 
     // Return null if the form control value is falsy, indicating an invalid or non-applicable condition
@@ -146,7 +165,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     return formPortValue === rulePortValue;
   }
 
-  ipLookup(rule, location, control) {
+  ipLookup(rule: FirewallRule, location, control): boolean {
     const formIpValue = control.value;
     const ruleIpValue = location === 'source' ? rule.sourceIpAddress : rule.destinationIpAddress;
 
@@ -162,7 +181,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     return formIpValue === ruleIpValue;
   }
 
-  networkObjectLookup(rule, location: 'source' | 'destination', control: AbstractControl) {
+  networkObjectLookup(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl) {
     const formIpValue = control.value;
     const ruleNetworkObject = location === 'source' ? rule.sourceNetworkObject : rule.destinationNetworkObject;
 
@@ -191,7 +210,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     return false;
   }
 
-  networkObjectGroupLookup(rule, location: 'source' | 'destination', control: AbstractControl) {
+  networkObjectGroupLookup(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl) {
     const formIpValue = control.value;
     const ruleNetworkObjectGroupId = location === 'source' ? rule.sourceNetworkObjectGroupId : rule.destinationNetworkObjectGroupId;
     const ruleNetworkObjectGroup = this.getNetworkObjectGroup(ruleNetworkObjectGroupId);
@@ -224,12 +243,12 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     });
   }
 
-  serviceObjectPortMatch(rule, location: 'source' | 'destination', control: AbstractControl): boolean {
+  serviceObjectPortMatch(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean {
     const serviceObjectPortValue = location === 'source' ? rule.serviceObject.sourcePorts : rule.serviceObject.destinationPorts;
     return control.value === serviceObjectPortValue;
   }
 
-  serviceObjectGroupPortMatch(rule, location: 'source' | 'destination', control: AbstractControl): boolean {
+  serviceObjectGroupPortMatch(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean {
     const serviceObjectGroup = this.getServiceObjectGroup(rule.serviceObjectGroupId);
 
     return serviceObjectGroup.serviceObjects.some(svcObj => {
@@ -269,10 +288,10 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.ngx.close('firewallRulePacketTracer');
   }
 
-  getNetworkObjectGroup(id) {
+  getNetworkObjectGroup(id): NetworkObjectGroup {
     return this.objects.networkObjectGroups.find(obj => obj.id === id);
   }
-  getServiceObjectGroup(id) {
+  getServiceObjectGroup(id): ServiceObjectGroup {
     return this.objects.serviceObjectGroups.find(obj => obj.id === id);
   }
 }
