@@ -60,7 +60,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   public NatRuleGroupType = NatRuleGroupTypeEnum.Intervrf;
 
   private subscriptions: Subscription[] = [];
-  private objectInfoSubscription: Subscription;
+  objectInfoSubscription: Subscription;
 
   constructor(
     private formBuilder: UntypedFormBuilder,

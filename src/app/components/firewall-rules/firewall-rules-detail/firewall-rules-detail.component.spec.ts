@@ -17,6 +17,7 @@ import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { MockProvider } from 'src/test/mock-providers';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-modal.component';
+import { FirewallRulePacketTracerComponent } from '../firewall-rule-packet-tracer/firewall-rule-packet-tracer.component';
 import { FirewallRuleImport, FirewallRulePreview, V1TiersService } from 'client';
 import { of, Subject, Subscription, throwError } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -41,6 +42,7 @@ describe('FirewallRulesDetailComponent', () => {
         PreviewModalComponent,
         ResolvePipe,
         YesNoModalComponent,
+        FirewallRulePacketTracerComponent,
       ],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1TiersService)],
     });

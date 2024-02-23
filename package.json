@@ -33,6 +33,7 @@
     "@ng-select/ng-select": "^11.1.1",
     "bootstrap": "^4.5.0",
     "jquery": "^3.7.0",
+    "netmask": "^2.0.2",
     "ngx-pagination": "^6.0.3",
     "ngx-papaparse": "^5.0.0",
     "ngx-smart-modal": "^14.0.2",
