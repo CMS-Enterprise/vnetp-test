@@ -34,6 +34,7 @@ import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.compone
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';
 
 @Component({
   selector: 'app-nat-rules-detail',
@@ -57,6 +58,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   filteredResults: boolean;
   public currentTier: Tier;
 
+  // natRuleGroup: NatRuleGroup;
   natRules = {} as GetManyNatRuleResponseDto;
   latestRuleIndex;
   perPage = 50;
@@ -69,7 +71,8 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   tiers: Tier[];
 
   natRuleModalSubscription: Subscription;
-
+  packetTracerSubscription: Subscription;
+  packetTracerObjects: NatRulePacketTracerDto;
   TierId: string;
   NatRuleGroup: NatRuleGroup;
   currentDatacenterSubscription: Subscription;
@@ -427,7 +430,58 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  subscribeToPacketTracer() {
+    this.packetTracerSubscription = this.ngx.getModal('natRulePacketTracer').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('natRulePacketTracer');
+      this.packetTracerSubscription.unsubscribe();
+    });
+  }
+
+  openPacketTracer() {
+    this.getAllNatRules();
+    this.getAllNetworkObjectGroups();
+    this.subscribeToPacketTracer();
+    this.ngx.getModal('natRulePacketTracer').open();
+  }
+
+  getAllNatRules() {
+    this.natRuleService
+      .getManyNatRule({
+        filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],
+        join: [
+          'originalSourceNetworkObject',
+          'originalSourceNetworkObjectGroup',
+          'translatedSourceNetworkObject',
+          'translatedSourceNetworkObjectGroup',
+          'originalDestinationNetworkObject',
+          'originalDestinationNetworkObjectGroup',
+          'translatedDestinationNetworkObject',
+          'translatedDestinationNetworkObjectGroup',
+          'originalServiceObject',
+          'translatedServiceObject',
+        ],
+        sort: ['ruleIndex,ASC'],
+        page: 1,
+        perPage: 50000,
+      })
+      .subscribe(response => {
+        this.packetTracerObjects.natRules = response.data;
+      });
+  }
   getZoneNames(zones: any[]): string {
     return zones.map(zone => zone.name).join(', ');
+  }
+
+  getAllNetworkObjectGroups() {
+    this.networkObjectGroupService
+      .getManyNetworkObjectGroup({
+        filter: [`tierId||eq||${this.TierId}`],
+        join: ['networkObjects'],
+        page: 1,
+        perPage: 50000,
+      })
+      .subscribe(response => {
+        this.packetTracerObjects.networkObjectGroups = response.data;
+      });
   }
 }

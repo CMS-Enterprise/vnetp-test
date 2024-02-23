@@ -20,6 +20,12 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NatRulePacketTracerComponent } from '../nat-rule-packet-tracer/nat-rule-packet-tracer.component';
+import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
+import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-modal.component';
 
 describe('NatRulesDetailComponent', () => {
   let component: NatRulesDetailComponent;
@@ -46,19 +52,28 @@ describe('NatRulesDetailComponent', () => {
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockComponent('app-nat-rule-modal'),
-        MockComponent('app-preview-modal'),
         MockNgxSmartModalComponent,
-        MockImportExportComponent,
-        MockYesNoModalComponent,
+        ImportExportComponent,
+        PreviewModalComponent,
+        YesNoModalComponent,
+        ResolvePipe,
+        NatRulePacketTracerComponent,
       ],
-      imports: [ApplicationPipesModule, RouterTestingModule.withRoutes([]), HttpClientTestingModule],
+      imports: [
+        FormsModule,
+        NgxPaginationModule,
+        ApplicationPipesModule,
+        ReactiveFormsModule,
+        RouterTestingModule.withRoutes([]),
+        HttpClientTestingModule,
+      ],
       providers: [
         MockProvider(V1TiersService),
         MockProvider(NgxSmartModalService),
         { provide: 'DatacenterService', useValue: mockDatacenterService },
         { provide: 'ActivatedRoute', useValue: mockActivatedRoute },
       ],
-    }).compileComponents();
+    });
   });
 
   beforeEach(() => {

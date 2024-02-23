@@ -40,6 +40,24 @@ export function IpAddressCidrValidator(control: UntypedFormControl): { invalidIp
   return { invalidIpCidr: true };
 }
 
+export function IsIpV4NoSubnetValidator(control: UntypedFormControl): { invalidIpNoSubnet: boolean } | { invalidIp: boolean } {
+  if (!control || !control.value) {
+    return null;
+  }
+
+  if (control.value.includes('/')) {
+    return { invalidIpNoSubnet: true };
+  }
+
+  const isValid = isIP(control.value, 4);
+
+  if (isValid) {
+    return null;
+  }
+
+  return { invalidIp: true };
+}
+
 export function IpAddressIpValidator(control: UntypedFormControl): { invalidIpAddress: boolean } {
   if (!control || !control.value) {
     return null;
@@ -122,6 +140,26 @@ export function ValidatePortRange(control: UntypedFormControl): { invalidPortNum
       return { invalidPortNumber: true };
     }
   }
+  return null;
+}
+
+export function ValidatePortNumber(control: UntypedFormControl): { invalidPortNumber: boolean } | { portRangeNotAllowed: boolean } {
+  if (!control || !control.value) {
+    return null;
+  }
+
+  if (control.value === 'any') {
+    return null;
+  }
+
+  if (control.value.includes('-')) {
+    return { portRangeNotAllowed: true };
+  }
+
+  if (!isValidPortNumber(Number(control.value))) {
+    return { invalidPortNumber: true };
+  }
+
   return null;
 }
 

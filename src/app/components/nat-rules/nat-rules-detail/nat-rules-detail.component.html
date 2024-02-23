@@ -17,6 +17,8 @@
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
+
+  <button type="button" class="btn btn-info" (click)="openPacketTracer()">Packet Tracer</button>
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
@@ -136,6 +138,7 @@
   </p>
 </ng-template>
 
+
 <!-- to/from zone/direction template -->
 <ng-template #directionZone let-natRule="datum">
   <p *ngIf="NatRuleGroup?.type === 'Intervrf' || NatRuleGroup?.type === 'External'" aria-label="Direction">
@@ -148,3 +151,5 @@
     To: {{ natRule?.toZone?.name }}
   </p>
 </ng-template>
+
+<app-nat-rule-packet-tracer [objects]="packetTracerObjects"></app-nat-rule-packet-tracer>
