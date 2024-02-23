@@ -76,7 +76,7 @@ describe('NatRulesPacketTracerComponent', () => {
           c: true,
         },
       };
-      expect(component.isExactMatch(rule)).toBe(true);
+      expect(component.isExactMatch(rule as any)).toBe(true);
     });
 
     it('should return false if any value is false', () => {
@@ -87,7 +87,7 @@ describe('NatRulesPacketTracerComponent', () => {
           c: true,
         },
       };
-      expect(component.isExactMatch(rule)).toBe(false);
+      expect(component.isExactMatch(rule as any)).toBe(false);
     });
   });
 
@@ -100,7 +100,7 @@ describe('NatRulesPacketTracerComponent', () => {
           c: true,
         },
       };
-      expect(component.isPartialMatch(rule)).toBe(true);
+      expect(component.isPartialMatch(rule as any)).toBe(true);
     });
 
     it('should return false if all values are false', () => {
@@ -111,7 +111,7 @@ describe('NatRulesPacketTracerComponent', () => {
           c: false,
         },
       };
-      expect(component.isPartialMatch(rule)).toBe(false);
+      expect(component.isPartialMatch(rule as any)).toBe(false);
     });
 
     it('should return false if all values are true', () => {
@@ -122,7 +122,7 @@ describe('NatRulesPacketTracerComponent', () => {
           c: true,
         },
       };
-      expect(component.isPartialMatch(rule)).toBe(false);
+      expect(component.isPartialMatch(rule as any)).toBe(false);
     });
   });
 
@@ -216,7 +216,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
       const control = { value: 'test' } as any;
       const spy = jest.spyOn(component, 'networkObjectLookup').mockImplementation();
-      component.handleInRange(rule, 'originalSource', control);
+      component.handleInRange(rule as any, 'originalSource', control);
 
       expect(spy).toHaveBeenCalledWith(rule, 'originalSource', control);
     });
@@ -227,7 +227,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
       const control = { value: 'test' } as any;
       const spy = jest.spyOn(component, 'networkObjectLookup').mockImplementation();
-      component.handleInRange(rule, 'originalDestination', control);
+      component.handleInRange(rule as any, 'originalDestination', control);
 
       expect(spy).toHaveBeenCalledWith(rule, 'originalDestination', control);
     });
@@ -238,7 +238,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
       const control = { value: 'test' } as any;
       const spy = jest.spyOn(component, 'networkObjectLookup').mockImplementation();
-      component.handleInRange(rule, 'translatedSource', control);
+      component.handleInRange(rule as any, 'translatedSource', control);
 
       expect(spy).toHaveBeenCalledWith(rule, 'translatedSource', control);
     });
@@ -249,7 +249,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
       const control = { value: 'test' } as any;
       const spy = jest.spyOn(component, 'networkObjectLookup').mockImplementation();
-      component.handleInRange(rule, 'translatedDestination', control);
+      component.handleInRange(rule as any, 'translatedDestination', control);
 
       expect(spy).toHaveBeenCalledWith(rule, 'translatedDestination', control);
     });
@@ -260,7 +260,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
       const control = { value: 'test' } as any;
       const spy = jest.spyOn(component, 'networkObjectGroupLookup').mockImplementation();
-      component.handleInRange(rule, 'originalSource', control);
+      component.handleInRange(rule as any, 'originalSource', control);
 
       expect(spy).toHaveBeenCalledWith(rule, 'originalSource', control);
     });
@@ -271,7 +271,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
       const control = { value: 'test' } as any;
       const spy = jest.spyOn(component, 'networkObjectGroupLookup').mockImplementation();
-      component.handleInRange(rule, 'originalDestination', control);
+      component.handleInRange(rule as any, 'originalDestination', control);
 
       expect(spy).toHaveBeenCalledWith(rule, 'originalDestination', control);
     });
@@ -282,7 +282,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
       const control = { value: 'test' } as any;
       const spy = jest.spyOn(component, 'networkObjectGroupLookup').mockImplementation();
-      component.handleInRange(rule, 'translatedSource', control);
+      component.handleInRange(rule as any, 'translatedSource', control);
 
       expect(spy).toHaveBeenCalledWith(rule, 'translatedSource', control);
     });
@@ -293,7 +293,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
       const control = { value: 'test' } as any;
       const spy = jest.spyOn(component, 'networkObjectGroupLookup').mockImplementation();
-      component.handleInRange(rule, 'translatedDestination', control);
+      component.handleInRange(rule as any, 'translatedDestination', control);
 
       expect(spy).toHaveBeenCalledWith(rule, 'translatedDestination', control);
     });
@@ -317,7 +317,7 @@ describe('NatRulesPacketTracerComponent', () => {
         const control = { value: '192.168.1.100' } as AbstractControl;
         mockNetmask.contains.mockReturnValue(true);
 
-        const result = component.networkObjectLookup(rule, 'originalDestination', control);
+        const result = component.networkObjectLookup(rule as any, 'originalDestination', control);
         expect(result).toBe(true);
       });
 
@@ -345,7 +345,7 @@ describe('NatRulesPacketTracerComponent', () => {
           return 0;
         });
 
-        const result = component.networkObjectLookup(rule, 'originalSource', control);
+        const result = component.networkObjectLookup(rule as any, 'originalSource', control);
         expect(result).toBe(true);
       });
 
@@ -359,7 +359,7 @@ describe('NatRulesPacketTracerComponent', () => {
         };
         const control = { value: '192.168.0.5' } as AbstractControl;
 
-        const result = component.networkObjectLookup(rule, 'originalSource', control);
+        const result = component.networkObjectLookup(rule as any, 'originalSource', control);
         expect(result).toBe(false);
       });
     });
@@ -373,7 +373,7 @@ describe('NatRulesPacketTracerComponent', () => {
         const control = { value: '192.168.1.100' } as AbstractControl;
         mockNetmask.contains.mockReturnValue(true);
 
-        const result = component.networkObjectLookup(rule, 'originalSource', control);
+        const result = component.networkObjectLookup(rule as any, 'originalSource', control);
         expect(result).toBe(true);
       });
 
@@ -401,7 +401,7 @@ describe('NatRulesPacketTracerComponent', () => {
           return 0; // Or handle invalid IPs appropriately
         });
 
-        const result = component.networkObjectLookup(rule, 'originalDestination', control);
+        const result = component.networkObjectLookup(rule as any, 'originalDestination', control);
         expect(result).toBe(true);
       });
 
@@ -412,7 +412,7 @@ describe('NatRulesPacketTracerComponent', () => {
         const control = { value: '192.168.1.100' } as AbstractControl;
         mockNetmask.contains.mockReturnValue(true);
 
-        const result = component.networkObjectLookup(rule, 'translatedSource', control);
+        const result = component.networkObjectLookup(rule as any, 'translatedSource', control);
         expect(result).toBe(true);
       });
 
@@ -440,7 +440,7 @@ describe('NatRulesPacketTracerComponent', () => {
           return 0; // Or handle invalid IPs appropriately
         });
 
-        const result = component.networkObjectLookup(rule, 'translatedDestination', control);
+        const result = component.networkObjectLookup(rule as any, 'translatedDestination', control);
         expect(result).toBe(true);
       });
 
@@ -451,7 +451,7 @@ describe('NatRulesPacketTracerComponent', () => {
         const control = { value: '10.0.0.5' } as AbstractControl; // IP outside of the range
         mockNetmask.contains.mockReturnValue(false);
 
-        const result = component.networkObjectLookup(rule, 'translatedSource', control);
+        const result = component.networkObjectLookup(rule as any, 'translatedSource', control);
         expect(result).toBe(false);
       });
     });
@@ -485,12 +485,12 @@ describe('NatRulesPacketTracerComponent', () => {
 
       component.objects = {
         natRules: [],
-        networkObjectGroups: [networkObjectGroup],
+        networkObjectGroups: [networkObjectGroup as any],
       };
 
       const control = { value: '192.168.1.20' } as AbstractControl;
 
-      const result = component.networkObjectGroupLookup(rule, 'originalSource', control);
+      const result = component.networkObjectGroupLookup(rule as any, 'originalSource', control);
       expect(result).toBe(true);
     });
 
@@ -509,12 +509,12 @@ describe('NatRulesPacketTracerComponent', () => {
 
       component.objects = {
         natRules: [],
-        networkObjectGroups: [networkObjectGroup],
+        networkObjectGroups: [networkObjectGroup as any],
       };
 
       const control = { value: '192.168.1.20' } as AbstractControl;
 
-      const result = component.networkObjectGroupLookup(rule, 'translatedSource', control);
+      const result = component.networkObjectGroupLookup(rule as any, 'translatedSource', control);
       expect(result).toBe(true);
     });
 
@@ -534,11 +534,11 @@ describe('NatRulesPacketTracerComponent', () => {
 
       component.objects = {
         natRules: [],
-        networkObjectGroups: [networkObjectGroup],
+        networkObjectGroups: [networkObjectGroup as any],
       };
 
       const control = { value: '192.168.1.20' } as AbstractControl;
-      const result = component.networkObjectGroupLookup(rule, 'originalDestination', control);
+      const result = component.networkObjectGroupLookup(rule as any, 'originalDestination', control);
       expect(result).toBe(false);
     });
 
@@ -558,11 +558,11 @@ describe('NatRulesPacketTracerComponent', () => {
 
       component.objects = {
         natRules: [],
-        networkObjectGroups: [networkObjectGroup],
+        networkObjectGroups: [networkObjectGroup as any],
       };
 
       const control = { value: '192.168.1.20' } as AbstractControl;
-      const result = component.networkObjectGroupLookup(rule, 'translatedDestination', control);
+      const result = component.networkObjectGroupLookup(rule as any, 'translatedDestination', control);
       expect(result).toBe(false);
     });
 
@@ -583,7 +583,7 @@ describe('NatRulesPacketTracerComponent', () => {
 
       component.objects = {
         natRules: [],
-        networkObjectGroups: [networkObjectGroup],
+        networkObjectGroups: [networkObjectGroup as any],
       };
 
       const control = { value: '192.168.1.20' } as AbstractControl;
@@ -592,7 +592,7 @@ describe('NatRulesPacketTracerComponent', () => {
         throw new Error('Test Error');
       });
 
-      const result = component.networkObjectGroupLookup(rule, 'originalSource', control);
+      const result = component.networkObjectGroupLookup(rule as any, 'originalSource', control);
       expect(result).toBe(false);
     });
 
@@ -610,13 +610,13 @@ describe('NatRulesPacketTracerComponent', () => {
 
       component.objects = {
         natRules: [],
-        networkObjectGroups: [networkObjectGroup],
+        networkObjectGroups: [networkObjectGroup as any],
       };
 
       const control = { value: '192.168.1.50' } as AbstractControl;
       mockNetmask.contains.mockReturnValue(true);
 
-      const result = component.networkObjectGroupLookup(rule, 'originalSource', control);
+      const result = component.networkObjectGroupLookup(rule as any, 'originalSource', control);
       expect(result).toBe(true);
     });
   });
@@ -626,7 +626,7 @@ describe('NatRulesPacketTracerComponent', () => {
       const rule = {};
 
       const control = { value: '80' } as AbstractControl;
-      const result = component.handleServiceObjectPortMatch(rule, 'original', 'source', control);
+      const result = component.handleServiceObjectPortMatch(rule as any, 'original', 'source', control);
       expect(result).toBe(false);
     });
 
@@ -641,7 +641,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
 
       const control = { value: '' } as AbstractControl;
-      const result = component.handleServiceObjectPortMatch(rule, 'original', 'source', control);
+      const result = component.handleServiceObjectPortMatch(rule as any, 'original', 'source', control);
       expect(result).toBe(false);
     });
 
@@ -649,7 +649,7 @@ describe('NatRulesPacketTracerComponent', () => {
       const rule = {};
 
       const control = { value: '' } as AbstractControl;
-      const result = component.handleServiceObjectPortMatch(rule, 'original', 'source', control);
+      const result = component.handleServiceObjectPortMatch(rule as any, 'original', 'source', control);
       expect(result).toBe(true);
     });
 
@@ -669,7 +669,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
 
       const control = { value: '80' } as AbstractControl;
-      const result = component.handleServiceObjectPortMatch(rule, 'original', 'source', control);
+      const result = component.handleServiceObjectPortMatch(rule as any, 'original', 'source', control);
       expect(result).toBe(true);
     });
 
@@ -689,7 +689,7 @@ describe('NatRulesPacketTracerComponent', () => {
       };
 
       const control = { value: '80' } as AbstractControl;
-      const result = component.handleServiceObjectPortMatch(rule, 'original', 'destination', control);
+      const result = component.handleServiceObjectPortMatch(rule as any, 'original', 'destination', control);
       expect(result).toBe(true);
     });
   });
@@ -758,7 +758,7 @@ describe('NatRulesPacketTracerComponent', () => {
           originalDestination: '10.0.0.5',
           translatedSource: '172.16.1.10',
           translatedDestination: '10.1.0.5',
-        },
+        } as any,
       ];
 
       component.objects = { natRules, networkObjectGroups: [] };
@@ -801,7 +801,7 @@ describe('NatRulesPacketTracerComponent', () => {
 
   it('should getNetworkObjectGroup on matching id', () => {
     const networkObjectGroup = { id: 'testId' };
-    component.objects = { networkObjectGroups: [networkObjectGroup], natRules: [] };
+    component.objects = { networkObjectGroups: [networkObjectGroup as any], natRules: [] };
     component.getNetworkObjectGroup('testId');
 
     expect(component.getNetworkObjectGroup('testId')).toEqual(networkObjectGroup);

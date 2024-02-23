@@ -4,7 +4,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
-import { NatRule, NetworkObjectGroup } from '../../../../../client';
+import { NatRule, NetworkObject, NetworkObjectGroup } from '../../../../../client';
 
 export type NatRulePacketTracerInput = {
   natRules: NatRule[];
@@ -21,6 +21,7 @@ export type NatRulePacketTracerCheckList = {
   originalDestInRange: boolean;
   translatedSourceInRange: boolean;
   translatedDestInRange: boolean;
+  softDeleted: boolean;
 };
 
 export type NatRulePacketTracerLocation = 'originalSource' | 'originalDestination' | 'translatedSource' | 'translatedDestination';
@@ -94,7 +95,7 @@ export class NatRulePacketTracerComponent implements OnInit {
     this.filterPartial = false;
   }
 
-  handleInRange(rule: NatRule, location: NatRulePacketTracerLocation, control: AbstractControl) {
+  handleInRange(rule: NatRule, location: NatRulePacketTracerLocation, control: AbstractControl): boolean {
     let lookupType;
     const formIpValue = control.value;
 
@@ -128,9 +129,9 @@ export class NatRulePacketTracerComponent implements OnInit {
     }
   }
 
-  networkObjectLookup(rule: NatRule, location: NatRulePacketTracerLocation, control: AbstractControl) {
+  networkObjectLookup(rule: NatRule, location: NatRulePacketTracerLocation, control: AbstractControl): boolean {
     const formIpValue = control.value;
-    let ruleNetworkObject;
+    let ruleNetworkObject: NetworkObject;
     switch (location) {
       case 'originalSource':
         ruleNetworkObject = rule.originalSourceNetworkObject;
@@ -171,13 +172,9 @@ export class NatRulePacketTracerComponent implements OnInit {
     return false;
   }
 
-  networkObjectGroupLookup(
-    rule,
-    location: 'originalSource' | 'originalDestination' | 'translatedSource' | 'translatedDestination',
-    control: AbstractControl,
-  ) {
+  networkObjectGroupLookup(rule: NatRule, location: NatRulePacketTracerLocation, control: AbstractControl): boolean {
     const formIpValue = control.value;
-    let ruleNetworkObjectGroupId;
+    let ruleNetworkObjectGroupId: string;
 
     switch (location) {
       case 'originalSource':
@@ -223,12 +220,12 @@ export class NatRulePacketTracerComponent implements OnInit {
     });
   }
 
-  getNetworkObjectGroup(id) {
+  getNetworkObjectGroup(id): NetworkObjectGroup {
     return this.objects.networkObjectGroups.find(obj => obj.id === id);
   }
 
   handleServiceObjectPortMatch(
-    rule: any, // Assuming rule is of a type that has originalServiceObject and translatedServiceObject properties
+    rule: NatRule,
     translation: 'original' | 'translated',
     location: 'source' | 'destination',
     control: AbstractControl,
@@ -255,69 +252,13 @@ export class NatRulePacketTracerComponent implements OnInit {
     return formPortValue === serviceObjectPortValue;
   }
 
-  // takes an ipAddress to search for and another IP Subnet and determines if the ip to search
-  // falls within range
-  calculateSubnet(ipToSearch, ipAddress) {
-    const split = ipAddress.split('/');
-    // determine if there is a CIDR
-    const [ip, cidr] = split;
-
-    // converts all IP addresses into decimal format
-    const ipNumber = this.dot2num(ip);
-    const ipToSearchNum = this.dot2num(ipToSearch);
-
-    // sends all parameters to function that determins the range of IPs
-    return this.ipToRange(ipToSearchNum, ipNumber, cidr);
-  }
-
-  cidrSize(cidrSlash): number {
-    return Math.pow(2, 32 - cidrSlash);
-  }
-
-  // caluculates whether an IP falls within a subnet or not
-  ipToRange(ipToSearchNum, ip, cidr) {
-    const size = this.cidrSize(cidr);
-    const startIpNum = ip - (ip % size);
-    const endIpNum = startIpNum + size - 1;
-    let inRange = false;
-
-    // if ipToCheck is inbetween our startIp and endIp
-    // we know that ipToCheck falls within range
-    if (startIpNum <= ipToSearchNum && endIpNum >= ipToSearchNum) {
-      inRange = true;
-    }
-
-    // converts back to IP addresses
-    const ipToCheckStr = this.num2dot(ipToSearchNum);
-    const startIpStr = this.num2dot(startIpNum);
-    const endIpStr = this.num2dot(endIpNum);
-    return {
-      ipToCheckStr,
-      cidr,
-      size,
-      startIpStr,
-      endIpStr,
-      inRange,
-    };
-  }
-
-  // converts decimal IPs back to octect format
-  num2dot(num) {
-    let d: any = num % 256;
-    for (let i = 3; i > 0; i--) {
-      num = Math.floor(num / 256);
-      d = (num % 256) + '.' + d;
-    }
-    return d;
-  }
-
   // converts octect IPs to decimals
   dot2num(dot): number {
     const d = dot.split('.');
     return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3];
   }
 
-  search() {
+  search(): void {
     this.rulesHit = [];
     this.submitted = true;
     if (this.form.invalid) {
@@ -355,7 +296,6 @@ export class NatRulePacketTracerComponent implements OnInit {
     });
     this.resetFilter();
     this.applyFilter();
-    return this.rulesHit;
   }
 
   get f() {
