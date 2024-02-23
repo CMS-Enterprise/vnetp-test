@@ -34,6 +34,7 @@ import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.compone
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';
 
 @Component({
   selector: 'app-nat-rules-detail',
@@ -71,11 +72,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
 
   natRuleModalSubscription: Subscription;
   packetTracerSubscription: Subscription;
-  packetTracerObjects = {
-    natRules: [] as NatRule[],
-    networkObjectGroups: [] as NetworkObjectGroup[],
-  };
-
+  packetTracerObjects = NatRulePacketTracerDto;
   TierId: string;
   NatRuleGroup: NatRuleGroup;
   currentDatacenterSubscription: Subscription;

@@ -5,11 +5,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
 import { NatRule, NetworkObject, NetworkObjectGroup } from '../../../../../client';
-
-export type NatRulePacketTracerInput = {
-  natRules: NatRule[];
-  networkObjectGroups: NetworkObjectGroup[];
-};
+import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';
 
 type NatRulePacketTracerOutput = {
   checkList: NatRulePacketTracerCheckList;
@@ -39,7 +35,7 @@ type NatRulePacketTracerLocation = 'originalSource' | 'originalDestination' | 't
   styleUrls: ['./nat-rule-packet-tracer.component.css'],
 })
 export class NatRulePacketTracerComponent implements OnInit {
-  @Input() objects: NatRulePacketTracerInput;
+  @Input() objects: NatRulePacketTracerDto;
   form: FormGroup;
   submitted: boolean;
 
