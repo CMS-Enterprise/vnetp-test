@@ -17,10 +17,17 @@ export type NatRulePacketTracerOutput = {
 };
 
 export type NatRulePacketTracerCheckList = {
-  originalSourceInRange: boolean;
-  originalDestInRange: boolean;
-  translatedSourceInRange: boolean;
-  translatedDestInRange: boolean;
+  originalSourceIPInRange: boolean;
+  originalDestIPInRange: boolean;
+  translatedSourceIPInRange: boolean;
+  translatedDestIPInRange: boolean;
+  originalSourcePortMatch: boolean;
+  originalDestPortMatch: boolean;
+  translatedSourcePortMatch: boolean;
+  translatedDestPortMatch: boolean;
+  directionMatch: boolean;
+  biDirectionalMatch: boolean;
+  enabledMatch: boolean;
   softDeleted: boolean;
 };
 
@@ -266,7 +273,7 @@ export class NatRulePacketTracerComponent implements OnInit {
     }
 
     this.objects.natRules.forEach(rule => {
-      const checkList = {
+      const checkList: NatRulePacketTracerCheckList = {
         originalSourceIPInRange: this.handleInRange(rule, 'originalSource', this.form.controls.originalSourceIp),
         originalDestIPInRange: this.handleInRange(rule, 'originalDestination', this.form.controls.originalDestinationIp),
         translatedSourceIPInRange: this.handleInRange(rule, 'translatedSource', this.form.controls.translatedSourceIp),
