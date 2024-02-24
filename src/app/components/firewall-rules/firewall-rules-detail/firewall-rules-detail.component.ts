@@ -38,6 +38,7 @@ import { SearchColumnConfig } from '../../../common/search-bar/search-bar.compon
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-rule-packet-tracer-dto';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -72,9 +73,11 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   serviceObjects: ServiceObject[];
   serviceObjectGroups: ServiceObjectGroup[];
   tiers: Tier[];
+  packetTracerObjects = new FirewallRulePacketTracerDto();
   zones: Zone[];
 
   firewallRuleModalSubscription: Subscription;
+  packetTracerSubscription: Subscription;
 
   scope: FirewallRuleScope;
   TierId: string;
@@ -448,8 +451,68 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       previewImportSubscription.unsubscribe();
     });
   }
+  subscribeToPacketTracer() {
+    this.packetTracerSubscription = this.ngx.getModal('firewallRulePacketTracer').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('firewallRulePacketTracer');
+      this.packetTracerSubscription.unsubscribe();
+    });
+  }
 
+  openPacketTracer() {
+    this.getAllFirewallRules();
+    this.getAllNetworkObjectGroups();
+    this.getAllServiceObjectGroups();
+    this.subscribeToPacketTracer();
+    this.ngx.getModal('firewallRulePacketTracer').open();
+  }
   getZoneNames(zones: any[]): string {
     return zones.map(zone => zone.name).join(', ');
+  }
+
+  getAllFirewallRules() {
+    this.firewallRuleService
+      .getManyFirewallRule({
+        filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`],
+        sort: ['ruleIndex,ASC'],
+        join: [
+          'sourceNetworkObject',
+          'destinationNetworkObject',
+          'sourceNetworkObjectGroup',
+          'destinationNetworkObjectGroup',
+          'serviceObject',
+          'serviceObjectGroup',
+        ],
+        page: 1,
+        perPage: 50000,
+      })
+      .subscribe(response => {
+        this.packetTracerObjects.firewallRules = response.data;
+      });
+  }
+
+  getAllNetworkObjectGroups() {
+    this.networkObjectGroupService
+      .getManyNetworkObjectGroup({
+        filter: [`tierId||eq||${this.TierId}`],
+        join: ['networkObjects'],
+        page: 1,
+        perPage: 50000,
+      })
+      .subscribe(response => {
+        this.packetTracerObjects.networkObjectGroups = response.data;
+      });
+  }
+
+  getAllServiceObjectGroups() {
+    this.serviceObjectGroupService
+      .getManyServiceObjectGroup({
+        filter: [`tierId||eq||${this.TierId}`],
+        join: ['serviceObjects'],
+        page: 1,
+        perPage: 50000,
+      })
+      .subscribe(response => {
+        this.packetTracerObjects.serviceObjectGroups = response.data;
+      });
   }
 }

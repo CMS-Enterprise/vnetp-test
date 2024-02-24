@@ -17,6 +17,8 @@
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
+
+  <button type="button" class="btn btn-info" (click)="openPacketTracer()">Packet Tracer</button>
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
@@ -106,3 +108,5 @@
     To: {{ getZoneNames(firewallRule.toZone) }}
   </p>
 </ng-template>
+
+<app-firewall-rule-packet-tracer [objects]="packetTracerObjects"></app-firewall-rule-packet-tracer>

@@ -14,6 +14,7 @@ import {
   faChevronRight,
   faDownload,
   faExclamationTriangle,
+  faFilter,
   faPencilAlt,
   faPlay,
   faPlus,
@@ -115,6 +116,8 @@ export class AppModule {
       faUndo,
       faUpload,
       faSearchPlus,
+      faFilter,
+      faExclamationTriangle,
     );
   }
 }
