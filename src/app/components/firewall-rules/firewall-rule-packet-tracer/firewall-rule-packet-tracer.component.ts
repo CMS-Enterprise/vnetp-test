@@ -117,6 +117,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         protocolMatch: this.form.controls.protocol.value === rule.protocol,
         enabledMatch: this.form.controls.enabled.value === rule.enabled,
         softDeleted: Boolean(rule.deletedAt),
+        actionMatch: this.form.controls.action.value === rule.action,
       };
 
       if (checkList.sourcePortMatch === null || checkList.destPortMatch === null) {
@@ -262,6 +263,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
+      action: [''],
       direction: [''],
       protocol: [''],
       enabled: [true],
