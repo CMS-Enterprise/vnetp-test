@@ -58,6 +58,13 @@ describe('NatRulesPacketTracerComponent', () => {
     fixture.detectChanges();
   });
 
+  const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
+  const isRequired = (prop: string): boolean => {
+    const fc = getFormControl(prop);
+    fc.setValue(null);
+    return !!fc.errors && !!fc.errors.required;
+  };
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -805,5 +812,51 @@ describe('NatRulesPacketTracerComponent', () => {
     component.getNetworkObjectGroup('testId');
 
     expect(component.getNetworkObjectGroup('testId')).toEqual(networkObjectGroup);
+  });
+
+  describe('Form Validators', () => {
+    it('should not require direction', () => {
+      expect(isRequired('direction')).toBeFalsy();
+    });
+
+    it('should not require biDirectional', () => {
+      expect(isRequired('biDirectional')).toBeFalsy();
+    });
+
+    it('shoudl not require enabled', () => {
+      expect(isRequired('enabled')).toBeFalsy();
+    });
+
+    it('should require originalSourceIp', () => {
+      expect(isRequired('originalSourceIp')).toBeTruthy();
+    });
+
+    it('should require originalDestinationIp', () => {
+      expect(isRequired('originalDestinationIp')).toBeTruthy();
+    });
+
+    it('should not require originalSourcePort', () => {
+      expect(isRequired('originalSourcePort')).toBeFalsy();
+    });
+
+    it('should not require originalDestinationPort', () => {
+      expect(isRequired('originalDestinationPort')).toBeFalsy();
+    });
+
+    it('should not require translatedSourceIp', () => {
+      expect(isRequired('translatedSourceIp')).toBeFalsy();
+    });
+
+    it('should not require translatedDestinationIp', () => {
+      expect(isRequired('translatedDestinationIp')).toBeFalsy();
+    });
+
+    it('should not require translatedSourcePort', () => {
+      expect(isRequired('translatedSourcePort')).toBeFalsy();
+    });
+
+    it('should not require translatedDestinationPort', () => {
+      expect(isRequired('translatedDestinationPort')).toBeFalsy();
+    });
   });
 });
