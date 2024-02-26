@@ -6,13 +6,14 @@ import {
   MockIconButtonComponent,
   MockNgxSmartModalComponent,
 } from 'src/test/mock-components';
-import { AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { FirewallRulePacketTracerComponent } from '../firewall-rule-packet-tracer/firewall-rule-packet-tracer.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FirewallRule, FirewallRuleDirectionEnum, FirewallRuleProtocolEnum } from '../../../../../client';
+import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 
 describe('FirewallRulesPacketTracerComponent', () => {
   let component: FirewallRulePacketTracerComponent;
@@ -43,6 +44,13 @@ describe('FirewallRulesPacketTracerComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+
+  const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
+  const isRequired = (prop: string): boolean => {
+    const fc = getFormControl(prop);
+    fc.setValue(null);
+    return !!fc.errors && !!fc.errors.required;
+  };
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -131,12 +139,16 @@ describe('FirewallRulesPacketTracerComponent', () => {
       component.form.controls['direction'].setValue('In');
       component.form.controls['protocol'].setValue('TCP');
       component.form.controls['enabled'].setValue(true);
+      component.form.controls['sourcePorts'].setValue('any');
+      component.form.controls['destinationPorts'].setValue('80');
       component.objects.firewallRules = [
         {
           sourceIpAddress: '192.168.1.10',
           destinationIpAddress: '10.0.0.5',
           direction: FirewallRuleDirectionEnum.In,
           protocol: FirewallRuleProtocolEnum.Tcp,
+          sourcePorts: 'any',
+          destinationPorts: '80',
           enabled: true,
         } as any,
       ];
@@ -171,7 +183,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
       component.form.controls['sourceIpAddress'].setValue('192.168.1.10');
       component.form.controls['destinationIpAddress'].setValue('10.0.0.5');
       component.form.controls['direction'].setValue('In');
-      component.form.controls['protocol'].setValue('TCP');
+      component.form.controls['protocol'].setValue('IP');
       component.form.controls['enabled'].setValue(true);
       component.objects.firewallRules = [
         {
@@ -329,6 +341,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     it('should reset component state', () => {
       // Spy on other component methods for verification
       jest.spyOn(component, 'resetFilter');
+      jest.spyOn(SubscriptionUtil, 'unsubscribe').mockImplementation(() => {});
       const formResetSpy = jest.spyOn(component.form, 'reset');
 
       component.reset();
@@ -622,6 +635,58 @@ describe('FirewallRulesPacketTracerComponent', () => {
       const control = { value: '80' } as AbstractControl;
       const result = component.serviceObjectGroupPortMatch(rule, 'source', control);
       expect(result).toBe(false);
+    });
+  });
+
+  describe('Form Validators', () => {
+    it('should not require action', () => {
+      expect(isRequired('action')).toBeFalsy();
+    });
+
+    it('should not require direction', () => {
+      expect(isRequired('direction')).toBeFalsy();
+    });
+
+    it('should not require protocol', () => {
+      expect(isRequired('protocol')).toBeFalsy();
+    });
+
+    it('should require sourceIpAddress', () => {
+      expect(isRequired('sourceIpAddress')).toBeTruthy();
+    });
+
+    it('should require destinationIpAddress', () => {
+      expect(isRequired('destinationIpAddress')).toBeTruthy();
+    });
+
+    it('should not require destinationPorts', () => {
+      expect(isRequired('destinationPorts')).toBeFalsy();
+    });
+
+    it('should not require sourcePorts', () => {
+      expect(isRequired('sourcePorts')).toBeFalsy();
+    });
+
+    it('should require destination ports if protocol is not IP', () => {
+      const fc = getFormControl('destinationPorts');
+      fc.setValue('');
+      getFormControl('protocol').setValue('IP');
+      expect(fc.errors).toBeNull();
+      getFormControl('protocol').setValue('TCP');
+      expect(isRequired('destinationPorts')).toBeTruthy();
+      getFormControl('protocol').setValue('UDP');
+      expect(isRequired('destinationPorts')).toBeTruthy();
+    });
+
+    it('should require source ports if protocol is not IP', () => {
+      const fc = getFormControl('sourcePorts');
+      fc.setValue('');
+      getFormControl('protocol').setValue('IP');
+      expect(fc.errors).toBeNull();
+      getFormControl('protocol').setValue('TCP');
+      expect(isRequired('sourcePorts')).toBeTruthy();
+      getFormControl('protocol').setValue('UDP');
+      expect(isRequired('sourcePorts')).toBeTruthy();
     });
   });
 });
