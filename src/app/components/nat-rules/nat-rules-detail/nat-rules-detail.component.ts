@@ -513,6 +513,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
 
   subscribeToPacketTracer() {
     this.packetTracerSubscription = this.ngx.getModal('natRulePacketTracer').onCloseFinished.subscribe(() => {
