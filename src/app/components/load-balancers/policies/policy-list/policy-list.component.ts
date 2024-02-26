@@ -30,7 +30,7 @@ export interface PolicyView extends LoadBalancerPolicy {
   selector: 'app-policy-list',
   templateUrl: './policy-list.component.html',
 })
-export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PolicyListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [{ displayName: 'Type', propertyName: 'type', propertyType: LoadBalancerPolicyTypeEnum }];
@@ -71,10 +71,6 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.policyChanges = this.subscribeToPolicyModal();
   }
 
   ngOnDestroy(): void {
@@ -175,6 +171,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       policy,
     };
+    this.subscribeToPolicyModal();
     this.ngx.setModalData(dto, 'policyModal');
     this.ngx.open('policyModal');
   }
@@ -212,8 +209,8 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToPolicyModal(): Subscription {
-    return this.ngx.getModal('policyModal').onCloseFinished.subscribe(() => {
+  private subscribeToPolicyModal(): void {
+    this.policyChanges = this.ngx.getModal('policyModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
@@ -228,6 +225,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadPolicies();
       }
       this.ngx.resetModalData('policyModal');
+      this.policyChanges.unsubscribe();
     });
   }
 }

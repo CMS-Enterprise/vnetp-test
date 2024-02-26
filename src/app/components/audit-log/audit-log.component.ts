@@ -115,7 +115,9 @@ export class AuditLogComponent implements OnInit {
                     key === 'pools' ||
                     key === 'healthMonitors' ||
                     key === 'pools' ||
-                    key === 'nodes'
+                    key === 'nodes' ||
+                    key === 'fromZone' ||
+                    key === 'toZone'
                   ) {
                     let beforeList;
                     let afterList;
@@ -124,14 +126,19 @@ export class AuditLogComponent implements OnInit {
                         return;
                       }
                       if (entityBefore[key]) {
-                        beforeList = entityBefore[key].map(obj => obj.loadBalancerNode.name);
+                        beforeList = entityBefore[key]?.map(obj => obj?.loadBalancerNode?.name);
                       }
                       if (entityAfter[key]) {
-                        afterList = entityAfter[key].map(obj => obj.loadBalancerNode.name);
+                        afterList = entityAfter[key]?.map(obj => obj?.loadBalancerNode?.name);
                       }
                     } else {
-                      beforeList = entityBefore[key].map(obj => obj.name);
-                      afterList = entityAfter[key].map(obj => obj.name);
+                      if (log.entityType === 'NatRule' && key === 'toZone') {
+                        beforeList = entityBefore[key]?.name;
+                        afterList = entityAfter[key]?.name;
+                      } else {
+                        beforeList = entityBefore[key]?.map(obj => obj?.name);
+                        afterList = entityAfter[key]?.map(obj => obj?.name);
+                      }
                     }
 
                     if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {

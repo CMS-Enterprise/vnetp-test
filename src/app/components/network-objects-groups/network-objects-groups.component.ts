@@ -342,6 +342,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.getNetworkObjects();
       }
       this.ngx.resetModalData('networkObjectModal');
+      this.networkObjectModalSubscription.unsubscribe();
       this.datacenterContextService.unlockDatacenter();
     });
   }
@@ -362,6 +363,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.getNetworkObjectGroups();
       }
       this.ngx.resetModalData('networkObjectGroupModal');
+      this.networkObjectGroupModalSubscription.unsubscribe();
       this.datacenterContextService.unlockDatacenter();
     });
   }

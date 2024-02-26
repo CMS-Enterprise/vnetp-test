@@ -11,6 +11,7 @@
  */
 import { ServiceObjectGroup } from './serviceObjectGroup';
 import { NetworkObject } from './networkObject';
+import { Zone } from './zone';
 import { ServiceObject } from './serviceObject';
 import { NetworkObjectGroup } from './networkObjectGroup';
 
@@ -49,6 +50,8 @@ export interface FirewallRule {
     readonly destinationNetworkObjectGroup?: NetworkObjectGroup;
     readonly serviceObject?: ServiceObject;
     readonly serviceObjectGroup?: ServiceObjectGroup;
+    toZone?: Array<Zone>;
+    fromZone?: Array<Zone>;
 }
 export enum FirewallRuleDirectionEnum {
     In = 'In',

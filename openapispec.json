@@ -4517,6 +4517,472 @@
         ]
       }
     },
+    "/v1/network-security/zones": {
+      "post": {
+        "operationId": "createOneZone",
+        "summary": "Create one Zone",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Zone"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Zone"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      },
+      "get": {
+        "operationId": "getManyZone",
+        "summary": "Get many Zone",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyZoneResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Zone"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/bulk": {
+      "post": {
+        "operationId": "createManyZone",
+        "summary": "Create many Zone",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManyZoneDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Zone"
+                    }
+                  }
+                },
+                "required": [
+                  "bulk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Zone"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}": {
+      "get": {
+        "operationId": "getOneZone",
+        "summary": "Get one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Zone"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneZone",
+        "summary": "Update one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Zone"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Zone"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneZone",
+        "summary": "Delete one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Zone"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneZone",
+        "summary": "Soft delete one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneZone",
+        "summary": "Restore one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}/provision": {
+      "put": {
+        "operationId": "provisionOneZone",
+        "summary": "Provision one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
+    "/v1/network-security/zones/{id}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionOneZone",
+        "summary": "Deprovision one Zone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-security/zones"
+        ]
+      }
+    },
     "/v1/network-security/nat-rules/bulk-import": {
       "post": {
         "operationId": "bulkImportNatRulesNatRule",
@@ -19559,6 +20025,333 @@
           "tierId"
         ]
       },
+      "NatRule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 60
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "ruleIndex": {
+            "type": "number",
+            "minimum": 1
+          },
+          "translationType": {
+            "type": "string",
+            "enum": [
+              "Static",
+              "DynamicIp",
+              "DynamicIpAndPort"
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "In",
+              "Out"
+            ]
+          },
+          "biDirectional": {
+            "type": "boolean"
+          },
+          "originalSourceAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "translatedSourceAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "originalDestinationAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "translatedDestinationAddressType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "NetworkObject",
+              "NetworkObjectGroup"
+            ]
+          },
+          "originalServiceType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "ServiceObject"
+            ]
+          },
+          "translatedServiceType": {
+            "type": "string",
+            "enum": [
+              "None",
+              "ServiceObject"
+            ]
+          },
+          "natRuleGroupId": {
+            "type": "string"
+          },
+          "originalSourceNetworkObjectId": {
+            "type": "string"
+          },
+          "originalSourceNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "translatedSourceNetworkObjectId": {
+            "type": "string"
+          },
+          "translatedSourceNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "originalDestinationNetworkObjectId": {
+            "type": "string"
+          },
+          "originalDestinationNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "translatedDestinationNetworkObjectId": {
+            "type": "string"
+          },
+          "translatedDestinationNetworkObjectGroupId": {
+            "type": "string"
+          },
+          "originalServiceObjectId": {
+            "type": "string"
+          },
+          "translatedServiceObjectId": {
+            "type": "string"
+          },
+          "toZoneId": {
+            "type": "string"
+          },
+          "originalSourceNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "originalSourceNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "translatedSourceNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "translatedSourceNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "originalDestinationNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "originalDestinationNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "translatedDestinationNetworkObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObject"
+              }
+            ]
+          },
+          "translatedDestinationNetworkObjectGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NetworkObjectGroup"
+              }
+            ]
+          },
+          "originalServiceObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObject"
+              }
+            ]
+          },
+          "translatedServiceObject": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServiceObject"
+              }
+            ]
+          },
+          "toZone": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Zone"
+              }
+            ]
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "enabled",
+          "ruleIndex",
+          "translationType",
+          "direction",
+          "biDirectional",
+          "originalSourceAddressType",
+          "translatedSourceAddressType",
+          "originalDestinationAddressType",
+          "translatedDestinationAddressType",
+          "originalServiceType",
+          "translatedServiceType",
+          "natRuleGroupId"
+        ]
+      },
+      "Zone": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string"
+          },
+          "tierId": {
+            "type": "string"
+          },
+          "firewallRulesTo": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          },
+          "firewallRulesFrom": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          },
+          "natRulesFrom": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRule"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "tierId"
+        ]
+      },
       "FirewallRule": {
         "type": "object",
         "properties": {
@@ -19731,6 +20524,20 @@
                 "$ref": "#/components/schemas/ServiceObjectGroup"
               }
             ]
+          },
+          "toZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
           }
         },
         "required": [
@@ -19792,7 +20599,8 @@
             "enum": [
               "Intravrf",
               "Intervrf",
-              "External"
+              "External",
+              "ZoneBased"
             ]
           },
           "tierId": {
@@ -19810,242 +20618,6 @@
           "name",
           "type",
           "tierId"
-        ]
-      },
-      "NatRule": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 60
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "enabled": {
-            "type": "boolean"
-          },
-          "ruleIndex": {
-            "type": "number",
-            "minimum": 1
-          },
-          "translationType": {
-            "type": "string",
-            "enum": [
-              "Static",
-              "DynamicIp",
-              "DynamicIpAndPort"
-            ]
-          },
-          "direction": {
-            "type": "string",
-            "enum": [
-              "In",
-              "Out"
-            ]
-          },
-          "biDirectional": {
-            "type": "boolean"
-          },
-          "originalSourceAddressType": {
-            "type": "string",
-            "enum": [
-              "None",
-              "NetworkObject",
-              "NetworkObjectGroup"
-            ]
-          },
-          "translatedSourceAddressType": {
-            "type": "string",
-            "enum": [
-              "None",
-              "NetworkObject",
-              "NetworkObjectGroup"
-            ]
-          },
-          "originalDestinationAddressType": {
-            "type": "string",
-            "enum": [
-              "None",
-              "NetworkObject",
-              "NetworkObjectGroup"
-            ]
-          },
-          "translatedDestinationAddressType": {
-            "type": "string",
-            "enum": [
-              "None",
-              "NetworkObject",
-              "NetworkObjectGroup"
-            ]
-          },
-          "originalServiceType": {
-            "type": "string",
-            "enum": [
-              "None",
-              "ServiceObject"
-            ]
-          },
-          "translatedServiceType": {
-            "type": "string",
-            "enum": [
-              "None",
-              "ServiceObject"
-            ]
-          },
-          "natRuleGroupId": {
-            "type": "string"
-          },
-          "originalSourceNetworkObjectId": {
-            "type": "string"
-          },
-          "originalSourceNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "translatedSourceNetworkObjectId": {
-            "type": "string"
-          },
-          "translatedSourceNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "originalDestinationNetworkObjectId": {
-            "type": "string"
-          },
-          "originalDestinationNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "translatedDestinationNetworkObjectId": {
-            "type": "string"
-          },
-          "translatedDestinationNetworkObjectGroupId": {
-            "type": "string"
-          },
-          "originalServiceObjectId": {
-            "type": "string"
-          },
-          "translatedServiceObjectId": {
-            "type": "string"
-          },
-          "originalSourceNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "originalSourceNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "translatedSourceNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "translatedSourceNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "originalDestinationNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "originalDestinationNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "translatedDestinationNetworkObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObject"
-              }
-            ]
-          },
-          "translatedDestinationNetworkObjectGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/NetworkObjectGroup"
-              }
-            ]
-          },
-          "originalServiceObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ServiceObject"
-              }
-            ]
-          },
-          "translatedServiceObject": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ServiceObject"
-              }
-            ]
-          }
-        },
-        "required": [
-          "name",
-          "enabled",
-          "ruleIndex",
-          "translationType",
-          "direction",
-          "biDirectional",
-          "originalSourceAddressType",
-          "translatedSourceAddressType",
-          "originalDestinationAddressType",
-          "translatedDestinationAddressType",
-          "originalServiceType",
-          "translatedServiceType",
-          "natRuleGroupId"
         ]
       },
       "NatRuleGroup": {
@@ -20093,7 +20665,8 @@
             "enum": [
               "Intravrf",
               "Intervrf",
-              "External"
+              "External",
+              "ZoneBased"
             ]
           },
           "tierId": {
@@ -20980,6 +21553,13 @@
               "$ref": "#/components/schemas/NatRuleGroup"
             }
           },
+          "zones": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
           "networkObjects": {
             "readOnly": true,
             "type": "array",
@@ -21661,6 +22241,20 @@
               }
             ]
           },
+          "toZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
           "tierName": {
             "type": "string"
           },
@@ -21944,6 +22538,9 @@
           "translatedServiceObjectId": {
             "type": "string"
           },
+          "toZoneId": {
+            "type": "string"
+          },
           "originalSourceNetworkObject": {
             "readOnly": true,
             "allOf": [
@@ -22023,6 +22620,21 @@
                 "$ref": "#/components/schemas/ServiceObject"
               }
             ]
+          },
+          "toZone": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Zone"
+              }
+            ]
+          },
+          "fromZone": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
           },
           "tierName": {
             "type": "string"

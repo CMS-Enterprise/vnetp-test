@@ -42,8 +42,8 @@ export class SubnetsVlansHelpText {
 export class SubnetModalHelpText {
   Vrf = 'Tier (VRF) that the subnet will be created within.';
   Protocol = 'IP Protocol of the Subnet.';
-  Network = 'CIDR Address (X.X.X.X/YY) of the Subnet.';
-  Gateway = 'Gateway Address of the Subnet.';
+  Network = 'CIDR Address of the Subnet. (IPv4/IPv6)';
+  Gateway = 'Gateway Address of the Subnet. (IPv4/IPv6)';
   Vlan = 'VLAN associated with the Subnet.';
   SharedBetweenVrfs = 'Enable if instructed to enable by DRaaS team.';
 }
@@ -52,9 +52,7 @@ export class SubnetModalHelpText {
   providedIn: 'root',
 })
 export class FirewallRulesHelpText {
-  wikiBase: string = environment.wikiBase;
-
-  Vrf = 'Tier (VRF) that Network Objects & Groups are created within.';
+  Vrf = `Tier (VRF) that Network Objects & Groups are created within.`;
   External = 'Firewall Rules between a Tier and CMSnet/Internet.';
   InterVrf = 'Firewall Rules between 2 Tiers.';
   IntraVrf = 'Contracts between Subnets in the same Tier.';
@@ -64,8 +62,6 @@ export class FirewallRulesHelpText {
   providedIn: 'root',
 })
 export class NatRulesHelpText {
-  wikiBase: string = environment.wikiBase;
-
   External = 'NAT Rules between a Tier and CMSnet/Internet.';
   InterVrf = 'NAT Rules between 2 Tiers.';
 }
@@ -74,8 +70,6 @@ export class NatRulesHelpText {
   providedIn: 'root',
 })
 export class NetworkInterfacesHelpText {
-  wikiBase: string = environment.wikiBase;
-
   Vrf = 'Tier (VRF) that Network Objects & Groups are created within.';
   Interfaces = 'Define Logical Interfaces and subnets allowed across them.';
 }
@@ -84,8 +78,6 @@ export class NetworkInterfacesHelpText {
   providedIn: 'root',
 })
 export class FirewallRuleModalHelpText {
-  wikiBase: string = environment.wikiBase;
-
   Name = 'Name of the Firewall Rule.';
   Action = 'Action that the firewall will take on traffic that matches this rule.';
   Direction =
@@ -98,7 +90,7 @@ export class FirewallRuleModalHelpText {
   SourceServiceType = `Type of Source Service (Port/Port Range, Object, Object Group).`;
   DestinationNetworkType = `Type of Destination Network (IP, Object, Object Group).`;
   DestinationServiceType = `Type of Destination Service (Port/Port Range, Object, Object Group).`;
-  IpNetworkType = `IP address of a single host (X.X.X.X) or subnet (X.X.X.X/YY).`;
+  IpNetworkType = `IP address of a single host or subnet. (IPv4/IPv6)`;
   NetworkObjectType = `Network Object created under IPAM.`;
   NetworkObjectGroupType = `Network Object Group created under IPAM.`;
   PortServiceType = `Single port (80), Range of ports (22-23) or 'any' to match any Port.`;
@@ -112,8 +104,6 @@ export class FirewallRuleModalHelpText {
   providedIn: 'root',
 })
 export class NatRuleModalHelpText {
-  wikiBase: string = environment.wikiBase;
-
   Name = 'Name of the NAT rule.';
   Direction =
     "Direction that this traffic flow will take. 'In' represents traffic entering the VRF from external/intervrf and 'Out' represents traffic leaving the VRF to external/intervrf.";
@@ -152,8 +142,6 @@ export class NatRuleModalHelpText {
   providedIn: 'root',
 })
 export class NetworkObjectsGroupsHelpText {
-  wikiBase: string = environment.wikiBase;
-
   Tier = 'Tier that Network Objects & Groups are created within.';
   NetworkObjects = 'Network Objects can consist of a single host (with NAT/PAT), range or subnet.';
   NetworkObjectGroups = 'Network Object Groups are a collection of Network Objects.';
@@ -167,8 +155,8 @@ export class NetworkObjectModalHelpText {
   Type = 'Type of Network Object (IpAddress, Range, FQDN).';
   Fqdn = 'Fully-Qualified Domain Name of the Network Object.';
   IpAddress = 'Ip Address/Subnet of the Network Object.';
-  StartIpAddress = 'Start Address (X.X.X.X) of Range Network Object.';
-  EndIpAddress = 'End Address (X.X.X.X) of Range Network Object.';
+  StartIpAddress = 'Start Address of Range Network Object. (IPv4/IPv6)';
+  EndIpAddress = 'End Address of Range Network Object, must be greater than StartIpAddress. (IPv4/IPv6)';
   Nat = 'Sets whether Network Object should be NATed.';
   NatType =
     'Type of NAT translation, InterVRF creates a translation between two Tiers, External creates a translation between a Tier and External.';
@@ -194,8 +182,6 @@ export class NetworkObjectGroupModalHelpText {
   providedIn: 'root',
 })
 export class ServiceObjectsGroupsHelpText {
-  wikiBase: string = environment.wikiBase;
-
   Tier = 'Tier that Service Objects & Groups are created within.';
   ServiceObjects = 'Service Objects consist of a source and destination ports.';
   ServiceObjectGroups = 'Service Object Groups are a collection of Service Objects.';
@@ -254,8 +240,6 @@ export class NodeModalHelpText {
   providedIn: 'root',
 })
 export class IRuleModalHelpText {
-  wikiBase: string = environment.wikiBase;
-
   Content = 'iRule content in valid F5 format.';
 }
 
@@ -263,8 +247,6 @@ export class IRuleModalHelpText {
   providedIn: 'root',
 })
 export class HealthMonitorModalHelpText {
-  wikiBase: string = environment.wikiBase;
-
   ServicePort = 'Port that Health Monitor attempts to connect to.';
   Interval = 'Interval that Health Monitor performs checks.';
   Timeout = 'Timeout for checks before considering them failed.';
@@ -274,8 +256,6 @@ export class HealthMonitorModalHelpText {
   providedIn: 'root',
 })
 export class ContractModalHelpText {
-  wikiBase: string = environment.wikiBase;
-
   Name = 'Contract Name.';
   Description = 'Contract Description.';
   FilterEntries = 'Filter Entries to allow specific traffic.';
@@ -290,9 +270,6 @@ export class DashboardHelpText {
   Vlans = 'Total VLANs within the current tenant.';
   Subnets = 'Total Subnets within the current tenant.';
   LbVirtualServers = 'Total Load Balancer Virtual Servers within the current tenant.';
-  VMwareVms = 'Total VMware Virtual Machines within the current tenant.';
-  ZvmLpars = 'Total z/VM LPARs within the current tenant.';
-  ZosLpars = 'Total z/OS LPARs within the current tenant.';
 }
 
 @Injectable({

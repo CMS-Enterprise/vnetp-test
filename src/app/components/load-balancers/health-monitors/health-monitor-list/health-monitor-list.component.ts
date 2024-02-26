@@ -30,7 +30,7 @@ export interface HealthMonitorView extends LoadBalancerHealthMonitor {
   selector: 'app-health-monitor-list',
   templateUrl: './health-monitor-list.component.html',
 })
-export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class HealthMonitorListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
@@ -79,10 +79,6 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
 
   ngOnInit() {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit() {
-    this.healthMonitorChanges = this.subscribeToHealthMonitorModal();
   }
 
   ngOnDestroy() {
@@ -183,6 +179,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
       tierId: this.currentTier.id,
       healthMonitor,
     };
+    this.subscribeToHealthMonitorModal();
     this.ngx.setModalData(dto, 'healthMonitorModal');
     this.ngx.open('healthMonitorModal');
   }
@@ -220,8 +217,8 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
     });
   }
 
-  private subscribeToHealthMonitorModal(): Subscription {
-    return this.ngx.getModal('healthMonitorModal').onCloseFinished.subscribe(() => {
+  private subscribeToHealthMonitorModal(): void {
+    this.healthMonitorChanges = this.ngx.getModal('healthMonitorModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
@@ -236,6 +233,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy, AfterViewI
         this.loadHealthMonitors();
       }
       this.ngx.resetModalData('healthMonitorModal');
+      this.healthMonitorChanges.unsubscribe();
     });
   }
 }

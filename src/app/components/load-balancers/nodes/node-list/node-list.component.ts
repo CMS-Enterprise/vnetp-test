@@ -25,7 +25,7 @@ export interface NodeView extends LoadBalancerNode {
   selector: 'app-node-list',
   templateUrl: './node-list.component.html',
 })
-export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class NodeListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
@@ -73,10 +73,6 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.nodeChanges = this.subscribeToNodeModal();
   }
 
   ngOnDestroy(): void {
@@ -186,6 +182,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       node,
     };
+    this.subscribeToNodeModal();
     this.ngx.setModalData(dto, 'nodeModal');
     this.ngx.open('nodeModal');
   }
@@ -223,8 +220,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToNodeModal(): Subscription {
-    return this.ngx.getModal('nodeModal').onCloseFinished.subscribe(() => {
+  private subscribeToNodeModal(): void {
+    this.nodeChanges = this.ngx.getModal('nodeModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
@@ -239,6 +236,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadNodes();
       }
       this.ngx.resetModalData('nodeModal');
+      this.nodeChanges.unsubscribe();
     });
   }
 }
