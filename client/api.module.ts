@@ -24,6 +24,7 @@ import { V1NetworkSecurityNetworkObjectGroupsService } from './api/v1NetworkSecu
 import { V1NetworkSecurityNetworkObjectsService } from './api/v1NetworkSecurityNetworkObjects.service';
 import { V1NetworkSecurityServiceObjectGroupsService } from './api/v1NetworkSecurityServiceObjectGroups.service';
 import { V1NetworkSecurityServiceObjectsService } from './api/v1NetworkSecurityServiceObjects.service';
+import { V1NetworkSecurityZonesService } from './api/v1NetworkSecurityZones.service';
 import { V1NetworkStaticRoutesService } from './api/v1NetworkStaticRoutes.service';
 import { V1NetworkSubnetsService } from './api/v1NetworkSubnets.service';
 import { V1NetworkVlansService } from './api/v1NetworkVlans.service';

@@ -17,6 +17,8 @@
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
+
+  <button type="button" class="btn btn-info" (click)="openPacketTracer()">Packet Tracer</button>
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
@@ -97,8 +99,17 @@
   </p>
 </ng-template>
 
-<ng-template #updatedAt let-firewallRule="datum">
-  <p aria-label="Updated At">
-    {{firewallRule.updatedAt | date: 'medium'}}
+<!-- to/from zone/direction template -->
+<ng-template #directionZone let-firewallRule="datum">
+  <p *ngIf="FirewallRuleGroup?.type === 'Intervrf' || FirewallRuleGroup?.type === 'External'" aria-label="Direction">
+    {{ firewallRule?.direction }}
+  </p>
+  <p *ngIf="FirewallRuleGroup?.type === 'ZoneBased'" aria-label="From Zone">
+    From: {{ getZoneNames(firewallRule.fromZone) }}
+  </p>
+  <p *ngIf="FirewallRuleGroup?.type === 'ZoneBased'" aria-label="To Zone">
+    To: {{ getZoneNames(firewallRule.toZone) }}
   </p>
 </ng-template>
+
+<app-firewall-rule-packet-tracer [objects]="packetTracerObjects"></app-firewall-rule-packet-tracer>
