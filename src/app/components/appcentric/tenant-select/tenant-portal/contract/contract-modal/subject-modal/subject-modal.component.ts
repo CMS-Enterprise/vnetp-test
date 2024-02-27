@@ -133,9 +133,9 @@ export class SubjectModalComponent implements OnInit {
   }
 
   private updateSubject(subject: Subject): void {
-    subject.name = null;
-    subject.tenantId = null;
-    subject.contractId = null;
+    delete subject.name;
+    delete subject.tenantId;
+    delete subject.contractId;
     this.subjectsService
       .updateOneSubject({
         id: this.subjectId,

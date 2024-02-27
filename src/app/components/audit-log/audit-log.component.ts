@@ -115,7 +115,9 @@ export class AuditLogComponent implements OnInit {
                     key === 'pools' ||
                     key === 'healthMonitors' ||
                     key === 'pools' ||
-                    key === 'nodes'
+                    key === 'nodes' ||
+                    key === 'fromZone' ||
+                    key === 'toZone'
                   ) {
                     let beforeList;
                     let afterList;
@@ -124,14 +126,19 @@ export class AuditLogComponent implements OnInit {
                         return;
                       }
                       if (entityBefore[key]) {
-                        beforeList = entityBefore[key].map(obj => obj.loadBalancerNode.name);
+                        beforeList = entityBefore[key]?.map(obj => obj?.loadBalancerNode?.name);
                       }
                       if (entityAfter[key]) {
-                        afterList = entityAfter[key].map(obj => obj.loadBalancerNode.name);
+                        afterList = entityAfter[key]?.map(obj => obj?.loadBalancerNode?.name);
                       }
                     } else {
-                      beforeList = entityBefore[key].map(obj => obj.name);
-                      afterList = entityAfter[key].map(obj => obj.name);
+                      if (log.entityType === 'NatRule' && key === 'toZone') {
+                        beforeList = entityBefore[key]?.name;
+                        afterList = entityAfter[key]?.name;
+                      } else {
+                        beforeList = entityBefore[key]?.map(obj => obj?.name);
+                        afterList = entityAfter[key]?.map(obj => obj?.name);
+                      }
                     }
 
                     if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {
@@ -229,19 +236,19 @@ export class AuditLogComponent implements OnInit {
   getObjects(): void {
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
       fields: ['id,name'],
-      limit: 50000,
+      perPage: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
       fields: ['id,name'],
-      limit: 50000,
+      perPage: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
       fields: ['id,name'],
-      limit: 50000,
+      perPage: 50000,
     });
     const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
       fields: ['id,name'],
-      limit: 50000,
+      perPage: 50000,
     });
     forkJoin([networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest, serviceObjectGroupRequest]).subscribe(
       (result: unknown) => {
@@ -259,7 +266,7 @@ export class AuditLogComponent implements OnInit {
       .getManyTier({
         filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
         page: 1,
-        limit: 1000,
+        perPage: 1000,
       })
       .subscribe(data => {
         this.tiers = data.data;

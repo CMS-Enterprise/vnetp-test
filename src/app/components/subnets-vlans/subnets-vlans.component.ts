@@ -46,7 +46,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   vlans = {} as GetManyVlanResponseDto;
   public subnetSearchColumns: SearchColumnConfig[] = [
     // TODO: Revisit this search param, grand child search params are not supported in api
-    // { displayName: 'Vlan', propertyName: 'vlan.name', searchOperator: 'cont', join: ['vlan'] },
+    { displayName: 'Vlan', propertyName: 'vlan.name', searchOperator: 'cont', join: ['vlan'] },
     { displayName: 'Network', propertyName: 'network', join: ['vlan'] },
     { displayName: 'Gateway', propertyName: 'gateway', join: ['vlan'] },
   ];
@@ -371,9 +371,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     event.forEach(e => {
       e.vlanNumber = Number(e.vlanNumber);
 
-      // eslint-disable-next-line
-      e.tierId = this.getTierId(e['vrfName']);
-      // test
+      e.tierId = this.getTierId(e['tierName']); // eslint-disable-line
     });
     const onConfirm = () => {
       this.vlanService.createManyVlan({ createManyVlanDto: { bulk: event } }).subscribe(() => {
@@ -428,7 +426,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         join: ['vlan'],
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.subnetTableComponentDto.page,
-        limit: this.subnetTableComponentDto.perPage,
+        perPage: this.subnetTableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -466,7 +464,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       .getManyVlan({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.vlanTableComponentDto.page,
-        limit: this.vlanTableComponentDto.perPage,
+        perPage: this.vlanTableComponentDto.perPage,
         sort: ['vlanNumber,ASC'],
       })
       .subscribe(

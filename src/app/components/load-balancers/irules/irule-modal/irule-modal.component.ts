@@ -98,7 +98,8 @@ export class IRuleModalComponent implements OnInit {
   }
 
   private updateIRule(loadBalancerIrule: LoadBalancerIrule): void {
-    loadBalancerIrule.tierId = null;
+    delete loadBalancerIrule.name;
+    delete loadBalancerIrule.tierId;
     this.iRuleService
       .updateOneLoadBalancerIrule({
         id: this.iRuleId,

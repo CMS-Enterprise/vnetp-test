@@ -59,7 +59,8 @@ export class ServiceObjectGroupModalComponent implements OnInit {
           () => {},
         );
     } else {
-      modalServiceObjectGroup.type = null;
+      delete modalServiceObjectGroup.type;
+      delete modalServiceObjectGroup.name;
       this.serviceObjectGroupService
         .updateOneServiceObjectGroup({
           id: this.ServiceObjectGroupId,
@@ -73,12 +74,10 @@ export class ServiceObjectGroupModalComponent implements OnInit {
 
   private closeModal() {
     this.ngx.close('serviceObjectGroupModal');
-    this.reset();
   }
 
   cancel() {
     this.ngx.close('serviceObjectGroupModal');
-    this.reset();
   }
 
   get f() {

@@ -115,10 +115,10 @@ export class SubnetsEditModalComponent implements OnInit {
   }
 
   private editSubnet(appCentricSubnet: AppCentricSubnet): void {
-    appCentricSubnet.name = null;
-    appCentricSubnet.gatewayIp = null;
-    appCentricSubnet.tenantId = null;
-    appCentricSubnet.bridgeDomainId = null;
+    delete appCentricSubnet.name;
+    delete appCentricSubnet.gatewayIp;
+    delete appCentricSubnet.tenantId;
+    delete appCentricSubnet.bridgeDomainId;
     this.subnetsService
       .updateOneAppCentricSubnet({
         id: this.subnetId,

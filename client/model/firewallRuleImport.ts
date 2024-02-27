@@ -11,6 +11,7 @@
  */
 import { ServiceObjectGroup } from './serviceObjectGroup';
 import { NetworkObject } from './networkObject';
+import { Zone } from './zone';
 import { ServiceObject } from './serviceObject';
 import { NetworkObjectGroup } from './networkObjectGroup';
 
@@ -49,7 +50,9 @@ export interface FirewallRuleImport {
     readonly destinationNetworkObjectGroup?: NetworkObjectGroup;
     readonly serviceObject?: ServiceObject;
     readonly serviceObjectGroup?: ServiceObjectGroup;
-    vrfName: string;
+    toZone?: Array<Zone>;
+    fromZone?: Array<Zone>;
+    tierName: string;
     firewallRuleGroupType: string;
 }
 export enum FirewallRuleImportDirectionEnum {

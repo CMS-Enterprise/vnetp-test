@@ -152,7 +152,6 @@ describe('ProfileModalComponent', () => {
         name: undefined,
         properties: null,
         reverseProxy: ProfileReverseProxyType.Explicit,
-        tierId: null,
         type: undefined,
       },
     });

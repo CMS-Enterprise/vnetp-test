@@ -136,9 +136,6 @@ describe('HealthMonitorModalComponent', () => {
     expect(spy).toHaveBeenCalledWith({
       id: '2',
       loadBalancerHealthMonitor: {
-        tierId: null,
-        name: undefined,
-        type: undefined,
         servicePort: 10,
         interval: 10,
         timeout: 10,

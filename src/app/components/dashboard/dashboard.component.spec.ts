@@ -83,7 +83,7 @@ describe('DashboardComponent', () => {
 
     component.ngOnInit();
 
-    expect(datacenterService.getManyDatacenter).toHaveBeenCalledWith({ page: 1, limit: 1 });
-    expect(tierService.getManyTier).toHaveBeenCalledWith({ page: 1, limit: 1 });
+    expect(datacenterService.getManyDatacenter).toHaveBeenCalledWith({ page: 1, perPage: 1 });
+    expect(tierService.getManyTier).toHaveBeenCalledWith({ page: 1, perPage: 1 });
   });
 });

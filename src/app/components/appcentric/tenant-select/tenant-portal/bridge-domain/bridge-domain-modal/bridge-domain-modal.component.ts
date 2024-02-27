@@ -187,9 +187,9 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   }
 
   private editBridgeDomain(bridgeDomain: BridgeDomain): void {
-    bridgeDomain.name = null;
-    bridgeDomain.tenantId = null;
-    bridgeDomain.vrfId = null;
+    delete bridgeDomain.name;
+    delete bridgeDomain.tenantId;
+    delete bridgeDomain.vrfId;
     this.bridgeDomainService
       .updateOneBridgeDomain({
         id: this.bridgeDomainId,
@@ -213,10 +213,14 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       this.form.value;
 
     let { l3OutForRouteProfileId, routeProfileId } = this.form.value;
-
     // Check if these fields are empty strings, and if so, set them to null
     l3OutForRouteProfileId = l3OutForRouteProfileId === '' ? null : l3OutForRouteProfileId;
     routeProfileId = routeProfileId === '' ? null : routeProfileId;
+
+    // fixes condition where the l3Out dropdown
+    if (l3OutForRouteProfileId === null) {
+      routeProfileId = null;
+    }
 
     const tenantId = this.tenantId;
 

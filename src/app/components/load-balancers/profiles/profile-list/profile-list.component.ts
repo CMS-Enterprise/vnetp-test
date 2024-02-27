@@ -32,7 +32,7 @@ export interface ProfileView extends LoadBalancerProfile {
   selector: 'app-profile-list',
   templateUrl: './profile-list.component.html',
 })
-export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ProfileListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
@@ -77,10 +77,6 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.profileChanges = this.subscribeToProfileModal();
   }
 
   ngOnDestroy(): void {
@@ -134,7 +130,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
       .getManyLoadBalancerProfile({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -162,12 +158,12 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(profiles: ImportProfile[]): void {
     const bulk = profiles.map(profile => {
-      const { vrfName } = profile;
-      if (!vrfName) {
+      const { tierName } = profile;
+      if (!tierName) {
         return profile;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...profile,
         tierId,
@@ -186,6 +182,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       profile,
     };
+    this.subscribeToProfileModal();
     this.ngx.setModalData(dto, 'profileModal');
     this.ngx.open('profileModal');
   }
@@ -223,8 +220,8 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToProfileModal(): Subscription {
-    return this.ngx.getModal('profileModal').onCloseFinished.subscribe(() => {
+  private subscribeToProfileModal(): void {
+    this.profileChanges = this.ngx.getModal('profileModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
@@ -239,10 +236,11 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadProfiles();
       }
       this.ngx.resetModalData('profileModal');
+      this.profileChanges.unsubscribe();
     });
   }
 }
 
 export interface ImportProfile extends LoadBalancerProfile {
-  vrfName?: string;
+  tierName?: string;
 }

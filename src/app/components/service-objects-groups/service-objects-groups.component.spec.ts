@@ -193,7 +193,7 @@ describe('ServicesObjectsGroupsComponent', () => {
         .getManyServiceObject({
           filter: [`tierId||eq||${component.currentTier.id}`],
           page: component.svcObjTableComponentDto.page,
-          limit: component.svcObjTableComponentDto.perPage,
+          perPage: component.svcObjTableComponentDto.perPage,
           sort: ['name,ASC'],
         })
         .subscribe(
@@ -223,7 +223,7 @@ describe('ServicesObjectsGroupsComponent', () => {
         .getManyServiceObjectGroup({
           filter: [`tierId||eq||${component.currentTier.id}`],
           page: component.svcObjGrpTableComponentDto.page,
-          limit: component.svcObjGrpTableComponentDto.perPage,
+          perPage: component.svcObjGrpTableComponentDto.perPage,
           sort: ['name,ASC'],
         })
         .subscribe(
@@ -702,7 +702,7 @@ describe('ServicesObjectsGroupsComponent', () => {
     it('should update the "vrf_name" property, add "tierId" property, and delete the "vrf_name" property', () => {
       const obj = {
         prop1: 'value1',
-        vrf_name: 'tier1',
+        tierName: 'tier1',
       };
 
       jest.spyOn(ObjectUtil, 'getObjectId').mockReturnValue('tier1Id');
@@ -720,7 +720,7 @@ describe('ServicesObjectsGroupsComponent', () => {
       const obj = {
         prop1: '',
         type: 'typeValue',
-        vrf_name: 'tier1',
+        tierName: 'tier1',
       };
 
       jest.spyOn(ObjectUtil, 'getObjectId').mockReturnValue('tier1Id');

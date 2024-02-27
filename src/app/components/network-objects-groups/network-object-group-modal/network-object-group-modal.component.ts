@@ -73,12 +73,10 @@ export class NetworkObjectGroupModalComponent implements OnInit {
 
   private closeModal() {
     this.ngx.close('networkObjectGroupModal');
-    this.reset();
   }
 
   cancel() {
     this.ngx.close('networkObjectGroupModal');
-    this.reset();
   }
 
   get f() {

@@ -64,7 +64,7 @@ export class VirtualServerModalComponent implements OnInit {
 
   private loadProfiles(): void {
     this.profilesService
-      .getManyLoadBalancerProfile({ filter: [`tierId||eq||${this.tierId}`], limit: 10000, page: 1 })
+      .getManyLoadBalancerProfile({ filter: [`tierId||eq||${this.tierId}`], perPage: 10000, page: 1 })
       .subscribe(response => {
         this.availableProfiles = response.data;
       });
@@ -72,14 +72,14 @@ export class VirtualServerModalComponent implements OnInit {
 
   private loadPolicies(): void {
     this.policiesService
-      .getManyLoadBalancerPolicy({ filter: [`tierId||eq||${this.tierId}`], limit: 10000, page: 1 })
+      .getManyLoadBalancerPolicy({ filter: [`tierId||eq||${this.tierId}`], perPage: 10000, page: 1 })
       .subscribe(response => {
         this.availablePolicies = response.data;
       });
   }
 
   private loadIRules(): void {
-    this.iRulesService.getManyLoadBalancerIrule({ filter: [`tierId||eq||${this.tierId}`], limit: 10000, page: 1 }).subscribe(response => {
+    this.iRulesService.getManyLoadBalancerIrule({ filter: [`tierId||eq||${this.tierId}`], perPage: 10000, page: 1 }).subscribe(response => {
       this.availableIRules = response.data;
     });
   }
@@ -314,7 +314,7 @@ export class VirtualServerModalComponent implements OnInit {
   }
 
   private updateVirtualServer(loadBalancerVirtualServer: LoadBalancerVirtualServer): void {
-    loadBalancerVirtualServer.tierId = null;
+    delete loadBalancerVirtualServer.tierId;
     this.virtualServerService
       .updateOneLoadBalancerVirtualServer({
         id: this.virtualServerId,

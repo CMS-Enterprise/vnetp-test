@@ -83,8 +83,8 @@ export class VrfModalComponent implements OnInit {
   }
 
   private editVrf(vrf: Vrf): void {
-    vrf.name = null;
-    vrf.tenantId = null;
+    delete vrf.name;
+    delete vrf.tenantId;
     this.vrfService
       .updateOneVrf({
         id: this.vrfId,
@@ -110,11 +110,10 @@ export class VrfModalComponent implements OnInit {
       name,
       description,
       alias,
+      policyControlEnforced,
+      policyControlEnforcementIngress,
       tenantId,
     } as Vrf;
-
-    vrf.policyControlEnforced = policyControlEnforced === 'true';
-    vrf.policyControlEnforcementIngress = policyControlEnforcementIngress === 'true';
 
     if (this.ModalMode === ModalMode.Create) {
       this.createVrf(vrf);

@@ -124,9 +124,9 @@ export class EndpointGroupModalComponent implements OnInit {
   }
 
   private editEndpointGroup(endpointGroup: EndpointGroup): void {
-    endpointGroup.name = null;
-    endpointGroup.tenantId = null;
-    endpointGroup.applicationProfileId = null;
+    delete endpointGroup.name;
+    delete endpointGroup.tenantId;
+    delete endpointGroup.applicationProfileId;
     this.endpointGroupService
       .updateOneEndpointGroup({
         id: this.endpointGroupId,
@@ -154,11 +154,10 @@ export class EndpointGroupModalComponent implements OnInit {
       description,
       alias,
       tenantId,
+      intraEpgIsolation,
       applicationProfileId,
       bridgeDomainId: bridgeDomain,
     } as EndpointGroup;
-
-    endpointGroup.intraEpgIsolation = intraEpgIsolation === 'true';
 
     if (this.ModalMode === ModalMode.Create) {
       this.createEndpointGroup(endpointGroup);

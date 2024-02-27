@@ -115,7 +115,8 @@ export class HealthMonitorModalComponent implements OnInit {
   }
 
   private updateHealthMonitor(loadBalancerHealthMonitor: LoadBalancerHealthMonitor): void {
-    loadBalancerHealthMonitor.tierId = null;
+    delete loadBalancerHealthMonitor.name;
+    delete loadBalancerHealthMonitor.tierId;
     this.healthMonitorService
       .updateOneLoadBalancerHealthMonitor({
         id: this.healthMonitorId,

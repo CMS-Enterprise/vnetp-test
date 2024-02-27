@@ -509,7 +509,7 @@ export class SelfServiceModalComponent implements OnInit {
       .getManyTier({
         filter: [`datacenterId||eq||${this.datacenterId}`],
         join: ['firewallRuleGroups', 'natRuleGroups'],
-        limit: 1000,
+        perPage: 1000,
         page: 1,
       })
       .subscribe(data => {

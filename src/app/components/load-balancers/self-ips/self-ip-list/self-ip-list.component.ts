@@ -31,7 +31,7 @@ export interface SelfIpView extends LoadBalancerSelfIp {
   selector: 'app-self-ip-list',
   templateUrl: './self-ip-list.component.html',
 })
-export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class SelfIpListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
@@ -82,10 +82,6 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.selfIpChanges = this.subscribeToSelfIpModal();
   }
 
   ngOnDestroy(): void {
@@ -150,7 +146,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         join: ['loadBalancerVlan'],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -182,14 +178,14 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(selfIps: ImportSelfIp[]): void {
     const bulk = selfIps.map(selfIp => {
-      const { vrfName } = selfIp;
-      if (!vrfName) {
+      const { tierName } = selfIp;
+      if (!tierName) {
         return selfIp;
       }
       const { loadBalancerVlanId } = selfIp;
       // continue getting vlanUUID
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       const vlanId = ObjectUtil.getObjectId(loadBalancerVlanId, this.vlans);
       if (loadBalancerVlanId) {
         selfIp.loadBalancerVlanId = vlanId;
@@ -212,6 +208,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       selfIp,
     };
+    this.subscribeToSelfIpModal();
     this.ngx.setModalData(dto, 'selfIpModal');
     this.ngx.open('selfIpModal');
   }
@@ -250,8 +247,8 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToSelfIpModal(): Subscription {
-    return this.ngx.getModal('selfIpModal').onCloseFinished.subscribe(() => {
+  private subscribeToSelfIpModal(): void {
+    this.selfIpChanges = this.ngx.getModal('selfIpModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
@@ -266,10 +263,11 @@ export class SelfIpListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadSelfIps();
       }
       this.ngx.resetModalData('selfIpModal');
+      this.selfIpChanges.unsubscribe();
     });
   }
 }
 
 export interface ImportSelfIp extends LoadBalancerSelfIp {
-  vrfName?: string;
+  tierName?: string;
 }

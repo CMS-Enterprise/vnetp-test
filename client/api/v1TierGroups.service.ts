@@ -43,9 +43,11 @@ export interface GetManyTierGroupRequestParams {
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-    /** Number of entities to return per page. */
+    /** Number of entities to return per page.      If page is not passed, a number of entities up to this parameter will be returned. Default 20. */
     perPage?: number;
-    /** Page of entities to return based on the perPage value and total number of entities in the database. */
+    /** Alias for perPage. If perPage is also passed this parameter will be ignored. */
+    limit?: number;
+    /** Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination. */
     page?: number;
     /** Filter condition to apply to the query. */
     filter?: Array<string>;
@@ -55,8 +57,6 @@ export interface GetManyTierGroupRequestParams {
     group?: Array<string>;
     /** Properties to select. */
     fields?: Array<string>;
-    /** Alias for perPage. Number of entities to return per page. */
-    limit?: number;
     /** Where object for advanced AND/OR queries. */
     s?: string;
 }
@@ -153,10 +153,10 @@ export class V1TierGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createManyTierGroup(requestParameters: CreateManyTierGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public createManyTierGroup(requestParameters: CreateManyTierGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public createManyTierGroup(requestParameters: CreateManyTierGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public createManyTierGroup(requestParameters: CreateManyTierGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public createManyTierGroup(requestParameters: CreateManyTierGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<TierGroup>>;
+    public createManyTierGroup(requestParameters: CreateManyTierGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<TierGroup>>>;
+    public createManyTierGroup(requestParameters: CreateManyTierGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<TierGroup>>>;
+    public createManyTierGroup(requestParameters: CreateManyTierGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const createManyTierGroupDto = requestParameters.createManyTierGroupDto;
         if (createManyTierGroupDto === null || createManyTierGroupDto === undefined) {
             throw new Error('Required parameter createManyTierGroupDto was null or undefined when calling createManyTierGroup.');
@@ -168,6 +168,7 @@ export class V1TierGroupsService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -190,7 +191,7 @@ export class V1TierGroupsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/tier-groups/bulk`,
+        return this.httpClient.post<Array<TierGroup>>(`${this.configuration.basePath}/v1/tier-groups/bulk`,
             createManyTierGroupDto,
             {
                 responseType: <any>responseType,
@@ -317,12 +318,12 @@ export class V1TierGroupsService {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
+        const limit = requestParameters.limit;
         const page = requestParameters.page;
         const filter = requestParameters.filter;
         const sort = requestParameters.sort;
         const group = requestParameters.group;
         const fields = requestParameters.fields;
-        const limit = requestParameters.limit;
         const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -341,6 +342,10 @@ export class V1TierGroupsService {
         if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>perPage, 'perPage');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
         }
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -369,10 +374,6 @@ export class V1TierGroupsService {
                 queryParameters = this.addToHttpParams(queryParameters,
                   <any>element, 'fields');
             })
-        }
-        if (limit !== undefined && limit !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>limit, 'limit');
         }
         if (s !== undefined && s !== null) {
           queryParameters = this.addToHttpParams(queryParameters,

@@ -13,6 +13,7 @@ import {
   V1TiersService,
   V1NetworkSecurityNatRulesService,
   Tier,
+  Zone,
   NatRuleImportCollectionDto,
   V1NetworkSecurityNetworkObjectsService,
   V1NetworkSecurityNetworkObjectGroupsService,
@@ -21,6 +22,7 @@ import {
   NatRulePreview,
   GetManyNatRuleResponseDto,
   NatRuleDirectionEnum,
+  V1NetworkSecurityZonesService,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
@@ -32,6 +34,7 @@ import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.compone
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';
 
 @Component({
   selector: 'app-nat-rules-detail',
@@ -55,7 +58,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   filteredResults: boolean;
   public currentTier: Tier;
 
-  natRuleGroup: NatRuleGroup;
+  // natRuleGroup: NatRuleGroup;
   natRules = {} as GetManyNatRuleResponseDto;
   latestRuleIndex;
   perPage = 50;
@@ -64,15 +67,18 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   networkObjects: NetworkObject[];
   networkObjectGroups: NetworkObjectGroup[];
   serviceObjects: ServiceObject[];
+  zones: Zone[];
   tiers: Tier[];
 
   natRuleModalSubscription: Subscription;
-
+  packetTracerSubscription: Subscription;
+  packetTracerObjects = new NatRulePacketTracerDto();
   TierId: string;
   NatRuleGroup: NatRuleGroup;
   currentDatacenterSubscription: Subscription;
 
   // Templates
+  @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
   @ViewChild('originalServiceType') originalServiceTemplate: TemplateRef<any>;
   @ViewChild('originalSourceAddress') originalSourceAddressTemplate: TemplateRef<any>;
   @ViewChild('originalDestinationAddress') originalDestinationAddressTemplate: TemplateRef<any>;
@@ -85,7 +91,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     description: 'NAT Rules for the currently selected Tier',
     columns: [
       { name: 'Name', property: 'name' },
-      { name: 'Direction', property: 'direction' },
+      { name: 'Direction', template: () => this.directionZoneTemplate },
       { name: 'BiDirectional', property: 'biDirectional' },
       { name: 'Original Service Type', template: () => this.originalServiceTemplate },
       { name: 'Original Source Address', template: () => this.originalSourceAddressTemplate },
@@ -110,6 +116,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private datacenterService: DatacenterContextService,
+    private zoneService: V1NetworkSecurityZonesService,
     private tableContextService: TableContextService,
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<NatRule>();
@@ -183,8 +190,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.natRuleService
       .getManyNatRule({
         filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`, eventParams],
+        join: ['fromZone', 'toZone'],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['ruleIndex,ASC'],
       })
       .subscribe(
@@ -205,7 +213,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       .getManyNatRule({
         filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],
         page: 1,
-        limit: 1,
+        perPage: 1,
         sort: ['ruleIndex,DESC'],
       })
       .subscribe(response => {
@@ -224,28 +232,36 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
-      limit: 50000,
+      perPage: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
       filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
-      limit: 50000,
+      perPage: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
       filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
       fields: ['id,name'],
       sort: ['updatedAt,ASC'],
       page: 1,
-      limit: 50000,
+      perPage: 50000,
+    });
+    const zoneRequest = this.zoneService.getManyZone({
+      filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
+      fields: ['id,name'],
+      sort: ['updatedAt,ASC'],
+      page: 1,
+      perPage: 50000,
     });
 
-    forkJoin([tierRequest, networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest]).subscribe(result => {
+    forkJoin([tierRequest, networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest, zoneRequest]).subscribe(result => {
       this.TierName = result[0].name;
       this.networkObjects = result[1].data;
       this.networkObjectGroups = result[2].data;
       this.serviceObjects = result[3].data;
+      this.zones = result[4].data;
 
       this.getNatRules();
     });
@@ -267,6 +283,8 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     dto.NetworkObjectGroups = this.networkObjectGroups;
     dto.NetworkObjects = this.networkObjects;
     dto.ServiceObjects = this.serviceObjects;
+    dto.Zones = this.zones;
+    dto.GroupType = this.NatRuleGroup.type;
 
     if (modalMode === ModalMode.Edit) {
       dto.natRule = natRule;
@@ -283,6 +301,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.natRuleModalSubscription = this.ngx.getModal('natRuleModal').onCloseFinished.subscribe(() => {
       this.getNatRuleGroup();
       this.ngx.resetModalData('natRuleModal');
+      this.natRuleModalSubscription.unsubscribe();
     });
   }
 
@@ -409,5 +428,60 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       }
       previewImportSubscription.unsubscribe();
     });
+  }
+
+  subscribeToPacketTracer() {
+    this.packetTracerSubscription = this.ngx.getModal('natRulePacketTracer').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('natRulePacketTracer');
+      this.packetTracerSubscription.unsubscribe();
+    });
+  }
+
+  openPacketTracer() {
+    this.getAllNatRules();
+    this.getAllNetworkObjectGroups();
+    this.subscribeToPacketTracer();
+    this.ngx.getModal('natRulePacketTracer').open();
+  }
+
+  getAllNatRules() {
+    this.natRuleService
+      .getManyNatRule({
+        filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],
+        join: [
+          'originalSourceNetworkObject',
+          'originalSourceNetworkObjectGroup',
+          'translatedSourceNetworkObject',
+          'translatedSourceNetworkObjectGroup',
+          'originalDestinationNetworkObject',
+          'originalDestinationNetworkObjectGroup',
+          'translatedDestinationNetworkObject',
+          'translatedDestinationNetworkObjectGroup',
+          'originalServiceObject',
+          'translatedServiceObject',
+        ],
+        sort: ['ruleIndex,ASC'],
+        page: 1,
+        perPage: 50000,
+      })
+      .subscribe(response => {
+        this.packetTracerObjects.natRules = response.data;
+      });
+  }
+  getZoneNames(zones: any[]): string {
+    return zones.map(zone => zone.name).join(', ');
+  }
+
+  getAllNetworkObjectGroups() {
+    this.networkObjectGroupService
+      .getManyNetworkObjectGroup({
+        filter: [`tierId||eq||${this.TierId}`],
+        join: ['networkObjects'],
+        page: 1,
+        perPage: 50000,
+      })
+      .subscribe(response => {
+        this.packetTracerObjects.networkObjectGroups = response.data;
+      });
   }
 }

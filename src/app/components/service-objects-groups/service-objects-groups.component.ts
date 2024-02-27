@@ -140,9 +140,11 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     });
   }
 
-  public checkObjectsParents(svcObjId) {
-    this.serviceObjectService.checkUsedObjectsServiceObject(svcObjId).subscribe(data => {
+  public checkObjectsParents(svcObj) {
+    this.serviceObjectService.checkUsedObjectsServiceObject(svcObj).subscribe(data => {
       this.usedObjectsParents.data = data;
+      this.usedObjectsParents.name = svcObj.name;
+      this.usedObjectsParents.objType = 'Service Object';
       this.openUsedObjectsParentsModal();
     });
   }
@@ -204,7 +206,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       .getManyServiceObject({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.svcObjTableComponentDto.page,
-        limit: this.svcObjTableComponentDto.perPage,
+        perPage: this.svcObjTableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -242,7 +244,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         join: ['serviceObjects'],
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.svcObjGrpTableComponentDto.page,
-        limit: this.svcObjGrpTableComponentDto.perPage,
+        perPage: this.svcObjGrpTableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -316,6 +318,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         this.getServiceObjects();
       }
       this.ngx.resetModalData('serviceObjectModal');
+      this.serviceObjectModalSubscription.unsubscribe();
       this.datacenterContextService.unlockDatacenter();
     });
   }
@@ -336,6 +339,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         this.getServiceObjectGroups();
       }
       this.ngx.resetModalData('serviceObjectGroupModal');
+      this.serviceObjectGroupModalSubscription.unsubscribe();
       this.datacenterContextService.unlockDatacenter();
     });
   }
@@ -541,7 +545,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       if (key === 'type' || key === 'protocol') {
         obj[key] = String(val).toUpperCase();
       }
-      if (key === 'vrf_name') {
+      if (key === 'tierName') {
         obj[key] = ObjectUtil.getObjectId(val as string, this.tiers);
         obj.tierId = obj[key];
         delete obj[key];

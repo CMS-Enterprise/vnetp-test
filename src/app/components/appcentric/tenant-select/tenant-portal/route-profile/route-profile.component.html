@@ -20,7 +20,7 @@
 
 <ng-template #actionsTemplate let-routeProfile="datum">
   <section class="table__actions">
-    <app-icon-button *ngIf="!routeProfile?.deletedAt" icon="edit" label="Edit L3 Out"
+    <app-icon-button *ngIf="!routeProfile?.deletedAt" icon="edit" label="Edit Route Profile"
       (handleClick)="openRouteProfileModal(ModalMode.Edit, routeProfile)"></app-icon-button>
 
     <app-icon-button *ngIf="routeProfile?.deletedAt" icon="undo" label="Restore Route Profile" type="success"

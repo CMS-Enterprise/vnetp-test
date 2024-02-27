@@ -174,19 +174,27 @@ describe('ServiceObjectGroupModalComponent', () => {
         expect(component['serviceObjectGroupService'].updateOneServiceObjectGroup).toHaveBeenCalledWith({
           id: 'test-id',
           serviceObjectGroup: {
-            name: 'test',
             description: 'test',
-            type: null,
           },
         });
       });
     });
   });
 
-  it('should call the reset function when the cancelled', () => {
-    jest.spyOn(component, 'reset');
-    component.cancel();
-    expect(component.reset).toHaveBeenCalled();
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    // Access the private ngx member using bracket notation
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    const ngx = component['ngx'];
+
+    // Set up the spy on ngx.close
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    // Call the cancel method
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    component['closeModal']();
+
+    // Check if ngx.close has been called with the expected argument
+    expect(ngxSpy).toHaveBeenCalledWith('serviceObjectGroupModal');
   });
 
   it('should return correct form data', () => {

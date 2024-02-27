@@ -156,9 +156,11 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     this.ngx.getModal('unusedObjectsModal').open();
   }
 
-  public checkObjectsParents(netObjId) {
-    this.networkObjectService.checkUsedObjectsNetworkObject(netObjId).subscribe(data => {
+  public checkObjectsParents(netObj) {
+    this.networkObjectService.checkUsedObjectsNetworkObject(netObj).subscribe(data => {
       this.usedObjectsParents.data = data;
+      this.usedObjectsParents.name = netObj.name;
+      this.usedObjectsParents.objType = 'Network Object';
       this.openUsedObjectsParentsModal();
     });
   }
@@ -207,7 +209,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       .getManyNetworkObject({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.netObjTableComponentDto.page,
-        limit: this.netObjTableComponentDto.perPage,
+        perPage: this.netObjTableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -243,7 +245,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         join: ['networkObjects'],
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.netObjGrpTableComponentDto.page,
-        limit: this.netObjGrpTableComponentDto.perPage,
+        perPage: this.netObjGrpTableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -317,7 +319,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       } else if (advancesSearch) {
         const param = {
           page: this.netObjTableComponentDto.page,
-          limit: this.netObjTableComponentDto.perPage,
+          perPage: this.netObjTableComponentDto.perPage,
           sort: ['name,ASC'],
         };
         if (advancesSearch.searchOperator === 'and') {
@@ -340,6 +342,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.getNetworkObjects();
       }
       this.ngx.resetModalData('networkObjectModal');
+      this.networkObjectModalSubscription.unsubscribe();
       this.datacenterContextService.unlockDatacenter();
     });
   }
@@ -360,6 +363,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         this.getNetworkObjectGroups();
       }
       this.ngx.resetModalData('networkObjectGroupModal');
+      this.networkObjectGroupModalSubscription.unsubscribe();
       this.datacenterContextService.unlockDatacenter();
     });
   }
@@ -572,7 +576,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       if (key === 'ipAddress' && val !== '') {
         obj[key] = String(val).trim();
       }
-      if (key === 'vrf_name') {
+      if (key === 'tierName') {
         obj[key] = ObjectUtil.getObjectId(val as string, this.tiers);
         obj.tierId = obj[key];
         delete obj[key];

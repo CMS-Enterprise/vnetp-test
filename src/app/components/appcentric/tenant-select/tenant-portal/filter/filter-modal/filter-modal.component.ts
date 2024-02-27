@@ -266,7 +266,8 @@ export class FilterModalComponent implements OnInit {
   }
 
   private editFilter(filter: Filter): void {
-    filter.name = null;
+    delete filter.name;
+    delete filter.tenantId;
     this.filterService
       .updateOneFilter({
         id: this.filterId,
@@ -298,8 +299,6 @@ export class FilterModalComponent implements OnInit {
     if (this.modalMode === ModalMode.Create) {
       this.createFilter(filter);
     } else {
-      delete filter.tenantId;
-      delete filter.name;
       this.editFilter(filter);
     }
   }

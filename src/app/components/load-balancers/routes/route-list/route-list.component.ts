@@ -24,7 +24,7 @@ export interface RouteView extends LoadBalancerRoute {
   selector: 'app-route-list',
   templateUrl: './route-list.component.html',
 })
-export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class RouteListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [
@@ -69,10 +69,6 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.routeChanges = this.subscribeToRouteModal();
   }
 
   ngOnDestroy(): void {
@@ -126,7 +122,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       .getManyLoadBalancerRoute({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['name,ASC'],
       })
       .subscribe(
@@ -157,12 +153,12 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(routes: ImportRoute[]): void {
     const bulk = routes.map(route => {
-      const { vrfName } = route;
-      if (!vrfName) {
+      const { tierName } = route;
+      if (!tierName) {
         return route;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...route,
         tierId,
@@ -181,6 +177,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       route,
     };
+    this.subscribeToRouteModal();
     this.ngx.setModalData(dto, 'routeModal');
     this.ngx.open('routeModal');
   }
@@ -218,8 +215,8 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToRouteModal(): Subscription {
-    return this.ngx.getModal('routeModal').onCloseFinished.subscribe(() => {
+  private subscribeToRouteModal(): void {
+    this.routeChanges = this.ngx.getModal('routeModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
@@ -234,10 +231,11 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadRoutes();
       }
       this.ngx.resetModalData('routeModal');
+      this.routeChanges.unsubscribe();
     });
   }
 }
 
 export interface ImportRoute extends LoadBalancerRoute {
-  vrfName?: string;
+  tierName?: string;
 }
