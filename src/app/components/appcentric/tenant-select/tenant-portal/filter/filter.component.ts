@@ -9,7 +9,9 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { FilterModalDto } from 'src/app/models/appcentric/filter-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-filter',
@@ -220,13 +222,25 @@ export class FilterComponent implements OnInit {
   };
 
   public importFilters(event): void {
-    const dto = this.sanitizeData(event);
-    this.filterService.createManyFilter({ createManyFilterDto: { bulk: dto } }).subscribe(
-      data => {},
-      () => {},
-      () => {
-        this.getFilters();
-      },
+    const modalDto = new YesNoModalDto(
+      'Import Filters',
+      `Are you sure you would like to import ${event.length} Filter${event.length > 1 ? 's' : ''}?`,
     );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.filterService.createManyFilter({ createManyFilterDto: { bulk: dto } }).subscribe(
+        () => {},
+        () => {},
+        () => {
+          this.getFilters();
+        },
+      );
+    };
+    const onClose = () => {
+      this.getFilters();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }

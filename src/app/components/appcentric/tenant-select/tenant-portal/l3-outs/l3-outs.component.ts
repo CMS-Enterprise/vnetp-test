@@ -9,8 +9,10 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { L3OutsModalDto } from 'src/app/models/appcentric/l3-outs-model-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-l3-outs',
@@ -234,14 +236,28 @@ export class L3OutsComponent implements OnInit {
   };
 
   public importL3Outs(event): void {
-    const dto = this.sanitizeData(event);
-    this.l3OutService.createManyL3Out({ createManyL3OutDto: { bulk: dto } }).subscribe(
-      data => {},
-      () => {},
-      () => {
-        this.getL3Outs();
-      },
+    const modalDto = new YesNoModalDto(
+      'Import L3Outs',
+      `Are you sure you would like to import ${event.length}  L3 Out${event.length > 1 ? 's' : ''}?`,
     );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.l3OutService.createManyL3Out({ createManyL3OutDto: { bulk: dto } }).subscribe(
+        data => {},
+        () => {},
+        () => {
+          this.getL3Outs();
+        },
+      );
+    };
+
+    const onClose = () => {
+      this.getL3Outs();
+      this.getVrfs();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
   public getVrfs(event?): void {

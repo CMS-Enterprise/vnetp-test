@@ -15,8 +15,10 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { ApplicationProfileModalDto } from 'src/app/models/appcentric/application-profile-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-application-profile',
@@ -254,14 +256,27 @@ export class ApplicationProfileComponent implements OnInit {
   };
 
   public importAppProfiles(event): void {
-    const dto = this.sanitizeData(event);
-    this.applicationProfileService.createManyApplicationProfile({ createManyApplicationProfileDto: { bulk: dto } }).subscribe(
-      data => {},
-      () => {},
-      () => {
-        this.getApplicationProfiles();
-      },
+    const modalDto = new YesNoModalDto(
+      'Import Application Profiles',
+      `Are you sure you would like to import ${event.length} Application Profile${event.length > 1 ? 's' : ''}?`,
     );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.applicationProfileService.createManyApplicationProfile({ createManyApplicationProfileDto: { bulk: dto } }).subscribe(
+        () => {},
+        () => {},
+        () => {
+          this.getApplicationProfiles();
+        },
+      );
+    };
+
+    const onClose = () => {
+      this.getApplicationProfiles();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
   public getEndpointGroups(applicationProfileId: string) {

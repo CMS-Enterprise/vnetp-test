@@ -9,7 +9,9 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { ContractModalDto } from 'src/app/models/appcentric/contract-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-contract',
@@ -221,13 +223,24 @@ export class ContractComponent implements OnInit {
   };
 
   public importContracts(event): void {
-    const dto = this.sanitizeData(event);
-    this.contractService.createManyContract({ createManyContractDto: { bulk: dto } }).subscribe(
-      data => {},
-      () => {},
-      () => {
-        this.getContracts();
-      },
+    const modalDto = new YesNoModalDto(
+      'Import Contracts',
+      `Are you sure you would like to import ${event.length} Contract${event.length > 1 ? 's' : ''}?`,
     );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.contractService.createManyContract({ createManyContractDto: { bulk: dto } }).subscribe(
+        data => {},
+        () => {},
+        () => {
+          this.getContracts();
+        },
+      );
+    };
+    const onClose = () => {
+      this.getContracts();
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }

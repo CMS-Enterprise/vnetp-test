@@ -13,6 +13,7 @@ import {
 import { MockProvider } from 'src/test/mock-providers';
 
 import { ApplicationProfileComponent } from './application-profile.component';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 
 describe('ApplicationProfileComponent', () => {
   let component: ApplicationProfileComponent;

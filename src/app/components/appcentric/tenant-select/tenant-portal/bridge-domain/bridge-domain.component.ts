@@ -15,8 +15,10 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { BridgeDomainModalDto } from 'src/app/models/appcentric/bridge-domain-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-bridge-domain',
@@ -274,14 +276,27 @@ export class BridgeDomainComponent implements OnInit {
   };
 
   public importBridgeDomains(event): void {
-    const dto = this.sanitizeData(event);
-    this.bridgeDomainService.createManyBridgeDomain({ createManyBridgeDomainDto: { bulk: dto } }).subscribe(
-      data => {},
-      () => {},
-      () => {
-        this.getBridgeDomains();
-      },
+    const modalDto = new YesNoModalDto(
+      'Import Bridge Domain',
+      `Are you sure you would like to import ${event.length} Bridge Domain${event.length > 1 ? 's' : ''}?`,
     );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.bridgeDomainService.createManyBridgeDomain({ createManyBridgeDomainDto: { bulk: dto } }).subscribe(
+        data => {},
+        () => {},
+        () => {
+          this.getBridgeDomains();
+        },
+      );
+    };
+
+    const onClose = () => {
+      this.getBridgeDomains();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
   private getVrfs(event?): void {

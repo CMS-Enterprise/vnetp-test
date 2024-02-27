@@ -9,6 +9,8 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { RouteProfileModalDto } from '../../../../../models/appcentric/route-profile-modal-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-route-profile',
@@ -213,13 +215,25 @@ export class RouteProfileComponent implements OnInit {
   };
 
   public importRouteProfiles(event): void {
-    const dto = this.sanitizeData(event);
-    this.routeProfileService.createManyRouteProfile({ createManyRouteProfileDto: { bulk: dto } }).subscribe(
-      data => {},
-      () => {},
-      () => {
-        this.getRouteProfile();
-      },
+    const modalDto = new YesNoModalDto(
+      'Import Route Profiles',
+      `Are you sure you would like to import ${event.length} Route Profile${event.length > 1 ? 's' : ''}?`,
     );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.routeProfileService.createManyRouteProfile({ createManyRouteProfileDto: { bulk: dto } }).subscribe(
+        () => {},
+        () => {},
+        () => {
+          this.getRouteProfile();
+        },
+      );
+    };
+    const onClose = () => {
+      this.getRouteProfile();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }

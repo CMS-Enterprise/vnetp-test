@@ -9,7 +9,9 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { VrfModalDto } from 'src/app/models/appcentric/vrf-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-vrf',
@@ -227,13 +229,24 @@ export class VrfComponent implements OnInit {
   };
 
   public importVrfs(event): void {
-    const dto = this.sanitizeData(event);
-    this.vrfService.createManyVrf({ createManyVrfDto: { bulk: dto } }).subscribe(
-      data => {},
-      () => {},
-      () => {
-        this.getVrfs();
-      },
+    const modalDto = new YesNoModalDto(
+      'Import Vrfs',
+      `Are you sure you would like to import ${event.length} Vrf${event.length > 1 ? 's' : ''}?`,
     );
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.vrfService.createManyVrf({ createManyVrfDto: { bulk: dto } }).subscribe(
+        () => {},
+        () => {},
+        () => {
+          this.getVrfs();
+        },
+      );
+    };
+    const onClose = () => {
+      this.getVrfs();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }
