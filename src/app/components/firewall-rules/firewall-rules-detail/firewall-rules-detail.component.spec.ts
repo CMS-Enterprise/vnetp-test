@@ -22,7 +22,6 @@ import { FirewallRuleImport, FirewallRulePreview, V1TiersService } from 'client'
 import { of, Subject, Subscription, throwError } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FirewallRuleObjectInfoModalComponent } from '../firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -43,7 +42,6 @@ describe('FirewallRulesDetailComponent', () => {
         PreviewModalComponent,
         ResolvePipe,
         YesNoModalComponent,
-        FirewallRuleObjectInfoModalComponent,
         FirewallRulePacketTracerComponent,
       ],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V1TiersService)],
