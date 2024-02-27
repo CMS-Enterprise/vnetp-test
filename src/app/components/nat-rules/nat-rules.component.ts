@@ -6,6 +6,7 @@ import { NatRulesHelpText } from '../../helptext/help-text-networking';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from '../../utils/ObjectUtil';
 import SubscriptionUtil from '../../utils/SubscriptionUtil';
+import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 
 @Component({
   selector: 'app-nat-rules',
@@ -51,5 +52,9 @@ export class NatRulesComponent implements OnInit, OnDestroy {
 
   public getTierName(tierId: string): string {
     return ObjectUtil.getObjectName(tierId, [this.currentTier], 'Error Resolving Name');
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }

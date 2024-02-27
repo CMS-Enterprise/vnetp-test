@@ -17,6 +17,7 @@
         <th scope="col">Tier</th>
         <th scope="col">Name</th>
         <th scope="col">State</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -36,9 +37,16 @@
           >
         </td>
         <td>{{ firewallRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
+        <td>
+          <app-icon-button
+          *ngIf="checkUndeployedChanges(firewallRuleGroup)"
+          icon="download"
+          label="Undeployed Changes"
+        ></app-icon-button>
+        </td>
       </tr>
       <tr *ngIf="firewallRuleGroups?.length === 0" class="text-center">
-        <td colspan="3">No Firewall Rule Groups</td>
+        <td colspan="4">No Firewall Rule Groups</td>
       </tr>
     </tbody>
   </table>

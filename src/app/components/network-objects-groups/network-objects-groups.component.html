@@ -52,6 +52,12 @@
 
     <ng-template #actionsTemplate let-netObj="datum">
       <section class="table__actions">
+        <app-icon-button
+          *ngIf="checkUndeployedChanges(netObj)"
+          icon="download"
+          label="Undeployed Changes"
+        ></app-icon-button>
+
         <app-icon-button (click)="checkObjectsParents(netObj)" icon="search"></app-icon-button>
         <app-icon-button
               *ngIf="!netObj?.deletedAt"
@@ -117,6 +123,13 @@
 
     <ng-template #actionsTemplate let-netObjGroup="datum">
       <section class="table__actions">
+
+        <app-icon-button
+        *ngIf="checkUndeployedChanges(netObjGroup)"
+        icon="download"
+        label="Undeployed Changes"
+      ></app-icon-button>
+
         <app-icon-button
               *ngIf="!netObjGroup?.deletedAt"
               icon="edit"

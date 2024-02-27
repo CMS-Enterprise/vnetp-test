@@ -29,6 +29,7 @@ import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.compone
 import { TableContextService } from 'src/app/services/table-context.service';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -583,5 +584,9 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       this.currentDatacenterSubscription,
       this.currentTierSubscription,
     ]);
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }

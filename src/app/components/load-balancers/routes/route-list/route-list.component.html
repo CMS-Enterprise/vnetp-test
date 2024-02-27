@@ -19,6 +19,12 @@
 <ng-template #actionsTemplate let-route="datum">
   <section class="table__actions">
     <app-icon-button
+    *ngIf="checkUndeployedChanges(route)"
+    icon="download"
+    label="Undeployed Changes"
+  ></app-icon-button>
+
+    <app-icon-button
       *ngIf="route?.deletedAt"
       icon="undo"
       label="Restore Route"

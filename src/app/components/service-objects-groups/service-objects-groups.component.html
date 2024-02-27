@@ -40,6 +40,12 @@
 
     <ng-template #actionsTemplate let-serviceObj="datum">
       <section class="table__actions">
+        <app-icon-button
+          *ngIf="checkUndeployedChanges(serviceObj)"
+          icon="download"
+          label="Undeployed Changes"
+        ></app-icon-button>
+        
         <app-icon-button (click)="checkObjectsParents(serviceObj)" icon="search"></app-icon-button>
         <app-icon-button
               *ngIf="!serviceObj?.deletedAt"
@@ -99,14 +105,18 @@
 
     <ng-template #groupStateTemplate let-serviceObjGroup="datum">
       <section>
-        <span>{{ serviceObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }} 
-          {{ (serviceObjGroup.provisionedVersion !== null && serviceObjGroup.version > serviceObjGroup.provisionedVersion) ? '- Outdated' : '' }}
-        </span>
+        <span>{{ serviceObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
       </section>
     </ng-template>
 
     <ng-template #actionsTemplate let-serviceObjGroup="datum">
       <section class="table__actions">
+        <app-icon-button
+          *ngIf="checkUndeployedChanges(serviceObjGroup)"
+          icon="download"
+          label="Undeployed Changes"
+        ></app-icon-button>
+
         <app-icon-button
               *ngIf="!serviceObjGroup?.deletedAt"
               icon="edit"

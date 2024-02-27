@@ -30,6 +30,7 @@ import { TableComponentDto } from '../../models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 
 @Component({
   selector: 'app-subnets-vlans',
@@ -514,5 +515,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       this.currentDatacenterSubscription,
       this.currentTierSubscription,
     ]);
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }
