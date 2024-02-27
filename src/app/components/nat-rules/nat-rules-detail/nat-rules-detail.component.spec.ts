@@ -26,6 +26,7 @@ import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-modal.component';
+import { NatRuleObjectInfoModalComponent } from '../nat-rule-modal/nat-rule-object-info-modal/nat-rule-object-info-modal.component';
 
 describe('NatRulesDetailComponent', () => {
   let component: NatRulesDetailComponent;
@@ -58,6 +59,7 @@ describe('NatRulesDetailComponent', () => {
         YesNoModalComponent,
         ResolvePipe,
         NatRulePacketTracerComponent,
+        NatRuleObjectInfoModalComponent,
       ],
       imports: [
         FormsModule,
