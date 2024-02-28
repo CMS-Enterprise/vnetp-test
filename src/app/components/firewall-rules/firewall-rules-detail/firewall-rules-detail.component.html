@@ -34,8 +34,8 @@
 <ng-template #actionsTemplate let-firewallRule="datum">
   <section class="table__actions">
     <app-icon-button
-      *ngIf="!firewallRule?.deletedAt"
-      icon="add"
+      *ngIf="!firewallRule?.deletedAt && FirewallRuleGroup?.type !== 'ZoneBased'"
+      icon="clone"
       label="Firewall Rule Operation"
       (handleClick)="openFirewallRuleOperationModal(firewallRule)"
     ></app-icon-button>

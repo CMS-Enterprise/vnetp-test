@@ -114,19 +114,9 @@ export class FirewallRulesOperationModalComponent implements OnInit {
       })
       .subscribe(data => {
         const allFirewallRuleGroups = data.firewallRuleGroups;
-        this.firewallRuleGroups = allFirewallRuleGroups.filter(firewallRuleGroup => firewallRuleGroup.name !== 'Intravrf');
-        const sourceFirewallRuleGroupType = this.firewallRuleGroups.find(
-          firewallRuleGroups => firewallRuleGroups.id === this.sourceFirewallRuleGroupId,
-        ).type;
-        if (sourceFirewallRuleGroupType === FirewallRuleGroupTypeEnum.ZoneBased) {
-          this.firewallRuleGroups = this.firewallRuleGroups.filter(
-            firewallRuleGroup => firewallRuleGroup.type === FirewallRuleGroupTypeEnum.ZoneBased,
-          );
-        } else {
-          this.firewallRuleGroups = this.firewallRuleGroups.filter(
-            firewallRuleGroup => firewallRuleGroup.type !== FirewallRuleGroupTypeEnum.ZoneBased,
-          );
-        }
+        this.firewallRuleGroups = allFirewallRuleGroups.filter(
+          firewallRuleGroup => firewallRuleGroup.name !== 'Intravrf' && firewallRuleGroup.type !== FirewallRuleGroupTypeEnum.ZoneBased,
+        );
       });
   }
 

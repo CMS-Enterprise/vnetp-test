@@ -21,6 +21,7 @@ export class IconButtonComponent {
     upload: ['fas', 'upload'],
     undo: ['fas', 'undo'],
     search: ['fas', 'search'],
+    clone: ['far', 'clone'],
   };
 
   public typeLookup: Record<IconType, string> = {
@@ -30,5 +31,5 @@ export class IconButtonComponent {
   };
 }
 
-export type Icon = 'search' | 'add' | 'edit' | 'execute' | 'undo' | 'delete' | 'upload' | 'download';
+export type Icon = 'search' | 'add' | 'edit' | 'execute' | 'undo' | 'delete' | 'upload' | 'download' | 'clone';
 export type IconType = 'default' | 'danger' | 'success';

@@ -5,7 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 // 3rd-Party Imports
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
+import { faClone, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import {
   faBars,
   faBolt,
@@ -115,6 +115,7 @@ export class AppModule {
       faUndo,
       faUpload,
       faSearchPlus,
+      faClone,
     );
   }
 }

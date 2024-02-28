@@ -41,7 +41,7 @@
     ></app-icon-button>
 
     <app-icon-button
-      *ngIf="!natRule?.deletedAt"
+      *ngIf="!natRule?.deletedAt && NatRuleGroup?.type !== 'ZoneBased'"
       icon="edit"
       label="Edit Nat Rule"
       (handleClick)="openNatRuleModal(ModalMode.Edit, natRule)"
