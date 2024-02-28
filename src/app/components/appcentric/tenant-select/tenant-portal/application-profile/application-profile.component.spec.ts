@@ -17,6 +17,7 @@ import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.co
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Subscription } from 'rxjs';
+import { V2AppCentricApplicationProfilesService, V2AppCentricEndpointGroupsService } from 'client';
 
 describe('ApplicationProfileComponent', () => {
   let component: ApplicationProfileComponent;
@@ -36,7 +37,11 @@ describe('ApplicationProfileComponent', () => {
         MockComponent('app-ap-endpoint-group-modal'),
       ],
       imports: [HttpClientModule, RouterTestingModule],
-      providers: [MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V2AppCentricEndpointGroupsService),
+        MockProvider(V2AppCentricApplicationProfilesService),
+      ],
     }).compileComponents();
   });
 
@@ -88,9 +93,9 @@ describe('ApplicationProfileComponent', () => {
       jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
         onConfirm();
 
-        const createManyApplicationProfileSpy = jest.spyOn(component['applicationProfileService'], 'createManyApplicationProfile');
-
-        expect(createManyApplicationProfileSpy).toHaveBeenCalled();
+        expect(component['applicationProfileService'].createManyApplicationProfile).toHaveBeenCalledWith({
+          createManyApplicationProfileDto: { bulk: component.sanitizeData(event) },
+        });
 
         mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
           const data = modal.getData() as YesNoModalDto;
