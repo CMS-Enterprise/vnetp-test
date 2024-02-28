@@ -20,8 +20,9 @@
   <section class="table__actions">
     <app-icon-button
     *ngIf="checkUndeployedChanges(selfIp)"
-    icon="download"
-    label="Undeployed Changes"
+          icon="asterisk"
+          [label]="'Undeployed Changes'"
+          [type]="'danger'"
   ></app-icon-button>
 
     <app-icon-button

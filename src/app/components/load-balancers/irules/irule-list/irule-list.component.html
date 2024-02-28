@@ -20,8 +20,9 @@
   <section class="table__actions">
     <app-icon-button
     *ngIf="checkUndeployedChanges(iRule)"
-    icon="download"
-    label="Undeployed Changes"
+          icon="asterisk"
+          [label]="'Undeployed Changes'"
+          [type]="'danger'"
   ></app-icon-button>
 
     <app-icon-button *ngIf="!iRule?.deletedAt" icon="edit" label="Edit iRule" (handleClick)="openModal(iRule)"></app-icon-button>

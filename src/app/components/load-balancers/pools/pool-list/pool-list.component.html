@@ -13,8 +13,9 @@
   <section class="table__actions">
     <app-icon-button
     *ngIf="checkUndeployedChanges(pool)"
-    icon="download"
-    label="Undeployed Changes"
+          icon="asterisk"
+          [label]="'Undeployed Changes'"
+          [type]="'danger'"
   ></app-icon-button>
 
     <app-icon-button *ngIf="!pool?.deletedAt" icon="edit" label="Edit Pool" (handleClick)="openModal(pool)"></app-icon-button>
