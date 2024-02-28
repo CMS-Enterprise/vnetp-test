@@ -444,7 +444,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           .bulkImportFirewallRulesFirewallRule({
             firewallRuleImportCollectionDto: firewallConfirmDto,
           })
-          .subscribe(() => {});
+          .subscribe(() => undefined);
       }
       previewImportSubscription.unsubscribe();
       window.location.reload();
