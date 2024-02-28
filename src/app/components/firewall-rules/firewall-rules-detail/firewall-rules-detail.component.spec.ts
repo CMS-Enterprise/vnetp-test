@@ -22,6 +22,7 @@ import { FirewallRuleImport, FirewallRulePreview, V1TiersService } from 'client'
 import { of, Subject, Subscription, throwError } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -29,7 +30,14 @@ describe('FirewallRulesDetailComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, NgxPaginationModule, ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule],
+      imports: [
+        FormsModule,
+        NgxPaginationModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
+        HttpClientTestingModule,
+        ToastrModule.forRoot(),
+      ],
       declarations: [
         FirewallRulesDetailComponent,
         MockImportExportComponent,
