@@ -134,6 +134,7 @@ describe('NetworkFormValidators', () => {
     });
 
     it('should not allow invalid ports/port ranges', () => {
+      expect(validate('-1')).toEqual({ invalidPortNumber: true });
       expect(validate(' 1')).toEqual({ invalidPortNumber: true });
       expect(validate('1 ')).toEqual({ invalidPortNumber: true });
       expect(validate(' 1 ')).toEqual({ invalidPortNumber: true });
