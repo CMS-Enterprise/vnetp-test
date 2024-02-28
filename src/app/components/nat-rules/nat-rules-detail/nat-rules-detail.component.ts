@@ -424,11 +424,10 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
           .bulkImportNatRulesNatRule({
             natRuleImportCollectionDto: natConfirmDto,
           })
-          .subscribe(() => {
-            this.getNatRuleGroup();
-          });
+          .subscribe(() => undefined);
       }
       previewImportSubscription.unsubscribe();
+      window.location.reload();
     });
   }
 
