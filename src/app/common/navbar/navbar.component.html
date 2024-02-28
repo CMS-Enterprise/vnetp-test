@@ -102,8 +102,17 @@
       <li id="accountNumber" class="nav-item">
         <a>
           <span *ngIf="tenant">{{ tenant }}</span>
+          DC: {{currentDatacenter.name}}
+          T: {{currentTier.name}}
         </a>
       </li>
+      <app-icon-button
+      *ngIf="undeployedChanges"
+      icon="asterisk"
+      [label]="'Undeployed Changes'"
+      [type]="'danger'"
+      (handleClick)="openUndeployedChangesModal()"
+    ></app-icon-button>
     </ul>
 
     <ul class="navbar-nav ml-auto align-items-lg-center">
@@ -177,4 +186,18 @@
       <span>Logout</span>
     </button>
   </footer>
+</ngx-smart-modal>
+
+
+<ngx-smart-modal #undeployedChangesModal identifier="undeployedChangesModal" [dismissable]="false" customClass="medium-modal">
+  <header class="modal-header">
+    <h4 class="modal-title">Undeployed Changes</h4>
+  </header>
+
+  <div class="modal-body">
+    <p class="mb-3">The following changes have not been deployed:</p>
+    <ul>
+      <li *ngFor="let change of undeployedChanges">{{ change }}</li>
+    </ul>
+  </div>
 </ngx-smart-modal>
