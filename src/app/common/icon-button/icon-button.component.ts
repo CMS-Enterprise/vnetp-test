@@ -21,6 +21,7 @@ export class IconButtonComponent {
     upload: ['fas', 'upload'],
     undo: ['fas', 'undo'],
     search: ['fas', 'search'],
+    filter: ['fas', 'filter'],
     clone: ['far', 'clone'],
   };
 
@@ -31,5 +32,5 @@ export class IconButtonComponent {
   };
 }
 
-export type Icon = 'search' | 'add' | 'edit' | 'execute' | 'undo' | 'delete' | 'upload' | 'download' | 'clone';
+export type Icon = 'search' | 'add' | 'edit' | 'execute' | 'undo' | 'delete' | 'upload' | 'download' | 'filter' | 'clone';
 export type IconType = 'default' | 'danger' | 'success';

@@ -17,6 +17,8 @@
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
+
+  <button type="button" class="btn btn-info" (click)="openPacketTracer()">Packet Tracer</button>
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
@@ -87,8 +89,8 @@
   <p *ngIf="natRule.originalServiceType === 'None'" aria-label="Original Service type">
     {{ natRule.originalServiceType }}
   </p>
-  <p *ngIf="natRule.originalServiceType === 'ServiceObject'" aria-label="Service Object">
-    {{ natRule?.originalServiceObjectId | resolve : getServiceObjectName }}
+  <p (click)="getObjectInfo('Original ServiceObject', natRule.originalServiceType, natRule.originalServiceObjectId)" style="color:blue;cursor: pointer;" *ngIf="natRule.originalServiceType === 'ServiceObject'" aria-label="Service Object">
+    {{ natRule?.originalServiceObjectId | resolve: getServiceObjectName }}
     (Object)
   </p>
 </ng-template>
@@ -98,12 +100,12 @@
   <p *ngIf="natRule.originalSourceAddressType === 'None'" aria-label="Original Source Address type">
     {{ natRule.originalSourceAddressType }}
   </p>
-  <p *ngIf="natRule.originalSourceAddressType === 'NetworkObject'" aria-label="Network Object">
-    {{ natRule?.originalSourceNetworkObjectId | resolve : getNetworkObjectName }}
+  <p (click)="getObjectInfo('Original Source NetworkObject', natRule.originalSourceAddressType, natRule.originalSourceNetworkObjectId)" style="color:blue;cursor: pointer;" *ngIf="natRule.originalSourceAddressType === 'NetworkObject'" aria-label="Network Object">
+    {{ natRule?.originalSourceNetworkObjectId | resolve: getNetworkObjectName }}
     (Object)
   </p>
-  <p *ngIf="natRule.originalSourceAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
-    {{ natRule?.originalSourceNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
+  <p (click)="getObjectInfo('Original Source NetworkObjectGroup', natRule.originalSourceAddressType, natRule.originalSourceNetworkObjectGroupId)" style="color:blue;cursor: pointer;" *ngIf="natRule.originalSourceAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
+    {{ natRule?.originalSourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
     (Object Group)
   </p>
 </ng-template>
@@ -113,12 +115,12 @@
   <p *ngIf="natRule.originalDestinationAddressType === 'None'" aria-label="Original Destination Address type">
     {{ natRule.originalDestinationAddressType }}
   </p>
-  <p *ngIf="natRule.originalDestinationAddressType === 'NetworkObject'" aria-label="Network Object">
-    {{ natRule?.originalDestinationNetworkObjectId | resolve : getNetworkObjectName }}
+  <p (click)="getObjectInfo('Original Destination NetworkObject', natRule.originalDestinationAddressType, natRule.originalDestinationNetworkObjectId)" style="color:blue;cursor: pointer;" *ngIf="natRule.originalDestinationAddressType === 'NetworkObject'" aria-label="Network Object">
+    {{ natRule?.originalDestinationNetworkObjectId | resolve: getNetworkObjectName }}
     (Object)
   </p>
-  <p *ngIf="natRule.originalDestinationAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
-    {{ natRule?.originalDestinationNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
+  <p (click)="getObjectInfo('Original Destination NetworkObjectGroup', natRule.originalDestinationAddressType, natRule.originalDestinationNetworkObjectGroupId)" style="color:blue;cursor: pointer;" *ngIf="natRule.originalDestinationAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
+    {{ natRule?.originalDestinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
     (Object Group)
   </p>
 </ng-template>
@@ -128,8 +130,8 @@
   <p *ngIf="natRule.translatedServiceType === 'None'" aria-label="Translated Service Type">
     {{ natRule.translatedServiceType }}
   </p>
-  <p *ngIf="natRule.translatedServiceType === 'ServiceObject'" aria-label="Service Object">
-    {{ natRule?.translatedServiceObjectId | resolve : getServiceObjectName }}
+  <p (click)="getObjectInfo('Translated ServiceObject', natRule.translatedServiceType, natRule.translatedServiceObjectId)" style="color:blue;cursor: pointer;" *ngIf="natRule.translatedServiceType === 'ServiceObject'" aria-label="Service Object">
+    {{ natRule?.translatedServiceObjectId | resolve: getServiceObjectName }}
     (Object)
   </p>
 </ng-template>
@@ -139,12 +141,12 @@
   <p *ngIf="natRule.translatedSourceAddressType === 'None'" aria-label="Translated Source Address Type">
     {{ natRule?.translatedSourceAddressType }}
   </p>
-  <p *ngIf="natRule.translatedSourceAddressType === 'NetworkObject'" aria-label="Network Object">
-    {{ natRule?.translatedSourceNetworkObjectId | resolve : getNetworkObjectName }}
+  <p (click)="getObjectInfo('Translated Source NetworkObject', natRule.translatedSourceAddressType, natRule.translatedSourceNetworkObjectId)" style="color:blue;cursor: pointer;" *ngIf="natRule.translatedSourceAddressType === 'NetworkObject'" aria-label="Network Object">
+    {{ natRule?.translatedSourceNetworkObjectId | resolve: getNetworkObjectName }}
     (Object)
   </p>
-  <p *ngIf="natRule.translatedSourceAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
-    {{ natRule?.translatedSourceNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
+  <p (click)="getObjectInfo('Translated Source NetworkObjectGroup', natRule.translatedSourceAddressType, natRule.translatedSourceNetworkObjectGroupId)" style="color:blue;cursor: pointer;" *ngIf="natRule.translatedSourceAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
+    {{ natRule?.translatedSourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
     (Object Group)
   </p>
 </ng-template>
@@ -154,29 +156,15 @@
   <p *ngIf="natRule.translatedDestinationAddressType === 'None'" aria-label="Translated Destination Address Type">
     {{ natRule?.translatedDestinationAddressType }}
   </p>
-  <p *ngIf="natRule.translatedDestinationAddressType === 'NetworkObject'" aria-label="Network Object">
-    {{ natRule?.translatedDestinationNetworkObjectId | resolve : getNetworkObjectName }}
+  <p (click)="getObjectInfo('Translated Destination NetworkObject', natRule.translatedDestinationAddressType, natRule.translatedDestinationNetworkObjectId)" style="color:blue;cursor: pointer;" *ngIf="natRule.translatedDestinationAddressType === 'NetworkObject'" aria-label="Network Object">
+    {{ natRule?.translatedDestinationNetworkObjectId | resolve: getNetworkObjectName }}
     (Object)
   </p>
-  <p *ngIf="natRule.translatedDestinationAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
-    {{ natRule?.translatedDestinationNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
+  <p (click)="getObjectInfo('Translated Destination NetworkObjectGroup', natRule.translatedDestinationAddressType, natRule.translatedDestinationNetworkObjectGroupId)" style="color:blue;cursor: pointer;" *ngIf="natRule.translatedDestinationAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
+    {{ natRule?.translatedDestinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
     (Object Group)
   </p>
 </ng-template>
-
-<app-nat-rules-operation-modal
-  (emitGetRuleGroup)="getNatRuleGroup()"
-  [networkObjects]="networkObjects"
-  [networkObjectGroups]="networkObjectGroups"
-  [serviceObjects]="serviceObjects"
-></app-nat-rules-operation-modal>
-
-<app-nat-rules-operation-modal
-  (emitGetRuleGroup)="getNatRuleGroup()"
-  [networkObjects]="networkObjects"
-  [networkObjectGroups]="networkObjectGroups"
-  [serviceObjects]="serviceObjects"
-></app-nat-rules-operation-modal>
 
 <!-- to/from zone/direction template -->
 <ng-template #directionZone let-natRule="datum">
@@ -190,3 +178,12 @@
     To: {{ natRule?.toZone?.name }}
   </p>
 </ng-template>
+
+<app-nat-rule-packet-tracer [objects]="packetTracerObjects"></app-nat-rule-packet-tracer>
+
+<app-nat-rules-operation-modal
+  (emitGetRuleGroup)="getNatRuleGroup()"
+  [networkObjects]="networkObjects"
+  [networkObjectGroups]="networkObjectGroups"
+  [serviceObjects]="serviceObjects"
+></app-nat-rules-operation-modal>
