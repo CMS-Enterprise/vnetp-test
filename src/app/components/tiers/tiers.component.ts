@@ -332,20 +332,6 @@ export class TiersComponent implements OnInit, OnDestroy {
   private subscribeToTierModal(): void {
     this.tierModalSubscription = this.ngx.getModal('tierModal').onCloseFinished.subscribe(() => {
       window.location.reload();
-      this.ngx.resetModalData('tierModal');
-      this.datacenterContextService.unlockDatacenter();
-      this.tierModalSubscription.unsubscribe();
-      // get search params from local storage
-      const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
-
-      // if filtered results boolean is true, apply search params in the
-      // subsequent get call
-      if (filteredResults) {
-        this.getTiers(params);
-      } else {
-        this.getTiers();
-      }
     });
   }
 
