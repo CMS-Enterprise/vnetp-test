@@ -14,6 +14,8 @@ import { FirewallRulePacketTracerComponent } from '../firewall-rule-packet-trace
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FirewallRule, FirewallRuleDirectionEnum, FirewallRuleProtocolEnum } from '../../../../../client';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
+import { MockProvider } from '../../../../test/mock-providers';
+import { ToastrService } from 'ngx-toastr';
 
 describe('FirewallRulesPacketTracerComponent', () => {
   let component: FirewallRulePacketTracerComponent;
@@ -37,7 +39,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
         MockTooltipComponent,
         FirewallRulePacketTracerComponent,
       ],
-      providers: [{ provide: NgxSmartModalService, useValue: mockNgxSmartModalService }],
+      providers: [{ provide: NgxSmartModalService, useValue: mockNgxSmartModalService }, MockProvider(ToastrService)],
     });
 
     fixture = TestBed.createComponent(FirewallRulePacketTracerComponent);

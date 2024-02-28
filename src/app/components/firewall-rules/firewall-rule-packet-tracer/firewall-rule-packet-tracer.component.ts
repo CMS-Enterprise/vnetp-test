@@ -8,6 +8,7 @@ import { Netmask } from 'netmask';
 import { FirewallRule, NetworkObjectGroup, ServiceObjectGroup } from '../../../../../client';
 import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-rule-packet-tracer-dto';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
+import { ToastrService } from 'ngx-toastr';
 
 type FirewallRulePacketTracerOutput = {
   checkList: FirewallRulePacketTracerChecklist;
@@ -47,7 +48,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   dropdownOpen = false;
   serviceTypeSubscription: any;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {}
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private toastrService: ToastrService) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -132,6 +133,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     });
     this.resetFilter();
     this.applyFilter();
+    this.toastrService.success('Packet Tracer Executed.');
   }
 
   handleInRange(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean {

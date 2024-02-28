@@ -6,6 +6,7 @@ import { IpAddressAnyValidator, ValidatePortRange } from 'src/app/validators/net
 import { Netmask } from 'netmask';
 import { NatRule, NetworkObject, NetworkObjectGroup } from '../../../../../client';
 import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';
+import { ToastrService } from 'ngx-toastr';
 
 type NatRulePacketTracerOutput = {
   checkList: NatRulePacketTracerCheckList;
@@ -49,7 +50,7 @@ export class NatRulePacketTracerComponent implements OnInit {
 
   dropdownOpen = false;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {}
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private toastrService: ToastrService) {}
 
   ngOnInit(): void {
     this.applyFilter();
@@ -299,6 +300,7 @@ export class NatRulePacketTracerComponent implements OnInit {
     });
     this.resetFilter();
     this.applyFilter();
+    this.toastrService.success('Packet Tracer Executed.');
   }
 
   get f() {

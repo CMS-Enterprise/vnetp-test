@@ -22,6 +22,7 @@ import {
   NatRuleTranslatedDestinationAddressTypeEnum,
 } from 'client';
 import { NatRulePacketTracerComponent } from './nat-rule-packet-tracer.component';
+import { ToastrService } from 'ngx-toastr';
 
 describe('NatRulesPacketTracerComponent', () => {
   let component: NatRulePacketTracerComponent;
@@ -50,6 +51,7 @@ describe('NatRulesPacketTracerComponent', () => {
         MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
         MockProvider(V1NetworkSecurityNetworkObjectsService),
         MockProvider(V1NetworkSecurityServiceObjectsService),
+        MockProvider(ToastrService),
       ],
     });
 
