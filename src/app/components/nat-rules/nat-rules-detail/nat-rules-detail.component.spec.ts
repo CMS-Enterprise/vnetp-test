@@ -12,7 +12,6 @@ import {
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientModule } from '@angular/common/http';
 import { of, Subject, Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NatRule, NatRuleGroupTypeEnum, NatRuleImport, NatRulePreview, V1TiersService } from 'client';
@@ -26,6 +25,7 @@ import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-modal.component';
+import { ToastrModule } from 'ngx-toastr';
 import { NatRuleObjectInfoModalComponent } from '../nat-rule-modal/nat-rule-object-info-modal/nat-rule-object-info-modal.component';
 
 describe('NatRulesDetailComponent', () => {
@@ -68,6 +68,7 @@ describe('NatRulesDetailComponent', () => {
         ReactiveFormsModule,
         RouterTestingModule.withRoutes([]),
         HttpClientTestingModule,
+        ToastrModule.forRoot(),
       ],
       providers: [
         MockProvider(V1TiersService),
