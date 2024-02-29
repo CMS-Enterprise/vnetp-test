@@ -446,10 +446,11 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           .bulkImportFirewallRulesFirewallRule({
             firewallRuleImportCollectionDto: firewallConfirmDto,
           })
-          .subscribe(() => undefined);
+          .subscribe(() => {
+            window.location.reload();
+          });
       }
       previewImportSubscription.unsubscribe();
-      window.location.reload();
     });
   }
   subscribeToPacketTracer() {
