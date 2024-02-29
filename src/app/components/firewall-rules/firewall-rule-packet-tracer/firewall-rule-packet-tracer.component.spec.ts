@@ -669,10 +669,12 @@ describe('FirewallRulesPacketTracerComponent', () => {
       expect(isRequired('sourcePorts')).toBeFalsy();
     });
 
-    it('should require destination ports if protocol is not IP', () => {
+    it('should require destination ports if protocol is not IP or ICMP', () => {
       const fc = getFormControl('destinationPorts');
       fc.setValue('');
       getFormControl('protocol').setValue('IP');
+      expect(fc.errors).toBeNull();
+      getFormControl('protocol').setValue('ICMP');
       expect(fc.errors).toBeNull();
       getFormControl('protocol').setValue('TCP');
       expect(isRequired('destinationPorts')).toBeTruthy();
@@ -680,10 +682,12 @@ describe('FirewallRulesPacketTracerComponent', () => {
       expect(isRequired('destinationPorts')).toBeTruthy();
     });
 
-    it('should require source ports if protocol is not IP', () => {
+    it('should require source ports if protocol is not IP or ICMP', () => {
       const fc = getFormControl('sourcePorts');
       fc.setValue('');
       getFormControl('protocol').setValue('IP');
+      expect(fc.errors).toBeNull();
+      getFormControl('protocol').setValue('ICMP');
       expect(fc.errors).toBeNull();
       getFormControl('protocol').setValue('TCP');
       expect(isRequired('sourcePorts')).toBeTruthy();
