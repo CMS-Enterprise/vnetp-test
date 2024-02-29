@@ -187,7 +187,7 @@
             [class.is-invalid]="submitted && f.originalSourceIp.errors" aria-label="Source IP" />
           <div *ngIf="submitted && f.originalSourceIp.errors" class="invalid-feedback">
             <div *ngIf="f.originalSourceIp.errors.required">Original Source IP Address is required</div>
-            <div *ngIf="f.originalSourceIp.errors.invalidIpAny">Original Source IP address, must be a valid IPv4/IPv6 address or
+            <div *ngIf="f.originalSourceIp.errors.invalidIpAny">Original Source IP address, must be a valid IPv4 address or
               CIDR</div>
           </div>
         </div>
@@ -201,7 +201,7 @@
             [class.is-invalid]="submitted && f.originalDestinationIp.errors" aria-label="Destination IP" />
           <div *ngIf="submitted && f.originalDestinationIp.errors" class="invalid-feedback">
             <div *ngIf="f.originalDestinationIp.errors.required">Original Destination IP is required</div>
-            <div *ngIf="f.originalDestinationIp.errors.invalidIpAny">Original Destination IP address, must be a valid IPv4/IPv6
+            <div *ngIf="f.originalDestinationIp.errors.invalidIpAny">Original Destination IP address, must be a valid IPv4
               address or CIDR</div>
           </div>
         </div>
@@ -217,7 +217,7 @@
             [class.is-invalid]="submitted && f.translatedSourceIp.errors" aria-label="Translated Source IP" aria-placeholder="None" placeholder="None"/>
           <div *ngIf="submitted && f.translatedSourceIp.errors" class="invalid-feedback">
             <div *ngIf="f.translatedSourceIp.errors.required">Translated Source IP is required</div>
-            <div *ngIf="f.translatedSourceIp.errors.invalidIpAny">Translated Source IP address must be a valid IPv4/IPv6
+            <div *ngIf="f.translatedSourceIp.errors.invalidIpAny">Translated Source IP address must be a valid IPv4
               address or CIDR</div>
           </div>
         </div>
@@ -231,7 +231,7 @@
             [class.is-invalid]="submitted && f.translatedDestinationIp.errors" aria-label="Translated Destination IP" aria-placeholder="None" placeholder="None" />
           <div *ngIf="submitted && f.translatedDestinationIp.errors" class="invalid-feedback">
             <div *ngIf="f.translatedDestinationIp.errors.required">Translated Destination IP is required</div>
-            <div *ngIf="f.translatedDestinationIp.errors.invalidIpAny">Translated Destination IP address must be a valid IPv4/IPv6
+            <div *ngIf="f.translatedDestinationIp.errors.invalidIpAny">Translated Destination IP address must be a valid IPv4
               address or CIDR</div>
           </div>
         </div>
