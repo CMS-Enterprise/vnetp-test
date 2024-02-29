@@ -27,7 +27,7 @@
 
 <ng-template #actionsTemplate let-firewallRule="datum">
   <section class="table__actions">
-    <app-icon-button *ngIf="!firewallRule?.deletedAt" icon="edit" label="Edit Firewall Rule"
+    <app-icon-button icon="edit" label="Edit Firewall Rule"
       (handleClick)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"></app-icon-button>
 
     <app-icon-button *ngIf="firewallRule?.deletedAt" icon="undo" label="Restore Firewall Rule" type="success"
@@ -53,16 +53,19 @@
 <app-yes-no-modal></app-yes-no-modal>
 <app-preview-modal></app-preview-modal>
 
+<app-firewall-rule-object-info-modal></app-firewall-rule-object-info-modal>
+
+
 <!-- source address template -->
 <ng-template #sourceAddress let-firewallRule="datum">
   <p *ngIf="firewallRule.sourceAddressType === 'IpAddress'" aria-label="Source IP">
     {{ firewallRule?.sourceIpAddress }}
   </p>
-  <p *ngIf="firewallRule.sourceAddressType === 'NetworkObject'" aria-label="Source Network Object">
+  <p (click)="getObjectInfo('Source NetworkObject', firewallRule.sourceAddressType, firewallRule.sourceNetworkObjectId)" style="color:blue;cursor: pointer;" *ngIf="firewallRule.sourceAddressType === 'NetworkObject'" aria-label="Source Network Object">
     {{ firewallRule?.sourceNetworkObjectId | resolve: getNetworkObjectName }}
     (Object)
   </p>
-  <p *ngIf="firewallRule.sourceAddressType === 'NetworkObjectGroup'" aria-label="Source Network Object Group">
+  <p (click)="getObjectInfo('Source NetworkObjectGroup', firewallRule.sourceAddressType, firewallRule.sourceNetworkObjectGroupId)" style="color:blue;cursor: pointer;" *ngIf="firewallRule.sourceAddressType === 'NetworkObjectGroup'" aria-label="Source Network Object Group">
     {{ firewallRule?.sourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
     (Object Group)
   </p>
@@ -73,11 +76,11 @@
   <p *ngIf="firewallRule.destinationAddressType === 'IpAddress'" aria-label="Destination IP">
     {{ firewallRule?.destinationIpAddress }}
   </p>
-  <p *ngIf="firewallRule.destinationAddressType === 'NetworkObject'" aria-label="Destination Network Object">
+  <p (click)="getObjectInfo('Destination NetworkObject', firewallRule.destinationAddressType, firewallRule.destinationNetworkObjectId)" style="color:blue;cursor: pointer;" *ngIf="firewallRule.destinationAddressType === 'NetworkObject'" aria-label="Destination Network Object">
     {{ firewallRule?.destinationNetworkObjectId | resolve: getNetworkObjectName }}
     (Object)
   </p>
-  <p *ngIf="firewallRule.destinationAddressType === 'NetworkObjectGroup'" aria-label="Destination Network Object Group">
+  <p (click)="getObjectInfo('Destination NetworkObjectGroup', firewallRule.destinationAddressType, firewallRule.destinationNetworkObjectGroupId)" style="color:blue;cursor: pointer;" *ngIf="firewallRule.destinationAddressType === 'NetworkObjectGroup'" aria-label="Destination Network Object Group">
     {{ firewallRule?.destinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
     (Object Group)
   </p>
@@ -88,10 +91,10 @@
   <p *ngIf="firewallRule.serviceType === 'Port'" aria-label="Source/Destination Ports">
     Source Ports: {{ firewallRule?.sourcePorts }} - Destination Ports: {{ firewallRule?.destinationPorts }}
   </p>
-  <p *ngIf="firewallRule.serviceType === 'ServiceObject'" aria-label="Service Object">
+  <p (click)="getObjectInfo('Service Object', firewallRule.serviceType, firewallRule.serviceObjectId)" style="color:blue;cursor: pointer;" *ngIf="firewallRule.serviceType === 'ServiceObject'" aria-label="Service Object">
     {{ firewallRule?.serviceObjectId | resolve: getServiceObjectName }} (Object)
   </p>
-  <p *ngIf="firewallRule.serviceType === 'ServiceObjectGroup'" aria-label="Service Object Group">
+  <p (click)="getObjectInfo('Service Object Group', firewallRule.serviceType, firewallRule.serviceObjectGroupId)" style="color:blue;cursor: pointer;" *ngIf="firewallRule.serviceType === 'ServiceObjectGroup'" aria-label="Service Object Group">
     {{ firewallRule?.serviceObjectGroupId | resolve: getServiceObjectGroupName }} (Object Group)
   </p>
 </ng-template>

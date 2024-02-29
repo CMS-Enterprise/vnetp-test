@@ -84,6 +84,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   FirewallRuleGroup: FirewallRuleGroup;
   currentDatacenterSubscription: Subscription;
 
+  objectInfoSubscription: Subscription;
   public isLoading = false;
 
   // Templates
@@ -92,6 +93,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   @ViewChild('destinationAddress') destinationAddressTemplate: TemplateRef<any>;
   @ViewChild('serviceType') serviceTemplate: TemplateRef<any>;
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+  @ViewChild('updatedAt') updatedAtTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
     description: 'Firewall Rules for the currently selected Tier',
@@ -444,11 +446,10 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           .bulkImportFirewallRulesFirewallRule({
             firewallRuleImportCollectionDto: firewallConfirmDto,
           })
-          .subscribe(() => {
-            this.getFirewallRuleGroup();
-          });
+          .subscribe(() => undefined);
       }
       previewImportSubscription.unsubscribe();
+      window.location.reload();
     });
   }
   subscribeToPacketTracer() {
@@ -514,5 +515,125 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         this.packetTracerObjects.serviceObjectGroups = response.data;
       });
+  }
+
+  getObjectInfo(property, objectType, objectId) {
+    if (objectId) {
+      switch (objectType) {
+        case 'NetworkObject': {
+          this.handleNetworkObject(property, objectId);
+          break;
+        }
+        case 'NetworkObjectGroup': {
+          this.handleNetworkObjectGroup(property, objectId);
+          break;
+        }
+        case 'ServiceObject': {
+          this.handleServiceObject(property, objectId);
+          break;
+        }
+        case 'ServiceObjectGroup': {
+          this.handleServiceObjectGroup(property, objectId);
+          break;
+        }
+      }
+    }
+  }
+
+  handleNetworkObject(property, objectId) {
+    this.networkObjectService.getOneNetworkObject({ id: objectId }).subscribe(data => {
+      const objectName = data.name;
+      const modalTitle = `${property} : ${objectName}`;
+      let value;
+      if (data.type === 'Fqdn') {
+        value = data.fqdn;
+      } else if (data.type === 'Range') {
+        value = `${data.startIpAddress} - ${data.endIpAddress}`;
+      } else {
+        value = data.ipAddress;
+      }
+      const modalBody = [`${data.type}: ${value}`];
+      const dto = {
+        modalTitle,
+        modalBody,
+      };
+      this.subscribeToObjectInfoModal();
+      this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
+      this.ngx.getModal('firewallRuleObjectInfoModal').open();
+    });
+  }
+
+  handleNetworkObjectGroup(property, objectId) {
+    this.networkObjectGroupService.getOneNetworkObjectGroup({ id: objectId, join: ['networkObjects'] }).subscribe(data => {
+      const members = data.networkObjects;
+      const memberDetails = members.map(member => {
+        let returnValue = `Name: ${member.name} --- `;
+
+        if (member.type === 'IpAddress') {
+          returnValue += `IP Address: ${member.ipAddress}`;
+        } else if (member.type === 'Range') {
+          returnValue += `Range: ${member.startIpAddress}-${member.endIpAddress}`;
+        } else if (member.type === 'Fqdn') {
+          returnValue += `FQDN: ${member.fqdn}`;
+        }
+
+        return returnValue;
+      });
+      const modalBody = memberDetails;
+      const objectName = data.name;
+      const modalTitle = `${property} : ${objectName}`;
+      const dto = {
+        modalTitle,
+        modalBody,
+      };
+      this.subscribeToObjectInfoModal();
+      this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
+      this.ngx.getModal('firewallRuleObjectInfoModal').open();
+    });
+  }
+
+  handleServiceObject(property, objectId) {
+    this.serviceObjectService.getOneServiceObject({ id: objectId }).subscribe(data => {
+      const objectName = data.name;
+      const modalTitle = `${property} : ${objectName}`;
+      const modalBody = [`Protocol : ${data.protocol}, Source Ports: ${data.sourcePorts}, Destination Ports: ${data.destinationPorts}`];
+      const dto = {
+        modalTitle,
+        modalBody,
+      };
+      this.subscribeToObjectInfoModal();
+      this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
+      this.ngx.getModal('firewallRuleObjectInfoModal').open();
+    });
+  }
+
+  handleServiceObjectGroup(property, objectId) {
+    this.serviceObjectGroupService.getOneServiceObjectGroup({ id: objectId, join: ['serviceObjects'] }).subscribe(data => {
+      const members = data.serviceObjects;
+      const memberDetails = members.map(member => {
+        let returnValue = `Name: ${member.name} ---`;
+
+        /* eslint-disable-next-line */
+        returnValue += `Protocol: ${member.protocol}, Source Ports: ${member.sourcePorts}, Destination Ports: ${member.destinationPorts}`;
+
+        return returnValue;
+      });
+      const modalBody = memberDetails;
+      const objectName = data.name;
+      const modalTitle = `${property} : ${objectName}`;
+      const dto = {
+        modalTitle,
+        modalBody,
+      };
+      this.subscribeToObjectInfoModal();
+      this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
+      this.ngx.getModal('firewallRuleObjectInfoModal').open();
+    });
+  }
+
+  subscribeToObjectInfoModal() {
+    this.objectInfoSubscription = this.ngx.getModal('firewallRuleObjectInfoModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('firewallRuleObjectInfoModal');
+    });
   }
 }
