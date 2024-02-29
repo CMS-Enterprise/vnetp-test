@@ -4,6 +4,15 @@
 </a>
 
 <h1>{{ TierName }} - {{ FirewallRuleGroup?.name }} FW Rules</h1>
+<app-icon-button
+*ngIf="checkUndeployedChangesGroup(FirewallRuleGroup)"
+icon="asterisk"
+label="Undeployed Changes"
+[type]="'danger'"
+click="showUndeployedChanges()"
+></app-icon-button>
+Show Undeployed Changes
+
 
 <section class="btn-toolbar" role="toolbar">
   <!-- Add Firewall Rule -->
@@ -27,6 +36,13 @@
 
 <ng-template #actionsTemplate let-firewallRule="datum">
   <section class="table__actions">
+      <app-icon-button
+      *ngIf="checkUndeployedChanges(firewallRule)"
+      icon="asterisk"
+      label="Undeployed Changes"
+      [type]="'danger'"
+    ></app-icon-button>
+
     <app-icon-button icon="edit" label="Edit Firewall Rule"
       (handleClick)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"></app-icon-button>
 

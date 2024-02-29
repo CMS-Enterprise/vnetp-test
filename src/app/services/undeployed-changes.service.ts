@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
-  ServiceObject,
   Tier,
+  V1NetworkSecurityFirewallRuleGroupsService,
+  V1NetworkSecurityNatRuleGroupsService,
   V1NetworkSecurityNetworkObjectGroupsService,
   V1NetworkSecurityNetworkObjectsService,
   V1NetworkSecurityServiceObjectGroupsService,
@@ -27,6 +28,8 @@ export class UndeployedChangesService {
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
+    private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
+    private natRuleGroupService: V1NetworkSecurityNatRuleGroupsService,
     private tierContextService: TierContextService,
   ) {
     this.setupSubscriptions();
@@ -54,43 +57,68 @@ export class UndeployedChangesService {
       return;
     }
 
+    const firewallRuleGroupRequest = this.firewallRuleGroupService.getManyFirewallRuleGroup({
+      filter: [`tierId||eq||${this.currentTier.id}`, 'version||gt_prop||provisionedVersion'],
+      sort: ['updatedAt,DESC'],
+      fields: ['id', 'name'],
+      page: 1,
+      perPage: 10,
+    });
+    const natRuleGroupRequest = this.natRuleGroupService.getManyNatRuleGroup({
+      filter: [`tierId||eq||${this.currentTier.id}`, 'version||gt_prop||provisionedVersion'],
+      sort: ['updatedAt,DESC'],
+      fields: ['id', 'name'],
+      page: 1,
+      perPage: 10,
+    });
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
       filter: [`tierId||eq||${this.currentTier.id}`, 'version||gt_prop||provisionedVersion'],
       sort: ['updatedAt,DESC'],
       fields: ['id', 'name'],
       page: 1,
-      perPage: 1,
+      perPage: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
       filter: [`tierId||eq||${this.currentTier.id}`, 'version||gt_prop||provisionedVersion'],
       sort: ['updatedAt,DESC'],
       fields: ['id', 'name'],
       page: 1,
-      perPage: 1,
+      perPage: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
       filter: [`tierId||eq||${this.currentTier.id}`, 'version||gt_prop||provisionedVersion'],
       sort: ['updatedAt,DESC'],
       fields: ['id', 'name'],
       page: 1,
-      perPage: 1,
+      perPage: 50000,
     });
     const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
       filter: [`tierId||eq||${this.currentTier.id}`, 'version||gt_prop||provisionedVersion'],
       sort: ['updatedAt,DESC'],
       fields: ['id', 'name'],
       page: 1,
-      perPage: 1,
+      perPage: 50000,
     });
 
-    forkJoin([networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest, serviceObjectGroupRequest]).subscribe(result => {
-      const undeployedNetworkObjects = result[0].data;
-      const undeployedNetworkObjectGroups = result[1].data;
-      const undeployedServiceObjects = result[2].data;
-      const undeployedServiceObjectGroups = result[3].data; // Corrected variable name for consistency
+    forkJoin([
+      firewallRuleGroupRequest,
+      natRuleGroupRequest,
+      networkObjectRequest,
+      networkObjectGroupRequest,
+      serviceObjectRequest,
+      serviceObjectGroupRequest,
+    ]).subscribe(result => {
+      const undeployedFirewallRuleGroups = result[0].data;
+      const undeployedNatRuleGroups = result[1].data;
+      const undeployedNetworkObjects = result[2].data;
+      const undeployedNetworkObjectGroups = result[3].data;
+      const undeployedServiceObjects = result[4].data;
+      const undeployedServiceObjectGroups = result[5].data; // Corrected variable name for consistency
 
       // Emit the detailed undeployed objects
       this.undeployedChangeObjectsSubject.next({
+        undeployedFirewallRuleGroups,
+        undeployedNatRuleGroups,
         undeployedNetworkObjects,
         undeployedNetworkObjectGroups,
         undeployedServiceObjects,
@@ -99,6 +127,8 @@ export class UndeployedChangesService {
 
       // Check if any of the results have data and update undeployedChangesSubject accordingly
       const hasUndeployedChanges =
+        undeployedFirewallRuleGroups.length > 0 ||
+        undeployedNatRuleGroups.length > 0 ||
         undeployedNetworkObjects.length > 0 ||
         undeployedNetworkObjectGroups.length > 0 ||
         undeployedServiceObjects.length > 0 ||

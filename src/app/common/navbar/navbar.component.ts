@@ -95,7 +95,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     this.undeployedChangesObjectSubscription = this.undeployedChangesService.undeployedChangeObjects.subscribe(undeployedChangeObjects => {
       this.undeployedChangeObjects = undeployedChangeObjects;
-      console.log(this.undeployedChangeObjects);
     });
   }
 

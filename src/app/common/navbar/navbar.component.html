@@ -102,8 +102,8 @@
       <li id="accountNumber" class="nav-item">
         <a>
           <span *ngIf="tenant">{{ tenant }}</span>
-          DC: {{currentDatacenter.name}}
-          T: {{currentTier.name}}
+          DC: {{currentDatacenter?.name}}
+          T: {{currentTier?.name}}
         </a>
       </li>
       <app-icon-button
@@ -191,13 +191,40 @@
 
 <ngx-smart-modal #undeployedChangesModal identifier="undeployedChangesModal" [dismissable]="false" customClass="medium-modal">
   <header class="modal-header">
-    <h4 class="modal-title">Undeployed Changes</h4>
+    <h4 class="modal-title">Undeployed Changes in Tier {{currentTier?.name}}</h4>
   </header>
 
   <div class="modal-body">
-    <p class="mb-3">The following changes have not been deployed:</p>
+    <p class="mb-3">The following provisioned objects have changes that have not been deployed:</p>
+
+    <h5>Firewall Rule Groups</h5>
     <ul>
-      <li *ngFor="let change of undeployedChanges">{{ change }}</li>
+      <li *ngFor="let obj of undeployedChangeObjects?.undeployedFirewallRuleGroups">{{ obj.name }}</li>
+    </ul>
+
+    <h5>NAT Rule Groups</h5>
+    <ul>
+      <li *ngFor="let obj of undeployedChangeObjects?.undeployedNatRuleGroups">{{ obj.name }}</li>
+    </ul>
+
+    <h5>Network Objects</h5>
+    <ul>
+      <li *ngFor="let obj of undeployedChangeObjects?.undeployedNetworkObjects">{{ obj.name }}</li>
+    </ul>
+
+    <h5>Network Object Groups</h5>
+    <ul>
+      <li *ngFor="let obj of undeployedChangeObjects?.undeployedNetworkObjectGroups">{{ obj.name }}</li>
+    </ul>
+
+    <h5>Service Objects</h5>
+    <ul>
+      <li *ngFor="let obj of undeployedChangeObjects?.undeployedServiceObjects">{{ obj.name }}</li>
+    </ul>
+
+    <h5>Service Object Groups</h5>
+    <ul>
+      <li *ngFor="let obj of undeployedChangeObjects?.undeployedServiceObjectGroups">{{ obj.name }}</li>
     </ul>
   </div>
 </ngx-smart-modal>
