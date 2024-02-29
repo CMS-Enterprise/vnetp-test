@@ -9,6 +9,7 @@ import { FirewallRule, NetworkObjectGroup, ServiceObjectGroup } from '../../../.
 import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-rule-packet-tracer-dto';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 
 type FirewallRulePacketTracerOutput = {
   checkList: FirewallRulePacketTracerChecklist;
@@ -46,7 +47,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   filterPartial = false;
 
   dropdownOpen = false;
-  serviceTypeSubscription: any;
+  serviceTypeSubscription: Subscription;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private toastrService: ToastrService) {}
 
@@ -306,7 +307,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   }
 
   private unsubAll() {
-    SubscriptionUtil.unsubscribe(this.serviceTypeSubscription);
+    SubscriptionUtil.unsubscribe([this.serviceTypeSubscription]);
   }
 
   reset(): void {
