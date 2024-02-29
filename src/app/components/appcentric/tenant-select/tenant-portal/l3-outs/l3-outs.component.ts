@@ -238,7 +238,7 @@ export class L3OutsComponent implements OnInit {
   public importL3Outs(event): void {
     const modalDto = new YesNoModalDto(
       'Import L3Outs',
-      `Are you sure you would like to import ${event.length}  L3 Out${event.length > 1 ? 's' : ''}?`,
+      `Are you sure you would like to import ${event.length} L3 Out${event.length > 1 ? 's' : ''}?`,
     );
 
     const onConfirm = () => {

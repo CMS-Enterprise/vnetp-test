@@ -196,7 +196,7 @@ export class ContractComponent implements OnInit {
     });
   }
 
-  private sanitizeData(entities) {
+  public sanitizeData(entities) {
     return entities.map(entity => {
       this.mapToCsv(entity);
       return entity;

@@ -195,7 +195,7 @@ export class FilterComponent implements OnInit {
     });
   }
 
-  private sanitizeData(entities) {
+  public sanitizeData(entities) {
     return entities.map(entity => {
       this.mapToCsv(entity);
       return entity;
