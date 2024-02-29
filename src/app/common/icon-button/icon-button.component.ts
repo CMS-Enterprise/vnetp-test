@@ -8,7 +8,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class IconButtonComponent {
   @Input() icon: Icon;
   @Input() type = 'default';
-  @Input() label: string;
+  @Input() label = '';
 
   @Output() handleClick = new EventEmitter<Event>();
 

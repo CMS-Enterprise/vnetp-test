@@ -38,7 +38,7 @@
     <app-icon-button
       *ngIf="!firewallRule?.deletedAt && FirewallRuleGroup?.type !== 'ZoneBased'"
       icon="clone"
-      label="Firewall Rule Operation"
+      label="Move/Clone Firewall Rule"
       (handleClick)="openFirewallRuleOperationModal(firewallRule)"
     ></app-icon-button>
 
@@ -59,7 +59,7 @@
 
     <app-icon-button
       icon="delete"
-      label="Soft-Delete/Delete Appliance"
+      label="Soft-Delete/Delete Firewall Rule"
       [type]="firewallRule.deletedAt ? 'danger' : 'default'"
       (handleClick)="deleteFirewallRule(firewallRule)"
     >
