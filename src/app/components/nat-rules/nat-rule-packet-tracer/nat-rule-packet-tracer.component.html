@@ -187,8 +187,7 @@
             [class.is-invalid]="submitted && f.originalSourceIp.errors" aria-label="Source IP" />
           <div *ngIf="submitted && f.originalSourceIp.errors" class="invalid-feedback">
             <div *ngIf="f.originalSourceIp.errors.required">Original Source IP Address is required</div>
-            <div *ngIf="f.originalSourceIp.errors.invalidIpAny">Original Source IP address, must be a valid IPv4 address or
-              CIDR</div>
+            <div *ngIf="f.originalSourceIp.errors.invalidIpAny">Original Source IP address, must be a valid IPv4 address</div>
           </div>
         </div>
       </div>
