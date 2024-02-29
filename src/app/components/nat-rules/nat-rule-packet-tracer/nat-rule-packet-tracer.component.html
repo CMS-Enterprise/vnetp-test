@@ -187,7 +187,7 @@
             [class.is-invalid]="submitted && f.originalSourceIp.errors" aria-label="Source IP" />
           <div *ngIf="submitted && f.originalSourceIp.errors" class="invalid-feedback">
             <div *ngIf="f.originalSourceIp.errors.required">Original Source IP Address is required</div>
-            <div *ngIf="f.originalSourceIp.errors.invalidIpAny">Original Invalid IP address, must be a valid IPv4/IPv6 address or
+            <div *ngIf="f.originalSourceIp.errors.invalidIpAny">Original Source IP address, must be a valid IPv4/IPv6 address or
               CIDR</div>
           </div>
         </div>
@@ -201,7 +201,7 @@
             [class.is-invalid]="submitted && f.originalDestinationIp.errors" aria-label="Destination IP" />
           <div *ngIf="submitted && f.originalDestinationIp.errors" class="invalid-feedback">
             <div *ngIf="f.originalDestinationIp.errors.required">Original Destination IP is required</div>
-            <div *ngIf="f.originalDestinationIp.errors.invalidIpAny">Original Invalid IP address, must be a valid IPv4/IPv6
+            <div *ngIf="f.originalDestinationIp.errors.invalidIpAny">Original Destination IP address, must be a valid IPv4/IPv6
               address or CIDR</div>
           </div>
         </div>
@@ -217,7 +217,7 @@
             [class.is-invalid]="submitted && f.translatedSourceIp.errors" aria-label="Translated Source IP" aria-placeholder="None" placeholder="None"/>
           <div *ngIf="submitted && f.translatedSourceIp.errors" class="invalid-feedback">
             <div *ngIf="f.translatedSourceIp.errors.required">Translated Source IP is required</div>
-            <div *ngIf="f.translatedSourceIp.errors.invalidIpAny">Translated Source IP address, must be a valid IPv4/IPv6
+            <div *ngIf="f.translatedSourceIp.errors.invalidIpAny">Translated Source IP address must be a valid IPv4/IPv6
               address or CIDR</div>
           </div>
         </div>
@@ -230,8 +230,8 @@
           <input type="text" id="translatedDestinationIp" formControlName="translatedDestinationIp" class="form-control"
             [class.is-invalid]="submitted && f.translatedDestinationIp.errors" aria-label="Translated Destination IP" aria-placeholder="None" placeholder="None" />
           <div *ngIf="submitted && f.translatedDestinationIp.errors" class="invalid-feedback">
-            <div *ngIf="f.translatedDestinationIp.errors.required">Translated Source IP is required</div>
-            <div *ngIf="f.translatedDestinationIp.errors.invalidIpAny">Translated Source IP address, must be a valid IPv4/IPv6
+            <div *ngIf="f.translatedDestinationIp.errors.required">Translated Destination IP is required</div>
+            <div *ngIf="f.translatedDestinationIp.errors.invalidIpAny">Translated Destination IP address must be a valid IPv4/IPv6
               address or CIDR</div>
           </div>
         </div>
@@ -247,7 +247,7 @@
             <input type="text" id="originalSourcePort" formControlName="originalSourcePort" class="form-control"
                    [class.is-invalid]="submitted && f.originalSourcePort.errors" aria-label="Original Source Port" aria-placeholder="any" placeholder="any" />
             <div *ngIf="submitted && f.originalSourcePort.errors" class="invalid-feedback">
-                <div *ngIf="f.originalSourcePort.errors.invalidPortNumber">Source Port/Range must be between 1-65535</div>
+                <div *ngIf="f.originalSourcePort.errors.invalidPortNumber">Original Source Port must be between 1-65535</div>
                 <div *ngIf="f.originalSourcePort.errors.required">Original Source Port is required</div>
             </div>
         </div>
@@ -257,7 +257,7 @@
             <input type="text" id="originalDestinationPort" formControlName="originalDestinationPort" class="form-control"
                    [class.is-invalid]="submitted && f.originalDestinationPort.errors" aria-label="Original Destination Port" aria-placeholder="any" placeholder="any"/>
             <div *ngIf="submitted && f.originalDestinationPort.errors" class="invalid-feedback">
-                <div *ngIf="f.originalDestinationPort.errors.invalidPortNumber">Destination Port/Range must be between 1-65535</div>
+                <div *ngIf="f.originalDestinationPort.errors.invalidPortNumber">Original Destination Port must be between 1-65535</div>
                 <div *ngIf="f.originalDestinationPort.errors.required">Original Destination Port is required</div>
             </div>
         </div>
@@ -269,7 +269,7 @@
             <input type="text" id="translatedSourcePort" formControlName="translatedSourcePort" class="form-control"
                    [class.is-invalid]="submitted && f.translatedSourcePort.errors" aria-label="Translated Source Port"  aria-placeholder="None" placeholder="None"/>
             <div *ngIf="submitted && f.translatedSourcePort.errors" class="invalid-feedback">
-                <div *ngIf="f.translatedSourcePort.errors.invalidPortNumber">Source Port/Range must be between 1-65535</div>
+                <div *ngIf="f.translatedSourcePort.errors.invalidPortNumber">Translated Source Port must be between 1-65535</div>
                 <div *ngIf="f.translatedSourcePort.errors.required">Translated Source Port is required</div>
             </div>
         </div>
@@ -279,7 +279,7 @@
             <input type="text" id="translatedDestinationPort" formControlName="translatedDestinationPort" class="form-control"
                    [class.is-invalid]="submitted && f.translatedDestinationPort.errors" aria-label="Translated Destination Port"  aria-placeholder="None" placeholder="None"/>
             <div *ngIf="submitted && f.translatedDestinationPort.errors" class="invalid-feedback">
-                <div *ngIf="f.translatedDestinationPort.errors.invalidPortNumber">Destination Port/Range must be between 1-65535</div>
+                <div *ngIf="f.translatedDestinationPort.errors.invalidPortNumber">Translated Destination Port must be between 1-65535</div>
                 <div *ngIf="f.translatedDestinationPort.errors.required">Translated Destination Port is required</div>
             </div>
         </div>
