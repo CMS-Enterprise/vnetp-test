@@ -860,5 +860,53 @@ describe('NatRulesPacketTracerComponent', () => {
     it('should not require translatedDestinationPort', () => {
       expect(isRequired('translatedDestinationPort')).toBeFalsy();
     });
+
+    it('should not allow invalid originalSourceIp', () => {
+      const fc = getFormControl('originalSourceIp');
+      fc.setValue('192.168.0.1/24');
+      expect(fc.errors).toBeTruthy();
+    });
+
+    it('should not allow invalid originalDestinationIp', () => {
+      const fc = getFormControl('originalDestinationIp');
+      fc.setValue('192.168.0.1/24');
+      expect(fc.errors).toBeTruthy();
+    });
+
+    it('should not allow invalid translatedSourceIp', () => {
+      const fc = getFormControl('translatedSourceIp');
+      fc.setValue('192.168.0.1/24');
+      expect(fc.errors).toBeTruthy();
+    });
+
+    it('should not allow invalid translatedDestinationIp', () => {
+      const fc = getFormControl('translatedDestinationIp');
+      fc.setValue('192.168.0.1/24');
+      expect(fc.errors).toBeTruthy();
+    });
+
+    it('should allow valid originalSourceIp', () => {
+      const fc = getFormControl('originalSourceIp');
+      fc.setValue('192.168.0.1');
+      expect(fc.errors).toBeFalsy();
+    });
+
+    it('should allow valid originalDestinationIp', () => {
+      const fc = getFormControl('originalDestinationIp');
+      fc.setValue('192.168.0.1');
+      expect(fc.errors).toBeFalsy();
+    });
+
+    it('should allow valid translatedSourceIp', () => {
+      const fc = getFormControl('translatedSourceIp');
+      fc.setValue('192.168.0.1');
+      expect(fc.errors).toBeFalsy();
+    });
+
+    it('should allow valid translatedDestinationIp', () => {
+      const fc = getFormControl('translatedDestinationIp');
+      fc.setValue('192.168.0.1');
+      expect(fc.errors).toBeFalsy();
+    });
   });
 });
