@@ -28,7 +28,7 @@ export interface LoadBalancerPoolBulkImportDto {
     healthMonitors?: Array<LoadBalancerHealthMonitor>;
     defaultHealthMonitors: Array<LoadBalancerPoolBulkImportDtoDefaultHealthMonitorsEnum>;
     tierId: string;
-    tierName: string;
+    vrfName: string;
     healthMonitorNames: Array<string>;
     defaultHealthMonitorNames: Array<string>;
     nodeNames: Array<string>;

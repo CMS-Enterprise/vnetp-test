@@ -26,6 +26,6 @@ export interface SubnetImport {
     sharedBetweenVrfs?: boolean;
     vlanId: string;
     tierId: string;
-    tierName: string;
+    vrfName: string;
 }
 

@@ -20,6 +20,6 @@ export interface NetworkObjectGroupRelationBulkImportDto {
      * Network Object that is being added or removed from group membership.
      */
     networkObjectId: string;
-    tierName: string;
+    vrfName: string;
 }
 

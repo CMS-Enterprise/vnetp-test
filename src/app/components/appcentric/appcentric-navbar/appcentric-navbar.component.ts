@@ -22,6 +22,7 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
+      console.log('tenant', tenant);
       this.tenant = tenant;
       this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
         this.user = user;

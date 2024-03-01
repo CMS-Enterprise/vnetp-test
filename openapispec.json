@@ -13007,6 +13007,14 @@
             }
           },
           {
+            "name": "appCentricTenant",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "page",
             "required": true,
             "in": "query",
@@ -20345,6 +20353,13 @@
             "items": {
               "$ref": "#/components/schemas/NatRule"
             }
+          },
+          "natRulesTo": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NatRule"
+            }
           }
         },
         "required": [
@@ -22255,7 +22270,7 @@
               "$ref": "#/components/schemas/Zone"
             }
           },
-          "tierName": {
+          "vrfName": {
             "type": "string"
           },
           "firewallRuleGroupType": {
@@ -22274,7 +22289,7 @@
           "destinationAddressType",
           "serviceType",
           "firewallRuleGroupId",
-          "tierName",
+          "vrfName",
           "firewallRuleGroupType"
         ]
       },
@@ -22332,14 +22347,14 @@
             "type": "string",
             "description": "Service Object that is being added or removed from group membership."
           },
-          "tierName": {
+          "vrfName": {
             "type": "string"
           }
         },
         "required": [
           "serviceObjectGroupId",
           "serviceObjectId",
-          "tierName"
+          "vrfName"
         ]
       },
       "ServiceObjectGroupRelationBulkImportCollectionDto": {
@@ -22371,14 +22386,14 @@
             "type": "string",
             "description": "Network Object that is being added or removed from group membership."
           },
-          "tierName": {
+          "vrfName": {
             "type": "string"
           }
         },
         "required": [
           "networkObjectGroupId",
           "networkObjectId",
-          "tierName"
+          "vrfName"
         ]
       },
       "NetworkObjectGroupRelationBulkImportCollectionDto": {
@@ -22636,7 +22651,7 @@
               "$ref": "#/components/schemas/Zone"
             }
           },
-          "tierName": {
+          "vrfName": {
             "type": "string"
           },
           "natRuleGroupType": {
@@ -22657,7 +22672,7 @@
           "originalServiceType",
           "translatedServiceType",
           "natRuleGroupId",
-          "tierName",
+          "vrfName",
           "natRuleGroupType"
         ]
       },
@@ -22763,7 +22778,7 @@
           "tierId": {
             "type": "string"
           },
-          "tierName": {
+          "vrfName": {
             "type": "string"
           }
         },
@@ -22773,7 +22788,7 @@
           "gateway",
           "vlanId",
           "tierId",
-          "tierName"
+          "vrfName"
         ]
       },
       "SubnetImportCollectionDto": {
@@ -22898,7 +22913,7 @@
           "tierId": {
             "type": "string"
           },
-          "tierName": {
+          "vrfName": {
             "type": "string"
           },
           "iruleNames": {
@@ -22931,7 +22946,7 @@
           "type",
           "servicePort",
           "tierId",
-          "tierName",
+          "vrfName",
           "iruleNames",
           "policyNames",
           "profileNames",
@@ -23048,7 +23063,7 @@
           "tierId": {
             "type": "string"
           },
-          "tierName": {
+          "vrfName": {
             "type": "string"
           },
           "healthMonitorNames": {
@@ -23075,7 +23090,7 @@
           "loadBalancingMethod",
           "defaultHealthMonitors",
           "tierId",
-          "tierName",
+          "vrfName",
           "healthMonitorNames",
           "defaultHealthMonitorNames",
           "nodeNames"
