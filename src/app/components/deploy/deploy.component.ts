@@ -6,6 +6,7 @@ import { TableRowWrapper } from 'src/app/models/other/table-row-wrapper';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 
 @Component({
   selector: 'app-deploy',
@@ -113,5 +114,9 @@ export class DeployComponent implements OnInit {
         this.getTierGroups(true);
       }
     });
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }

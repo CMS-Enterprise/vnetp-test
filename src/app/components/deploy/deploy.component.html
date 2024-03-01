@@ -13,6 +13,7 @@
       <th scope="col">Type</th>
       <th scope="col">Tier Group</th>
       <th scope="col">State</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -34,6 +35,10 @@
       </td>
       <td>
         {{ tier?.item?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}
+      </td>
+      <td>
+        <app-icon-button *ngIf="checkUndeployedChanges(tier?.item)" icon="asterisk" label="Undeployed Changes"
+        [type]="'danger'"></app-icon-button>
       </td>
     </tr>
     <tr *ngIf="!tiers?.length" class="text-center">
