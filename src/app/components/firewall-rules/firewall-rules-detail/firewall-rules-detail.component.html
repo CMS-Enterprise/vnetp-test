@@ -18,7 +18,7 @@
     <span>Refresh</span>
   </button>
 
-  <button *ngIf="FirewallRuleGroup?.type === 'Intervrf' || FirewallRuleGroup?.type === 'External'" (click)="openPacketTracer()">Packet Tracer</button>
+  <button class="btn btn-info" *ngIf="FirewallRuleGroup?.type === 'Intervrf' || FirewallRuleGroup?.type === 'External'" (click)="openPacketTracer()">Packet Tracer</button>
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
