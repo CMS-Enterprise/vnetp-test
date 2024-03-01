@@ -6,6 +6,7 @@ import { TableConfig } from '../table/table.component';
 @Component({
   selector: 'app-preview-modal',
   templateUrl: './preview-modal.component.html',
+  styleUrls: ['./preview-modal.component.css'],
 })
 export class PreviewModalComponent<T> {
   form: UntypedFormGroup;
