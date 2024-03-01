@@ -275,6 +275,7 @@ export class AuditLogComponent implements OnInit {
         ) {
           let beforeList;
           let afterList;
+          console.log('key', key);
           if (key === 'nodes') {
             if (entityBefore[key] === undefined || entityAfter[key] === undefined) {
               return;
@@ -286,9 +287,22 @@ export class AuditLogComponent implements OnInit {
               afterList = entityAfter[key].map(obj => obj.loadBalancerNode.name);
             }
           } else {
-            if (log.entityType === 'NatRule' && key === 'toZone') {
+            if (entityBefore[key]?.name) {
               beforeList = entityBefore[key].name;
               afterList = entityAfter[key].name;
+            } else {
+              return;
+            }
+            if (log.entityType === 'NatRule' && key === 'toZone') {
+              console.log('key', key);
+              console.log('log', log);
+              if (entityBefore[key].name) {
+                beforeList = entityBefore[key].name;
+                afterList = entityAfter[key].name;
+              }
+              // beforeList = entityBefore[key].name;
+              // afterList = entityAfter[key].name;
+              else return;
             } else {
               beforeList = entityBefore[key].map(obj => obj.name);
               afterList = entityAfter[key].map(obj => obj.name);
