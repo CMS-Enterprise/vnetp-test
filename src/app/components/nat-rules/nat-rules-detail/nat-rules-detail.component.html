@@ -18,23 +18,51 @@
     <span>Refresh</span>
   </button>
 
-  <button type="button" class="btn btn-info" (click)="openPacketTracer()">Packet Tracer</button>
+  <button class="btn btn-info" *ngIf="NatRuleGroup?.type === 'Intervrf' || NatRuleGroup?.type === 'External'" (click)="openPacketTracer()">Packet Tracer</button>
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
-  <app-table [config]="config" [data]="natRules" (clearResults)="getNatRules($event)" (searchParams)="getNatRules($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+  <app-table
+    [config]="config"
+    [data]="natRules"
+    (clearResults)="getNatRules($event)"
+    (searchParams)="getNatRules($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
 </ng-container>
 
 <ng-template #actionsTemplate let-natRule="datum">
   <section class="table__actions">
-    <app-icon-button *ngIf="!natRule?.deletedAt" icon="edit" label="Edit Nat Rule"
-      (handleClick)="openNatRuleModal(ModalMode.Edit, natRule)"></app-icon-button>
+    <app-icon-button
+      *ngIf="!natRule?.deletedAt"
+      icon="add"
+      label="Move/Clone Nat Rule"
+      (handleClick)="openNatRuleOperationModal(natRule)"
+    ></app-icon-button>
 
-    <app-icon-button *ngIf="natRule?.deletedAt" icon="undo" label="Restore Nat Rule" type="success"
-      (handleClick)="restoreNatRule(natRule)"></app-icon-button>
+    <app-icon-button
+      *ngIf="!natRule?.deletedAt && NatRuleGroup?.type !== 'ZoneBased'"
+      icon="edit"
+      label="Edit Nat Rule"
+      (handleClick)="openNatRuleModal(ModalMode.Edit, natRule)"
+    ></app-icon-button>
 
-    <app-icon-button icon="delete" label="Soft-Delete/Delete Appliance"
-      [type]="natRule.deletedAt ? 'danger' : 'default'" (handleClick)="deleteNatRule(natRule)">
+    <app-icon-button
+      *ngIf="natRule?.deletedAt"
+      icon="undo"
+      label="Restore Nat Rule"
+      type="success"
+      (handleClick)="restoreNatRule(natRule)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete NAT Rule"
+      [type]="natRule.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteNatRule(natRule)"
+    >
     </app-icon-button>
   </section>
 </ng-template>
@@ -138,7 +166,6 @@
   </p>
 </ng-template>
 
-
 <!-- to/from zone/direction template -->
 <ng-template #directionZone let-natRule="datum">
   <p *ngIf="NatRuleGroup?.type === 'Intervrf' || NatRuleGroup?.type === 'External'" aria-label="Direction">
@@ -153,3 +180,10 @@
 </ng-template>
 
 <app-nat-rule-packet-tracer [objects]="packetTracerObjects"></app-nat-rule-packet-tracer>
+
+<app-nat-rules-operation-modal
+  (emitGetRuleGroup)="getNatRuleGroup()"
+  [networkObjects]="networkObjects"
+  [networkObjectGroups]="networkObjectGroups"
+  [serviceObjects]="serviceObjects"
+></app-nat-rules-operation-modal>
