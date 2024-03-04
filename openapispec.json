@@ -13051,6 +13051,63 @@
         ]
       }
     },
+    "/v1/audit-log/app-centric": {
+      "get": {
+        "operationId": "getAllAppCentricLogsAuditLog",
+        "parameters": [
+          {
+            "name": "datacenterId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenant",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditLog"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/audit-log"
+        ]
+      }
+    },
     "/v2/app-centric/tenants": {
       "post": {
         "operationId": "createOneTenant",
