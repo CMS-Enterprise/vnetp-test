@@ -39,6 +39,7 @@ import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-rule-packet-tracer-dto';
+import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -86,6 +87,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   objectInfoSubscription: Subscription;
   public isLoading = false;
+
+  public firewallRuleOperationModalSubscription: Subscription;
+  public firewallRuleGroupName: string;
 
   // Templates
   @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
@@ -163,6 +167,26 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     this.getFirewallRules(event);
   }
 
+  public openFirewallRuleOperationModal(firewallRule: FirewallRule): void {
+    const dto: RuleOperationModalDto = {
+      tierId: this.TierId,
+      ruleId: firewallRule.id,
+      sourceRuleGroupId: firewallRule.firewallRuleGroupId,
+      ruleGroupName: this.firewallRuleGroupName,
+    };
+    this.subscribeToFirewallRuleOperationModal();
+    this.ngx.setModalData(dto, 'firewallRuleOperationModal');
+    this.ngx.open('firewallRuleOperationModal');
+  }
+
+  private subscribeToFirewallRuleOperationModal(): void {
+    this.firewallRuleOperationModalSubscription = this.ngx.getModal('firewallRuleOperationModal').onCloseFinished.subscribe(() => {
+      this.getFirewallRuleGroup();
+      this.ngx.resetModalData('firewallRuleOperationModal');
+      this.firewallRuleOperationModalSubscription.unsubscribe();
+    });
+  }
+
   getFirewallRuleGroup(): void {
     this.firewallRuleGroupService
       .getOneFirewallRuleGroup({
@@ -176,6 +200,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         } as FirewallRuleGroup;
 
         this.TierId = data.tierId;
+        this.firewallRuleGroupName = data.name;
 
         this.getObjects();
         this.getFirewallRuleLastIndex();
