@@ -35,8 +35,6 @@ export class AuditLogComponent implements OnInit {
   currentDatacenterSubscription: Subscription;
   currentDatacenter: Datacenter;
 
-  tenantId: string = 'd8f7f3c9-1393-49bf-81d9-71beb34a266c';
-
   private dataChanges: Subscription;
 
   public perPage = 10;
