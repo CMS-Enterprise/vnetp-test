@@ -36,7 +36,7 @@ export interface VirtualServerImportDto {
     type: VirtualServerImportDtoTypeEnum;
     servicePort: number;
     tierId: string;
-    vrfName: string;
+    tierName: string;
     iruleNames: Array<string>;
     policyNames: Array<string>;
     profileNames: Array<string>;
