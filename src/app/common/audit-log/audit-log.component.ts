@@ -92,7 +92,7 @@ export class AuditLogComponent implements OnInit {
     }
   }
 
-  getAppCentricAuditLogs() {
+  getAppCentricAuditLogs(): void {
     this.auditLogService
       .getAllAppCentricLogsAuditLog({
         page: this.tableComponentDto.page,
@@ -319,7 +319,7 @@ export class AuditLogComponent implements OnInit {
     );
   }
 
-  public getAppCentricTenants() {
+  public getAppCentricTenants(): void {
     this.appCentricTenantService
       .getManyTenant({
         page: this.tableComponentDto.page,
