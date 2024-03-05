@@ -53,6 +53,7 @@ describe('NatRulesDetailComponent', () => {
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockComponent('app-nat-rule-modal'),
+        MockComponent({ selector: 'app-nat-rules-operation-modal', inputs: ['serviceObjects', 'networkObjects', 'networkObjectGroups'] }),
         MockNgxSmartModalComponent,
         ImportExportComponent,
         PreviewModalComponent,
