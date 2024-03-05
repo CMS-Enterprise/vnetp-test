@@ -44,6 +44,10 @@ describe('FirewallRulesDetailComponent', () => {
         MockImportExportComponent,
         MockComponent('app-firewall-rule-modal'),
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockComponent({
+          selector: 'app-firewall-rules-operation-modal',
+          inputs: ['serviceObjects', 'serviceObjectGroups', 'networkObjects', 'networkObjectGroups'],
+        }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,
