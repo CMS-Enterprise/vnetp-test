@@ -3,7 +3,7 @@
     <ng-container *ngIf="!isLoading; else loading">
         <app-table *ngIf="!showingAppCentricLogs" [config]="config" [data]="auditLogs" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)">
         </app-table>
-        <app-table *ngIf="showingAppCentricLogs" [config]="appCentricConfig" [data]="auditLogs" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)">
+        <app-table *ngIf="showingAppCentricLogs" (tableEvent)="onAppCentricTableEvent($event)" [config]="appCentricConfig" [data]="auditLogs" [(itemsPerPage)]="perPage">
         </app-table>
     </ng-container>
 

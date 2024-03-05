@@ -64,10 +64,10 @@ export class AuditLogComponent implements OnInit {
   };
   public auditLogs;
   public tiers: Tier[] = [];
-  public networkObjects = [];
-  public networkObjectGroups = [];
-  public serviceObjects = [];
-  public serviceObjectGroups = [];
+  public networkObjects: NetworkObject[] = [];
+  public networkObjectGroups: NetworkObjectGroup[] = [];
+  public serviceObjects: ServiceObject[] = [];
+  public serviceObjectGroups: ServiceObjectGroup[] = [];
   public isLoading = false;
   selectedAuditLog;
 
@@ -92,7 +92,14 @@ export class AuditLogComponent implements OnInit {
     }
   }
 
-  getAppCentricAuditLogs(): void {
+  getAppCentricAuditLogs(event?): void {
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 10;
+    } else {
+      this.tableComponentDto.perPage = this.perPage;
+    }
+
     this.auditLogService
       .getAllAppCentricLogsAuditLog({
         page: this.tableComponentDto.page,
@@ -109,8 +116,23 @@ export class AuditLogComponent implements OnInit {
             const keys = Object.keys(log.entityBefore);
             // get the entity before and entity after object
             const { entityBefore, entityAfter } = log;
+
             keys.map(key => {
               if (key === 'updatedAt') {
+                return;
+              }
+
+              // will need to handle object-to-object relational additions/subtractions
+              if (key === 'l3outs') {
+                let beforeList;
+                let afterList;
+                beforeList = entityBefore[key]?.name;
+                afterList = entityAfter[key]?.name;
+                if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {
+                  return;
+                }
+                const message = { propertyName: key, before: beforeList, after: afterList };
+                messageArray.push(message);
                 return;
               }
               if (entityBefore[key] !== entityAfter[key]) {
@@ -373,5 +395,10 @@ export class AuditLogComponent implements OnInit {
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
     this.getAuditLogs(event);
+  }
+
+  public onAppCentricTableEvent(event: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.getAppCentricAuditLogs(event);
   }
 }
