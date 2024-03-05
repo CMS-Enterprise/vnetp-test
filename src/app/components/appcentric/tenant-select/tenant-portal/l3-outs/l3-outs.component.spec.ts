@@ -49,7 +49,7 @@ describe('L3OutsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('importBridgeDomainsConfig', () => {
+  describe('importL3OutsConfig', () => {
     const mockNgxSmartModalComponent = {
       getData: jest.fn().mockReturnValue({ modalYes: true }),
       removeData: jest.fn(),

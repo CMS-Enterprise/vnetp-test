@@ -334,14 +334,26 @@ export class ApplicationProfileModalComponent implements OnInit {
   };
 
   public importEndpointGroups(event): void {
-    const dto = this.sanitizeData(event);
-    this.endpointGroupService.createManyEndpointGroup({ createManyEndpointGroupDto: { bulk: dto } }).subscribe(
-      data => {},
-      () => {},
-      () => {
-        this.getEndpointGroups();
-      },
+    const modalDto = new YesNoModalDto(
+      'Import Endpoint Groups',
+      `Are you sure you would like to import ${event.length} Endpoint Group${event.length > 1 ? 's' : ''}?`,
     );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.endpointGroupService.createManyEndpointGroup({ createManyEndpointGroupDto: { bulk: dto } }).subscribe(
+        data => {},
+        () => {},
+        () => {
+          this.getEndpointGroups();
+        },
+      );
+    };
+    const onClose = () => {
+      this.getEndpointGroups();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
   private getBridgeDomains(): void {

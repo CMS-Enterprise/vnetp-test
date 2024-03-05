@@ -377,7 +377,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     SubscriptionUtil.unsubscribe([this.l3OutForRouteProfileSubscription]);
   }
 
-  private sanitizeData(entities) {
+  public sanitizeData(entities) {
     return entities.map(entity => {
       this.mapToCsv(entity);
       return entity;
@@ -411,16 +411,30 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     return obj;
   };
 
+  // need to revisit these tests
   public importBridgeDomainL3OutRelation(event): void {
-    const dto = this.sanitizeData(event);
-    dto.map(relation => {
-      this.bridgeDomainService.addL3OutToBridgeDomainBridgeDomain(relation).subscribe(
-        data => {},
-        () => {},
-        () => {
-          this.getL3OutsTableData();
-        },
-      );
-    });
+    const modalDto = new YesNoModalDto(
+      'Import L3 Outs',
+      `Are you sure you would like to import ${event.length} L3 Out${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      dto.map(relation => {
+        this.bridgeDomainService.addL3OutToBridgeDomainBridgeDomain(relation).subscribe(
+          data => {},
+          () => {},
+          () => {
+            this.getL3OutsTableData();
+          },
+        );
+      });
+    };
+
+    const onClose = () => {
+      this.getL3OutsTableData();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }

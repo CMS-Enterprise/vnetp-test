@@ -9,6 +9,10 @@ import { MockProvider } from 'src/test/mock-providers';
 import { FilterEntryModalComponent } from './filter-entry-modal/filter-entry-modal.component';
 
 import { FilterModalComponent } from './filter-modal.component';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { Subscription } from 'rxjs';
+import { V2AppCentricFilterEntriesService } from 'client';
 
 describe('FilterEntryModalComponent', () => {
   let component: FilterModalComponent;
@@ -26,7 +30,7 @@ describe('FilterEntryModalComponent', () => {
         MockIconButtonComponent,
       ],
       imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule, NgSelectModule, FormsModule],
-      providers: [MockProvider(NgxSmartModalService)],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricFilterEntriesService)],
     }).compileComponents();
   });
 
@@ -91,6 +95,62 @@ describe('FilterEntryModalComponent', () => {
 
       description.setValue('a'.repeat(501));
       expect(description.valid).toBe(false);
+    });
+  });
+
+  describe('importFilterEntries', () => {
+    const mockNgxSmartModalComponent = {
+      getData: jest.fn().mockReturnValue({ modalYes: true }),
+      removeData: jest.fn(),
+      onCloseFinished: {
+        subscribe: jest.fn(),
+      },
+    };
+
+    beforeEach(() => {
+      component['ngx'] = {
+        getModal: jest.fn().mockReturnValue({
+          ...mockNgxSmartModalComponent,
+          open: jest.fn(),
+        }),
+        setModalData: jest.fn(),
+      } as any;
+    });
+
+    it('should display a confirmation modal with the correct message', () => {
+      const event = [{ name: 'Filter 1' }, { name: 'Filter 1' }] as any;
+      const modalDto = new YesNoModalDto('Import Filter Entries', `Are you sure you would like to import ${event.length} Filter Entries?`);
+      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+
+      component.importFilterEntries(event);
+
+      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
+    });
+
+    it('should import application profiles and refresh the table on confirmation', () => {
+      const event = [{ name: 'Filter Entry 1' }, { name: 'Filter Entry 1' }] as any;
+      jest.spyOn(component, 'getFilterEntries');
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        onConfirm();
+
+        expect(component['filterEntriesService'].createManyFilterEntry).toHaveBeenCalledWith({
+          createManyFilterEntryDto: { bulk: component.sanitizeData(event) },
+        });
+
+        mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+          const data = modal.getData() as YesNoModalDto;
+          modal.removeData();
+          if (data && data.modalYes) {
+            onConfirm();
+          }
+        });
+
+        return new Subscription();
+      });
+
+      component.importFilterEntries(event);
+
+      expect(component.getFilterEntries).toHaveBeenCalled();
     });
   });
 });

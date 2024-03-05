@@ -9,7 +9,9 @@ import { AppcentricSubnetDto } from 'src/app/models/appcentric/appcentric-subnet
 import { BridgeDomainDto } from 'src/app/models/appcentric/bridge-domain-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { IpAddressCidrValidator } from 'src/app/validators/network-form-validators';
 
@@ -210,7 +212,7 @@ export class SubnetsModalComponent implements OnInit {
     });
   }
 
-  private sanitizeData(entities) {
+  public sanitizeData(entities) {
     return entities.map(entity => {
       this.mapToCsv(entity);
       return entity;
@@ -241,13 +243,26 @@ export class SubnetsModalComponent implements OnInit {
   };
 
   public importSubnets(event) {
-    const dto = this.sanitizeData(event);
-    this.subnetsService.createManyAppCentricSubnet({ createManyAppCentricSubnetDto: { bulk: dto } }).subscribe(
-      data => {},
-      () => {},
-      () => {
-        this.getSubnets();
-      },
+    const modalDto = new YesNoModalDto(
+      'Import Subnets',
+      `Are you sure you would like to import ${event.length} Subnet${event.length > 1 ? 's' : ''}?`,
     );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.subnetsService.createManyAppCentricSubnet({ createManyAppCentricSubnetDto: { bulk: dto } }).subscribe(
+        data => {},
+        () => {},
+        () => {
+          this.getSubnets();
+        },
+      );
+    };
+
+    const onClose = () => {
+      this.getSubnets();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }

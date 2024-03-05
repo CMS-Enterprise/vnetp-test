@@ -263,7 +263,7 @@ export class SubjectModalComponent implements OnInit {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  private sanitizeData(entities) {
+  public sanitizeData(entities) {
     return entities.map(entity => {
       this.mapToCsv(entity);
       return entity;
@@ -298,15 +298,27 @@ export class SubjectModalComponent implements OnInit {
   };
 
   public importSubjectFilterRelation(event): void {
-    const dto = this.sanitizeData(event);
-    dto.map(relation => {
-      this.subjectsService.addFilterToSubjectSubject(relation).subscribe(
-        data => {},
-        () => {},
-        () => {
-          this.getFiltertableData();
-        },
-      );
-    });
+    const modalDto = new YesNoModalDto(
+      'Import Subject Filters',
+      `Are you sure you would like to import ${event.length} Subject Filter${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      dto.map(relation => {
+        this.subjectsService.addFilterToSubjectSubject(relation).subscribe(
+          data => {},
+          () => {},
+          () => {
+            this.getFiltertableData();
+          },
+        );
+      });
+    };
+    const onClose = () => {
+      this.getFiltertableData();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }

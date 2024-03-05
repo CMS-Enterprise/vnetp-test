@@ -334,6 +334,13 @@ export class FilterModalComponent implements OnInit {
   };
 
   public importFilterEntries(event): void {
+    const modalDto = new YesNoModalDto(
+      'Import Filter Entries',
+      `Are you sure you would like to import ${event.length} Filter Entrie${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {};
+
     const dto = this.sanitizeData(event);
     this.filterEntriesService.createManyFilterEntry({ createManyFilterEntryDto: { bulk: dto } }).subscribe(
       data => {},
@@ -342,5 +349,10 @@ export class FilterModalComponent implements OnInit {
         this.getFilterEntries();
       },
     );
+    const onClose = () => {
+      this.getFilterEntries();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }

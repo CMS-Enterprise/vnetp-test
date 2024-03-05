@@ -13,6 +13,10 @@ import {
 import { MockProvider } from 'src/test/mock-providers';
 
 import { SubnetsModalComponent } from './subnets-modal.component';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { Subscription } from 'rxjs';
+import { V2AppCentricAppCentricSubnetsService } from 'client';
 
 describe('SubnetsModalComponent', () => {
   let component: SubnetsModalComponent;
@@ -30,7 +34,7 @@ describe('SubnetsModalComponent', () => {
         MockComponent({ selector: 'app-subnets-edit-modal', inputs: ['bridgeDomainId', 'tenantId'] }),
       ],
       imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule],
-      providers: [MockProvider(NgxSmartModalService)],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricAppCentricSubnetsService)],
     }).compileComponents();
   });
 
@@ -132,6 +136,62 @@ describe('SubnetsModalComponent', () => {
 
       gatewayIp.setValue('2001:0db8:85a3:0000:0000:8a2e:0370:7334/xyz');
       expect(gatewayIp.valid).toBe(false);
+    });
+  });
+
+  describe('importAppProfilesConfig', () => {
+    const mockNgxSmartModalComponent = {
+      getData: jest.fn().mockReturnValue({ modalYes: true }),
+      removeData: jest.fn(),
+      onCloseFinished: {
+        subscribe: jest.fn(),
+      },
+    };
+
+    beforeEach(() => {
+      component['ngx'] = {
+        getModal: jest.fn().mockReturnValue({
+          ...mockNgxSmartModalComponent,
+          open: jest.fn(),
+        }),
+        setModalData: jest.fn(),
+      } as any;
+    });
+
+    it('should display a confirmation modal with the correct message', () => {
+      const event = [{ name: 'Subnet 1' }, { name: 'Subnet 1' }] as any;
+      const modalDto = new YesNoModalDto('Import Subnets', `Are you sure you would like to import ${event.length} Subnets?`);
+      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+
+      component.importSubnets(event);
+
+      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
+    });
+
+    it('should import subnets and refresh the table on confirmation', () => {
+      const event = [{ name: 'Subnet 1' }, { name: 'Subnet 1' }] as any;
+      jest.spyOn(component, 'getSubnets');
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        onConfirm();
+
+        expect(component['subnetsService'].createManyAppCentricSubnet).toHaveBeenCalledWith({
+          createManyAppCentricSubnetDto: { bulk: component.sanitizeData(event) },
+        });
+
+        mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+          const data = modal.getData() as YesNoModalDto;
+          modal.removeData();
+          if (data && data.modalYes) {
+            onConfirm();
+          }
+        });
+
+        return new Subscription();
+      });
+
+      component.importSubnets(event);
+
+      expect(component.getSubnets).toHaveBeenCalled();
     });
   });
 });

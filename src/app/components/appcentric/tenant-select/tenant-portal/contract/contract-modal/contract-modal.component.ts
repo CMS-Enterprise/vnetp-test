@@ -306,13 +306,25 @@ export class ContractModalComponent implements OnInit {
   };
 
   public importSubjects(event): void {
-    const dto = this.sanitizeData(event);
-    this.subjectsService.createManySubject({ createManySubjectDto: { bulk: dto } }).subscribe(
-      data => {},
-      () => {},
-      () => {
-        this.getSubjects();
-      },
+    const modalDto = new YesNoModalDto(
+      'Import Subjects',
+      `Are you sure you would like to import ${event.length} Subject${event.length > 1 ? 's' : ''}?`,
     );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.subjectsService.createManySubject({ createManySubjectDto: { bulk: dto } }).subscribe(
+        data => {},
+        () => {},
+        () => {
+          this.getSubjects();
+        },
+      );
+    };
+    const onClose = () => {
+      this.getSubjects();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }
