@@ -22,7 +22,6 @@ import { TableContextService } from 'src/app/services/table-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { FilterEntryModalDto } from '../../../../../../models/appcentric/filter-entry-modal.dto';
-import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 @Component({
   selector: 'app-filter-modal',
@@ -343,7 +342,7 @@ export class FilterModalComponent implements OnInit {
 
     const dto = this.sanitizeData(event);
     this.filterEntriesService.createManyFilterEntry({ createManyFilterEntryDto: { bulk: dto } }).subscribe(
-      data => {},
+      () => {},
       () => {},
       () => {
         this.getFilterEntries();

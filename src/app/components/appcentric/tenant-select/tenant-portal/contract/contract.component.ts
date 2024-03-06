@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Contract, GetManyContractResponseDto, V2AppCentricContractsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -231,7 +231,7 @@ export class ContractComponent implements OnInit {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.contractService.createManyContract({ createManyContractDto: { bulk: dto } }).subscribe(
-        data => {},
+        () => {},
         () => {},
         () => {
           this.getContracts();

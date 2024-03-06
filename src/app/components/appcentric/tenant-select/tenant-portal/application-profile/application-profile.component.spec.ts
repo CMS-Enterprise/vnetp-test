@@ -13,7 +13,6 @@ import {
 import { MockProvider } from 'src/test/mock-providers';
 
 import { ApplicationProfileComponent } from './application-profile.component';
-import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Subscription } from 'rxjs';

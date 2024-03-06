@@ -246,7 +246,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       this.editBridgeDomain(bridgeDomain);
     }
   }
-  public getL3OutsTableData(event?): void {
+  public getL3OutsTableData(): void {
     this.isLoading = true;
     this.bridgeDomainService
       .getOneBridgeDomain({
@@ -422,7 +422,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       const dto = this.sanitizeData(event);
       dto.map(relation => {
         this.bridgeDomainService.addL3OutToBridgeDomainBridgeDomain(relation).subscribe(
-          data => {},
+          () => {},
           () => {},
           () => {
             this.getL3OutsTableData();

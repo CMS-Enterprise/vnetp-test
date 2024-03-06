@@ -166,7 +166,7 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
     const dto = this.sanitizeData(event);
     dto.map(relation => {
       this.endpointGroupsService.addProvidedContractToEndpointGroupEndpointGroup(relation).subscribe(
-        data => {},
+        () => {},
         () => {},
         () => {
           this.getProvidedContracts();

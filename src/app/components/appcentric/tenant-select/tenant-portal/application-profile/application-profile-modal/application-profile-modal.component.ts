@@ -342,7 +342,7 @@ export class ApplicationProfileModalComponent implements OnInit {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.endpointGroupService.createManyEndpointGroup({ createManyEndpointGroupDto: { bulk: dto } }).subscribe(
-        data => {},
+        () => {},
         () => {},
         () => {
           this.getEndpointGroups();

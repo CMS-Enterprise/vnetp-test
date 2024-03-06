@@ -165,7 +165,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
     const dto = this.sanitizeData(event);
     dto.map(relation => {
       this.endpointGroupsService.addConsumedContractToEndpointGroupEndpointGroup(relation).subscribe(
-        data => {},
+        () => {},
         () => {},
         () => {
           this.getConsumedContracts();

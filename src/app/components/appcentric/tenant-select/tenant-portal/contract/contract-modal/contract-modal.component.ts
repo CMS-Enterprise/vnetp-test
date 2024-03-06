@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { V2AppCentricContractsService, Contract, V2AppCentricSubjectsService, Subject, GetManySubjectResponseDto } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -314,7 +313,7 @@ export class ContractModalComponent implements OnInit {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.subjectsService.createManySubject({ createManySubjectDto: { bulk: dto } }).subscribe(
-        data => {},
+        () => {},
         () => {},
         () => {
           this.getSubjects();

@@ -251,7 +251,7 @@ export class SubnetsModalComponent implements OnInit {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.subnetsService.createManyAppCentricSubnet({ createManyAppCentricSubnetDto: { bulk: dto } }).subscribe(
-        data => {},
+        () => {},
         () => {},
         () => {
           this.getSubnets();

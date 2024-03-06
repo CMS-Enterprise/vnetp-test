@@ -307,7 +307,7 @@ export class SubjectModalComponent implements OnInit {
       const dto = this.sanitizeData(event);
       dto.map(relation => {
         this.subjectsService.addFilterToSubjectSubject(relation).subscribe(
-          data => {},
+          () => {},
           () => {},
           () => {
             this.getFiltertableData();

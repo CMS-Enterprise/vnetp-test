@@ -244,7 +244,7 @@ export class L3OutsComponent implements OnInit {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.l3OutService.createManyL3Out({ createManyL3OutDto: { bulk: dto } }).subscribe(
-        data => {},
+        () => {},
         () => {},
         () => {
           this.getL3Outs();
