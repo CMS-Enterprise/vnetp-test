@@ -11,10 +11,11 @@
 
 <ng-template #entityAfterTemplate let-auditLog="datum">
     <div *ngIf="auditLog.entityAfter">
-        <span (click)=openDetailedModal(auditLog) >{{ auditLog.entityAfter.name }}</span>
+        <span *ngIf="auditLog.actionType === 'Update'" (click)=openDetailedModal(auditLog) >{{ auditLog.entityAfter.name }}</span>
+        <div *ngIf="auditLog.actionType !== 'Update'">{{ auditLog.entityAfter.name }}</div>
     </div>
     <div *ngIf="auditLog.entityBefore && !auditLog.entityAfter">
-        <span (click)=openDetailedModal(auditLog) >{{ auditLog.entityBefore.name }}</span>
+        <div>{{ auditLog.entityBefore.name }}</div>
     </div>
     <div *ngIf="auditLog.entityAfter?.definition?.vrf_name">
         <span (click)=openDetailedModal(auditLog) >{{ auditLog.entityAfter.definition.vrf_name }}</span>

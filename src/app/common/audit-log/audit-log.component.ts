@@ -1,10 +1,13 @@
 /* eslint-disable */
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
+  ApplicationProfile,
   AuditLogActionTypeEnum,
   Datacenter,
+  L3Out,
   NetworkObject,
   NetworkObjectGroup,
+  RouteProfile,
   ServiceObject,
   ServiceObjectGroup,
   Tier,
@@ -14,6 +17,9 @@ import {
   V1NetworkSecurityServiceObjectGroupsService,
   V1NetworkSecurityServiceObjectsService,
   V1TiersService,
+  V2AppCentricApplicationProfilesService,
+  V2AppCentricL3outsService,
+  V2AppCentricRouteProfilesService,
   V2AppCentricTenantsService,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -71,6 +77,15 @@ export class AuditLogComponent implements OnInit {
   public isLoading = false;
   selectedAuditLog;
 
+  routeProfiles;
+  l3Outs;
+  appProfiles;
+  bridgeDomains;
+  endpointGroups;
+  providedContracts;
+  consumedContracts;
+  vrfs;
+
   showingAppCentricLogs = false;
   appCentricTenants;
 
@@ -85,11 +100,40 @@ export class AuditLogComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private router: Router,
     private appCentricTenantService: V2AppCentricTenantsService,
+    private appProfileService: V2AppCentricApplicationProfilesService,
+    private routeProfileService: V2AppCentricRouteProfilesService,
+    private l3OutService: V2AppCentricL3outsService,
   ) {
     const match = this.router.routerState.snapshot.url.includes('appcentric');
     if (match) {
       this.showingAppCentricLogs = true;
     }
+  }
+
+  getAppCentricObjects(): void {
+    const appProfileRequest = this.appProfileService.getManyApplicationProfile({
+      fields: ['id,name'],
+      perPage: 50000,
+    });
+    const routeProfileRequest = this.routeProfileService.getManyRouteProfile({
+      fields: ['id,name'],
+      perPage: 50000,
+    });
+    const l3OutRequest = this.l3OutService.getManyL3Out({
+      fields: ['id,name'],
+      perPage: 50000,
+    });
+    // const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
+    //   fields: ['id,name'],
+    //   perPage: 50000,
+    // });
+    forkJoin([appProfileRequest, routeProfileRequest, l3OutRequest]).subscribe((result: unknown) => {
+      this.appProfiles = (result as ApplicationProfile)[0];
+      this.routeProfiles = (result as RouteProfile)[1];
+      this.l3Outs = (result as L3Out)[2];
+      // this.serviceObjectGroups = (result as ServiceObjectGroup)[3];
+      this.getAppCentricAuditLogs();
+    });
   }
 
   getAppCentricAuditLogs(event?): void {
@@ -121,13 +165,34 @@ export class AuditLogComponent implements OnInit {
               if (key === 'updatedAt') {
                 return;
               }
+              if (entityBefore[key] === undefined || entityAfter[key] === undefined) {
+                return;
+              }
 
               // will need to handle object-to-object relational additions/subtractions
-              if (key === 'l3outs') {
+              if (key === 'l3outs' || key === 'filters') {
                 let beforeList;
                 let afterList;
-                beforeList = entityBefore[key]?.name;
-                afterList = entityAfter[key]?.name;
+                beforeList = entityBefore[key]?.map(obj => obj?.name);
+                afterList = entityAfter[key]?.map(obj => obj?.name);
+
+                if (entityBefore[key] === undefined || entityAfter[key] === undefined) {
+                  return;
+                }
+                const message = { propertyName: key, before: beforeList, after: afterList };
+                messageArray.push(message);
+                return;
+              }
+
+              if (key === 'consumedContracts') {
+                let beforeList;
+                let afterList;
+
+                beforeList = entityBefore[key]?.map(obj => obj?.name);
+                afterList = entityAfter[key]?.map(obj => obj?.name);
+
+                console.log('beforeList', beforeList);
+                console.log('afterList', afterList);
                 if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {
                   return;
                 }
@@ -135,12 +200,62 @@ export class AuditLogComponent implements OnInit {
                 messageArray.push(message);
                 return;
               }
+              if (key === 'providedContracts') {
+                let beforeList;
+                let afterList;
+
+                beforeList = entityBefore[key]?.map(obj => obj?.name);
+                afterList = entityAfter[key]?.map(obj => obj?.name);
+
+                console.log('beforeList', beforeList);
+                console.log('afterList', afterList);
+                if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {
+                  return;
+                }
+                const message = { propertyName: key, before: beforeList, after: afterList };
+                messageArray.push(message);
+                return;
+              }
+
               if (entityBefore[key] !== entityAfter[key]) {
+                if (key.includes('Id')) {
+                  let beforeMatch;
+                  let afterMatch;
+                  const lowerCaseKey = key.toLocaleLowerCase();
+                  console.log('lowerCaseKey', lowerCaseKey);
+                  if (lowerCaseKey === 'routeprofileid') {
+                    beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.routeProfiles);
+                    beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
+                    entityBefore[key] = beforeMatch;
+                    afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.routeProfiles);
+                    afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
+                    entityAfter[key] = afterMatch;
+                  }
+                  if (lowerCaseKey.includes('consumedcontractid')) {
+                    beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.consumedContracts);
+                    beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
+                    entityBefore[key] = beforeMatch;
+                    afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.consumedContracts);
+                    afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
+                    entityAfter[key] = afterMatch;
+                  }
+                  if (lowerCaseKey === 'l3outforrouteprofileid') {
+                    beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.l3Outs);
+                    beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
+                    entityBefore[key] = beforeMatch;
+                    afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.l3Outs);
+                    afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
+                    entityAfter[key] = afterMatch;
+                  }
+                }
                 const message = { propertyName: key, before: entityBefore[key], after: entityAfter[key] };
                 messageArray.push(message);
               }
             });
+
             messageArray.sort((a, b) => a.propertyName.localeCompare(b.propertyName));
+            // console.log('log',log)
+            // console.log('messageArray',messageArray)
             log.changedProperties = messageArray;
           }
         });
@@ -385,6 +500,7 @@ export class AuditLogComponent implements OnInit {
         this.currentDatacenter = cd;
         if (this.showingAppCentricLogs) {
           this.getAppCentricTenants();
+          this.getAppCentricObjects();
         } else {
           this.getTiers();
         }
