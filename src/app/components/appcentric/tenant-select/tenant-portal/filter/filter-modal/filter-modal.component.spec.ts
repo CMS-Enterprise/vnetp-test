@@ -42,7 +42,6 @@ describe('FilterEntryModalComponent', () => {
   });
 
   const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
-  /* eslint-disable-next-line */
   const isRequired = (prop: string) => {
     const fc = getFormControl(prop);
     fc.setValue(null);
@@ -128,7 +127,7 @@ describe('FilterEntryModalComponent', () => {
       expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
     });
 
-    it('should import application profiles and refresh the table on confirmation', () => {
+    it('should import filter entries and refresh on confirmation', () => {
       const event = [{ name: 'Filter Entry 1' }, { name: 'Filter Entry 1' }] as any;
       jest.spyOn(component, 'getFilterEntries');
       jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {

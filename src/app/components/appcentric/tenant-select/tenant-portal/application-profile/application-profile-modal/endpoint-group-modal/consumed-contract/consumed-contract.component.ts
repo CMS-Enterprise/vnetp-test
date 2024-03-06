@@ -127,7 +127,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
     }
   }
 
-  private sanitizeData(entities) {
+  public sanitizeData(entities) {
     return entities.map(entity => {
       this.mapToCsv(entity);
       return entity;
@@ -162,15 +162,28 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
   };
 
   public importConsumedContractEpgRelation(event): void {
-    const dto = this.sanitizeData(event);
-    dto.map(relation => {
-      this.endpointGroupsService.addConsumedContractToEndpointGroupEndpointGroup(relation).subscribe(
-        () => {},
-        () => {},
-        () => {
-          this.getConsumedContracts();
-        },
-      );
-    });
+    const modalDto = new YesNoModalDto(
+      'Import Consumed Contracts',
+      `Are you sure you would like to import ${event.length} Consumed Contract${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      dto.map(relation => {
+        this.endpointGroupsService.addConsumedContractToEndpointGroupEndpointGroup(relation).subscribe(
+          () => {},
+          () => {},
+          () => {
+            this.getConsumedContracts();
+          },
+        );
+      });
+    };
+
+    const onClose = () => {
+      this.getConsumedContracts();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }

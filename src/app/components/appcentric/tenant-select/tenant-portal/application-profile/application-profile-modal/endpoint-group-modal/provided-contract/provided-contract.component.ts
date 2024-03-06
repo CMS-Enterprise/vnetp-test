@@ -163,15 +163,27 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
   };
 
   public importProvidedContractEpgRelation(event): void {
-    const dto = this.sanitizeData(event);
-    dto.map(relation => {
-      this.endpointGroupsService.addProvidedContractToEndpointGroupEndpointGroup(relation).subscribe(
-        () => {},
-        () => {},
-        () => {
-          this.getProvidedContracts();
-        },
-      );
-    });
+    const modalDto = new YesNoModalDto(
+      'Import Provided Contracts',
+      `Are you sure you would like to import ${event.length} Provided Contract${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      dto.map(relation => {
+        this.endpointGroupsService.addProvidedContractToEndpointGroupEndpointGroup(relation).subscribe(
+          () => {},
+          () => {},
+          () => {
+            this.getProvidedContracts();
+          },
+        );
+      });
+    };
+    const onClose = () => {
+      this.getProvidedContracts();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }

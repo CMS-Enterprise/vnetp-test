@@ -80,7 +80,7 @@ describe('SubjectModalComponent', () => {
       expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
     });
 
-    it('should import application profiles and refresh the table on confirmation', () => {
+    it('should import subject filters and refresh on confirmation', () => {
       const event = [{ name: 'Filter 1' }, { name: 'Filter 1' }] as any;
       jest.spyOn(component, 'getFiltertableData');
       jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
