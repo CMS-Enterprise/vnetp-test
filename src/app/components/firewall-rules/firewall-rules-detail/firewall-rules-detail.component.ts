@@ -643,8 +643,4 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   checkUndeployedChangesGroup(group: FirewallRuleGroup): boolean {
     return UndeployedChangesUtil.hasUndeployedChanges(group);
   }
-
-  showUndeployedChanges(): void {
-    this.getFirewallRules(null, 'updatedAt||gt||' + this.FirewallRuleGroup.provisionedAt);
-  }
 }

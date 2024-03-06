@@ -1,4 +1,11 @@
 <div class="select-wrap">
+  <app-icon-button
+  *ngIf="undeployedChanges"
+  icon="asterisk"
+  [label]="'Undeployed Changes'"
+  [type]="'danger'"
+></app-icon-button>
+
   <span *ngIf="currentDatacenter">
     Current Datacenter: <span class="text-bold ml-1">{{ currentDatacenter.name }}</span>
   </span>

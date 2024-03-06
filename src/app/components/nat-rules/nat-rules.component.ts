@@ -54,7 +54,7 @@ export class NatRulesComponent implements OnInit, OnDestroy {
     return ObjectUtil.getObjectName(tierId, [this.currentTier], 'Error Resolving Name');
   }
 
-  checkUndeployedChanges(object) {
-    return UndeployedChangesUtil.hasUndeployedChanges(object);
+  checkUndeployedChangesGroup(group: NatRuleGroup): boolean {
+    return UndeployedChangesUtil.hasUndeployedChanges(group);
   }
 }

@@ -39,9 +39,10 @@
         <td>{{ natRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
         <td>
           <app-icon-button
-          *ngIf="checkUndeployedChanges(natRuleGroup)"
+          *ngIf="checkUndeployedChangesGroup(natRuleGroup)"
           icon="asterisk"
           label="Undeployed Changes"
+          [type]="'danger'"
         ></app-icon-button>
         </td>
       </tr>

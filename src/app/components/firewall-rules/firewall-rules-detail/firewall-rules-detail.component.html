@@ -4,15 +4,6 @@
 </a>
 
 <h1>{{ TierName }} - {{ FirewallRuleGroup?.name }} FW Rules</h1>
-<app-icon-button
-*ngIf="checkUndeployedChangesGroup(FirewallRuleGroup)"
-icon="asterisk"
-label="Undeployed Changes"
-[type]="'danger'"
-click="showUndeployedChanges()"
-></app-icon-button>
-Show Undeployed Changes
-
 
 <section class="btn-toolbar" role="toolbar">
   <!-- Add Firewall Rule -->

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -6,10 +6,11 @@ import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
+import { UndeployedChangesService } from '../services/undeployed-changes.service';
 
 @Injectable()
 export class HttpConfigInterceptor {
-  constructor(private auth: AuthService, private toastr: ToastrService, private route: ActivatedRoute) {}
+  constructor(private auth: AuthService, private injector: Injector, private toastr: ToastrService, private route: ActivatedRoute) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const currentUser = this.auth.currentUserValue;
@@ -119,6 +120,11 @@ export class HttpConfigInterceptor {
     if (request.method === 'GET') {
       return;
     }
+
+    // Get undeployed changes on successful non-get request.
+    const undeployedChanges = this.injector.get(UndeployedChangesService);
+    undeployedChanges.getUndeployedChanges();
+
     const loginNotificationMsg = 'Login Successful';
     const postNotificationMsg = 'Request Successful';
     const bulkNotificationMessage = 'Bulk Upload Successful';

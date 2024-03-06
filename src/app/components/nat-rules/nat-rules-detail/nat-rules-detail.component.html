@@ -24,9 +24,11 @@
 <ng-container *ngIf="!isLoading; else loading">
   <app-table [config]="config" [data]="natRules" (clearResults)="getNatRules($event)" (searchParams)="getNatRules($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
 </ng-container>
-
 <ng-template #actionsTemplate let-natRule="datum">
   <section class="table__actions">
+    <app-icon-button *ngIf="checkUndeployedChanges(natRule)" icon="asterisk" label="Undeployed Changes"
+      [type]="'danger'"></app-icon-button>
+
     <app-icon-button *ngIf="!natRule?.deletedAt" icon="edit" label="Edit Nat Rule"
       (handleClick)="openNatRuleModal(ModalMode.Edit, natRule)"></app-icon-button>
 
