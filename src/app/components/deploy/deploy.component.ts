@@ -1,7 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { V1TiersService, Tier, Datacenter, V1TierGroupsService, TierGroup, V1JobsService, Job } from 'client';
+import {
+  V1TiersService,
+  Tier,
+  Datacenter,
+  V1TierGroupsService,
+  TierGroup,
+  V1JobsService,
+  Job,
+  V1NetworkSecurityFirewallRuleGroupsService,
+  V1NetworkSecurityNatRuleGroupsService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+  FirewallRuleGroup,
+  NatRuleGroup,
+  NetworkObject,
+  NetworkObjectGroup,
+  ServiceObject,
+  ServiceObjectGroup,
+} from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { TableRowWrapper } from 'src/app/models/other/table-row-wrapper';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -15,6 +35,14 @@ import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 export class DeployComponent implements OnInit {
   currentDatacenterSubscription: Subscription;
   currentDatacenter: Datacenter;
+  changeReport = {
+    firewallRuleGroups: [] as FirewallRuleGroup[],
+    natRuleGroups: [] as NatRuleGroup[],
+    networkObjects: [] as NetworkObject[],
+    networkObjectGroups: [] as NetworkObjectGroup[],
+    serviceObjects: [] as ServiceObject[],
+    serviceObjectGroups: [] as ServiceObjectGroup[],
+  };
 
   tierGroups: TierGroup[] = [];
   tiers: TableRowWrapper<Tier>[] = [];
@@ -23,6 +51,12 @@ export class DeployComponent implements OnInit {
     private tierService: V1TiersService,
     private tierGroupService: V1TierGroupsService,
     private datacenterService: DatacenterContextService,
+    private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
+    private natRuleGroupService: V1NetworkSecurityNatRuleGroupsService,
+    private networkObjectService: V1NetworkSecurityNetworkObjectsService,
+    private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
+    private serviceObjectService: V1NetworkSecurityServiceObjectsService,
+    private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private jobService: V1JobsService,
     private ngx: NgxSmartModalService,
   ) {}
@@ -118,5 +152,68 @@ export class DeployComponent implements OnInit {
 
   checkUndeployedChanges(object) {
     return UndeployedChangesUtil.hasUndeployedChanges(object);
+  }
+
+  getChangeReport(tier: Tier) {
+    const firewallRuleGroupRequest = this.firewallRuleGroupService.getManyFirewallRuleGroup({
+      filter: [`tierId||eq||${tier.id}`, 'version||gt_prop||provisionedVersion'],
+      sort: ['updatedAt,DESC'],
+      fields: ['id', 'name'],
+      page: 1,
+      perPage: 10,
+    });
+    const natRuleGroupRequest = this.natRuleGroupService.getManyNatRuleGroup({
+      filter: [`tierId||eq||${tier.id}`, 'version||gt_prop||provisionedVersion'],
+      sort: ['updatedAt,DESC'],
+      fields: ['id', 'name'],
+      page: 1,
+      perPage: 10,
+    });
+    const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
+      filter: [`tierId||eq||${tier.id}`, 'version||gt_prop||provisionedVersion'],
+      sort: ['updatedAt,DESC'],
+      fields: ['id', 'name'],
+      page: 1,
+      perPage: 50000,
+    });
+    const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
+      filter: [`tierId||eq||${tier.id}`, 'version||gt_prop||provisionedVersion'],
+      sort: ['updatedAt,DESC'],
+      fields: ['id', 'name'],
+      page: 1,
+      perPage: 50000,
+    });
+    const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
+      filter: [`tierId||eq||${tier.id}`, 'version||gt_prop||provisionedVersion'],
+      sort: ['updatedAt,DESC'],
+      fields: ['id', 'name'],
+      page: 1,
+      perPage: 50000,
+    });
+    const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
+      filter: [`tierId||eq||${tier.id}`, 'version||gt_prop||provisionedVersion'],
+      sort: ['updatedAt,DESC'],
+      fields: ['id', 'name'],
+      page: 1,
+      perPage: 50000,
+    });
+
+    forkJoin([
+      firewallRuleGroupRequest,
+      natRuleGroupRequest,
+      networkObjectRequest,
+      networkObjectGroupRequest,
+      serviceObjectRequest,
+      serviceObjectGroupRequest,
+    ]).subscribe(result => {
+      this.changeReport.firewallRuleGroups = result[0].data;
+      this.changeReport.natRuleGroups = result[1].data;
+      this.changeReport.networkObjects = result[2].data;
+      this.changeReport.networkObjectGroups = result[3].data;
+      this.changeReport.serviceObjects = result[4].data;
+      this.changeReport.serviceObjectGroups = result[5].data;
+
+      this.ngx.getModal('changeReportModal').open();
+    });
   }
 }

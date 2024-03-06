@@ -9,6 +9,7 @@
     <tr>
       <th scope="col">Deploy</th>
       <th scope="col">Name</th>
+      <th scope="col">Last Provisioned At</th>
       <th scope="col">Class</th>
       <th scope="col">Type</th>
       <th scope="col">Tier Group</th>
@@ -25,6 +26,9 @@
         {{ tier?.item?.name }}
       </td>
       <td>
+        {{ tier?.item?.provisionedAt | date: 'medium'}}
+      </td>
+      <td>
         {{ tier?.item?.tierClass }}
       </td>
       <td>
@@ -38,11 +42,11 @@
       </td>
       <td>
         <app-icon-button *ngIf="checkUndeployedChanges(tier?.item)" icon="asterisk" label="Undeployed Changes"
-        [type]="'danger'"></app-icon-button>
+        [type]="'danger'" (handleClick)=getChangeReport(tier.item)></app-icon-button>
       </td>
     </tr>
     <tr *ngIf="!tiers?.length" class="text-center">
-      <td colspan="6">No Tiers to Provision</td>
+      <td colspan="7">No Tiers to Provision</td>
     </tr>
   </tbody>
 </table>
@@ -54,3 +58,56 @@
 </section>
 
 <app-yes-no-modal></app-yes-no-modal>
+
+<ngx-smart-modal #undeployedChangesModal identifier="changeReportModal" [dismissable]="false" customClass="medium-modal">
+  <header class="modal-header">
+    <h4 class="modal-title">Undeployed Changes in Tier</h4>
+  </header>
+
+  <div class="modal-body">
+    <p class="mb-3">The following provisioned objects have changes that have not been deployed:</p>
+    <div *ngIf="changeReport.firewallRuleGroups.length > 0">
+      <h5>Firewall Rule Groups <span class="badge bg-secondary">{{ changeReport.firewallRuleGroups.length }}</span></h5>
+      <ul>
+        <li *ngFor="let obj of changeReport.firewallRuleGroups">{{ obj.name }}</li>
+      </ul>
+    </div>
+    
+    <div *ngIf="changeReport.natRuleGroups.length > 0">
+      <h5>NAT Rule Groups <span class="badge bg-secondary">{{ changeReport.natRuleGroups.length }}</span></h5>
+      <ul>
+        <li *ngFor="let obj of changeReport.natRuleGroups">{{ obj.name }}</li>
+      </ul>
+    </div>
+    
+    <div *ngIf="changeReport.networkObjects.length > 0">
+      <h5>Network Objects <span class="badge bg-secondary">{{ changeReport.networkObjects.length }}</span></h5>
+      <ul>
+        <li *ngFor="let obj of changeReport.networkObjects">{{ obj.name }}</li>
+      </ul>
+    </div>
+    
+    <div *ngIf="changeReport.networkObjectGroups.length > 0">
+      <h5>Network Object Groups <span class="badge bg-secondary">{{ changeReport.networkObjectGroups.length }}</span></h5>
+      <ul>
+        <li *ngFor="let obj of changeReport.networkObjectGroups">{{ obj.name }}</li>
+      </ul>
+    </div>
+    
+    <div *ngIf="changeReport.serviceObjects.length > 0">
+      <h5>Service Objects <span class="badge bg-secondary">{{ changeReport.serviceObjects.length }}</span></h5>
+      <ul>
+        <li *ngFor="let obj of changeReport.serviceObjects">{{ obj.name }}</li>
+      </ul>
+    </div>
+    
+    <div *ngIf="changeReport.serviceObjectGroups.length > 0">
+      <h5>Service Object Groups <span class="badge bg-secondary">{{ changeReport.serviceObjectGroups.length }}</span></h5>
+      <ul>
+        <li *ngFor="let obj of changeReport.serviceObjectGroups">{{ obj.name }}</li>
+      </ul>
+    </div>
+    
+    
+  </div>
+</ngx-smart-modal>

@@ -122,8 +122,10 @@ export class HttpConfigInterceptor {
     }
 
     // Get undeployed changes on successful non-get request.
-    const undeployedChanges = this.injector.get(UndeployedChangesService);
-    undeployedChanges.getUndeployedChanges();
+    if (!responseEvent.url.includes('auth/')) {
+      const undeployedChanges = this.injector.get(UndeployedChangesService);
+      undeployedChanges.getUndeployedChanges();
+    }
 
     const loginNotificationMsg = 'Login Successful';
     const postNotificationMsg = 'Request Successful';
