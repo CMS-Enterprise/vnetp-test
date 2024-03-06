@@ -140,7 +140,7 @@ describe('SubnetsModalComponent', () => {
     });
   });
 
-  describe('importAppProfilesConfig', () => {
+  describe('importAppCentricSubnetsConfig', () => {
     const mockNgxSmartModalComponent = {
       getData: jest.fn().mockReturnValue({ modalYes: true }),
       removeData: jest.fn(),
