@@ -21,6 +21,7 @@ import { ImportExportModule } from 'src/app/common/import-export/import-export.m
 import { TierSelectModule } from 'src/app/common/tier-select/tier-select.module';
 import { NatRuleObjectInfoModalComponent } from './nat-rule-modal/nat-rule-object-info-modal/nat-rule-object-info-modal.component';
 import { NatRulePacketTracerComponent } from './nat-rule-packet-tracer/nat-rule-packet-tracer.component';
+import { NatRulesOperationModalComponent } from './nat-rules-operation-modal/nat-rules-operation-modal.component';
 
 const routes: Routes = [
   {
@@ -62,6 +63,8 @@ const routes: Routes = [
     NatRulesDetailComponent,
     NatRuleObjectInfoModalComponent,
     NatRulePacketTracerComponent,
+    NatRuleModalComponent,
+    NatRulesOperationModalComponent,
   ],
 })
 export class NatRulesModule {}

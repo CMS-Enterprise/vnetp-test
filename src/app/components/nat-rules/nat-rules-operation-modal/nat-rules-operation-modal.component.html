@@ -1,0 +1,88 @@
+<ngx-smart-modal
+  #natRulesOperationModal
+  identifier="natRulesOperationModal"
+  [dismissable]="false"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+  customClass="small-modal"
+>
+  <header class="modal-header">
+    <h4 class="modal-title">Nat Rule - {{ name }}</h4>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="tiers">Destination Tier</label>
+        <ng-select
+          id="tiers"
+          [items]="tiers"
+          bindLabel="name"
+          bindValue="id"
+          [(ngModel)]="selectedTierId"
+          [ngModelOptions]="{ standalone: true }"
+          (change)="getNatRuleGroups(selectedTierId)"
+        ></ng-select>
+      </div>
+
+      <div class="form-group">
+        <label for="natRuleGroups">Nat Rule Groups</label>
+        <ng-select id="natRuleGroups" [items]="natRuleGroups" bindLabel="name" bindValue="id" formControlName="natRuleGroupId"></ng-select>
+        <div *ngIf="submitted && f.natRuleGroupId.errors" class="invalid-feedback">
+          <div *ngIf="f.natRuleGroupId.errors.required">Nat Group is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="operation">Operation</label>
+        <tooltip
+          message="Clone will create a copy of the selected rule in the selected rule group. Move will create a copy of the selected rule and soft delete the original rule."
+        ></tooltip>
+        <select class="form-control" id="operation" class="form-control" formControlName="operation">
+          <option></option>
+          <option *ngIf="this.form.controls.natRuleGroupId.value !== sourceNatRuleGroupId" value="Move">Move</option>
+          <option value="Clone">Clone</option>
+        </select>
+        <div *ngIf="submitted && f.operation.errors" class="invalid-feedback">
+          <div *ngIf="f.operation.errors.required">Operation is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        <tooltip
+          message="Please note that a rule with the same name must not already exist in order for the new rule to be moved/cloned."
+        ></tooltip>
+        <input class="form-control" id="name" type="text" formControlName="name" />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.name.errors.maxlength">Name must be 60 characters or less.</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="ruleIndex">Rule Index</label>
+        <tooltip
+          message="Please note that a rule with the same rule index must not already exist in order for the new rule to be moved/cloned."
+        ></tooltip>
+        <input class="form-control" id="ruleIndex" type="number" formControlName="ruleIndex" />
+        <div *ngIf="submitted && f.ruleIndex.errors" class="invalid-feedback">
+          <div *ngIf="f.ruleIndex.errors.required">Rule Index is required</div>
+        </div>
+      </div>
+    </div>
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
+        Cancel
+      </button>
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save</span>
+      </button>
+    </footer>
+  </form>
+</ngx-smart-modal>
+
+<app-yes-no-modal></app-yes-no-modal>

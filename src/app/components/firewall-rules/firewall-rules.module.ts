@@ -21,6 +21,7 @@ import { FirewallRuleModalComponent } from './firewall-rule-modal/firewall-rule-
 import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.module';
 // eslint-disable-next-line max-len
 import { FirewallRuleObjectInfoModalComponent } from './firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
+import { FirewallRulesOperationModalComponent } from './firewall-rules-operation-modal/firewall-rules-operation-modal.component';
 
 const routes: Routes = [
   {
@@ -61,6 +62,7 @@ const routes: Routes = [
     FirewallRuleModalComponent,
     FirewallRulePacketTracerComponent,
     FirewallRuleObjectInfoModalComponent,
+    FirewallRulesOperationModalComponent,
   ],
 })
 export class FirewallRulesModule {}

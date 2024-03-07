@@ -52,7 +52,7 @@ export interface FirewallRuleImport {
     readonly serviceObjectGroup?: ServiceObjectGroup;
     toZone?: Array<Zone>;
     fromZone?: Array<Zone>;
-    vrfName: string;
+    tierName: string;
     firewallRuleGroupType: string;
 }
 export enum FirewallRuleImportDirectionEnum {

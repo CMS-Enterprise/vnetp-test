@@ -7,6 +7,9 @@ import { IsIpV4NoSubnetValidator, ValidatePortNumber } from 'src/app/validators/
 import { Netmask } from 'netmask';
 import { FirewallRule, NetworkObjectGroup, ServiceObjectGroup } from '../../../../../client';
 import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-rule-packet-tracer-dto';
+import SubscriptionUtil from '../../../utils/SubscriptionUtil';
+import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 
 type FirewallRulePacketTracerOutput = {
   checkList: FirewallRulePacketTracerChecklist;
@@ -44,11 +47,13 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   filterPartial = false;
 
   dropdownOpen = false;
+  serviceTypeSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder) {}
+  constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private toastrService: ToastrService) {}
 
   ngOnInit(): void {
     this.buildForm();
+    this.setFormValidators();
     this.applyFilter();
   }
 
@@ -117,6 +122,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         protocolMatch: this.form.controls.protocol.value === rule.protocol,
         enabledMatch: this.form.controls.enabled.value === rule.enabled,
         softDeleted: Boolean(rule.deletedAt),
+        actionMatch: this.form.controls.action.value === rule.action,
       };
 
       if (checkList.sourcePortMatch === null || checkList.destPortMatch === null) {
@@ -128,6 +134,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     });
     this.resetFilter();
     this.applyFilter();
+    this.toastrService.success('Packet Tracer Executed.');
   }
 
   handleInRange(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean {
@@ -256,12 +263,38 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     });
   }
 
+  setFormValidators() {
+    const sourcePorts = this.form.controls.sourcePorts;
+    const destinationPorts = this.form.controls.destinationPorts;
+    this.serviceTypeSubscription = this.form.controls.protocol.valueChanges.subscribe(serviceType => {
+      switch (serviceType) {
+        case 'TCP':
+          sourcePorts.setValidators(Validators.compose([Validators.required, ValidatePortNumber]));
+          destinationPorts.setValidators(Validators.compose([Validators.required, ValidatePortNumber]));
+          break;
+        case 'UDP':
+          sourcePorts.setValidators(Validators.compose([Validators.required, ValidatePortNumber]));
+          destinationPorts.setValidators(Validators.compose([Validators.required, ValidatePortNumber]));
+          break;
+        default:
+          sourcePorts.setValidators(null);
+          destinationPorts.setValidators(null);
+          sourcePorts.setValue('');
+          destinationPorts.setValue('');
+          break;
+      }
+      sourcePorts.updateValueAndValidity();
+      destinationPorts.updateValueAndValidity();
+    });
+  }
+
   get f() {
     return this.form.controls;
   }
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
+      action: [''],
       direction: [''],
       protocol: [''],
       enabled: [true],
@@ -273,7 +306,12 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     });
   }
 
+  private unsubAll() {
+    SubscriptionUtil.unsubscribe([this.serviceTypeSubscription]);
+  }
+
   reset(): void {
+    this.unsubAll();
     this.submitted = false;
     this.rulesHit = [];
     this.form.reset();
