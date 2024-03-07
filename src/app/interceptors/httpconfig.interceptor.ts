@@ -117,23 +117,40 @@ export class HttpConfigInterceptor {
 
   // if not a GET request, show appropriate success message
   processSuccessRequest(request, responseEvent) {
+    // Early return for GET requests since no further processing is needed
     if (request.method === 'GET') {
       return;
     }
 
-    // Get undeployed changes on successful non-get request.
-    if (!responseEvent.url.includes('auth/')) {
+    this.handleNonGetRequests(responseEvent);
+    this.showSuccessMessage(responseEvent);
+  }
+
+  private handleNonGetRequests(responseEvent) {
+    // Only fetch undeployed changes for non-auth URLs
+    if (!responseEvent.url.includes('auth/') && !responseEvent.url.includes('bulk')) {
       const undeployedChanges = this.injector.get(UndeployedChangesService);
       undeployedChanges.getUndeployedChanges();
     }
+  }
 
+  private showSuccessMessage(responseEvent) {
+    // Define messages based on URL patterns
     const loginNotificationMsg = 'Login Successful';
     const postNotificationMsg = 'Request Successful';
     const bulkNotificationMessage = 'Bulk Upload Successful';
-    return responseEvent.url.includes('auth/')
-      ? this.toastr.success(loginNotificationMsg)
-      : responseEvent.url.includes('bulk')
-      ? this.toastr.success(bulkNotificationMessage)
-      : this.toastr.success(postNotificationMsg);
+
+    // Determine the appropriate message to show
+    let message;
+    if (responseEvent.url.includes('auth/')) {
+      message = loginNotificationMsg;
+    } else if (responseEvent.url.includes('bulk')) {
+      message = bulkNotificationMessage;
+    } else {
+      message = postNotificationMsg;
+    }
+
+    // Display the determined success message
+    this.toastr.success(message);
   }
 }

@@ -6,7 +6,18 @@ import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of, Subject } from 'rxjs';
-import { V1TiersService, V1TierGroupsService, V1JobsService, FirewallRuleGroupTypeEnum } from 'client';
+import {
+  V1TiersService,
+  V1TierGroupsService,
+  V1JobsService,
+  FirewallRuleGroupTypeEnum,
+  V1NetworkSecurityFirewallRuleGroupsService,
+  V1NetworkSecurityNatRuleGroupsService,
+  V1NetworkSecurityNetworkObjectsService,
+  V1NetworkSecurityNetworkObjectGroupsService,
+  V1NetworkSecurityServiceObjectsService,
+  V1NetworkSecurityServiceObjectGroupsService,
+} from 'client';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { MockProvider } from 'src/test/mock-providers';
@@ -63,6 +74,12 @@ describe('DeployComponent', () => {
         MockProvider(V1JobsService),
         MockProvider(V1TierGroupsService),
         MockProvider(V1TiersService, { getManyTier: of(testData.getManyTierResponse) }),
+        MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
+        MockProvider(V1NetworkSecurityNatRuleGroupsService),
+        MockProvider(V1NetworkSecurityNetworkObjectsService),
+        MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+        MockProvider(V1NetworkSecurityServiceObjectsService),
+        MockProvider(V1NetworkSecurityServiceObjectGroupsService),
         { provide: DatacenterContextService, useValue: datacenterService },
       ],
     })
