@@ -17,7 +17,7 @@ export class UndeployedChangesService {
 
   constructor(private datacenterContextService: DatacenterContextService, private tierService: V1TiersService) {
     this.setupSubscriptions();
-    // Get undeployed changes every 15 minutes
+    // Get undeployed changes every 30 seconds.
     setInterval(() => {
       this.getUndeployedChanges();
     }, 30 * 1000);
@@ -53,5 +53,9 @@ export class UndeployedChangesService {
         this.undeployedChangeObjectsSubject.next(response.data);
         this.undeployedChangesSubject.next(response.data.length > 0);
       });
+  }
+
+  getAppCentricChanges(): void {
+    throw new Error('Not implemented');
   }
 }
