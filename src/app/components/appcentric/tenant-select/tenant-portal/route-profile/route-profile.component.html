@@ -1,19 +1,21 @@
 <ng-container>
-  <section class="btn-toolbar" role="toolbar">
+  <!-- <section class="btn-toolbar" role="toolbar">
     <button type="button" class="btn btn-success" (click)="openRouteProfileModal(ModalMode.Create)">
       <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
       <span>Create Route Profile</span>
     </button>
-  </section>
+  </section> -->
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-table [config]="config" [data]="routeProfiles" (clearResults)="getRouteProfile($event)"
+    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importRouteProfileConfig()" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="routeProfiles" [tableConfig]="config" (openObjectModalFunc)="openRouteProfileModal(ModalMode.Create)" (clearResultsFunc)="getRouteProfile($event)" (searchParamsFunc)="getRouteProfile($event)" (tableEventFunc)="getRouteProfile($event)"></app-standard-component>
+
+    <!-- <app-table [config]="config" [data]="routeProfiles" (clearResults)="getRouteProfile($event)"
       (searchParams)="getRouteProfile($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage"
       (tableEvent)="onTableEvent($event)"></app-table>
     <section class="btn-toolbar" role="toolbar">
       <app-import-export [exportObject]="routeProfiles" exportFileName="routeProfiles" [disableJson]="false"
         ></app-import-export>
-    </section>
+    </section> -->
   </ng-container>
 </ng-container>
 

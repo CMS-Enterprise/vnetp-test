@@ -53,6 +53,8 @@ export class BridgeDomainComponent implements OnInit {
     ],
   };
 
+  objectType = 'Bridge Domain';
+
   constructor(
     private bridgeDomainService: V2AppCentricBridgeDomainsService,
     private tableContextService: TableContextService,

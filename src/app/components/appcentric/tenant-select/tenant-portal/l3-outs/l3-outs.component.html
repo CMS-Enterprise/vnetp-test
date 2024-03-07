@@ -1,13 +1,14 @@
 <ng-container>
-  <section class="btn-toolbar" role="toolbar">
+  <!-- <section class="btn-toolbar" role="toolbar">
     <button type="button" class="btn btn-success" (click)="openL3OutsModal(ModalMode.Create)">
       <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
       <span>Create L3 Out</span>
     </button>
-  </section>
+  </section> -->
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-table
+    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importL3OutsConfig()" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="l3Outs" [tableConfig]="config" (openObjectModalFunc)="openL3OutsModal(ModalMode.Create)" (clearResultsFunc)="getL3Outs($event)" (searchParamsFunc)="getL3Outs($event)" (tableEventFunc)="getL3Outs($event)"></app-standard-component>
+    <!-- <app-table
       [config]="config"
       [data]="l3Outs"
       (clearResults)="getL3Outs($event)"
@@ -22,7 +23,7 @@
         exportFileName="l3Outs"
         [disableJson]="false"
       ></app-import-export>
-    </section>
+    </section> -->
   </ng-container>
 </ng-container>
 

@@ -14,6 +14,7 @@ import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.modul
 import { BridgeDomainModalComponent } from './bridge-domain-modal/bridge-domain-modal.component';
 import { SubnetsModalComponent } from './subnets-modal/subnets-modal.component';
 import { SubnetsEditModalComponent } from './subnets-modal/subnets-edit-modal/subnets-edit-modal.component';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -37,6 +38,7 @@ const routes: Routes = [
     TooltipModule,
     NgSelectModule,
     YesNoModalModule,
+    StandardComponentModule,
   ],
   exports: [BridgeDomainComponent, BridgeDomainModalComponent],
 })

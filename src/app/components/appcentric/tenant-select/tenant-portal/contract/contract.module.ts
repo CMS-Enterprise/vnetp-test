@@ -13,6 +13,7 @@ import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.modul
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { ContractModalComponent } from './contract-modal/contract-modal.component';
 import { SubjectModalComponent } from './contract-modal/subject-modal/subject-modal.component';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -36,6 +37,7 @@ const routes: Routes = [
     TooltipModule,
     NgSelectModule,
     YesNoModalModule,
+    StandardComponentModule,
   ],
 })
 export class ContractModule {}

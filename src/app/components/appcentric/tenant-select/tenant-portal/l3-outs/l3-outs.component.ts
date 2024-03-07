@@ -45,6 +45,8 @@ export class L3OutsComponent implements OnInit {
     ],
   };
 
+  objectType = 'L3 Out';
+
   constructor(
     private l3OutService: V2AppCentricL3outsService,
     private tableContextService: TableContextService,

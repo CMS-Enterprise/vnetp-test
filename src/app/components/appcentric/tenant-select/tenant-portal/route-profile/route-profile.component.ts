@@ -42,6 +42,8 @@ export class RouteProfileComponent implements OnInit {
     ],
   };
 
+  objectType = 'Route Profile';
+
   constructor(
     private routeProfileService: V2AppCentricRouteProfilesService,
     private tableContextService: TableContextService,

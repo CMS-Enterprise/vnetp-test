@@ -48,6 +48,8 @@ export class VrfComponent implements OnInit {
     ],
   };
 
+  objectType = 'Vrf';
+
   constructor(
     private vrfService: V2AppCentricVrfsService,
     private tableContextService: TableContextService,

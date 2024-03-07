@@ -95,6 +95,7 @@ export class SearchBarComponent implements OnInit {
     this.tableContextService.removeAdvancedSearchLocalStorage();
     this.filteredResults = false;
     this.searchError = false;
+    this.searchText = null;
     this.searchBarClearResults.emit();
   }
 }

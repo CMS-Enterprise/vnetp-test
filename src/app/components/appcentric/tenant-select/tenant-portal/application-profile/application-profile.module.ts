@@ -16,6 +16,7 @@ import { EndpointGroupModalComponent } from './application-profile-modal/endpoin
 import { ProvidedContractComponent } from './application-profile-modal/endpoint-group-modal/provided-contract/provided-contract.component';
 import { ConsumedContractComponent } from './application-profile-modal/endpoint-group-modal/consumed-contract/consumed-contract.component';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -46,6 +47,7 @@ const routes: Routes = [
     TooltipModule,
     NgSelectModule,
     TabsModule,
+    StandardComponentModule,
   ],
   exports: [ApplicationProfileComponent, ApplicationProfileModalComponent],
 })

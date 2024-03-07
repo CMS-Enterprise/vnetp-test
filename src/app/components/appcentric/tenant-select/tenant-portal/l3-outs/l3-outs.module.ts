@@ -12,6 +12,7 @@ import { ImportExportModule } from 'src/app/common/import-export/import-export.m
 import { TableModule } from 'src/app/common/table/table.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { L3OutsModalComponent } from './l3-outs-modal/l3-outs-modal.component';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -35,6 +36,7 @@ const routes: Routes = [
     TooltipModule,
     NgSelectModule,
     YesNoModalModule,
+    StandardComponentModule,
   ],
   exports: [L3OutsComponent, L3OutsModalComponent],
 })

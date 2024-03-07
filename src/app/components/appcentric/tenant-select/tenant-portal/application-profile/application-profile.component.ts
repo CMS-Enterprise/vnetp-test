@@ -54,6 +54,8 @@ export class ApplicationProfileComponent implements OnInit {
     ],
   };
 
+  objectType = 'Application Profile';
+
   constructor(
     private applicationProfileService: V2AppCentricApplicationProfilesService,
     private tableContextService: TableContextService,

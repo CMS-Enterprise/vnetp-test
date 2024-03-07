@@ -12,6 +12,7 @@ import { TableModule } from 'src/app/common/table/table.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { RouteProfileModalComponent } from './route-profile-modal/route-profile-modal.component';
 import { RouteProfileComponent } from './route-profile.component';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -35,6 +36,7 @@ const routes: Routes = [
     TooltipModule,
     NgSelectModule,
     YesNoModalModule,
+    StandardComponentModule,
   ],
   exports: [RouteProfileComponent, RouteProfileModalComponent],
 })

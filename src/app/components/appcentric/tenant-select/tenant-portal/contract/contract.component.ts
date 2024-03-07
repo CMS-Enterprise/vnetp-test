@@ -45,6 +45,8 @@ export class ContractComponent implements OnInit {
     ],
   };
 
+  objectType = 'Contract';
+
   constructor(
     private contractService: V2AppCentricContractsService,
     private tableContextService: TableContextService,

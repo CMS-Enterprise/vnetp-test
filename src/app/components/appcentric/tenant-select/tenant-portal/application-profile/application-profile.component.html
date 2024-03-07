@@ -1,14 +1,13 @@
 <ng-container>
-  <section class="btn-toolbar" role="toolbar">
-    <!-- Create Application Profile -->
-    <button type="button" class="btn btn-success" (click)="openApplicationProfileModal(ModalMode.Create)">
+  <!-- <section class="btn-toolbar" role="toolbar">
+        <button type="button" class="btn btn-success" (click)="openApplicationProfileModal(ModalMode.Create)">
       <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
       <span>Create Application Profile</span>
     </button>
-  </section>
+  </section> -->
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-table
+    <!-- <app-table
       [config]="config"
       [data]="applicationProfiles"
       (clearResults)="getApplicationProfiles($event)"
@@ -16,14 +15,15 @@
       [searchColumns]="searchColumns"
       [(itemsPerPage)]="perPage"
       (tableEvent)="onTableEvent($event)"
-    ></app-table>
-    <section class="btn-toolbar" role="toolbar">
+    ></app-table> -->
+    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importApplicationProfilesConfig()" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="applicationProfiles" [tableConfig]="config" (openObjectModalFunc)="openApplicationProfileModal(ModalMode.Create)" (clearResultsFunc)="getApplicationProfiles($event)" (searchParamsFunc)="getApplicationProfiles($event)" (tableEventFunc)="getApplicationProfiles($event)"></app-standard-component>
+    <!-- <section class="btn-toolbar" role="toolbar">
       <app-import-export
         [exportObject]="applicationProfiles"
         exportFileName="applicationProfiles"
         [disableJson]="false"
       ></app-import-export>
-    </section>
+    </section> -->
   </ng-container>
 </ng-container>
 

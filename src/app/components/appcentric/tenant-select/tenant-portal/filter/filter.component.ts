@@ -44,6 +44,8 @@ export class FilterComponent implements OnInit {
     ],
   };
 
+  objectType = 'Filter';
+
   constructor(
     private filterService: V2AppCentricFiltersService,
     private tableContextService: TableContextService,
