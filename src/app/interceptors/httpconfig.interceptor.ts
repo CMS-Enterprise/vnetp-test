@@ -127,7 +127,7 @@ export class HttpConfigInterceptor {
   }
 
   private handleNonGetRequests(responseEvent) {
-    // Only fetch undeployed changes for non-auth URLs
+    // Fetch undeployed changes only for specific non-auth and non-bulk URLs
     if (!responseEvent.url.includes('auth/') && !responseEvent.url.includes('bulk')) {
       const undeployedChanges = this.injector.get(UndeployedChangesService);
       undeployedChanges.getUndeployedChanges();
@@ -135,12 +135,12 @@ export class HttpConfigInterceptor {
   }
 
   private showSuccessMessage(responseEvent) {
-    // Define messages based on URL patterns
+    // Messages defined based on URL patterns
     const loginNotificationMsg = 'Login Successful';
     const postNotificationMsg = 'Request Successful';
     const bulkNotificationMessage = 'Bulk Upload Successful';
 
-    // Determine the appropriate message to show
+    // Determine and display the appropriate success message
     let message;
     if (responseEvent.url.includes('auth/')) {
       message = loginNotificationMsg;
@@ -150,7 +150,6 @@ export class HttpConfigInterceptor {
       message = postNotificationMsg;
     }
 
-    // Display the determined success message
     this.toastr.success(message);
   }
 }
