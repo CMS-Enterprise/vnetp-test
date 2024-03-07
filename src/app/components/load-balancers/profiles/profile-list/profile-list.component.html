@@ -22,7 +22,7 @@
     *ngIf="checkUndeployedChanges(profile)"
           icon="asterisk"
           [label]="'Undeployed Changes'"
-          [type]="'danger'"
+          [type]="'info'"
   ></app-icon-button>
 
     <app-icon-button *ngIf="!profile?.deletedAt" icon="edit" label="Edit Profile" (handleClick)="openModal(profile)"></app-icon-button>

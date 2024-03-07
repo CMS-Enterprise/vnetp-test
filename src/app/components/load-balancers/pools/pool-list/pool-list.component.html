@@ -15,7 +15,7 @@
     *ngIf="checkUndeployedChanges(pool)"
           icon="asterisk"
           [label]="'Undeployed Changes'"
-          [type]="'danger'"
+          [type]="'info'"
   ></app-icon-button>
 
     <app-icon-button *ngIf="!pool?.deletedAt" icon="edit" label="Edit Pool" (handleClick)="openModal(pool)"></app-icon-button>

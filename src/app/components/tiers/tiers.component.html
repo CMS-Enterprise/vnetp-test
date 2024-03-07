@@ -38,7 +38,7 @@
 <ng-template #actionsTemplate let-tier="datum">
   <section class="table__actions">
     <app-icon-button *ngIf="checkUndeployedChanges(tier)" icon="asterisk" label="Undeployed Changes"
-      [type]="'danger'"></app-icon-button>
+      [type]="'info'"></app-icon-button>
 
     <app-icon-button *ngIf="!tier?.deletedAt" icon="edit" label="Edit Tier"
       (handleClick)="openTierModal(ModalMode.Edit, tier)"></app-icon-button>

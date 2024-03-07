@@ -56,7 +56,7 @@
           *ngIf="checkUndeployedChanges(netObj)"
           icon="asterisk"
           label="Undeployed Changes"
-          [type]="'danger'"
+          [type]="'info'"
         ></app-icon-button>
 
         <app-icon-button (click)="checkObjectsParents(netObj)" icon="search"></app-icon-button>
@@ -129,7 +129,7 @@
         *ngIf="checkUndeployedChanges(netObjGroup)"
         icon="asterisk"
         label="Undeployed Changes"
-        [type]="'danger'"
+        [type]="'info'"
       ></app-icon-button>
 
         <app-icon-button

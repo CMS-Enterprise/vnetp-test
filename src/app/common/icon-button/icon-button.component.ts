@@ -29,8 +29,9 @@ export class IconButtonComponent {
     default: 'icon',
     danger: 'icon icon--danger',
     success: 'icon icon--success',
+    info: 'icon icon--info',
   };
 }
 
 export type Icon = 'search' | 'add' | 'edit' | 'execute' | 'undo' | 'delete' | 'upload' | 'download' | 'filter' | 'asterisk';
-export type IconType = 'default' | 'danger' | 'success';
+export type IconType = 'default' | 'danger' | 'success' | 'info';

@@ -22,7 +22,7 @@
     *ngIf="checkUndeployedChanges(iRule)"
           icon="asterisk"
           [label]="'Undeployed Changes'"
-          [type]="'danger'"
+          [type]="'info'"
   ></app-icon-button>
 
     <app-icon-button *ngIf="!iRule?.deletedAt" icon="edit" label="Edit iRule" (handleClick)="openModal(iRule)"></app-icon-button>

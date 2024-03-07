@@ -26,7 +26,7 @@
         {{ tier?.item?.name }}
       </td>
       <td>
-        {{ tier?.item?.provisionedAt | date: 'medium'}}
+        {{ tier?.item?.provisionedAt}}
       </td>
       <td>
         {{ tier?.item?.tierClass }}
@@ -42,7 +42,7 @@
       </td>
       <td>
         <app-icon-button *ngIf="checkUndeployedChanges(tier?.item)" icon="asterisk" label="Undeployed Changes"
-        [type]="'danger'" (handleClick)=getChangeReport(tier.item)></app-icon-button>
+        [type]="'info'" (handleClick)=getChangeReport(tier.item)></app-icon-button>
       </td>
     </tr>
     <tr *ngIf="!tiers?.length" class="text-center">

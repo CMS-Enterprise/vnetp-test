@@ -22,7 +22,7 @@
     *ngIf="checkUndeployedChanges(policy)"
           icon="asterisk"
           [label]="'Undeployed Changes'"
-          [type]="'danger'"
+          [type]="'info'"
   ></app-icon-button>
 
     <app-icon-button *ngIf="!policy?.deletedAt" icon="edit" label="Edit Policy" (handleClick)="openModal(policy)"></app-icon-button>

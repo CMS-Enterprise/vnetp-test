@@ -27,7 +27,7 @@
 <ng-template #actionsTemplate let-natRule="datum">
   <section class="table__actions">
     <app-icon-button *ngIf="checkUndeployedChanges(natRule)" icon="asterisk" label="Undeployed Changes"
-      [type]="'danger'"></app-icon-button>
+      [type]="'info'"></app-icon-button>
 
     <app-icon-button *ngIf="!natRule?.deletedAt" icon="edit" label="Edit Nat Rule"
       (handleClick)="openNatRuleModal(ModalMode.Edit, natRule)"></app-icon-button>
