@@ -11,6 +11,7 @@ import { RouteModalComponent } from './route-modal/route-modal.component';
 import { RouterModule, Routes } from '@angular/router';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -32,6 +33,7 @@ const routes: Routes = [
     TooltipModule,
     YesNoModalModule,
     ImportExportModule,
+    StandardComponentModule,
   ],
   declarations: [RouteListComponent, RouteModalComponent],
 })

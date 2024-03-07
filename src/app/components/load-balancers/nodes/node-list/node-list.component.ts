@@ -56,6 +56,8 @@ export class NodeListComponent implements OnInit, OnDestroy {
   private dataChanges: Subscription;
   private nodeChanges: Subscription;
 
+  objectType = 'Node';
+
   constructor(
     private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,

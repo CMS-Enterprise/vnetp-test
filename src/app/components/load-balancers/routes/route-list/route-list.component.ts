@@ -52,6 +52,8 @@ export class RouteListComponent implements OnInit, OnDestroy {
   private dataChanges: Subscription;
   private routeChanges: Subscription;
 
+  objectType = 'Route';
+
   constructor(
     private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,

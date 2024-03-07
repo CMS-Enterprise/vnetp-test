@@ -11,6 +11,7 @@ import { SelfIpModalComponent } from './self-ip-modal/self-ip-modal.component';
 import { RouterModule, Routes } from '@angular/router';
 import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
+import { StandardComponentModule } from 'src/app/common/standard-component/standard-component.module';
 
 const routes: Routes = [
   {
@@ -32,6 +33,7 @@ const routes: Routes = [
     TooltipModule,
     ImportExportModule,
     YesNoModalModule,
+    StandardComponentModule,
   ],
   declarations: [SelfIpListComponent, SelfIpModalComponent],
 })

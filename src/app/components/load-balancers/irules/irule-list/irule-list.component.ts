@@ -51,6 +51,8 @@ export class IRuleListComponent implements OnInit, OnDestroy {
   private dataChanges: Subscription;
   private iRuleChanges: Subscription;
 
+  objectType = 'iRule';
+
   constructor(
     private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,

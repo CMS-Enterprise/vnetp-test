@@ -54,6 +54,8 @@ export class PolicyListComponent implements OnInit, OnDestroy {
   private dataChanges: Subscription;
   private policyChanges: Subscription;
 
+  objectType = 'Policy';
+
   constructor(
     private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,

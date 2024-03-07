@@ -64,6 +64,8 @@ export class SelfIpListComponent implements OnInit, OnDestroy {
   private dataChanges: Subscription;
   private selfIpChanges: Subscription;
 
+  objectType = 'Self IP';
+
   constructor(
     private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,

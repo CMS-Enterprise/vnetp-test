@@ -60,6 +60,8 @@ export class ProfileListComponent implements OnInit, OnDestroy {
   private dataChanges: Subscription;
   private profileChanges: Subscription;
 
+  objectType = 'Profile';
+
   constructor(
     private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,

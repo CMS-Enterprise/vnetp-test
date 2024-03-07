@@ -62,6 +62,8 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy {
   private healthMonitorChanges: Subscription;
   private dataChanges: Subscription;
 
+  objectType = 'Health Monitor';
+
   constructor(
     private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,

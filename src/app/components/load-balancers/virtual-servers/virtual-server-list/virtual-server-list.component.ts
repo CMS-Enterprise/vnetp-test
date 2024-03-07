@@ -62,6 +62,8 @@ export class VirtualServerListComponent implements OnInit, OnDestroy {
   private dataChanges: Subscription;
   private virtualServerChanges: Subscription;
 
+  objectType = 'Virtual Server';
+
   constructor(
     private datacenterContextService: DatacenterContextService,
     private entityService: EntityService,
