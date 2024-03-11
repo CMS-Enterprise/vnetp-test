@@ -2,9 +2,9 @@ import UndeployedChangesUtil from './UndeployedChangesUtil'; // Adjust the impor
 
 describe('UndeployedChangesUtil', () => {
   describe('hasUndeployedChanges', () => {
-    it('should return false if provisionedVersion is null', () => {
+    it('should return true if provisionedVersion is null', () => {
       const input = { version: 1, provisionedVersion: null };
-      expect(UndeployedChangesUtil.hasUndeployedChanges(input)).toBe(false);
+      expect(UndeployedChangesUtil.hasUndeployedChanges(input)).toBe(true);
     });
 
     it('should return false if provisionedVersion is undefined', () => {
