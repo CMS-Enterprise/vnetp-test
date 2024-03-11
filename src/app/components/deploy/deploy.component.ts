@@ -36,6 +36,7 @@ export class DeployComponent implements OnInit {
   currentDatacenterSubscription: Subscription;
   currentDatacenter: Datacenter;
   changeReport = {
+    tier: {} as Tier,
     firewallRuleGroups: [] as FirewallRuleGroup[],
     natRuleGroups: [] as NatRuleGroup[],
     networkObjects: [] as NetworkObject[],
@@ -43,6 +44,15 @@ export class DeployComponent implements OnInit {
     serviceObjects: [] as ServiceObject[],
     serviceObjectGroups: [] as ServiceObjectGroup[],
   };
+
+  reportGroups = [
+    { name: 'Firewall Rule Groups', data: this.changeReport.firewallRuleGroups },
+    { name: 'NAT Rule Groups', data: this.changeReport.natRuleGroups },
+    { name: 'Network Objects', data: this.changeReport.networkObjects },
+    { name: 'Network Object Groups', data: this.changeReport.networkObjectGroups },
+    { name: 'Service Objects', data: this.changeReport.serviceObjects },
+    { name: 'Service Object Groups', data: this.changeReport.serviceObjectGroups },
+  ];
 
   tierGroups: TierGroup[] = [];
   tiers: TableRowWrapper<Tier>[] = [];
@@ -156,44 +166,44 @@ export class DeployComponent implements OnInit {
 
   getChangeReport(tier: Tier) {
     const firewallRuleGroupRequest = this.firewallRuleGroupService.getManyFirewallRuleGroup({
-      filter: [`tierId||eq||${tier.id}`, 'version||gt_prop||provisionedVersion'],
+      s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name'],
+      fields: ['id', 'name', 'provisionedVersion'],
       page: 1,
       perPage: 10,
     });
     const natRuleGroupRequest = this.natRuleGroupService.getManyNatRuleGroup({
-      filter: [`tierId||eq||${tier.id}`, 'version||gt_prop||provisionedVersion'],
+      s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name'],
+      fields: ['id', 'name', 'provisionedVersion'],
       page: 1,
       perPage: 10,
     });
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
-      filter: [`tierId||eq||${tier.id}`, 'version||gt_prop||provisionedVersion'],
+      s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name'],
+      fields: ['id', 'name', 'provisionedVersion'],
       page: 1,
       perPage: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
-      filter: [`tierId||eq||${tier.id}`, 'version||gt_prop||provisionedVersion'],
+      s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name'],
+      fields: ['id', 'name', 'provisionedVersion'],
       page: 1,
       perPage: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
-      filter: [`tierId||eq||${tier.id}`, 'version||gt_prop||provisionedVersion'],
+      s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name'],
+      fields: ['id', 'name', 'provisionedVersion'],
       page: 1,
       perPage: 50000,
     });
     const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
-      filter: [`tierId||eq||${tier.id}`, 'version||gt_prop||provisionedVersion'],
+      s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name'],
+      fields: ['id', 'name', 'provisionedVersion'],
       page: 1,
       perPage: 50000,
     });
@@ -212,8 +222,46 @@ export class DeployComponent implements OnInit {
       this.changeReport.networkObjectGroups = result[3].data;
       this.changeReport.serviceObjects = result[4].data;
       this.changeReport.serviceObjectGroups = result[5].data;
+      this.changeReport.tier = tier;
+
+      this.updateReportGroups();
 
       this.ngx.getModal('changeReportModal').open();
+    });
+  }
+
+  private updateReportGroups() {
+    this.reportGroups = [
+      { name: 'Firewall Rule Groups', data: this.changeReport.firewallRuleGroups },
+      { name: 'NAT Rule Groups', data: this.changeReport.natRuleGroups },
+      { name: 'Network Objects', data: this.changeReport.networkObjects },
+      { name: 'Network Object Groups', data: this.changeReport.networkObjectGroups },
+      { name: 'Service Objects', data: this.changeReport.serviceObjects },
+      { name: 'Service Object Groups', data: this.changeReport.serviceObjectGroups },
+    ];
+  }
+
+  getUndeployedOrNewObjects(tierId) {
+    return JSON.stringify({
+      OR: [
+        {
+          provisionedVersion: {
+            isnull: true,
+          },
+        },
+        {
+          version: {
+            gt_prop: 'provisionedVersion',
+          },
+        },
+      ],
+      AND: [
+        {
+          tierId: {
+            eq: tierId,
+          },
+        },
+      ],
     });
   }
 }
