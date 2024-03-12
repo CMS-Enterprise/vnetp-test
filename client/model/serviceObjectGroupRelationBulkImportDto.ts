@@ -20,6 +20,6 @@ export interface ServiceObjectGroupRelationBulkImportDto {
      * Service Object that is being added or removed from group membership.
      */
     serviceObjectId: string;
-    vrfName: string;
+    tierName: string;
 }
 

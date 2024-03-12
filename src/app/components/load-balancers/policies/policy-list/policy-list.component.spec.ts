@@ -107,14 +107,14 @@ describe('PolicyListComponent', () => {
   // });
 
   it('should import policies', () => {
-    const policies = [{ name: 'Policy1', vrfName: 'Tier1' }, { name: 'Policy2' }] as ImportPolicy[];
+    const policies = [{ name: 'Policy1', tierName: 'Tier1' }, { name: 'Policy2' }] as ImportPolicy[];
     const spy = jest.spyOn(service, 'createManyLoadBalancerPolicy');
 
     component.import(policies);
 
     expect(spy).toHaveBeenCalledWith({
       createManyLoadBalancerPolicyDto: {
-        bulk: [{ name: 'Policy1', tierId: '1', vrfName: 'Tier1' }, { name: 'Policy2' }],
+        bulk: [{ name: 'Policy1', tierId: '1', tierName: 'Tier1' }, { name: 'Policy2' }],
       },
     });
   });

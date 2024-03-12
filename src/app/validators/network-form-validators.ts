@@ -103,6 +103,9 @@ export function MacAddressValidator(control: UntypedFormControl): { invalidMacAd
 }
 
 export function ValidatePortRange(control: UntypedFormControl): { invalidPortNumber: boolean } | { invalidPortRange: boolean } {
+  if (control.value?.includes(' ')) {
+    return { invalidPortNumber: true };
+  }
   if (!control || !control.value) {
     return null;
   }
