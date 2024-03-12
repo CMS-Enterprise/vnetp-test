@@ -19,6 +19,9 @@ import {
   NetworkObjectGroup,
   ServiceObject,
   ServiceObjectGroup,
+  AuditLogEntityTypeEnum,
+  V1AuditLogService,
+  AuditLog,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Subscription, forkJoin } from 'rxjs';
@@ -27,6 +30,17 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
+
+interface DifferenceDetail {
+  before: any;
+  after: any;
+}
+
+interface ReportEntry {
+  timestamp: string;
+  actionType: string;
+  differences: { [key: string]: DifferenceDetail } | string | any[];
+}
 
 @Component({
   selector: 'app-deploy',
@@ -45,17 +59,20 @@ export class DeployComponent implements OnInit {
     serviceObjectGroups: [] as ServiceObjectGroup[],
   };
 
+  report: ReportEntry[] = [];
+
   reportGroups = [
-    { name: 'Firewall Rule Groups', data: this.changeReport.firewallRuleGroups },
-    { name: 'NAT Rule Groups', data: this.changeReport.natRuleGroups },
-    { name: 'Network Objects', data: this.changeReport.networkObjects },
-    { name: 'Network Object Groups', data: this.changeReport.networkObjectGroups },
-    { name: 'Service Objects', data: this.changeReport.serviceObjects },
-    { name: 'Service Object Groups', data: this.changeReport.serviceObjectGroups },
+    { name: 'Firewall Rule Groups', data: this.changeReport.firewallRuleGroups, type: AuditLogEntityTypeEnum.FirewallRuleGroup },
+    { name: 'NAT Rule Groups', data: this.changeReport.natRuleGroups, type: AuditLogEntityTypeEnum.NatRuleGroup },
+    { name: 'Network Objects', data: this.changeReport.networkObjects, type: AuditLogEntityTypeEnum.NetworkObject },
+    { name: 'Network Object Groups', data: this.changeReport.networkObjectGroups, type: AuditLogEntityTypeEnum.NetworkObjectGroup },
+    { name: 'Service Objects', data: this.changeReport.serviceObjects, type: AuditLogEntityTypeEnum.ServiceObject },
+    { name: 'Service Object Groups', data: this.changeReport.serviceObjectGroups, type: AuditLogEntityTypeEnum.ServiceObjectGroup },
   ];
 
   tierGroups: TierGroup[] = [];
   tiers: TableRowWrapper<Tier>[] = [];
+  AuditLogEntityTypeEnum = AuditLogEntityTypeEnum;
 
   constructor(
     private tierService: V1TiersService,
@@ -68,6 +85,7 @@ export class DeployComponent implements OnInit {
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private jobService: V1JobsService,
+    private auditLogService: V1AuditLogService,
     private ngx: NgxSmartModalService,
   ) {}
 
@@ -168,42 +186,42 @@ export class DeployComponent implements OnInit {
     const firewallRuleGroupRequest = this.firewallRuleGroupService.getManyFirewallRuleGroup({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedVersion'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion'],
       page: 1,
       perPage: 10,
     });
     const natRuleGroupRequest = this.natRuleGroupService.getManyNatRuleGroup({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedVersion'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion'],
       page: 1,
       perPage: 10,
     });
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedVersion'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion'],
       page: 1,
       perPage: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedVersion'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion'],
       page: 1,
       perPage: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedVersion'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion'],
       page: 1,
       perPage: 50000,
     });
     const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedVersion'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion'],
       page: 1,
       perPage: 50000,
     });
@@ -232,12 +250,12 @@ export class DeployComponent implements OnInit {
 
   private updateReportGroups() {
     this.reportGroups = [
-      { name: 'Firewall Rule Groups', data: this.changeReport.firewallRuleGroups },
-      { name: 'NAT Rule Groups', data: this.changeReport.natRuleGroups },
-      { name: 'Network Objects', data: this.changeReport.networkObjects },
-      { name: 'Network Object Groups', data: this.changeReport.networkObjectGroups },
-      { name: 'Service Objects', data: this.changeReport.serviceObjects },
-      { name: 'Service Object Groups', data: this.changeReport.serviceObjectGroups },
+      { name: 'Firewall Rule Groups', data: this.changeReport.firewallRuleGroups, type: AuditLogEntityTypeEnum.FirewallRuleGroup },
+      { name: 'NAT Rule Groups', data: this.changeReport.natRuleGroups, type: AuditLogEntityTypeEnum.NatRuleGroup },
+      { name: 'Network Objects', data: this.changeReport.networkObjects, type: AuditLogEntityTypeEnum.NetworkObject },
+      { name: 'Network Object Groups', data: this.changeReport.networkObjectGroups, type: AuditLogEntityTypeEnum.NetworkObjectGroup },
+      { name: 'Service Objects', data: this.changeReport.serviceObjects, type: AuditLogEntityTypeEnum.ServiceObject },
+      { name: 'Service Object Groups', data: this.changeReport.serviceObjectGroups, type: AuditLogEntityTypeEnum.ServiceObjectGroup },
     ];
   }
 
@@ -263,5 +281,63 @@ export class DeployComponent implements OnInit {
         },
       ],
     });
+  }
+
+  getObjectAuditLogEvents(id: string, updatedAt: string, type: AuditLogEntityTypeEnum) {
+    console.log(id, updatedAt, type, 'audit log data');
+    this.auditLogService
+      .getAuditLogByEntityIdAuditLog({
+        entityId: id,
+        entityType: type,
+        tenant: '1',
+        afterTimestamp: new Date(updatedAt).toISOString(),
+      })
+      .subscribe(data => {
+        console.log(data, 'audit log data');
+        this.report = this.generateReport(data);
+        console.log(this.report, 'change report');
+        this.ngx.getModal('changeReportDetailModal').open();
+      });
+  }
+
+  generateReport(auditLogs: any[]): ReportEntry[] {
+    return auditLogs.map(log => {
+      if (log.entityBefore && log.entityAfter) {
+        const differencesArray = Object.entries(log.entityAfter).reduce((acc, [key, afterValue]) => {
+          const beforeValue = log.entityBefore[key];
+          if (beforeValue !== afterValue) {
+            acc.push({ key, before: beforeValue, after: afterValue });
+          }
+          return acc;
+        }, []);
+
+        return {
+          timestamp: log.timestamp,
+          actionType: log.actionType,
+          differences: differencesArray.length ? differencesArray : 'Entity state changed without specific property comparison.',
+        };
+      } else {
+        return {
+          timestamp: log.timestamp,
+          actionType: log.actionType,
+          differences: 'Entity state changed without specific property comparison.',
+        };
+      }
+    });
+  }
+
+  isArray(value: any): boolean {
+    return Array.isArray(value);
+  }
+
+  expandedRows: number[] = [];
+
+  toggleExpand(index: number): void {
+    const position = this.expandedRows.indexOf(index);
+    if (position > -1) {
+      this.expandedRows.splice(position, 1); // Collapse row
+    } else {
+      this.expandedRows.push(index); // Expand row
+    }
   }
 }

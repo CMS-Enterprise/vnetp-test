@@ -59,7 +59,7 @@
 
 <app-yes-no-modal></app-yes-no-modal>
 
-<ngx-smart-modal #undeployedChangesModal identifier="changeReportModal" [dismissable]="false" customClass="medium-modal">
+<ngx-smart-modal #changeReportModal identifier="changeReportModal" [dismissable]="false" customClass="medium-modal">
   <header class="modal-header">
     <h4 class="modal-title">Undeployed Changes in Tier: {{ changeReport?.tier?.name }}</h4>
   </header>
@@ -76,10 +76,57 @@
             {{ obj.name }}
             <span *ngIf="obj.provisionedVersion === null">(Not Provisioned)</span>
             <span *ngIf="obj.provisionedVersion !== null">(Updated)</span>
+            <button class="btn btn-link" (click)="getObjectAuditLogEvents(obj.id, obj.provisionedAt, group.type)">Show Diff</button>
           </li>
         </ul>
       </div>
     </div>
   </div>
   
+</ngx-smart-modal>
+
+<ngx-smart-modal #changeReportDetailModal identifier="changeReportDetailModal" [dismissable]="true" customClass="large-modal">
+  <header class="modal-header">
+    <h4 class="modal-title">Change Report Detail</h4>
+  </header>
+
+  <div class="modal-body">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">Timestamp</th>
+          <th scope="col">Action Type</th>
+          <th scope="col">Differences</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let entry of report; let i = index">
+          <tr (click)="toggleExpand(i)">
+            <td>{{ entry.timestamp }}</td>
+            <td>{{ entry.actionType }}</td>
+            <td>
+              <button class="btn btn-link p-0" (click)="$event.stopPropagation(); toggleExpand(i)">
+                View Details
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="expandedRows.includes(i)">
+            <td colspan="3">
+              <div *ngIf="isArray(entry.differences); else simpleText">
+                <ul>
+                  <li *ngFor="let diff of entry.differences">
+                    <strong>{{ diff.key }}:</strong> From "{{ diff.before }}" to "{{ diff.after }}"
+                  </li>
+                </ul>
+              </div>
+              <ng-template #simpleText>{{ entry.differences }}</ng-template>
+            </td>
+          </tr>
+        </ng-container>
+        <tr *ngIf="report.length === 0">
+          <td colspan="3" class="text-center">No Changes Detected</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </ngx-smart-modal>

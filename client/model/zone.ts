@@ -27,5 +27,6 @@ export interface Zone {
     readonly firewallRulesTo?: Array<FirewallRule>;
     readonly firewallRulesFrom?: Array<FirewallRule>;
     readonly natRulesFrom?: Array<NatRule>;
+    readonly natRulesTo?: Array<NatRule>;
 }
 
