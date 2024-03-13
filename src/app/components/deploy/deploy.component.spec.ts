@@ -172,4 +172,72 @@ describe('DeployComponent', () => {
       expect(deploySpy).toHaveBeenCalled();
     });
   });
+
+  describe('generateReport', () => {
+    it('should accurately generate a report with differences for given audit logs', () => {
+      const mockAuditLogs = [
+        {
+          id: '510d97e0-4050-4e84-a1e0-c60a26967c78',
+          actionType: 'Update',
+          entityType: 'FirewallRule',
+          entityBefore: {
+            id: '1263d980-1ad6-449d-8373-456e1881bd02',
+            name: 'fw-rule2',
+            action: 'Permit',
+            sourceIpAddress: '10.0.0.1',
+          },
+          entityAfter: {
+            id: '1263d980-1ad6-449d-8373-456e1881bd02',
+            name: 'fw-rule2',
+            action: 'Permit',
+            sourceIpAddress: '10.0.0.2',
+          },
+          timestamp: '2024-03-13T20:29:25.398Z',
+        },
+      ];
+
+      const reportEntries = component.generateReport(mockAuditLogs);
+
+      expect(reportEntries.length).toBe(1); // Expecting one report entry
+      expect(reportEntries[0].differences.length).toBeGreaterThan(0); // Expecting differences
+      expect(reportEntries[0].differences).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            key: 'sourceIpAddress',
+            before: '10.0.0.1',
+            after: '10.0.0.2',
+          }),
+        ]),
+      );
+    });
+
+    it('should not include unchanged properties in the report', () => {
+      const mockAuditLogs = [
+        {
+          id: '510d97e0-4050-4e84-a1e0-c60a26967c78',
+          actionType: 'Update',
+          entityType: 'FirewallRule',
+          entityBefore: {
+            id: '1263d980-1ad6-449d-8373-456e1881bd02',
+            name: 'fw-rule2',
+            action: 'Permit',
+            sourceIpAddress: '10.0.0.1',
+            toZone: [],
+          },
+          entityAfter: {
+            id: '1263d980-1ad6-449d-8373-456e1881bd02',
+            name: 'fw-rule2',
+            action: 'Permit',
+            sourceIpAddress: '10.0.0.1',
+            toZone: [],
+          },
+          timestamp: '2024-03-13T20:29:25.398Z',
+        },
+      ];
+
+      const reportEntries = component.generateReport(mockAuditLogs);
+      expect(reportEntries.length).toBe(1);
+      expect(reportEntries[0].differences).toBe('Entity state changed without specific property comparison.');
+    });
+  });
 });
