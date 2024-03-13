@@ -20,6 +20,7 @@ import {
   V1NetworkVlansService,
   V1NetworkSubnetsService,
   V1AuditLogService,
+  AuditLogEntityTypeEnum,
 } from 'client';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -64,6 +65,10 @@ describe('DeployComponent', () => {
 
   const datacenterSubject = new Subject();
 
+  const mockAuditLogService = {
+    getAuditLogByEntityIdAuditLog: jest.fn(),
+  };
+
   beforeEach(() => {
     const datacenterService = {
       currentDatacenter: datacenterSubject.asObservable(),
@@ -85,7 +90,7 @@ describe('DeployComponent', () => {
         MockProvider(V1NetworkSecurityServiceObjectGroupsService),
         MockProvider(V1NetworkVlansService),
         MockProvider(V1NetworkSubnetsService),
-        MockProvider(V1AuditLogService),
+        { provide: V1AuditLogService, useValue: mockAuditLogService },
         { provide: DatacenterContextService, useValue: datacenterService },
       ],
     })
@@ -98,6 +103,8 @@ describe('DeployComponent', () => {
           name: 'Datacenter1',
         };
         fixture.detectChanges();
+
+        jest.clearAllMocks();
       });
   });
 
@@ -238,6 +245,110 @@ describe('DeployComponent', () => {
       const reportEntries = component.generateReport(mockAuditLogs);
       expect(reportEntries.length).toBe(1);
       expect(reportEntries[0].differences).toBe('Entity state changed without specific property comparison.');
+    });
+  });
+
+  describe('getObjectAuditLogEvents', () => {
+    // Assuming your service is properly mocked
+    beforeEach(() => {
+      // Mock the service's method to return a promise that resolves to your mock data
+      mockAuditLogService.getAuditLogByEntityIdAuditLog.mockReset();
+      mockAuditLogService.getAuditLogByEntityIdAuditLog.mockReturnValue(of([]));
+    });
+
+    it('should call getAuditLogByEntityIdAuditLog with createdAt timestamp for a non-provisioned object', async () => {
+      const mockObject = {
+        id: 'test-object-id',
+        updatedAt: '2024-03-15T00:00:00.000Z',
+        provisionedAt: '',
+        createdAt: '2024-03-13T00:00:00.000Z',
+      };
+      const type = AuditLogEntityTypeEnum.Vlan;
+
+      await component.getObjectAuditLogEvents(mockObject, type);
+
+      expect(mockAuditLogService.getAuditLogByEntityIdAuditLog).toHaveBeenCalledWith({
+        entityId: mockObject.id,
+        entityType: type,
+        tenant: '1',
+        afterTimestamp: mockObject.createdAt,
+      });
+    });
+
+    it('should call getAuditLogByEntityIdAuditLog with updatedAt timestamp provisioned object that isnt a rule group', async () => {
+      const mockObject = {
+        id: 'test-object-id',
+        updatedAt: '2024-03-15T00:00:00.000Z',
+        provisionedAt: '2024-03-14T00:00:00.000Z',
+        createdAt: '2024-03-13T10:00:00.000Z',
+      };
+      const type = AuditLogEntityTypeEnum.Vlan;
+
+      await component.getObjectAuditLogEvents(mockObject, type);
+
+      expect(mockAuditLogService.getAuditLogByEntityIdAuditLog).toHaveBeenCalledWith({
+        entityId: mockObject.id,
+        entityType: type,
+        tenant: '1',
+        afterTimestamp: mockObject.updatedAt,
+      });
+    });
+
+    it('should call getAuditLogByEntityIdAuditLog with provisionedAt timestamp for provisioned firewall rule group', async () => {
+      const mockObject = {
+        id: 'test-object-id',
+        updatedAt: '2024-03-15T00:00:00.000Z',
+        provisionedAt: '2024-03-14T00:00:00.000Z',
+        createdAt: '2024-03-13T10:00:00.000Z',
+      };
+      const type = AuditLogEntityTypeEnum.FirewallRuleGroup;
+
+      await component.getObjectAuditLogEvents(mockObject, type);
+
+      expect(mockAuditLogService.getAuditLogByEntityIdAuditLog).toHaveBeenCalledWith({
+        entityId: mockObject.id,
+        entityType: type,
+        tenant: '1',
+        afterTimestamp: mockObject.provisionedAt,
+      });
+    });
+
+    it('should call getAuditLogByEntityIdAuditLog with provisionedAt timestamp for provisioned nat rule group', async () => {
+      const mockObject = {
+        id: 'test-object-id',
+        updatedAt: '2024-03-15T00:00:00.000Z',
+        provisionedAt: '2024-03-14T00:00:00.000Z',
+        createdAt: '2024-03-13T10:00:00.000Z',
+      };
+      const type = AuditLogEntityTypeEnum.NatRuleGroup;
+
+      await component.getObjectAuditLogEvents(mockObject, type);
+
+      expect(mockAuditLogService.getAuditLogByEntityIdAuditLog).toHaveBeenCalledWith({
+        entityId: mockObject.id,
+        entityType: type,
+        tenant: '1',
+        afterTimestamp: mockObject.provisionedAt,
+      });
+    });
+
+    it('should generate a report after retrieving audit log events', async () => {
+      const mockAuditLogs = [
+        /* Mock audit log data */
+      ];
+      mockAuditLogService.getAuditLogByEntityIdAuditLog.mockReturnValue(of(mockAuditLogs));
+
+      const mockObject = {
+        id: 'test-object-id',
+        updatedAt: '2024-03-14T10:00:00.000Z',
+        provisionedAt: '',
+        createdAt: '2024-03-13T10:00:00.000Z',
+      };
+      const type = AuditLogEntityTypeEnum.ServiceObject;
+
+      await component.getObjectAuditLogEvents(mockObject, type);
+
+      expect(component.report).toEqual(component.generateReport(mockAuditLogs));
     });
   });
 });
