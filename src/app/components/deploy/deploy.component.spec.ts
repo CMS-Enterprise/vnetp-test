@@ -17,6 +17,9 @@ import {
   V1NetworkSecurityNetworkObjectGroupsService,
   V1NetworkSecurityServiceObjectsService,
   V1NetworkSecurityServiceObjectGroupsService,
+  V1NetworkVlansService,
+  V1NetworkSubnetsService,
+  V1AuditLogService,
 } from 'client';
 import { By } from '@angular/platform-browser';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
@@ -80,6 +83,9 @@ describe('DeployComponent', () => {
         MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
         MockProvider(V1NetworkSecurityServiceObjectsService),
         MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+        MockProvider(V1NetworkVlansService),
+        MockProvider(V1NetworkSubnetsService),
+        MockProvider(V1AuditLogService),
         { provide: DatacenterContextService, useValue: datacenterService },
       ],
     })

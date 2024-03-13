@@ -75,6 +75,7 @@
         <table class="table table-sm table-striped table-bordered">
           <thead>
             <tr>
+              <th>Name</th>
               <th>Last Updated At</th>
               <th>Status</th>
               <th>Actions</th>
@@ -89,7 +90,7 @@
                 <span *ngIf="obj.provisionedVersion !== null">Updated</span>
               </td>
               <td>
-                <button class="btn btn-link p-0" (click)="getObjectAuditLogEvents(obj.id, obj.provisionedAt, group.type)">Show Diff</button>
+                <button class="btn btn-link p-0" (click)="getObjectAuditLogEvents(obj, group.type)">Show Diff</button>
               </td>
             </tr>
           </tbody>
@@ -112,6 +113,7 @@
       <table class="table table-sm table-striped table-bordered">
         <thead>
           <tr>
+            <th scope="col">Name</th>
             <th scope="col">Timestamp</th>
             <th scope="col">Action Type</th>
             <th scope="col">Differences</th>
@@ -120,6 +122,7 @@
         <tbody>
           <ng-container *ngFor="let entry of report; let i = index">
             <tr (click)="toggleExpand(i)" style="cursor: pointer;">
+              <td>{{ entry.name }}</td>
               <td>{{ entry.timestamp }}</td>
               <td>{{ entry.actionType }}</td>
               <td>
@@ -129,7 +132,7 @@
               </td>
             </tr>
             <tr *ngIf="expandedRows.includes(i)">
-              <td colspan="3">
+              <td colspan="4">
                 <div *ngIf="isArray(entry.differences); else simpleText">
                   <ul>
                     <li *ngFor="let diff of entry.differences">

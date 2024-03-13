@@ -21,6 +21,18 @@ import {
   ServiceObjectGroup,
   AuditLogEntityTypeEnum,
   V1AuditLogService,
+  Subnet,
+  Vlan,
+  V1NetworkSubnetsService,
+  V1NetworkVlansService,
+  GetManyFirewallRuleGroupResponseDto,
+  GetManyNatRuleGroupResponseDto,
+  GetManyNetworkObjectResponseDto,
+  GetManyNetworkObjectGroupResponseDto,
+  GetManyServiceObjectResponseDto,
+  GetManyServiceObjectGroupResponseDto,
+  GetManySubnetResponseDto,
+  GetManyVlanResponseDto,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Subscription, forkJoin } from 'rxjs';
@@ -36,6 +48,7 @@ interface DifferenceDetail {
 }
 
 interface ReportEntry {
+  name: string;
   timestamp: string;
   actionType: string;
   differences: { [key: string]: DifferenceDetail } | string | any[];
@@ -56,6 +69,8 @@ export class DeployComponent implements OnInit {
     networkObjectGroups: [] as NetworkObjectGroup[],
     serviceObjects: [] as ServiceObject[],
     serviceObjectGroups: [] as ServiceObjectGroup[],
+    subnets: [] as Subnet[],
+    vlans: [] as Vlan[],
   };
 
   report: ReportEntry[] = [];
@@ -67,6 +82,8 @@ export class DeployComponent implements OnInit {
     { name: 'Network Object Groups', data: this.changeReport.networkObjectGroups, type: AuditLogEntityTypeEnum.NetworkObjectGroup },
     { name: 'Service Objects', data: this.changeReport.serviceObjects, type: AuditLogEntityTypeEnum.ServiceObject },
     { name: 'Service Object Groups', data: this.changeReport.serviceObjectGroups, type: AuditLogEntityTypeEnum.ServiceObjectGroup },
+    { name: 'Subnets', data: this.changeReport.subnets, type: AuditLogEntityTypeEnum.Subnet },
+    { name: 'Vlans', data: this.changeReport.vlans, type: AuditLogEntityTypeEnum.Vlan },
   ];
 
   tierGroups: TierGroup[] = [];
@@ -83,6 +100,8 @@ export class DeployComponent implements OnInit {
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
+    private subnetService: V1NetworkSubnetsService,
+    private vlanService: V1NetworkVlansService,
     private jobService: V1JobsService,
     private auditLogService: V1AuditLogService,
     private ngx: NgxSmartModalService,
@@ -206,21 +225,35 @@ export class DeployComponent implements OnInit {
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt', 'createdAt'],
       page: 1,
       perPage: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt', 'createdAt'],
       page: 1,
       perPage: 50000,
     });
     const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt', 'createdAt'],
+      page: 1,
+      perPage: 50000,
+    });
+    const subnetRequest = this.subnetService.getManySubnet({
+      s: this.getUndeployedOrNewObjects(tier.id),
+      sort: ['updatedAt,DESC'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt', 'createdAt'],
+      page: 1,
+      perPage: 50000,
+    });
+    const vlanRequest = this.vlanService.getManyVlan({
+      s: this.getUndeployedOrNewObjects(tier.id),
+      sort: ['updatedAt,DESC'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt', 'createdAt'],
       page: 1,
       perPage: 50000,
     });
@@ -232,19 +265,36 @@ export class DeployComponent implements OnInit {
       networkObjectGroupRequest,
       serviceObjectRequest,
       serviceObjectGroupRequest,
-    ]).subscribe(result => {
-      this.changeReport.firewallRuleGroups = result[0].data;
-      this.changeReport.natRuleGroups = result[1].data;
-      this.changeReport.networkObjects = result[2].data;
-      this.changeReport.networkObjectGroups = result[3].data;
-      this.changeReport.serviceObjects = result[4].data;
-      this.changeReport.serviceObjectGroups = result[5].data;
-      this.changeReport.tier = tier;
+      subnetRequest,
+      vlanRequest,
+    ]).subscribe(
+      (
+        result: [
+          GetManyFirewallRuleGroupResponseDto,
+          GetManyNatRuleGroupResponseDto,
+          GetManyNetworkObjectResponseDto,
+          GetManyNetworkObjectGroupResponseDto,
+          GetManyServiceObjectResponseDto,
+          GetManyServiceObjectGroupResponseDto,
+          GetManySubnetResponseDto,
+          GetManyVlanResponseDto,
+        ],
+      ) => {
+        this.changeReport.firewallRuleGroups = result[0].data;
+        this.changeReport.natRuleGroups = result[1].data;
+        this.changeReport.networkObjects = result[2].data;
+        this.changeReport.networkObjectGroups = result[3].data;
+        this.changeReport.serviceObjects = result[4].data;
+        this.changeReport.serviceObjectGroups = result[5].data;
+        this.changeReport.subnets = result[6].data;
+        this.changeReport.vlans = result[7].data;
+        this.changeReport.tier = tier;
 
-      this.updateReportGroups();
+        this.updateReportGroups();
 
-      this.ngx.getModal('changeReportModal').open();
-    });
+        this.ngx.getModal('changeReportModal').open();
+      },
+    );
   }
 
   private updateReportGroups() {
@@ -255,6 +305,8 @@ export class DeployComponent implements OnInit {
       { name: 'Network Object Groups', data: this.changeReport.networkObjectGroups, type: AuditLogEntityTypeEnum.NetworkObjectGroup },
       { name: 'Service Objects', data: this.changeReport.serviceObjects, type: AuditLogEntityTypeEnum.ServiceObject },
       { name: 'Service Object Groups', data: this.changeReport.serviceObjectGroups, type: AuditLogEntityTypeEnum.ServiceObjectGroup },
+      { name: 'Subnets', data: this.changeReport.subnets, type: AuditLogEntityTypeEnum.Subnet },
+      { name: 'Vlans', data: this.changeReport.vlans, type: AuditLogEntityTypeEnum.Vlan },
     ];
   }
 
@@ -282,41 +334,66 @@ export class DeployComponent implements OnInit {
     });
   }
 
-  getObjectAuditLogEvents(id: string, updatedAt: string, type: AuditLogEntityTypeEnum) {
-    console.log(id, updatedAt, type, 'audit log data');
+  getObjectAuditLogEvents(
+    object: { id: string; updatedAt: string; provisionedAt: string; createdAt: string },
+    type: AuditLogEntityTypeEnum,
+  ) {
+    console.log(object, type, 'audit log data');
+
+    let afterTimestamp;
+
+    if (!object.provisionedAt) {
+      afterTimestamp = new Date(object.createdAt).toISOString();
+    } else if (object.updatedAt > object.provisionedAt) {
+      // When getting updates to provisioned groups, we must use the provisionedAt timestamp to get all changes
+      // to group members since the last update since the group itself is updated when members are updated.
+      if (type === AuditLogEntityTypeEnum.FirewallRuleGroup || type === AuditLogEntityTypeEnum.NatRuleGroup) {
+        afterTimestamp = new Date(object.provisionedAt).toISOString();
+      } else {
+        afterTimestamp = new Date(object.updatedAt).toISOString();
+      }
+    } else {
+      throw new Error('Unable to determine afterTimestamp for audit log query.');
+    }
+
     this.auditLogService
       .getAuditLogByEntityIdAuditLog({
-        entityId: id,
+        entityId: object.id,
         entityType: type,
         tenant: '1',
-        afterTimestamp: new Date(updatedAt).toISOString(),
+        afterTimestamp,
       })
       .subscribe(data => {
-        console.log(data, 'audit log data');
         this.report = this.generateReport(data);
-        console.log(this.report, 'change report');
         this.ngx.getModal('changeReportDetailModal').open();
       });
   }
 
   generateReport(auditLogs: any[]): ReportEntry[] {
     return auditLogs.map(log => {
+      let name = '';
+      if (log.entityBefore || log.entityAfter) {
+        name = log.entityBefore ? log.entityBefore.name : log.entityAfter.name;
+      }
+
       if (log.entityBefore && log.entityAfter) {
         const differencesArray = Object.entries(log.entityAfter).reduce((acc, [key, afterValue]) => {
           const beforeValue = log.entityBefore[key];
-          if (beforeValue !== afterValue) {
+          if (JSON.stringify(beforeValue) !== JSON.stringify(afterValue)) {
             acc.push({ key, before: beforeValue, after: afterValue });
           }
           return acc;
         }, []);
 
         return {
+          name,
           timestamp: log.timestamp,
           actionType: log.actionType,
           differences: differencesArray.length ? differencesArray : 'Entity state changed without specific property comparison.',
         };
       } else {
         return {
+          name,
           timestamp: log.timestamp,
           actionType: log.actionType,
           differences: 'Entity state changed without specific property comparison.',
