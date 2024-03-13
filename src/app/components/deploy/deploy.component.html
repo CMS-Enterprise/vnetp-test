@@ -70,12 +70,11 @@
     <ng-container *ngFor="let group of reportGroups">
       <ng-container *ngIf="group.data.length > 0">
         <div class="scrollable-table-container" style="overflow-y: auto; max-height: 200px; margin-bottom: 20px;">
+          <span>{{ group.name }} <span class="badge bg-secondary">{{ group.data.length }}</span></span>
 
         <table class="table table-sm table-striped table-bordered">
           <thead>
             <tr>
-              <th>{{ group.name }} <span class="badge bg-secondary">{{ group.data.length }}</span></th>
-              <th>Name</th>
               <th>Last Updated At</th>
               <th>Status</th>
               <th>Actions</th>
@@ -83,7 +82,6 @@
           </thead>
           <tbody>
             <tr *ngFor="let obj of group.data">
-              <td></td>
               <td>{{ obj.name }}</td>
               <td>{{ obj.updatedAt }}</td>
               <td>
