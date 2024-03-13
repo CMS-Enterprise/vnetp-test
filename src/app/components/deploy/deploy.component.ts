@@ -21,7 +21,6 @@ import {
   ServiceObjectGroup,
   AuditLogEntityTypeEnum,
   V1AuditLogService,
-  AuditLog,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { Subscription, forkJoin } from 'rxjs';
@@ -186,42 +185,42 @@ export class DeployComponent implements OnInit {
     const firewallRuleGroupRequest = this.firewallRuleGroupService.getManyFirewallRuleGroup({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt'],
       page: 1,
       perPage: 10,
     });
     const natRuleGroupRequest = this.natRuleGroupService.getManyNatRuleGroup({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt'],
       page: 1,
       perPage: 10,
     });
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt'],
       page: 1,
       perPage: 50000,
     });
     const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt'],
       page: 1,
       perPage: 50000,
     });
     const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt'],
       page: 1,
       perPage: 50000,
     });
     const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt'],
       page: 1,
       perPage: 50000,
     });
