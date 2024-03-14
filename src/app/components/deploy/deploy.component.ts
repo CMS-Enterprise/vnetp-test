@@ -204,21 +204,21 @@ export class DeployComponent implements OnInit {
     const firewallRuleGroupRequest = this.firewallRuleGroupService.getManyFirewallRuleGroup({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt', 'createdAt'],
       page: 1,
       perPage: 10,
     });
     const natRuleGroupRequest = this.natRuleGroupService.getManyNatRuleGroup({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt', 'createdAt'],
       page: 1,
       perPage: 10,
     });
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
       s: this.getUndeployedOrNewObjects(tier.id),
       sort: ['updatedAt,DESC'],
-      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt'],
+      fields: ['id', 'name', 'provisionedAt', 'provisionedVersion', 'updatedAt', 'createdAt'],
       page: 1,
       perPage: 50000,
     });
@@ -378,13 +378,40 @@ export class DeployComponent implements OnInit {
 
       if (log.entityBefore && log.entityAfter) {
         const differencesArray = Object.entries(log.entityAfter).reduce((acc, [key, afterValue]) => {
-          const beforeValue = log.entityBefore[key];
+          let beforeValue = log.entityBefore[key];
+
           if (JSON.stringify(beforeValue) !== JSON.stringify(afterValue)) {
-            acc.push({ key, before: beforeValue, after: afterValue });
+            // set arrays to push object names into
+            const beforeArrayNames = [];
+            const afterArrayNames = [];
+
+            // if beforeValue is array, go through each array member and push
+            // its name property to the parent array above
+            if (Array.isArray(beforeValue)) {
+              beforeValue.forEach(arrayMem => {
+                beforeArrayNames.push(arrayMem.name);
+              });
+            }
+
+            // if afterValue is array, go through each array member and push
+            // its name property to the parent array above
+            if (Array.isArray(afterValue)) {
+              afterValue.forEach(arrayMem => {
+                afterArrayNames.push(arrayMem.name);
+              });
+            }
+
+            // if both are of type array we need to change whats pushed up
+            if (Array.isArray(beforeValue) && Array.isArray(afterArrayNames)) {
+              acc.push({ key, before: beforeArrayNames, after: afterArrayNames });
+            }
+            // if not we just use the before and afterValue like normal
+            else {
+              acc.push({ key, before: beforeValue, after: afterValue });
+            }
           }
           return acc;
         }, []);
-
         return {
           name,
           timestamp: log.timestamp,
