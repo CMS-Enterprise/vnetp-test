@@ -378,7 +378,7 @@ export class DeployComponent implements OnInit {
 
       if (log.entityBefore && log.entityAfter) {
         const differencesArray = Object.entries(log.entityAfter).reduce((acc, [key, afterValue]) => {
-          let beforeValue = log.entityBefore[key];
+          const beforeValue = log.entityBefore[key];
 
           if (JSON.stringify(beforeValue) !== JSON.stringify(afterValue)) {
             // set arrays to push object names into
