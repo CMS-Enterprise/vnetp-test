@@ -42,8 +42,6 @@
       [type]="'info'"
     ></app-icon-button>
 
-    <app-icon-button icon="edit" label="Edit Firewall Rule"
-      (handleClick)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"></app-icon-button>
     <app-icon-button
       *ngIf="!firewallRule?.deletedAt && FirewallRuleGroup?.type !== 'ZoneBased'"
       icon="clone"
