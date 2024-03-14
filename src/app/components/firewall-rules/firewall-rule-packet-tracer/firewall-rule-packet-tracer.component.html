@@ -31,6 +31,7 @@
         <thead>
           <tr>
             <th scope="col">Rule Name</th>
+            <th scope="col">Action Match</th>
             <th scope="col">Source In Range</th>
             <th scope="col">Dest In Range</th>
             <th scope="col">Direction Match</th>
@@ -51,6 +52,11 @@
                 <div *ngIf="rule.checkList.softDeleted" class="icon-spacing">
                   <fa-icon class="icon" [icon]="['fas', 'trash']" style="color: #d33737"></fa-icon>
                 </div>
+              </span>
+            </td>
+            <td>
+              <span [ngStyle]="{ 'font-weight': rule.checkList.actionMatch === false ? 'bold' : 'normal' }">
+                {{ rule.checkList.actionMatch }}
               </span>
             </td>
             <td>
@@ -104,6 +110,17 @@
       <hr />
 
       <div class="form-row">
+
+        <div class="form-group col-md-2">
+          <label for="ruleName">Action</label>
+          <select id="action" formControlName="action" class="form-control"
+            [class.is-invalid]="submitted && f.action.errors" aria-label="Action">
+            <option></option>
+            <option value="Deny">Deny</option>
+            <option value="Permit">Permit</option>
+          </select>
+        </div>
+
         <div class="form-group col-md-2">
           <label for="direction">Direction</label>
           <select
@@ -117,9 +134,6 @@
             <option value="In">In</option>
             <option value="Out">Out</option>
           </select>
-          <div *ngIf="submitted && f.direction.errors" class="invalid-feedback">
-            <div *ngIf="f.direction.errors.required">Direction is required</div>
-          </div>
         </div>
 
         <div class="form-group col-md-2">
@@ -137,9 +151,6 @@
             <option value="TCP">TCP</option>
             <option value="UDP">UDP</option>
           </select>
-          <div *ngIf="submitted && f.protocol.errors" class="invalid-feedback">
-            <div *ngIf="f.protocol.errors.required">Protocol is required</div>
-          </div>
         </div>
 
         <div class="form-group col-md-2">
@@ -155,9 +166,6 @@
             <option [ngValue]="false">False</option>
             <option [ngValue]="true">True</option>
           </select>
-          <div *ngIf="submitted && f.enabled.errors" class="invalid-feedback">
-            <div *ngIf="f.enabled.errors.required">Enabled is required</div>
-          </div>
         </div>
       </div>
 
@@ -192,7 +200,7 @@
           />
           <div *ngIf="submitted && f.destinationIpAddress.errors" class="invalid-feedback">
             <div *ngIf="f.destinationIpAddress.errors.required">Destination IP is required</div>
-            <div *ngIf="f.destinationIpAddress.errors.invalidIpAny">Invalid IP address, must be a valid IPv4/IPv6 address or CIDR</div>
+            <div *ngIf="f.destinationIpAddress.errors.invalidIpAny">Invalid IP address, must be a valid IPv4 address</div>
           </div>
         </div>
       </div>
@@ -210,8 +218,8 @@
               aria-label="Source Ports"
             />
             <div *ngIf="submitted && f.sourcePorts.errors" class="invalid-feedback">
-              <div *ngIf="f.sourcePorts.errors.invalidPortNumber">Source Port/Range must be between 1-65535</div>
               <div *ngIf="f.sourcePorts.errors.required">Source Port is required</div>
+              <div *ngIf="f.sourcePorts.errors.invalidPortNumber">Source Port must be between 1-65535</div>
               <div *ngIf="f.sourcePorts.errors.portRangeNotAllowed">Port range not allowed</div>
             </div>
           </div>
@@ -227,8 +235,8 @@
               aria-label="Destination Ports"
             />
             <div *ngIf="submitted && f.destinationPorts.errors" class="invalid-feedback">
-              <div *ngIf="f.destinationPorts.errors.invalidPortNumber">Destination Port/Range must be between 1-65535</div>
               <div *ngIf="f.destinationPorts.errors.required">Destination Port is required</div>
+              <div *ngIf="f.destinationPorts.errors.invalidPortNumber">Destination Port must be between 1-65535</div>
               <div *ngIf="f.destinationPorts.errors.portRangeNotAllowed">Port range not allowed</div>
             </div>
           </div>

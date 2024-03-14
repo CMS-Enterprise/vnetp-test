@@ -23,6 +23,7 @@ export class IconButtonComponent {
     search: ['fas', 'search'],
     filter: ['fas', 'filter'],
     asterisk: ['fas', 'asterisk'],
+    clone: ['far', 'clone'],
   };
 
   public typeLookup: Record<IconType, string> = {
@@ -33,5 +34,5 @@ export class IconButtonComponent {
   };
 }
 
-export type Icon = 'search' | 'add' | 'edit' | 'execute' | 'undo' | 'delete' | 'upload' | 'download' | 'filter' | 'asterisk';
+export type Icon = 'search' | 'add' | 'edit' | 'execute' | 'undo' | 'delete' | 'upload' | 'download' | 'filter' | 'asterisk' | 'clone';
 export type IconType = 'default' | 'danger' | 'success' | 'info';

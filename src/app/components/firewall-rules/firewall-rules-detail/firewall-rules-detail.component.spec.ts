@@ -22,6 +22,7 @@ import { FirewallRuleImport, FirewallRulePreview, V1TiersService } from 'client'
 import { of, Subject, Subscription, throwError } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrModule } from 'ngx-toastr';
 import { FirewallRuleObjectInfoModalComponent } from '../firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
 
 describe('FirewallRulesDetailComponent', () => {
@@ -30,12 +31,23 @@ describe('FirewallRulesDetailComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, NgxPaginationModule, ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule],
+      imports: [
+        FormsModule,
+        NgxPaginationModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
+        HttpClientTestingModule,
+        ToastrModule.forRoot(),
+      ],
       declarations: [
         FirewallRulesDetailComponent,
         MockImportExportComponent,
         MockComponent('app-firewall-rule-modal'),
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockComponent({
+          selector: 'app-firewall-rules-operation-modal',
+          inputs: ['serviceObjects', 'serviceObjectGroups', 'networkObjects', 'networkObjectGroups'],
+        }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,

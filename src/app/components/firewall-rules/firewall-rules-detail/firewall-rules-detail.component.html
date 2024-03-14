@@ -18,11 +18,19 @@
     <span>Refresh</span>
   </button>
 
-  <button type="button" class="btn btn-info" (click)="openPacketTracer()">Packet Tracer</button>
+  <button class="btn btn-info" *ngIf="FirewallRuleGroup?.type === 'Intervrf' || FirewallRuleGroup?.type === 'External'" (click)="openPacketTracer()">Packet Tracer</button>
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
-  <app-table [config]="config" [data]="firewallRules" (clearResults)="getFirewallRules($event)" (searchParams)="getFirewallRules($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+  <app-table
+    [config]="config"
+    [data]="firewallRules"
+    (clearResults)="getFirewallRules($event)"
+    (searchParams)="getFirewallRules($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
 </ng-container>
 
 <ng-template #actionsTemplate let-firewallRule="datum">
@@ -36,12 +44,34 @@
 
     <app-icon-button icon="edit" label="Edit Firewall Rule"
       (handleClick)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"></app-icon-button>
+    <app-icon-button
+      *ngIf="!firewallRule?.deletedAt && FirewallRuleGroup?.type !== 'ZoneBased'"
+      icon="clone"
+      label="Move/Clone Firewall Rule"
+      (handleClick)="openFirewallRuleOperationModal(firewallRule)"
+    ></app-icon-button>
 
-    <app-icon-button *ngIf="firewallRule?.deletedAt" icon="undo" label="Restore Firewall Rule" type="success"
-      (handleClick)="restoreFirewallRule(firewallRule)"></app-icon-button>
+    <app-icon-button
+      *ngIf="!firewallRule?.deletedAt"
+      icon="edit"
+      label="Edit Firewall Rule"
+      (handleClick)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"
+    ></app-icon-button>
 
-    <app-icon-button icon="delete" label="Soft-Delete/Delete Appliance"
-      [type]="firewallRule.deletedAt ? 'danger' : 'default'" (handleClick)="deleteFirewallRule(firewallRule)">
+    <app-icon-button
+      *ngIf="firewallRule?.deletedAt"
+      icon="undo"
+      label="Restore Firewall Rule"
+      type="success"
+      (handleClick)="restoreFirewallRule(firewallRule)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Firewall Rule"
+      [type]="firewallRule.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteFirewallRule(firewallRule)"
+    >
     </app-icon-button>
   </section>
 </ng-template>
@@ -51,9 +81,12 @@
 </ng-template>
 
 <section class="btn-toolbar" role="toolbar">
-  <app-import-export [exportObject]="firewallRules"
+  <app-import-export
+    [exportObject]="firewallRules"
     exportFileName="firewallRules-{{ TierName }}-{{ FirewallRuleGroup?.name }}"
-    (import)="importFirewallRulesConfig($event)" [disableJson]="false"></app-import-export>
+    (import)="importFirewallRulesConfig($event)"
+    [disableJson]="false"
+  ></app-import-export>
 </section>
 
 <app-firewall-rule-modal></app-firewall-rule-modal>
@@ -120,3 +153,12 @@
 </ng-template>
 
 <app-firewall-rule-packet-tracer [objects]="packetTracerObjects"></app-firewall-rule-packet-tracer>
+
+
+<app-firewall-rules-operation-modal
+  (emitGetRuleGroup)="getFirewallRuleGroup()"
+  [networkObjects]="networkObjects"
+  [networkObjectGroups]="networkObjectGroups"
+  [serviceObjects]="serviceObjects"
+  [serviceObjectGroups]="serviceObjectGroups"
+></app-firewall-rules-operation-modal>

@@ -22,6 +22,7 @@ import { GetManyNatRuleResponseDto } from '../model/models';
 import { NatRule } from '../model/models';
 import { NatRuleImportCollectionDto } from '../model/models';
 import { NatRulePreview } from '../model/models';
+import { RuleOperationDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -79,6 +80,10 @@ export interface GetOneNatRuleRequestParams {
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
     join?: Array<string>;
+}
+
+export interface NatRuleOperationNatRuleRequestParams {
+    ruleOperationDto: RuleOperationDto;
 }
 
 export interface RestoreOneNatRuleRequestParams {
@@ -579,6 +584,62 @@ export class V1NetworkSecurityNatRulesService {
         return this.httpClient.get<NatRule>(`${this.configuration.basePath}/v1/network-security/nat-rules/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Nat Rule Operation
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public natRuleOperationNatRule(requestParameters: NatRuleOperationNatRuleRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<NatRule>;
+    public natRuleOperationNatRule(requestParameters: NatRuleOperationNatRuleRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<NatRule>>;
+    public natRuleOperationNatRule(requestParameters: NatRuleOperationNatRuleRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<NatRule>>;
+    public natRuleOperationNatRule(requestParameters: NatRuleOperationNatRuleRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const ruleOperationDto = requestParameters.ruleOperationDto;
+        if (ruleOperationDto === null || ruleOperationDto === undefined) {
+            throw new Error('Required parameter ruleOperationDto was null or undefined when calling natRuleOperationNatRule.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<NatRule>(`${this.configuration.basePath}/v1/network-security/nat-rules/operation`,
+            ruleOperationDto,
+            {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

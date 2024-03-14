@@ -77,10 +77,21 @@ pipeline {
           '''         
           }
        }
-     } 
-  }  
-
+     }   
       
+ 
+   stage('Selenium-uiTest') {
+      agent { label 'rehl8-Selenium' }
+          steps {
+              script {
+                       if (env.GIT_BRANCH == 'int' || env.GIT_BRANCH == 'dev' ) {
+		                        build job: 'Pipeline-Selenium-uiTest', wait: false, parameters: [string(name: 'BRANCH_NAME', value: "${env.GIT_BRANCH}")]
+                       }  
+              }
+          } 
+    }
+}  
+  
   post { 
      always {
          echo 'send to cds-draas-jenkins channel in Slack'

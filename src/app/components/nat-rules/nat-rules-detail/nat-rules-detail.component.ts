@@ -35,6 +35,7 @@ import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';
+import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
 
 @Component({
   selector: 'app-nat-rules-detail',
@@ -78,6 +79,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   currentDatacenterSubscription: Subscription;
 
   objectInfoSubscription: Subscription;
+
+  public natRuleOperationModalSubscription: Subscription;
+  public natRuleGroupName: string;
 
   // Templates
   @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
@@ -153,6 +157,26 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.getNatRules(event);
   }
 
+  public openNatRuleOperationModal(natRule: NatRule): void {
+    const dto: RuleOperationModalDto = {
+      tierId: this.TierId,
+      ruleId: natRule.id,
+      sourceRuleGroupId: natRule.natRuleGroupId,
+      ruleGroupName: this.natRuleGroupName,
+    };
+    this.subscribeToNatRuleOperationModal();
+    this.ngx.setModalData(dto, 'natRulesOperationModal');
+    this.ngx.open('natRulesOperationModal');
+  }
+
+  private subscribeToNatRuleOperationModal(): void {
+    this.natRuleOperationModalSubscription = this.ngx.getModal('natRulesOperationModal').onCloseFinished.subscribe(() => {
+      this.getNatRuleGroup();
+      this.ngx.resetModalData('natRulesOperationModal');
+      this.natRuleOperationModalSubscription.unsubscribe();
+    });
+  }
+
   getNatRuleGroup(): void {
     this.natRuleGroupService
       .getOneNatRuleGroup({
@@ -161,6 +185,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.NatRuleGroup = data;
         this.TierId = data.tierId;
+        this.natRuleGroupName = data.name;
 
         this.getObjects();
         this.getNatRuleLastIndex();
@@ -419,10 +444,11 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
           .bulkImportNatRulesNatRule({
             natRuleImportCollectionDto: natConfirmDto,
           })
-          .subscribe(() => undefined);
+          .subscribe(() => {
+            window.location.reload();
+          });
       }
       previewImportSubscription.unsubscribe();
-      window.location.reload();
     });
   }
 
