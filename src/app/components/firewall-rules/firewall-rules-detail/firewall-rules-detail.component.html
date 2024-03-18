@@ -22,7 +22,8 @@
   <app-standard-component (importObjectsFunc)="importFirewallRulesConfig($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="firewallRules" [tableConfig]="config" (openObjectModalFunc)="openFirewallRuleModal(ModalMode.Create)" (clearResultsFunc)="getFirewallRules($event)" (searchParamsFunc)="getFirewallRules($event)" (tableEventFunc)="getFirewallRules($event)"></app-standard-component>
 
   <button class="btn btn-info" *ngIf="FirewallRuleGroup?.type === 'Intervrf' || FirewallRuleGroup?.type === 'External'" (click)="openPacketTracer()">Packet Tracer</button>
-</section>
+</ng-container>
+<!-- </section> -->
 
 <ng-container *ngIf="!isLoading; else loading">
   <app-table

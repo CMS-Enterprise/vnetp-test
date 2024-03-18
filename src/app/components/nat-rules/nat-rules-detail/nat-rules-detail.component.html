@@ -21,7 +21,8 @@
   <app-standard-component (importObjectsFunc)="importNatRulesConfig($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="natRules" [tableConfig]="config" (openObjectModalFunc)="openNatRuleModal(ModalMode.Create)" (clearResultsFunc)="getNatRules($event)" (searchParamsFunc)="getNatRules($event)" (tableEventFunc)="getNatRules($event)"></app-standard-component>
 
   <button class="btn btn-info" *ngIf="NatRuleGroup?.type === 'Intervrf' || NatRuleGroup?.type === 'External'" (click)="openPacketTracer()">Packet Tracer</button>
-</section>
+</ng-container>
+<!-- </section> -->
 
 <ng-container *ngIf="!isLoading; else loading">
   <app-table
