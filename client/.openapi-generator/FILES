@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 README.md
 api.module.ts
 api/api.ts
@@ -165,6 +166,7 @@ model/networkObjectGroupRelationBulkImportDto.ts
 model/nodeImportCollectionDto.ts
 model/poolImportCollectionDto.ts
 model/routeProfile.ts
+model/ruleOperationDto.ts
 model/selfService.ts
 model/selfServiceConfig.ts
 model/selfServiceConvertedArtifactObjects.ts
