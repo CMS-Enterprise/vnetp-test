@@ -73,6 +73,10 @@
           <span>{{ group.name }} <span class="badge bg-secondary">{{ group.data.length }}</span></span>
 
         <table class="table table-sm table-striped table-bordered">
+          <caption>
+            <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+            <span>{{ group?.name }}</span>
+          </caption>
           <thead>
             <tr>
               <th>Name</th>
@@ -111,6 +115,10 @@
   <div class="modal-body">
     <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
       <table class="table table-sm table-striped table-bordered">
+        <caption>
+          <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+          <span>Detailed Change Report</span>
+        </caption>
         <thead>
           <tr>
             <th scope="col">Name</th>
