@@ -101,9 +101,11 @@ pipeline {
      }
     success {
       node ('rehl8-prod') {
-           sh 'cp coverage/cobertura-coverage.xml cobertura-coverage.xml'
-           cobertura(coberturaReportFile: 'cobertura-coverage.xml')
-              script {
+            script {
+                if (env.GIT_BRANCH == 'int' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'master') {
+                    sh 'cp coverage/cobertura-coverage.xml cobertura-coverage.xml'
+                    cobertura(coberturaReportFile: 'cobertura-coverage.xml')
+                }
                      slackNotifier.notify(currentBuild.currentResult)
               }
        }
