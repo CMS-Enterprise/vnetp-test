@@ -38,9 +38,9 @@ pipeline {
 
       
    stage("SonarQube - Static Analysis") {
-     if (env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'master' ) {
      agent { label 'rehl8-prod' }
        steps {
+         if (env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'master' ) {
         withSonarQubeEnv('CB2Sonarrehl8') {
           script {
             
