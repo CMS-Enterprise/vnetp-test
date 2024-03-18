@@ -351,4 +351,68 @@ describe('DeployComponent', () => {
       expect(component.report).toEqual(component.generateReport(mockAuditLogs));
     });
   });
+
+  it('should generate where param query', () => {
+    const tierId = 'test';
+
+    const where = component.getUndeployedOrNewObjects(tierId);
+
+    expect(where).toEqual(
+      JSON.stringify({
+        OR: [
+          {
+            provisionedVersion: {
+              isnull: true,
+            },
+          },
+          {
+            version: {
+              gt_prop: 'provisionedVersion',
+            },
+          },
+        ],
+        AND: [
+          {
+            tierId: {
+              eq: 'test',
+            },
+          },
+        ],
+      }),
+    );
+  });
+
+  describe('toggleExpand', () => {
+    beforeEach(() => {
+      component.expandedRows = []; // Reset expandedRows before each test
+    });
+
+    it('should add an index to expandedRows if it is not present', () => {
+      const indexToAdd = 1;
+      component.toggleExpand(indexToAdd);
+      expect(component.expandedRows.includes(indexToAdd)).toBeTruthy();
+    });
+
+    it('should remove an index from expandedRows if it is already present', () => {
+      const indexToRemove = 2;
+      // Pre-add the index to simulate it being there from previous interactions
+      component.expandedRows.push(indexToRemove);
+      component.toggleExpand(indexToRemove);
+      expect(component.expandedRows.includes(indexToRemove)).toBeFalsy();
+    });
+
+    it('should not affect other indices when one is toggled', () => {
+      const initialIndices = [3, 4];
+      component.expandedRows = [...initialIndices];
+      const indexToToggle = 5;
+
+      component.toggleExpand(indexToToggle); // Add new index
+      expect(component.expandedRows.includes(indexToToggle)).toBeTruthy();
+      expect(component.expandedRows).toEqual([...initialIndices, indexToToggle]);
+
+      component.toggleExpand(indexToToggle); // Remove it again
+      expect(component.expandedRows.includes(indexToToggle)).toBeFalsy();
+      expect(component.expandedRows).toEqual(initialIndices);
+    });
+  });
 });
