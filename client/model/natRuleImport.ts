@@ -56,9 +56,9 @@ export interface NatRuleImport {
     readonly translatedDestinationNetworkObjectGroup?: NetworkObjectGroup;
     readonly originalServiceObject?: ServiceObject;
     readonly translatedServiceObject?: ServiceObject;
-    tierName: string;
     readonly toZone?: Zone;
     fromZone?: Array<Zone>;
+    tierName: string;
     natRuleGroupType: string;
 }
 export enum NatRuleImportTranslationTypeEnum {

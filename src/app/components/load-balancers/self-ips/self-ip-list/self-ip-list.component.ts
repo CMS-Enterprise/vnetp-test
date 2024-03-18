@@ -20,6 +20,7 @@ import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.com
 import { SelfIpModalDto } from '../self-ip-modal/self-ip-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface SelfIpView extends LoadBalancerSelfIp {
   nameView: string;
@@ -147,7 +148,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy {
         join: ['loadBalancerVlan'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -265,6 +266,10 @@ export class SelfIpListComponent implements OnInit, OnDestroy {
       this.ngx.resetModalData('selfIpModal');
       this.selfIpChanges.unsubscribe();
     });
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }
 

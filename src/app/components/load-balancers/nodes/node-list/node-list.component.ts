@@ -14,6 +14,7 @@ import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.com
 import { NodeModalDto } from '../node-modal/node-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface NodeView extends LoadBalancerNode {
   nameView: string;
@@ -127,7 +128,7 @@ export class NodeListComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -238,6 +239,10 @@ export class NodeListComponent implements OnInit, OnDestroy {
       this.ngx.resetModalData('nodeModal');
       this.nodeChanges.unsubscribe();
     });
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }
 

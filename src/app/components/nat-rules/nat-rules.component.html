@@ -18,6 +18,7 @@
         <th scope="col">Tier</th>
         <th scope="col">Name</th>
         <th scope="col">State</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -36,9 +37,17 @@
           >
         </td>
         <td>{{ natRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
+        <td>
+          <app-icon-button
+          *ngIf="checkUndeployedChangesGroup(natRuleGroup)"
+          icon="asterisk"
+          label="Undeployed Changes"
+          [type]="'info'"
+        ></app-icon-button>
+        </td>
       </tr>
       <tr *ngIf="natRuleGroups?.length === 0" class="text-center">
-        <td colspan="3">No Nat Rule Groups</td>
+        <td colspan="4">No Nat Rule Groups</td>
       </tr>
     </tbody>
   </table>
