@@ -6,6 +6,8 @@ import { of, throwError } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { UndeployedChangesService } from '../services/undeployed-changes.service';
+import { Injector } from '@angular/core';
 
 // TODO: this returns a bunch of errors that need to be supressed
 describe('HttpConfigInterceptor', () => {
@@ -30,6 +32,20 @@ describe('HttpConfigInterceptor', () => {
     logout: jest.fn(),
   } as any;
 
+  const mockUndeployedChangesService = {
+    getUndeployedChanges: jest.fn(),
+  };
+
+  const mockInjector = {
+    get: jest.fn(token => {
+      if (token === UndeployedChangesService) {
+        return mockUndeployedChangesService;
+      }
+      // Return null or a different mock for other tokens as needed
+      return null;
+    }),
+  };
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, ToastrModule],
@@ -38,6 +54,7 @@ describe('HttpConfigInterceptor', () => {
         { provide: AuthService, useValue: mockAuthService },
         { provide: ToastrService, useValue: mockToastrService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: Injector, useValue: mockInjector },
       ],
     });
 
@@ -47,21 +64,25 @@ describe('HttpConfigInterceptor', () => {
   describe('processSuccessRequest ', () => {
     it('should do nothing when the request method is get', () => {
       const res = interceptor.processSuccessRequest({ method: 'GET' }, {});
+      expect(mockUndeployedChangesService.getUndeployedChanges).not.toHaveBeenCalled();
       expect(res).toBeUndefined();
     });
 
     it('should show login successful when the request method is post and responseEvent includes auth/', () => {
       interceptor.processSuccessRequest({ method: 'POST' }, { url: 'auth/' });
+      expect(mockUndeployedChangesService.getUndeployedChanges).not.toHaveBeenCalled();
       expect(mockToastrService.success).toHaveBeenCalledWith('Login Successful');
     });
 
     it('should show Bulk Upload Successful when the request method is post and responseEvent includes bulk', () => {
       interceptor.processSuccessRequest({ method: 'POST' }, { url: 'bulk' });
+      expect(mockUndeployedChangesService.getUndeployedChanges).not.toHaveBeenCalled();
       expect(mockToastrService.success).toHaveBeenCalledWith('Bulk Upload Successful');
     });
 
     it('should show request successful when the request method is post and responseEvent does not include auth/ or bulk', () => {
       interceptor.processSuccessRequest({ method: 'POST' }, { url: 'test' });
+      expect(mockUndeployedChangesService.getUndeployedChanges).toHaveBeenCalled();
       expect(mockToastrService.success).toHaveBeenCalledWith('Request Successful');
     });
   });
