@@ -65,7 +65,6 @@ const routes: Routes = [
     NatRulesDetailComponent,
     NatRuleObjectInfoModalComponent,
     NatRulePacketTracerComponent,
-    NatRuleModalComponent,
     NatRulesOperationModalComponent,
   ],
 })

@@ -1,14 +1,7 @@
 /* eslint-disable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NatRulesDetailComponent } from './nat-rules-detail.component';
-import {
-  MockComponent,
-  MockFontAwesomeComponent,
-  MockIconButtonComponent,
-  MockImportExportComponent,
-  MockNgxSmartModalComponent,
-  MockYesNoModalComponent,
-} from 'src/test/mock-components';
+import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -24,7 +17,6 @@ import { ImportExportComponent } from 'src/app/common/import-export/import-expor
 import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-modal.component';
 import { ToastrModule } from 'ngx-toastr';
 import { NatRuleObjectInfoModalComponent } from '../nat-rule-modal/nat-rule-object-info-modal/nat-rule-object-info-modal.component';
 
@@ -61,7 +53,6 @@ describe('NatRulesDetailComponent', () => {
         MockComponent({ selector: 'app-nat-rules-operation-modal', inputs: ['serviceObjects', 'networkObjects', 'networkObjectGroups'] }),
         MockNgxSmartModalComponent,
         ImportExportComponent,
-        PreviewModalComponent,
         YesNoModalComponent,
         ResolvePipe,
         NatRulePacketTracerComponent,
