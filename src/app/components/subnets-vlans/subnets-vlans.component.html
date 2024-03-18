@@ -57,6 +57,13 @@
     <ng-template #actionsTemplate let-subnet="datum">
       <section class="table__actions">
         <app-icon-button
+          *ngIf="checkUndeployedChanges(subnet)"
+          icon="asterisk"
+          label="Undeployed Changes"
+          [type]="'info'"
+        ></app-icon-button>
+
+        <app-icon-button
         *ngIf="!subnet?.deletedAt"
         icon="edit"
         label="Edit Subnet"
@@ -110,6 +117,13 @@
 
     <ng-template #actionsTemplate let-vlan="datum">
       <section class="table__actions">
+        <app-icon-button
+          *ngIf="checkUndeployedChanges(vlan)"
+          icon="asterisk"
+          label="Undeployed Changes"
+          [type]="'info'"
+        ></app-icon-button>
+
         <app-icon-button
         *ngIf="!vlan?.deletedAt"
         icon="edit"

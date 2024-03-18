@@ -71,6 +71,13 @@
 
     <ng-template #actionsTemplate let-serviceObj="datum">
       <section class="table__actions">
+        <app-icon-button
+          *ngIf="checkUndeployedChanges(serviceObj)"
+          icon="asterisk"
+          [label]="'Undeployed Changes'"
+          [type]="'info'"
+        ></app-icon-button>
+        
         <app-icon-button (click)="checkObjectsParents(serviceObj)" icon="search"></app-icon-button>
         <app-icon-button
               *ngIf="!serviceObj?.deletedAt"
@@ -135,6 +142,13 @@
 
     <ng-template #actionsTemplate let-serviceObjGroup="datum">
       <section class="table__actions">
+        <app-icon-button
+          *ngIf="checkUndeployedChanges(serviceObjGroup)"
+          icon="asterisk"
+          label="Undeployed Changes"
+          [type]="'info'"
+        ></app-icon-button>
+
         <app-icon-button
               *ngIf="!serviceObjGroup?.deletedAt"
               icon="edit"

@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { UndeployedChangesService } from '../../../../services/undeployed-changes.service';
 
 @Component({
   selector: 'app-datacenter-select',
@@ -24,12 +25,17 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
   private datacenterLockSubscription: Subscription;
   private datacentersSubscription: Subscription;
   private routeChangesSubscription: Subscription;
+  undeployedChangesSubscription: Subscription;
+  undeployedChangesObjectSubscription: Subscription;
+  undeployedChangeObjects: any;
+  undeployedChanges: boolean;
 
   constructor(
     private datacenterContextService: DatacenterContextService,
     private ngx: NgxSmartModalService,
     private toastrService: ToastrService,
     private router: Router,
+    private undeployedChangesService: UndeployedChangesService,
     private activedRoute: ActivatedRoute,
   ) {}
 
@@ -64,6 +70,14 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
     this.routeChangesSubscription = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       const currentRoute = this.router.url.split('?')[0];
       this.disableSelect = !currentRoute.includes('/dashboard');
+    });
+
+    this.undeployedChangesSubscription = this.undeployedChangesService.undeployedChanges.subscribe(undeployedChanges => {
+      this.undeployedChanges = undeployedChanges;
+    });
+
+    this.undeployedChangesObjectSubscription = this.undeployedChangesService.undeployedChangeObjects.subscribe(undeployedChangeObjects => {
+      this.undeployedChangeObjects = undeployedChangeObjects;
     });
   }
 

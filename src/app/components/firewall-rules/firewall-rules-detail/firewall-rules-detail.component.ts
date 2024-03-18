@@ -39,6 +39,7 @@ import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-rule-packet-tracer-dto';
+import UndeployedChangesUtil from '../../../utils/UndeployedChangesUtil';
 import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
 
 @Component({
@@ -209,12 +210,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         id: this.Id,
       })
       .subscribe(data => {
-        this.FirewallRuleGroup = {
-          name: data.name,
-          type: data.type,
-          id: data.id,
-        } as FirewallRuleGroup;
-
+        this.FirewallRuleGroup = data;
         this.TierId = data.tierId;
         this.firewallRuleGroupName = data.name;
 
@@ -223,10 +219,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  getFirewallRules(event?): void {
+  getFirewallRules(event?, eventParams?): void {
     this.filteredResults = false;
     this.isLoading = true;
-    let eventParams;
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 50;
@@ -677,5 +672,17 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     this.objectInfoSubscription = this.ngx.getModal('firewallRuleObjectInfoModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('firewallRuleObjectInfoModal');
     });
+  }
+
+  checkUndeployedChanges(rule: FirewallRule): boolean {
+    if (!this.FirewallRuleGroup.provisionedAt || !rule.updatedAt) {
+      return false;
+    }
+
+    return rule.updatedAt > this.FirewallRuleGroup.provisionedAt;
+  }
+
+  checkUndeployedChangesGroup(group: FirewallRuleGroup): boolean {
+    return UndeployedChangesUtil.hasUndeployedChanges(group);
   }
 }

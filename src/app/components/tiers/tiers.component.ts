@@ -26,6 +26,7 @@ import { TableConfig } from '../../common/table/table.component';
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
+import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 
 @Component({
   selector: 'app-tiers',
@@ -348,5 +349,9 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     SubscriptionUtil.unsubscribe([this.tierModalSubscription, this.currentDatacenterSubscription]);
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }

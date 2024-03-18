@@ -29,6 +29,7 @@ import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.compone
 import { TableContextService } from 'src/app/services/table-context.service';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -211,7 +212,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.svcObjTableComponentDto.page,
         perPage: this.svcObjTableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -249,7 +250,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.svcObjGrpTableComponentDto.page,
         perPage: this.svcObjGrpTableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -587,5 +588,9 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       this.currentDatacenterSubscription,
       this.currentTierSubscription,
     ]);
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }

@@ -43,6 +43,13 @@
 
 <ng-template #actionsTemplate let-firewallRule="datum">
   <section class="table__actions">
+      <app-icon-button
+      *ngIf="checkUndeployedChanges(firewallRule)"
+      icon="asterisk"
+      label="Undeployed Changes"
+      [type]="'info'"
+    ></app-icon-button>
+
     <app-icon-button
       *ngIf="!firewallRule?.deletedAt && FirewallRuleGroup?.type !== 'ZoneBased'"
       icon="clone"

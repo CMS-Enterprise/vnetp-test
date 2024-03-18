@@ -21,6 +21,13 @@
 <ng-template #actionsTemplate let-virtualServer="datum">
   <section class="table__actions">
     <app-icon-button
+    *ngIf="checkUndeployedChanges(virtualServer)"
+          icon="asterisk"
+          [label]="'Undeployed Changes'"
+          [type]="'info'"
+  ></app-icon-button>
+
+    <app-icon-button
       *ngIf="!virtualServer?.deletedAt"
       icon="edit"
       label="Edit Virtual Server"

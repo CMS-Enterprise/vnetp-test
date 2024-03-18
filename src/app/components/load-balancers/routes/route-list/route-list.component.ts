@@ -14,6 +14,7 @@ import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.com
 import { RouteModalDto } from '../route-modal/route-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface RouteView extends LoadBalancerRoute {
   nameView: string;
@@ -125,7 +126,7 @@ export class RouteListComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         (response: any) => {
@@ -235,6 +236,10 @@ export class RouteListComponent implements OnInit, OnDestroy {
       this.ngx.resetModalData('routeModal');
       this.routeChanges.unsubscribe();
     });
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }
 

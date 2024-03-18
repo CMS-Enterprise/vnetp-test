@@ -63,6 +63,8 @@ export enum AuditLogEntityTypeEnum {
     Subnet = 'Subnet',
     Vlan = 'Vlan',
     Tier = 'Tier',
+    FirewallRuleGroup = 'FirewallRuleGroup',
+    NatRuleGroup = 'NatRuleGroup',
     L3Out = 'L3Out',
     Tenant = 'Tenant',
     AppCentricSubnet = 'AppCentricSubnet',

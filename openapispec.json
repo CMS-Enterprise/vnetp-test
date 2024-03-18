@@ -13109,6 +13109,66 @@
         ]
       }
     },
+    "/v1/audit-log/entity": {
+      "get": {
+        "operationId": "getAuditLogByEntityIdAuditLog",
+        "summary": "",
+        "description": "Get Audit Log by Entity Id",
+        "parameters": [
+          {
+            "name": "entityId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entityType",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenant",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "afterTimestamp",
+            "required": true,
+            "in": "query",
+            "description": "Return audit logs after timestamp in YYYY-MM-DD-HH-MM-SS format.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditLog"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/audit-log"
+        ]
+      }
+    },
     "/v2/app-centric/tenants": {
       "post": {
         "operationId": "createOneTenant",
@@ -21828,6 +21888,8 @@
               "Subnet",
               "Vlan",
               "Tier",
+              "FirewallRuleGroup",
+              "NatRuleGroup",
               "L3Out",
               "Tenant",
               "AppCentricSubnet",
