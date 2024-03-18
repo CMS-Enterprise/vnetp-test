@@ -38,11 +38,12 @@ pipeline {
 
       
    stage("SonarQube - Static Analysis") {
+     if (env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'master' ) {
      agent { label 'rehl8-prod' }
        steps {
         withSonarQubeEnv('CB2Sonarrehl8') {
           script {
-            if (env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'master' ) {
+            
                   def readContent = readFile "sonar-project.properties"
                   writeFile file: "sonar-project.properties", text: "$readContent \nsonar.branch.name=$BRANCH_NAME\n"
                   docker.image("${sonarImage}").withRun('--security-opt label=disable -v "$PWD:/usr/src"') { c ->
@@ -52,13 +53,13 @@ pipeline {
                  sh 'sleep 10'
                  sh 'if [ -d ./.scannerwork ]; then chmod -R 777 ./.scannerwork; fi'
                  sh 'if [ -d ./.scannerwork ]; then rm -Rf ./.scannerwork; fi'
-              }     
-            }
-          }
-        }
+                   
+              }
+           }
+         }
       }
-    }
-      
+     }
+   }     
 
    stage('Publish') {
      agent { label 'rehl8-prod' }
