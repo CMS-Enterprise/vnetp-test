@@ -579,7 +579,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
       if (key === 'ipAddress' && val !== '') {
         obj[key] = String(val).trim();
       }
-      if (key === 'vrf_name') {
+      if (key === 'tierName') {
         obj[key] = ObjectUtil.getObjectId(val as string, this.tiers);
         obj.tierId = obj[key];
         delete obj[key];

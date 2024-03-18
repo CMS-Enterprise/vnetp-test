@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 README.md
 api.module.ts
 api/api.ts
@@ -24,6 +25,7 @@ api/v1NetworkSecurityNetworkObjectGroups.service.ts
 api/v1NetworkSecurityNetworkObjects.service.ts
 api/v1NetworkSecurityServiceObjectGroups.service.ts
 api/v1NetworkSecurityServiceObjects.service.ts
+api/v1NetworkSecurityZones.service.ts
 api/v1NetworkStaticRoutes.service.ts
 api/v1NetworkSubnets.service.ts
 api/v1NetworkVlans.service.ts
@@ -88,6 +90,7 @@ model/createManyTierDto.ts
 model/createManyTierGroupDto.ts
 model/createManyVlanDto.ts
 model/createManyVrfDto.ts
+model/createManyZoneDto.ts
 model/datacenter.ts
 model/dcsPermissions.ts
 model/endpointGroup.ts
@@ -135,6 +138,7 @@ model/getManyTierGroupResponseDto.ts
 model/getManyTierResponseDto.ts
 model/getManyVlanResponseDto.ts
 model/getManyVrfResponseDto.ts
+model/getManyZoneResponseDto.ts
 model/job.ts
 model/l3Out.ts
 model/loadBalancerHealthMonitor.ts
@@ -162,6 +166,7 @@ model/networkObjectGroupRelationBulkImportDto.ts
 model/nodeImportCollectionDto.ts
 model/poolImportCollectionDto.ts
 model/routeProfile.ts
+model/ruleOperationDto.ts
 model/selfService.ts
 model/selfServiceConfig.ts
 model/selfServiceConvertedArtifactObjects.ts
@@ -184,4 +189,5 @@ model/virtualServerImportCollectionDto.ts
 model/virtualServerImportDto.ts
 model/vlan.ts
 model/vrf.ts
+model/zone.ts
 variables.ts

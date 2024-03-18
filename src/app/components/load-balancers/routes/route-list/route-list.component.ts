@@ -155,12 +155,12 @@ export class RouteListComponent implements OnInit, OnDestroy {
 
   public import(routes: ImportRoute[]): void {
     const bulk = routes.map(route => {
-      const { vrfName } = route;
-      if (!vrfName) {
+      const { tierName } = route;
+      if (!tierName) {
         return route;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...route,
         tierId,
@@ -239,5 +239,5 @@ export class RouteListComponent implements OnInit, OnDestroy {
 }
 
 export interface ImportRoute extends LoadBalancerRoute {
-  vrfName?: string;
+  tierName?: string;
 }

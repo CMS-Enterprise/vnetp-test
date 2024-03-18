@@ -110,14 +110,14 @@ describe('HealthMonitorListComponent', () => {
   // });
 
   it('should import health monitors', () => {
-    const healthMonitors = [{ name: 'HealthMonitor1', vrfName: 'Tier1' }, { name: 'HealthMonitor2' }] as ImportHealthMonitor[];
+    const healthMonitors = [{ name: 'HealthMonitor1', tierName: 'Tier1' }, { name: 'HealthMonitor2' }] as ImportHealthMonitor[];
     const spy = jest.spyOn(service, 'createManyLoadBalancerHealthMonitor');
 
     component.import(healthMonitors);
 
     expect(spy).toHaveBeenCalledWith({
       createManyLoadBalancerHealthMonitorDto: {
-        bulk: [{ name: 'HealthMonitor1', tierId: '1', vrfName: 'Tier1' }, { name: 'HealthMonitor2' }],
+        bulk: [{ name: 'HealthMonitor1', tierId: '1', tierName: 'Tier1' }, { name: 'HealthMonitor2' }],
       },
     });
   });

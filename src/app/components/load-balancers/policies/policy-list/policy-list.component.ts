@@ -149,12 +149,12 @@ export class PolicyListComponent implements OnInit, OnDestroy {
 
   public import(policies: ImportPolicy[]): void {
     const bulk = policies.map(policy => {
-      const { vrfName } = policy;
-      if (!vrfName) {
+      const { tierName } = policy;
+      if (!tierName) {
         return policy;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...policy,
         tierId,
@@ -233,5 +233,5 @@ export class PolicyListComponent implements OnInit, OnDestroy {
 }
 
 export interface ImportPolicy extends LoadBalancerPolicy {
-  vrfName?: string;
+  tierName?: string;
 }

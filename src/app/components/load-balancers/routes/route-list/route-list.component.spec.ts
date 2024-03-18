@@ -111,14 +111,14 @@ describe('RouteListComponent', () => {
   // });
 
   it('should import routes', () => {
-    const routes = [{ name: 'Route1', vrfName: 'Tier1' }, { name: 'Route2' }] as ImportRoute[];
+    const routes = [{ name: 'Route1', tierName: 'Tier1' }, { name: 'Route2' }] as ImportRoute[];
     const spy = jest.spyOn(service, 'createManyLoadBalancerRoute');
 
     component.import(routes);
 
     expect(spy).toHaveBeenCalledWith({
       createManyLoadBalancerRouteDto: {
-        bulk: [{ name: 'Route1', tierId: '1', vrfName: 'Tier1' }, { name: 'Route2' }],
+        bulk: [{ name: 'Route1', tierId: '1', tierName: 'Tier1' }, { name: 'Route2' }],
       },
     });
   });

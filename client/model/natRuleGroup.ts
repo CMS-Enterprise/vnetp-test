@@ -28,7 +28,8 @@ export interface NatRuleGroup {
 export enum NatRuleGroupTypeEnum {
     Intravrf = 'Intravrf',
     Intervrf = 'Intervrf',
-    External = 'External'
+    External = 'External',
+    ZoneBased = 'ZoneBased'
 };
 
 

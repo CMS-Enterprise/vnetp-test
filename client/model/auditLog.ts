@@ -32,7 +32,9 @@ export enum AuditLogActionTypeEnum {
     SoftDelete = 'SoftDelete',
     Restore = 'Restore',
     Delete = 'Delete',
-    Deploy = 'Deploy'
+    Deploy = 'Deploy',
+    RuleMove = 'RuleMove',
+    RuleClone = 'RuleClone'
 };
 export enum AuditLogEntityTypeEnum {
     Appliance = 'Appliance',

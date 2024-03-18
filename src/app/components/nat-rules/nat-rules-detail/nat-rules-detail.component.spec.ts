@@ -12,14 +12,21 @@ import {
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientModule } from '@angular/common/http';
 import { of, Subject, Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { NatRule, NatRuleImport, NatRulePreview, V1TiersService } from 'client';
+import { NatRule, NatRuleGroupTypeEnum, NatRuleImport, NatRulePreview, V1TiersService } from 'client';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NatRulePacketTracerComponent } from '../nat-rule-packet-tracer/nat-rule-packet-tracer.component';
+import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
+import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-modal.component';
+import { ToastrModule } from 'ngx-toastr';
+import { NatRuleObjectInfoModalComponent } from '../nat-rule-modal/nat-rule-object-info-modal/nat-rule-object-info-modal.component';
 
 describe('NatRulesDetailComponent', () => {
   let component: NatRulesDetailComponent;
@@ -51,18 +58,31 @@ describe('NatRulesDetailComponent', () => {
           selector: 'app-standard-component',
           inputs: ['tableData', 'tableConfig', 'objectSearchColumns', 'tableItemsPerPage', 'objectType'],
         }),
+        MockComponent({ selector: 'app-nat-rules-operation-modal', inputs: ['serviceObjects', 'networkObjects', 'networkObjectGroups'] }),
         MockNgxSmartModalComponent,
-        MockImportExportComponent,
-        MockYesNoModalComponent,
+        ImportExportComponent,
+        PreviewModalComponent,
+        YesNoModalComponent,
+        ResolvePipe,
+        NatRulePacketTracerComponent,
+        NatRuleObjectInfoModalComponent,
       ],
-      imports: [ApplicationPipesModule, RouterTestingModule.withRoutes([]), HttpClientTestingModule],
+      imports: [
+        FormsModule,
+        NgxPaginationModule,
+        ApplicationPipesModule,
+        ReactiveFormsModule,
+        RouterTestingModule.withRoutes([]),
+        HttpClientTestingModule,
+        ToastrModule.forRoot(),
+      ],
       providers: [
         MockProvider(V1TiersService),
         MockProvider(NgxSmartModalService),
         { provide: 'DatacenterService', useValue: mockDatacenterService },
         { provide: 'ActivatedRoute', useValue: mockActivatedRoute },
       ],
-    }).compileComponents();
+    });
   });
 
   beforeEach(() => {
@@ -136,11 +156,13 @@ describe('NatRulesDetailComponent', () => {
     const networkObjectResponse = { data: ['networkObject1', 'networkObject2'] };
     const networkObjectGroupResponse = { data: ['networkObjectGroup1', 'networkObjectGroup2'] };
     const serviceObjectResponse = { data: ['serviceObject1', 'serviceObject2'] };
+    const zoneServiceResponse = { data: ['zone1', 'zone2'] };
 
     jest.spyOn(component['tierService'], 'getOneTier').mockReturnValue(of(tierResponse) as any);
     jest.spyOn(component['networkObjectService'], 'getManyNetworkObject').mockReturnValue(of(networkObjectResponse) as any);
     jest.spyOn(component['networkObjectGroupService'], 'getManyNetworkObjectGroup').mockReturnValue(of(networkObjectGroupResponse) as any);
     jest.spyOn(component['serviceObjectService'], 'getManyServiceObject').mockReturnValue(of(serviceObjectResponse) as any);
+    jest.spyOn(component['zoneService'], 'getManyZone').mockReturnValue(of(zoneServiceResponse) as any);
 
     jest.spyOn(component, 'getNatRules');
 
@@ -150,12 +172,14 @@ describe('NatRulesDetailComponent', () => {
     expect(component.networkObjects).toEqual(networkObjectResponse.data);
     expect(component.networkObjectGroups).toEqual(networkObjectGroupResponse.data);
     expect(component.serviceObjects).toEqual(serviceObjectResponse.data);
+    expect(component.zones).toEqual(zoneServiceResponse.data);
 
     expect(component.getNatRules).toHaveBeenCalled();
   });
 
   it('should open nat rule modal in create mode', () => {
     jest.spyOn(component, 'openNatRuleModal');
+    component.NatRuleGroup = { id: 'testNatRuleGroupId', type: NatRuleGroupTypeEnum.Intervrf } as any;
     component.createNatRule();
     expect(component.openNatRuleModal).toHaveBeenCalledWith(ModalMode.Create);
   });
@@ -181,12 +205,14 @@ describe('NatRulesDetailComponent', () => {
 
     it('should open Nat Rule modal with correct data in Create mode', () => {
       const mm = ModalMode.Create;
-
+      component.NatRuleGroup = { id: 'testNatRuleGroupId', type: NatRuleGroupTypeEnum.Intervrf } as any;
       component.openNatRuleModal(mm);
 
       const expectedDto = {
+        GroupType: NatRuleGroupTypeEnum.Intervrf,
         tierId: component.TierId,
         natRuleGroupId: component.Id,
+        Zones: undefined,
         modalMode: mm,
         NetworkObjectGroups: component.networkObjectGroups,
         NetworkObjects: component.networkObjects,
@@ -201,13 +227,16 @@ describe('NatRulesDetailComponent', () => {
 
     it('should open Nat Rule modal with correct data in Edit mode', () => {
       const mm = ModalMode.Edit;
+      component.NatRuleGroup = { id: 'testNatRuleGroupId', type: NatRuleGroupTypeEnum.Intervrf } as any;
       const nr: NatRule = { id: 'testNatRuleId', ruleIndex: 2 } as any;
 
       component.openNatRuleModal(mm, nr);
 
       const expectedDto = {
+        GroupType: NatRuleGroupTypeEnum.Intervrf,
         tierId: component.TierId,
         natRuleGroupId: component.Id,
+        Zones: undefined,
         modalMode: mm,
         NetworkObjectGroups: component.networkObjectGroups,
         NetworkObjects: component.networkObjects,
@@ -390,6 +419,100 @@ describe('NatRulesDetailComponent', () => {
 
       expect(component['ngx'].setModalData).toHaveBeenCalled();
       expect(component['ngx'].getModal).toHaveBeenCalledWith('previewModal');
+    });
+  });
+
+  describe('getObjectInfo', () => {
+    let ngxSmartModalService: NgxSmartModalService;
+    beforeEach(async () => {
+      ngxSmartModalService = TestBed.inject(NgxSmartModalService);
+    });
+
+    it('should call NetworkObjectService when objectType is NetworkObject', () => {
+      const objectId = 'test-id';
+      const property = 'test-property';
+      const setModalDataSpy = jest.spyOn(ngxSmartModalService, 'setModalData');
+      const getSpy = jest.spyOn(ngxSmartModalService, 'getModal');
+
+      jest
+        .spyOn(component['networkObjectService'], 'getOneNetworkObject')
+        .mockReturnValue(of({ name: 'test-name', type: 'Fqdn', fqdn: 'www.example.com' } as any));
+
+      component.getObjectInfo(property, 'NetworkObject', objectId);
+
+      expect(component['networkObjectService'].getOneNetworkObject).toHaveBeenCalled();
+
+      jest
+        .spyOn(component['networkObjectService'], 'getOneNetworkObject')
+        .mockReturnValue(of({ name: 'test-name', type: 'Range', startIpAddress: '192.168.0.1', endIpAddress: '192.168.0.10' } as any));
+
+      component.getObjectInfo(property, 'NetworkObject', objectId);
+
+      expect(component['networkObjectService'].getOneNetworkObject).toHaveBeenCalled();
+
+      jest
+        .spyOn(component['networkObjectService'], 'getOneNetworkObject')
+        .mockReturnValue(of({ name: 'test-name', type: 'IpAddress', ipAddress: '192.168.0.1' } as any));
+
+      component.getObjectInfo(property, 'NetworkObject', objectId);
+
+      expect(component['networkObjectService'].getOneNetworkObject).toHaveBeenCalled();
+      expect(setModalDataSpy).toHaveBeenCalled();
+      expect(getSpy).toHaveBeenCalled();
+    });
+
+    it('should call NetworkObjectGroupService when objectType is NetworkObjectGroup', () => {
+      const objectId = 'test-id';
+      const property = 'test-property';
+      const setModalDataSpy = jest.spyOn(ngxSmartModalService, 'setModalData');
+      const getSpy = jest.spyOn(ngxSmartModalService, 'getModal');
+
+      jest.spyOn(component['networkObjectGroupService'], 'getOneNetworkObjectGroup').mockReturnValue(
+        of({
+          name: 'test-name',
+          networkObjects: [{ name: 'test-name', type: 'Range', startIpAddress: '192.168.0.1', endIpAddress: '192.168.0.10' }],
+        } as any),
+      );
+
+      component.getObjectInfo(property, 'NetworkObjectGroup', objectId);
+
+      expect(component['networkObjectGroupService'].getOneNetworkObjectGroup).toHaveBeenCalled();
+
+      jest
+        .spyOn(component['networkObjectGroupService'], 'getOneNetworkObjectGroup')
+        .mockReturnValue(of({ name: 'test-name', networkObjects: [{ name: 'test-name', type: 'Fqdn', fqdn: 'www.example.com' }] } as any));
+
+      component.getObjectInfo(property, 'NetworkObjectGroup', objectId);
+
+      expect(component['networkObjectGroupService'].getOneNetworkObjectGroup).toHaveBeenCalled();
+
+      jest
+        .spyOn(component['networkObjectGroupService'], 'getOneNetworkObjectGroup')
+        .mockReturnValue(
+          of({ name: 'test-name', networkObjects: [{ name: 'test-name', type: 'IpAddress', ipAddress: '192.168.0.1' }] } as any),
+        );
+
+      component.getObjectInfo(property, 'NetworkObjectGroup', objectId);
+
+      expect(component['networkObjectGroupService'].getOneNetworkObjectGroup).toHaveBeenCalled();
+      expect(setModalDataSpy).toHaveBeenCalled();
+      expect(getSpy).toHaveBeenCalled();
+    });
+
+    it('should call ServiceObjectService when objectType is ServiceObject', () => {
+      const objectId = 'test-id';
+      const property = 'test-property';
+      const setModalDataSpy = jest.spyOn(ngxSmartModalService, 'setModalData');
+      const getSpy = jest.spyOn(ngxSmartModalService, 'getModal');
+      jest
+        .spyOn(component['serviceObjectService'], 'getOneServiceObject')
+        .mockReturnValue(of({ name: 'test-name', protocol: 'TCP', sourcePorts: '80', destinationPorts: '8080' } as any));
+
+      component.getObjectInfo(property, 'ServiceObject', objectId);
+
+      expect(component['serviceObjectService'].getOneServiceObject).toHaveBeenCalled();
+      expect(setModalDataSpy).toHaveBeenCalled();
+      expect(getSpy).toHaveBeenCalled();
     });
   });
 });

@@ -114,14 +114,14 @@ describe('IRuleListComponent', () => {
   // });
 
   it('should import iRules', () => {
-    const iRules = [{ name: 'iRule1', vrfName: 'Tier1' }, { name: 'iRule2' }] as ImportIRule[];
+    const iRules = [{ name: 'iRule1', tierName: 'Tier1' }, { name: 'iRule2' }] as ImportIRule[];
     const spy = jest.spyOn(service, 'createManyLoadBalancerIrule');
 
     component.import(iRules);
 
     expect(spy).toHaveBeenCalledWith({
       createManyLoadBalancerIruleDto: {
-        bulk: [{ name: 'iRule1', tierId: '1', vrfName: 'Tier1' }, { name: 'iRule2' }],
+        bulk: [{ name: 'iRule1', tierId: '1', tierName: 'Tier1' }, { name: 'iRule2' }],
       },
     });
   });

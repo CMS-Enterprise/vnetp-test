@@ -549,7 +549,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
       if (key === 'type' || key === 'protocol') {
         obj[key] = String(val).toUpperCase();
       }
-      if (key === 'vrf_name') {
+      if (key === 'tierName') {
         obj[key] = ObjectUtil.getObjectId(val as string, this.tiers);
         obj.tierId = obj[key];
         delete obj[key];

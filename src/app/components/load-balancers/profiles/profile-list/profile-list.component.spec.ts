@@ -113,14 +113,14 @@ describe('ProfileListComponent', () => {
   // });
 
   it('should import profiles', () => {
-    const newProfiles = [{ name: 'Profile1', vrfName: 'Tier1' }, { name: 'Profile2' }] as ImportProfile[];
+    const newProfiles = [{ name: 'Profile1', tierName: 'Tier1' }, { name: 'Profile2' }] as ImportProfile[];
     const spy = jest.spyOn(service, 'createManyLoadBalancerProfile');
 
     component.import(newProfiles);
 
     expect(spy).toHaveBeenCalledWith({
       createManyLoadBalancerProfileDto: {
-        bulk: [{ name: 'Profile1', tierId: '1', vrfName: 'Tier1' }, { name: 'Profile2' }],
+        bulk: [{ name: 'Profile1', tierId: '1', tierName: 'Tier1' }, { name: 'Profile2' }],
       },
     });
   });

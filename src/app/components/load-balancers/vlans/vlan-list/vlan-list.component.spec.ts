@@ -110,14 +110,14 @@ describe('VlanListComponent', () => {
   // });
 
   it('should import vlans', () => {
-    const vlans = [{ name: 'VLAN1', vrfName: 'Tier1' }, { name: 'VLAN2' }] as ImportVlan[];
+    const vlans = [{ name: 'VLAN1', tierName: 'Tier1' }, { name: 'VLAN2' }] as ImportVlan[];
     const spy = jest.spyOn(service, 'createManyLoadBalancerVlan');
 
     component.import(vlans);
 
     expect(spy).toHaveBeenCalledWith({
       createManyLoadBalancerVlanDto: {
-        bulk: [{ name: 'VLAN1', tierId: '1', vrfName: 'Tier1' }, { name: 'VLAN2' }],
+        bulk: [{ name: 'VLAN1', tierId: '1', tierName: 'Tier1' }, { name: 'VLAN2' }],
       },
     });
   });

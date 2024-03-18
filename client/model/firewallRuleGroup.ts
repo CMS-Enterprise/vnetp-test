@@ -28,7 +28,8 @@ export interface FirewallRuleGroup {
 export enum FirewallRuleGroupTypeEnum {
     Intravrf = 'Intravrf',
     Intervrf = 'Intervrf',
-    External = 'External'
+    External = 'External',
+    ZoneBased = 'ZoneBased'
 };
 
 

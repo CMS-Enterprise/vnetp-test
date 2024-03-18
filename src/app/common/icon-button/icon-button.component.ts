@@ -8,7 +8,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class IconButtonComponent {
   @Input() icon: Icon;
   @Input() type = 'default';
-  @Input() label: string;
+  @Input() label = '';
 
   @Output() handleClick = new EventEmitter<Event>();
 
@@ -21,6 +21,8 @@ export class IconButtonComponent {
     upload: ['fas', 'upload'],
     undo: ['fas', 'undo'],
     search: ['fas', 'search'],
+    filter: ['fas', 'filter'],
+    clone: ['far', 'clone'],
   };
 
   public typeLookup: Record<IconType, string> = {
@@ -30,5 +32,5 @@ export class IconButtonComponent {
   };
 }
 
-export type Icon = 'search' | 'add' | 'edit' | 'execute' | 'undo' | 'delete' | 'upload' | 'download';
+export type Icon = 'search' | 'add' | 'edit' | 'execute' | 'undo' | 'delete' | 'upload' | 'download' | 'filter' | 'clone';
 export type IconType = 'default' | 'danger' | 'success';
