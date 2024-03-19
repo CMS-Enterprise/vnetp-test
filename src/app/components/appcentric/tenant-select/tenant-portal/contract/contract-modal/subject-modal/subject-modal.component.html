@@ -146,6 +146,13 @@
       ></app-table>
     </div>
   </ng-container>
+
+  <app-import-export
+  [exportObject]="subjects"
+  exportFileName="subjects"
+  [disableJson]="false"
+  (import)="importSubjectFilterRelation($event)"
+></app-import-export>
 </ngx-smart-modal>
 
 <ng-template #actionsTemplate let-filter="datum">
