@@ -94,7 +94,7 @@ export class AuditLogComponent implements OnInit {
     }
     this.auditLogService
       .searchAuditLogAuditLog({
-        filter: eventParams,
+        filter: [eventParams],
       })
       .subscribe(
         data => {
