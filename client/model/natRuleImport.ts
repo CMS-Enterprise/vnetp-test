@@ -58,7 +58,7 @@ export interface NatRuleImport {
     readonly translatedServiceObject?: ServiceObject;
     readonly toZone?: Zone;
     fromZone?: Array<Zone>;
-    vrfName: string;
+    tierName: string;
     natRuleGroupType: string;
 }
 export enum NatRuleImportTranslationTypeEnum {

@@ -22,6 +22,7 @@ import { FirewallRule } from '../model/models';
 import { FirewallRuleImportCollectionDto } from '../model/models';
 import { FirewallRulePreview } from '../model/models';
 import { GetManyFirewallRuleResponseDto } from '../model/models';
+import { RuleOperationDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -42,6 +43,10 @@ export interface CreateOneFirewallRuleRequestParams {
 export interface DeleteOneFirewallRuleRequestParams {
     /** UUID. */
     id: string;
+}
+
+export interface FwRuleOperationFirewallRuleRequestParams {
+    ruleOperationDto: RuleOperationDto;
 }
 
 export interface GetFirewallRulesFirewallRuleRequestParams {
@@ -362,6 +367,62 @@ export class V1NetworkSecurityFirewallRulesService {
         }
 
         return this.httpClient.delete<FirewallRule>(`${this.configuration.basePath}/v1/network-security/firewall-rules/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * FW Rule Operation
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public fwRuleOperationFirewallRule(requestParameters: FwRuleOperationFirewallRuleRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FirewallRule>;
+    public fwRuleOperationFirewallRule(requestParameters: FwRuleOperationFirewallRuleRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FirewallRule>>;
+    public fwRuleOperationFirewallRule(requestParameters: FwRuleOperationFirewallRuleRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FirewallRule>>;
+    public fwRuleOperationFirewallRule(requestParameters: FwRuleOperationFirewallRuleRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const ruleOperationDto = requestParameters.ruleOperationDto;
+        if (ruleOperationDto === null || ruleOperationDto === undefined) {
+            throw new Error('Required parameter ruleOperationDto was null or undefined when calling fwRuleOperationFirewallRule.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<FirewallRule>(`${this.configuration.basePath}/v1/network-security/firewall-rules/operation`,
+            ruleOperationDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

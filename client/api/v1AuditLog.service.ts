@@ -30,11 +30,39 @@ export interface GetAuditLogAuditLogRequestParams {
     entityType?: string;
     actionType?: string;
     tenant?: string;
+    appCentricTenant?: string;
     filter?: Array<string>;
 }
 
+export interface GetAuditLogByEntityIdAuditLogRequestParams {
+    entityId: string;
+    entityType: string;
+    tenant: string;
+    /** Return audit logs after timestamp in YYYY-MM-DD HH:MM:SS format. */
+    afterTimestamp: string;
+}
+
 export interface SearchAuditLogAuditLogRequestParams {
-    filter?: any;
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
+    /** Number of entities to return per page.      If page is not passed, a number of entities up to this parameter will be returned. Default 20. */
+    perPage?: number;
+    /** Alias for perPage. If perPage is also passed this parameter will be ignored. */
+    limit?: number;
+    /** Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination. */
+    page?: number;
+    /** Filter condition to apply to the query. */
+    filter?: Array<string>;
+    /** Properties to sort the response by. */
+    sort?: Array<string>;
+    /** Properties to group the response by. */
+    group?: Array<string>;
+    /** Properties to select. */
+    fields?: Array<string>;
+    /** Where object for advanced AND/OR queries. */
+    s?: string;
 }
 
 
@@ -123,6 +151,7 @@ export class V1AuditLogService {
         const entityType = requestParameters.entityType;
         const actionType = requestParameters.actionType;
         const tenant = requestParameters.tenant;
+        const appCentricTenant = requestParameters.appCentricTenant;
         const filter = requestParameters.filter;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -141,6 +170,10 @@ export class V1AuditLogService {
         if (tenant !== undefined && tenant !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>tenant, 'tenant');
+        }
+        if (appCentricTenant !== undefined && appCentricTenant !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>appCentricTenant, 'appCentricTenant');
         }
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -190,6 +223,83 @@ export class V1AuditLogService {
     }
 
     /**
+     * Get Audit Log by Entity Id
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAuditLogByEntityIdAuditLog(requestParameters: GetAuditLogByEntityIdAuditLogRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<AuditLog>>;
+    public getAuditLogByEntityIdAuditLog(requestParameters: GetAuditLogByEntityIdAuditLogRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<AuditLog>>>;
+    public getAuditLogByEntityIdAuditLog(requestParameters: GetAuditLogByEntityIdAuditLogRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<AuditLog>>>;
+    public getAuditLogByEntityIdAuditLog(requestParameters: GetAuditLogByEntityIdAuditLogRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const entityId = requestParameters.entityId;
+        if (entityId === null || entityId === undefined) {
+            throw new Error('Required parameter entityId was null or undefined when calling getAuditLogByEntityIdAuditLog.');
+        }
+        const entityType = requestParameters.entityType;
+        if (entityType === null || entityType === undefined) {
+            throw new Error('Required parameter entityType was null or undefined when calling getAuditLogByEntityIdAuditLog.');
+        }
+        const tenant = requestParameters.tenant;
+        if (tenant === null || tenant === undefined) {
+            throw new Error('Required parameter tenant was null or undefined when calling getAuditLogByEntityIdAuditLog.');
+        }
+        const afterTimestamp = requestParameters.afterTimestamp;
+        if (afterTimestamp === null || afterTimestamp === undefined) {
+            throw new Error('Required parameter afterTimestamp was null or undefined when calling getAuditLogByEntityIdAuditLog.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (entityId !== undefined && entityId !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>entityId, 'entityId');
+        }
+        if (entityType !== undefined && entityType !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>entityType, 'entityType');
+        }
+        if (tenant !== undefined && tenant !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>tenant, 'tenant');
+        }
+        if (afterTimestamp !== undefined && afterTimestamp !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>afterTimestamp, 'afterTimestamp');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<Array<AuditLog>>(`${this.configuration.basePath}/v1/audit-log/entity`,
+            {
+                params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Get Audit Logs by search
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -199,12 +309,69 @@ export class V1AuditLogService {
     public searchAuditLogAuditLog(requestParameters: SearchAuditLogAuditLogRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<AuditLog>>>;
     public searchAuditLogAuditLog(requestParameters: SearchAuditLogAuditLogRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<AuditLog>>>;
     public searchAuditLogAuditLog(requestParameters: SearchAuditLogAuditLogRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const relations = requestParameters.relations;
+        const join = requestParameters.join;
+        const perPage = requestParameters.perPage;
+        const limit = requestParameters.limit;
+        const page = requestParameters.page;
         const filter = requestParameters.filter;
+        const sort = requestParameters.sort;
+        const group = requestParameters.group;
+        const fields = requestParameters.fields;
+        const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (filter !== undefined && filter !== null) {
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
+        }
+        if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>filter, 'filter');
+            <any>perPage, 'perPage');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
+        }
+        if (page !== undefined && page !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
+        }
+        if (filter) {
+            filter.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'filter');
+            })
+        }
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
+        }
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
+        }
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (s !== undefined && s !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>s, 's');
         }
 
         let headers = this.defaultHeaders;

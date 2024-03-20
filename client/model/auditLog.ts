@@ -33,7 +33,9 @@ export enum AuditLogActionTypeEnum {
     SoftDelete = 'SoftDelete',
     Restore = 'Restore',
     Delete = 'Delete',
-    Deploy = 'Deploy'
+    Deploy = 'Deploy',
+    RuleMove = 'RuleMove',
+    RuleClone = 'RuleClone'
 };
 export enum AuditLogEntityTypeEnum {
     Appliance = 'Appliance',
@@ -62,6 +64,8 @@ export enum AuditLogEntityTypeEnum {
     Subnet = 'Subnet',
     Vlan = 'Vlan',
     Tier = 'Tier',
+    FirewallRuleGroup = 'FirewallRuleGroup',
+    NatRuleGroup = 'NatRuleGroup',
     L3Out = 'L3Out',
     Tenant = 'Tenant',
     AppCentricSubnet = 'AppCentricSubnet',
