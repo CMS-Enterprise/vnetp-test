@@ -20,6 +20,7 @@ import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.com
 import { HealthMonitorModalDto } from '../health-monitor-modal/health-monitor-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface HealthMonitorView extends LoadBalancerHealthMonitor {
   nameView: string;
@@ -133,7 +134,7 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -235,6 +236,10 @@ export class HealthMonitorListComponent implements OnInit, OnDestroy {
       this.ngx.resetModalData('healthMonitorModal');
       this.healthMonitorChanges.unsubscribe();
     });
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }
 

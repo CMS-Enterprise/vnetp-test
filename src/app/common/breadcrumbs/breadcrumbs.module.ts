@@ -8,9 +8,10 @@ import { DatacenterSelectComponent } from './components/datacenter-select/datace
 import { ToastrModule } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
 import { TooltipModule } from '../tooltip/tooltip.module';
+import { IconButtonModule } from '../icon-button/icon-button.module';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule, FormsModule, NgxSmartModalModule, RouterModule, ToastrModule, TooltipModule],
+  imports: [CommonModule, FontAwesomeModule, FormsModule, NgxSmartModalModule, RouterModule, ToastrModule, TooltipModule, IconButtonModule],
   declarations: [BreadcrumbComponent, DatacenterSelectComponent],
   exports: [BreadcrumbComponent, DatacenterSelectComponent],
 })

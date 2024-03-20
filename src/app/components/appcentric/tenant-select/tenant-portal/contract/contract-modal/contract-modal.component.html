@@ -92,6 +92,13 @@
         (tableEvent)="onTableEvent($event)"
       ></app-table>
     </div>
+
+    <app-import-export
+        [exportObject]="subjects"
+        exportFileName="subjects"
+        [disableJson]="false"
+        (import)="importSubjects($event)"
+      ></app-import-export>
   </ng-container>
 </ngx-smart-modal>
 

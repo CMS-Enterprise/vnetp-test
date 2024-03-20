@@ -92,6 +92,12 @@
         (tableEvent)="onTableEvent($event)"
       ></app-table>
     </div>
+    <app-import-export
+    [exportObject]="endpointGroups"
+    exportFileName="endpointGroups"
+    [disableJson]="false"
+    (import)="importEndpointGroups($event)"
+  ></app-import-export>
   </ng-container>
 </ngx-smart-modal>
 

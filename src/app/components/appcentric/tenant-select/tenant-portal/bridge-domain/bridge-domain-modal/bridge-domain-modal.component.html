@@ -127,10 +127,10 @@
         <div class="form-group" *ngIf="f.l3OutForRouteProfileId.value">
           <label for="routeProfile">Route Profile</label>
           <ng-select id="routeProfile" [items]="routeProfiles" bindLabel="name" bindValue="id"
-            formControlName="routeProfileId" [class.is-invalid]="submitted && f.routeProfileId.errors"
-            ></ng-select>
+            formControlName="routeProfileId" [class.is-invalid]="submitted && f.routeProfileId.errors"></ng-select>
           <div *ngIf="submitted && f.routeProfileId.errors" class="custom-invalid-feedback">
-            <div *ngIf="f.routeProfileId.errors.required">Route Profile is required when Route Profile for L3 Out has a value</div>
+            <div *ngIf="f.routeProfileId.errors.required">Route Profile is required when Route Profile for L3 Out has a
+              value</div>
           </div>
         </div>
       </div>
@@ -146,6 +146,8 @@
       </button>
     </footer>
   </form>
+  <app-import-export [exportObject]="l3Outs" exportFileName="l3Outs" [disableJson]="false"
+  (import)="importBridgeDomainL3OutRelation($event)"></app-import-export>
 </ngx-smart-modal>
 
 <ng-template #actionsTemplate let-l3Out="datum">

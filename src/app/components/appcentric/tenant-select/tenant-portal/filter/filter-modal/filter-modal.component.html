@@ -91,6 +91,12 @@
         (tableEvent)="onTableEvent($event)"
       ></app-table>
     </div>
+    <app-import-export
+        [exportObject]="filterEntries"
+        exportFileName="filterEntries"
+        [disableJson]="false"
+        (import)="importFilterEntries($event)"
+      ></app-import-export>
   </div>
 </ngx-smart-modal>
 

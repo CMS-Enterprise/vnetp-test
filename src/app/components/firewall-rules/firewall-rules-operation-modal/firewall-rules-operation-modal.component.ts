@@ -123,7 +123,8 @@ export class FirewallRulesOperationModalComponent implements OnInit {
   public getTiers(): void {
     this.tierService
       .getManyTier({
-        filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
+        filter: [`datacenterId||eq||${this.currentDatacenter.id}`, 'deletedAt||isnull'],
+        perPage: 1000,
       })
       .subscribe(data => {
         this.tiers = data;

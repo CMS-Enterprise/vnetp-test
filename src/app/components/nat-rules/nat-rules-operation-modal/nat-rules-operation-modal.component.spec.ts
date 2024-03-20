@@ -4,6 +4,12 @@ import { ReactiveFormsModule, FormsModule, FormBuilder, Validators } from '@angu
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import {
+  MockNgxSmartModalComponent,
+  MockFontAwesomeComponent,
+  MockTooltipComponent,
+  MockYesNoModalComponent,
+} from '../../../../test/mock-components';
 import { of } from 'rxjs';
 import { V1TiersService, V1NetworkSecurityNatRulesService, RuleOperationDto } from '../../../../../client';
 import { DatacenterContextService } from '../../../services/datacenter-context.service';
@@ -46,7 +52,13 @@ describe('NatRulesOperationModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [NatRulesOperationModalComponent /* Add any required mock components here */],
+      declarations: [
+        NatRulesOperationModalComponent,
+        MockNgxSmartModalComponent,
+        MockFontAwesomeComponent,
+        MockTooltipComponent,
+        MockYesNoModalComponent,
+      ],
       imports: [NgSelectModule, ReactiveFormsModule, HttpClientModule, FormsModule, RouterTestingModule],
       providers: [
         FormBuilder,
