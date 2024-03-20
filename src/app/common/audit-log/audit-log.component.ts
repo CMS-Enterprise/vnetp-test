@@ -24,7 +24,6 @@ import {
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { forkJoin, Subscription } from 'rxjs';
-import { first } from 'rxjs/operators';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
@@ -123,15 +122,10 @@ export class AuditLogComponent implements OnInit {
       fields: ['id,name'],
       perPage: 50000,
     });
-    // const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
-    //   fields: ['id,name'],
-    //   perPage: 50000,
-    // });
     forkJoin([appProfileRequest, routeProfileRequest, l3OutRequest]).subscribe((result: unknown) => {
       this.appProfiles = (result as ApplicationProfile)[0];
       this.routeProfiles = (result as RouteProfile)[1];
       this.l3Outs = (result as L3Out)[2];
-      // this.serviceObjectGroups = (result as ServiceObjectGroup)[3];
       this.getAppCentricAuditLogs();
     });
   }
@@ -191,8 +185,6 @@ export class AuditLogComponent implements OnInit {
                 beforeList = entityBefore[key]?.map(obj => obj?.name);
                 afterList = entityAfter[key]?.map(obj => obj?.name);
 
-                console.log('beforeList', beforeList);
-                console.log('afterList', afterList);
                 if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {
                   return;
                 }
@@ -207,8 +199,6 @@ export class AuditLogComponent implements OnInit {
                 beforeList = entityBefore[key]?.map(obj => obj?.name);
                 afterList = entityAfter[key]?.map(obj => obj?.name);
 
-                console.log('beforeList', beforeList);
-                console.log('afterList', afterList);
                 if (JSON.stringify(beforeList) === JSON.stringify(afterList)) {
                   return;
                 }
@@ -222,7 +212,6 @@ export class AuditLogComponent implements OnInit {
                   let beforeMatch;
                   let afterMatch;
                   const lowerCaseKey = key.toLocaleLowerCase();
-                  console.log('lowerCaseKey', lowerCaseKey);
                   if (lowerCaseKey === 'routeprofileid') {
                     beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.routeProfiles);
                     beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
@@ -254,8 +243,6 @@ export class AuditLogComponent implements OnInit {
             });
 
             messageArray.sort((a, b) => a.propertyName.localeCompare(b.propertyName));
-            // console.log('log',log)
-            // console.log('messageArray',messageArray)
             log.changedProperties = messageArray;
           }
         });
