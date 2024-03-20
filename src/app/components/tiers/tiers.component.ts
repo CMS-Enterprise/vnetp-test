@@ -26,6 +26,7 @@ import { TableConfig } from '../../common/table/table.component';
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
+import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 
 @Component({
   selector: 'app-tiers',
@@ -331,20 +332,7 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   private subscribeToTierModal(): void {
     this.tierModalSubscription = this.ngx.getModal('tierModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('tierModal');
-      this.datacenterContextService.unlockDatacenter();
-      this.tierModalSubscription.unsubscribe();
-      // get search params from local storage
-      const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
-
-      // if filtered results boolean is true, apply search params in the
-      // subsequent get call
-      if (filteredResults) {
-        this.getTiers(params);
-      } else {
-        this.getTiers();
-      }
+      window.location.reload();
     });
   }
 
@@ -360,5 +348,9 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     SubscriptionUtil.unsubscribe([this.tierModalSubscription, this.currentDatacenterSubscription]);
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }

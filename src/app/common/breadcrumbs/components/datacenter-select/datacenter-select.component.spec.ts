@@ -8,6 +8,7 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { By } from '@angular/platform-browser';
 import { MockProvider } from 'src/test/mock-providers';
 import { RouterTestingModule } from '@angular/router/testing';
+import { V1TiersService } from '../../../../../../client';
 
 describe('DatacenterSelectComponent', () => {
   let component: DatacenterSelectComponent;
@@ -16,7 +17,12 @@ describe('DatacenterSelectComponent', () => {
     TestBed.configureTestingModule({
       imports: [FormsModule, RouterTestingModule.withRoutes([])],
       declarations: [DatacenterSelectComponent, MockNgxSmartModalComponent, MockTooltipComponent],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(ToastrService), MockProvider(DatacenterContextService)],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(ToastrService),
+        MockProvider(DatacenterContextService),
+        MockProvider(V1TiersService),
+      ],
     });
 
     fixture = TestBed.createComponent(DatacenterSelectComponent);

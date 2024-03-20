@@ -30,6 +30,7 @@ import { TableComponentDto } from '../../models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 
 @Component({
   selector: 'app-subnets-vlans',
@@ -371,9 +372,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     event.forEach(e => {
       e.vlanNumber = Number(e.vlanNumber);
 
-      // eslint-disable-next-line
-      e.tierId = this.getTierId(e['vrfName']);
-      // test
+      e.tierId = this.getTierId(e['tierName']); // eslint-disable-line
     });
     const onConfirm = () => {
       this.vlanService.createManyVlan({ createManyVlanDto: { bulk: event } }).subscribe(() => {
@@ -429,7 +428,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.subnetTableComponentDto.page,
         perPage: this.subnetTableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -467,7 +466,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.vlanTableComponentDto.page,
         perPage: this.vlanTableComponentDto.perPage,
-        sort: ['vlanNumber,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -516,5 +515,9 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       this.currentDatacenterSubscription,
       this.currentTierSubscription,
     ]);
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }

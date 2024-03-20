@@ -5,6 +5,8 @@ import {
   IpAddressAnyValidator,
   FqdnValidator,
   MacAddressValidator,
+  IsIpV4NoSubnetValidator,
+  ValidatePortNumber,
 } from './network-form-validators';
 import { FormControl } from '@angular/forms';
 
@@ -133,6 +135,15 @@ describe('NetworkFormValidators', () => {
 
     it('should not allow invalid ports/port ranges', () => {
       expect(validate('-1')).toEqual({ invalidPortNumber: true });
+      expect(validate(' 1')).toEqual({ invalidPortNumber: true });
+      expect(validate('1 ')).toEqual({ invalidPortNumber: true });
+      expect(validate(' 1 ')).toEqual({ invalidPortNumber: true });
+      expect(validate(' 1 1 ')).toEqual({ invalidPortNumber: true });
+      expect(validate('1 1')).toEqual({ invalidPortNumber: true });
+      expect(validate(' 1 1')).toEqual({ invalidPortNumber: true });
+      expect(validate('1 1 ')).toEqual({ invalidPortNumber: true });
+      expect(validate('1- 2')).toEqual({ invalidPortNumber: true });
+      expect(validate('1 -2')).toEqual({ invalidPortNumber: true });
       expect(validate('500-50')).toEqual({ invalidPortRange: true });
       expect(validate('500-500')).toEqual({ invalidPortRange: true });
       expect(validate('500--50')).toEqual({ invalidPortNumber: true });
@@ -140,6 +151,51 @@ describe('NetworkFormValidators', () => {
       expect(validate('one')).toEqual({ invalidPortNumber: true });
       expect(validate('one-twenty')).toEqual({ invalidPortNumber: true });
       expect(validate(' any ')).toEqual({ invalidPortNumber: true });
+    });
+  });
+
+  describe('IsIpV4NoSubnetValidator', () => {
+    const { validate } = createValidator(IsIpV4NoSubnetValidator);
+
+    it('should allow valid ip addresses', () => {
+      expect(validate('255.255.255.255')).toBeNull();
+      expect(validate('1.1.1.1')).toBeNull();
+      expect(validate('192.168.10.0')).toBeNull();
+    });
+
+    it('should not allow invalid ip addresses', () => {
+      expect(validate('1.1.1.')).toEqual({ invalidIp: true });
+      expect(validate('not an ip')).toEqual({ invalidIp: true });
+    });
+
+    it('should not allow ip addresses with subnet', () => {
+      expect(validate('192.168.10.0/24')).toEqual({ invalidIpNoSubnet: true });
+    });
+
+    it('should not allow ipV6 addresses', () => {
+      expect(validate('fe80::7ccc:2a54:aed2:2180')).toEqual({ invalidIp: true });
+      expect(validate('fe80::7ccc:2a54:aed2:2180/128')).toEqual({ invalidIpNoSubnet: true });
+    });
+  });
+
+  describe('validatePortNumber', () => {
+    const { validate } = createValidator(ValidatePortNumber);
+
+    it('should allow valid port numbers', () => {
+      expect(validate('1')).toBeNull();
+      expect(validate('65535')).toBeNull();
+    });
+
+    it('should not allow invalid port numbers', () => {
+      expect(validate('0')).toEqual({ invalidPortNumber: true });
+      expect(validate('65536')).toEqual({ invalidPortNumber: true });
+      expect(validate('one')).toEqual({ invalidPortNumber: true });
+    });
+
+    it('should not allow port ranges', () => {
+      expect(validate('1-100')).toEqual({ portRangeNotAllowed: true });
+      expect(validate('90-500')).toEqual({ portRangeNotAllowed: true });
+      expect(validate('1-65535')).toEqual({ portRangeNotAllowed: true });
     });
   });
 });

@@ -14,6 +14,7 @@ import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.com
 import { VlanModalDto } from '../vlan-modal/vlan-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface VlanView extends LoadBalancerVlan {
   nameView: string;
@@ -117,7 +118,7 @@ export class VlanListComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -143,12 +144,12 @@ export class VlanListComponent implements OnInit, OnDestroy {
       if (vlan.tag && typeof vlan.tag !== 'number') {
         vlan.tag = +vlan.tag;
       }
-      const { vrfName } = vlan;
-      if (!vrfName) {
+      const { tierName } = vlan;
+      if (!tierName) {
         return vlan;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...vlan,
         tierId,
@@ -224,8 +225,12 @@ export class VlanListComponent implements OnInit, OnDestroy {
       this.vlanChanges.unsubscribe();
     });
   }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
+  }
 }
 
 export interface ImportVlan extends LoadBalancerVlan {
-  vrfName?: string;
+  tierName?: string;
 }

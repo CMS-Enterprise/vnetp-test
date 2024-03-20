@@ -14,6 +14,7 @@ import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.com
 import { RouteModalDto } from '../route-modal/route-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface RouteView extends LoadBalancerRoute {
   nameView: string;
@@ -123,7 +124,7 @@ export class RouteListComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         (response: any) => {
@@ -153,12 +154,12 @@ export class RouteListComponent implements OnInit, OnDestroy {
 
   public import(routes: ImportRoute[]): void {
     const bulk = routes.map(route => {
-      const { vrfName } = route;
-      if (!vrfName) {
+      const { tierName } = route;
+      if (!tierName) {
         return route;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...route,
         tierId,
@@ -234,8 +235,12 @@ export class RouteListComponent implements OnInit, OnDestroy {
       this.routeChanges.unsubscribe();
     });
   }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
+  }
 }
 
 export interface ImportRoute extends LoadBalancerRoute {
-  vrfName?: string;
+  tierName?: string;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -8,6 +9,10 @@ import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockN
 import { MockProvider } from 'src/test/mock-providers';
 
 import { ApplicationProfileModalComponent } from './application-profile-modal.component';
+import { V2AppCentricBridgeDomainsService, V2AppCentricEndpointGroupsService } from 'client';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { Subscription } from 'rxjs';
 
 describe('ApplicationProfileModalComponent', () => {
   let component: ApplicationProfileModalComponent;
@@ -24,7 +29,11 @@ describe('ApplicationProfileModalComponent', () => {
         MockComponent({ selector: 'app-endpoint-group-modal', inputs: ['applicationProfileId', 'tenantId'] }),
       ],
       imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, NgSelectModule, HttpClientModule],
-      providers: [MockProvider(NgxSmartModalService)],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V2AppCentricBridgeDomainsService),
+        MockProvider(V2AppCentricEndpointGroupsService),
+      ],
     }).compileComponents();
   });
 
@@ -100,6 +109,65 @@ describe('ApplicationProfileModalComponent', () => {
     });
     optionalFields.forEach(r => {
       expect(isRequired(r)).toBe(false);
+    });
+  });
+
+  describe('importEndpointGroupsConfig', () => {
+    const mockNgxSmartModalComponent = {
+      getData: jest.fn().mockReturnValue({ modalYes: true }),
+      removeData: jest.fn(),
+      onCloseFinished: {
+        subscribe: jest.fn(),
+      },
+    };
+
+    beforeEach(() => {
+      component['ngx'] = {
+        getModal: jest.fn().mockReturnValue({
+          ...mockNgxSmartModalComponent,
+          open: jest.fn(),
+        }),
+        setModalData: jest.fn(),
+      } as any;
+    });
+
+    it('should display a confirmation modal with the correct message', () => {
+      const event = [{ name: 'Endpoint Group 1' }, { name: 'Endpoint Group 1' }] as any;
+      const modalDto = new YesNoModalDto(
+        'Import Endpoint Groups',
+        `Are you sure you would like to import ${event.length} Endpoint Groups?`,
+      );
+      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+
+      component.importEndpointGroups(event);
+
+      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
+    });
+
+    it('should import application profiles and refresh the table on confirmation', () => {
+      const event = [{ name: 'Endpoint Group 1' }, { name: 'Endpoint Group 1' }] as any;
+      jest.spyOn(component, 'getEndpointGroups');
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        onConfirm();
+
+        expect(component['endpointGroupService'].createManyEndpointGroup).toHaveBeenCalledWith({
+          createManyEndpointGroupDto: { bulk: component.sanitizeData(event) },
+        });
+
+        mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+          const data = modal.getData() as YesNoModalDto;
+          modal.removeData();
+          if (data && data.modalYes) {
+            onConfirm();
+          }
+        });
+
+        return new Subscription();
+      });
+
+      component.importEndpointGroups(event);
+
+      expect(component.getEndpointGroups).toHaveBeenCalled();
     });
   });
 });

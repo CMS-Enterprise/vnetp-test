@@ -34,6 +34,8 @@ import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.compone
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';
+import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
 
 @Component({
   selector: 'app-nat-rules-detail',
@@ -57,6 +59,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   filteredResults: boolean;
   public currentTier: Tier;
 
+  // natRuleGroup: NatRuleGroup;
   natRules = {} as GetManyNatRuleResponseDto;
   latestRuleIndex;
   perPage = 50;
@@ -69,10 +72,16 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   tiers: Tier[];
 
   natRuleModalSubscription: Subscription;
-
+  packetTracerSubscription: Subscription;
+  packetTracerObjects = new NatRulePacketTracerDto();
   TierId: string;
   NatRuleGroup: NatRuleGroup;
   currentDatacenterSubscription: Subscription;
+
+  objectInfoSubscription: Subscription;
+
+  public natRuleOperationModalSubscription: Subscription;
+  public natRuleGroupName: string;
 
   // Templates
   @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
@@ -148,19 +157,35 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     this.getNatRules(event);
   }
 
+  public openNatRuleOperationModal(natRule: NatRule): void {
+    const dto: RuleOperationModalDto = {
+      tierId: this.TierId,
+      ruleId: natRule.id,
+      sourceRuleGroupId: natRule.natRuleGroupId,
+      ruleGroupName: this.natRuleGroupName,
+    };
+    this.subscribeToNatRuleOperationModal();
+    this.ngx.setModalData(dto, 'natRulesOperationModal');
+    this.ngx.open('natRulesOperationModal');
+  }
+
+  private subscribeToNatRuleOperationModal(): void {
+    this.natRuleOperationModalSubscription = this.ngx.getModal('natRulesOperationModal').onCloseFinished.subscribe(() => {
+      this.getNatRuleGroup();
+      this.ngx.resetModalData('natRulesOperationModal');
+      this.natRuleOperationModalSubscription.unsubscribe();
+    });
+  }
+
   getNatRuleGroup(): void {
     this.natRuleGroupService
       .getOneNatRuleGroup({
         id: this.Id,
       })
       .subscribe(data => {
-        this.NatRuleGroup = {
-          name: data.name,
-          type: data.type,
-          id: data.id,
-        } as NatRuleGroup;
-
+        this.NatRuleGroup = data;
         this.TierId = data.tierId;
+        this.natRuleGroupName = data.name;
 
         this.getObjects();
         this.getNatRuleLastIndex();
@@ -420,14 +445,168 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
             natRuleImportCollectionDto: natConfirmDto,
           })
           .subscribe(() => {
-            this.getNatRuleGroup();
+            window.location.reload();
           });
       }
       previewImportSubscription.unsubscribe();
     });
   }
 
+  getObjectInfo(property, objectType, objectId) {
+    if (objectId) {
+      switch (objectType) {
+        case 'NetworkObject': {
+          this.handleNetworkObject(property, objectId);
+          break;
+        }
+        case 'NetworkObjectGroup': {
+          this.handleNetworkObjectGroup(property, objectId);
+          break;
+        }
+        case 'ServiceObject': {
+          this.handleServiceObject(property, objectId);
+          break;
+        }
+      }
+    }
+  }
+
+  handleNetworkObject(property, objectId) {
+    this.networkObjectService.getOneNetworkObject({ id: objectId }).subscribe(data => {
+      const objectName = data.name;
+      const modalTitle = `${property} : ${objectName}`;
+      let value;
+      if (data.type === 'Fqdn') {
+        value = data.fqdn;
+      } else if (data.type === 'Range') {
+        value = `${data.startIpAddress} - ${data.endIpAddress}`;
+      } else {
+        value = data.ipAddress;
+      }
+      const modalBody = [`${data.type}: ${value}`];
+      const dto = {
+        modalTitle,
+        modalBody,
+      };
+      this.subscribeToObjectInfoModal();
+      this.ngx.setModalData(dto, 'natRuleObjectInfoModal');
+      this.ngx.getModal('natRuleObjectInfoModal').open();
+    });
+  }
+
+  handleNetworkObjectGroup(property, objectId) {
+    this.networkObjectGroupService.getOneNetworkObjectGroup({ id: objectId, join: ['networkObjects'] }).subscribe(data => {
+      const members = data.networkObjects;
+      const memberDetails = members.map(member => {
+        let returnValue = `Name: ${member.name} --- `;
+
+        if (member.type === 'IpAddress') {
+          returnValue += `IP Address: ${member.ipAddress}`;
+        } else if (member.type === 'Range') {
+          returnValue += `Range: ${member.startIpAddress}-${member.endIpAddress}`;
+        } else if (member.type === 'Fqdn') {
+          returnValue += `FQDN: ${member.fqdn}`;
+        }
+
+        return returnValue;
+      });
+      const modalBody = memberDetails;
+      const objectName = data.name;
+      const modalTitle = `${property} : ${objectName}`;
+      const dto = {
+        modalTitle,
+        modalBody,
+      };
+      this.subscribeToObjectInfoModal();
+      this.ngx.setModalData(dto, 'natRuleObjectInfoModal');
+      this.ngx.getModal('natRuleObjectInfoModal').open();
+    });
+  }
+
+  handleServiceObject(property, objectId) {
+    this.serviceObjectService.getOneServiceObject({ id: objectId }).subscribe(data => {
+      const objectName = data.name;
+      const modalTitle = `${property} : ${objectName}`;
+      const modalBody = [`Protocol : ${data.protocol}, Source Ports: ${data.sourcePorts}, Destination Ports: ${data.destinationPorts}`];
+      const dto = {
+        modalTitle,
+        modalBody,
+      };
+      this.subscribeToObjectInfoModal();
+      this.ngx.setModalData(dto, 'natRuleObjectInfoModal');
+      this.ngx.getModal('natRuleObjectInfoModal').open();
+    });
+  }
+
+  subscribeToObjectInfoModal() {
+    this.objectInfoSubscription = this.ngx.getModal('natRuleObjectInfoModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('natRuleObjectInfoModal');
+      this.objectInfoSubscription.unsubscribe();
+    });
+  }
+
+  subscribeToPacketTracer() {
+    this.packetTracerSubscription = this.ngx.getModal('natRulePacketTracer').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('natRulePacketTracer');
+      this.packetTracerSubscription.unsubscribe();
+    });
+  }
+
+  openPacketTracer() {
+    this.getAllNatRules();
+    this.getAllNetworkObjectGroups();
+    this.subscribeToPacketTracer();
+    this.ngx.getModal('natRulePacketTracer').open();
+  }
+
+  getAllNatRules() {
+    this.natRuleService
+      .getManyNatRule({
+        filter: [`natRuleGroupId||eq||${this.NatRuleGroup.id}`],
+        join: [
+          'originalSourceNetworkObject',
+          'originalSourceNetworkObjectGroup',
+          'translatedSourceNetworkObject',
+          'translatedSourceNetworkObjectGroup',
+          'originalDestinationNetworkObject',
+          'originalDestinationNetworkObjectGroup',
+          'translatedDestinationNetworkObject',
+          'translatedDestinationNetworkObjectGroup',
+          'originalServiceObject',
+          'translatedServiceObject',
+        ],
+        sort: ['ruleIndex,ASC'],
+        page: 1,
+        perPage: 50000,
+      })
+      .subscribe(response => {
+        this.packetTracerObjects.natRules = response.data;
+      });
+  }
   getZoneNames(zones: any[]): string {
     return zones.map(zone => zone.name).join(', ');
+  }
+
+  getAllNetworkObjectGroups() {
+    this.networkObjectGroupService
+      .getManyNetworkObjectGroup({
+        filter: [`tierId||eq||${this.TierId}`],
+        join: ['networkObjects'],
+        page: 1,
+        perPage: 50000,
+      })
+      .subscribe(response => {
+        this.packetTracerObjects.networkObjectGroups = response.data;
+      });
+  }
+
+  checkUndeployedChanges(rule: NatRule): boolean {
+    console.log('rule', rule);
+    console.log('this.NatRuleGroup', this.NatRuleGroup);
+    if (!this.NatRuleGroup.provisionedAt || !rule.updatedAt) {
+      return false;
+    }
+
+    return rule.updatedAt > this.NatRuleGroup.provisionedAt;
   }
 }

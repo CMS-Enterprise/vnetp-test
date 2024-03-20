@@ -14,6 +14,7 @@ import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.com
 import { NodeModalDto } from '../node-modal/node-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface NodeView extends LoadBalancerNode {
   nameView: string;
@@ -127,7 +128,7 @@ export class NodeListComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -158,12 +159,12 @@ export class NodeListComponent implements OnInit, OnDestroy {
 
   public import(nodes: ImportNode[]): void {
     const bulk = nodes.map(node => {
-      const { vrfName } = node;
-      if (!vrfName) {
+      const { tierName } = node;
+      if (!tierName) {
         return node;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...node,
         tierId,
@@ -239,8 +240,12 @@ export class NodeListComponent implements OnInit, OnDestroy {
       this.nodeChanges.unsubscribe();
     });
   }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
+  }
 }
 
 export interface ImportNode extends LoadBalancerNode {
-  vrfName?: string;
+  tierName?: string;
 }

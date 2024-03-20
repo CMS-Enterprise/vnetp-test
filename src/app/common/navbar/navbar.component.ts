@@ -3,9 +3,12 @@ import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { UserDto } from '../../../../client';
+import { Datacenter, Tier, UserDto } from '../../../../client';
 import { environment } from 'src/environments/environment';
 import { IncidentService } from 'src/app/services/incident.service';
+import { UndeployedChangesService } from '../../services/undeployed-changes.service';
+import { DatacenterContextService } from '../../services/datacenter-context.service';
+import { TierContextService } from '../../services/tier-context.service';
 
 @Component({
   selector: 'app-navbar',
@@ -19,6 +22,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public tenantAccountNumber: string;
   private currentUserSubscription: Subscription;
   private currentTenantSubscription: Subscription;
+  private currentDatacenterSubscription: Subscription;
+  private currentTierSubscription: Subscription;
+  private undeployedChangesSubscription: Subscription;
+  private undeployedChangesObjectSubscription: Subscription;
+  public currentDatacenter: Datacenter;
+  public currentTier: Tier;
+  public undeployedChanges: boolean;
+  public undeployedChangeObjects: any;
   public environment = environment;
   public dcsVersion: string = this.environment?.dynamic?.dcsVersion;
   changeRequest: string;
@@ -26,7 +37,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private changeRequestModalSubscription: Subscription;
   private currentChangeRequestSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private auth: AuthService, private incidentService: IncidentService) {}
+  constructor(
+    private ngx: NgxSmartModalService,
+    private auth: AuthService,
+    private datacenterContextService: DatacenterContextService,
+    private tierContextService: TierContextService,
+    private undeployedChangesService: UndeployedChangesService,
+    private incidentService: IncidentService,
+  ) {}
 
   public openLogoutModal(): void {
     this.ngx.getModal('logoutModal').open();
@@ -35,6 +53,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public logout(): void {
     this.ngx.close('logoutModal');
     this.auth.logout();
+  }
+
+  public openUndeployedChangesModal(): void {
+    this.ngx.getModal('undeployedChangesModal').open();
   }
 
   ngOnInit(): void {
@@ -64,6 +86,25 @@ export class NavbarComponent implements OnInit, OnDestroy {
         }
       });
     });
+
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(datacenter => {
+      if (datacenter) {
+        this.currentDatacenter = datacenter;
+        this.currentTierSubscription = this.tierContextService.currentTier.subscribe(tier => {
+          if (tier) {
+            this.currentTier = tier;
+          }
+        });
+      }
+    });
+
+    this.undeployedChangesSubscription = this.undeployedChangesService.undeployedChanges.subscribe(undeployedChanges => {
+      this.undeployedChanges = undeployedChanges;
+    });
+
+    this.undeployedChangesObjectSubscription = this.undeployedChangesService.undeployedChangeObjects.subscribe(undeployedChangeObjects => {
+      this.undeployedChangeObjects = undeployedChangeObjects;
+    });
   }
 
   ngOnDestroy(): void {
@@ -72,6 +113,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.currentTenantSubscription,
       this.currentChangeRequestSubscription,
       this.changeRequestModalSubscription,
+      this.currentDatacenterSubscription,
+      this.currentTierSubscription,
+      this.undeployedChangesSubscription,
+      this.undeployedChangesObjectSubscription,
     ]);
   }
 

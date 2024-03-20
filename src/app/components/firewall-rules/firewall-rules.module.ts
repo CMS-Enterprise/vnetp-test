@@ -16,10 +16,12 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { FirewallRulePacketTracerComponent } from './firewall-rule-packet-tracer/firewall-rule-packet-tracer.component';
 import { FirewallRuleModalComponent } from './firewall-rule-modal/firewall-rule-modal.component';
 import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.module';
 // eslint-disable-next-line max-len
 import { FirewallRuleObjectInfoModalComponent } from './firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
+import { FirewallRulesOperationModalComponent } from './firewall-rules-operation-modal/firewall-rules-operation-modal.component';
 
 const routes: Routes = [
   {
@@ -54,6 +56,13 @@ const routes: Routes = [
     NgSelectModule,
     PreviewModalModule,
   ],
-  declarations: [FirewallRulesComponent, FirewallRulesDetailComponent, FirewallRuleModalComponent, FirewallRuleObjectInfoModalComponent],
+  declarations: [
+    FirewallRulesComponent,
+    FirewallRulesDetailComponent,
+    FirewallRuleModalComponent,
+    FirewallRulePacketTracerComponent,
+    FirewallRuleObjectInfoModalComponent,
+    FirewallRulesOperationModalComponent,
+  ],
 })
 export class FirewallRulesModule {}

@@ -20,6 +20,7 @@ import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.com
 import { SelfIpModalDto } from '../self-ip-modal/self-ip-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface SelfIpView extends LoadBalancerSelfIp {
   nameView: string;
@@ -147,7 +148,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy {
         join: ['loadBalancerVlan'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -178,14 +179,14 @@ export class SelfIpListComponent implements OnInit, OnDestroy {
 
   public import(selfIps: ImportSelfIp[]): void {
     const bulk = selfIps.map(selfIp => {
-      const { vrfName } = selfIp;
-      if (!vrfName) {
+      const { tierName } = selfIp;
+      if (!tierName) {
         return selfIp;
       }
       const { loadBalancerVlanId } = selfIp;
       // continue getting vlanUUID
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       const vlanId = ObjectUtil.getObjectId(loadBalancerVlanId, this.vlans);
       if (loadBalancerVlanId) {
         selfIp.loadBalancerVlanId = vlanId;
@@ -266,8 +267,12 @@ export class SelfIpListComponent implements OnInit, OnDestroy {
       this.selfIpChanges.unsubscribe();
     });
   }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
+  }
 }
 
 export interface ImportSelfIp extends LoadBalancerSelfIp {
-  vrfName?: string;
+  tierName?: string;
 }

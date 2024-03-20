@@ -17,22 +17,54 @@
     <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
     <span>Refresh</span>
   </button>
+
+  <button class="btn btn-info" *ngIf="NatRuleGroup?.type === 'Intervrf' || NatRuleGroup?.type === 'External'" (click)="openPacketTracer()">Packet Tracer</button>
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
-  <app-table [config]="config" [data]="natRules" (clearResults)="getNatRules($event)" (searchParams)="getNatRules($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+  <app-table
+    [config]="config"
+    [data]="natRules"
+    (clearResults)="getNatRules($event)"
+    (searchParams)="getNatRules($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
 </ng-container>
-
 <ng-template #actionsTemplate let-natRule="datum">
   <section class="table__actions">
-    <app-icon-button *ngIf="!natRule?.deletedAt" icon="edit" label="Edit Nat Rule"
-      (handleClick)="openNatRuleModal(ModalMode.Edit, natRule)"></app-icon-button>
+    <app-icon-button *ngIf="checkUndeployedChanges(natRule)" icon="asterisk" label="Undeployed Changes"
+      [type]="'info'"></app-icon-button>
 
-    <app-icon-button *ngIf="natRule?.deletedAt" icon="undo" label="Restore Nat Rule" type="success"
-      (handleClick)="restoreNatRule(natRule)"></app-icon-button>
+    <app-icon-button
+      *ngIf="!natRule?.deletedAt"
+      icon="add"
+      label="Move/Clone Nat Rule"
+      (handleClick)="openNatRuleOperationModal(natRule)"
+    ></app-icon-button>
 
-    <app-icon-button icon="delete" label="Soft-Delete/Delete Appliance"
-      [type]="natRule.deletedAt ? 'danger' : 'default'" (handleClick)="deleteNatRule(natRule)">
+    <app-icon-button
+      *ngIf="!natRule?.deletedAt && NatRuleGroup?.type !== 'ZoneBased'"
+      icon="edit"
+      label="Edit Nat Rule"
+      (handleClick)="openNatRuleModal(ModalMode.Edit, natRule)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="natRule?.deletedAt"
+      icon="undo"
+      label="Restore Nat Rule"
+      type="success"
+      (handleClick)="restoreNatRule(natRule)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete NAT Rule"
+      [type]="natRule.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteNatRule(natRule)"
+    >
     </app-icon-button>
   </section>
 </ng-template>
@@ -59,7 +91,7 @@
   <p *ngIf="natRule.originalServiceType === 'None'" aria-label="Original Service type">
     {{ natRule.originalServiceType }}
   </p>
-  <p *ngIf="natRule.originalServiceType === 'ServiceObject'" aria-label="Service Object">
+  <p (click)="getObjectInfo('Original ServiceObject', natRule.originalServiceType, natRule.originalServiceObjectId)" style="color:blue;cursor: pointer;" *ngIf="natRule.originalServiceType === 'ServiceObject'" aria-label="Service Object">
     {{ natRule?.originalServiceObjectId | resolve: getServiceObjectName }}
     (Object)
   </p>
@@ -70,11 +102,11 @@
   <p *ngIf="natRule.originalSourceAddressType === 'None'" aria-label="Original Source Address type">
     {{ natRule.originalSourceAddressType }}
   </p>
-  <p *ngIf="natRule.originalSourceAddressType === 'NetworkObject'" aria-label="Network Object">
+  <p (click)="getObjectInfo('Original Source NetworkObject', natRule.originalSourceAddressType, natRule.originalSourceNetworkObjectId)" style="color:blue;cursor: pointer;" *ngIf="natRule.originalSourceAddressType === 'NetworkObject'" aria-label="Network Object">
     {{ natRule?.originalSourceNetworkObjectId | resolve: getNetworkObjectName }}
     (Object)
   </p>
-  <p *ngIf="natRule.originalSourceAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
+  <p (click)="getObjectInfo('Original Source NetworkObjectGroup', natRule.originalSourceAddressType, natRule.originalSourceNetworkObjectGroupId)" style="color:blue;cursor: pointer;" *ngIf="natRule.originalSourceAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
     {{ natRule?.originalSourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
     (Object Group)
   </p>
@@ -85,11 +117,11 @@
   <p *ngIf="natRule.originalDestinationAddressType === 'None'" aria-label="Original Destination Address type">
     {{ natRule.originalDestinationAddressType }}
   </p>
-  <p *ngIf="natRule.originalDestinationAddressType === 'NetworkObject'" aria-label="Network Object">
+  <p (click)="getObjectInfo('Original Destination NetworkObject', natRule.originalDestinationAddressType, natRule.originalDestinationNetworkObjectId)" style="color:blue;cursor: pointer;" *ngIf="natRule.originalDestinationAddressType === 'NetworkObject'" aria-label="Network Object">
     {{ natRule?.originalDestinationNetworkObjectId | resolve: getNetworkObjectName }}
     (Object)
   </p>
-  <p *ngIf="natRule.originalDestinationAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
+  <p (click)="getObjectInfo('Original Destination NetworkObjectGroup', natRule.originalDestinationAddressType, natRule.originalDestinationNetworkObjectGroupId)" style="color:blue;cursor: pointer;" *ngIf="natRule.originalDestinationAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
     {{ natRule?.originalDestinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
     (Object Group)
   </p>
@@ -100,7 +132,7 @@
   <p *ngIf="natRule.translatedServiceType === 'None'" aria-label="Translated Service Type">
     {{ natRule.translatedServiceType }}
   </p>
-  <p *ngIf="natRule.translatedServiceType === 'ServiceObject'" aria-label="Service Object">
+  <p (click)="getObjectInfo('Translated ServiceObject', natRule.translatedServiceType, natRule.translatedServiceObjectId)" style="color:blue;cursor: pointer;" *ngIf="natRule.translatedServiceType === 'ServiceObject'" aria-label="Service Object">
     {{ natRule?.translatedServiceObjectId | resolve: getServiceObjectName }}
     (Object)
   </p>
@@ -111,11 +143,11 @@
   <p *ngIf="natRule.translatedSourceAddressType === 'None'" aria-label="Translated Source Address Type">
     {{ natRule?.translatedSourceAddressType }}
   </p>
-  <p *ngIf="natRule.translatedSourceAddressType === 'NetworkObject'" aria-label="Network Object">
+  <p (click)="getObjectInfo('Translated Source NetworkObject', natRule.translatedSourceAddressType, natRule.translatedSourceNetworkObjectId)" style="color:blue;cursor: pointer;" *ngIf="natRule.translatedSourceAddressType === 'NetworkObject'" aria-label="Network Object">
     {{ natRule?.translatedSourceNetworkObjectId | resolve: getNetworkObjectName }}
     (Object)
   </p>
-  <p *ngIf="natRule.translatedSourceAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
+  <p (click)="getObjectInfo('Translated Source NetworkObjectGroup', natRule.translatedSourceAddressType, natRule.translatedSourceNetworkObjectGroupId)" style="color:blue;cursor: pointer;" *ngIf="natRule.translatedSourceAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
     {{ natRule?.translatedSourceNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
     (Object Group)
   </p>
@@ -126,11 +158,11 @@
   <p *ngIf="natRule.translatedDestinationAddressType === 'None'" aria-label="Translated Destination Address Type">
     {{ natRule?.translatedDestinationAddressType }}
   </p>
-  <p *ngIf="natRule.translatedDestinationAddressType === 'NetworkObject'" aria-label="Network Object">
+  <p (click)="getObjectInfo('Translated Destination NetworkObject', natRule.translatedDestinationAddressType, natRule.translatedDestinationNetworkObjectId)" style="color:blue;cursor: pointer;" *ngIf="natRule.translatedDestinationAddressType === 'NetworkObject'" aria-label="Network Object">
     {{ natRule?.translatedDestinationNetworkObjectId | resolve: getNetworkObjectName }}
     (Object)
   </p>
-  <p *ngIf="natRule.translatedDestinationAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
+  <p (click)="getObjectInfo('Translated Destination NetworkObjectGroup', natRule.translatedDestinationAddressType, natRule.translatedDestinationNetworkObjectGroupId)" style="color:blue;cursor: pointer;" *ngIf="natRule.translatedDestinationAddressType === 'NetworkObjectGroup'" aria-label="Network Object Group">
     {{ natRule?.translatedDestinationNetworkObjectGroupId | resolve: getNetworkObjectGroupName }}
     (Object Group)
   </p>
@@ -148,3 +180,12 @@
     To: {{ natRule?.toZone?.name }}
   </p>
 </ng-template>
+
+<app-nat-rule-packet-tracer [objects]="packetTracerObjects"></app-nat-rule-packet-tracer>
+
+<app-nat-rules-operation-modal
+  (emitGetRuleGroup)="getNatRuleGroup()"
+  [networkObjects]="networkObjects"
+  [networkObjectGroups]="networkObjectGroups"
+  [serviceObjects]="serviceObjects"
+></app-nat-rules-operation-modal>

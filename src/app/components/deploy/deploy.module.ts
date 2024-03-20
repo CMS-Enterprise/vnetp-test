@@ -6,6 +6,8 @@ import { ApplicationPipesModule } from '../../pipes/application-pipes.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { FormsModule } from '@angular/forms';
+import { IconButtonModule } from '../../common/icon-button/icon-button.module';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
 
 const routes: Routes = [
   {
@@ -15,7 +17,16 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes), ApplicationPipesModule, FontAwesomeModule, YesNoModalModule, FormsModule],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    ApplicationPipesModule,
+    FontAwesomeModule,
+    YesNoModalModule,
+    FormsModule,
+    IconButtonModule,
+    NgxSmartModalModule,
+  ],
   declarations: [DeployComponent],
   exports: [DeployComponent],
 })
