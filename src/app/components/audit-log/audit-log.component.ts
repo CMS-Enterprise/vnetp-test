@@ -41,8 +41,8 @@ export class AuditLogComponent implements OnInit {
 
   public searchColumns: SearchColumnConfig[] = [
     {
-      displayName: 'Incident',
-      propertyName: 'incident',
+      displayName: 'CR#',
+      propertyName: 'changeRequestNumber',
       propertyType: 'string',
     },
   ];

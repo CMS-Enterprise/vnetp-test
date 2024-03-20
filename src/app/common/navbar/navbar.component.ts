@@ -65,7 +65,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       if (inc) {
         this.changeRequest = inc;
       } else {
-        this.changeRequest = ' { NO INC SELECTED } ';
+        this.changeRequest = ' { NO CHANGE REQUEST SELECTED } ';
       }
     });
     this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
