@@ -14,6 +14,7 @@
       (tableEvent)="onTableEvent($event)"></app-table>
     <section class="btn-toolbar" role="toolbar">
       <app-import-export [exportObject]="routeProfiles" exportFileName="routeProfiles" [disableJson]="false"
+      (import)="importRouteProfiles($event)"
         ></app-import-export>
     </section> -->
   </ng-container>

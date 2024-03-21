@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -7,6 +8,10 @@ import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockN
 import { MockProvider } from 'src/test/mock-providers';
 
 import { ContractModalComponent } from './contract-modal.component';
+import { Subscription } from 'rxjs';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { V2AppCentricSubjectsService } from 'client';
 
 describe('ContractModalComponent', () => {
   let component: ContractModalComponent;
@@ -23,7 +28,7 @@ describe('ContractModalComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
       ],
       imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule],
-      providers: [MockProvider(NgxSmartModalService)],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricSubjectsService)],
     }).compileComponents();
   });
 
@@ -99,6 +104,62 @@ describe('ContractModalComponent', () => {
     });
     optionalFields.forEach(r => {
       expect(isRequired(r)).toBe(false);
+    });
+  });
+
+  describe('importSubjectsConfig', () => {
+    const mockNgxSmartModalComponent = {
+      getData: jest.fn().mockReturnValue({ modalYes: true }),
+      removeData: jest.fn(),
+      onCloseFinished: {
+        subscribe: jest.fn(),
+      },
+    };
+
+    beforeEach(() => {
+      component['ngx'] = {
+        getModal: jest.fn().mockReturnValue({
+          ...mockNgxSmartModalComponent,
+          open: jest.fn(),
+        }),
+        setModalData: jest.fn(),
+      } as any;
+    });
+
+    it('should display a confirmation modal with the correct message', () => {
+      const event = [{ name: 'Subject 1' }, { name: 'Subject 1' }] as any;
+      const modalDto = new YesNoModalDto('Import Subjects', `Are you sure you would like to import ${event.length} Subjects?`);
+      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+
+      component.importSubjects(event);
+
+      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
+    });
+
+    it('should import subjects and refresh on confirmation', () => {
+      const event = [{ name: 'Subject 1' }, { name: 'Subject 1' }] as any;
+      jest.spyOn(component, 'getSubjects');
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        onConfirm();
+
+        expect(component['subjectsService'].createManySubject).toHaveBeenCalledWith({
+          createManySubjectDto: { bulk: component.sanitizeData(event) },
+        });
+
+        mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+          const data = modal.getData() as YesNoModalDto;
+          modal.removeData();
+          if (data && data.modalYes) {
+            onConfirm();
+          }
+        });
+
+        return new Subscription();
+      });
+
+      component.importSubjects(event);
+
+      expect(component.getSubjects).toHaveBeenCalled();
     });
   });
 });

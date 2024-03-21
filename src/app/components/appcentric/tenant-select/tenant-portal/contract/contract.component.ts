@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Contract, GetManyContractResponseDto, V2AppCentricContractsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -9,7 +9,9 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { ContractModalDto } from 'src/app/models/appcentric/contract-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-contract',
@@ -196,23 +198,51 @@ export class ContractComponent implements OnInit {
     });
   }
 
-  public importContractsConfig(): void {
-    // const tenantEnding = tenants.length > 1 ? 's' : '';
-    // const modalDto = new YesNoModalDto(
-    //   `Import Tier${tenantEnding}`,
-    //   `Would you like to import ${tenants.length} tier${tenantEnding}?`,
-    //   `Import Tier${tenantEnding}`,
-    //   'Cancel',
-    // );
-    // const onConfirm = () => {
-    //   this.tenantService
-    //     .createManyTier({
-    //       createManyTierDto: { bulk: this.sanitizeTiers(tiers) },
-    //     })
-    //     .subscribe(() => {
-    //       this.getTiers();
-    //     });
-    // };
-    // SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  public sanitizeData(entities) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  public importContracts(event): void {
+    const modalDto = new YesNoModalDto(
+      'Import Contracts',
+      `Are you sure you would like to import ${event.length} Contract${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.contractService.createManyContract({ createManyContractDto: { bulk: dto } }).subscribe(
+        () => {},
+        () => {},
+        () => {
+          this.getContracts();
+        },
+      );
+    };
+    const onClose = () => {
+      this.getContracts();
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }

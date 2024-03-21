@@ -30,3 +30,10 @@
     ></app-icon-button>
   </section>
 </ng-template>
+
+<app-import-export
+  [exportObject]="contracts"
+  exportFileName="contracts"
+  [disableJson]="false"
+  (import)="importProvidedContractEpgRelation($event)"
+></app-import-export>

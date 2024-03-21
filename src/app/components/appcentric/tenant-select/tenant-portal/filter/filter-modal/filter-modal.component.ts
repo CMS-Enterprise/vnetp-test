@@ -301,4 +301,57 @@ export class FilterModalComponent implements OnInit {
       this.editFilter(filter);
     }
   }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+      if (key === 'filterName') {
+        obj.filterId = this.filterId;
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  public importFilterEntries(event): void {
+    const modalDto = new YesNoModalDto(
+      'Import Filter Entries',
+      `Are you sure you would like to import ${event.length} Filter Entrie${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {};
+
+    const dto = this.sanitizeData(event);
+    this.filterEntriesService.createManyFilterEntry({ createManyFilterEntryDto: { bulk: dto } }).subscribe(
+      () => {},
+      () => {},
+      () => {
+        this.getFilterEntries();
+      },
+    );
+    const onClose = () => {
+      this.getFilterEntries();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
 }
