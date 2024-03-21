@@ -37,14 +37,13 @@ export interface GetAuditLogAuditLogRequestParams {
     entityType?: string;
     actionType?: string;
     tenant?: string;
-    appCentricTenant?: string;
 }
 
 export interface GetAuditLogByEntityIdAuditLogRequestParams {
     entityId: string;
     entityType: string;
     tenant: string;
-    /** Return audit logs after timestamp in YYYY-MM-DD-HH-MM-SS format. */
+    /** Return audit logs after timestamp in YYYY-MM-DD HH:MM:SS format. */
     afterTimestamp: string;
 }
 
@@ -207,7 +206,6 @@ export class V1AuditLogService {
         const entityType = requestParameters.entityType;
         const actionType = requestParameters.actionType;
         const tenant = requestParameters.tenant;
-        const appCentricTenant = requestParameters.appCentricTenant;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (datacenterId !== undefined && datacenterId !== null) {
@@ -225,10 +223,6 @@ export class V1AuditLogService {
         if (tenant !== undefined && tenant !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>tenant, 'tenant');
-        }
-        if (appCentricTenant !== undefined && appCentricTenant !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>appCentricTenant, 'appCentricTenant');
         }
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,

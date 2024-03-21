@@ -13073,14 +13073,6 @@
             }
           },
           {
-            "name": "appCentricTenant",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "page",
             "required": true,
             "in": "query",
@@ -13208,7 +13200,7 @@
             "name": "afterTimestamp",
             "required": true,
             "in": "query",
-            "description": "Return audit logs after timestamp in YYYY-MM-DD-HH-MM-SS format.",
+            "description": "Return audit logs after timestamp in YYYY-MM-DD HH:MM:SS format.",
             "schema": {
               "type": "string"
             }
