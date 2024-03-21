@@ -16,7 +16,7 @@
         (import)="importFilters($event)"
       ></app-import-export>
     </section> -->
-    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importFiltersConfig()" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="filters" [tableConfig]="config" (openObjectModalFunc)="openFilterModal(ModalMode.Create)" (clearResultsFunc)="getFilters($event)" (searchParamsFunc)="getFilters($event)" (tableEventFunc)="getFilters($event)"></app-standard-component>
+    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importFilters($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="filters" [tableConfig]="config" (openObjectModalFunc)="openFilterModal(ModalMode.Create)" (clearResultsFunc)="getFilters($event)" (searchParamsFunc)="getFilters($event)" (tableEventFunc)="getFilters($event)"></app-standard-component>
 
   </ng-container>
 </ng-container>

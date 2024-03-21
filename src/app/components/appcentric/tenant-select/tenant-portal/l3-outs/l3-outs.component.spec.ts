@@ -34,6 +34,10 @@ describe('L3OutsComponent', () => {
         MockIconButtonComponent,
         MockComponent({ selector: 'app-l3-outs-modal', inputs: ['vrfs', 'tenantId'] }),
         MockYesNoModalComponent,
+        MockComponent({
+          selector: 'app-standard-component',
+          inputs: ['unusedObjectsButton', 'tableData', 'tableConfig', 'objectSearchColumns', 'tableItemsPerPage', 'objectType'],
+        }),
       ],
       imports: [RouterTestingModule, HttpClientModule],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricL3outsService)],

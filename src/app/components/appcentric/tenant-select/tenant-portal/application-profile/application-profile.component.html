@@ -16,7 +16,7 @@
       [(itemsPerPage)]="perPage"
       (tableEvent)="onTableEvent($event)"
     ></app-table> -->
-    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importApplicationProfilesConfig()" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="applicationProfiles" [tableConfig]="config" (openObjectModalFunc)="openApplicationProfileModal(ModalMode.Create)" (clearResultsFunc)="getApplicationProfiles($event)" (searchParamsFunc)="getApplicationProfiles($event)" (tableEventFunc)="getApplicationProfiles($event)"></app-standard-component>
+    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importAppProfiles($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="applicationProfiles" [tableConfig]="config" (openObjectModalFunc)="openApplicationProfileModal(ModalMode.Create)" (clearResultsFunc)="getApplicationProfiles($event)" (searchParamsFunc)="getApplicationProfiles($event)" (tableEventFunc)="getApplicationProfiles($event)"></app-standard-component>
     <!-- <section class="btn-toolbar" role="toolbar">
       <app-import-export
         [exportObject]="applicationProfiles"

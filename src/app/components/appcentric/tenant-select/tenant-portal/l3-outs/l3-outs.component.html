@@ -7,7 +7,7 @@
   </section> -->
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importL3OutsConfig()" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="l3Outs" [tableConfig]="config" (openObjectModalFunc)="openL3OutsModal(ModalMode.Create)" (clearResultsFunc)="getL3Outs($event)" (searchParamsFunc)="getL3Outs($event)" (tableEventFunc)="getL3Outs($event)"></app-standard-component>
+    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importL3Outs($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="l3Outs" [tableConfig]="config" (openObjectModalFunc)="openL3OutsModal(ModalMode.Create)" (clearResultsFunc)="getL3Outs($event)" (searchParamsFunc)="getL3Outs($event)" (tableEventFunc)="getL3Outs($event)"></app-standard-component>
     <!-- <app-table
       [config]="config"
       [data]="l3Outs"

@@ -34,6 +34,10 @@ describe('ContractComponent', () => {
         MockIconButtonComponent,
         MockYesNoModalComponent,
         MockComponent({ selector: 'app-contract-modal', inputs: ['tenantId'] }),
+        MockComponent({
+          selector: 'app-standard-component',
+          inputs: ['unusedObjectsButton', 'tableData', 'tableConfig', 'objectSearchColumns', 'tableItemsPerPage', 'objectType'],
+        }),
       ],
       imports: [RouterTestingModule, HttpClientModule],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricContractsService)],

@@ -37,7 +37,7 @@ describe('RouteListComponent', () => {
         MockTooltipComponent,
         MockComponent({
           selector: 'app-standard-component',
-          inputs: ['config', 'searchColumns', 'perPage', 'objectType'],
+          inputs: ['tableData', 'tableConfig', 'objectSearchColumns', 'tableItemsPerPage', 'objectType'],
         }),
       ],
       providers: [

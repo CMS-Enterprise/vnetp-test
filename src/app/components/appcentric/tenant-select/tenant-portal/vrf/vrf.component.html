@@ -7,7 +7,7 @@
   </section> -->
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importVrfsConfig()" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="vrfs" [tableConfig]="config" (openObjectModalFunc)="openVrfModal(ModalMode.Create)" (clearResultsFunc)="getVrfs($event)" (searchParamsFunc)="getVrfs($event)" (tableEventFunc)="getVrfs($event)"></app-standard-component>
+    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importVrfs($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="vrfs" [tableConfig]="config" (openObjectModalFunc)="openVrfModal(ModalMode.Create)" (clearResultsFunc)="getVrfs($event)" (searchParamsFunc)="getVrfs($event)" (tableEventFunc)="getVrfs($event)"></app-standard-component>
     <!-- <app-table
       [config]="config"
       [data]="vrfs"

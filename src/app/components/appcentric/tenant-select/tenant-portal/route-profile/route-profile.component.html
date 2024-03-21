@@ -7,7 +7,7 @@
   </section> -->
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importRouteProfileConfig()" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="routeProfiles" [tableConfig]="config" (openObjectModalFunc)="openRouteProfileModal(ModalMode.Create)" (clearResultsFunc)="getRouteProfile($event)" (searchParamsFunc)="getRouteProfile($event)" (tableEventFunc)="getRouteProfile($event)"></app-standard-component>
+    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importRouteProfiles($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="routeProfiles" [tableConfig]="config" (openObjectModalFunc)="openRouteProfileModal(ModalMode.Create)" (clearResultsFunc)="getRouteProfile($event)" (searchParamsFunc)="getRouteProfile($event)" (tableEventFunc)="getRouteProfile($event)"></app-standard-component>
 
     <!-- <app-table [config]="config" [data]="routeProfiles" (clearResults)="getRouteProfile($event)"
       (searchParams)="getRouteProfile($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage"

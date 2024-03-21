@@ -33,6 +33,10 @@ describe('RouteProfilesComponent', () => {
         MockIconButtonComponent,
         MockComponent({ selector: 'app-route-profile-modal', inputs: ['tenantId'] }),
         MockYesNoModalComponent,
+        MockComponent({
+          selector: 'app-standard-component',
+          inputs: ['unusedObjectsButton', 'tableData', 'tableConfig', 'objectSearchColumns', 'tableItemsPerPage', 'objectType'],
+        }),
       ],
       imports: [RouterTestingModule, HttpClientModule],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricRouteProfilesService)],

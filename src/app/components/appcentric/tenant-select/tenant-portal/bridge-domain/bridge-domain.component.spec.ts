@@ -35,6 +35,10 @@ describe('BridgeDomainComponent', () => {
         MockYesNoModalComponent,
         MockComponent({ selector: 'app-bridge-domain-modal', inputs: ['tenantId'] }),
         MockComponent({ selector: 'app-subnets-modal', inputs: ['tenantId'] }),
+        MockComponent({
+          selector: 'app-standard-component',
+          inputs: ['unusedObjectsButton', 'tableData', 'tableConfig', 'objectSearchColumns', 'tableItemsPerPage', 'objectType'],
+        }),
       ],
       imports: [HttpClientModule, RouterTestingModule],
       providers: [

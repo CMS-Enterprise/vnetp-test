@@ -34,6 +34,10 @@ describe('VrfComponent', () => {
         MockIconButtonComponent,
         MockYesNoModalComponent,
         MockComponent({ selector: 'app-vrf-modal', inputs: ['tenantId'] }),
+        MockComponent({
+          selector: 'app-standard-component',
+          inputs: ['unusedObjectsButton', 'tableData', 'tableConfig', 'objectSearchColumns', 'tableItemsPerPage', 'objectType'],
+        }),
       ],
       imports: [RouterTestingModule, HttpClientModule],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricVrfsService)],

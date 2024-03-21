@@ -16,7 +16,7 @@
       [(itemsPerPage)]="perPage"
       (tableEvent)="onTableEvent($event)"
     ></app-table> -->
-    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importBridgeDomainsConfig()" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="bridgeDomains" [tableConfig]="config" (openObjectModalFunc)="openBridgeDomainModal(ModalMode.Create)" (clearResultsFunc)="getBridgeDomains($event)" (searchParamsFunc)="getBridgeDomains($event)" (tableEventFunc)="getBridgeDomains($event)"></app-standard-component>
+    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importBridgeDomains($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="bridgeDomains" [tableConfig]="config" (openObjectModalFunc)="openBridgeDomainModal(ModalMode.Create)" (clearResultsFunc)="getBridgeDomains($event)" (searchParamsFunc)="getBridgeDomains($event)" (tableEventFunc)="getBridgeDomains($event)"></app-standard-component>
 
     <!-- <section class="btn-toolbar" role="toolbar">
       <app-import-export

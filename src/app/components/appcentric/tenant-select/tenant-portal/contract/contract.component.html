@@ -7,7 +7,7 @@
   </section> -->
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importContractsConfig()" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="contracts" [tableConfig]="config" (openObjectModalFunc)="openContractModal(ModalMode.Create)" (clearResultsFunc)="getContracts($event)" (searchParamsFunc)="getContracts($event)" (tableEventFunc)="getContracts($event)"></app-standard-component>
+    <app-standard-component [unusedObjectsButton]="false" (importObjectsFunc)="importContracts($event)" [objectType]="objectType" [tableItemsPerPage]="perPage" [objectSearchColumns]="searchColumns" [tableData]="contracts" [tableConfig]="config" (openObjectModalFunc)="openContractModal(ModalMode.Create)" (clearResultsFunc)="getContracts($event)" (searchParamsFunc)="getContracts($event)" (tableEventFunc)="getContracts($event)"></app-standard-component>
 
     <!-- <app-table
       [config]="config"

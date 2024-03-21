@@ -35,6 +35,10 @@ describe('ApplicationProfileComponent', () => {
         MockImportExportComponent,
         MockYesNoModalComponent,
         MockComponent('app-ap-endpoint-group-modal'),
+        MockComponent({
+          selector: 'app-standard-component',
+          inputs: ['unusedObjectsButton', 'tableData', 'tableConfig', 'objectSearchColumns', 'tableItemsPerPage', 'objectType'],
+        }),
       ],
       imports: [HttpClientModule, RouterTestingModule],
       providers: [

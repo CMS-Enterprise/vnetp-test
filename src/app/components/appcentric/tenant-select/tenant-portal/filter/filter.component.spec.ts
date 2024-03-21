@@ -35,6 +35,10 @@ describe('FilterComponent', () => {
         MockYesNoModalComponent,
         MockComponent({ selector: 'app-filter-entry-modal', inputs: ['tenantId'] }),
         MockComponent({ selector: 'app-filter-modal', inputs: ['tenantId'] }),
+        MockComponent({
+          selector: 'app-standard-component',
+          inputs: ['unusedObjectsButton', 'tableData', 'tableConfig', 'objectSearchColumns', 'tableItemsPerPage', 'objectType'],
+        }),
       ],
       imports: [RouterTestingModule, HttpClientModule],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricFiltersService)],
