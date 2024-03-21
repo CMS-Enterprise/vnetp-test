@@ -39,6 +39,8 @@ export class ChangeRequestModalComponent implements OnInit {
 
   public removeCRFromLocalStorage() {
     this.incidentService.currentIncidentValue = '';
+    this.changeRequest = null;
+    this.incidentService.removeIncidentNumberLocalStorage();
     this.unsub();
     this.closeModal();
   }
@@ -50,14 +52,11 @@ export class ChangeRequestModalComponent implements OnInit {
   }
 
   public closeModal(): void {
+    this.unsub();
     this.ngx.close('changeRequestModal');
   }
 
   public unsub() {
     SubscriptionUtil.unsubscribe([this.changeRequestSubscription]);
   }
-
-  // public getCRNumber() {
-  //   this.changeRequest = this.incidentService.getIncidentLocalStorage();
-  // }
 }

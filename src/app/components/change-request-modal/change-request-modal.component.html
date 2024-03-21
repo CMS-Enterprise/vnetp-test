@@ -1,4 +1,4 @@
-<ngx-smart-modal #changeRequestModal identifier="changeRequestModal" customClass="mediun-modal">
+<ngx-smart-modal #changeRequestModal identifier="changeRequestModal" (onClose)="closeModal()">
     <header class="modal-header">
         <h4 class="modal-title header">Change Request</h4>
     </header>
@@ -8,14 +8,14 @@
     </main>
 
     <footer class="modal-footer">
+        <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
+            Cancel
+        </button>
+        <button type="button" class="btn btn-warning" data-dismiss="modal" (click)="removeCRFromLocalStorage()">
+            Clear CR#
+        </button>
         <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="save()">
             Save
-        </button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="closeModal()">
-            Close
-        </button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="removeCRFromLocalStorage()">
-            Clear CR#
         </button>
     </footer>
 </ngx-smart-modal>

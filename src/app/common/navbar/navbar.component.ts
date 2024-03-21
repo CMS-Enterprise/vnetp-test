@@ -61,7 +61,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentChangeRequestSubscription = this.incidentService.currentIncident.subscribe(inc => {
-      console.log('inc', inc);
       if (inc) {
         this.changeRequest = inc;
       } else {
