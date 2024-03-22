@@ -20,6 +20,7 @@ export class TenantSelectComponent implements OnInit {
   public tenants = {} as GetManyTenantResponseDto;
   public tableComponentDto = new TableComponentDto();
   private tenantModalSubscription: Subscription;
+  selectedTenantToDelete;
 
   public isLoading = false;
 
@@ -37,6 +38,7 @@ export class TenantSelectComponent implements OnInit {
       { name: '', template: () => this.actionsTemplate },
     ],
   };
+  typeDeletemodalSubscription: Subscription;
 
   constructor(
     private tenantService: V2AppCentricTenantsService,
@@ -99,7 +101,7 @@ export class TenantSelectComponent implements OnInit {
 
   public deleteTenant(tenant: Tenant): void {
     if (tenant.deletedAt) {
-      this.tenantService.deleteOneTenant({ id: tenant.id }).subscribe(() => {
+      this.tenantService.softDeleteOneTenant({ id: tenant.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
@@ -190,5 +192,19 @@ export class TenantSelectComponent implements OnInit {
         this.getTenants();
       }
     });
+  }
+
+  public subscribeToTypeDeleteModal() {
+    this.typeDeletemodalSubscription = this.ngx.getModal('typeDeleteModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('typeDeleteModal');
+      this.typeDeletemodalSubscription.unsubscribe();
+      this.getTenants();
+    });
+  }
+
+  public openTypeDeleteModal(tenant) {
+    this.selectedTenantToDelete = tenant;
+    this.subscribeToTypeDeleteModal();
+    this.ngx.getModal('typeDeleteModal').open();
   }
 }
