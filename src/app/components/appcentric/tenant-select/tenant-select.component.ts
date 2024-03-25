@@ -21,7 +21,7 @@ export class TenantSelectComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
   private tenantModalSubscription: Subscription;
   selectedTenantToDelete: Tenant;
-  objectType: string = 'tenant';
+  objectType = 'tenant';
 
   public isLoading = false;
 

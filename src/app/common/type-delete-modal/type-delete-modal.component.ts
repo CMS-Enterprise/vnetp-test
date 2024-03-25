@@ -8,12 +8,12 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 })
 export class TypeDeleteModalComponent {
   @Input() objectToDelete;
-  objectName;
-  @Input() objectType;
-  nameMismatch;
+  objectName: string;
+  @Input() objectType: string;
+  nameMismatch: boolean;
   constructor(private ngx: NgxSmartModalService, private tierService: V1TiersService, private tenantService: V2AppCentricTenantsService) {}
 
-  deleteTier() {
+  deleteTier(): void {
     if (this.objectName === this.objectToDelete.name) {
       this.nameMismatch = false;
       this.tierService.cascadeDeleteTierTier({ id: this.objectToDelete.id }).subscribe(data => {
@@ -25,7 +25,7 @@ export class TypeDeleteModalComponent {
     }
   }
 
-  deleteTenant() {
+  deleteTenant(): void {
     if (this.objectName === this.objectToDelete.name) {
       this.nameMismatch = false;
       this.tenantService.cascadeDeleteTenantTenant({ id: this.objectToDelete.id }).subscribe(data => {
@@ -37,8 +37,7 @@ export class TypeDeleteModalComponent {
     }
   }
 
-  delete() {
-    console.log('this.objectType', this.objectType);
+  delete(): void {
     if (this.objectType === 'tenant') {
       return this.deleteTenant();
     } else {
