@@ -1,11 +1,11 @@
 <ngx-smart-modal #typeDeleteModal identifier="typeDeleteModal" [dismissable]="false" (onClose)="closeModal()">
     <header class="modal-header">
-        <h4 class="modal-title">Delete Tier - {{tierToDelete?.name}}</h4>
+        <h4 class="modal-title">Delete Tier - {{objectToDelete?.name}}</h4>
     </header>
 
     <main style="text-align: center;" class="modal-body">
 
-        <input type="text" [(ngModel)]="tierName">
+        <input type="text" [(ngModel)]="objectName">
         <div>
             <span style="color: #dc3545;" *ngIf="nameMismatch">Names do not match</span>
             <span *ngIf="!nameMismatch">Please type in the name of the tier you wish to delete</span>
@@ -18,7 +18,7 @@
             Cancel
           </button>
     
-        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteTier()">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete()">
             Delete
         </button>
     </footer>

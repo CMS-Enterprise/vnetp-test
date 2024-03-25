@@ -36,7 +36,7 @@ export interface GetAuditLogByEntityIdAuditLogRequestParams {
     entityId: string;
     entityType: string;
     tenant: string;
-    /** Return audit logs after timestamp in YYYY-MM-DD-HH-MM-SS format. */
+    /** Return audit logs after timestamp in YYYY-MM-DD HH:MM:SS format. */
     afterTimestamp: string;
 }
 

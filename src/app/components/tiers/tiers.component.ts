@@ -49,7 +49,8 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   public isLoading = false;
 
-  selectedTierToDelete;
+  selectedTierToDelete: Tier;
+  objectType: string = 'tier';
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('stateTemplate') stateTemplate: TemplateRef<any>;

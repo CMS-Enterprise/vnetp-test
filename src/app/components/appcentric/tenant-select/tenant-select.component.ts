@@ -20,7 +20,8 @@ export class TenantSelectComponent implements OnInit {
   public tenants = {} as GetManyTenantResponseDto;
   public tableComponentDto = new TableComponentDto();
   private tenantModalSubscription: Subscription;
-  selectedTenantToDelete;
+  selectedTenantToDelete: Tenant;
+  objectType: string = 'tenant';
 
   public isLoading = false;
 
@@ -101,18 +102,7 @@ export class TenantSelectComponent implements OnInit {
 
   public deleteTenant(tenant: Tenant): void {
     if (tenant.deletedAt) {
-      this.tenantService.softDeleteOneTenant({ id: tenant.id }).subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getTenants();
-        } else {
-          this.getTenants();
-        }
-      });
+      this.openTypeDeleteModal(tenant);
     } else {
       this.tenantService
         .softDeleteOneTenant({
@@ -194,7 +184,7 @@ export class TenantSelectComponent implements OnInit {
     });
   }
 
-  public subscribeToTypeDeleteModal() {
+  public subscribeToTypeDeleteModal(): void {
     this.typeDeletemodalSubscription = this.ngx.getModal('typeDeleteModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('typeDeleteModal');
       this.typeDeletemodalSubscription.unsubscribe();
@@ -202,7 +192,7 @@ export class TenantSelectComponent implements OnInit {
     });
   }
 
-  public openTypeDeleteModal(tenant) {
+  public openTypeDeleteModal(tenant: Tenant): void {
     this.selectedTenantToDelete = tenant;
     this.subscribeToTypeDeleteModal();
     this.ngx.getModal('typeDeleteModal').open();
