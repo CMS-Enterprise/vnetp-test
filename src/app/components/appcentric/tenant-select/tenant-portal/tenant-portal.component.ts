@@ -21,12 +21,13 @@ export class TenantPortalComponent implements OnInit {
   public initialTabIndex = 0;
   public currentTab: string;
   public tenants: GetManyTenantResponseDto;
-  public currentTenant: string;
+  public currentTenantName: string;
   public tenantId: string;
 
   public tabs: Tab[] = tabs.map(t => ({ name: t.name }));
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private tenantService: V2AppCentricTenantsService) {
+    // get tenantId in URL snapshot
     const match = this.router.routerState.snapshot.url.match(
       /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
     );
@@ -54,15 +55,12 @@ export class TenantPortalComponent implements OnInit {
       .subscribe(
         data => {
           this.tenants = data;
-          console.log('this.tenants', this.tenants);
-          this.currentTenant = this.tenants.data.find(ten => ten.id === this.tenantId).name;
-          console.log('this.currentTenant', this.currentTenant);
+
+          // match this.tenantId with list of currentTenants to get the tenantName
+          this.currentTenantName = this.tenants.data.find(ten => ten.id === this.tenantId).name;
         },
         () => {
           this.tenants = null;
-        },
-        () => {
-          // this.isLoading = false;
         },
       );
   }
