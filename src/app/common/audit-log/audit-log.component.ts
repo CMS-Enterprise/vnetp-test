@@ -3,7 +3,11 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
   ApplicationProfile,
   AuditLogActionTypeEnum,
+  BridgeDomain,
+  Contract,
   Datacenter,
+  EndpointGroup,
+  GetManyTenantResponseDto,
   L3Out,
   NetworkObject,
   NetworkObjectGroup,
@@ -21,6 +25,7 @@ import {
   V2AppCentricL3outsService,
   V2AppCentricRouteProfilesService,
   V2AppCentricTenantsService,
+  Vrf,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { forkJoin, Subscription } from 'rxjs';
@@ -76,17 +81,17 @@ export class AuditLogComponent implements OnInit {
   public isLoading = false;
   selectedAuditLog;
 
-  routeProfiles;
-  l3Outs;
-  appProfiles;
-  bridgeDomains;
-  endpointGroups;
-  providedContracts;
-  consumedContracts;
-  vrfs;
+  routeProfiles: RouteProfile[];
+  l3Outs: L3Out[];
+  appProfiles: ApplicationProfile[];
+  bridgeDomains: BridgeDomain;
+  endpointGroups: EndpointGroup[];
+  providedContracts: Contract[];
+  consumedContracts: Contract[];
+  vrfs: Vrf[];
 
   showingAppCentricLogs = false;
-  appCentricTenants;
+  appCentricTenants: GetManyTenantResponseDto;
 
   constructor(
     private auditLogService: V1AuditLogService,
