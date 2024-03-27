@@ -26,7 +26,11 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentChangeRequestSubscription = this.incidentService.currentIncident.subscribe(inc => {
-      this.changeRequest = inc;
+      if (inc) {
+        this.changeRequest = inc;
+      } else {
+        this.changeRequest = 'NO CHANGE REQUEST SELECTED';
+      }
     });
     this.currentTenantSubscription = this.auth.currentTenant.subscribe(tenant => {
       this.tenant = tenant;
@@ -76,7 +80,7 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
     this.ngx.getModal('changeRequestModal').open();
   }
 
-  subscribeToChangeRequestModal() {
+  subscribeToChangeRequestModal(): void {
     this.changeRequestModalSubscription = this.ngx.getModal('changeRequestModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('changeRequestModal');
       this.changeRequestModalSubscription.unsubscribe();

@@ -48,7 +48,7 @@
       </li>
       <li (click)="openChangeRequestModal()" id="changeRequestNumber" class="nav-item">
         <a>
-          <span *ngIf="changeRequest" style="color: lime;">{{ changeRequest }}</span>
+          <button *ngIf="changeRequest" style="color: red;">{{ changeRequest }}</button>
         </a>
       </li>
     </ul>
