@@ -13112,15 +13112,9 @@
     "/v1/audit-log/app-centric": {
       "get": {
         "operationId": "getAllAppCentricLogsAuditLog",
+        "summary": "",
+        "description": "Get App Centric Audit Logs",
         "parameters": [
-          {
-            "name": "datacenterId",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "tenant",
             "required": false,

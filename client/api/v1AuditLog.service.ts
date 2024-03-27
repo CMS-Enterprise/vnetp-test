@@ -24,7 +24,6 @@ import { Configuration }                                     from '../configurat
 
 
 export interface GetAllAppCentricLogsAuditLogRequestParams {
-    datacenterId: string;
     page: number;
     perPage: number;
     tenant?: string;
@@ -109,6 +108,7 @@ export class V1AuditLogService {
     }
 
     /**
+     * Get App Centric Audit Logs
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -117,10 +117,6 @@ export class V1AuditLogService {
     public getAllAppCentricLogsAuditLog(requestParameters: GetAllAppCentricLogsAuditLogRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<AuditLog>>>;
     public getAllAppCentricLogsAuditLog(requestParameters: GetAllAppCentricLogsAuditLogRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<AuditLog>>>;
     public getAllAppCentricLogsAuditLog(requestParameters: GetAllAppCentricLogsAuditLogRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const datacenterId = requestParameters.datacenterId;
-        if (datacenterId === null || datacenterId === undefined) {
-            throw new Error('Required parameter datacenterId was null or undefined when calling getAllAppCentricLogsAuditLog.');
-        }
         const page = requestParameters.page;
         if (page === null || page === undefined) {
             throw new Error('Required parameter page was null or undefined when calling getAllAppCentricLogsAuditLog.');
@@ -132,10 +128,6 @@ export class V1AuditLogService {
         const tenant = requestParameters.tenant;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (datacenterId !== undefined && datacenterId !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>datacenterId, 'datacenterId');
-        }
         if (tenant !== undefined && tenant !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>tenant, 'tenant');

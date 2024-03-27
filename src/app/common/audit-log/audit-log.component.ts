@@ -147,7 +147,6 @@ export class AuditLogComponent implements OnInit {
       .getAllAppCentricLogsAuditLog({
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        datacenterId: `${this.currentDatacenter.id}`,
       })
       .subscribe(data => {
         this.showingAppCentricLogs = true;
