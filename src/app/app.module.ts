@@ -44,6 +44,7 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavbarModule } from './common/navbar/navbar.module';
 import { BreadcrumbsModule } from './common/breadcrumbs/breadcrumbs.module';
+import { ChangeRequestModalModule } from './components/change-request-modal/change-request-modal.module';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -66,6 +67,7 @@ export function init_app(appLoadService: AppInitService) {
     FontAwesomeModule,
     FormsModule,
     HttpClientModule,
+    ChangeRequestModalModule,
     NgxSmartModalModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right',

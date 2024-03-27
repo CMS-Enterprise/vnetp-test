@@ -17,6 +17,7 @@ import { StaticRoutesModule } from '../../components/static-routes/static-routes
 import { LogoutModule } from '../../components/logout/logout.module';
 import { UnauthorizedModule } from '../../components/unauthorized/unauthorized.module';
 import { LoadBalancersModule } from '../../components/load-balancers/load-balancers.module';
+import { ChangeRequestModalModule } from '../change-request-modal/change-request-modal.module';
 
 const routes: Routes = [
   {
@@ -140,6 +141,7 @@ const routes: Routes = [
     LogoutModule,
     UnauthorizedModule,
     LoadBalancersModule,
+    ChangeRequestModalModule,
   ],
 })
 export class NetcentricModule {}

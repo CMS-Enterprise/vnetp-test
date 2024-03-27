@@ -56,7 +56,7 @@ export class AuditLogComponent implements OnInit {
       { name: 'Object Name', template: () => this.entityAfterTemplate },
       { name: 'User', property: 'changedBy' },
       { name: 'Timestamp', property: 'timestamp' },
-      { name: 'Incident', property: 'incident' },
+      { name: 'Incident', property: 'changeRequestNumber' },
     ],
     hideAdvancedSearch: true,
   };
@@ -107,7 +107,6 @@ export class AuditLogComponent implements OnInit {
           this.auditLogs = [];
         },
         () => {
-          console.log('false');
           this.isLoading = false;
         },
       );
@@ -125,7 +124,6 @@ export class AuditLogComponent implements OnInit {
     } else {
       this.tableComponentDto.perPage = this.perPage;
     }
-    console.log('eventParams', eventParams);
     this.auditLogService
       .getAuditLogAuditLog({
         datacenterId: `${this.currentDatacenter.id}`,
@@ -385,7 +383,6 @@ export class AuditLogComponent implements OnInit {
         ) {
           let beforeList;
           let afterList;
-          console.log('key', key);
           if (key === 'nodes') {
             if (entityBefore[key] === undefined || entityAfter[key] === undefined) {
               return;
@@ -404,8 +401,6 @@ export class AuditLogComponent implements OnInit {
               return;
             }
             if (log.entityType === 'NatRule' && key === 'toZone') {
-              console.log('key', key);
-              console.log('log', log);
               if (entityBefore[key].name) {
                 beforeList = entityBefore[key].name;
                 afterList = entityAfter[key].name;
