@@ -396,29 +396,6 @@ export class AuditLogComponent implements OnInit {
       );
   }
 
-  // method for retrieving tiers and all objects within those tiers for object lookups
-  // this seems to cause failures / hangups / pending calls that
-  // can cascade throughout the app
-
-  // public getTiersWithObjects(): void {
-  //   this.tierService
-  //     .getManyTier({
-  //       filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
-  //       join: ['networkObjects,networkObjectGroups,serviceObjects,serviceObjectGroups'],
-  //     })
-  //     .pipe(first())
-  //     .subscribe((data: unknown) => {
-  //       this.tiers = data as Tier[];
-  //       this.tiers.map(tier => {
-  //         this.networkObjects.push(...tier.networkObjects);
-  //         this.networkObjectGroups.push(...tier.networkObjectGroups);
-  //         this.serviceObjects.push(...tier.serviceObjects);
-  //         this.serviceObjectGroups.push(...tier.serviceObjectGroups);
-  //         this.getAuditLogs();
-  //       });
-  //     });
-  // }
-
   getObjects(): void {
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
       fields: ['id,name'],
