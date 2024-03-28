@@ -13109,6 +13109,57 @@
         ]
       }
     },
+    "/v1/audit-log/app-centric": {
+      "get": {
+        "operationId": "getAllAppCentricLogsAuditLog",
+        "summary": "",
+        "description": "Get App Centric Audit Logs",
+        "parameters": [
+          {
+            "name": "tenant",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditLog"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/audit-log"
+        ]
+      }
+    },
     "/v1/audit-log/entity": {
       "get": {
         "operationId": "getAuditLogByEntityIdAuditLog",
@@ -13143,7 +13194,7 @@
             "name": "afterTimestamp",
             "required": true,
             "in": "query",
-            "description": "Return audit logs after timestamp in YYYY-MM-DD-HH-MM-SS format.",
+            "description": "Return audit logs after timestamp in YYYY-MM-DD HH:MM:SS format.",
             "schema": {
               "type": "string"
             }
