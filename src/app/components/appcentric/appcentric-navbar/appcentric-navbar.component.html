@@ -70,6 +70,14 @@
           <a id="environment-summary-link" class="dropdown-item" routerLink="environment-summary" queryParamsHandling="merge"
             >Environment Summary</a
           >
+          <a
+            id="audit-log-link"
+            *ngIf="userRoles?.includes('admin')"
+            class="dropdown-item"
+            routerLink="audit-log"
+            queryParamsHandling="preserve"
+            >Audit Log</a
+          >
           <a class="dropdown-item" (click)="openLogoutModal()">Logout</a>
         </div>
       </li>

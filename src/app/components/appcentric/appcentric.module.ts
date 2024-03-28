@@ -11,6 +11,7 @@ import { AppcentricDashboardComponent } from './appcentric-dashboard/appcentric-
 import { TenantSelectModule } from './tenant-select/tenant-select.module';
 import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module';
 import { ChangeRequestModalModule } from '../change-request-modal/change-request-modal.module';
+import { AuditLogModule } from '../../common/audit-log/audit-log.module';
 
 const routes: Routes = [
   {
@@ -35,6 +36,12 @@ const routes: Routes = [
         data: { breadcrumb: 'Environment Summary', title: 'Environment Summary' },
         loadChildren: () => import('../../common/environment-summary/environment-summary.module').then(m => m.EnvironmentSummaryModule),
       },
+      {
+        path: 'audit-log',
+        canActivate: [AuthGuard],
+        data: { breadcrumb: 'Audit Log', title: 'Automation - Audit Log' },
+        loadChildren: () => import('../../common/audit-log/audit-log.module').then(m => m.AuditLogModule),
+      },
     ],
   },
 ];
@@ -50,6 +57,7 @@ const routes: Routes = [
     TenantSelectModule,
     BreadcrumbsModule,
     ChangeRequestModalModule,
+    AuditLogModule,
   ],
 })
 export class AppcentricModule {}
