@@ -84,7 +84,7 @@ export class AuditLogComponent implements OnInit {
   routeProfiles: RouteProfile[];
   l3Outs: L3Out[];
   appProfiles: ApplicationProfile[];
-  bridgeDomains: BridgeDomain;
+  bridgeDomains: BridgeDomain[];
   endpointGroups: EndpointGroup[];
   providedContracts: Contract[];
   consumedContracts: Contract[];
