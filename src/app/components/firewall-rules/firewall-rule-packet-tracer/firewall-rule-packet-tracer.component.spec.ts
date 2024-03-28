@@ -12,7 +12,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { FirewallRulePacketTracerComponent } from '../firewall-rule-packet-tracer/firewall-rule-packet-tracer.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FirewallRule, FirewallRuleDirectionEnum, FirewallRuleProtocolEnum } from '../../../../../client';
+import { FirewallRuleDirectionEnum, FirewallRuleProtocolEnum } from '../../../../../client';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { MockProvider } from '../../../../test/mock-providers';
 import { ToastrService } from 'ngx-toastr';

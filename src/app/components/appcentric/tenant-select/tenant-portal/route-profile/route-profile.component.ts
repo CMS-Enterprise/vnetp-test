@@ -11,6 +11,7 @@ import { TableContextService } from 'src/app/services/table-context.service';
 import { RouteProfileModalDto } from '../../../../../models/appcentric/route-profile-modal-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 
 @Component({
   selector: 'app-route-profile',
@@ -50,6 +51,11 @@ export class RouteProfileComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private router: Router,
   ) {
+    const advancedSearchAdapter = new AdvancedSearchAdapter<RouteProfile>();
+    advancedSearchAdapter.setService(this.routeProfileService);
+    advancedSearchAdapter.setServiceName('V2AppCentricRouteProfilesService');
+    this.config.advancedSearchAdapter = advancedSearchAdapter;
+
     const match = this.router.routerState.snapshot.url.match(
       /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
     );

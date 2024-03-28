@@ -38,14 +38,14 @@
       [type]="'info'"></app-icon-button>
 
     <app-icon-button
-      *ngIf="!natRule?.deletedAt"
+      *ngIf="!natRule?.deletedAt && NatRuleGroup?.type !== 'ZoneBased'"
       icon="clone"
       label="Move/Clone Nat Rule"
       (handleClick)="openNatRuleOperationModal(natRule)"
     ></app-icon-button>
 
     <app-icon-button
-      *ngIf="!natRule?.deletedAt && NatRuleGroup?.type !== 'ZoneBased'"
+      *ngIf="!natRule?.deletedAt "
       icon="edit"
       label="Edit Nat Rule"
       (handleClick)="openNatRuleModal(ModalMode.Edit, natRule)"
