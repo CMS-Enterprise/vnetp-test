@@ -1,10 +1,15 @@
-<ngx-smart-modal #changeRequestModal identifier="changeRequestModal" (onClose)="closeModal()">
+<ngx-smart-modal (onOpen)="getData()" #changeRequestModal identifier="changeRequestModal" (onClose)="closeModal()">
     <header class="modal-header">
         <h4 class="modal-title header">Change Request</h4>
     </header>
 
     <main class="modal-body">
-        <textarea placeholder="Change Request #" [(ngModel)]="changeRequest"></textarea>
+        <form [formGroup]="form">
+            <input formControlName="changeRequest" name="changeRequest" (keyup.enter)="save()" placeholder="Change Request #" />
+            <div *ngIf="submitted && form.status === 'INVALID'">
+                <div>ERROR</div>
+              </div>
+        </form>
     </main>
 
     <footer class="modal-footer">

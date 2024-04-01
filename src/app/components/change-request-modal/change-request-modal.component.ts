@@ -4,6 +4,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { IncidentService } from 'src/app/services/incident.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { ChangeRequestValidator } from 'src/app/validators/change-request-validator';
 
 @Component({
   selector: 'app-change-request-modal',
@@ -12,14 +13,12 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 })
 export class ChangeRequestModalComponent implements OnInit {
   public form: UntypedFormGroup;
-  public changeRequest;
+  // public changeRequest;
   private changeRequestSubscription: Subscription;
+  submitted;
 
   constructor(private formBuilder: UntypedFormBuilder, private incidentService: IncidentService, private ngx: NgxSmartModalService) {}
   ngOnInit(): void {
-    this.changeRequestSubscription = this.incidentService.currentIncident.subscribe(inc => {
-      this.changeRequest = inc;
-    });
     this.buildForm();
   }
 
@@ -28,32 +27,45 @@ export class ChangeRequestModalComponent implements OnInit {
   }
 
   public save() {
-    if (this.changeRequest === null || this.changeRequest === undefined) {
-      return null;
+    // if (this.changeRequest === null || this.changeRequest === undefined) {
+    //   return null;
+    // }
+    this.submitted = true;
+    console.log('this.form', this.form);
+    console.log('this.f', this.f);
+    if (this.form.invalid) {
+      return false;
     }
-    console.log('this.cr', this.changeRequest);
-    this.incidentService.currentIncidentValue = this.changeRequest;
+    this.incidentService.currentIncidentValue = this.f.changeRequest.value;
 
     this.closeModal();
   }
 
   public removeCRFromLocalStorage() {
     this.incidentService.currentIncidentValue = '';
-    this.changeRequest = null;
     this.incidentService.removeIncidentNumberLocalStorage();
     this.unsub();
     this.closeModal();
   }
 
+  public getData() {
+    this.changeRequestSubscription = this.incidentService.currentIncident.subscribe(inc => {
+      this.f.changeRequest.setValue(inc);
+    });
+  }
+
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      changeRequest: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(30)])],
+      changeRequest: ['', ChangeRequestValidator()],
     });
   }
 
   public closeModal(): void {
     this.unsub();
+    this.form.reset();
+    // this.changeRequest = null;
     this.ngx.close('changeRequestModal');
+    this.submitted = false;
   }
 
   public unsub() {
