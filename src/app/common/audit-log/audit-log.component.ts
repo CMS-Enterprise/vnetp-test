@@ -60,7 +60,7 @@ export class AuditLogComponent implements OnInit {
   ];
 
   public appCentricConfig: TableConfig<any> = {
-    description: 'Audit Log',
+    description: 'App Centric Audit Log',
     columns: [
       { name: 'Action', property: 'actionType' },
       { name: 'Object Type', property: 'entityType' },
@@ -69,6 +69,7 @@ export class AuditLogComponent implements OnInit {
       { name: 'User', property: 'changedBy' },
       { name: 'Timestamp', property: 'timestamp' },
     ],
+    hideAdvancedSearch: true,
   };
   public config: TableConfig<any> = {
     description: 'Audit Log',
@@ -79,7 +80,7 @@ export class AuditLogComponent implements OnInit {
       { name: 'Object Name', template: () => this.entityAfterTemplate },
       { name: 'User', property: 'changedBy' },
       { name: 'Timestamp', property: 'timestamp' },
-      { name: 'Incident', property: 'changeRequestNumber' },
+      { name: 'Change Request', property: 'changeRequestNumber' },
     ],
     hideAdvancedSearch: true,
   };
