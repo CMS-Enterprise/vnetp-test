@@ -15,10 +15,6 @@ import { MockProvider } from 'src/test/mock-providers';
 
 import { BridgeDomainModalComponent } from './bridge-domain-modal.component';
 import { V2AppCentricBridgeDomainsService } from 'client';
-import { Subscription } from 'rxjs';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-
 describe('BridgeDomainModalComponent', () => {
   let component: BridgeDomainModalComponent;
   let fixture: ComponentFixture<BridgeDomainModalComponent>;
