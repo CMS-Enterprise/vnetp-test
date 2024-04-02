@@ -1,0 +1,78 @@
+.card {
+  margin-bottom: 20px;
+}
+
+.expanded-card {
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.card-body.expanded {
+  transition: all 0.3s ease;
+}
+
+.card {
+  margin-bottom: 20px;
+}
+
+.card.collapsed:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a shadow around the card */
+  transition: box-shadow 0.3s ease-in-out; /* Smooth transition */
+  cursor: pointer;
+}
+
+.card.collapsed:focus {
+  outline: none; /* Removes the default focus outline */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Example: Adds a shadow to indicate focus */
+}
+
+.card.collapsed:active {
+  transform: scale(0.98); /* Slightly reduces the size to simulate a button press */
+}
+
+.close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: none; /* Optionally remove border */
+  background: transparent; /* Optionally make background transparent */
+  cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+  font-size: 24px;
+}
+
+.close-button:hover {
+  background-color: rgba(0,0,0,0.1); /* Example hover effect */
+}
+
+#myCustomTable th.column-border {
+  position: relative; /* Establishes positioning context */
+  /* Ensure there's enough space at the bottom for the border */
+  padding-bottom: 10px; /* Adjust based on your table's styling */
+}
+
+#myCustomTable th.column-border::after {
+  content: '';
+  position: absolute;
+  left: 10%; /* Adjust if the border needs to be shorter */
+  right: 10%; /* Adjust to match the left value for symmetry */
+  bottom: -1px; /* Slightly adjust to align right below the header; may need tuning */
+  border-bottom: 2px solid #000; /* Custom border style */
+  display: block;
+}
+
+/* Ensure that the main headers in the first row do not have a bottom border */
+#myCustomTable thead th {
+  border-bottom: 0;
+  border-top: 0;
+}
+
+.tight-spacing {
+  line-height: 1.0; /* Reduce line height for tighter spacing */
+  margin-top: -10px; /* Optional: Pull the element up closer to the preceding element */
+}
+
+/* if we wannt to change color
+.status-green { color: #28a745; }
+.status-black { color: #000000; }
+.status-red { color: #dc3545; }
+.status-blue { color: #007bff; } */

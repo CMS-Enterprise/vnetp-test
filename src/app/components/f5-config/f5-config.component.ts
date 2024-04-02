@@ -1,0 +1,93 @@
+import { Component, OnInit } from '@angular/core';
+import { Datacenter, F5Config, F5ConfigJobCreateDtoTypeEnum, V1RuntimeDataF5ConfigService } from '../../../../client';
+import { Observable, Subscription } from 'rxjs';
+import { DatacenterContextService } from '../../services/datacenter-context.service';
+import { HttpClient } from '@angular/common/http';
+import { F5ConfigService } from './f5-config.service';
+import { RuntimeDataService } from '../../services/runtime-data.service';
+
+@Component({
+  selector: 'app-f5-config',
+  templateUrl: './f5-config.component.html',
+  styleUrls: ['./f5-config.component.css'],
+})
+export class F5ConfigComponent implements OnInit {
+  f5Configs: F5Config[];
+  filteredF5Configs: F5Config[] = [];
+  currentDatacenter: Datacenter;
+  currentDatacenterSubscription: Subscription;
+  searchQuery = '';
+
+  constructor(
+    private runtimeDataService: RuntimeDataService,
+    private f5ConfigService: V1RuntimeDataF5ConfigService,
+    private f5ConfigStateManagementService: F5ConfigService,
+    private datacenterContextService: DatacenterContextService,
+    private http: HttpClient,
+  ) {}
+
+  ngOnInit(): void {
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.currentDatacenter = cd;
+        this.getF5Configs();
+      }
+    });
+  }
+
+  onSearch(searchQuery: string): void {
+    this.searchQuery = searchQuery.toLowerCase();
+    this.filterF5Configs();
+  }
+
+  filterF5Configs(): void {
+    const filteredConfigs: F5Config[] = [];
+    this.f5Configs.forEach(f5Config => {
+      if (this.matchF5Config(f5Config)) {
+        filteredConfigs.push(f5Config);
+      }
+    });
+    this.filteredF5Configs = filteredConfigs;
+  }
+
+  matchF5Config(f5Config: F5Config): boolean {
+    const partitionInfo = (f5Config as any).data.partitionInfo;
+    if (this.searchQuery === '' || f5Config.hostName.toLowerCase().includes(this.searchQuery)) {
+      return true;
+    }
+    const filteredParitions = this.f5ConfigStateManagementService.filterVirtualServers(partitionInfo, this.searchQuery);
+
+    for (const partition in filteredParitions) {
+      if (filteredParitions.hasOwnProperty(partition)) {
+        if (partition.toLowerCase().includes(this.searchQuery.toLowerCase())) {
+          return true;
+        }
+
+        if (filteredParitions[partition].length > 0) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  public getF5Configs() {
+    // this.f5ConfigService.getManyF5Config({ filter: [`datacenterId||eq||${this.currentDatacenter.id}`] }).subscribe(data => {
+    //   this.f5Configs = data;
+    // });
+    this.getJsonData().subscribe(data => {
+      this.f5Configs = [
+        {
+          hostName: 'f5-1',
+          data,
+        },
+      ] as any;
+      this.filterF5Configs();
+    });
+  }
+
+  getJsonData(): Observable<any> {
+    return this.http.get('/assets/output(1).json');
+  }
+}

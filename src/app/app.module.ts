@@ -29,6 +29,8 @@ import {
   faUndo,
   faUpload,
   faAsterisk,
+  faCircle,
+  faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
@@ -121,6 +123,8 @@ export class AppModule {
       faExclamationTriangle,
       faAsterisk,
       faClone,
+      faCircle,
+      faCheck,
     );
   }
 }

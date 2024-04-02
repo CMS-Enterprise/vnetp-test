@@ -128,6 +128,8 @@
           <a id="environment-summary-link" class="dropdown-item" routerLink="environment-summary" queryParamsHandling="merge"
             >Environment Summary</a
           >
+
+          <a id="f5-config-ling" class="dropdown-item" routerLink="f5-config" queryParamsHandling="merge">F5 Config</a>
           <a
             id="audit-log-link"
             *ngIf="userRoles?.includes('admin')"
@@ -139,7 +141,12 @@
           <a id="ticket-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="{{ environment?.dynamic?.snowBase }}"
             >Ticketing System</a
           >
-          <a id="documentation-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="{{ environment?.dynamic?.wikiBase}}"
+          <a
+            id="documentation-link"
+            class="dropdown-item"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="{{ environment?.dynamic?.wikiBase }}"
             >Documentation</a
           >
           <a tabindex="0" (keyup.enter)="openLogoutModal()" name="logout-link" class="dropdown-item" (click)="openLogoutModal()">Logout</a>
@@ -149,9 +156,7 @@
       </li>
 
       <li class="nav-item align-self-end align-self-lg-center">
-        <button class="btn btn-danger" routerLink="deploy" queryParamsHandling="merge">
-          Deploy
-        </button>
+        <button class="btn btn-danger" routerLink="deploy" queryParamsHandling="merge">Deploy</button>
       </li>
     </ul>
   </div>
@@ -168,9 +173,7 @@
   </div>
 
   <footer class="modal-footer">
-    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="logoutModal.close()">
-      Cancel
-    </button>
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="logoutModal.close()">Cancel</button>
 
     <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="logout()">
       <fa-icon class="icon" [icon]="['fas', 'sign-out-alt']"></fa-icon>

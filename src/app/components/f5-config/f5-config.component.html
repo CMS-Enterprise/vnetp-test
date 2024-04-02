@@ -1,0 +1,8 @@
+<app-f5-config-filter (f5ConfigSearch)="onSearch($event)" [showPartitionFilter]="false"></app-f5-config-filter>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4" *ngFor="let f5Config of filteredF5Configs">
+      <app-f5-config-card [f5Config]="f5Config" ></app-f5-config-card>
+    </div>
+  </div>
+</div>

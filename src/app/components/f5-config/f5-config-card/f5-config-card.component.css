@@ -1,0 +1,18 @@
+.card {
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Adds a shadow around the card */
+  transition: box-shadow 0.3s ease-in-out; /* Smooth transition */
+}
+
+.card:focus {
+  outline: none; /* Removes the default focus outline */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Example: Adds a shadow to indicate focus */
+}
+
+.card:active {
+  transform: scale(0.98); /* Slightly reduces the size to simulate a button press */
+}

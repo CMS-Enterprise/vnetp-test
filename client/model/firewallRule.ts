@@ -52,6 +52,7 @@ export interface FirewallRule {
     readonly serviceObjectGroup?: ServiceObjectGroup;
     toZone?: Array<Zone>;
     fromZone?: Array<Zone>;
+    hitCount?: number;
 }
 export enum FirewallRuleDirectionEnum {
     In = 'In',

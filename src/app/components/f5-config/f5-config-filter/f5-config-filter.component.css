@@ -1,0 +1,83 @@
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  height: 24px;
+  padding: 2px 10px; /* Reduce padding on the top and bottom, adjust left/right as needed */
+  border: none;
+  border-bottom: 2px solid #ccc;
+  cursor: pointer;
+  user-select: none;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.border-enabled {
+  border-bottom: 2px solid #000;
+}
+
+.border-disabled {
+  border-bottom: 2px solid #ccc;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0;
+  margin: 2px 0 0;
+  background-color: #f8f9fa;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dropdown-item:hover {
+  background-color: #e9ecef;
+}
+
+.arrow.down {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+
+.show .dropdown-menu {
+  display: block;
+}
+
+.custom-dropdown.disabled,
+.custom-dropdown .disabled {
+  pointer-events: none;
+  color: #6c757d; /* Bootstrap's text-muted color */
+}
+
+.search-input {
+  /* width: 20%;
+  margin: 0 auto; */
+  /* display: flexbox; */
+  /* justify-content: start; */
+  height: 24px;
+  padding: 2px 10px;
+  border: none;
+  border-bottom: 2px solid #000;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007bff;
+}

@@ -24,6 +24,7 @@ export interface NatRuleGroup {
     type: NatRuleGroupTypeEnum;
     tierId: string;
     readonly natRules?: Array<NatRule>;
+    runtimeDataLastRefreshed?: string;
 }
 export enum NatRuleGroupTypeEnum {
     Intravrf = 'Intravrf',
