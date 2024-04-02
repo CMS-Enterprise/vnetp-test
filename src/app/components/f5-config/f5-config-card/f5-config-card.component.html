@@ -1,33 +1,9 @@
-<!-- <div class="card" (click)="navigateToDetails()">
-  <ng-container class="d-flex align-items-center">
-    <button
-      type="button"
-      class="btn btn-icon"
-      (click)="refreshF5Config($event)"
-      [disabled]="isRecentlyRefreshed() || isRefreshingRuntimeData"
-    >
-      <ng-container *ngIf="!isRecentlyRefreshed()">
-        <fa-icon class="icon" [icon]="['fas', 'sync-alt']" [spin]="isRefreshingRuntimeData"></fa-icon>
-      </ng-container>
-      <ng-container *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData">
-        <fa-icon class="icon" [icon]="['fas', 'check']"></fa-icon>
-      </ng-container>
-    </button>
-    <p>
-      <small>Last refreshed: {{ lastRefreshed }}</small>
-    </p>
-  </ng-container>
-  <div class="card-body">
-    <h5 class="card-title">{{ hostName }}</h5>
-    <p class="card-text">Software Version: {{ softwareVersion }}</p>
-    <p class="card-text">Status: {{ highAvailabilityStatus }}</p>
-  </div>
-</div> -->
-
 <div class="card" (click)="navigateToDetails()">
   <div class="card-header d-flex justify-content-end align-items-center">
     <p class="mb-0">
-      <small>Refreshed: {{ lastRefreshed }}</small>
+      <small *ngIf="!isRecentlyRefreshed() && !isRefreshingRuntimeData">Refreshed: {{ lastRefreshed }}</small>
+      <small *ngIf="isRefreshingRuntimeData" class="text-muted">Refreshing</small>
+      <small *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" class="text-muted">Refreshed</small>
     </p>
     <button
       type="button"
@@ -35,13 +11,15 @@
       (click)="refreshF5Config($event); $event.stopPropagation()"
       [disabled]="isRecentlyRefreshed() || isRefreshingRuntimeData"
     >
-      <fa-icon class="icon" [icon]="['fas', 'sync-alt']" [spin]="isRefreshingRuntimeData"></fa-icon>
+      <fa-icon *ngIf="!isRecentlyRefreshed()" class="icon" [icon]="['fas', 'sync-alt']" [spin]="isRefreshingRuntimeData"></fa-icon>
       <fa-icon *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" class="icon" [icon]="['fas', 'check']"></fa-icon>
     </button>
   </div>
   <div class="card-body">
     <h5 class="card-title">{{ hostName }}</h5>
-    <p class="card-text">Software Version: {{ softwareVersion }}</p>
     <p class="card-text">Status: {{ highAvailabilityStatus }}</p>
+    <p class="card-text">
+      <small>Software Version: {{ softwareVersion }}</small>
+    </p>
   </div>
 </div>

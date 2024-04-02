@@ -9,6 +9,9 @@ export class RuntimeDataService {
   constructor() {}
 
   calculateTimeDifference(timestamp: string): string {
+    if (timestamp === null || timestamp === undefined) {
+      return '-';
+    }
     const lastRefreshedDate = new Date(timestamp);
     const now = Date.now();
     const difference = now - lastRefreshedDate.getTime();
