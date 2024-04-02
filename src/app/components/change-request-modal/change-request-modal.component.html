@@ -5,9 +5,9 @@
 
     <main class="modal-body">
         <form [formGroup]="form">
-            <input formControlName="changeRequest" name="changeRequest" (keyup.enter)="save()" placeholder="Change Request #" />
-            <div *ngIf="submitted && form.status === 'INVALID'">
-                <div>ERROR</div>
+            <input [class.is-invalid]="submitted && f.changeRequest.errors" formControlName="changeRequest" name="changeRequest" (keyup.enter)="save()" placeholder="CHGXXXXXXX" />
+            <div class="invalid-feedback" *ngIf="submitted && form.invalid">
+                <div>Invalid Change Request Number</div>
               </div>
         </form>
     </main>

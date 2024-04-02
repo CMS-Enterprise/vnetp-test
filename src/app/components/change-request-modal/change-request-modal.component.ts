@@ -31,8 +31,6 @@ export class ChangeRequestModalComponent implements OnInit {
     //   return null;
     // }
     this.submitted = true;
-    console.log('this.form', this.form);
-    console.log('this.f', this.f);
     if (this.form.invalid) {
       return false;
     }
@@ -63,7 +61,6 @@ export class ChangeRequestModalComponent implements OnInit {
   public closeModal(): void {
     this.unsub();
     this.form.reset();
-    // this.changeRequest = null;
     this.ngx.close('changeRequestModal');
     this.submitted = false;
   }
