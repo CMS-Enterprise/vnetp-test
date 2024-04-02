@@ -77,18 +77,5 @@ export class F5ConfigComponent implements OnInit {
       this.f5Configs = data;
       this.filterF5Configs();
     });
-    // this.getJsonData().subscribe(data => {
-    //   this.f5Configs = [
-    //     {
-    //       hostName: data.host_info.Hostname,
-    //       data,
-    //     },
-    //   ] as any;
-    //   this.filterF5Configs();
-    // });
-  }
-
-  getJsonData(): Observable<any> {
-    return this.http.get('/assets/output(1).json');
   }
 }
