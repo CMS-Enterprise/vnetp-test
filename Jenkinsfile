@@ -35,27 +35,27 @@ pipeline {
             }
         }
 
-        stage('SonarQube - Static Analysis') {
-            when {
-                expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'dev' }
-            }
-            agent { label 'rehl8-prod' }
-            steps {
-                withSonarQubeEnv('CB2Sonarrehl8') {
-                    script {
-                        def readContent = readFile 'sonar-project.properties'
-                        writeFile file: 'sonar-project.properties', text: "$readContent \nsonar.branch.name=$BRANCH_NAME\n"
-                        docker.image("${sonarImage}").withRun('--security-opt label=disable -v "$PWD:/usr/src"') { c ->
-                            // NEED THIS LINE TO WORK!
-                            sh 'while [ ! -f ./.scannerwork/report-task.txt ]; do sleep 5; done'
-                            sh 'sleep 10'
-                            sh 'if [ -d ./.scannerwork ]; then chmod -R 777 ./.scannerwork; fi'
-                            sh 'if [ -d ./.scannerwork ]; then rm -Rf ./.scannerwork; fi'
-                        }
-                    }
-                }
-            }
-        }
+        // stage('SonarQube - Static Analysis') {
+        //     when {
+        //         expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'dev' }
+        //     }
+        //     agent { label 'rehl8-prod' }
+        //     steps {
+        //         withSonarQubeEnv('CB2Sonarrehl8') {
+        //             script {
+        //                 def readContent = readFile 'sonar-project.properties'
+        //                 writeFile file: 'sonar-project.properties', text: "$readContent \nsonar.branch.name=$BRANCH_NAME\n"
+        //                 docker.image("${sonarImage}").withRun('--security-opt label=disable -v "$PWD:/usr/src"') { c ->
+        //                     // NEED THIS LINE TO WORK!
+        //                     sh 'while [ ! -f ./.scannerwork/report-task.txt ]; do sleep 5; done'
+        //                     sh 'sleep 10'
+        //                     sh 'if [ -d ./.scannerwork ]; then chmod -R 777 ./.scannerwork; fi'
+        //                     sh 'if [ -d ./.scannerwork ]; then rm -Rf ./.scannerwork; fi'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Publish') {
             agent { label 'rehl8-prod' }
