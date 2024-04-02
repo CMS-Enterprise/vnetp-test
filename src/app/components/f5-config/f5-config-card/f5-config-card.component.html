@@ -1,4 +1,4 @@
-<div class="card" (click)="navigateToDetails()">
+<div class="card" [class.card-disabled]="isRefreshingRuntimeData" (click)="!isRefreshingRuntimeData && navigateToDetails()">
   <div class="card-header d-flex justify-content-end align-items-center">
     <p class="mb-0">
       <small *ngIf="!isRecentlyRefreshed() && !isRefreshingRuntimeData">Refreshed: {{ lastRefreshed }}</small>
@@ -8,7 +8,7 @@
     <button
       type="button"
       class="btn btn-icon"
-      (click)="refreshF5Config($event); $event.stopPropagation()"
+      (click)="refreshF5Config(); $event.stopPropagation()"
       [disabled]="isRecentlyRefreshed() || isRefreshingRuntimeData"
     >
       <fa-icon *ngIf="!isRecentlyRefreshed()" class="icon" [icon]="['fas', 'sync-alt']" [spin]="isRefreshingRuntimeData"></fa-icon>

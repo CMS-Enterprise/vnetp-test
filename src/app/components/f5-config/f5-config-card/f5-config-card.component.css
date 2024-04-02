@@ -13,11 +13,24 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Example: Adds a shadow to indicate focus */
 }
 
-.card:active {
+.card:not(.card-disabled):active {
   transform: scale(0.98); /* Slightly reduces the size to simulate a button press */
 }
 
 .btn-icon:hover {
   transform: rotate(70deg); /* Adjust the rotation degree as needed */
   transition: transform 0.3s ease; /* Smooth transition for the rotation effect */
+}
+
+.card-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.card-disabled:hover {
+  box-shadow: none; /* Removes hover effect */
+}
+
+.card-disabled .btn-icon {
+  pointer-events: none; /* Prevents clicks on the refresh button */
 }

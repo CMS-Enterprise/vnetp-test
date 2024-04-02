@@ -54,8 +54,7 @@ export class F5ConfigCardComponent implements OnInit {
     });
   }
 
-  refreshF5Config(event: MouseEvent): void {
-    event.stopPropagation();
+  refreshF5Config(): void {
     if (this.isRecentlyRefreshed()) {
       return;
     }
