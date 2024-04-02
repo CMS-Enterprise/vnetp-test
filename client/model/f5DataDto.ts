@@ -11,16 +11,9 @@
  */
 
 
-export interface F5ConfigJobCreateDto { 
-    type: F5ConfigJobCreateDtoTypeEnum;
-    datacenterId: string;
+export interface F5DataDto { 
+    partitionInfo: object;
+    hostInfo: object;
     hostname: string;
 }
-export enum F5ConfigJobCreateDtoTypeEnum {
-    FirewallRule = 'FirewallRule',
-    NatRule = 'NatRule',
-    F5Config = 'F5Config'
-};
-
-
 

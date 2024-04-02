@@ -11,9 +11,10 @@
  */
 
 
-export interface F5Config { 
+export interface F5Runtime { 
     readonly id?: string;
-    hostName: string;
+    displayName: string;
+    hostname: string;
     data: object;
     readonly createdAt?: string | null;
     partitions: Array<string>;

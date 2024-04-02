@@ -17,9 +17,9 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { F5Config } from '../model/models';
 import { F5ConfigJobCreateDto } from '../model/models';
 import { F5ConfigJobResultDto } from '../model/models';
+import { F5Runtime } from '../model/models';
 import { Job } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -28,6 +28,10 @@ import { Configuration }                                     from '../configurat
 
 export interface CreateRuntimeDataJobF5ConfigRequestParams {
     f5ConfigJobCreateDto: F5ConfigJobCreateDto;
+}
+
+export interface CreateRuntimefDataJobDefinitionF5ConfigRequestParams {
+    f5Runtime: F5Runtime;
 }
 
 export interface GetManyF5ConfigRequestParams {
@@ -176,14 +180,70 @@ export class V1RuntimeDataF5ConfigService {
     }
 
     /**
-     * Get many F5Config
+     * Create new F5 Runtime
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getManyF5Config(requestParameters: GetManyF5ConfigRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<F5Config>>;
-    public getManyF5Config(requestParameters: GetManyF5ConfigRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<F5Config>>>;
-    public getManyF5Config(requestParameters: GetManyF5ConfigRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<F5Config>>>;
+    public createRuntimefDataJobDefinitionF5Config(requestParameters: CreateRuntimefDataJobDefinitionF5ConfigRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<F5Runtime>;
+    public createRuntimefDataJobDefinitionF5Config(requestParameters: CreateRuntimefDataJobDefinitionF5ConfigRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<F5Runtime>>;
+    public createRuntimefDataJobDefinitionF5Config(requestParameters: CreateRuntimefDataJobDefinitionF5ConfigRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<F5Runtime>>;
+    public createRuntimefDataJobDefinitionF5Config(requestParameters: CreateRuntimefDataJobDefinitionF5ConfigRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const f5Runtime = requestParameters.f5Runtime;
+        if (f5Runtime === null || f5Runtime === undefined) {
+            throw new Error('Required parameter f5Runtime was null or undefined when calling createRuntimefDataJobDefinitionF5Config.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<F5Runtime>(`${this.configuration.basePath}/v1/runtime-data/f5-config/create-f5-runtime`,
+            f5Runtime,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get many F5Runtime
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getManyF5Config(requestParameters: GetManyF5ConfigRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<F5Runtime>>;
+    public getManyF5Config(requestParameters: GetManyF5ConfigRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<F5Runtime>>>;
+    public getManyF5Config(requestParameters: GetManyF5ConfigRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<F5Runtime>>>;
     public getManyF5Config(requestParameters: GetManyF5ConfigRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
@@ -270,7 +330,7 @@ export class V1RuntimeDataF5ConfigService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<F5Config>>(`${this.configuration.basePath}/v1/runtime-data/f5-config`,
+        return this.httpClient.get<Array<F5Runtime>>(`${this.configuration.basePath}/v1/runtime-data/f5-config`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

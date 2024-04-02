@@ -9,12 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { F5DataDto } from './f5DataDto';
 
 
 export interface F5ConfigJobResultDto { 
     type: F5ConfigJobResultDtoTypeEnum;
-    data: object;
     hostName: string;
+    data: F5DataDto;
 }
 export enum F5ConfigJobResultDtoTypeEnum {
     FirewallRule = 'FirewallRule',

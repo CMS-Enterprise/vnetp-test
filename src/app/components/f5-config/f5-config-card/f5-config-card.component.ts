@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Datacenter, F5Config, F5ConfigJobCreateDtoTypeEnum, V1RuntimeDataF5ConfigService } from '../../../../../client';
+import { Component, Input, OnInit } from '@angular/core';
+import { Datacenter, F5ConfigJobCreateDtoTypeEnum, F5Runtime, V1RuntimeDataF5ConfigService } from '../../../../../client';
 import { ActivatedRoute, Router } from '@angular/router';
 import { F5ConfigService } from '../f5-config.service';
 import { RuntimeDataService } from '../../../services/runtime-data.service';
@@ -12,7 +12,7 @@ import { DatacenterContextService } from '../../../services/datacenter-context.s
   styleUrls: ['./f5-config-card.component.css'],
 })
 export class F5ConfigCardComponent implements OnInit {
-  @Input() f5Config: F5Config;
+  @Input() f5Config: F5Runtime;
   softwareVersion: number;
   highAvailabilityStatus: string;
   hostName: string;
@@ -35,7 +35,7 @@ export class F5ConfigCardComponent implements OnInit {
     const f5Data = this.f5Config.data as any;
     this.softwareVersion = f5Data?.host_info['Software Version'];
     this.highAvailabilityStatus = f5Data?.hostInfo?.highAvailabilityStatus;
-    this.hostName = this.f5Config.hostName;
+    this.hostName = this.f5Config.hostname;
     this.lastRefreshed = this.runtimeDataService.calculateTimeDifference(this.f5Config.runtimeDataLastRefreshed);
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
@@ -48,7 +48,7 @@ export class F5ConfigCardComponent implements OnInit {
     const currentQueryParams = this.route.snapshot.queryParams;
     this.f5StateManagementService.changeF5Config(this.f5Config);
 
-    this.router.navigate(['/netcentric/f5-config/partitions', this.f5Config.hostName], {
+    this.router.navigate(['/netcentric/f5-config/partitions', this.f5Config.hostname], {
       relativeTo: this.route,
       queryParams: currentQueryParams,
     });
@@ -64,8 +64,7 @@ export class F5ConfigCardComponent implements OnInit {
       f5ConfigJobCreateDto: {
         type: F5ConfigJobCreateDtoTypeEnum.F5Config,
         datacenterId: this.currentDatacenter.id,
-        hostName: this.f5Config.hostName,
-        partitions: this.f5Config.partitions,
+        hostname: this.f5Config.hostname,
       },
     });
 
@@ -73,7 +72,7 @@ export class F5ConfigCardComponent implements OnInit {
   }
 
   pollRuntimeData(): void {
-    this.f5ConfigService.getManyF5Config({ filter: [`hostName||eq||${this.f5Config.hostName}`] }).subscribe(data => {
+    this.f5ConfigService.getManyF5Config({ filter: [`hostname||eq||${this.f5Config.hostname}`] }).subscribe(data => {
       if (data.length !== 1) {
         return;
       }

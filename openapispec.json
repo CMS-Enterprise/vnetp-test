@@ -13109,6 +13109,57 @@
         ]
       }
     },
+    "/v1/audit-log/app-centric": {
+      "get": {
+        "operationId": "getAllAppCentricLogsAuditLog",
+        "summary": "",
+        "description": "Get App Centric Audit Logs",
+        "parameters": [
+          {
+            "name": "tenant",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditLog"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/audit-log"
+        ]
+      }
+    },
     "/v1/audit-log/entity": {
       "get": {
         "operationId": "getAuditLogByEntityIdAuditLog",
@@ -19469,10 +19520,78 @@
         ]
       }
     },
+    "/v1/runtime-data/hitcount/create-runtime-data-job": {
+      "post": {
+        "operationId": "createRuntimeDataJobHitcount",
+        "summary": "",
+        "description": "Create Runtime Data Hitcount Collection Job",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HitcountJobCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/hitcount"
+        ]
+      }
+    },
+    "/v1/runtime-data/hitcount/upload-runtime-data-job-results": {
+      "post": {
+        "operationId": "uploadRuntimeDataJobResultsHitcount",
+        "summary": "",
+        "description": "Update Runtime Hitcount Data",
+        "parameters": [
+          {
+            "name": "tenant",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HitcountJobResultDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/runtime-data/hitcount"
+        ]
+      }
+    },
     "/v1/runtime-data/f5-config": {
       "get": {
         "operationId": "getManyF5Config",
-        "summary": "Get many F5Config",
+        "summary": "Get many F5Runtime",
         "parameters": [
           {
             "name": "relations",
@@ -19591,8 +19710,41 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/F5Config"
+                    "$ref": "#/components/schemas/F5Runtime"
                   }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/f5-config"
+        ]
+      }
+    },
+    "/v1/runtime-data/f5-config/create-f5-runtime": {
+      "post": {
+        "operationId": "createRuntimefDataJobDefinitionF5Config",
+        "summary": "",
+        "description": "Create new F5 Runtime",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/F5Runtime"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/F5Runtime"
                 }
               }
             }
@@ -19668,74 +19820,6 @@
         },
         "tags": [
           "v1/runtime-data/f5-config"
-        ]
-      }
-    },
-    "/v1/runtime-data/hitcount/create-runtime-data-job": {
-      "post": {
-        "operationId": "createRuntimeDataJobHitcount",
-        "summary": "",
-        "description": "Create Runtime Data Hitcount Collection Job",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/HitcountJobCreateDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Job"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v1/runtime-data/hitcount"
-        ]
-      }
-    },
-    "/v1/runtime-data/hitcount/upload-runtime-data-job-results": {
-      "post": {
-        "operationId": "uploadRuntimeDataJobResultsHitcount",
-        "summary": "",
-        "description": "Update Runtime Hitcount Data",
-        "parameters": [
-          {
-            "name": "tenant",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/HitcountJobResultDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v1/runtime-data/hitcount"
         ]
       }
     }
@@ -24871,97 +24955,6 @@
           "type"
         ]
       },
-      "F5Config": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "hostName": {
-            "type": "string"
-          },
-          "data": {
-            "type": "object"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true,
-            "nullable": true
-          },
-          "partitions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "runtimeDataLastRefreshed": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "hostName",
-          "data",
-          "partitions"
-        ]
-      },
-      "F5ConfigJobCreateDto": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "FirewallRule",
-              "NatRule",
-              "F5Config"
-            ]
-          },
-          "datacenterId": {
-            "type": "string"
-          },
-          "hostName": {
-            "type": "string"
-          },
-          "partitions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "required": [
-          "type",
-          "datacenterId",
-          "hostName",
-          "partitions"
-        ]
-      },
-      "F5ConfigJobResultDto": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "FirewallRule",
-              "NatRule",
-              "F5Config"
-            ]
-          },
-          "data": {
-            "type": "object"
-          },
-          "hostName": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "data",
-          "hostName"
-        ]
-      },
       "HitcountJobCreateDto": {
         "type": "object",
         "properties": {
@@ -25025,6 +25018,113 @@
         "required": [
           "type",
           "groupId",
+          "data"
+        ]
+      },
+      "F5Runtime": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "hostname": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true,
+            "nullable": true
+          },
+          "partitions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "runtimeDataLastRefreshed": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "displayName",
+          "hostname",
+          "data",
+          "partitions"
+        ]
+      },
+      "F5ConfigJobCreateDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "FirewallRule",
+              "NatRule",
+              "F5Config"
+            ]
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "hostname": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "datacenterId",
+          "hostname"
+        ]
+      },
+      "F5DataDto": {
+        "type": "object",
+        "properties": {
+          "partitionInfo": {
+            "type": "object"
+          },
+          "hostInfo": {
+            "type": "object"
+          },
+          "hostname": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "partitionInfo",
+          "hostInfo",
+          "hostname"
+        ]
+      },
+      "F5ConfigJobResultDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "FirewallRule",
+              "NatRule",
+              "F5Config"
+            ]
+          },
+          "hostName": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/F5DataDto"
+          }
+        },
+        "required": [
+          "type",
+          "hostName",
           "data"
         ]
       }

@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Datacenter, F5Config, F5ConfigJobCreateDtoTypeEnum, V1RuntimeDataF5ConfigService } from '../../../../client';
-import { Observable, Subscription } from 'rxjs';
+import { Datacenter, F5Runtime, V1RuntimeDataF5ConfigService } from '../../../../client';
+import { Subscription } from 'rxjs';
 import { DatacenterContextService } from '../../services/datacenter-context.service';
-import { HttpClient } from '@angular/common/http';
 import { F5ConfigService } from './f5-config.service';
-import { RuntimeDataService } from '../../services/runtime-data.service';
 
 @Component({
   selector: 'app-f5-config',
@@ -12,18 +10,16 @@ import { RuntimeDataService } from '../../services/runtime-data.service';
   styleUrls: ['./f5-config.component.css'],
 })
 export class F5ConfigComponent implements OnInit {
-  f5Configs: F5Config[];
-  filteredF5Configs: F5Config[] = [];
+  f5Configs: F5Runtime[];
+  filteredF5Configs: F5Runtime[] = [];
   currentDatacenter: Datacenter;
   currentDatacenterSubscription: Subscription;
   searchQuery = '';
 
   constructor(
-    private runtimeDataService: RuntimeDataService,
     private f5ConfigService: V1RuntimeDataF5ConfigService,
     private f5ConfigStateManagementService: F5ConfigService,
     private datacenterContextService: DatacenterContextService,
-    private http: HttpClient,
   ) {}
 
   ngOnInit(): void {
@@ -41,7 +37,7 @@ export class F5ConfigComponent implements OnInit {
   }
 
   filterF5Configs(): void {
-    const filteredConfigs: F5Config[] = [];
+    const filteredConfigs: F5Runtime[] = [];
     this.f5Configs.forEach(f5Config => {
       if (this.matchF5Config(f5Config)) {
         filteredConfigs.push(f5Config);
@@ -50,9 +46,9 @@ export class F5ConfigComponent implements OnInit {
     this.filteredF5Configs = filteredConfigs;
   }
 
-  matchF5Config(f5Config: F5Config): boolean {
+  matchF5Config(f5Config: F5Runtime): boolean {
     const partitionInfo = (f5Config as any).data.partitionInfo;
-    if (this.searchQuery === '' || f5Config.hostName.toLowerCase().includes(this.searchQuery)) {
+    if (this.searchQuery === '' || f5Config.hostname.toLowerCase().includes(this.searchQuery)) {
       return true;
     }
     const filteredParitions = this.f5ConfigStateManagementService.filterVirtualServers(partitionInfo, this.searchQuery);

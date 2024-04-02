@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { F5ConfigService } from '../f5-config.service';
-import { F5Config } from '../../../../../client';
 import { Subscription } from 'rxjs';
+import { F5Runtime } from '../../../../../client';
 
 @Component({
   selector: 'app-partition-details',
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./partition-details.component.css'],
 })
 export class PartitionDetailsComponent implements OnInit, OnDestroy {
-  f5Config: F5Config;
+  f5Config: F5Runtime;
   f5ConfigSubscription: Subscription;
   partitionInfo: any;
   partitionNames: string[];
