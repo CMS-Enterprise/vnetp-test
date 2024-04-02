@@ -68,8 +68,10 @@ export class AuditLogComponent implements OnInit {
       { name: 'Object Name', template: () => this.entityAfterTemplate },
       { name: 'User', property: 'changedBy' },
       { name: 'Timestamp', property: 'timestamp' },
+      { name: 'Change Request', property: 'changeRequestNumber' },
     ],
     hideAdvancedSearch: true,
+    hideDefaultSearch: true,
   };
   public config: TableConfig<any> = {
     description: 'Audit Log',
@@ -83,6 +85,7 @@ export class AuditLogComponent implements OnInit {
       { name: 'Change Request', property: 'changeRequestNumber' },
     ],
     hideAdvancedSearch: true,
+    hideDefaultSearch: true,
   };
   public auditLogs;
   public tiers: Tier[] = [];
@@ -148,6 +151,7 @@ export class AuditLogComponent implements OnInit {
   }
 
   getAppCentricAuditLogs(event?): void {
+    console.log('here?');
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 10;
@@ -298,9 +302,43 @@ export class AuditLogComponent implements OnInit {
       );
   }
 
-  public getAuditLogs(event?): void {
+  public searchAppCentricAuditLogs(event?) {
     let eventParams;
     this.isLoading = true;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 10;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      eventParams = `${propertyName}||cont||${searchText}`;
+    } else {
+      this.tableComponentDto.perPage = this.perPage;
+    }
+    this.auditLogService
+      .searchAppCentricAuditLogAuditLog({
+        filter: [eventParams],
+      })
+      .subscribe(
+        data => {
+          this.auditLogs = data;
+          this.auditLogs.data.map(log => {
+            this.transformLogs(log);
+          });
+        },
+        () => {
+          this.auditLogs = [];
+        },
+        () => {
+          this.isLoading = false;
+        },
+      );
+  }
+
+  public getAuditLogs(event?): void {
+    console.log('here?');
+    console.log('showappcentric', this.showingAppCentricLogs);
+    let eventParams;
+    // this.isLoading = true;
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 10;
@@ -440,7 +478,7 @@ export class AuditLogComponent implements OnInit {
           this.auditLogs = [];
         },
         () => {
-          this.isLoading = false;
+          // this.isLoading = false;
         },
       );
   }

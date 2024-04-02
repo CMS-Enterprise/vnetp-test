@@ -21,6 +21,7 @@ export interface TableConfig<T> {
   advancedSearchAdapter?: AdvancedSearchAdapter<T>;
   hideAdvancedSearch?: boolean;
   hideSearchBar?: boolean;
+  hideDefaultSearch?: boolean;
 }
 
 /**
@@ -58,6 +59,7 @@ export class TableComponent<T> implements AfterViewInit {
   @Input() searchColumns: SearchColumnConfig[];
   @Output() clearResults = new EventEmitter<any>();
   @Output() searchParams = new EventEmitter<any>();
+  @Input() hideDefaultSearch;
 
   @ViewChild(SearchBarComponent) searchBarComponent!: SearchBarComponent;
   @ViewChild(AdvancedSearchComponent) advancedSearchComponent!: AdvancedSearchComponent<any>;
@@ -84,6 +86,9 @@ export class TableComponent<T> implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
+    if (this.config.hideDefaultSearch) {
+      this.hideDefaultSearch = true;
+    }
     if (this.config?.advancedSearchAdapter) {
       const advancedSearchAdapter = this.config.advancedSearchAdapter;
       this.advancedSearchAdapterSubject.next(advancedSearchAdapter);

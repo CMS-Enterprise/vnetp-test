@@ -1,10 +1,10 @@
-<h1 *ngIf="!showingAppCentricLogs">Audit Log</h1>
+<h1 *ngIf="!showingAppCentricLogs">Net Centric Audit Log</h1>
 <h1 *ngIf="showingAppCentricLogs">App Centric Audit Log</h1>
 <ng-container *ngIf="currentDatacenter; else warningMessage">
     <ng-container *ngIf="!isLoading; else loading">
         <app-table (clearResults)="getAuditLogs($event)" (searchParams)="searchAuditLogs($event)" [searchColumns]="searchColumns" *ngIf="!showingAppCentricLogs" [config]="config" [data]="auditLogs" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)">
         </app-table>
-        <app-table *ngIf="showingAppCentricLogs" (tableEvent)="onAppCentricTableEvent($event)" [config]="appCentricConfig" [data]="auditLogs" [(itemsPerPage)]="perPage">
+        <app-table (clearResults)="getAppCentricAuditLogs($event)" (searchParams)="searchAppCentricAuditLogs($event)" *ngIf="showingAppCentricLogs" (tableEvent)="onAppCentricTableEvent($event)" [searchColumns]="searchColumns" [config]="appCentricConfig" [data]="auditLogs" [(itemsPerPage)]="perPage">
         </app-table>
     </ng-container>
 

@@ -6,6 +6,7 @@
           (searchBarClearResults)="clearTableResults()"
           [columns]="searchColumns"
           (searchCriteria)="getObjectsAndFilter($event)"
+          [hideDefaultSearch]="hideDefaultSearch"
         ></app-search-bar>
         <tooltip [message]="helpText?.CaseSensitive"></tooltip>
       </div>

@@ -4,7 +4,7 @@
 <div id="main">
   <select aria-label="searchColumn" id="searchColumn" [(ngModel)]="searchColumn" placeholder="Column">
     <optgroup aria-label="search-properties">
-      <option [ngValue]="defaultSearch.propertyName" selected> {{ defaultSearch.displayName }} </option>
+      <option *ngIf="!hideDefaultSearch" [ngValue]="defaultSearch.propertyName" selected> {{ defaultSearch.displayName }} </option>
       <option *ngFor="let column of columns" [ngValue]="column.propertyName">
         {{ column.displayName }}
       </option>

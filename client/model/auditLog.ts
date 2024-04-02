@@ -24,7 +24,7 @@ export interface AuditLog {
     datacenterId: string;
     tierId?: string;
     tenantId: string;
-    incident?: string;
+    changeRequestNumber?: string;
 }
 export enum AuditLogActionTypeEnum {
     BulkUpload = 'BulkUpload',

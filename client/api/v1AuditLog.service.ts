@@ -48,7 +48,7 @@ export interface GetAuditLogByEntityIdAuditLogRequestParams {
     afterTimestamp: string;
 }
 
-export interface SearchAuditLogAuditLogRequestParams {
+export interface SearchAppCentricAuditLogAuditLogRequestParams {
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -71,12 +71,27 @@ export interface SearchAuditLogAuditLogRequestParams {
     s?: string;
 }
 
-export interface GetAuditLogByEntityIdAuditLogRequestParams {
-    entityId: string;
-    entityType: string;
-    tenant: string;
-    /** Return audit logs after timestamp in YYYY-MM-DD HH:MM:SS format. */
-    afterTimestamp: string;
+export interface SearchAuditLogAuditLogRequestParams {
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
+    /** Number of entities to return per page.      If page is not passed, a number of entities up to this parameter will be returned. Default 20. */
+    perPage?: number;
+    /** Alias for perPage. If perPage is also passed this parameter will be ignored. */
+    limit?: number;
+    /** Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination. */
+    page?: number;
+    /** Filter condition to apply to the query. */
+    filter?: Array<string>;
+    /** Properties to sort the response by. */
+    sort?: Array<string>;
+    /** Properties to group the response by. */
+    group?: Array<string>;
+    /** Properties to select. */
+    fields?: Array<string>;
+    /** Where object for advanced AND/OR queries. */
+    s?: string;
 }
 
 
@@ -251,10 +266,6 @@ export class V1AuditLogService {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>tenant, 'tenant');
         }
-        if (appCentricTenant !== undefined && appCentricTenant !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>appCentricTenant, 'appCentricTenant');
-        }
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>page, 'page');
@@ -262,6 +273,10 @@ export class V1AuditLogService {
         if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>perPage, 'perPage');
+        }
+        if (appCentricTenant !== undefined && appCentricTenant !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>appCentricTenant, 'appCentricTenant');
         }
         if (filter) {
             filter.forEach((element) => {
@@ -368,6 +383,113 @@ export class V1AuditLogService {
         }
 
         return this.httpClient.get<Array<AuditLog>>(`${this.configuration.basePath}/v1/audit-log/entity`,
+            {
+                params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get App Centric Audit Logs by search
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public searchAppCentricAuditLogAuditLog(requestParameters: SearchAppCentricAuditLogAuditLogRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<AuditLog>>;
+    public searchAppCentricAuditLogAuditLog(requestParameters: SearchAppCentricAuditLogAuditLogRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<AuditLog>>>;
+    public searchAppCentricAuditLogAuditLog(requestParameters: SearchAppCentricAuditLogAuditLogRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<AuditLog>>>;
+    public searchAppCentricAuditLogAuditLog(requestParameters: SearchAppCentricAuditLogAuditLogRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const relations = requestParameters.relations;
+        const join = requestParameters.join;
+        const perPage = requestParameters.perPage;
+        const limit = requestParameters.limit;
+        const page = requestParameters.page;
+        const filter = requestParameters.filter;
+        const sort = requestParameters.sort;
+        const group = requestParameters.group;
+        const fields = requestParameters.fields;
+        const s = requestParameters.s;
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
+        }
+        if (perPage !== undefined && perPage !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>perPage, 'perPage');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
+        }
+        if (page !== undefined && page !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
+        }
+        if (filter) {
+            filter.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'filter');
+            })
+        }
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
+        }
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
+        }
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (s !== undefined && s !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>s, 's');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<Array<AuditLog>>(`${this.configuration.basePath}/v1/audit-log/app-centric/filter`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
