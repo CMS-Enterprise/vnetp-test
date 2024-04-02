@@ -16,3 +16,8 @@
 .card:active {
   transform: scale(0.98); /* Slightly reduces the size to simulate a button press */
 }
+
+.btn-icon:hover {
+  transform: rotate(70deg); /* Adjust the rotation degree as needed */
+  transition: transform 0.3s ease; /* Smooth transition for the rotation effect */
+}
