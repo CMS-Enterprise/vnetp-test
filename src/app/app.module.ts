@@ -125,6 +125,7 @@ export class AppModule {
       faClone,
       faCircle,
       faCheck,
+      faSyncAlt,
     );
   }
 }

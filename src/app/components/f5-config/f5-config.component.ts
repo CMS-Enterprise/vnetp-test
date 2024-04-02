@@ -75,11 +75,12 @@ export class F5ConfigComponent implements OnInit {
   public getF5Configs() {
     this.f5ConfigService.getManyF5Config({ filter: [`datacenterId||eq||${this.currentDatacenter.id}`] }).subscribe(data => {
       this.f5Configs = data;
+      this.filterF5Configs();
     });
     // this.getJsonData().subscribe(data => {
     //   this.f5Configs = [
     //     {
-    //       hostName: 'f5-1',
+    //       hostName: data.host_info.Hostname,
     //       data,
     //     },
     //   ] as any;

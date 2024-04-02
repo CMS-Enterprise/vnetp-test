@@ -33,7 +33,7 @@ export class F5ConfigCardComponent implements OnInit {
 
   ngOnInit(): void {
     const f5Data = this.f5Config.data as any;
-    this.softwareVersion = f5Data?.hostInfo?.softwareVersion;
+    this.softwareVersion = f5Data?.host_info['Software Version'];
     this.highAvailabilityStatus = f5Data?.hostInfo?.highAvailabilityStatus;
     this.hostName = this.f5Config.hostName;
     this.lastRefreshed = this.runtimeDataService.calculateTimeDifference(this.f5Config.runtimeDataLastRefreshed);
@@ -54,10 +54,12 @@ export class F5ConfigCardComponent implements OnInit {
     });
   }
 
-  refreshF5Config(): void {
+  refreshF5Config(event: MouseEvent): void {
+    event.stopPropagation();
     if (this.isRecentlyRefreshed()) {
       return;
     }
+    this.isRefreshingRuntimeData = true;
     const createJobRequest = this.f5ConfigService.createRuntimeDataJobF5Config({
       f5ConfigJobCreateDto: {
         type: F5ConfigJobCreateDtoTypeEnum.F5Config,
