@@ -101,20 +101,6 @@ export class F5ConfigCardComponent implements OnInit {
     });
   }
 
-  pollRuntimeData(): void {
-    this.f5ConfigService.getManyF5Config({ filter: [`hostname||eq||${this.f5Config.hostname}`] }).subscribe(data => {
-      if (data.length !== 1) {
-        return;
-      }
-      const newF5Config = data[0];
-      if (newF5Config.runtimeDataLastRefreshed !== this.f5Config.runtimeDataLastRefreshed) {
-        this.f5Config = newF5Config;
-        this.isRefreshingRuntimeData = false;
-        this.pollingSubscription.unsubscribe();
-      }
-    });
-  }
-
   isRecentlyRefreshed(): boolean {
     return this.runtimeDataService.isRecentlyRefreshed(this.f5Config.runtimeDataLastRefreshed);
   }
