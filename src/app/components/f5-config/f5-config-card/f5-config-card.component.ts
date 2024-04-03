@@ -84,7 +84,6 @@ export class F5ConfigCardComponent implements OnInit {
           },
           error: error => {
             console.error('An error occurred during polling: ', error);
-            this.isRefreshingRuntimeData = false;
           },
           complete: () => {
             this.isRefreshingRuntimeData = false;
