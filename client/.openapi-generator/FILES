@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 README.md
 api.module.ts
 api/api.ts
@@ -192,6 +191,7 @@ model/subnetImportCollectionDto.ts
 model/tenant.ts
 model/tier.ts
 model/tierGroup.ts
+model/towerJobDto.ts
 model/userDto.ts
 model/userPass.ts
 model/virtualServerImportCollectionDto.ts

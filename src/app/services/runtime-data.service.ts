@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscription, interval } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { switchMap, take, takeWhile } from 'rxjs/operators';
+import { V1JobsService } from '../../../client';
+import { TowerJobDto } from '../../../client/model/towerJobDto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RuntimeDataService {
-  constructor() {}
+  constructor(private jobsService: V1JobsService) {}
 
   calculateTimeDifference(timestamp: string): string {
     if (timestamp === null || timestamp === undefined) {
@@ -45,28 +47,16 @@ export class RuntimeDataService {
     return diffInSeconds <= thresholdInSeconds;
   }
 
-  refreshRuntimeData(
-    createJobRequest: Observable<any>,
-    pollFunction: () => void,
-    timeBetweenPolls: number = 1000,
-    maxPollAttempts: number = 120,
-  ): Subscription {
-    let pollingSubscription: Subscription;
+  pollJobStatus(jobId: string, timeBetweenPolls = 1000, maxPollAttempts = 120): Observable<TowerJobDto> {
+    let attempts = 0;
 
-    createJobRequest.subscribe(() => {
-      let pollAttempts = 0;
-      pollingSubscription = interval(timeBetweenPolls)
-        .pipe(take(maxPollAttempts))
-        .subscribe(() => {
-          pollAttempts++;
-          console.log(`Polling attempt ${pollAttempts}`);
-          pollFunction();
-          if (pollAttempts >= maxPollAttempts) {
-            pollingSubscription.unsubscribe();
-          }
-        });
-    });
-
-    return pollingSubscription;
+    return interval(timeBetweenPolls).pipe(
+      takeWhile(() => attempts < maxPollAttempts, true),
+      switchMap(() => {
+        attempts++;
+        return this.jobsService.getJobStatusJob({ id: jobId });
+      }),
+      takeWhile((status: TowerJobDto) => status.status === 'running' && attempts <= maxPollAttempts),
+    );
   }
 }

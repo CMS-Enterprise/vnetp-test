@@ -13034,6 +13034,37 @@
         ]
       }
     },
+    "/v1/jobs/{id}/status": {
+      "get": {
+        "operationId": "getJobStatusJob",
+        "summary": "Get Job Status",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TowerJobDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/jobs"
+        ]
+      }
+    },
     "/v1/audit-log": {
       "get": {
         "operationId": "getAuditLogAuditLog",
@@ -23742,6 +23773,26 @@
         "required": [
           "datacenterId",
           "nodes"
+        ]
+      },
+      "TowerJobDto": {
+        "type": "object",
+        "properties": {
+          "finished": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "failed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "finished",
+          "status",
+          "failed"
         ]
       },
       "Vrf": {

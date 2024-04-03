@@ -126,6 +126,7 @@ export class AppModule {
       faCircle,
       faCheck,
       faSyncAlt,
+      faExclamationTriangle,
     );
   }
 }

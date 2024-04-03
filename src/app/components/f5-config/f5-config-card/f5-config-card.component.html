@@ -1,5 +1,12 @@
 <div class="card" [class.card-disabled]="isRefreshingRuntimeData" (click)="!isRefreshingRuntimeData && navigateToDetails()">
   <div class="card-header d-flex justify-content-end align-items-center">
+    <fa-icon
+      *ngIf="jobStatus"
+      class="icon"
+      [icon]="['fas', 'triangle-exclamation']"
+      data-bs-toggle="tooltip"
+      [attr.title]="getTooltipMessage(jobStatus)"
+    ></fa-icon>
     <p class="mb-0">
       <small *ngIf="!isRecentlyRefreshed() && !isRefreshingRuntimeData">Refreshed: {{ lastRefreshed }}</small>
       <small *ngIf="isRefreshingRuntimeData" class="text-muted">Refreshing</small>

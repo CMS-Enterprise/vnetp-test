@@ -21,6 +21,7 @@ export class F5ConfigCardComponent implements OnInit {
   isRefreshingRuntimeData = false;
   currentDatacenter: Datacenter;
   currentDatacenterSubscription: Subscription;
+  jobStatus: string;
 
   constructor(
     private router: Router,
@@ -55,19 +56,50 @@ export class F5ConfigCardComponent implements OnInit {
   }
 
   refreshF5Config(): void {
-    if (this.isRecentlyRefreshed()) {
+    if (this.isRecentlyRefreshed() || this.isRefreshingRuntimeData) {
       return;
     }
     this.isRefreshingRuntimeData = true;
-    const createJobRequest = this.f5ConfigService.createRuntimeDataJobF5Config({
-      f5ConfigJobCreateDto: {
-        type: F5ConfigJobCreateDtoTypeEnum.F5Config,
-        datacenterId: this.currentDatacenter.id,
-        hostname: this.f5Config.hostname,
-      },
-    });
 
-    this.pollingSubscription = this.runtimeDataService.refreshRuntimeData(createJobRequest, () => this.pollRuntimeData());
+    this.f5ConfigService
+      .createRuntimeDataJobF5Config({
+        f5ConfigJobCreateDto: {
+          type: F5ConfigJobCreateDtoTypeEnum.F5Config,
+          datacenterId: this.currentDatacenter.id,
+          hostname: this.f5Config.hostname,
+        },
+      })
+      .subscribe(job => {
+        this.runtimeDataService.pollJobStatus(job.id).subscribe({
+          next: towerJobDto => {
+            if (towerJobDto.status === 'COMPLETED') {
+              this.updateF5Config();
+            } else if (towerJobDto.status === 'FAILED') {
+              console.error('Job failed');
+              this.jobStatus = towerJobDto.status;
+              this.isRefreshingRuntimeData = false;
+            } else if (towerJobDto.status === 'RUNNING') {
+              this.jobStatus = towerJobDto.status;
+            }
+          },
+          error: error => {
+            console.error('An error occurred during polling: ', error);
+            this.isRefreshingRuntimeData = false;
+          },
+          complete: () => {
+            this.isRefreshingRuntimeData = false;
+          },
+        });
+      });
+  }
+
+  private updateF5Config(): void {
+    this.f5ConfigService.getManyF5Config({ filter: [`hostname||eq||${this.f5Config.hostname}`] }).subscribe(data => {
+      if (data.length !== 1) {
+        return;
+      }
+      this.f5Config = data[0];
+    });
   }
 
   pollRuntimeData(): void {
@@ -86,5 +118,16 @@ export class F5ConfigCardComponent implements OnInit {
 
   isRecentlyRefreshed(): boolean {
     return this.runtimeDataService.isRecentlyRefreshed(this.f5Config.runtimeDataLastRefreshed);
+  }
+
+  getTooltipMessage(status: string): string {
+    switch (status) {
+      case 'FAILED':
+        return 'Job Status: Failed';
+      case 'RUNNING':
+        return 'Job Status: Timeout';
+      default:
+        return '';
+    }
   }
 }

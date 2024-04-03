@@ -138,6 +138,7 @@ export * from './subnetImportCollectionDto';
 export * from './tenant';
 export * from './tier';
 export * from './tierGroup';
+export * from './towerJobDto';
 export * from './userDto';
 export * from './userPass';
 export * from './virtualServerImportCollectionDto';
