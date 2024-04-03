@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Datacenter, F5ConfigJobCreateDtoTypeEnum, F5Runtime, V1RuntimeDataF5ConfigService } from '../../../../../client';
 import { ActivatedRoute, Router } from '@angular/router';
 import { F5ConfigService } from '../f5-config.service';
@@ -22,6 +22,8 @@ export class F5ConfigCardComponent implements OnInit {
   currentDatacenter: Datacenter;
   currentDatacenterSubscription: Subscription;
   jobStatus: string;
+
+  @ViewChildren('bootstrapTooltip') tooltips: QueryList<ElementRef>;
 
   constructor(
     private router: Router,
@@ -72,18 +74,19 @@ export class F5ConfigCardComponent implements OnInit {
       .subscribe(job => {
         this.runtimeDataService.pollJobStatus(job.id).subscribe({
           next: towerJobDto => {
-            if (towerJobDto.status === 'COMPLETED') {
+            if (towerJobDto.status === 'successful') {
               this.updateF5Config();
-            } else if (towerJobDto.status === 'FAILED') {
+            } else if (towerJobDto.status === 'failed') {
               console.error('Job failed');
               this.jobStatus = towerJobDto.status;
               this.isRefreshingRuntimeData = false;
-            } else if (towerJobDto.status === 'RUNNING') {
+            } else if (towerJobDto.status === 'running') {
               this.jobStatus = towerJobDto.status;
             }
           },
-          error: error => {
-            console.error('An error occurred during polling: ', error);
+          error: () => {
+            this.jobStatus = 'error';
+            this.isRefreshingRuntimeData = false;
           },
           complete: () => {
             this.isRefreshingRuntimeData = false;
@@ -107,10 +110,12 @@ export class F5ConfigCardComponent implements OnInit {
 
   getTooltipMessage(status: string): string {
     switch (status) {
-      case 'FAILED':
+      case 'failed':
         return 'Job Status: Failed';
-      case 'RUNNING':
+      case 'running':
         return 'Job Status: Timeout';
+      case 'error':
+        return 'An error occurred during polling';
       default:
         return '';
     }
