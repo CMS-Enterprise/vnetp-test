@@ -13043,6 +13043,7 @@
             "name": "id",
             "required": true,
             "in": "path",
+            "description": "UUID.",
             "schema": {
               "type": "string"
             }
@@ -25017,16 +25018,12 @@
               "F5Config"
             ]
           },
-          "datacenterId": {
-            "type": "string"
-          },
           "groupId": {
             "type": "string"
           }
         },
         "required": [
           "type",
-          "datacenterId",
           "groupId"
         ]
       },
@@ -25123,16 +25120,12 @@
               "F5Config"
             ]
           },
-          "datacenterId": {
-            "type": "string"
-          },
           "hostname": {
             "type": "string"
           }
         },
         "required": [
           "type",
-          "datacenterId",
           "hostname"
         ]
       },

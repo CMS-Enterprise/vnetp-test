@@ -13,7 +13,6 @@
 
 export interface F5ConfigJobCreateDto { 
     type: F5ConfigJobCreateDtoTypeEnum;
-    datacenterId: string;
     hostname: string;
 }
 export enum F5ConfigJobCreateDtoTypeEnum {

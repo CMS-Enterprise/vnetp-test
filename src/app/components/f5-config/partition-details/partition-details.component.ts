@@ -23,7 +23,6 @@ export class PartitionDetailsComponent implements OnInit, OnDestroy {
   constructor(private f5ConfigStateManagementService: F5ConfigService) {}
 
   ngOnInit(): void {
-    // this is an issue when we refresh the page the state of the service is refreshed, need to use session storage
     this.f5ConfigSubscription = this.f5ConfigStateManagementService.currentF5Config.subscribe(f5Config => {
       if (f5Config) {
         this.f5Config = f5Config;

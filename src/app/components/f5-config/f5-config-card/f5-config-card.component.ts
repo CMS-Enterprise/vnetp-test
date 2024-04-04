@@ -1,10 +1,9 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { Datacenter, F5ConfigJobCreateDtoTypeEnum, F5Runtime, V1RuntimeDataF5ConfigService } from '../../../../../client';
+import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { F5ConfigJobCreateDtoTypeEnum, F5Runtime, V1RuntimeDataF5ConfigService } from '../../../../../client';
 import { ActivatedRoute, Router } from '@angular/router';
 import { F5ConfigService } from '../f5-config.service';
 import { RuntimeDataService } from '../../../services/runtime-data.service';
 import { Subscription } from 'rxjs';
-import { DatacenterContextService } from '../../../services/datacenter-context.service';
 
 @Component({
   selector: 'app-f5-config-card',
@@ -19,8 +18,6 @@ export class F5ConfigCardComponent implements OnInit {
   lastRefreshed: string;
   pollingSubscription: Subscription;
   isRefreshingRuntimeData = false;
-  currentDatacenter: Datacenter;
-  currentDatacenterSubscription: Subscription;
   jobStatus: string;
 
   @ViewChildren('bootstrapTooltip') tooltips: QueryList<ElementRef>;
@@ -31,7 +28,6 @@ export class F5ConfigCardComponent implements OnInit {
     private f5StateManagementService: F5ConfigService,
     private runtimeDataService: RuntimeDataService,
     private f5ConfigService: V1RuntimeDataF5ConfigService,
-    private datacenterContextService: DatacenterContextService,
   ) {}
 
   ngOnInit(): void {
@@ -40,11 +36,6 @@ export class F5ConfigCardComponent implements OnInit {
     this.highAvailabilityStatus = f5Data?.hostInfo?.highAvailabilityStatus;
     this.hostName = this.f5Config.hostname;
     this.lastRefreshed = this.runtimeDataService.calculateTimeDifference(this.f5Config.runtimeDataLastRefreshed);
-    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
-      if (cd) {
-        this.currentDatacenter = cd;
-      }
-    });
   }
 
   navigateToDetails(): void {
@@ -67,7 +58,6 @@ export class F5ConfigCardComponent implements OnInit {
       .createRuntimeDataJobF5Config({
         f5ConfigJobCreateDto: {
           type: F5ConfigJobCreateDtoTypeEnum.F5Config,
-          datacenterId: this.currentDatacenter.id,
           hostname: this.f5Config.hostname,
         },
       })
@@ -77,7 +67,6 @@ export class F5ConfigCardComponent implements OnInit {
             if (towerJobDto.status === 'successful') {
               this.updateF5Config();
             } else if (towerJobDto.status === 'failed') {
-              console.error('Job failed');
               this.jobStatus = towerJobDto.status;
               this.isRefreshingRuntimeData = false;
             } else if (towerJobDto.status === 'running') {

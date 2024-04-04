@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Datacenter, F5Runtime, V1RuntimeDataF5ConfigService } from '../../../../client';
-import { Subscription } from 'rxjs';
-import { DatacenterContextService } from '../../services/datacenter-context.service';
+import { F5Runtime, V1RuntimeDataF5ConfigService } from '../../../../client';
 import { F5ConfigService } from './f5-config.service';
 
 @Component({
@@ -12,23 +10,12 @@ import { F5ConfigService } from './f5-config.service';
 export class F5ConfigComponent implements OnInit {
   f5Configs: F5Runtime[];
   filteredF5Configs: F5Runtime[] = [];
-  currentDatacenter: Datacenter;
-  currentDatacenterSubscription: Subscription;
   searchQuery = '';
 
-  constructor(
-    private f5ConfigService: V1RuntimeDataF5ConfigService,
-    private f5ConfigStateManagementService: F5ConfigService,
-    private datacenterContextService: DatacenterContextService,
-  ) {}
+  constructor(private f5ConfigService: V1RuntimeDataF5ConfigService, private f5ConfigStateManagementService: F5ConfigService) {}
 
   ngOnInit(): void {
-    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
-      if (cd) {
-        this.currentDatacenter = cd;
-        this.getF5Configs();
-      }
-    });
+    this.getF5Configs();
   }
 
   onSearch(searchQuery: string): void {

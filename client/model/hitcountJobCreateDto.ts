@@ -13,7 +13,6 @@
 
 export interface HitcountJobCreateDto { 
     type: HitcountJobCreateDtoTypeEnum;
-    datacenterId: string;
     groupId: string;
 }
 export enum HitcountJobCreateDtoTypeEnum {

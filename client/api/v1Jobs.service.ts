@@ -30,6 +30,7 @@ export interface CreateOneJobRequestParams {
 }
 
 export interface GetJobStatusJobRequestParams {
+    /** UUID. */
     id: string;
 }
 

@@ -42,10 +42,7 @@ export class VirtualServerCardComponent implements OnInit {
     this.poolTableData = this.getPoolTableData(this.poolStats);
   }
 
-  toggleExpanded(event: Event): void {
-    if (event) {
-      event.stopPropagation();
-    }
+  toggleExpanded(): void {
     this.expanded = !this.expanded;
     this.expandedChange.emit(this.expanded);
     // strange bug when quickly closing and opening the card, status wont render in the table
@@ -69,13 +66,13 @@ export class VirtualServerCardComponent implements OnInit {
 
   getVirtualServerTableData(virtualServer) {
     const stats = virtualServer?.stats?.nestedStats?.entries;
-    const bitsInRaw = stats['clientside.bitsIn']?.value;
-    const bitsOutRaw = stats['clientside.bitsOut']?.value;
-    const packetsInRaw = stats['clientside.pktsIn']?.value;
-    const packetsOutRaw = stats['clientside.pktsOut']?.value;
-    const currentConnectionsRaw = stats['clientside.curConns']?.value;
-    const maxConnectionsRaw = stats['clientside.maxConns']?.value;
-    const totalConnectionsRaw = stats['clientside.totConns']?.value;
+    const bitsInRaw = stats?.['clientside.bitsIn']?.value;
+    const bitsOutRaw = stats?.['clientside.bitsOut']?.value;
+    const packetsInRaw = stats?.['clientside.pktsIn']?.value;
+    const packetsOutRaw = stats?.['clientside.pktsOut']?.value;
+    const currentConnectionsRaw = stats?.['clientside.curConns']?.value;
+    const maxConnectionsRaw = stats?.['clientside.maxConns']?.value;
+    const totalConnectionsRaw = stats?.['clientside.totConns']?.value;
     const totalRequestsRaw = stats?.totRequests?.value;
     const fiveSecAvgUsageRatioRaw = stats?.fiveSecAvgUsageRatio?.value;
     const fiveMinAvgUsageRatioRaw = stats?.fiveMinAvgUsageRatio?.value;
@@ -109,16 +106,16 @@ export class VirtualServerCardComponent implements OnInit {
   }
 
   public getPoolTableData(poolStats) {
-    const bitsInRaw = poolStats['serverside.bitsIn']?.value;
-    const bitsOutRaw = poolStats['serverside.bitsOut']?.value;
-    const packetsInRaw = poolStats['serverside.pktsIn']?.value;
-    const packetsOutRaw = poolStats['serverside.pktsOut']?.value;
-    const currentConnectionsRaw = poolStats['serverside.curConns']?.value;
-    const maxConnectionsRaw = poolStats['serverside.maxConns']?.value;
-    const totalConnectionsRaw = poolStats['serverside.totConns']?.value;
+    const bitsInRaw = poolStats?.['serverside.bitsIn']?.value;
+    const bitsOutRaw = poolStats?.['serverside.bitsOut']?.value;
+    const packetsInRaw = poolStats?.['serverside.pktsIn']?.value;
+    const packetsOutRaw = poolStats?.['serverside.pktsOut']?.value;
+    const currentConnectionsRaw = poolStats?.['serverside.curConns']?.value;
+    const maxConnectionsRaw = poolStats?.['serverside.maxConns']?.value;
+    const totalConnectionsRaw = poolStats?.['serverside.totConns']?.value;
     const totalRequestsRaw = poolStats?.totRequests?.value;
-    const maxAgeRaw = poolStats['connq.ageMax'].value;
-    const maxQueueDepthRaw = poolStats['connq.depth'].value;
+    const maxAgeRaw = poolStats?.['connq.ageMax']?.value;
+    const maxQueueDepthRaw = poolStats?.['connq.depth']?.value;
 
     const bitsIn = this.convertBitsToHighestUnit(bitsInRaw);
     const bitsOut = this.convertBitsToHighestUnit(bitsOutRaw);

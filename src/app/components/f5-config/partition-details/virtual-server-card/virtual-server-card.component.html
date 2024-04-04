@@ -1,4 +1,4 @@
-<div *ngIf="!expanded" class="card" [ngClass]="{ collapsed: !expanded }" (click)="toggleExpanded($event)">
+<div *ngIf="!expanded" class="card" [ngClass]="{ collapsed: !expanded }" (click)="toggleExpanded(); $event.stopPropagation()">
   <div class="card-body">
     <div class="d-flex align-items-center">
       <fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon>
@@ -19,7 +19,7 @@
 
 <div *ngIf="expanded" class="card expanded-card">
   <div class="card-body expanded">
-    <button type="button" class="close-button" aria-label="Close" (click)="toggleExpanded($event)">&times;</button>
+    <button type="button" class="close-button" aria-label="Close" (click)="toggleExpanded()">&times;</button>
     <div class="virtual-server-section mb-4">
       <h5>Virtual Server</h5>
       <table id="myCustomTable" class="table">
