@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subscription, interval } from 'rxjs';
-import { switchMap, take, takeWhile } from 'rxjs/operators';
+import { Observable, interval } from 'rxjs';
+import { switchMap, takeWhile } from 'rxjs/operators';
 import { V1JobsService } from '../../../client';
 import { TowerJobDto } from '../../../client/model/towerJobDto';
 

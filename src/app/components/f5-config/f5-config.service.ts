@@ -96,7 +96,7 @@ export class F5ConfigService {
     } else if (availabilityState === 'offline') {
       return 'down';
     } else {
-      return 'unkown';
+      return 'unknown';
     }
   }
 }

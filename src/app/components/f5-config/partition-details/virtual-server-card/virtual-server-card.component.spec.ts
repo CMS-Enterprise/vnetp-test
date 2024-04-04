@@ -80,7 +80,7 @@ describe('VirtualServerCardComponent', () => {
 
     it('should return "text-primary" for all other conditions', () => {
       // Test with both undefined
-      let result = component.getStatusClass(undefined, undefined);
+      let result = component.getStatusClass();
       expect(result).toEqual('text-primary');
 
       // Test with one undefined and one with a non-matching description

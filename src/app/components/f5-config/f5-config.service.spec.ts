@@ -13,8 +13,22 @@ describe('F5ConfigService', () => {
     service = TestBed.inject(F5ConfigService);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('should emit the provided config object through currentF5Config observable upon changeF5Config call', done => {
+    const testConfig = { hostname: 'testHostname', someOtherProp: 'testValue' };
+
+    let isFirstEmission = true;
+
+    service.currentF5Config.subscribe({
+      next: config => {
+        if (!isFirstEmission) {
+          expect(config).toEqual(testConfig);
+          done();
+        }
+        isFirstEmission = false;
+      },
+    });
+
+    service.changeF5Config(testConfig);
   });
 
   describe('filterVirtualServers', () => {
@@ -50,6 +64,76 @@ describe('F5ConfigService', () => {
       const query = 'server1';
       const filtered = service.filterVirtualServers(partitionInfo, query);
       expect(filtered.partition1.length).toBe(0);
+    });
+  });
+
+  describe('getVirtualServerStatus', () => {
+    it('should return "up" for available and enabled virtual servers', () => {
+      const virtualServer = {
+        stats: {
+          nestedStats: {
+            entries: {
+              'status.availabilityState': { description: 'available' },
+              'status.enabledState': { description: 'enabled' },
+            },
+          },
+        },
+      };
+      expect(service.getVirtualServerStatus(virtualServer)).toEqual('up');
+    });
+
+    it('should return "disabled" for available and disabled virtual servers', () => {
+      const virtualServer = {
+        stats: {
+          nestedStats: {
+            entries: {
+              'status.availabilityState': { description: 'available' },
+              'status.enabledState': { description: 'disabled' },
+            },
+          },
+        },
+      };
+      expect(service.getVirtualServerStatus(virtualServer)).toEqual('disabled');
+    });
+
+    it('should return "down" for offline virtual servers', () => {
+      const virtualServer = {
+        stats: {
+          nestedStats: {
+            entries: {
+              'status.availabilityState': { description: 'offline' },
+              // Note: enabledState could be anything here, but offline dominates
+              'status.enabledState': { description: 'anyState' },
+            },
+          },
+        },
+      };
+      expect(service.getVirtualServerStatus(virtualServer)).toEqual('down');
+    });
+
+    it('should return "unknown" for any other states', () => {
+      // Example where neither condition matches exactly, e.g., missing states
+      const virtualServerMissingStates = {
+        stats: {
+          nestedStats: {
+            entries: {},
+          },
+        },
+      };
+      expect(service.getVirtualServerStatus(virtualServerMissingStates)).toEqual('unknown');
+
+      // Example with unexpected states
+      const virtualServerUnexpectedStates = {
+        stats: {
+          nestedStats: {
+            entries: {
+              'status.availabilityState': { description: 'unexpected' },
+              'status.enabledState': { description: 'unexpected' },
+            },
+          },
+        },
+      };
+      expect(service.getVirtualServerStatus(virtualServerUnexpectedStates)).toEqual('unknown');
     });
   });
 });

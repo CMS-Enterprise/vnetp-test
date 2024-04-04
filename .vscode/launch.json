@@ -17,7 +17,7 @@
           "runtimeExecutable": "/Users/acrapo/.nvmnsource/versions/node/v18.13.0/bin/node",
           "name": "Debug Jest unit Tests",
           "program": "${workspaceFolder}/node_modules/jest/bin/jest",
-          "args": ["--runInBand", "--coverage","partition-details.comp"],
+          "args": ["--runInBand", "--coverage","sort-ser"],
           "console": "integratedTerminal",
           "internalConsoleOptions": "neverOpen",
       }
