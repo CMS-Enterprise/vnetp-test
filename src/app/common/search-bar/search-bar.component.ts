@@ -45,7 +45,6 @@ export class SearchBarComponent implements OnInit {
   constructor(private tableContextService: TableContextService) {}
 
   ngOnInit(): void {
-    console.log('hideDefaultSearch', this.hideDefaultSearch);
     // after a search has occured, technically a new instance of the app-table has been created
     // therefore we must use localStorage to get the previous values for consistency once the new
     // table has been created.
