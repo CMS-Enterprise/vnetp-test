@@ -1,32 +1,46 @@
 <div class="card" [class.card-disabled]="isRefreshingRuntimeData" (click)="!isRefreshingRuntimeData && navigateToDetails()">
-  <div class="card-header d-flex justify-content-end align-items-center">
-    <fa-icon
-      *ngIf="jobStatus"
-      class="icon"
-      [icon]="['fas', 'exclamation-triangle']"
-      data-bs-toggle="tooltip"
-      [attr.title]="getTooltipMessage(jobStatus)"
-    ></fa-icon>
-    <p class="mb-0">
-      <small *ngIf="!isRecentlyRefreshed() && !isRefreshingRuntimeData">Refreshed: {{ lastRefreshed }}</small>
-      <small *ngIf="isRefreshingRuntimeData" class="text-muted">Refreshing</small>
-      <small *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" class="text-muted">Refreshed</small>
-    </p>
-    <button
-      type="button"
-      class="btn btn-icon"
-      (click)="refreshF5Config(); $event.stopPropagation()"
-      [disabled]="isRecentlyRefreshed() || isRefreshingRuntimeData"
-    >
-      <fa-icon *ngIf="!isRecentlyRefreshed()" class="icon" [icon]="['fas', 'sync-alt']" [spin]="isRefreshingRuntimeData"></fa-icon>
-      <fa-icon *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" class="icon" [icon]="['fas', 'check']"></fa-icon>
-    </button>
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <!-- Status message on the left -->
+    <div class="d-flex align-items-center custom-align-items">
+      <fa-icon
+        [icon]="['fas', 'circle']"
+        class="icon-align"
+        [class.text-success]="highAvailabilityStatus === 'active'"
+        [class.text-muted]="highAvailabilityStatus !== 'active'"
+      ></fa-icon>
+      <p class="mb-0">
+        <span>{{ highAvailabilityStatus }}</span>
+      </p>
+    </div>
+    <!-- Icons and refresh button on the right -->
+    <div class="d-flex align-items-center">
+      <fa-icon
+        *ngIf="jobStatus"
+        class="icon"
+        [icon]="['fas', 'exclamation-triangle']"
+        data-bs-toggle="tooltip"
+        [attr.title]="getTooltipMessage(jobStatus)"
+      ></fa-icon>
+      <p class="mb-0">
+        <small *ngIf="!isRecentlyRefreshed() && !isRefreshingRuntimeData">Refreshed: {{ lastRefreshed }}</small>
+        <small *ngIf="isRefreshingRuntimeData" class="text-muted">Refreshing</small>
+        <small *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" class="text-muted">Refreshed</small>
+      </p>
+      <button
+        type="button"
+        class="btn btn-icon"
+        (click)="refreshF5Config(); $event.stopPropagation()"
+        [disabled]="isRecentlyRefreshed() || isRefreshingRuntimeData"
+      >
+        <fa-icon *ngIf="!isRecentlyRefreshed()" class="icon" [icon]="['fas', 'sync-alt']" [spin]="isRefreshingRuntimeData"></fa-icon>
+        <fa-icon *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" class="icon" [icon]="['fas', 'check']"></fa-icon>
+      </button>
+    </div>
   </div>
   <div class="card-body">
     <h5 class="card-title">{{ hostName }}</h5>
-    <p class="card-text">Status: {{ highAvailabilityStatus }}</p>
     <p class="card-text">
-      <small>Software Version: {{ softwareVersion }}</small>
+      <small>Version: {{ softwareVersion }}</small>
     </p>
   </div>
 </div>

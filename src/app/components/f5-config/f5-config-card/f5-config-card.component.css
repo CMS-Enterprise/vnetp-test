@@ -34,3 +34,16 @@
 .card-disabled .btn-icon {
   pointer-events: none; /* Prevents clicks on the refresh button */
 }
+
+.custom-align-items {
+  display: flex;
+  align-items: center; /* This should already align items vertically in the center */
+}
+
+.icon-align {
+  margin-right: 4px; /* Adjust based on your spacing preference */
+}
+
+.custom-align-items p {
+  margin-bottom: 0; /* Ensure the paragraph doesn't push itself down with margin */
+}

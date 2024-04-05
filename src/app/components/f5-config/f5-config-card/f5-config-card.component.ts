@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 })
 export class F5ConfigCardComponent implements OnInit {
   @Input() f5Config: F5Runtime;
-  softwareVersion: number;
+  softwareVersion: string;
   highAvailabilityStatus: string;
   hostName: string;
   lastRefreshed: string;
@@ -33,7 +33,7 @@ export class F5ConfigCardComponent implements OnInit {
   ngOnInit(): void {
     const f5Data = this.f5Config.data as any;
     this.softwareVersion = f5Data?.hostInfo?.softwareVersion;
-    this.highAvailabilityStatus = f5Data?.hostInfo?.highAvailabilityStatus;
+    this.highAvailabilityStatus = f5Data?.hostInfo?.availability?.status;
     this.hostName = this.f5Config.hostname;
     this.lastRefreshed = this.runtimeDataService.calculateTimeDifference(this.f5Config.runtimeDataLastRefreshed);
   }
@@ -97,6 +97,7 @@ export class F5ConfigCardComponent implements OnInit {
     return this.runtimeDataService.isRecentlyRefreshed(this.f5Config.runtimeDataLastRefreshed);
   }
 
+  // if active make circle green with text active, if not active make circle grey with status
   getTooltipMessage(status: string): string {
     switch (status) {
       case 'failed':
