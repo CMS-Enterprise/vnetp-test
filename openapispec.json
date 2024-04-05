@@ -25120,13 +25120,13 @@
               "F5Config"
             ]
           },
-          "hostname": {
+          "id": {
             "type": "string"
           }
         },
         "required": [
           "type",
-          "hostname"
+          "id"
         ]
       },
       "F5DataDto": {

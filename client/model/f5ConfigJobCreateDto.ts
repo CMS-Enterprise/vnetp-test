@@ -13,7 +13,7 @@
 
 export interface F5ConfigJobCreateDto { 
     type: F5ConfigJobCreateDtoTypeEnum;
-    hostname: string;
+    id: string;
 }
 export enum F5ConfigJobCreateDtoTypeEnum {
     FirewallRule = 'FirewallRule',

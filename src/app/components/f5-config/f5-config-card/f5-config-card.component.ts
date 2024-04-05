@@ -58,7 +58,7 @@ export class F5ConfigCardComponent implements OnInit {
       .createRuntimeDataJobF5Config({
         f5ConfigJobCreateDto: {
           type: F5ConfigJobCreateDtoTypeEnum.F5Config,
-          hostname: this.f5Config.hostname,
+          id: this.f5Config.id,
         },
       })
       .subscribe(job => {
