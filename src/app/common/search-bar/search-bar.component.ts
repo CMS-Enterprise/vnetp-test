@@ -59,10 +59,7 @@ export class SearchBarComponent implements OnInit {
     this.searchText = previousSearchText;
 
     this.searchColumn = previousSearchColumn;
-    if (this.hideDefaultSearch) {
-      // this.searchColumn = null
-      return;
-    }
+
     if (!previousSearchColumn) {
       this.searchColumn = this.defaultSearch.propertyName;
     }
@@ -104,6 +101,5 @@ export class SearchBarComponent implements OnInit {
     this.filteredResults = false;
     this.searchError = false;
     this.searchBarClearResults.emit();
-    console.log('hideDefaultSearch', this.hideDefaultSearch);
   }
 }
