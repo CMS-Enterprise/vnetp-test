@@ -22,7 +22,7 @@
         [attr.title]="getTooltipMessage(jobStatus)"
       ></fa-icon>
       <p class="mb-0">
-        <small *ngIf="!isRecentlyRefreshed() && !isRefreshingRuntimeData">Refreshed: {{ lastRefreshed }}</small>
+        <small *ngIf="!isRecentlyRefreshed() && !isRefreshingRuntimeData">{{ lastRefreshed }}</small>
         <small *ngIf="isRefreshingRuntimeData" class="text-muted">Refreshing</small>
         <small *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" class="text-muted">Refreshed</small>
       </p>
