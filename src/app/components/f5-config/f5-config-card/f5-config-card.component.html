@@ -20,8 +20,7 @@
         [icon]="['fas', 'exclamation-triangle']"
         data-bs-toggle="tooltip"
         [attr.title]="getTooltipMessage(jobStatus)"
-        ></fa-icon
-      ><p>{{ jobStatus }}</p>
+      ></fa-icon>
       <p class="mb-0">
         <small *ngIf="!isRecentlyRefreshed() && !isRefreshingRuntimeData">{{ lastRefreshed }}</small>
         <small *ngIf="isRefreshingRuntimeData" class="text-muted">Refreshing</small>
