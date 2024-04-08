@@ -56,7 +56,7 @@ export class RuntimeDataService {
         attempts++;
         return this.jobsService.getJobStatusJob({ id: jobId });
       }),
-      takeWhile((status: TowerJobDto) => status.status === 'running' && attempts <= maxPollAttempts),
+      takeWhile((status: TowerJobDto) => status.status === 'running' || status.status === 'pending'),
     );
   }
 }
