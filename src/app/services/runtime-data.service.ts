@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, interval } from 'rxjs';
-import { switchMap, takeWhile, tap } from 'rxjs/operators';
+import { Observable, Subject, interval } from 'rxjs';
+import { switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { V1JobsService } from '../../../client';
 import { TowerJobDto } from '../../../client/model/towerJobDto';
 
@@ -49,16 +49,25 @@ export class RuntimeDataService {
 
   pollJobStatus(jobId: string, timeBetweenPolls = 1000, maxPollAttempts = 120): Observable<TowerJobDto> {
     let attempts = 0;
+    const stopPolling = new Subject<void>();
 
     return interval(timeBetweenPolls).pipe(
       switchMap(() => {
         attempts++;
+        if (attempts > maxPollAttempts) {
+          stopPolling.next();
+          stopPolling.complete();
+        }
         return this.jobsService.getJobStatusJob({ id: jobId });
       }),
       tap((status: TowerJobDto) => {
         console.log(`Attempt: ${attempts}, Status: ${status.status}`);
+        if (status.status === 'successful' || status.status === 'failed') {
+          stopPolling.next();
+          stopPolling.complete();
+        }
       }),
-      takeWhile((status: TowerJobDto) => (status.status === 'running' || status.status === 'pending') && attempts <= maxPollAttempts),
+      takeUntil(stopPolling),
     );
   }
 }
