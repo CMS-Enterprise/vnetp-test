@@ -15,7 +15,7 @@
     <!-- Icons and refresh button on the right -->
     <div class="d-flex align-items-center">
       <fa-icon
-        *ngIf="jobStatus"
+        *ngIf="jobStatus && jobStatus !== 'successful'"
         class="icon"
         [icon]="['fas', 'exclamation-triangle']"
         data-bs-toggle="tooltip"
