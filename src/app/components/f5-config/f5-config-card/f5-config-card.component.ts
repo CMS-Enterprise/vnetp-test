@@ -64,7 +64,7 @@ export class F5ConfigCardComponent implements OnInit {
       .subscribe(job => {
         this.runtimeDataService.pollJobStatus(job.id).subscribe({
           next: towerJobDto => {
-            console.log(towerJobDto);
+            console.log('component status sub: ', towerJobDto);
             if (towerJobDto.status === 'successful') {
               this.jobStatus = towerJobDto.status;
               this.updateF5Config();
