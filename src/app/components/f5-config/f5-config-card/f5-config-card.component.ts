@@ -107,7 +107,7 @@ export class F5ConfigCardComponent implements OnInit {
       case 'error':
         return 'An error occurred during polling';
       default:
-        return '';
+        return status;
     }
   }
 }
