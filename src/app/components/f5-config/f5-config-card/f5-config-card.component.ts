@@ -63,26 +63,21 @@ export class F5ConfigCardComponent implements OnInit {
         },
       })
       .subscribe(job => {
+        let status = '';
         this.runtimeDataService.pollJobStatus(job.id).subscribe({
           next: towerJobDto => {
-            console.log('component status sub: ', towerJobDto);
-            if (towerJobDto.status === 'successful') {
-              this.jobStatus = towerJobDto.status;
-              this.updateF5Config();
-            } else if (towerJobDto.status === 'failed') {
-              this.jobStatus = towerJobDto.status;
-              this.isRefreshingRuntimeData = false;
-            } else if (towerJobDto.status === 'running') {
-              this.jobStatus = towerJobDto.status;
-            }
+            status = towerJobDto.status;
           },
           error: () => {
-            this.jobStatus = 'error';
+            status = 'error';
             this.isRefreshingRuntimeData = false;
           },
           complete: () => {
             this.isRefreshingRuntimeData = false;
-            this.cd.detectChanges();
+            if (status === 'successful') {
+              this.updateF5Config();
+            }
+            this.jobStatus = status;
           },
         });
       });
