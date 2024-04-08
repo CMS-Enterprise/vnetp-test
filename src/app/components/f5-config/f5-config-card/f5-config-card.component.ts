@@ -32,7 +32,8 @@ export class F5ConfigCardComponent implements OnInit {
 
   ngOnInit(): void {
     const f5Data = this.f5Config.data as any;
-    this.softwareVersion = f5Data?.hostInfo?.softwareVersion;
+    this.softwareVersion = '10.1.0';
+    // this.softwareVersion = f5Data?.hostInfo?.softwareVersion;
     this.highAvailabilityStatus = f5Data?.hostInfo?.availability?.status;
     this.hostName = this.f5Config.hostname;
     this.lastRefreshed = this.runtimeDataService.calculateTimeDifference(this.f5Config.runtimeDataLastRefreshed);

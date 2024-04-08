@@ -5,8 +5,8 @@
       <fa-icon
         [icon]="['fas', 'circle']"
         class="icon-align"
-        [class.text-success]="highAvailabilityStatus === 'active'"
-        [class.text-muted]="highAvailabilityStatus !== 'active'"
+        [class.text-success]="highAvailabilityStatus === 'ACTIVE'"
+        [class.text-muted]="highAvailabilityStatus !== 'ACTIVE'"
       ></fa-icon>
       <p class="mb-0">
         <span>{{ highAvailabilityStatus }}</span>
@@ -37,10 +37,10 @@
       </button>
     </div>
   </div>
-  <div class="card-body">
+  <div class="card-body pb-0">
     <h5 class="card-title">{{ hostName }}</h5>
-    <p class="card-text">
-      <small>Version: {{ softwareVersion }}</small>
+    <p class="card-text mb-0">
+      <small class="text-muted">Version: {{ softwareVersion }}</small>
     </p>
   </div>
 </div>
