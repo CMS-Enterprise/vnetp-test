@@ -11,10 +11,6 @@
   transition: all 0.3s ease;
 }
 
-.card {
-  margin-bottom: 20px;
-}
-
 .card.collapsed:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a shadow around the card */
   transition: box-shadow 0.3s ease-in-out; /* Smooth transition */
@@ -70,9 +66,3 @@
   line-height: 1.0; /* Reduce line height for tighter spacing */
   margin-top: -10px; /* Optional: Pull the element up closer to the preceding element */
 }
-
-/* if we wannt to change color
-.status-green { color: #28a745; }
-.status-black { color: #000000; }
-.status-red { color: #dc3545; }
-.status-blue { color: #007bff; } */
