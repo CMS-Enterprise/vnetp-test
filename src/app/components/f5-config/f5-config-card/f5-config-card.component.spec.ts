@@ -54,7 +54,7 @@ describe('F5ConfigCardComponent', () => {
       data: {
         hostInfo: {
           softwareVersion: 1,
-          highAvailabilityStatus: 'available',
+          availability: { status: 'available' },
         },
       },
       hostname: 'hostname',
@@ -180,9 +180,9 @@ describe('F5ConfigCardComponent', () => {
       expect(message).toEqual('An error occurred during polling');
     });
 
-    it('should return an empty string for any other status', () => {
+    it('should return an status string for any other status', () => {
       const message = component.getTooltipMessage('success');
-      expect(message).toEqual('');
+      expect(message).toEqual('success');
     });
   });
 });

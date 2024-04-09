@@ -144,6 +144,7 @@ describe('RuntimeDataService', () => {
       const result = [
         { id: jobId, status: 'running' },
         { id: jobId, status: 'running' },
+        { id: jobId, status: 'success' },
       ];
 
       // Assertions

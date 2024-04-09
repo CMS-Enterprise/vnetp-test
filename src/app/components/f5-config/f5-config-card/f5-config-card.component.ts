@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { F5ConfigJobCreateDtoTypeEnum, F5Runtime, V1RuntimeDataF5ConfigService } from '../../../../../client';
 import { ActivatedRoute, Router } from '@angular/router';
 import { F5ConfigService } from '../f5-config.service';
@@ -28,7 +28,6 @@ export class F5ConfigCardComponent implements OnInit {
     private f5StateManagementService: F5ConfigService,
     private runtimeDataService: RuntimeDataService,
     private f5ConfigService: V1RuntimeDataF5ConfigService,
-    private cd: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +70,7 @@ export class F5ConfigCardComponent implements OnInit {
           error: () => {
             status = 'error';
             this.isRefreshingRuntimeData = false;
+            this.jobStatus = status;
           },
           complete: () => {
             this.isRefreshingRuntimeData = false;
