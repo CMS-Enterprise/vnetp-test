@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges, DoCheck } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -9,13 +9,14 @@ import { IncidentService } from 'src/app/services/incident.service';
 import { UndeployedChangesService } from '../../services/undeployed-changes.service';
 import { DatacenterContextService } from '../../services/datacenter-context.service';
 import { TierContextService } from '../../services/tier-context.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent implements OnInit, OnDestroy {
+export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
   public user: UserDto;
   public userRoles: string[];
   public tenant: string;
@@ -33,6 +34,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public environment = environment;
   public dcsVersion: string = this.environment?.dynamic?.dcsVersion;
   changeRequest: string;
+  lockChangeRequest;
 
   private changeRequestModalSubscription: Subscription;
   private currentChangeRequestSubscription: Subscription;
@@ -44,6 +46,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private tierContextService: TierContextService,
     private undeployedChangesService: UndeployedChangesService,
     private incidentService: IncidentService,
+    private router: Router,
   ) {}
 
   public openLogoutModal(): void {
@@ -139,6 +142,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
       });
     } catch (e) {
       console.log('hit catch', e);
+    }
+  }
+
+  // url check to lock change request modal except for on the dashboard component
+  ngDoCheck() {
+    if (!this.router.url.includes('dashboard')) {
+      this.lockChangeRequest = true;
+    } else {
+      this.lockChangeRequest = false;
     }
   }
 }

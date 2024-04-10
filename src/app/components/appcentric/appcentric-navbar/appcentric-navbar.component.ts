@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserDto } from 'client/model/userDto';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -21,8 +22,14 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
   private changeRequestModalSubscription: Subscription;
   private currentChangeRequestSubscription: Subscription;
   changeRequest: string;
+  lockChangeRequest;
 
-  constructor(private ngx: NgxSmartModalService, private auth: AuthService, private incidentService: IncidentService) {}
+  constructor(
+    private ngx: NgxSmartModalService,
+    private auth: AuthService,
+    private incidentService: IncidentService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.currentChangeRequestSubscription = this.incidentService.currentIncident.subscribe(inc => {
@@ -85,5 +92,14 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
       this.ngx.resetModalData('changeRequestModal');
       this.changeRequestModalSubscription.unsubscribe();
     });
+  }
+
+  // url check to lock change request modal except for on the dashboard component
+  ngDoCheck() {
+    if (!this.router.url.includes('dashboard')) {
+      this.lockChangeRequest = true;
+    } else {
+      this.lockChangeRequest = false;
+    }
   }
 }
