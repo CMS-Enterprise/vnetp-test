@@ -47,7 +47,7 @@ export class RuntimeDataService {
     return diffInSeconds <= thresholdInSeconds;
   }
 
-  pollJobStatus(jobId: string, timeBetweenPolls = 1000, maxPollAttempts = 120): Observable<TowerJobDto> {
+  pollJobStatus(jobId: string, timeBetweenPolls = 10000, maxPollAttempts = 30): Observable<TowerJobDto> {
     let attempts = 0;
 
     return interval(timeBetweenPolls).pipe(
