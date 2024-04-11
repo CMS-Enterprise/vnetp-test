@@ -19,6 +19,7 @@ export class F5ConfigCardComponent implements OnInit {
   pollingSubscription: Subscription;
   isRefreshingRuntimeData = false;
   jobStatus: string;
+  displayName: string;
 
   @ViewChildren('bootstrapTooltip') tooltips: QueryList<ElementRef>;
 
@@ -36,6 +37,7 @@ export class F5ConfigCardComponent implements OnInit {
     this.highAvailabilityStatus = f5Data?.hostInfo?.availability?.status;
     this.hostName = this.f5Config.hostname;
     this.lastRefreshed = this.runtimeDataService.calculateTimeDifference(this.f5Config.runtimeDataLastRefreshed);
+    this.displayName = this.f5Config.displayName;
   }
 
   navigateToDetails(): void {
