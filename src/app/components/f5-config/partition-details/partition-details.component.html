@@ -1,14 +1,25 @@
-<app-f5-config-filter (f5ConfigSearch)="onSearch($event)"(partitionSelected)="onPartitionSelected($event)" (search)="onSearch($event)"></app-f5-config-filter>
+<app-f5-config-filter
+  *ngIf="partitionNames"
+  (f5ConfigSearch)="onSearch($event)"
+  (partitionSelected)="onPartitionSelected($event)"
+  (search)="onSearch($event)"
+></app-f5-config-filter>
+<div *ngIf="!partitionNames" class="empty-state-container">
+  <p>No partitions found.</p>
+</div>
 <div *ngFor="let partitionName of filteredPartitionNames">
   <ng-container *ngIf="selectedPartition === '[ALL]' || selectedPartition === partitionName">
     <h2>{{ partitionName }}</h2>
     <div class="row">
-      <div *ngFor="let virtualServer of filteredPartitionInfo[partitionName]| sortVirtualServersByStatus" [ngClass]="virtualServer.expanded ? 'col-12' : 'col-md-2'">
+      <div
+        *ngFor="let virtualServer of filteredPartitionInfo[partitionName] | sortVirtualServersByStatus"
+        [ngClass]="virtualServer.expanded ? 'col-12' : 'col-md-2'"
+      >
         <app-virtual-server-card
           [virtualServer]="virtualServer"
           (expandedChange)="handleExpandedChange(virtualServer, $event)"
         ></app-virtual-server-card>
       </div>
     </div>
-    </ng-container>
+  </ng-container>
 </div>

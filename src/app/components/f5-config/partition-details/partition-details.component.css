@@ -1,0 +1,8 @@
+  .empty-state-container {
+    text-align: center;
+    padding: 20px;
+  }
+  .empty-state-image {
+    width: 100px; /* Adjust size as needed */
+    margin-bottom: 15px;
+  }
