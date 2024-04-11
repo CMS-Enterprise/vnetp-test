@@ -6,7 +6,7 @@ import { F5Runtime } from '../../../../../client';
 @Component({
   selector: 'app-partition-details',
   templateUrl: './partition-details.component.html',
-  styleUrls: ['./partition-details.component.scss'],
+  styleUrls: ['./partition-details.component.css'],
 })
 export class PartitionDetailsComponent implements OnInit, OnDestroy {
   f5Config: F5Runtime;
