@@ -38,7 +38,7 @@ export class StaticRoutesComponent implements OnInit, OnDestroy {
         filter: [`datacenterId||eq||${this.DatacenterId}`],
         join: ['staticRoutes'],
         page: 1,
-        limit: 1000,
+        perPage: 1000,
       })
       .subscribe(
         (data: unknown) => {

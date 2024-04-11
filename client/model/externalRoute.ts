@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { WanForm } from './wanForm';
 
 
 export interface ExternalRoute { 
@@ -21,6 +22,8 @@ export interface ExternalRoute {
     vrf: ExternalRouteVrfEnum;
     environment: ExternalRouteEnvironmentEnum;
     wanFormId: string;
+    readonly wanForm?: WanForm;
+    datacenterId: string;
 }
 export enum ExternalRouteVrfEnum {
     Appprod = 'appprod',

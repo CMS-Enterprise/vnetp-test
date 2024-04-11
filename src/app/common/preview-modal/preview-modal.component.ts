@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { TableConfig } from '../table/table.component';
 
 @Component({
   selector: 'app-preview-modal',
   templateUrl: './preview-modal.component.html',
+  styleUrls: ['./preview-modal.component.css'],
 })
 export class PreviewModalComponent<T> {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted = false;
   config: TableConfig<T> = {
     description: 'Import Preview',
@@ -32,7 +33,7 @@ export class PreviewModalComponent<T> {
   }
 
   public getData(): void {
-    const modalConfig = this.ngx.getModalData('previewModal');
+    const modalConfig = this.ngx.getModalData('previewModal') as any;
     this.config = modalConfig.tableConfig;
     this.data = modalConfig.data;
     this.ngx.resetModalData('previewModal');

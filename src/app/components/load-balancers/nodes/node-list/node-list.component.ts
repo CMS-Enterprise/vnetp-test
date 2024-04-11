@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { GetManyLoadBalancerNodeResponseDto, LoadBalancerNode, Tier, V1LoadBalancerNodesService } from 'client';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { GetManyLoadBalancerNodeResponseDto, LoadBalancerNode, LoadBalancerNodeTypeEnum, Tier, V1LoadBalancerNodesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -10,8 +10,11 @@ import { TableContextService } from 'src/app/services/table-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { NodeModalDto } from '../node-modal/node-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface NodeView extends LoadBalancerNode {
   nameView: string;
@@ -23,10 +26,14 @@ export interface NodeView extends LoadBalancerNode {
   selector: 'app-node-list',
   templateUrl: './node-list.component.html',
 })
-export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class NodeListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Type', propertyName: 'type', propertyType: LoadBalancerNodeTypeEnum },
+    { displayName: 'IpAddress', propertyName: 'ipAddress' },
+    { displayName: 'FQDN', propertyName: 'fqdn', searchOperator: 'cont' },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -57,14 +64,16 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
-  ) {}
+    public filteredHelpText: FilteredCount,
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerNode>();
+    advancedSearchAdapterObject.setService(this.nodesService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerNodesService');
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.nodeChanges = this.subscribeToNodeModal();
   }
 
   ngOnDestroy(): void {
@@ -106,8 +115,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'ipAddress' || propertyName === 'type') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -115,8 +127,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
       .getManyLoadBalancerNode({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        perPage: this.tableComponentDto.perPage,
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -137,7 +149,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         },
         () => {
-          this.nodes = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;
@@ -147,12 +159,12 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(nodes: ImportNode[]): void {
     const bulk = nodes.map(node => {
-      const { vrfName } = node;
-      if (!vrfName) {
+      const { tierName } = node;
+      if (!tierName) {
         return node;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...node,
         tierId,
@@ -171,6 +183,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       node,
     };
+    this.subscribeToNodeModal();
     this.ngx.setModalData(dto, 'nodeModal');
     this.ngx.open('nodeModal');
   }
@@ -208,8 +221,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToNodeModal(): Subscription {
-    return this.ngx.getModal('nodeModal').onCloseFinished.subscribe(() => {
+  private subscribeToNodeModal(): void {
+    this.nodeChanges = this.ngx.getModal('nodeModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
@@ -224,10 +237,15 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadNodes();
       }
       this.ngx.resetModalData('nodeModal');
+      this.nodeChanges.unsubscribe();
     });
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }
 
 export interface ImportNode extends LoadBalancerNode {
-  vrfName?: string;
+  tierName?: string;
 }

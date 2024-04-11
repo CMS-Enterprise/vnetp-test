@@ -13,10 +13,11 @@ import { ServiceObject } from './serviceObject';
 
 
 export interface GetManyServiceObjectResponseDto { 
-    data: Array<ServiceObject>;
+    totalPages: number;
     count: number;
     total: number;
     page: number;
     pageCount: number;
+    data: Array<ServiceObject>;
 }
 

@@ -1,45 +1,51 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  ExternalRoute,
-  ExternalRouteDto,
-  ExternalRouteDtoEnvironmentEnum,
-  ExternalRouteDtoVrfEnum,
-  ExternalRouteEnvironmentEnum,
-  ExternalRouteVrfEnum,
-} from 'client';
-import { V1NetworkScopeFormsWanFormService } from 'client/api/v1NetworkScopeFormsWanForm.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ExternalRouteModalDto } from 'src/app/models/network-scope-forms/external-route-modal.dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import {
-  IpAddressAnyValidator,
   IpAddressCidrValidator,
   IpAddressHostNetworkCidrValidator,
-  IpAddressIpValidator,
   validateWanFormExternalRouteIp,
 } from 'src/app/validators/network-form-validators';
+import { ExternalRoute } from '../../../../../../../client/model/externalRoute';
+// eslint-disable-next-line max-len
+import { V1NetworkScopeFormsWanFormExternalRouteService } from '../../../../../../../client/api/v1NetworkScopeFormsWanFormExternalRoute.service';
+import { DatacenterContextService } from '../../../../../services/datacenter-context.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-external-route-modal',
   templateUrl: './external-route-modal.component.html',
   styleUrls: ['./external-route-modal.component.css'],
 })
-export class ExternalRouteModalComponent implements OnInit {
+export class ExternalRouteModalComponent implements OnInit, OnDestroy {
   public modalMode: ModalMode;
   public form: FormGroup;
   public externalRouteId: string;
   public submitted: boolean;
   public wanFormId: string;
+  private datacenterId: string;
+  private datacenterSubscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
-    private wanFormService: V1NetworkScopeFormsWanFormService,
+    private externalRouteService: V1NetworkScopeFormsWanFormExternalRouteService,
+    private datacenterContextService: DatacenterContextService,
   ) {}
 
   ngOnInit(): void {
     this.buildForm();
+    this.datacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.datacenterId = cd.id;
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.datacenterSubscription.unsubscribe();
   }
 
   get f() {
@@ -92,49 +98,6 @@ export class ExternalRouteModalComponent implements OnInit {
     });
   }
 
-  private createExternalRoute(externalRoute: ExternalRoute): void {
-    // TODO: openapi generates two different enums for the same thing, so we need to convert them. must be a way to fix
-    const externalRouteVrfToDtoVrf = {
-      [ExternalRouteVrfEnum.Appprod]: ExternalRouteDtoVrfEnum.Appprod,
-      [ExternalRouteVrfEnum.Appdev]: ExternalRouteDtoVrfEnum.Appdev,
-      [ExternalRouteVrfEnum.Dataprod]: ExternalRouteDtoVrfEnum.Dataprod,
-      [ExternalRouteVrfEnum.Datadev]: ExternalRouteDtoVrfEnum.Datadev,
-      [ExternalRouteVrfEnum.Edcmgmt]: ExternalRouteDtoVrfEnum.Edcmgmt,
-    };
-
-    const externalRouteEnvironmnetToDtoEnvironment = {
-      [ExternalRouteEnvironmentEnum.Prod]: ExternalRouteDtoEnvironmentEnum.Prod,
-      [ExternalRouteEnvironmentEnum.Dev]: ExternalRouteDtoEnvironmentEnum.Dev,
-      [ExternalRouteEnvironmentEnum.Val]: ExternalRouteDtoEnvironmentEnum.Val,
-      [ExternalRouteEnvironmentEnum.Imp]: ExternalRouteDtoEnvironmentEnum.Imp,
-    };
-
-    const externalRouteDtoVrf = externalRouteVrfToDtoVrf[externalRoute.vrf];
-    const externalRouteDtoEnvironment = externalRouteEnvironmnetToDtoEnvironment[externalRoute.environment];
-
-    const dto: ExternalRouteDto = {
-      externalRouteIp: externalRoute.externalRouteIp,
-      description: externalRoute.description,
-      vrf: externalRouteDtoVrf,
-      environment: externalRouteDtoEnvironment,
-    };
-    this.wanFormService.createExternalRouteWanForm({ wanFormId: this.wanFormId, externalRouteDto: dto }).subscribe(() => {
-      this.closeModal();
-    });
-  }
-
-  private editExternalRoute(externalRouteToEdit: ExternalRoute): void {
-    this.wanFormService
-      .updateExternalRouteWanForm({
-        externalRouteId: this.externalRouteId,
-        wanFormId: this.wanFormId,
-        externalRoute: externalRouteToEdit,
-      })
-      .subscribe(() => {
-        this.closeModal();
-      });
-  }
-
   public save(): void {
     this.submitted = true;
     if (this.form.invalid) {
@@ -148,12 +111,22 @@ export class ExternalRouteModalComponent implements OnInit {
       vrf,
       environment,
       wanFormId: this.wanFormId,
+      datacenterId: this.datacenterId,
     } as ExternalRoute;
 
     if (this.modalMode === ModalMode.Create) {
-      this.createExternalRoute(externalRoute);
+      this.externalRouteService.createOneExternalRoute({ externalRoute }).subscribe(() => {
+        this.closeModal();
+      });
     } else {
-      this.editExternalRoute(externalRoute);
+      this.externalRouteService
+        .updateOneExternalRoute({
+          id: this.externalRouteId,
+          externalRoute,
+        })
+        .subscribe(() => {
+          this.closeModal();
+        });
     }
   }
 }

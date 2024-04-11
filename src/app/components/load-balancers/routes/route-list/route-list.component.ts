@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { GetManyLoadBalancerRouteResponseDto, LoadBalancerRoute, Tier, V1LoadBalancerRoutesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
@@ -10,8 +10,11 @@ import { TableContextService } from 'src/app/services/table-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { RouteModalDto } from '../route-modal/route-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface RouteView extends LoadBalancerRoute {
   nameView: string;
@@ -22,17 +25,20 @@ export interface RouteView extends LoadBalancerRoute {
   selector: 'app-route-list',
   templateUrl: './route-list.component.html',
 })
-export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class RouteListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Destination', propertyName: 'destination' },
+    { displayName: 'Gateway', propertyName: 'gateway' },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<RouteView> = {
     description: 'Routes in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Destination', property: 'destination' },
       { name: 'Gateway', property: 'gateway' },
       { name: 'State', property: 'state' },
@@ -54,14 +60,16 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
-  ) {}
+    public filteredHelpText: FilteredCount,
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerRoute>();
+    advancedSearchAdapterObject.setService(this.routesService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerRoutesService');
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.routeChanges = this.subscribeToRouteModal();
   }
 
   ngOnDestroy(): void {
@@ -103,17 +111,20 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
+      if (propertyName === 'name') {
+        eventParams = propertyName + '||cont||' + searchText;
+      } else if (propertyName) {
+        eventParams = propertyName + '||eq||' + searchText;
       }
     }
     this.routesService
       .getManyLoadBalancerRoute({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        perPage: this.tableComponentDto.perPage,
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         (response: any) => {
@@ -126,16 +137,14 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
           }
           this.routes = response;
-          this.routes.data = (this.routes.data as RouteView[]).map(r => {
-            return {
-              ...r,
-              nameView: r.name.length >= 20 ? r.name.slice(0, 19) + '...' : r.name,
-              state: r.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-            };
-          });
+          this.routes.data = (this.routes.data as RouteView[]).map(r => ({
+            ...r,
+            nameView: r.name.length >= 20 ? r.name.slice(0, 19) + '...' : r.name,
+            state: r.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+          }));
         },
         () => {
-          this.routes = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;
@@ -145,12 +154,12 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(routes: ImportRoute[]): void {
     const bulk = routes.map(route => {
-      const { vrfName } = route;
-      if (!vrfName) {
+      const { tierName } = route;
+      if (!tierName) {
         return route;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...route,
         tierId,
@@ -169,6 +178,7 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       route,
     };
+    this.subscribeToRouteModal();
     this.ngx.setModalData(dto, 'routeModal');
     this.ngx.open('routeModal');
   }
@@ -206,8 +216,8 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToRouteModal(): Subscription {
-    return this.ngx.getModal('routeModal').onCloseFinished.subscribe(() => {
+  private subscribeToRouteModal(): void {
+    this.routeChanges = this.ngx.getModal('routeModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
@@ -222,10 +232,15 @@ export class RouteListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadRoutes();
       }
       this.ngx.resetModalData('routeModal');
+      this.routeChanges.unsubscribe();
     });
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }
 
 export interface ImportRoute extends LoadBalancerRoute {
-  vrfName?: string;
+  tierName?: string;
 }

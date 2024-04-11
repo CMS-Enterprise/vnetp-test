@@ -1,5 +1,11 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
-import { GetManyLoadBalancerPolicyResponseDto, LoadBalancerPolicy, Tier, V1LoadBalancerPoliciesService } from 'client';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  GetManyLoadBalancerPolicyResponseDto,
+  LoadBalancerPolicy,
+  LoadBalancerPolicyTypeEnum,
+  Tier,
+  V1LoadBalancerPoliciesService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -10,8 +16,11 @@ import { TableContextService } from 'src/app/services/table-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { PolicyModalDto } from '../policy-modal/policy-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface PolicyView extends LoadBalancerPolicy {
   nameView: string;
@@ -22,17 +31,17 @@ export interface PolicyView extends LoadBalancerPolicy {
   selector: 'app-policy-list',
   templateUrl: './policy-list.component.html',
 })
-export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PolicyListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [{ displayName: 'Type', propertyName: 'type', propertyType: LoadBalancerPolicyTypeEnum }];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<PolicyView> = {
     description: 'Policies in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
@@ -53,14 +62,16 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
-  ) {}
+    public filteredHelpText: FilteredCount,
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerPolicy>();
+    advancedSearchAdapterObject.setService(this.policiesService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerPoliciesService');
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.policyChanges = this.subscribeToPolicyModal();
   }
 
   ngOnDestroy(): void {
@@ -102,31 +113,32 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
+      if (propertyName === 'name') {
+        eventParams = propertyName + '||cont||' + searchText;
+      } else if (propertyName) {
+        eventParams = propertyName + '||eq||' + searchText;
       }
     }
     this.policiesService
       .getManyLoadBalancerPolicy({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        perPage: this.tableComponentDto.perPage,
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
           this.policies = response;
-          this.policies.data = (this.policies.data as PolicyView[]).map(p => {
-            return {
-              ...p,
-              nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
-              state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-            };
-          });
+          this.policies.data = (this.policies.data as PolicyView[]).map(p => ({
+            ...p,
+            nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
+            state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+          }));
         },
         () => {
-          this.policies = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;
@@ -136,12 +148,12 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(policies: ImportPolicy[]): void {
     const bulk = policies.map(policy => {
-      const { vrfName } = policy;
-      if (!vrfName) {
+      const { tierName } = policy;
+      if (!tierName) {
         return policy;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...policy,
         tierId,
@@ -160,6 +172,7 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       policy,
     };
+    this.subscribeToPolicyModal();
     this.ngx.setModalData(dto, 'policyModal');
     this.ngx.open('policyModal');
   }
@@ -197,8 +210,8 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToPolicyModal(): Subscription {
-    return this.ngx.getModal('policyModal').onCloseFinished.subscribe(() => {
+  private subscribeToPolicyModal(): void {
+    this.policyChanges = this.ngx.getModal('policyModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
@@ -213,10 +226,15 @@ export class PolicyListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadPolicies();
       }
       this.ngx.resetModalData('policyModal');
+      this.policyChanges.unsubscribe();
     });
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }
 
 export interface ImportPolicy extends LoadBalancerPolicy {
-  vrfName?: string;
+  tierName?: string;
 }

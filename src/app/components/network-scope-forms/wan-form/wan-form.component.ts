@@ -1,10 +1,8 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { WanFormPaginationResponse } from 'client';
 import { V1NetworkScopeFormsWanFormService } from 'client/api/v1NetworkScopeFormsWanForm.service';
 import { WanForm } from 'client/model/wanForm';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
-import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { WanFormModalDto } from 'src/app/models/network-scope-forms/wan-form-modal.dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -13,6 +11,8 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TableContextService } from 'src/app/services/table-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { GetManyWanFormResponseDto } from '../../../../../client/model/getManyWanFormResponseDto';
+import { SearchColumnConfig } from '../../../common/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-wan-form',
@@ -21,7 +21,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 })
 export class WanFormComponent implements OnInit, OnDestroy {
   public isLoading = false;
-  public wanForms: WanFormPaginationResponse;
+  public wanForms: GetManyWanFormResponseDto;
   public perPage = 20;
   public searchColumns: SearchColumnConfig[] = [];
   public tableComponentDto = new TableComponentDto();
@@ -111,17 +111,16 @@ export class WanFormComponent implements OnInit, OnDestroy {
       }
     }
     this.wanFormService
-      .getManyWanFormsWanForm({
-        datacenterId: this.datacenterId,
+      .getManyWanForm({
+        filter: [`datacenterId||eq||${this.datacenterId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        searchText: eventParams,
       })
       .subscribe(
         data => {
           this.wanForms = data;
         },
-        error => {
+        () => {
           this.wanForms = null;
         },
         () => {
@@ -133,7 +132,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
   public activateWanForm(wanForm: WanForm) {
     const modalDto = new YesNoModalDto('Activate WAN Form', `Are you sure you want to activate: '${wanForm.name}'?`);
     const onConfirm = () => {
-      this.wanFormService.activateWanFormWanForm({ id: wanForm.id, wanForm }).subscribe(data => {
+      this.wanFormService.activateWanFormWanForm({ id: wanForm.id }).subscribe(() => {
         this.getWanForms();
       });
     };

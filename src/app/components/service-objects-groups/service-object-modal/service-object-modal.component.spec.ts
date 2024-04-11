@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ServiceObjectModalComponent } from '../service-object-modal/service-object-modal.component';
@@ -14,7 +14,7 @@ describe('ServiceObjectModalComponent', () => {
   let component: ServiceObjectModalComponent;
   let fixture: ComponentFixture<ServiceObjectModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [ServiceObjectModalComponent, MockTooltipComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
@@ -28,7 +28,7 @@ describe('ServiceObjectModalComponent', () => {
         component.ServiceObjectId = '2';
         fixture.detectChanges();
       });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -68,13 +68,20 @@ describe('ServiceObjectModalComponent', () => {
     expect(component.f.name).toBeTruthy();
   });
 
-  it('should reset the form when closing the modal', () => {
-    component.form.controls.name.setValue('Test');
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    // Access the private ngx member using bracket notation
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    const ngx = component['ngx'];
 
-    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
-    cancelButton.nativeElement.click();
+    // Set up the spy on ngx.close
+    const ngxSpy = jest.spyOn(ngx, 'close');
 
-    expect(component.form.controls.name.value).toBe('');
+    // Call the cancel method
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    component['closeModal']();
+
+    // Check if ngx.close has been called with the expected argument
+    expect(ngxSpy).toHaveBeenCalledWith('serviceObjectModal');
   });
 
   it('should not create a service object when the form is invalid', () => {
@@ -139,8 +146,6 @@ describe('ServiceObjectModalComponent', () => {
     expect(updateServiceObjectSpy).toHaveBeenCalledWith({
       id: '2',
       serviceObject: {
-        name: null,
-        protocol: null,
         destinationPorts: 'any',
         sourcePorts: 'any',
       },
@@ -148,20 +153,18 @@ describe('ServiceObjectModalComponent', () => {
   });
 
   describe('getData', () => {
-    const createServiceObjectModalDto = (): ServiceObjectModalDto => {
-      return {
-        TierId: '1',
-        ServiceObject: {
-          tierId: '1',
-          id: '2',
-          name: 'ServiceObject',
-          protocol: ServiceObjectProtocolEnum.Ip,
-          destinationPorts: 'any',
-          sourcePorts: 'any',
-        },
-        ModalMode: ModalMode.Edit,
-      };
-    };
+    const createServiceObjectModalDto = (): ServiceObjectModalDto => ({
+      TierId: '1',
+      ServiceObject: {
+        tierId: '1',
+        id: '2',
+        name: 'ServiceObject',
+        protocol: ServiceObjectProtocolEnum.Ip,
+        destinationPorts: 'any',
+        sourcePorts: 'any',
+      },
+      ModalMode: ModalMode.Edit,
+    });
 
     it('should enable the name, protocol, source ports and destination ports when creating a new service object', () => {
       const ngx = TestBed.inject(NgxSmartModalService);

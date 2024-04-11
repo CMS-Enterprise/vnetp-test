@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { V1NetworkSubnetsService, Subnet, Vlan, V1NetworkVlansService, GetManyVlanResponseDto } from 'client';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { V1NetworkSubnetsService, Subnet, Vlan, V1NetworkVlansService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 import { SubnetModalHelpText } from 'src/app/helptext/help-text-networking';
@@ -16,12 +16,12 @@ export class SubnetModalComponent implements OnInit {
   public ModalMode: ModalMode;
   public SubnetId: string;
   public TierId: string;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
   public vlans: Vlan[];
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private subnetService: V1NetworkSubnetsService,
     public helpText: SubnetModalHelpText,
@@ -65,7 +65,7 @@ export class SubnetModalComponent implements OnInit {
         filter: [`tierId||eq||${this.TierId}`],
         sort: ['updatedAt,ASC'],
         page: 1,
-        limit: 10000,
+        perPage: 10000,
       })
       .subscribe(
         response => {
@@ -135,11 +135,11 @@ export class SubnetModalComponent implements OnInit {
   }
 
   private editSubnet(subnet: Subnet): void {
-    subnet.name = null;
-    subnet.network = null;
-    subnet.gateway = null;
-    subnet.tierId = null;
-    subnet.vlanId = null;
+    delete subnet.name;
+    delete subnet.network;
+    delete subnet.gateway;
+    delete subnet.tierId;
+    delete subnet.vlanId;
     this.subnetService.updateOneSubnet({ id: this.SubnetId, subnet }).subscribe(
       () => {
         this.closeModal();

@@ -160,8 +160,6 @@ describe('TierModalComponent', () => {
     expect(updateTierSpy).toHaveBeenCalledWith({
       id: '2',
       tier: {
-        name: null,
-        datacenterId: null,
         description: 'Description',
         tierGroupId: '2',
         tierType: 'Presentation',
@@ -171,17 +169,15 @@ describe('TierModalComponent', () => {
   });
 
   describe('getData', () => {
-    const createTierModalDto = (): TierModalDto => {
-      return {
-        DatacenterId: '1',
-        Tier: {
-          id: '2',
-          name: 'Tier',
-          datacenterId: '1',
-        },
-        ModalMode: ModalMode.Edit,
-      };
-    };
+    const createTierModalDto = (): TierModalDto => ({
+      DatacenterId: '1',
+      Tier: {
+        id: '2',
+        name: 'Tier',
+        datacenterId: '1',
+      },
+      ModalMode: ModalMode.Edit,
+    });
 
     it('should enable the name field when creating a new tier', () => {
       const ngx = TestBed.inject(NgxSmartModalService);

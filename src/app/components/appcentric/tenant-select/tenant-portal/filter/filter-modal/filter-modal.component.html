@@ -1,0 +1,143 @@
+<ngx-smart-modal
+  #filterModal
+  identifier="filterModal"
+  customClass="large-modal"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+  [dismissable]="false"
+  customClass="large-modal"
+>
+  <header class="modal-header">
+    <h4 class="modal-title">Filter</h4>
+  </header>
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="form-control"
+          [class.is-invalid]="submitted && f.name.errors"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or '_'.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="alias">Alias</label>
+        <input
+          type="text"
+          id="alias"
+          formControlName="alias"
+          class="form-control"
+          [class.is-invalid]="submitted && f.alias.errors"
+          aria-label="Alias"
+        />
+        <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
+          <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input
+          type="text"
+          id="description"
+          formControlName="description"
+          class="form-control"
+          [class.is-invalid]="submitted && f.description.errors"
+          aria-label="Description"
+        />
+        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+          <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
+        Cancel
+      </button>
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save</span>
+      </button>
+    </footer>
+  </form>
+  <div *ngIf="modalMode == 'Edit'">
+    <div class="modal-body">
+      <hr />
+      <h5>Filter Entries</h5>
+      <section class="btn-toolbar" role="toolbar">
+        <button type="button" class="btn btn-success" (click)="openFilterEntryModal(ModalMode.Create)">
+          <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+          <span>Create Filter Entry</span>
+        </button>
+      </section>
+      <app-table
+        [config]="config"
+        [data]="filterEntries"
+        (clearResults)="getFilterEntries($event)"
+        (searchParams)="getFilterEntries($event)"
+        [searchColumns]="searchColumns"
+        [(itemsPerPage)]="perPage"
+        (tableEvent)="onTableEvent($event)"
+      ></app-table>
+    </div>
+    <app-import-export
+        [exportObject]="filterEntries"
+        exportFileName="filterEntries"
+        [disableJson]="false"
+        (import)="importFilterEntries($event)"
+      ></app-import-export>
+  </div>
+</ngx-smart-modal>
+
+<ng-template #actionsTemplate let-filterEntry="datum">
+  <section>
+    <app-icon-button
+      *ngIf="!filterEntry?.deletedAt"
+      icon="edit"
+      label="Edit FIlter Entry"
+      (handleClick)="openFilterEntryModal(ModalMode.Edit, filterEntry)"
+    ></app-icon-button>
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Filter Entry"
+      [type]="filterEntry?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="removeFilterEntry(filterEntry)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="filterEntry?.deletedAt"
+      icon="undo"
+      label="Restore Filter Entry"
+      type="success"
+      (handleClick)="restoreFilterEntry(filterEntry)"
+    ></app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #sourcePortTemplate let-filterEntry="datum">
+  <section>
+    <span *ngIf="filterEntry.sourceFromPort && filterEntry.sourceToPort"
+      >{{ filterEntry?.sourceFromPort }} - {{ filterEntry?.sourceToPort }}</span
+    >
+  </section>
+</ng-template>
+
+<ng-template #destinationPortTemplate let-filterEntry="datum">
+  <section>
+    <span *ngIf="filterEntry.destinationFromPort && filterEntry.destinationToPort"
+      >{{ filterEntry?.destinationFromPort }} - {{ filterEntry?.destinationToPort }}</span
+    >
+  </section>
+</ng-template>
+<app-filter-entry-modal [tenantId]="tenantId"></app-filter-entry-modal>

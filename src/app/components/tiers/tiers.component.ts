@@ -1,6 +1,6 @@
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { Component, OnInit, OnDestroy, TemplateRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { EntityService } from 'src/app/services/entity.service';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -24,8 +24,9 @@ import {
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableConfig } from '../../common/table/table.component';
 import { TableComponentDto } from '../../models/other/table-component-dto';
-import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
+import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 
 @Component({
   selector: 'app-tiers',
@@ -44,8 +45,11 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   private currentDatacenterSubscription: Subscription;
   private tierModalSubscription: Subscription;
+  private typeDeletemodalSubscription: Subscription;
 
   public isLoading = false;
+
+  selectedTierToDelete;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('stateTemplate') stateTemplate: TemplateRef<any>;
@@ -87,7 +91,7 @@ export class TiersComponent implements OnInit, OnDestroy {
         filter: [`datacenterId||eq||${this.currentDatacenter.id}`],
       })
       .subscribe(response => {
-        this.tierGroups = response.data as TierGroup[];
+        this.tierGroups = response.data;
 
         if (loadTiers) {
           this.getTiers();
@@ -104,40 +108,40 @@ export class TiersComponent implements OnInit, OnDestroy {
           filter: [`tierId||eq||${tier.id}`],
           sort: ['updatedAt,ASC'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
         const networkObjectGroupRequest = this.networkObjectGroupService.getManyNetworkObjectGroup({
           filter: [`tierId||eq||${tier.id}`],
           sort: ['updatedAt,ASC'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
         const serviceObjectRequest = this.serviceObjectService.getManyServiceObject({
           filter: [`tierId||eq||${tier.id}`],
           sort: ['updatedAt,ASC'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
 
         const serviceObjectGroupRequest = this.serviceObjectGroupService.getManyServiceObjectGroup({
           filter: [`tierId||eq||${tier.id}`],
           sort: ['updatedAt,ASC'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
 
         const firewallRuleGroupRequest = this.firewallRuleGroupService.getManyFirewallRuleGroup({
           filter: [`tierId||eq||${tier.id}`],
           join: ['firewallRules'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
 
         const natRuleGroupRequest = this.natRuleGroupService.getManyNatRuleGroup({
           filter: [`tierId||eq||${tier.id}`],
           join: ['natRules'],
           page: 1,
-          limit: 50000,
+          perPage: 50000,
         });
         forkJoin([
           networkObjectRequest,
@@ -194,7 +198,7 @@ export class TiersComponent implements OnInit, OnDestroy {
       .getManyTier({
         filter: [`datacenterId||eq||${this.currentDatacenter.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
+        perPage: this.tableComponentDto.perPage,
         sort: ['updatedAt,ASC'],
       })
       .subscribe(
@@ -226,25 +230,43 @@ export class TiersComponent implements OnInit, OnDestroy {
     this.ngx.getModal('tierModal').open();
   }
 
-  public deleteTier(tier: Tier): void {
-    this.entityService.deleteEntity(tier, {
-      entityName: 'Tier',
-      delete$: this.tierService.deleteOneTier({ id: tier.id }),
-      softDelete$: this.tierService.softDeleteOneTier({ id: tier.id }),
-      onSuccess: () => {
-        // get search params from local storage
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getTiers(params);
-        } else {
-          this.getTiers();
-        }
-      },
+  public subscribeToTypeDeleteModal() {
+    this.typeDeletemodalSubscription = this.ngx.getModal('typeDeleteModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('typeDeleteModal');
+      this.typeDeletemodalSubscription.unsubscribe();
+      this.getTiers();
     });
+  }
+
+  public openTypeDeleteModal(tier) {
+    this.selectedTierToDelete = tier;
+    this.subscribeToTypeDeleteModal();
+    this.ngx.getModal('typeDeleteModal').open();
+  }
+
+  public deleteTier(tier: Tier): void {
+    if (tier.deletedAt) {
+      this.openTypeDeleteModal(tier);
+    } else {
+      this.entityService.deleteEntity(tier, {
+        entityName: 'Tier',
+        delete$: this.tierService.deleteOneTier({ id: tier.id }),
+        softDelete$: this.tierService.softDeleteOneTier({ id: tier.id }),
+        onSuccess: () => {
+          // get search params from local storage
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
+
+          // if filtered results boolean is true, apply search params in the
+          // subsequent get call
+          if (filteredResults) {
+            this.getTiers(params);
+          } else {
+            this.getTiers();
+          }
+        },
+      });
+    }
   }
 
   public restoreTier(tier: Tier): void {
@@ -310,20 +332,7 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   private subscribeToTierModal(): void {
     this.tierModalSubscription = this.ngx.getModal('tierModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('tierModal');
-      this.datacenterContextService.unlockDatacenter();
-      this.tierModalSubscription.unsubscribe();
-      // get search params from local storage
-      const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
-
-      // if filtered results boolean is true, apply search params in the
-      // subsequent get call
-      if (filteredResults) {
-        this.getTiers(params);
-      } else {
-        this.getTiers();
-      }
+      window.location.reload();
     });
   }
 
@@ -339,5 +348,9 @@ export class TiersComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     SubscriptionUtil.unsubscribe([this.tierModalSubscription, this.currentDatacenterSubscription]);
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }

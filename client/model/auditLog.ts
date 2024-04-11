@@ -23,6 +23,7 @@ export interface AuditLog {
     groupName?: string;
     datacenterId: string;
     tierId?: string;
+    tenantId: string;
 }
 export enum AuditLogActionTypeEnum {
     BulkUpload = 'BulkUpload',
@@ -31,7 +32,9 @@ export enum AuditLogActionTypeEnum {
     SoftDelete = 'SoftDelete',
     Restore = 'Restore',
     Delete = 'Delete',
-    Deploy = 'Deploy'
+    Deploy = 'Deploy',
+    RuleMove = 'RuleMove',
+    RuleClone = 'RuleClone'
 };
 export enum AuditLogEntityTypeEnum {
     Appliance = 'Appliance',
@@ -59,7 +62,21 @@ export enum AuditLogEntityTypeEnum {
     NatRule = 'NatRule',
     Subnet = 'Subnet',
     Vlan = 'Vlan',
-    Tier = 'Tier'
+    Tier = 'Tier',
+    FirewallRuleGroup = 'FirewallRuleGroup',
+    NatRuleGroup = 'NatRuleGroup',
+    L3Out = 'L3Out',
+    Tenant = 'Tenant',
+    AppCentricSubnet = 'AppCentricSubnet',
+    ApplicationProfile = 'ApplicationProfile',
+    BridgeDomain = 'BridgeDomain',
+    Contract = 'Contract',
+    EndpointGroup = 'EndpointGroup',
+    Filter = 'Filter',
+    FilterEntry = 'FilterEntry',
+    Subject = 'Subject',
+    Vrf = 'Vrf',
+    RouteProfile = 'RouteProfile'
 };
 
 

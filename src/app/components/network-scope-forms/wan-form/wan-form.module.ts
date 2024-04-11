@@ -9,12 +9,12 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.module';
-import { SharedModule } from 'src/app/common/shared.module';
 import { TableModule } from 'src/app/common/table/table.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { WanFormModalComponent } from './wan-form-modal/wan-form-modal.component';
 import { ExternalRouteModalComponent } from './wan-form-modal/external-route-modal/external-route-modal.component';
+import { YesNoModalModule } from '../../../common/yes-no-modal/yes-no-modal.module';
 
 const routes: Routes = [
   {
@@ -36,10 +36,13 @@ const routes: Routes = [
     PreviewModalModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    SharedModule,
     TableModule,
     TabsModule,
     TooltipModule,
+    IconButtonModule,
+    FontAwesomeModule,
+    TableModule,
+    YesNoModalModule,
   ],
 })
 export class WanFormModule {}

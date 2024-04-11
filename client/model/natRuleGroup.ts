@@ -26,8 +26,10 @@ export interface NatRuleGroup {
     readonly natRules?: Array<NatRule>;
 }
 export enum NatRuleGroupTypeEnum {
+    Intravrf = 'Intravrf',
     Intervrf = 'Intervrf',
-    External = 'External'
+    External = 'External',
+    ZoneBased = 'ZoneBased'
 };
 
 

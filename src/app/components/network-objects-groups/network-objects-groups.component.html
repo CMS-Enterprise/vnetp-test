@@ -1,8 +1,8 @@
 <app-tier-select></app-tier-select>
 
-<h1 *ngIf="navIndex === 0">Network Objects ({{networkObjects?.total}} items)</h1>
+<h1 *ngIf="navIndex === 0">Network Objects</h1>
 
-<h1 *ngIf="navIndex === 1">Network Object Groups ({{networkObjectGroups?.total}} items)</h1>
+<h1 *ngIf="navIndex === 1">Network Object Groups</h1>
 
 <ng-container *ngIf="currentTier; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
@@ -12,6 +12,9 @@
       <button type="button" class="btn btn-success" (click)="openNetworkObjectModal(ModalMode.Create)">
         <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
         <span>Create Network Object</span>
+      </button>
+      <button type="button" class="btn btn-link" (click)="checkObjectUsage()">
+        <span>Unused Objects</span>
       </button>
     </section>
 
@@ -49,6 +52,14 @@
 
     <ng-template #actionsTemplate let-netObj="datum">
       <section class="table__actions">
+        <app-icon-button
+          *ngIf="checkUndeployedChanges(netObj)"
+          icon="asterisk"
+          label="Undeployed Changes"
+          [type]="'info'"
+        ></app-icon-button>
+
+        <app-icon-button (click)="checkObjectsParents(netObj)" icon="search"></app-icon-button>
         <app-icon-button
               *ngIf="!netObj?.deletedAt"
               icon="edit"
@@ -113,6 +124,14 @@
 
     <ng-template #actionsTemplate let-netObjGroup="datum">
       <section class="table__actions">
+
+        <app-icon-button
+        *ngIf="checkUndeployedChanges(netObjGroup)"
+        icon="asterisk"
+        label="Undeployed Changes"
+        [type]="'info'"
+      ></app-icon-button>
+
         <app-icon-button
               *ngIf="!netObjGroup?.deletedAt"
               icon="edit"
@@ -156,6 +175,9 @@
 </ng-container>
 <app-network-object-group-modal></app-network-object-group-modal>
 <app-network-object-modal></app-network-object-modal>
+<app-unused-objects-modal [unusedObjectsInput]="unusedObjects"></app-unused-objects-modal>
+<app-used-objects-parents-modal [usedObjectsParentsInput]="usedObjectsParents"></app-used-objects-parents-modal>
+
 <app-yes-no-modal [allowEmptyTier]="showRadio"></app-yes-no-modal>
 <ng-template #warningMessage>
   <p>Select a Tier to display Network Objects & Groups details</p>

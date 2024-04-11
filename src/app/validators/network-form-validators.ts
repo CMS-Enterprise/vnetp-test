@@ -1,8 +1,8 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, UntypedFormControl } from '@angular/forms';
 import { isFQDN, isIP, isMACAddress } from 'validator';
 
-export function IpAddressAnyValidator(control: FormControl): { invalidIpAny: boolean } {
-  if (!control || !control.value) {
+export function IpAddressAnyValidator(control: UntypedFormControl): { invalidIpAny: boolean } {
+  if (!control?.value) {
     return null;
   }
 
@@ -23,7 +23,7 @@ export function IpAddressAnyValidator(control: FormControl): { invalidIpAny: boo
 }
 
 export function validateWanFormExternalRouteIp(control: FormControl): { invalidExternalRouteIp: boolean } {
-  if (!control || !control.value) {
+  if (!control?.value) {
     return null;
   }
 
@@ -36,8 +36,8 @@ export function validateWanFormExternalRouteIp(control: FormControl): { invalidE
   return { invalidExternalRouteIp: true };
 }
 
-export function IpAddressCidrValidator(control: FormControl): { invalidIpCidr: boolean } {
-  if (!control || !control.value) {
+export function IpAddressCidrValidator(control: UntypedFormControl): { invalidIpCidr: boolean } {
+  if (!control?.value) {
     return null;
   }
   const valueArray = control.value.split('/');
@@ -55,7 +55,7 @@ export function IpAddressCidrValidator(control: FormControl): { invalidIpCidr: b
 }
 
 export function IpAddressHostNetworkCidrValidator(control: FormControl): { invalidHost: true } {
-  if (!control || !control.value) {
+  if (!control?.value) {
     return null;
   }
 
@@ -66,8 +66,26 @@ export function IpAddressHostNetworkCidrValidator(control: FormControl): { inval
   return { invalidHost: true };
 }
 
-export function IpAddressIpValidator(control: FormControl): { invalidIpAddress: boolean } {
-  if (!control || !control.value) {
+export function IsIpV4NoSubnetValidator(control: UntypedFormControl): { invalidIpNoSubnet: boolean } | { invalidIp: boolean } {
+  if (!control?.value) {
+    return null;
+  }
+
+  if (control.value.includes('/')) {
+    return { invalidIpNoSubnet: true };
+  }
+
+  const isValid = isIP(control.value, 4);
+
+  if (isValid) {
+    return null;
+  }
+
+  return { invalidIp: true };
+}
+
+export function IpAddressIpValidator(control: UntypedFormControl): { invalidIpAddress: boolean } {
+  if (!control?.value) {
     return null;
   }
   const valueArray = control.value.split('/');
@@ -84,8 +102,8 @@ export function IpAddressIpValidator(control: FormControl): { invalidIpAddress: 
   return { invalidIpAddress: true };
 }
 
-export function FqdnValidator(control: FormControl): { invalidFqdn: boolean } {
-  if (!control || !control.value) {
+export function FqdnValidator(control: UntypedFormControl): { invalidFqdn: boolean } {
+  if (!control?.value) {
     return null;
   }
 
@@ -97,8 +115,8 @@ export function FqdnValidator(control: FormControl): { invalidFqdn: boolean } {
   return { invalidFqdn: true };
 }
 
-export function MacAddressValidator(control: FormControl): { invalidMacAddress: boolean } {
-  if (!control || !control.value) {
+export function MacAddressValidator(control: UntypedFormControl): { invalidMacAddress: boolean } {
+  if (!control?.value) {
     return null;
   }
 
@@ -110,8 +128,11 @@ export function MacAddressValidator(control: FormControl): { invalidMacAddress: 
   return { invalidMacAddress: true };
 }
 
-export function ValidatePortRange(control: FormControl): { invalidPortNumber: boolean } | { invalidPortRange: boolean } {
-  if (!control || !control.value) {
+export function ValidatePortRange(control: UntypedFormControl): { invalidPortNumber: boolean } | { invalidPortRange: boolean } {
+  if (control.value?.includes(' ')) {
+    return { invalidPortNumber: true };
+  }
+  if (!control?.value) {
     return null;
   }
 
@@ -148,6 +169,26 @@ export function ValidatePortRange(control: FormControl): { invalidPortNumber: bo
       return { invalidPortNumber: true };
     }
   }
+  return null;
+}
+
+export function ValidatePortNumber(control: UntypedFormControl): { invalidPortNumber: boolean } | { portRangeNotAllowed: boolean } {
+  if (!control?.value) {
+    return null;
+  }
+
+  if (control.value === 'any') {
+    return null;
+  }
+
+  if (control.value.includes('-')) {
+    return { portRangeNotAllowed: true };
+  }
+
+  if (!isValidPortNumber(Number(control.value))) {
+    return { invalidPortNumber: true };
+  }
+
   return null;
 }
 
@@ -201,7 +242,6 @@ function isCidrValid(cidr: string): boolean {
 
   const binaryIp = octets.map(octet => octet.toString(2).padStart(8, '0')).join('');
 
-  const networkBits = binaryIp.slice(0, maskValue);
   const hostBits = binaryIp.slice(maskValue);
 
   if (hostBits !== '0'.repeat(32 - maskValue)) {

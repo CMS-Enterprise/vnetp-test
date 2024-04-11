@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { Message, MessageService } from './message.service';
 import { Datacenter, V1DatacentersService } from 'client';
 
 /** Service to store and expose the Current Datacenter Context. */
@@ -32,9 +31,9 @@ export class DatacenterContextService {
 
   constructor(
     private datacenterService: V1DatacentersService,
-    private messageService: MessageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private zone: NgZone,
   ) {
     // This subscription ensures that we release
     // the datacenter change lock when a navigation
@@ -101,7 +100,7 @@ export class DatacenterContextService {
    * array of datacenters returned from the API. If it is present then that datacenter will be selected.
    */
   private getDatacenters(datacenterParam?: string) {
-    this.datacenterService.getManyDatacenters({ join: ['tiers'], page: 1, limit: 1000 }).subscribe(response => {
+    this.datacenterService.getManyDatacenter({ join: ['tiers'], page: 1, perPage: 1000 }).subscribe(response => {
       // Update internal datacenters array and external subject.
       this._datacenters = response.data;
       this.datacentersSubject.next(response.data);
@@ -123,20 +122,18 @@ export class DatacenterContextService {
   // Refreshes datacenters and current datacenter subject from API
   public refreshDatacenter() {
     const currentDatacenterId = this.currentDatacenterValue.id;
-    this.datacenterService.getManyDatacenters({ join: ['tiers'] }).subscribe(response => {
+    this.datacenterService.getManyDatacenter({ join: ['tiers'] }).subscribe(response => {
       // Update internal datacenters array and external subject.
       this._datacenters = response.data;
       this.datacentersSubject.next(response.data);
 
       const datacenter = this._datacenters.find(dc => dc.id === currentDatacenterId);
-
       this.currentDatacenterSubject.next(datacenter);
     });
   }
 
   public switchDatacenter(datacenterId: string): boolean {
     if (this.lockCurrentDatacenterSubject.value) {
-      this.messageService.sendMessage(new Message(null, null, 'Current datacenter locked'));
       return false;
     }
 
@@ -147,20 +144,17 @@ export class DatacenterContextService {
 
     const isSameDatacenter = this.currentDatacenterValue && datacenter.id === this.currentDatacenterValue.id;
     if (isSameDatacenter) {
-      this.messageService.sendMessage(new Message(null, null, 'Datacenter already selected'));
       return false;
     }
 
-    const oldDatacenterId = this.currentDatacenterValue ? this.currentDatacenterValue.id : null;
-
     this.currentDatacenterSubject.next(datacenter);
     this.ignoreNextQueryParamEvent = true;
-    this.router.navigate([], {
-      queryParams: { datacenter: datacenter.id },
-      queryParamsHandling: 'merge',
+    this.zone.run(() => {
+      this.router.navigate([], {
+        queryParams: { datacenter: datacenter.id },
+        queryParamsHandling: 'merge',
+      });
     });
-
-    this.messageService.sendMessage(new Message(oldDatacenterId, datacenterId, 'Datacenter switched'));
     return true;
   }
 }

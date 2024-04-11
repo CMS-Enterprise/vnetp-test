@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+/* eslint-disable */
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { FirewallRuleModalComponent } from './firewall-rule-modal.component';
@@ -17,12 +18,13 @@ import {
   V1NetworkSecurityServiceObjectsService,
 } from 'client';
 import { FirewallRuleObjectInfoModalComponent } from './firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
+import { of } from 'rxjs';
 
 describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
   let fixture: ComponentFixture<FirewallRuleModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -48,7 +50,7 @@ describe('FirewallRuleModalComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
 
   const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
   const isRequired = (prop: string): boolean => {
@@ -66,7 +68,6 @@ describe('FirewallRuleModalComponent', () => {
       'name',
       'action',
       'protocol',
-      'direction',
       'ruleIndex',
       'sourceIpAddress',
       'sourcePorts',
@@ -75,6 +76,7 @@ describe('FirewallRuleModalComponent', () => {
     ];
     const optionalFields = [
       'description',
+      'direction',
       'logging',
       'sourceNetworkType',
       'sourceNetworkObject',
@@ -180,6 +182,80 @@ describe('FirewallRuleModalComponent', () => {
     expect(isRequired('destinationPorts')).toBe(true);
   });
 
+  it('service inputs should be reset if protocol changes to IP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('TCP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('IP');
+
+    expect(sourcePorts.value).toBe('any');
+    expect(destinationPorts.value).toBe('any');
+    expect(serviceType.value).toBe('Port');
+  });
+
+  it('service inputs should be reset if protocol changes to ICMP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('TCP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('ICMP');
+
+    expect(sourcePorts.value).toBe('any');
+    expect(destinationPorts.value).toBe('any');
+    expect(serviceType.value).toBe('Port');
+  });
+
+  it('service inputs should be cleared when protocol changes to UDP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('UDP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('IP');
+    protocol.setValue('UDP');
+
+    expect(sourcePorts.value).toBe(null);
+    expect(destinationPorts.value).toBe(null);
+    expect(serviceType.value).toBe('Port');
+  });
+
+  it('service inputs should be cleared when protocol changes to TCP', () => {
+    const protocol = getFormControl('protocol');
+    protocol.setValue('TCP');
+
+    const serviceType = getFormControl('serviceType');
+    serviceType.setValue('Port');
+    const sourcePorts = getFormControl('sourcePorts');
+    const destinationPorts = getFormControl('destinationPorts');
+    destinationPorts.setValue('80');
+    sourcePorts.setValue('80');
+
+    protocol.setValue('IP');
+    protocol.setValue('TCP');
+
+    expect(sourcePorts.value).toBe(null);
+    expect(destinationPorts.value).toBe(null);
+    expect(serviceType.value).toBe('Port');
+  });
+
   describe('Name', () => {
     it('should have a minimum length of 3 and maximum length of 100', () => {
       const { name } = component.form.controls;
@@ -199,6 +275,120 @@ describe('FirewallRuleModalComponent', () => {
 
       name.setValue('invalid/name!');
       expect(name.valid).toBe(false);
+    });
+  });
+
+  describe('getObjectInfo', () => {
+    let ngxSmartModalService: NgxSmartModalService;
+    beforeEach(async () => {
+      ngxSmartModalService = TestBed.inject(NgxSmartModalService);
+    });
+
+    it('should call NetworkObjectService when objectType is NetworkObject', () => {
+      const objectId = 'test-id';
+      const property = 'test-property';
+      const setModalDataSpy = jest.spyOn(ngxSmartModalService, 'setModalData');
+      const getSpy = jest.spyOn(ngxSmartModalService, 'getModal');
+
+      jest
+        .spyOn(component['networkObjectService'], 'getOneNetworkObject')
+        .mockReturnValue(of({ name: 'test-name', type: 'Fqdn', fqdn: 'www.example.com' } as any));
+
+      component.getObjectInfo(property, 'NetworkObject', objectId);
+
+      expect(component['networkObjectService'].getOneNetworkObject).toHaveBeenCalled();
+
+      jest
+        .spyOn(component['networkObjectService'], 'getOneNetworkObject')
+        .mockReturnValue(of({ name: 'test-name', type: 'Range', startIpAddress: '192.168.0.1', endIpAddress: '192.168.0.10' } as any));
+
+      component.getObjectInfo(property, 'NetworkObject', objectId);
+
+      expect(component['networkObjectService'].getOneNetworkObject).toHaveBeenCalled();
+
+      jest
+        .spyOn(component['networkObjectService'], 'getOneNetworkObject')
+        .mockReturnValue(of({ name: 'test-name', type: 'IpAddress', ipAddress: '192.168.0.1' } as any));
+
+      component.getObjectInfo(property, 'NetworkObject', objectId);
+
+      expect(component['networkObjectService'].getOneNetworkObject).toHaveBeenCalled();
+      expect(setModalDataSpy).toHaveBeenCalled();
+      expect(getSpy).toHaveBeenCalled();
+    });
+
+    it('should call NetworkObjectService when objectType is NetworkObjectGroup', () => {
+      const objectId = 'test-id';
+      const property = 'test-property';
+      const setModalDataSpy = jest.spyOn(ngxSmartModalService, 'setModalData');
+      const getSpy = jest.spyOn(ngxSmartModalService, 'getModal');
+
+      jest.spyOn(component['networkObjectGroupService'], 'getOneNetworkObjectGroup').mockReturnValue(
+        of({
+          name: 'test-name',
+          networkObjects: [{ name: 'test-name', type: 'Range', startIpAddress: '192.168.0.1', endIpAddress: '192.168.0.10' }],
+        } as any),
+      );
+
+      component.getObjectInfo(property, 'NetworkObjectGroup', objectId);
+
+      expect(component['networkObjectGroupService'].getOneNetworkObjectGroup).toHaveBeenCalled();
+
+      jest
+        .spyOn(component['networkObjectGroupService'], 'getOneNetworkObjectGroup')
+        .mockReturnValue(of({ name: 'test-name', networkObjects: [{ name: 'test-name', type: 'Fqdn', fqdn: 'www.example.com' }] } as any));
+
+      component.getObjectInfo(property, 'NetworkObjectGroup', objectId);
+
+      expect(component['networkObjectGroupService'].getOneNetworkObjectGroup).toHaveBeenCalled();
+
+      jest
+        .spyOn(component['networkObjectGroupService'], 'getOneNetworkObjectGroup')
+        .mockReturnValue(
+          of({ name: 'test-name', networkObjects: [{ name: 'test-name', type: 'IpAddress', ipAddress: '192.168.0.1' }] } as any),
+        );
+
+      component.getObjectInfo(property, 'NetworkObjectGroup', objectId);
+
+      expect(component['networkObjectGroupService'].getOneNetworkObjectGroup).toHaveBeenCalled();
+      expect(setModalDataSpy).toHaveBeenCalled();
+      expect(getSpy).toHaveBeenCalled();
+    });
+
+    it('should call ServiceObjectService when objectType is ServiceObject', () => {
+      const objectId = 'test-id';
+      const property = 'test-property';
+      const setModalDataSpy = jest.spyOn(ngxSmartModalService, 'setModalData');
+      const getSpy = jest.spyOn(ngxSmartModalService, 'getModal');
+      jest
+        .spyOn(component['serviceObjectService'], 'getOneServiceObject')
+        .mockReturnValue(of({ name: 'test-name', protocol: 'TCP', sourcePorts: '80', destinationPorts: '8080' } as any));
+
+      component.getObjectInfo(property, 'ServiceObject', objectId);
+
+      expect(component['serviceObjectService'].getOneServiceObject).toHaveBeenCalled();
+      expect(setModalDataSpy).toHaveBeenCalled();
+      expect(getSpy).toHaveBeenCalled();
+    });
+
+    it('should call ServiceObjectGroupService when objectType is ServiceObjectGroup', () => {
+      const objectId = 'test-id';
+      const property = 'test-property';
+      const setModalDataSpy = jest.spyOn(ngxSmartModalService, 'setModalData');
+      const getSpy = jest.spyOn(ngxSmartModalService, 'getModal');
+
+      jest.spyOn(component['serviceObjectGroupService'], 'getOneServiceObjectGroup').mockReturnValue(
+        of({
+          name: 'test-name',
+          serviceObjects: [{ name: 'test-object-name', protocol: 'TCP', sourcePorts: '80', destinationPorts: '8080' }],
+        } as any),
+      );
+
+      component.getObjectInfo(property, 'ServiceObjectGroup', objectId);
+
+      expect(component['serviceObjectGroupService'].getOneServiceObjectGroup).toHaveBeenCalled();
+      expect(setModalDataSpy).toHaveBeenCalled();
+      expect(getSpy).toHaveBeenCalled();
     });
   });
 });

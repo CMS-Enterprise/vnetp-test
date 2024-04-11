@@ -1,0 +1,68 @@
+<h1>Tenants</h1>
+<ng-container>
+  <section class="btn-toolbar" role="toolbar">
+    <!-- Create Tenant -->
+    <button type="button" class="btn btn-success" (click)="openTenantModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Tenant</span>
+    </button>
+  </section>
+
+  <ng-container *ngIf="!isLoading; else loading">
+    <app-table
+      [config]="config"
+      [data]="tenants"
+      (clearResults)="getTenants()"
+      (searchParams)="getTenants()"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
+    <section class="btn-toolbar" role="toolbar">
+      <app-import-export
+        [exportObject]="tenants"
+        exportFileName="tenants"
+        [disableJson]="false"
+      ></app-import-export>
+    </section>
+  </ng-container>
+</ng-container>
+
+<ng-template #tenantSelectNameTemplate let-tenant="datum">
+  <section>
+    <a routerLink="/appcentric/tenant-select/edit/{{ tenant.id }}/home" queryParamsHandling="merge">{{ tenant.name }}</a>
+  </section>
+</ng-template>
+
+<ng-template #actionsTemplate let-tenant="datum">
+  <section class="table__actions">
+    <app-icon-button
+      *ngIf="!tenant?.deletedAt"
+      icon="edit"
+      label="Edit Tenant"
+      (handleClick)="openTenantModal(ModalMode.Edit, tenant)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="tenant?.deletedAt"
+      icon="undo"
+      label="Restore Tenant"
+      type="success"
+      (handleClick)="restoreTenant(tenant)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Tenant"
+      [type]="tenant?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteTenant(tenant)"
+    ></app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<app-tenant-select-modal></app-tenant-select-modal>
+<app-yes-no-modal></app-yes-no-modal>

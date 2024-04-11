@@ -1,5 +1,11 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { GetManyLoadBalancerProfileResponseDto, LoadBalancerProfile, Tier, V1LoadBalancerProfilesService } from 'client';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  GetManyLoadBalancerProfileResponseDto,
+  LoadBalancerProfile,
+  LoadBalancerProfileTypeEnum,
+  Tier,
+  V1LoadBalancerProfilesService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -10,8 +16,12 @@ import { TableContextService } from 'src/app/services/table-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { ProfileModalDto } from '../profile-modal/profile-modal.dto';
+import { FilteredCount } from 'src/app/helptext/help-text-networking';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import { ProfileReverseProxyType } from '../profile-modal/profile-modal.component';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface ProfileView extends LoadBalancerProfile {
   nameView: string;
@@ -23,19 +33,22 @@ export interface ProfileView extends LoadBalancerProfile {
   selector: 'app-profile-list',
   templateUrl: './profile-list.component.html',
 })
-export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ProfileListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
-  public searchColumns: SearchColumnConfig[] = [];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Type', propertyName: 'type', propertyType: LoadBalancerProfileTypeEnum },
+    { displayName: 'Reverse Proxy', propertyName: 'reverseProxy', propertyType: ProfileReverseProxyType },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   public config: TableConfig<ProfileView> = {
     description: 'Profiles in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Type', property: 'type' },
-      { name: 'Reverse Proxy', property: 'reverseProxyView' },
+      { name: 'Reverse Proxy', property: 'reverseProxy' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
@@ -55,14 +68,16 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
-  ) {}
+    public filteredHelpText: FilteredCount,
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerProfile>();
+    advancedSearchAdapterObject.setService(this.profilesService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerProfilesService');
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.profileChanges = this.subscribeToProfileModal();
   }
 
   ngOnDestroy(): void {
@@ -104,36 +119,37 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
+      if (propertyName === 'name') {
+        eventParams = propertyName + '||cont||' + searchText;
+      } else if (propertyName) {
+        eventParams = propertyName + '||eq||' + searchText;
       }
     }
     this.profilesService
       .getManyLoadBalancerProfile({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        perPage: this.tableComponentDto.perPage,
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
           this.profiles = response;
-          this.profiles.data = (this.profiles.data as ProfileView[]).map(p => {
-            return {
-              ...p,
-              nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
-              state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-              reverseProxyView: p.reverseProxy
-                ? p.reverseProxy.length >= 20
-                  ? p.reverseProxy.slice(0, 19) + '...'
-                  : p.reverseProxy
-                : undefined,
-            };
-          });
+          this.profiles.data = (this.profiles.data as ProfileView[]).map(p => ({
+            ...p,
+            nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
+            state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+            reverseProxyView: p.reverseProxy
+              ? p.reverseProxy.length >= 20
+                ? p.reverseProxy.slice(0, 19) + '...'
+                : p.reverseProxy
+              : undefined,
+          }));
         },
         () => {
-          this.profiles = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;
@@ -143,12 +159,12 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(profiles: ImportProfile[]): void {
     const bulk = profiles.map(profile => {
-      const { vrfName } = profile;
-      if (!vrfName) {
+      const { tierName } = profile;
+      if (!tierName) {
         return profile;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...profile,
         tierId,
@@ -167,6 +183,7 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       profile,
     };
+    this.subscribeToProfileModal();
     this.ngx.setModalData(dto, 'profileModal');
     this.ngx.open('profileModal');
   }
@@ -204,8 +221,8 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToProfileModal(): Subscription {
-    return this.ngx.getModal('profileModal').onCloseFinished.subscribe(() => {
+  private subscribeToProfileModal(): void {
+    this.profileChanges = this.ngx.getModal('profileModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
@@ -220,10 +237,15 @@ export class ProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadProfiles();
       }
       this.ngx.resetModalData('profileModal');
+      this.profileChanges.unsubscribe();
     });
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }
 
 export interface ImportProfile extends LoadBalancerProfile {
-  vrfName?: string;
+  tierName?: string;
 }

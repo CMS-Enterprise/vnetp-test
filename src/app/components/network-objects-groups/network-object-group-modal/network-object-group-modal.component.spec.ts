@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NetworkObjectGroupModalComponent } from './network-object-group-modal.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ describe('NetworkObjectGroupModalComponent', () => {
   let component: NetworkObjectGroupModalComponent;
   let fixture: ComponentFixture<NetworkObjectGroupModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -33,7 +33,7 @@ describe('NetworkObjectGroupModalComponent', () => {
         MockProvider(V1TiersService),
       ],
     });
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NetworkObjectGroupModalComponent);
@@ -87,5 +87,21 @@ describe('NetworkObjectGroupModalComponent', () => {
       description.setValue('a'.repeat(501));
       expect(description.valid).toBe(false);
     });
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    // Access the private ngx member using bracket notation
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    const ngx = component['ngx'];
+
+    // Set up the spy on ngx.close
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    // Call the cancel method
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    component['closeModal']();
+
+    // Check if ngx.close has been called with the expected argument
+    expect(ngxSpy).toHaveBeenCalledWith('networkObjectGroupModal');
   });
 });

@@ -17,6 +17,7 @@
         <th scope="col">Tier</th>
         <th scope="col">Name</th>
         <th scope="col">State</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -31,14 +32,22 @@
           {{ getTierName(firewallRuleGroup.tierId) }}
         </td>
         <td>
-          <a routerLink="/firewall-rules/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge"
+          <a routerLink="/netcentric/firewall-rules/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge"
             >{{ firewallRuleGroup.name | slice: 0:20 }}{{ firewallRuleGroup.name.length > 20 ? '...' : '' }}</a
           >
         </td>
         <td>{{ firewallRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
+        <td>
+          <app-icon-button
+          *ngIf="checkUndeployedChanges(firewallRuleGroup)"
+          icon="asterisk"
+          label="Undeployed Changes"
+          [type]="'info'"
+        ></app-icon-button>
+        </td>
       </tr>
       <tr *ngIf="firewallRuleGroups?.length === 0" class="text-center">
-        <td colspan="3">No Firewall Rule Groups</td>
+        <td colspan="4">No Firewall Rule Groups</td>
       </tr>
     </tbody>
   </table>
@@ -62,7 +71,7 @@
 
 <ng-template #fwRuleTemplate let-firewallRuleGroup="datum">
   <section>
-    <a routerLink="/firewall-rules/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge"
+    <a routerLink="/netcentric/firewall-rules/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge"
           >{{ firewallRuleGroup.name | slice: 0:20 }}{{ firewallRuleGroup.name.length > 20 ? '...' : '' }}</a
         >
   </section>

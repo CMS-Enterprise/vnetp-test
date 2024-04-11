@@ -5,7 +5,7 @@ import { LoadBalancersComponent } from './load-balancers.component';
 const outlet = 'load-balancer';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'home',
     component: LoadBalancersComponent,
@@ -14,6 +14,7 @@ const routes: Routes = [
         outlet,
         path: '',
         redirectTo: 'virtual-servers',
+        pathMatch: 'full',
       },
       {
         outlet,

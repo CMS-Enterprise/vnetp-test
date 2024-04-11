@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+/* eslint-disable */
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -11,12 +12,17 @@ import {
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
 import { V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { of, Subscription } from 'rxjs';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 describe('ServiceObjectGroupModalComponent', () => {
   let component: ServiceObjectGroupModalComponent;
   let fixture: ComponentFixture<ServiceObjectGroupModalComponent>;
+  let onConfirm: jest.Mock;
+  let subscriptionUtilSubscribeToYesNoModalSpy: jest.SpyInstance;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -39,7 +45,11 @@ describe('ServiceObjectGroupModalComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
       });
-  }));
+  });
+  beforeEach(() => {
+    onConfirm = jest.fn();
+    subscriptionUtilSubscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockReturnValue(new Subscription());
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -109,5 +119,97 @@ describe('ServiceObjectGroupModalComponent', () => {
     const description = component.form.controls.description;
     description.setValue('a'.repeat(501));
     expect(description.valid).toBeFalsy();
+  });
+
+  describe('save', () => {
+    it('should set submitted to true', () => {
+      component.submitted = false;
+
+      component.save();
+
+      expect(component.submitted).toBeTruthy();
+    });
+
+    it('should do nothing if the form is invalid', () => {
+      component.form.setErrors({ error: true });
+      jest.spyOn(component['serviceObjectGroupService'], 'createOneServiceObjectGroup');
+      jest.spyOn(component['serviceObjectGroupService'], 'updateOneServiceObjectGroup');
+
+      component.save();
+
+      expect(component['serviceObjectGroupService'].createOneServiceObjectGroup).not.toHaveBeenCalled();
+      expect(component['serviceObjectGroupService'].updateOneServiceObjectGroup).not.toHaveBeenCalled();
+    });
+
+    describe('create mode', () => {
+      beforeEach(() => {
+        component.ModalMode = ModalMode.Create;
+        component.form.setValue({ name: 'test', description: 'test', type: 'test' });
+      });
+
+      it('should create a new service object group', () => {
+        component.save();
+
+        expect(component['serviceObjectGroupService'].createOneServiceObjectGroup).toHaveBeenCalledWith({
+          serviceObjectGroup: {
+            name: 'test',
+            description: 'test',
+            type: 'test',
+            tierId: component.TierId,
+          },
+        });
+      });
+    });
+
+    describe('update mode', () => {
+      beforeEach(() => {
+        component.ModalMode = ModalMode.Edit;
+        component.ServiceObjectGroupId = 'test-id';
+        component.form.setValue({ name: 'test', description: 'test', type: 'test' });
+      });
+
+      it('should update an existing service object group', () => {
+        component.save();
+
+        expect(component['serviceObjectGroupService'].updateOneServiceObjectGroup).toHaveBeenCalledWith({
+          id: 'test-id',
+          serviceObjectGroup: {
+            description: 'test',
+          },
+        });
+      });
+    });
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    // Access the private ngx member using bracket notation
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    const ngx = component['ngx'];
+
+    // Set up the spy on ngx.close
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    // Call the cancel method
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    component['closeModal']();
+
+    // Check if ngx.close has been called with the expected argument
+    expect(ngxSpy).toHaveBeenCalledWith('serviceObjectGroupModal');
+  });
+
+  it('should return correct form data', () => {
+    const res = component.f;
+    expect(res).toEqual(component.form.controls);
+  });
+
+  it('should call addServiceObjectToGroupServiceObjectGroupServiceObject', () => {
+    component.ServiceObjectGroupId = 'test-id';
+    component.selectedServiceObject = 'test-id' as any;
+    jest
+      .spyOn(component['serviceObjectGroupService'], 'addServiceObjectToGroupServiceObjectGroup')
+      .mockReturnValue(of({ serviceObjects: [] } as any));
+
+    component.addServiceObject();
+    expect(component['serviceObjectGroupService'].addServiceObjectToGroupServiceObjectGroup).toHaveBeenCalled();
   });
 });

@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { NetworkObject } from './networkObject';
+import { Zone } from './zone';
 import { ServiceObject } from './serviceObject';
 import { NetworkObjectGroup } from './networkObjectGroup';
 
@@ -44,6 +45,7 @@ export interface NatRuleImport {
     translatedDestinationNetworkObjectGroupId?: string;
     originalServiceObjectId?: string;
     translatedServiceObjectId?: string;
+    toZoneId?: string;
     readonly originalSourceNetworkObject?: NetworkObject;
     readonly originalSourceNetworkObjectGroup?: NetworkObjectGroup;
     readonly translatedSourceNetworkObject?: NetworkObject;
@@ -54,7 +56,9 @@ export interface NatRuleImport {
     readonly translatedDestinationNetworkObjectGroup?: NetworkObjectGroup;
     readonly originalServiceObject?: ServiceObject;
     readonly translatedServiceObject?: ServiceObject;
-    vrfName: string;
+    readonly toZone?: Zone;
+    fromZone?: Array<Zone>;
+    tierName: string;
     natRuleGroupType: string;
 }
 export enum NatRuleImportTranslationTypeEnum {

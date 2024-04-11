@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { IpAddressCidrValidator, IpAddressIpValidator } from 'src/app/validators/network-form-validators';
 import { StaticRoute, V1NetworkStaticRoutesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -12,14 +12,14 @@ import { NameValidator } from 'src/app/validators/name-validator';
   templateUrl: './static-route-modal.component.html',
 })
 export class StaticRouteModalComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted: boolean;
   ModalMode: ModalMode;
   TierId: string;
   StaticRouteId: string;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private staticRouteService: V1NetworkStaticRoutesService,
   ) {}

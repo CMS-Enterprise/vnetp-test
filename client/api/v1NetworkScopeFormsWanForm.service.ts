@@ -17,12 +17,9 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ExternalRoute } from '../model/models';
-import { ExternalRouteDto } from '../model/models';
-import { ExternalRoutePaginationResponse } from '../model/models';
+import { CreateManyWanFormDto } from '../model/models';
+import { GetManyWanFormResponseDto } from '../model/models';
 import { WanForm } from '../model/models';
-import { WanFormDto } from '../model/models';
-import { WanFormPaginationResponse } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -31,55 +28,55 @@ import { Configuration }                                     from '../configurat
 export interface ActivateWanFormWanFormRequestParams {
     /** ID of the WAN form to activate */
     id: string;
+}
+
+export interface CreateManyWanFormRequestParams {
+    createManyWanFormDto: CreateManyWanFormDto;
+}
+
+export interface CreateOneWanFormRequestParams {
     wanForm: WanForm;
 }
 
-export interface CreateExternalRouteWanFormRequestParams {
-    /** ID of the WAN form external route belongs to */
-    wanFormId: string;
-    externalRouteDto: ExternalRouteDto;
-}
-
-export interface CreateWanFormWanFormRequestParams {
-    wanFormDto: WanFormDto;
-}
-
-export interface DeleteExternalRouteWanFormRequestParams {
-    /** ID of the External Route form to delete */
-    externalRouteId: string;
-    /** ID of the WAN form external route belongs to */
-    wanFormId: any;
-}
-
-export interface DeleteWanFormWanFormRequestParams {
-    /** ID of the WAN form to delete */
+export interface DeleteOneWanFormRequestParams {
+    /** UUID. */
     id: string;
 }
 
-export interface GetManyExternalRoutesWanFormRequestParams {
-    /** ID of the WAN form external route belongs to */
-    wanFormId: string;
-    page?: number;
+export interface GetManyWanFormRequestParams {
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
+    /** Number of entities to return per page.      If page is not passed, a number of entities up to this parameter will be returned. Default 20. */
     perPage?: number;
-}
-
-export interface GetManyWanFormsWanFormRequestParams {
-    datacenterId: string;
+    /** Alias for perPage. If perPage is also passed this parameter will be ignored. */
+    limit?: number;
+    /** Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination. */
     page?: number;
-    perPage?: number;
-    searchText?: string;
+    /** Filter condition to apply to the query. */
+    filter?: Array<string>;
+    /** Properties to sort the response by. */
+    sort?: Array<string>;
+    /** Properties to group the response by. */
+    group?: Array<string>;
+    /** Properties to select. */
+    fields?: Array<string>;
+    /** Where object for advanced AND/OR queries. */
+    s?: string;
 }
 
-export interface UpdateExternalRouteWanFormRequestParams {
-    /** ID of the External Route to update */
-    externalRouteId: string;
-    /** ID of the WAN form external route belongs to */
-    wanFormId: any;
-    externalRoute: ExternalRoute;
+export interface GetOneWanFormRequestParams {
+    /** UUID. */
+    id: string;
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
 }
 
-export interface UpdateWanFormWanFormRequestParams {
-    /** ID of the WAN form to update */
+export interface UpdateOneWanFormRequestParams {
+    /** UUID. */
     id: string;
     wanForm: WanForm;
 }
@@ -159,10 +156,6 @@ export class V1NetworkScopeFormsWanFormService {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling activateWanFormWanForm.');
         }
-        const wanForm = requestParameters.wanForm;
-        if (wanForm === null || wanForm === undefined) {
-            throw new Error('Required parameter wanForm was null or undefined when calling activateWanFormWanForm.');
-        }
 
         let headers = this.defaultHeaders;
 
@@ -178,15 +171,6 @@ export class V1NetworkScopeFormsWanFormService {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
 
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
@@ -194,7 +178,7 @@ export class V1NetworkScopeFormsWanFormService {
         }
 
         return this.httpClient.put<WanForm>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(id))}/activate`,
-            wanForm,
+            null,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -206,22 +190,18 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Create a new External Route
+     * Create many WanForm
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createExternalRouteWanForm(requestParameters: CreateExternalRouteWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
-    public createExternalRouteWanForm(requestParameters: CreateExternalRouteWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
-    public createExternalRouteWanForm(requestParameters: CreateExternalRouteWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
-    public createExternalRouteWanForm(requestParameters: CreateExternalRouteWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const wanFormId = requestParameters.wanFormId;
-        if (wanFormId === null || wanFormId === undefined) {
-            throw new Error('Required parameter wanFormId was null or undefined when calling createExternalRouteWanForm.');
-        }
-        const externalRouteDto = requestParameters.externalRouteDto;
-        if (externalRouteDto === null || externalRouteDto === undefined) {
-            throw new Error('Required parameter externalRouteDto was null or undefined when calling createExternalRouteWanForm.');
+    public createManyWanForm(requestParameters: CreateManyWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<WanForm>>;
+    public createManyWanForm(requestParameters: CreateManyWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<WanForm>>>;
+    public createManyWanForm(requestParameters: CreateManyWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<WanForm>>>;
+    public createManyWanForm(requestParameters: CreateManyWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const createManyWanFormDto = requestParameters.createManyWanFormDto;
+        if (createManyWanFormDto === null || createManyWanFormDto === undefined) {
+            throw new Error('Required parameter createManyWanFormDto was null or undefined when calling createManyWanForm.');
         }
 
         let headers = this.defaultHeaders;
@@ -253,8 +233,8 @@ export class V1NetworkScopeFormsWanFormService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(wanFormId))}/external-routes`,
-            externalRouteDto,
+        return this.httpClient.post<Array<WanForm>>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/bulk`,
+            createManyWanFormDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -266,18 +246,18 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Create a new WAN form
+     * Create one WanForm
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createWanFormWanForm(requestParameters: CreateWanFormWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanForm>;
-    public createWanFormWanForm(requestParameters: CreateWanFormWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanForm>>;
-    public createWanFormWanForm(requestParameters: CreateWanFormWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanForm>>;
-    public createWanFormWanForm(requestParameters: CreateWanFormWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const wanFormDto = requestParameters.wanFormDto;
-        if (wanFormDto === null || wanFormDto === undefined) {
-            throw new Error('Required parameter wanFormDto was null or undefined when calling createWanFormWanForm.');
+    public createOneWanForm(requestParameters: CreateOneWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanForm>;
+    public createOneWanForm(requestParameters: CreateOneWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanForm>>;
+    public createOneWanForm(requestParameters: CreateOneWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanForm>>;
+    public createOneWanForm(requestParameters: CreateOneWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const wanForm = requestParameters.wanForm;
+        if (wanForm === null || wanForm === undefined) {
+            throw new Error('Required parameter wanForm was null or undefined when calling createOneWanForm.');
         }
 
         let headers = this.defaultHeaders;
@@ -310,7 +290,7 @@ export class V1NetworkScopeFormsWanFormService {
         }
 
         return this.httpClient.post<WanForm>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form`,
-            wanFormDto,
+            wanForm,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -322,124 +302,18 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Delete an existing External Route form
+     * Delete one WanForm
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteExternalRouteWanForm(requestParameters: DeleteExternalRouteWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deleteExternalRouteWanForm(requestParameters: DeleteExternalRouteWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deleteExternalRouteWanForm(requestParameters: DeleteExternalRouteWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deleteExternalRouteWanForm(requestParameters: DeleteExternalRouteWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const externalRouteId = requestParameters.externalRouteId;
-        if (externalRouteId === null || externalRouteId === undefined) {
-            throw new Error('Required parameter externalRouteId was null or undefined when calling deleteExternalRouteWanForm.');
-        }
-        const wanFormId = requestParameters.wanFormId;
-        if (wanFormId === null || wanFormId === undefined) {
-            throw new Error('Required parameter wanFormId was null or undefined when calling deleteExternalRouteWanForm.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(wanFormId))}/external-routes/${encodeURIComponent(String(externalRouteId))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Delete an existing WAN form
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public deleteWanFormWanForm(requestParameters: DeleteWanFormWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deleteWanFormWanForm(requestParameters: DeleteWanFormWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deleteWanFormWanForm(requestParameters: DeleteWanFormWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deleteWanFormWanForm(requestParameters: DeleteWanFormWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public deleteOneWanForm(requestParameters: DeleteOneWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanForm>;
+    public deleteOneWanForm(requestParameters: DeleteOneWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanForm>>;
+    public deleteOneWanForm(requestParameters: DeleteOneWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanForm>>;
+    public deleteOneWanForm(requestParameters: DeleteOneWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteWanFormWanForm.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(id))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Get many External Routes
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getManyExternalRoutesWanForm(requestParameters: GetManyExternalRoutesWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoutePaginationResponse>;
-    public getManyExternalRoutesWanForm(requestParameters: GetManyExternalRoutesWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoutePaginationResponse>>;
-    public getManyExternalRoutesWanForm(requestParameters: GetManyExternalRoutesWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoutePaginationResponse>>;
-    public getManyExternalRoutesWanForm(requestParameters: GetManyExternalRoutesWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const wanFormId = requestParameters.wanFormId;
-        if (wanFormId === null || wanFormId === undefined) {
-            throw new Error('Required parameter wanFormId was null or undefined when calling getManyExternalRoutesWanForm.');
-        }
-        const page = requestParameters.page;
-        const perPage = requestParameters.perPage;
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (page !== undefined && page !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>page, 'page');
-        }
-        if (perPage !== undefined && perPage !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>perPage, 'perPage');
+            throw new Error('Required parameter id was null or undefined when calling deleteOneWanForm.');
         }
 
         let headers = this.defaultHeaders;
@@ -462,7 +336,113 @@ export class V1NetworkScopeFormsWanFormService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ExternalRoutePaginationResponse>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(wanFormId))}/external-routes`,
+        return this.httpClient.delete<WanForm>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(id))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get many WanForm
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getManyWanForm(requestParameters: GetManyWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyWanFormResponseDto>;
+    public getManyWanForm(requestParameters: GetManyWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyWanFormResponseDto>>;
+    public getManyWanForm(requestParameters: GetManyWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyWanFormResponseDto>>;
+    public getManyWanForm(requestParameters: GetManyWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const relations = requestParameters.relations;
+        const join = requestParameters.join;
+        const perPage = requestParameters.perPage;
+        const limit = requestParameters.limit;
+        const page = requestParameters.page;
+        const filter = requestParameters.filter;
+        const sort = requestParameters.sort;
+        const group = requestParameters.group;
+        const fields = requestParameters.fields;
+        const s = requestParameters.s;
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
+        }
+        if (perPage !== undefined && perPage !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>perPage, 'perPage');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
+        }
+        if (page !== undefined && page !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
+        }
+        if (filter) {
+            filter.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'filter');
+            })
+        }
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
+        }
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
+        }
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (s !== undefined && s !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>s, 's');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<GetManyWanFormResponseDto>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -475,39 +455,34 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Get many WAN forms
+     * Get one WanForm
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getManyWanFormsWanForm(requestParameters: GetManyWanFormsWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanFormPaginationResponse>;
-    public getManyWanFormsWanForm(requestParameters: GetManyWanFormsWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanFormPaginationResponse>>;
-    public getManyWanFormsWanForm(requestParameters: GetManyWanFormsWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanFormPaginationResponse>>;
-    public getManyWanFormsWanForm(requestParameters: GetManyWanFormsWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const datacenterId = requestParameters.datacenterId;
-        if (datacenterId === null || datacenterId === undefined) {
-            throw new Error('Required parameter datacenterId was null or undefined when calling getManyWanFormsWanForm.');
+    public getOneWanForm(requestParameters: GetOneWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanForm>;
+    public getOneWanForm(requestParameters: GetOneWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanForm>>;
+    public getOneWanForm(requestParameters: GetOneWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanForm>>;
+    public getOneWanForm(requestParameters: GetOneWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getOneWanForm.');
         }
-        const page = requestParameters.page;
-        const perPage = requestParameters.perPage;
-        const searchText = requestParameters.searchText;
+        const relations = requestParameters.relations;
+        const join = requestParameters.join;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (datacenterId !== undefined && datacenterId !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>datacenterId, 'datacenterId');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
         }
-        if (page !== undefined && page !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>page, 'page');
-        }
-        if (perPage !== undefined && perPage !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>perPage, 'perPage');
-        }
-        if (searchText !== undefined && searchText !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>searchText, 'searchText');
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
 
         let headers = this.defaultHeaders;
@@ -530,7 +505,7 @@ export class V1NetworkScopeFormsWanFormService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<WanFormPaginationResponse>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form`,
+        return this.httpClient.get<WanForm>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -543,86 +518,22 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Update an existing External Route
+     * Update one WanForm
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateExternalRouteWanForm(requestParameters: UpdateExternalRouteWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
-    public updateExternalRouteWanForm(requestParameters: UpdateExternalRouteWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
-    public updateExternalRouteWanForm(requestParameters: UpdateExternalRouteWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
-    public updateExternalRouteWanForm(requestParameters: UpdateExternalRouteWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const externalRouteId = requestParameters.externalRouteId;
-        if (externalRouteId === null || externalRouteId === undefined) {
-            throw new Error('Required parameter externalRouteId was null or undefined when calling updateExternalRouteWanForm.');
-        }
-        const wanFormId = requestParameters.wanFormId;
-        if (wanFormId === null || wanFormId === undefined) {
-            throw new Error('Required parameter wanFormId was null or undefined when calling updateExternalRouteWanForm.');
-        }
-        const externalRoute = requestParameters.externalRoute;
-        if (externalRoute === null || externalRoute === undefined) {
-            throw new Error('Required parameter externalRoute was null or undefined when calling updateExternalRouteWanForm.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.put<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(wanFormId))}/external-routes/${encodeURIComponent(String(externalRouteId))}`,
-            externalRoute,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Update an existing WAN form
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public updateWanFormWanForm(requestParameters: UpdateWanFormWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanForm>;
-    public updateWanFormWanForm(requestParameters: UpdateWanFormWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanForm>>;
-    public updateWanFormWanForm(requestParameters: UpdateWanFormWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanForm>>;
-    public updateWanFormWanForm(requestParameters: UpdateWanFormWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public updateOneWanForm(requestParameters: UpdateOneWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanForm>;
+    public updateOneWanForm(requestParameters: UpdateOneWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanForm>>;
+    public updateOneWanForm(requestParameters: UpdateOneWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanForm>>;
+    public updateOneWanForm(requestParameters: UpdateOneWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateWanFormWanForm.');
+            throw new Error('Required parameter id was null or undefined when calling updateOneWanForm.');
         }
         const wanForm = requestParameters.wanForm;
         if (wanForm === null || wanForm === undefined) {
-            throw new Error('Required parameter wanForm was null or undefined when calling updateWanFormWanForm.');
+            throw new Error('Required parameter wanForm was null or undefined when calling updateOneWanForm.');
         }
 
         let headers = this.defaultHeaders;

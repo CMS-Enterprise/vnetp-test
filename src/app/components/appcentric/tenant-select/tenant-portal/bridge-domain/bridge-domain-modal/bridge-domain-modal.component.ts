@@ -1,0 +1,440 @@
+import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import {
+  V2AppCentricBridgeDomainsService,
+  BridgeDomain,
+  Vrf,
+  L3Out,
+  V2AppCentricL3outsService,
+  V2AppCentricVrfsService,
+  V2AppCentricRouteProfilesService,
+  RouteProfile,
+  GetManyL3OutResponseDto,
+} from 'client';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
+import { TableConfig } from 'src/app/common/table/table.component';
+import { BridgeDomainModalDto } from 'src/app/models/appcentric/bridge-domain-modal-dto';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { TableContextService } from 'src/app/services/table-context.service';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { NameValidator } from 'src/app/validators/name-validator';
+import { MacAddressValidator } from 'src/app/validators/network-form-validators';
+
+@Component({
+  selector: 'app-bridge-domain-modal',
+  templateUrl: './bridge-domain-modal.component.html',
+  styleUrls: ['./bridge-domain-modal.component.css'],
+})
+export class BridgeDomainModalComponent implements OnInit, OnDestroy {
+  public isLoading = false;
+  public modalMode: ModalMode;
+  public bridgeDomainId: string;
+  public form: UntypedFormGroup;
+  public submitted: boolean;
+  @Input() tenantId: string;
+
+  private l3OutForRouteProfileSubscription: Subscription;
+
+  public tableComponentDto = new TableComponentDto();
+
+  public l3Outs: L3Out[];
+  public filteredL3Outs: L3Out[];
+  public vrfs: Vrf[];
+  public routeProfiles: RouteProfile[];
+  public l3OutsTableData: GetManyL3OutResponseDto;
+
+  public selectedL3Out: L3Out;
+
+  public perPage = 20;
+
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+
+  public searchColumns: SearchColumnConfig[] = [];
+
+  public config: TableConfig<any> = {
+    description: 'bd l3Outs',
+    columns: [
+      { name: 'Name', property: 'name' },
+      { name: 'Alias', property: 'alias' },
+      { name: 'Description', property: 'description' },
+      { name: '', template: () => this.actionsTemplate },
+    ],
+  };
+
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private ngx: NgxSmartModalService,
+    private bridgeDomainService: V2AppCentricBridgeDomainsService,
+    private tableContextService: TableContextService,
+    private l3OutService: V2AppCentricL3outsService,
+    private vrfService: V2AppCentricVrfsService,
+    private routeProfileService: V2AppCentricRouteProfilesService,
+  ) {}
+
+  ngOnInit(): void {
+    this.buildForm();
+    this.setFormValidators();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubAll();
+    this.reset();
+  }
+
+  public onTableEvent(event: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.getL3OutsTableData();
+  }
+
+  get f() {
+    return this.form.controls;
+  }
+
+  public closeModal(): void {
+    this.ngx.close('bridgeDomainModal');
+    this.reset();
+  }
+
+  public getData(): void {
+    const dto = Object.assign({}, this.ngx.getModalData('bridgeDomainModal') as BridgeDomainModalDto);
+
+    this.modalMode = dto.modalMode;
+    if (this.modalMode === ModalMode.Edit) {
+      this.bridgeDomainId = dto.bridgeDomain.id;
+      this.getL3OutsTableData();
+      this.getL3Outs();
+      this.getRouteProfiles();
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.unicastRouting.setValue(true);
+      this.form.controls.arpFlooding.setValue(true);
+      this.form.controls.limitLocalIpLearning.setValue(true);
+      this.form.controls.epMoveDetectionModeGarp.setValue(false);
+    }
+
+    this.getVrfs();
+
+    const bridgeDomain = dto.bridgeDomain;
+    if (bridgeDomain !== undefined) {
+      this.form.controls.name.setValue(bridgeDomain.name);
+      this.form.controls.name.disable();
+      this.form.controls.description.setValue(bridgeDomain.description);
+      this.form.controls.alias.setValue(bridgeDomain.alias);
+      this.form.controls.unicastRouting.setValue(bridgeDomain.unicastRouting);
+      this.form.controls.arpFlooding.setValue(bridgeDomain.arpFlooding);
+      this.form.controls.bdMacAddress.setValue(bridgeDomain.bdMacAddress);
+      this.form.controls.limitLocalIpLearning.setValue(bridgeDomain.limitLocalIpLearning);
+      this.form.controls.epMoveDetectionModeGarp.setValue(bridgeDomain.epMoveDetectionModeGarp);
+      this.form.controls.vrfId.setValue(bridgeDomain.vrfId);
+      this.form.controls.l3OutForRouteProfileId.setValue(bridgeDomain.l3OutForRouteProfileId);
+      this.form.controls.routeProfileId.setValue(bridgeDomain.routeProfileId);
+    }
+
+    this.ngx.resetModalData('bridgeDomainModal');
+  }
+
+  public reset(): void {
+    this.submitted = false;
+    this.ngx.resetModalData('bridgeDomainModal');
+    this.buildForm();
+    this.unsubAll();
+  }
+
+  private buildForm(): void {
+    this.form = this.formBuilder.group({
+      name: ['', NameValidator()],
+      alias: ['', Validators.compose([Validators.maxLength(100)])],
+      description: ['', Validators.compose([Validators.maxLength(500)])],
+      unicastRouting: [null],
+      arpFlooding: [null],
+      bdMacAddress: ['', MacAddressValidator],
+      limitLocalIpLearning: [null],
+      epMoveDetectionModeGarp: [null],
+      vrfId: ['', Validators.required],
+      l3OutForRouteProfileId: [''],
+      routeProfileId: [''],
+    });
+  }
+
+  public setFormValidators(): void {
+    const routeProfile = this.form.controls.routeProfileId;
+    const l3OutForRouteProfile = this.form.controls.l3OutForRouteProfileId;
+
+    this.l3OutForRouteProfileSubscription = l3OutForRouteProfile.valueChanges.subscribe(l3OutForRpValue => {
+      if (l3OutForRpValue) {
+        routeProfile.setValidators(Validators.required);
+        routeProfile.setValue('');
+      } else {
+        routeProfile.clearValidators();
+        routeProfile.setValue('');
+      }
+      routeProfile.updateValueAndValidity();
+    });
+  }
+
+  private createBridgeDomain(bridgeDomain: BridgeDomain): void {
+    this.bridgeDomainService.createOneBridgeDomain({ bridgeDomain }).subscribe(
+      () => {
+        this.closeModal();
+      },
+      () => {},
+    );
+  }
+
+  private editBridgeDomain(bridgeDomain: BridgeDomain): void {
+    delete bridgeDomain.name;
+    delete bridgeDomain.tenantId;
+    delete bridgeDomain.vrfId;
+    this.bridgeDomainService
+      .updateOneBridgeDomain({
+        id: this.bridgeDomainId,
+        bridgeDomain,
+      })
+      .subscribe(
+        () => {
+          this.closeModal();
+        },
+        () => {},
+      );
+  }
+
+  public save(): void {
+    this.submitted = true;
+    if (this.form.invalid) {
+      return;
+    }
+
+    const { name, description, alias, unicastRouting, arpFlooding, bdMacAddress, limitLocalIpLearning, epMoveDetectionModeGarp, vrfId } =
+      this.form.value;
+
+    let { l3OutForRouteProfileId, routeProfileId } = this.form.value;
+    // Check if these fields are empty strings, and if so, set them to null
+    l3OutForRouteProfileId = l3OutForRouteProfileId === '' ? null : l3OutForRouteProfileId;
+    routeProfileId = routeProfileId === '' ? null : routeProfileId;
+
+    // fixes condition where the l3Out dropdown
+    if (l3OutForRouteProfileId === null) {
+      routeProfileId = null;
+    }
+
+    const tenantId = this.tenantId;
+
+    const bridgeDomain = {
+      name,
+      description,
+      alias,
+      tenantId,
+      unicastRouting,
+      arpFlooding,
+      bdMacAddress,
+      limitLocalIpLearning,
+      epMoveDetectionModeGarp,
+      l3OutForRouteProfileId,
+      routeProfileId,
+    } as BridgeDomain;
+
+    bridgeDomain.vrfId = vrfId;
+
+    if (this.modalMode === ModalMode.Create) {
+      this.createBridgeDomain(bridgeDomain);
+    } else {
+      this.editBridgeDomain(bridgeDomain);
+    }
+  }
+  public getL3OutsTableData(): void {
+    this.isLoading = true;
+    this.bridgeDomainService
+      .getOneBridgeDomain({
+        id: this.bridgeDomainId,
+        relations: ['l3outs'],
+      })
+      .subscribe(
+        data => {
+          const l3PagResponse = {} as GetManyL3OutResponseDto;
+          l3PagResponse.count = data.l3outs.length;
+          l3PagResponse.page = 1;
+          l3PagResponse.pageCount = 1;
+          l3PagResponse.total = data.l3outs.length;
+          l3PagResponse.data = data.l3outs;
+          this.l3OutsTableData = l3PagResponse;
+        },
+        () => (this.l3OutsTableData = null),
+        () => (this.isLoading = false),
+      );
+  }
+
+  public getL3Outs(): void {
+    this.isLoading = true;
+    this.l3OutService
+      .getManyL3Out({
+        filter: [`tenantId||eq||${this.tenantId}`],
+        page: 1,
+        perPage: 1000,
+      })
+      .subscribe(
+        data => {
+          const allL3Outs = data.data;
+          this.l3Outs = allL3Outs;
+          const usedL3Outs = this.l3OutsTableData.data;
+          const usedL3OutIds = usedL3Outs.map(l3Out => l3Out.id);
+          this.filteredL3Outs = allL3Outs.filter(l3Out => !usedL3OutIds.includes(l3Out.id));
+        },
+        () => (this.l3Outs = null),
+        () => (this.isLoading = false),
+      );
+  }
+
+  public getVrfs(): void {
+    this.isLoading = true;
+    this.vrfService
+      .getManyVrf({
+        filter: [`tenantId||eq||${this.tenantId}`],
+        page: 1,
+        perPage: 1000,
+      })
+      .subscribe(
+        data => {
+          this.vrfs = data.data;
+        },
+        () => (this.vrfs = null),
+        () => (this.isLoading = false),
+      );
+  }
+
+  public getRouteProfiles(): void {
+    this.isLoading = true;
+    this.routeProfileService
+      .getManyRouteProfile({
+        filter: [`tenantId||eq||${this.tenantId}`],
+        page: 1,
+        perPage: 1000,
+      })
+      .subscribe(
+        data => {
+          this.routeProfiles = data.data;
+        },
+        () => (this.routeProfiles = null),
+        () => (this.isLoading = false),
+      );
+  }
+
+  public addL3Out(): void {
+    this.bridgeDomainService
+      .addL3OutToBridgeDomainBridgeDomain({
+        bridgeDomainId: this.bridgeDomainId,
+        l3OutId: this.selectedL3Out.id,
+      })
+      .subscribe(() => {
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getL3OutsTableData();
+        } else {
+          this.getL3OutsTableData();
+        }
+        this.getL3Outs();
+        this.selectedL3Out = null;
+      });
+  }
+
+  public removeL3Out(l3Out: L3Out): void {
+    const modalDto = new YesNoModalDto('Remove L3Out', `Are you sure you want to remove L3Out ${l3Out.name}?`);
+    const onConfirm = () => {
+      this.bridgeDomainService
+        .removeL3OutFromBridgeDomainBridgeDomain({
+          bridgeDomainId: this.bridgeDomainId,
+          l3OutId: l3Out.id,
+        })
+        .subscribe(
+          () => {
+            const params = this.tableContextService.getSearchLocalStorage();
+            const { filteredResults } = params;
+
+            // if filtered results boolean is true, apply search params in the
+            // subsequent get call
+            if (filteredResults) {
+              this.getL3OutsTableData();
+            } else {
+              this.getL3OutsTableData();
+            }
+          },
+          () => {},
+          () => this.getL3Outs(),
+        );
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  }
+
+  private unsubAll(): void {
+    SubscriptionUtil.unsubscribe([this.l3OutForRouteProfileSubscription]);
+  }
+
+  public sanitizeData(entities) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'bridgeDomainName') {
+        obj.bridgeDomainId = this.bridgeDomainId;
+        delete obj[key];
+      }
+      if (key === 'l3OutName') {
+        obj.l3OutId = ObjectUtil.getObjectId(val as string, this.l3Outs);
+        delete obj[key];
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  // need to revisit these tests
+  public importBridgeDomainL3OutRelation(event): void {
+    const modalDto = new YesNoModalDto(
+      'Import L3 Outs',
+      `Are you sure you would like to import ${event.length} L3 Out${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      dto.map(relation => {
+        this.bridgeDomainService.addL3OutToBridgeDomainBridgeDomain(relation).subscribe(
+          () => {},
+          () => {},
+          () => {
+            this.getL3OutsTableData();
+          },
+        );
+      });
+    };
+
+    const onClose = () => {
+      this.getL3OutsTableData();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
+}

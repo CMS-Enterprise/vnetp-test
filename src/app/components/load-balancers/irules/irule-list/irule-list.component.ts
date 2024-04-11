@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { GetManyLoadBalancerIruleResponseDto, LoadBalancerIrule, Tier, V1LoadBalancerIrulesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { combineLatest, Subscription } from 'rxjs';
@@ -10,8 +10,10 @@ import { TableContextService } from 'src/app/services/table-context.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { IRuleModalDto } from '../irule-modal/irule-modal.dto';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface IRuleView extends LoadBalancerIrule {
   nameView: string;
@@ -24,7 +26,7 @@ export interface IRuleView extends LoadBalancerIrule {
   selector: 'app-irule-list',
   templateUrl: './irule-list.component.html',
 })
-export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class IRuleListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public tiers: Tier[] = [];
   public searchColumns: SearchColumnConfig[] = [];
@@ -34,12 +36,13 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<IRuleView> = {
     description: 'iRules in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Description', property: 'descriptionView' },
       { name: 'Content', property: 'contentView' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],
+    hideAdvancedSearch: true,
   };
   public iRules = {} as GetManyLoadBalancerIruleResponseDto;
   public tableComponentDto = new TableComponentDto();
@@ -56,14 +59,15 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerIrule>();
+    advancedSearchAdapterObject.setService(this.iRuleService);
+    advancedSearchAdapterObject.setServiceName('V1LoadBalancerIrulesService');
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.iRuleChanges = this.subscribeToIRuleModal();
   }
 
   ngOnDestroy(): void {
@@ -114,28 +118,22 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
       .getManyLoadBalancerIrule({
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
-        limit: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        perPage: this.tableComponentDto.perPage,
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
           this.iRules = response;
-          this.iRules.data = (this.iRules.data as IRuleView[]).map(i => {
-            return {
-              ...i,
-              nameView: i.name.length >= 20 ? i.name.slice(0, 19) + '...' : i.name,
-              descriptionView: i.description
-                ? i.description.length >= 20
-                  ? i.description.slice(0, 19) + '...'
-                  : i.description
-                : undefined,
-              state: i.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-              contentView: i.content ? (i.content.length >= 20 ? i.content.slice(0, 19) + '...' : i.content) : undefined,
-            };
-          });
+          this.iRules.data = (this.iRules.data as IRuleView[]).map(i => ({
+            ...i,
+            nameView: i.name.length >= 20 ? i.name.slice(0, 19) + '...' : i.name,
+            descriptionView: i.description ? (i.description.length >= 20 ? i.description.slice(0, 19) + '...' : i.description) : undefined,
+            state: i.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+            contentView: i.content ? (i.content.length >= 20 ? i.content.slice(0, 19) + '...' : i.content) : undefined,
+          }));
         },
         () => {
-          this.iRules = null;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;
@@ -145,12 +143,12 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public import(iRules: ImportIRule[]): void {
     const bulk = iRules.map(iRule => {
-      const { vrfName } = iRule;
-      if (!vrfName) {
+      const { tierName } = iRule;
+      if (!tierName) {
         return iRule;
       }
 
-      const tierId = ObjectUtil.getObjectId(vrfName, this.tiers);
+      const tierId = ObjectUtil.getObjectId(tierName, this.tiers);
       return {
         ...iRule,
         tierId,
@@ -169,6 +167,7 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       iRule,
     };
+    this.subscribeToIRuleModal();
     this.ngx.setModalData(dto, 'iRuleModal');
     this.ngx.open('iRuleModal');
   }
@@ -206,8 +205,8 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToIRuleModal(): Subscription {
-    return this.ngx.getModal('iRuleModal').onCloseFinished.subscribe(() => {
+  private subscribeToIRuleModal(): void {
+    this.iRuleChanges = this.ngx.getModal('iRuleModal').onCloseFinished.subscribe(() => {
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
@@ -222,10 +221,15 @@ export class IRuleListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadIRules();
       }
       this.ngx.resetModalData('iRuleModal');
+      this.iRuleChanges.unsubscribe();
     });
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }
 
 export interface ImportIRule extends LoadBalancerIrule {
-  vrfName?: string;
+  tierName?: string;
 }

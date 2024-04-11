@@ -1,14 +1,12 @@
+// eslint-disable-next-line no-undef
+globalThis.ngJest = {
+  skipNgcc: false,
+  tsconfig: 'tsconfig.spec.json',
+};
+
+
+
 module.exports = {
-  globals: {
-    'ts-jest': {
-      astTransformers: {
-        before: [
-          'jest-preset-angular/build/InlineFilesTransformer',
-          'jest-preset-angular/build/StripStylesTransformer',
-        ],
-      },
-    },
-  },
   preset: 'jest-preset-angular',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/src/test/setupJest.ts'],
@@ -35,6 +33,6 @@ module.exports = {
     '!**/environments/**',
     '!**/src/setupJest.ts',
   ],
-  moduleDirectories: ['', 'node_modules', 'src'],
-  transformIgnorePatterns: ['node_modules/(?!lodash-es/*)']
+  moduleDirectories: [__dirname, 'node_modules', 'src'],
+  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
 };

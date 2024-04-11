@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { SharedModule } from 'src/app/common/shared.module';
 import { TabsModule } from '../../common/tabs/tabs.module';
 import { TooltipModule } from '../../common/tooltip/tooltip.module';
 import { AuthGuard } from '../../guards/auth.guard';
@@ -16,7 +15,13 @@ import { NatRulesComponent } from './nat-rules.component';
 import { PreviewModalModule } from '../../common/preview-modal/preview-modal.module';
 import { TableModule } from 'src/app/common/table/table.module';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
+import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
+import { TierSelectModule } from 'src/app/common/tier-select/tier-select.module';
 import { NatRuleObjectInfoModalComponent } from './nat-rule-modal/nat-rule-object-info-modal/nat-rule-object-info-modal.component';
+import { NatRulePacketTracerComponent } from './nat-rule-packet-tracer/nat-rule-packet-tracer.component';
+import { NatRulesOperationModalComponent } from './nat-rules-operation-modal/nat-rules-operation-modal.component';
 
 const routes: Routes = [
   {
@@ -42,13 +47,24 @@ const routes: Routes = [
     NgxSmartModalModule,
     PreviewModalModule,
     ReactiveFormsModule,
-    SharedModule,
     TableModule,
     TabsModule,
     TooltipModule,
     RouterModule.forChild(routes),
     NgSelectModule,
+    ApplicationPipesModule,
+    YesNoModalModule,
+    ImportExportModule,
+    TierSelectModule,
   ],
-  declarations: [NatRulesComponent, NatRuleModalComponent, NatRulesDetailComponent, NatRuleObjectInfoModalComponent],
+  declarations: [
+    NatRulesComponent,
+    NatRuleModalComponent,
+    NatRulesDetailComponent,
+    NatRuleObjectInfoModalComponent,
+    NatRulePacketTracerComponent,
+    NatRuleModalComponent,
+    NatRulesOperationModalComponent,
+  ],
 })
 export class NatRulesModule {}

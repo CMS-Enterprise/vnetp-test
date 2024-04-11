@@ -1,6 +1,6 @@
 <ngx-smart-modal #networkObjectModal identifier="networkObjectModal" [dismissable]="false" (onOpen)="getData()" (onClose)="reset()">
   <header class="modal-header">
-    <h4 class="modal-title">Network Object</h4>
+    <h2 class="modal-title">Network Object</h2>
   </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -221,7 +221,7 @@
         </div>
 
         <div class="form-group col-md-6">
-          <label for="natTranslatedPort">Destination Port</label>
+          <label for="natTranslatedPort">Translated Port</label>
           <tooltip *ngIf="f.natService.value" [message]="helpText.NatTranslatedPort"></tooltip>
           <input
             type="text"
@@ -232,8 +232,8 @@
             mask="09999"
           />
           <div *ngIf="submitted && f.natTranslatedPort.errors" class="invalid-feedback">
-            <div *ngIf="f.natTranslatedPort.errors.invalidPortNumber">Destination Port must be between 1-65535</div>
-            <div *ngIf="f.natTranslatedPort.errors.required">Destination Port is required</div>
+            <div *ngIf="f.natTranslatedPort.errors.invalidPortNumber">Translated Port must be between 1-65535</div>
+            <div *ngIf="f.natTranslatedPort.errors.required">Translated Port is required</div>
           </div>
         </div>
       </div>

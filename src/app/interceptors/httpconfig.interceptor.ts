@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -6,10 +6,11 @@ import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
+import { UndeployedChangesService } from '../services/undeployed-changes.service';
 
 @Injectable()
 export class HttpConfigInterceptor {
-  constructor(private auth: AuthService, private toastr: ToastrService, private route: ActivatedRoute) {}
+  constructor(private auth: AuthService, private injector: Injector, private toastr: ToastrService, private route: ActivatedRoute) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const currentUser = this.auth.currentUserValue;
@@ -50,10 +51,7 @@ export class HttpConfigInterceptor {
     }
 
     if (request.params.get('join') && request.params.get('join').split(',').length > 1) {
-      const queryStingReplacement = request.params
-        .get('join')
-        .split(',')
-        .join('&join=');
+      const queryStingReplacement = request.params.get('join').split(',').join('&join=');
       const requestUrl = `${request.url}?join=${queryStingReplacement}`;
       request = request.clone({
         url: requestUrl,
@@ -62,10 +60,7 @@ export class HttpConfigInterceptor {
     }
 
     if (request.params.get('filter') && request.params.get('filter').split(',').length > 1) {
-      const queryStingReplacement = request.params
-        .get('filter')
-        .split(',')
-        .join('&filter=');
+      const queryStingReplacement = request.params.get('filter').split(',').join('&filter=');
       const requestUrl = `${request.url}?filter=${queryStingReplacement}`;
       request = request.clone({
         url: requestUrl,
@@ -93,25 +88,26 @@ export class HttpConfigInterceptor {
                 toastrMessage = `Bad Request - ${errorResponse?.error?.description}`;
               } else {
                 // TODO: Adding this temporarily to capture errors without description.
-                console.log(errorResponse);
+                // console.log(errorResponse);
                 toastrMessage = 'Unhandled Error Response';
               }
               break;
             case 401:
               this.auth.logout(true);
-              return;
+              break;
             case 403:
               toastrMessage = 'Unauthorized';
               break;
           }
         }
 
+        /* eslint-disable-next-line */
         const data = {
           error: errorResponse,
           status: errorResponse.status,
         };
 
-        console.error(data);
+        // console.error(data);
 
         this.toastr.error(toastrMessage);
         return throwError(errorResponse);
@@ -121,16 +117,39 @@ export class HttpConfigInterceptor {
 
   // if not a GET request, show appropriate success message
   processSuccessRequest(request, responseEvent) {
+    // Early return for GET requests since no further processing is needed
     if (request.method === 'GET') {
       return;
     }
+
+    this.handleNonGetRequests(responseEvent);
+    this.showSuccessMessage(responseEvent);
+  }
+
+  private handleNonGetRequests(responseEvent) {
+    // Fetch undeployed changes only for specific non-auth and non-bulk URLs
+    if (!responseEvent.url.includes('auth/') && !responseEvent.url.includes('bulk')) {
+      const undeployedChanges = this.injector.get(UndeployedChangesService);
+      undeployedChanges.getUndeployedChanges();
+    }
+  }
+
+  private showSuccessMessage(responseEvent) {
+    // Messages defined based on URL patterns
     const loginNotificationMsg = 'Login Successful';
     const postNotificationMsg = 'Request Successful';
     const bulkNotificationMessage = 'Bulk Upload Successful';
-    return responseEvent.url.includes('auth/')
-      ? this.toastr.success(loginNotificationMsg)
-      : responseEvent.url.includes('bulk')
-      ? this.toastr.success(bulkNotificationMessage)
-      : this.toastr.success(postNotificationMsg);
+
+    // Determine and display the appropriate success message
+    let message;
+    if (responseEvent.url.includes('auth/')) {
+      message = loginNotificationMsg;
+    } else if (responseEvent.url.includes('bulk')) {
+      message = bulkNotificationMessage;
+    } else {
+      message = postNotificationMsg;
+    }
+
+    this.toastr.success(message);
   }
 }

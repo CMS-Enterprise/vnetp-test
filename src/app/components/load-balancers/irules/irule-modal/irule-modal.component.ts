@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { IRuleModalHelpText } from 'src/app/helptext/help-text-networking';
 import { LoadBalancerIrule, V1LoadBalancerIrulesService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -12,7 +12,7 @@ import { IRuleModalDto } from './irule-modal.dto';
   templateUrl: './irule-modal.component.html',
 })
 export class IRuleModalComponent implements OnInit {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public submitted: boolean;
 
   private iRuleId: string;
@@ -21,7 +21,7 @@ export class IRuleModalComponent implements OnInit {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private iRuleService: V1LoadBalancerIrulesService,
     public helpText: IRuleModalHelpText,
   ) {}
@@ -41,7 +41,7 @@ export class IRuleModalComponent implements OnInit {
   }
 
   public getData(): void {
-    const dto: IRuleModalDto = Object.assign({}, this.ngx.getModalData('iRuleModal'));
+    const dto: IRuleModalDto = Object.assign({}, this.ngx.getModalData('iRuleModal')) as any;
     const { iRule, tierId } = dto;
     this.tierId = tierId;
     this.modalMode = iRule ? ModalMode.Edit : ModalMode.Create;
@@ -98,7 +98,8 @@ export class IRuleModalComponent implements OnInit {
   }
 
   private updateIRule(loadBalancerIrule: LoadBalancerIrule): void {
-    loadBalancerIrule.tierId = null;
+    delete loadBalancerIrule.name;
+    delete loadBalancerIrule.tierId;
     this.iRuleService
       .updateOneLoadBalancerIrule({
         id: this.iRuleId,

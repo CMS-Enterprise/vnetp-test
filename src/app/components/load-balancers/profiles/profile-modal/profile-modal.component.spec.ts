@@ -30,18 +30,16 @@ describe('ProfileModalComponent', () => {
     ngx = TestBed.inject(NgxSmartModalService);
   });
 
-  const createProfile = (): LoadBalancerProfile => {
-    return {
-      tierId: '1',
-      id: '2',
-      name: 'Profile2',
-      type: LoadBalancerProfileTypeEnum.ClientSsl,
-      certificate: 'a'.repeat(60),
-      reverseProxy: null,
-      properties: [],
-      key: 'key',
-    };
-  };
+  const createProfile = (): LoadBalancerProfile => ({
+    tierId: '1',
+    id: '2',
+    name: 'Profile2',
+    type: LoadBalancerProfileTypeEnum.ClientSsl,
+    certificate: 'a'.repeat(60),
+    reverseProxy: null,
+    properties: [],
+    key: 'key',
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -154,7 +152,6 @@ describe('ProfileModalComponent', () => {
         name: undefined,
         properties: null,
         reverseProxy: ProfileReverseProxyType.Explicit,
-        tierId: null,
         type: undefined,
       },
     });

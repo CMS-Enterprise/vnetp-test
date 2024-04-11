@@ -1,12 +1,8 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ExternalRoute, ExternalRoutePaginationResponse } from 'client';
-import { UpdateWanFormWanFormRequestParams, V1NetworkScopeFormsWanFormService } from 'client/api/v1NetworkScopeFormsWanForm.service';
 import { WanForm } from 'client/model/wanForm';
-import { WanFormDto } from 'client/model/wanFormDto';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
-import { SearchColumnConfig } from 'src/app/common/seach-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { ExternalRouteModalDto } from 'src/app/models/network-scope-forms/external-route-modal.dto';
 import { WanFormModalDto } from 'src/app/models/network-scope-forms/wan-form-modal.dto';
@@ -15,6 +11,12 @@ import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { NameValidator } from 'src/app/validators/name-validator';
+import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
+import { GetManyExternalRouteResponseDto } from '../../../../../../client/model/getManyExternalRouteResponseDto';
+import { V1NetworkScopeFormsWanFormService } from '../../../../../../client/api/v1NetworkScopeFormsWanForm.service';
+// eslint-disable-next-line max-len
+import { V1NetworkScopeFormsWanFormExternalRouteService } from '../../../../../../client/api/v1NetworkScopeFormsWanFormExternalRoute.service';
+import { ExternalRoute } from '../../../../../../client/model/externalRoute';
 
 @Component({
   selector: 'app-wan-form-modal',
@@ -34,7 +36,7 @@ export class WanFormModalComponent implements OnInit, OnDestroy {
   public wanFormId: string;
   public datacenterId: string;
   public currentDatacenterSubscription: Subscription;
-  public externalRoutes: ExternalRoutePaginationResponse;
+  public externalRoutes: GetManyExternalRouteResponseDto;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('vrfNameTemplate') vrfNameTemplate: TemplateRef<any>;
@@ -56,6 +58,7 @@ export class WanFormModalComponent implements OnInit, OnDestroy {
     private tableContextService: TableContextService,
     private formBuilder: FormBuilder,
     private datacenterContextService: DatacenterContextService,
+    private externalRouteService: V1NetworkScopeFormsWanFormExternalRouteService,
   ) {}
 
   ngOnInit(): void {
@@ -117,34 +120,6 @@ export class WanFormModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  public createWanForm(wanForm: WanForm): void {
-    const dto: WanFormDto = {
-      name: wanForm.name,
-      description: wanForm.description,
-      datacenterId: wanForm.datacenterId,
-    };
-    this.wanFormService
-      .createWanFormWanForm({
-        wanFormDto: dto,
-      })
-      .subscribe(() => {
-        this.closeModal();
-      });
-  }
-
-  public editWanForm(wanForm: WanForm): void {
-    wanForm.name = null;
-
-    this.wanFormService
-      .updateWanFormWanForm({
-        id: this.wanFormId,
-        wanForm,
-      })
-      .subscribe(() => {
-        this.closeModal();
-      });
-  }
-
   public save(): void {
     this.submitted = true;
     if (this.form.invalid) {
@@ -161,9 +136,13 @@ export class WanFormModalComponent implements OnInit, OnDestroy {
     } as WanForm;
 
     if (this.modalMode === ModalMode.Create) {
-      this.createWanForm(wanForm);
+      this.wanFormService.createOneWanForm({ wanForm }).subscribe(() => {
+        this.closeModal();
+      });
     } else {
-      this.editWanForm(wanForm);
+      this.wanFormService.updateOneWanForm({ id: this.wanFormId, wanForm }).subscribe(() => {
+        this.closeModal();
+      });
     }
   }
 
@@ -179,9 +158,9 @@ export class WanFormModalComponent implements OnInit, OnDestroy {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
-    this.wanFormService
-      .getManyExternalRoutesWanForm({
-        wanFormId: this.wanFormId,
+    this.externalRouteService
+      .getManyExternalRoute({
+        filter: [`wanFormId||eq||${this.wanFormId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })
@@ -189,7 +168,7 @@ export class WanFormModalComponent implements OnInit, OnDestroy {
         data => {
           this.externalRoutes = data;
         },
-        error => {
+        () => {
           this.externalRoutes = null;
         },
         () => {
@@ -200,16 +179,15 @@ export class WanFormModalComponent implements OnInit, OnDestroy {
 
   public deleteExternalRoute(externalRoute: ExternalRoute): void {
     this.isLoading = true;
-    this.wanFormService
-      .deleteExternalRouteWanForm({
-        externalRouteId: externalRoute.id,
-        wanFormId: this.wanFormId,
+    this.externalRouteService
+      .deleteOneExternalRoute({
+        id: externalRoute.id,
       })
       .subscribe(
-        data => {
+        () => {
           this.getExternalRoutes();
         },
-        error => {
+        () => {
           this.isLoading = false;
         },
         () => {

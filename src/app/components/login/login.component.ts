@@ -29,14 +29,16 @@ export class LoginComponent implements OnInit {
   disableUserPass = true;
   showTenantButton = false;
 
+  selectedMode = 'netcentric';
+
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
 
   ngOnInit() {
-    environment.environment.dcsLocations.map(location => {
+    environment.dynamic.dcsLocations.map(location => {
       this.availableLocations.push(location.name);
     });
     const currentUrl = location.href;
-    environment.environment.dcsLocations.map(location => {
+    environment.dynamic.dcsLocations.map(location => {
       if (currentUrl.includes(location.url.toLowerCase())) {
         this.showLogin = true;
         this.selectedLocation = location.name;
@@ -49,7 +51,7 @@ export class LoginComponent implements OnInit {
       this.disableUserPass = true;
     }
 
-    this.returnUrl = '/dashboard';
+    // this.returnUrl = '/appcentric/dashboard';
 
     if (this.route.snapshot.queryParams.returnUrl) {
       this.returnUrl = decodeURIComponent(this.route.snapshot.queryParams.returnUrl);
@@ -57,9 +59,6 @@ export class LoginComponent implements OnInit {
 
     if (!this.authService.currentUser) {
       this.authService.logout();
-    } else {
-      // If the user is logged in, navigate them to the Return URL.
-      this.router.navigateByUrl(this.returnUrl);
     }
 
     // Attempt to extract the tenant parameter from the return URL.
@@ -72,11 +71,10 @@ export class LoginComponent implements OnInit {
   }
 
   navToLocation() {
-    const match = environment.environment.dcsLocations.find(location => location.name === this.selectedLocation);
+    const match = environment.dynamic.dcsLocations.find(location => location.name === this.selectedLocation);
     if (match) {
       const currentURL = location.href;
-      if (currentURL.includes(match.url)) {
-      } else {
+      if (!currentURL.includes(match.url)) {
         location.href = match.url;
       }
     }
@@ -116,14 +114,14 @@ export class LoginComponent implements OnInit {
                 }
                 this.showTenantButton = true;
               },
-              error => {
+              () => {
                 this.toastr.error('Error getting tenants');
                 this.errorMessage = 'Error getting tenants';
                 this.loading = false;
               },
             );
         },
-        error => {
+        () => {
           this.toastr.error('Invalid Username/Password');
           this.errorMessage = 'Invalid Username/Password';
           this.loading = false;
@@ -131,8 +129,9 @@ export class LoginComponent implements OnInit {
       );
   }
 
-  setTenantAndNavigate(tenant) {
+  setTenantAndNavigate(tenant, mode) {
     const { tenantQueryParameter } = tenant;
+    mode = mode.toLowerCase();
     this.toastr.success(`Welcome ${this.userpass.username}!`);
     this.authService.currentTenantValue = tenantQueryParameter;
     // if the user had a session expire, and they can choose from multiple tenants,
@@ -141,11 +140,11 @@ export class LoginComponent implements OnInit {
     // page they were on after login if they choose a different tenant, we redirect them
     // to the dashboard after they login
     if (tenantQueryParameter !== this.oldTenant) {
-      this.returnUrl = '/dashboard';
+      this.returnUrl = `/${mode}/dashboard`;
     }
     // if the returnUrl is /dashboard then we assume the user is starting a brand new session
     // when they login we allow them to select a tenant and then they are brought to the dashboard
-    if (this.returnUrl === '/dashboard') {
+    if (this.returnUrl === `/${mode}/dashboard`) {
       localStorage.setItem('tenantQueryParam', JSON.stringify(tenantQueryParameter));
       this.router.navigate([this.returnUrl], {
         queryParams: { tenant: tenantQueryParameter },

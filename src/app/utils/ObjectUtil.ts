@@ -43,5 +43,5 @@ export default class ObjectUtil {
 
 export interface Lookup {
   id?: string;
-  name: string;
+  name?: string;
 }

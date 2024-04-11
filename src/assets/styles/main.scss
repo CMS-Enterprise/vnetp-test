@@ -1,9 +1,8 @@
 // 3rd party imports
-@import '~ngx-toastr/toastr.css';
-@import '~ngx-smart-modal/ngx-smart-modal';
-@import '~bootstrap/dist/css/bootstrap.min.css';
-@import '~d3-context-menu/css/d3-context-menu.css';
-@import '~@ng-select/ng-select/themes/default.theme.css';
+@import 'ngx-toastr/toastr';
+@import 'ngx-smart-modal/styles';
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import '@ng-select/ng-select/themes/default.theme.css';
 
 // custom imports
 @import 'variables', 'buttons', 'tables', 'forms', 'modals';
@@ -62,6 +61,11 @@ hr {
 .large-modal {
   max-width: 1000px;
   max-height: 1000px;
+}
+
+.medium-wide-modal {
+  max-width: 1200px;
+  max-height: 800px;
 }
 
 .medium-modal {
@@ -160,4 +164,10 @@ hr {
 
 body {
   font-family: 'Open Sans', sans-serif;
+}
+
+.icon-spacing {
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
 }

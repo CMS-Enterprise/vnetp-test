@@ -1,0 +1,252 @@
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { GetManyVrfResponseDto, V2AppCentricVrfsService, Vrf } from 'client';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
+import { TableConfig } from 'src/app/common/table/table.component';
+import { VrfModalDto } from 'src/app/models/appcentric/vrf-modal-dto';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { TableContextService } from 'src/app/services/table-context.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+
+@Component({
+  selector: 'app-vrf',
+  templateUrl: './vrf.component.html',
+  styleUrls: ['./vrf.component.css'],
+})
+export class VrfComponent implements OnInit {
+  public ModalMode = ModalMode;
+  public currentVrfPage = 1;
+  public perPage = 20;
+  public vrfs = {} as GetManyVrfResponseDto;
+  public tableComponentDto = new TableComponentDto();
+  private vrfModalSubscription: Subscription;
+  public tenantId: string;
+
+  public isLoading = false;
+
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
+    { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
+    { displayName: 'Policy Control Enforced', propertyName: 'policyControlEnforced', propertyType: 'boolean' },
+    { displayName: 'Policy Control Enforcement Ingress', propertyName: 'policyControlEnforcementIngress', propertyType: 'boolean' },
+  ];
+
+  public config: TableConfig<any> = {
+    description: 'Vrfs',
+    columns: [
+      { name: 'Name', property: 'name' },
+      { name: 'Alias', property: 'alias' },
+      { name: 'Description', property: 'description' },
+      { name: 'Policy Control Enforced', property: 'policyControlEnforced' },
+      { name: 'Policy Control Enforcement Ingress', property: 'policyControlEnforcementIngress' },
+      { name: '', template: () => this.actionsTemplate },
+    ],
+  };
+
+  constructor(
+    private vrfService: V2AppCentricVrfsService,
+    private tableContextService: TableContextService,
+    private ngx: NgxSmartModalService,
+    private router: Router,
+  ) {
+    const advancedSearchAdapter = new AdvancedSearchAdapter<Vrf>();
+    advancedSearchAdapter.setService(this.vrfService);
+    advancedSearchAdapter.setServiceName('V2AppCentricVrfsService');
+    this.config.advancedSearchAdapter = advancedSearchAdapter;
+
+    const match = this.router.routerState.snapshot.url.match(
+      /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
+    );
+    if (match) {
+      const uuid = match[0].split('/')[2];
+      this.tenantId = uuid;
+    }
+  }
+
+  ngOnInit(): void {
+    this.getVrfs();
+  }
+
+  public onTableEvent(event: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.getVrfs(event);
+  }
+
+  public getVrfs(event?): void {
+    this.isLoading = true;
+    let eventParams;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
+    this.vrfService
+      .getManyVrf({
+        filter: [`tenantId||eq||${this.tenantId}`, eventParams],
+        page: this.tableComponentDto.page,
+        perPage: this.tableComponentDto.perPage,
+      })
+      .subscribe(
+        data => {
+          this.vrfs = data;
+        },
+        () => {
+          this.vrfs = null;
+        },
+        () => {
+          this.isLoading = false;
+        },
+      );
+  }
+
+  public deleteVrf(vrf: Vrf): void {
+    if (vrf.deletedAt) {
+      this.vrfService.deleteOneVrf({ id: vrf.id }).subscribe(() => {
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getVrfs(params);
+        } else {
+          this.getVrfs();
+        }
+      });
+    } else {
+      this.vrfService
+        .softDeleteOneVrf({
+          id: vrf.id,
+        })
+        .subscribe(() => {
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
+
+          // if filtered results boolean is true, apply search params in the
+          // subsequent get call
+          if (filteredResults) {
+            this.getVrfs(params);
+          } else {
+            this.getVrfs();
+          }
+        });
+    }
+  }
+
+  public restoreVrf(vrf: Vrf): void {
+    if (!vrf.deletedAt) {
+      return;
+    }
+
+    this.vrfService
+      .restoreOneVrf({
+        id: vrf.id,
+      })
+      .subscribe(() => {
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults) {
+          this.getVrfs(params);
+        } else {
+          this.getVrfs();
+        }
+      });
+  }
+
+  public openVrfModal(modalMode: ModalMode, vrf?: Vrf): void {
+    const dto = new VrfModalDto();
+
+    dto.ModalMode = modalMode;
+
+    if (modalMode === ModalMode.Edit) {
+      dto.vrf = vrf;
+    }
+
+    this.subscribeToVrfModal();
+    this.ngx.setModalData(dto, 'vrfModal');
+    this.ngx.getModal('vrfModal').open();
+  }
+
+  private subscribeToVrfModal(): void {
+    this.vrfModalSubscription = this.ngx.getModal('vrfModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('vrfModal');
+      this.vrfModalSubscription.unsubscribe();
+      // get search params from local storage
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      // if filtered results boolean is true, apply search params in the
+      // subsequent get call
+      if (filteredResults) {
+        this.getVrfs(params);
+      } else {
+        this.getVrfs();
+      }
+    });
+  }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'ipAddress' && val !== '') {
+        obj[key] = String(val).trim();
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  public importVrfs(event): void {
+    const modalDto = new YesNoModalDto(
+      'Import Vrfs',
+      `Are you sure you would like to import ${event.length} Vrf${event.length > 1 ? 's' : ''}?`,
+    );
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.vrfService.createManyVrf({ createManyVrfDto: { bulk: dto } }).subscribe(
+        () => {},
+        () => {},
+        () => {
+          this.getVrfs();
+        },
+      );
+    };
+    const onClose = () => {
+      this.getVrfs();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
+}

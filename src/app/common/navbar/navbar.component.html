@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg" *ngIf="user && tenant">
-  <a class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
+  <a id="dashboard-link" class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
     <fa-icon class="icon" [icon]="['fas', 'bolt']"></fa-icon>
   </a>
 
@@ -19,6 +19,7 @@
     <ul class="navbar-nav mr-auto">
       <li class="nav-item dropdown">
         <a
+          tabindex="0"
           class="nav-link dropdown-toggle"
           id="networkingNavbarDropdown"
           role="button"
@@ -28,8 +29,9 @@
           >Networking
         </a>
         <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
-          <a class="dropdown-item" routerLink="tiers" queryParamsHandling="merge">Tiers</a>
+          <a id="tiers-link" class="dropdown-item" routerLink="tiers" queryParamsHandling="merge">Tiers</a>
           <a
+            id="self-service-link"
             *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
             class="dropdown-item"
             routerLink="self-service"
@@ -37,6 +39,7 @@
             >Managed Network</a
           >
           <a
+            id="subnets-vlans-link"
             *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
             class="dropdown-item"
             routerLink="subnets-vlans"
@@ -44,6 +47,7 @@
             >Subnets & VLANs</a
           >
           <a
+            id="firewall-rule-groups-link"
             *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
             class="dropdown-item"
             routerLink="firewall-rules"
@@ -51,6 +55,7 @@
             >Firewall Rule Groups</a
           >
           <a
+            id="nat-rule-groups-link"
             *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
             class="dropdown-item"
             routerLink="nat-rules"
@@ -58,6 +63,7 @@
             >NAT Rule Groups</a
           >
           <a
+            id="network-objects-groups-link"
             *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
             class="dropdown-item"
             routerLink="network-objects-groups"
@@ -65,6 +71,7 @@
             >Network Objects/Groups</a
           >
           <a
+            id="service-objects-groups-link"
             *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
             class="dropdown-item"
             routerLink="service-objects-groups"
@@ -72,6 +79,7 @@
             >Service Objects/Groups</a
           >
           <a
+            id="load-balancers-link"
             *ngIf="userRoles?.includes('admin') || userRoles?.includes('loadbalancer_admin')"
             class="dropdown-item"
             routerLink="load-balancers"
@@ -79,6 +87,7 @@
             >Load Balancers</a
           >
           <a
+            id="routing-link"
             *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
             class="dropdown-item"
             routerLink="static-routes"
@@ -106,12 +115,13 @@
 
     <ul class="navbar-nav ml-auto align-items-lg-center">
       <li class="nav-item">
-        <a class="nav-link" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
+        <a id="jobs-link" class="nav-link" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
           <span>Jobs</span>
         </a>
       </li>
       <li class="nav-item dropdown">
         <a
+          tabindex="0"
           class="nav-link dropdown-toggle"
           id="userNavbarDropdown"
           role="button"
@@ -122,19 +132,36 @@
           <span *ngIf="user">{{ user.uid }} ({{ user.cn }})</span>
         </a>
         <div class="dropdown-menu dropdown-menu--reverse" aria-labelledby="userNavbarDropdown">
-          <a *ngIf="userRoles?.includes('admin')" class="dropdown-item" routerLink="audit-log" queryParamsHandling="merge">Audit Log</a>
-          <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://jiraent.cms.gov/">Ticketing System</a>
-          <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="http://wiki.draas.cdsvdc.lcl/">Documentation</a>
-          <a class="dropdown-item" (click)="openLogoutModal()">Logout</a>
+          <a id="environment-summary-link" class="dropdown-item" routerLink="environment-summary" queryParamsHandling="merge"
+            >Environment Summary</a
+          >
+          <a
+            id="audit-log-link"
+            *ngIf="userRoles?.includes('admin')"
+            class="dropdown-item"
+            routerLink="audit-log"
+            queryParamsHandling="merge"
+            >Audit Log</a
+          >
+          <a id="ticket-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="{{ environment?.dynamic?.snowBase }}"
+            >Ticketing System</a
+          >
+          <a
+            id="documentation-link"
+            class="dropdown-item"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="{{ environment?.dynamic?.wikiBase }}"
+            >Documentation</a
+          >
+          <a tabindex="0" (keyup.enter)="openLogoutModal()" name="logout-link" class="dropdown-item" (click)="openLogoutModal()">Logout</a>
           <div class="dropdown-divider" *ngIf="dcsVersion"></div>
-          <a class="dropdown-item" target="_blank" rel="noopener noreferrer" *ngIf="dcsVersion">v{{ dcsVersion }}</a>
+          <a name="version" class="dropdown-item" target="_blank" rel="noopener noreferrer" *ngIf="dcsVersion">v{{ dcsVersion }}</a>
         </div>
       </li>
 
       <li class="nav-item align-self-end align-self-lg-center">
-        <button class="btn btn-danger" routerLink="deploy" queryParamsHandling="merge">
-          Deploy
-        </button>
+        <button class="btn btn-danger" routerLink="deploy" queryParamsHandling="merge">Deploy</button>
       </li>
     </ul>
   </div>
@@ -151,9 +178,7 @@
   </div>
 
   <footer class="modal-footer">
-    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="logoutModal.close()">
-      Cancel
-    </button>
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="logoutModal.close()">Cancel</button>
 
     <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="logout()">
       <fa-icon class="icon" [icon]="['fas', 'sign-out-alt']"></fa-icon>

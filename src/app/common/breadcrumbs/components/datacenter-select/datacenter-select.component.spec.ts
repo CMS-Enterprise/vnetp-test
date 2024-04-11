@@ -8,16 +8,21 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { By } from '@angular/platform-browser';
 import { MockProvider } from 'src/test/mock-providers';
 import { RouterTestingModule } from '@angular/router/testing';
+import { V1TiersService } from '../../../../../../client';
 
 describe('DatacenterSelectComponent', () => {
   let component: DatacenterSelectComponent;
   let fixture: ComponentFixture<DatacenterSelectComponent>;
-
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, RouterTestingModule.withRoutes([])],
       declarations: [DatacenterSelectComponent, MockNgxSmartModalComponent, MockTooltipComponent],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(ToastrService), MockProvider(DatacenterContextService)],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(ToastrService),
+        MockProvider(DatacenterContextService),
+        MockProvider(V1TiersService),
+      ],
     });
 
     fixture = TestBed.createComponent(DatacenterSelectComponent);
@@ -32,14 +37,12 @@ describe('DatacenterSelectComponent', () => {
   it('should call to open the datacenter switch modal on click', () => {
     const ngx = TestBed.inject(NgxSmartModalService) as any;
     const openSpy = jest.fn();
-    jest.spyOn(ngx, 'getModal').mockImplementation(() => {
-      return {
-        open: openSpy,
-      };
-    });
+    jest.spyOn(ngx, 'getModal').mockImplementation(() => ({
+      open: openSpy,
+    }));
 
     const openButton = fixture.debugElement.query(By.css('.btn.btn-primary'));
-    openButton.nativeElement.click();
+    openButton.triggerEventHandler('click', 'getModal');
 
     expect(openSpy).toHaveBeenCalled();
   });

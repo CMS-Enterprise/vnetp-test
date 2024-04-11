@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
   GetManyLoadBalancerPoolResponseDto,
   LoadBalancerPool,
@@ -15,8 +15,10 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { EntityService } from 'src/app/services/entity.service';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { SearchColumnConfig } from '../../../../common/seach-bar/search-bar.component';
+import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { PoolModalDto } from '../pool-modal/pool-modal.dto';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface PoolView extends LoadBalancerPool {
   nameView: string;
@@ -30,7 +32,7 @@ export interface PoolView extends LoadBalancerPool {
   selector: 'app-pool-list',
   templateUrl: './pool-list.component.html',
 })
-export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PoolListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;
   public datacenterId: string;
   public tiers: Tier[] = [];
@@ -41,7 +43,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
   public config: TableConfig<PoolView> = {
     description: 'Pools in the currently selected Tier',
     columns: [
-      { name: 'Name', property: 'nameView' },
+      { name: 'Name', property: 'name' },
       { name: 'Load Balancing Method', property: 'methodName' },
       { name: 'Nodes', property: 'totalNodes' },
       { name: 'Health Monitors', property: 'totalHealthMonitors' },
@@ -63,14 +65,14 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     private poolsService: V1LoadBalancerPoolsService,
     private ngx: NgxSmartModalService,
     private tierContextService: TierContextService,
-  ) {}
+  ) {
+    const advancedSearchAdapterObject = new AdvancedSearchAdapter<LoadBalancerPool>();
+    advancedSearchAdapterObject.setService(this.poolsService);
+    this.config.advancedSearchAdapter = advancedSearchAdapterObject;
+  }
 
   ngOnInit(): void {
     this.dataChanges = this.subscribeToDataChanges();
-  }
-
-  ngAfterViewInit(): void {
-    this.poolChanges = this.subscribeToPoolModal();
   }
 
   ngOnDestroy(): void {
@@ -101,20 +103,16 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
       })
       .subscribe(
         response => {
-          const getTotal = <T>(array: T[]) => {
-            return array ? array.length : 0;
-          };
+          const getTotal = <T>(array: T[]) => (array ? array.length : 0);
           this.pools = response;
-          this.pools.data = this.pools.data.map(p => {
-            return {
-              ...p,
-              nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
-              methodName: methodsLookup[p.loadBalancingMethod],
-              state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
-              totalNodes: getTotal(p.nodes),
-              totalHealthMonitors: getTotal(p.healthMonitors) + getTotal(p.defaultHealthMonitors),
-            };
-          });
+          this.pools.data = this.pools.data.map(p => ({
+            ...p,
+            nameView: p.name.length >= 20 ? p.name.slice(0, 19) + '...' : p.name,
+            methodName: methodsLookup[p.loadBalancingMethod],
+            state: p.provisionedAt ? 'Provisioned' : 'Not Provisioned',
+            totalNodes: getTotal(p.nodes),
+            totalHealthMonitors: getTotal(p.healthMonitors) + getTotal(p.defaultHealthMonitors),
+          }));
         },
         () => {
           this.pools = null;
@@ -141,6 +139,7 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
       tierId: this.currentTier.id,
       pool,
     };
+    this.subscribeToPoolModal();
     this.ngx.setModalData(dto, 'poolModal');
     this.ngx.open('poolModal');
   }
@@ -165,10 +164,15 @@ export class PoolListComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToPoolModal(): Subscription {
-    return this.ngx.getModal('poolModal').onCloseFinished.subscribe(() => {
+  private subscribeToPoolModal(): void {
+    this.poolChanges = this.ngx.getModal('poolModal').onCloseFinished.subscribe(() => {
       this.loadPools();
       this.ngx.resetModalData('poolModal');
+      this.poolChanges.unsubscribe();
     });
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }

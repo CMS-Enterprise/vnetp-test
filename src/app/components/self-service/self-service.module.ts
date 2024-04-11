@@ -6,13 +6,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
-import { SharedModule } from 'src/app/common/shared.module';
 import { TableModule } from 'src/app/common/table/table.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { SelfServiceArtifactReviewModalComponent } from './self-service-artifact-review-modal/self-service-artifact-review-modal.component';
 import { SelfServiceBulkUploadModalComponent } from './self-service-bulk-upload-modal/self-service-bulk-upload-modal.component';
 import { SelfServiceModalComponent } from './self-service-modal/self-service-modal.component';
 import { SelfServiceComponent } from './self-service.component';
+import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 
 const routes: Routes = [
   {
@@ -29,11 +30,12 @@ const routes: Routes = [
     FontAwesomeModule,
     IconButtonModule,
     CommonModule,
-    SharedModule,
     TableModule,
     RouterModule.forChild(routes),
     NgxSmartModalModule,
     TabsModule,
+    ImportExportModule,
+    YesNoModalModule,
   ],
   declarations: [
     SelfServiceComponent,

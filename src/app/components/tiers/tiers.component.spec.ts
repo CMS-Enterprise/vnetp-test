@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   MockComponent,
   MockFontAwesomeComponent,
@@ -31,12 +31,13 @@ describe('TiersComponent', () => {
   let component: TiersComponent;
   let fixture: ComponentFixture<TiersComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [NgxSmartModalModule, NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
         MockComponent('app-tier-modal'),
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockComponent({ selector: 'app-type-delete-modal', inputs: ['tierToDelete'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockImportExportComponent,
@@ -49,7 +50,7 @@ describe('TiersComponent', () => {
         MockProvider(DatacenterContextService),
         MockProvider(NgxSmartModalService),
         MockProvider(V1TierGroupsService, { getManyTierGroup: () => of([]) }),
-        MockProvider(V1TiersService, { getManyDatacenterTier: () => of([]) }),
+        MockProvider(V1TiersService, { getManyTier: () => of([]) }),
         MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
         MockProvider(V1NetworkSecurityNatRuleGroupsService),
         MockProvider(V1NetworkSecurityNetworkObjectsService),
@@ -58,7 +59,7 @@ describe('TiersComponent', () => {
         MockProvider(V1NetworkSecurityServiceObjectGroupsService),
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TiersComponent);

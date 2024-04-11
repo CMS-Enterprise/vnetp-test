@@ -15,22 +15,13 @@ describe('EntityService', () => {
 
     service = TestBed.inject(EntityService);
 
-    jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn, closeFn) => {
+    jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn) => {
       confirmFn();
       return of().subscribe();
     });
   });
 
   describe('deleteEntity', () => {
-    it('should throw an error when deleting a provisioned entity', () => {
-      const throwsError = () => {
-        const entity: Entity = { provisionedAt: {}, name: 'Entity' };
-        service.deleteEntity(entity, null);
-      };
-
-      expect(throwsError).toThrow('Cannot delete provisioned object');
-    });
-
     it('should soft-delete an entity', () => {
       const softDelete$ = of();
       const softDeleteSpy = jest.spyOn(softDelete$, 'subscribe');

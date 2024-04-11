@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, Validators, UntypedFormGroup } from '@angular/forms';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ServiceObjectGroupModalHelpText } from 'src/app/helptext/help-text-networking';
 import { ServiceObject, ServiceObjectGroup, V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'client';
@@ -14,7 +14,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   templateUrl: './service-object-group-modal.component.html',
 })
 export class ServiceObjectGroupModalComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   submitted: boolean;
   serviceObjects: Array<ServiceObject>;
   TierId: string;
@@ -25,7 +25,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
 
   constructor(
     private ngx: NgxSmartModalService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private tierService: V1TiersService,
     public helpText: ServiceObjectGroupModalHelpText,
@@ -59,29 +59,25 @@ export class ServiceObjectGroupModalComponent implements OnInit {
           () => {},
         );
     } else {
-      modalServiceObjectGroup.type = null;
+      delete modalServiceObjectGroup.type;
+      delete modalServiceObjectGroup.name;
       this.serviceObjectGroupService
         .updateOneServiceObjectGroup({
           id: this.ServiceObjectGroupId,
           serviceObjectGroup: modalServiceObjectGroup,
         })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+        .subscribe(() => {
+          this.closeModal();
+        });
     }
   }
 
   private closeModal() {
     this.ngx.close('serviceObjectGroupModal');
-    this.reset();
   }
 
   cancel() {
     this.ngx.close('serviceObjectGroupModal');
-    this.reset();
   }
 
   get f() {
@@ -90,7 +86,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
 
   addServiceObject() {
     this.serviceObjectGroupService
-      .addServiceObjectToGroupServiceObjectGroupServiceObject({
+      .addServiceObjectToGroupServiceObjectGroup({
         serviceObjectGroupId: this.ServiceObjectGroupId,
         serviceObjectId: this.selectedServiceObject.id,
       })
@@ -105,7 +101,7 @@ export class ServiceObjectGroupModalComponent implements OnInit {
     const modalDto = new YesNoModalDto('Remove Service Object from Service Object Group', '');
     const onConfirm = () => {
       this.serviceObjectGroupService
-        .removeServiceObjectFromGroupServiceObjectGroupServiceObject({
+        .removeServiceObjectFromGroupServiceObjectGroup({
           serviceObjectGroupId: this.ServiceObjectGroupId,
           serviceObjectId: serviceObject.id,
         })
@@ -149,15 +145,15 @@ export class ServiceObjectGroupModalComponent implements OnInit {
     this.ngx.resetModalData('serviceObjectGroupModal');
   }
 
-  private getTierServiceObjects() {
+  public getTierServiceObjects() {
     this.tierService.getOneTier({ id: this.TierId, join: ['serviceObjects'] }).subscribe(data => {
-      this.tierServiceObjects = data.serviceObjects.filter(tierObj => {
-        return !this.serviceObjects.some(groupObj => groupObj.id === tierObj.id) && tierObj.deletedAt === null;
-      });
+      this.tierServiceObjects = data.serviceObjects.filter(
+        tierObj => !this.serviceObjects.some(groupObj => groupObj.id === tierObj.id) && tierObj.deletedAt === null,
+      );
     });
   }
 
-  private getGroupServiceObjects() {
+  public getGroupServiceObjects() {
     this.serviceObjectGroupService
       .getOneServiceObjectGroup({
         id: this.ServiceObjectGroupId,

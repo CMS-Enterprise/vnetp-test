@@ -1,18 +1,26 @@
-import { SearchColumnConfig } from '../seach-bar/search-bar.component';
-import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef, Output, EventEmitter, AfterContentInit } from '@angular/core';
+import { SearchBarComponent, SearchColumnConfig } from '../search-bar/search-bar.component';
+import { Component, TemplateRef, Input, AfterViewInit, ChangeDetectorRef, Output, EventEmitter, ViewChild } from '@angular/core';
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { SearchBarHelpText } from 'src/app/helptext/help-text-networking';
+import { Subject, Subscription } from 'rxjs';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { AdvancedSearchAdapter } from '../advanced-search/advanced-search.adapter';
+import { AdvancedSearchComponent } from '../advanced-search/advanced-search-modal.component';
 
 export interface TableColumn<T> {
   name: string;
   property?: keyof T;
   template?: () => TemplateRef<any>;
+  value?: (datum: T) => any;
 }
 export interface TableConfig<T> {
   description: string;
   columns: TableColumn<T>[];
   rowStyle?: (datum: object) => Partial<CSSStyleDeclaration>;
+  advancedSearchAdapter?: AdvancedSearchAdapter<T>;
+  hideAdvancedSearch?: boolean;
+  hideSearchBar?: boolean;
 }
 
 /**
@@ -51,35 +59,82 @@ export class TableComponent<T> implements AfterViewInit {
   @Output() clearResults = new EventEmitter<any>();
   @Output() searchParams = new EventEmitter<any>();
 
+  @ViewChild(SearchBarComponent) searchBarComponent!: SearchBarComponent;
+  @ViewChild(AdvancedSearchComponent) advancedSearchComponent!: AdvancedSearchComponent<any>;
+
+  advancedSearchSubscription: Subscription;
+
   public searchText = '';
 
   public currentPage = 1;
   public show = false;
+  public hasSearchResults = false;
   public uniqueTableId: string;
 
   public showSearchBar = true;
   public paginationControlsOn = true;
 
-  constructor(private changeRef: ChangeDetectorRef, private tableContextService: TableContextService, public helpText: SearchBarHelpText) {}
+  public advancedSearchAdapterSubject: Subject<any> = new Subject<any>();
+
+  constructor(
+    private changeRef: ChangeDetectorRef,
+    private tableContextService: TableContextService,
+    public helpText: SearchBarHelpText,
+    private ngx: NgxSmartModalService,
+  ) {}
 
   ngAfterViewInit(): void {
+    if (this.config?.advancedSearchAdapter) {
+      const advancedSearchAdapter = this.config.advancedSearchAdapter;
+      this.advancedSearchAdapterSubject.next(advancedSearchAdapter);
+    }
+    const searchParams = this.tableContextService.getSearchLocalStorage();
+    const advancedSearchParams = this.tableContextService.getAdvancedSearchLocalStorage();
+    if (searchParams.searchText || advancedSearchParams) {
+      this.hasSearchResults = true;
+    } else {
+      this.hasSearchResults = false;
+    }
+
     this.show = true;
     this.uniqueTableId = this.config.description.toLowerCase().replace(/ /gm, '-');
     // list of components that should have the search bar hidden when a user navigates to them
     const badList = [
       'managed-network',
-      'selected-objects',
+      'unused-network-objects/groups',
+      'unused-service-objects/groups',
       'import-preview',
       'pools-in-the-currently-selected-tier',
       'static-routes-listed-by-tier',
       'static-routes-for-the-currently-selected-tier',
       'audit-log',
       'detailed-audit-log-entry',
+      'endpoint-groups',
+      'consumed-contracts',
+      'provided-contracts',
+      'subnets',
+      'subjects',
+      'filterentries',
       'self-services',
+      'subject-filters',
+      'l3out-modal',
+      'bd-l3outs',
+      'tiers-in-the-currently-selected-datacenter',
+      'tenants-and-datacenters',
+      'object-usage',
+      'tenants',
       'external-routes',
     ];
 
-    const hidePagination = ['import-preview', 'detailed-audit-log-entry'];
+    const hidePagination = [
+      'import-preview',
+      'detailed-audit-log-entry',
+      'unused-network-objects/groups',
+      'unused-service-objects/groups',
+      'bd-l3outs',
+      'tenants-and-datacenters',
+      'object-usage',
+    ];
 
     // if tableId is a badList ID, we hide the search bar
     if (badList.includes(this.uniqueTableId)) {
@@ -103,7 +158,7 @@ export class TableComponent<T> implements AfterViewInit {
   // the itemsPerPage and the currentPage back to its default values, and then emits the event to the parent component,
   // where the appropriate function is called to re-populate the table
   public clearTableResults(): void {
-    this.itemsPerPage = 50;
+    this.itemsPerPage = 20;
     this.currentPage = 1;
     this.clearResults.emit(new TableComponentDto(+this.itemsPerPage, this.currentPage));
   }
@@ -111,10 +166,47 @@ export class TableComponent<T> implements AfterViewInit {
   // when a user interacts with the pagination controls this function is invoked
   // we get the searchParams from localStorage and emit the pagination & search params
   onTableEvent(): void {
+    const advancedSearchParams = this.tableContextService.getAdvancedSearchLocalStorage();
     const searchParams = this.tableContextService.getSearchLocalStorage();
+
+    if (searchParams.searchText || advancedSearchParams) {
+      this.hasSearchResults = true;
+    } else {
+      this.hasSearchResults = false;
+    }
+
+    if (advancedSearchParams) {
+      this.advancedSearchComponent.searchThis(
+        this.currentPage,
+        this.itemsPerPage,
+        advancedSearchParams.searchOperator,
+        advancedSearchParams.searchString,
+      );
+      return;
+    }
+
     this.tableContextService.addFilteredResultsLocalStorage();
     const { searchColumn, searchText } = searchParams;
     this.tableEvent.emit(new TableComponentDto(+this.itemsPerPage, this.currentPage, searchColumn, searchText));
     this.itemsPerPageChange.emit(this.itemsPerPage);
+  }
+
+  public setAdvancedSearchData($event): void {
+    this.data = $event;
+    this.searchBarComponent.setFilteredResults();
+    this.hasSearchResults = true;
+  }
+
+  subscribeToAdvancedSearch() {
+    this.advancedSearchSubscription = this.ngx.getModal('advancedSearch').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('advancedSearch');
+      this.advancedSearchSubscription.unsubscribe();
+    });
+  }
+
+  /* eslint-disable-next-line */
+  openAdvancedSearch(event?) {
+    this.subscribeToAdvancedSearch();
+    this.ngx.getModal('advancedSearch').open();
   }
 }
