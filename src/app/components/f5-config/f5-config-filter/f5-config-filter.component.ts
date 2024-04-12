@@ -29,6 +29,7 @@ export class F5ConfigFilterComponent implements OnInit {
       if (f5Config) {
         this.f5Config = f5Config;
         this.partitionInfo = f5Config.data?.partitionInfo;
+        this.partitionInfo = this.partitionInfo === undefined ? {} : this.partitionInfo;
         this.partitionNames = Object.keys(this.partitionInfo);
         this.partitions.push(...this.partitionNames);
       }

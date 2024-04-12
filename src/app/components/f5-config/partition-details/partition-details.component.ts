@@ -19,6 +19,7 @@ export class PartitionDetailsComponent implements OnInit, OnDestroy {
   searchQuery = '';
   @Input() f5ParentSearchQuery;
   filteredPartitionInfo: any;
+  partitionInfoExists = false;
 
   constructor(private f5ConfigStateManagementService: F5ConfigService) {}
 
@@ -27,6 +28,8 @@ export class PartitionDetailsComponent implements OnInit, OnDestroy {
       if (f5Config) {
         this.f5Config = f5Config;
         this.partitionInfo = f5Config.data?.partitionInfo;
+        this.partitionInfo = this.partitionInfo === undefined ? {} : this.partitionInfo;
+        this.partitionInfoExists = Object.keys(this.partitionInfo).length > 0;
         this.partitionNames = Object.keys(this.partitionInfo);
         this.filteredPartitionNames = this.partitionNames;
         this.filteredPartitionInfo = this.f5ConfigStateManagementService.filterVirtualServers(this.partitionInfo, this.searchQuery);

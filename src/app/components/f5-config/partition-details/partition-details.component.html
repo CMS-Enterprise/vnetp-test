@@ -1,10 +1,9 @@
 <app-f5-config-filter
-  *ngIf="partitionNames"
   (f5ConfigSearch)="onSearch($event)"
   (partitionSelected)="onPartitionSelected($event)"
   (search)="onSearch($event)"
 ></app-f5-config-filter>
-<div *ngIf="!partitionNames" class="empty-state-container">
+<div *ngIf="!partitionInfoExists" class="empty-state-container">
   <p>No partitions found.</p>
 </div>
 <div *ngFor="let partitionName of filteredPartitionNames">

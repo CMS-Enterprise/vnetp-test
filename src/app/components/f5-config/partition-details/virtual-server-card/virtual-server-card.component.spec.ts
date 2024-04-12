@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VirtualServerCardComponent } from './virtual-server-card.component';
 import { ChangeDetectorRef } from '@angular/core';
+import { MockFontAwesomeComponent } from '../../../../../test/mock-components';
 
 describe('VirtualServerCardComponent', () => {
   let component: VirtualServerCardComponent;
@@ -9,7 +10,7 @@ describe('VirtualServerCardComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [VirtualServerCardComponent],
+      declarations: [VirtualServerCardComponent, MockFontAwesomeComponent],
       providers: [{ provide: ChangeDetectorRef, useValue: jest.fn() }],
     });
 
