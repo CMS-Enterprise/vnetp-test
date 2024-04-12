@@ -19,7 +19,7 @@ const routes = [
     component: F5ConfigComponent,
   },
   {
-    path: 'partitions/:hostName',
+    path: 'partitions/:id',
     canActivate: [AuthGuard],
     data: { breadcrumb: 'Partition Details' },
     component: PartitionDetailsComponent,

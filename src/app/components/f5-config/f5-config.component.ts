@@ -14,7 +14,10 @@ export class F5ConfigComponent implements OnInit {
   constructor(private f5ConfigService: V1RuntimeDataF5ConfigService, private f5ConfigStateManagementService: F5ConfigService) {}
 
   ngOnInit(): void {
-    this.getF5Configs();
+    this.f5ConfigStateManagementService.getF5Configs().subscribe(data => {
+      this.f5Configs = data;
+      this.filterF5Configs();
+    });
   }
 
   onSearch(searchQuery: string): void {

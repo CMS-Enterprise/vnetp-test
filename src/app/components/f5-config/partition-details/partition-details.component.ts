@@ -1,16 +1,17 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { F5ConfigService } from '../f5-config.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { F5Runtime } from '../../../../../client';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 
 @Component({
   selector: 'app-partition-details',
   templateUrl: './partition-details.component.html',
   styleUrls: ['./partition-details.component.css'],
 })
-export class PartitionDetailsComponent implements OnInit, OnDestroy {
+export class PartitionDetailsComponent implements OnInit {
+  urlF5Id: string;
   f5Config: F5Runtime;
-  f5ConfigSubscription: Subscription;
   partitionInfo: any;
   partitionNames: string[];
   filteredPartitionNames: string[];
@@ -21,24 +22,24 @@ export class PartitionDetailsComponent implements OnInit, OnDestroy {
   filteredPartitionInfo: any;
   partitionInfoExists = false;
 
-  constructor(private f5ConfigStateManagementService: F5ConfigService) {}
+  constructor(private f5ConfigStateManagementService: F5ConfigService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.f5ConfigSubscription = this.f5ConfigStateManagementService.currentF5Config.subscribe(f5Config => {
-      if (f5Config) {
-        this.f5Config = f5Config;
-        this.partitionInfo = f5Config.data?.partitionInfo;
-        this.partitionInfo = this.partitionInfo === undefined ? {} : this.partitionInfo;
-        this.partitionInfoExists = Object.keys(this.partitionInfo).length > 0;
-        this.partitionNames = Object.keys(this.partitionInfo);
-        this.filteredPartitionNames = this.partitionNames;
-        this.filteredPartitionInfo = this.f5ConfigStateManagementService.filterVirtualServers(this.partitionInfo, this.searchQuery);
-      }
+    this.route.params.subscribe(params => {
+      this.urlF5Id = params?.id;
+      this.f5ConfigStateManagementService.getF5Configs().subscribe(data => {
+        this.f5Config = data.find(f5 => f5?.id === this.urlF5Id);
+        if (this.f5Config) {
+          const f5 = this.f5Config as any;
+          this.partitionInfo = f5?.data?.partitionInfo;
+          this.partitionInfo = this.partitionInfo === undefined ? {} : this.partitionInfo;
+          this.partitionInfoExists = Object.keys(this.partitionInfo).length > 0;
+          this.partitionNames = Object.keys(this.partitionInfo);
+          this.filteredPartitionNames = this.partitionNames;
+          this.filteredPartitionInfo = this.f5ConfigStateManagementService.filterVirtualServers(this.partitionInfo, this.searchQuery);
+        }
+      });
     });
-  }
-
-  ngOnDestroy(): void {
-    this.f5ConfigSubscription.unsubscribe();
   }
 
   onPartitionSelected(partition: string): void {

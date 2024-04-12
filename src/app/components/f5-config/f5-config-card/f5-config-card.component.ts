@@ -42,9 +42,8 @@ export class F5ConfigCardComponent implements OnInit {
 
   navigateToDetails(): void {
     const currentQueryParams = this.route.snapshot.queryParams;
-    this.f5StateManagementService.changeF5Config(this.f5Config);
 
-    this.router.navigate(['/netcentric/f5-config/partitions', this.f5Config.hostname], {
+    this.router.navigate(['/netcentric/f5-config/partitions', this.f5Config.id], {
       relativeTo: this.route,
       queryParams: currentQueryParams,
     });

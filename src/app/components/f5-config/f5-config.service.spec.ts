@@ -1,34 +1,21 @@
 import { TestBed } from '@angular/core/testing';
 import { F5ConfigService } from './f5-config.service';
+import { V1RuntimeDataF5ConfigService } from '../../../../client';
+import { of } from 'rxjs';
 
 describe('F5ConfigService', () => {
   let service: F5ConfigService;
-
+  let mockV1F5ConfigService: any;
   beforeEach(() => {
+    mockV1F5ConfigService = {
+      getManyF5Config: jest.fn().mockReturnValue(of()),
+    };
     TestBed.configureTestingModule({
       imports: [],
-      providers: [F5ConfigService],
+      providers: [F5ConfigService, { provide: V1RuntimeDataF5ConfigService, useValue: mockV1F5ConfigService }],
     });
 
     service = TestBed.inject(F5ConfigService);
-  });
-
-  it('should emit the provided config object through currentF5Config observable upon changeF5Config call', done => {
-    const testConfig = { hostname: 'testHostname', someOtherProp: 'testValue' };
-
-    let isFirstEmission = true;
-
-    service.currentF5Config.subscribe({
-      next: config => {
-        if (!isFirstEmission) {
-          expect(config).toEqual(testConfig);
-          done();
-        }
-        isFirstEmission = false;
-      },
-    });
-
-    service.changeF5Config(testConfig);
   });
 
   describe('filterVirtualServers', () => {

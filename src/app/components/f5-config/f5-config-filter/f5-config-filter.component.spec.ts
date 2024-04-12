@@ -4,25 +4,38 @@ import { F5ConfigFilterComponent } from './f5-config-filter.component';
 import { F5ConfigService } from '../f5-config.service';
 import { of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 describe('F5ConfigFilterComponent', () => {
   let component: F5ConfigFilterComponent;
   let fixture: ComponentFixture<F5ConfigFilterComponent>;
   let mockF5ConfigStateManagementService: any;
+  let mockActivatedRoute: any;
 
   beforeEach(() => {
+    mockActivatedRoute = {
+      params: of({ id: 'id' }),
+    };
     mockF5ConfigStateManagementService = {
-      currentF5Config: of({
-        data: {
-          partitionInfo: {
-            partition1: [{ name: 'virtualServer1' }],
+      getF5Configs: jest.fn().mockReturnValue(
+        of([
+          {
+            id: 'id',
+            data: {
+              partitionInfo: {
+                partition1: [{ name: 'virtualServer1' }],
+              },
+            },
           },
-        },
-      }),
+        ]),
+      ),
     };
     TestBed.configureTestingModule({
       declarations: [F5ConfigFilterComponent],
-      providers: [{ provide: F5ConfigService, useValue: mockF5ConfigStateManagementService }],
+      providers: [
+        { provide: F5ConfigService, useValue: mockF5ConfigStateManagementService },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+      ],
       imports: [FormsModule],
     });
     fixture = TestBed.createComponent(F5ConfigFilterComponent);
@@ -33,6 +46,7 @@ describe('F5ConfigFilterComponent', () => {
   it('should initialize properties correctly', () => {
     expect(component.partitionNames).toEqual(['partition1']);
     expect(component.f5Config).toEqual({
+      id: 'id',
       data: {
         partitionInfo: {
           partition1: [{ name: 'virtualServer1' }],

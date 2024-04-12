@@ -51,6 +51,7 @@ describe('F5ConfigCardComponent', () => {
     fixture = TestBed.createComponent(F5ConfigCardComponent);
     component = fixture.componentInstance;
     component.f5Config = {
+      id: 'id',
       data: {
         hostInfo: {
           softwareVersion: 1,
@@ -75,8 +76,7 @@ describe('F5ConfigCardComponent', () => {
     it('should navigate to the details page with correct parameters', () => {
       component.navigateToDetails();
 
-      expect(mockF5ConfigStateManagementService.changeF5Config).toHaveBeenCalledWith(component.f5Config);
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/netcentric/f5-config/partitions', component.f5Config.hostname], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/netcentric/f5-config/partitions', component.f5Config.id], {
         relativeTo: mockActivatedRoute,
         queryParams: mockActivatedRoute.snapshot.queryParams,
       });

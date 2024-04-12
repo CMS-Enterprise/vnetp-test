@@ -18,6 +18,7 @@ describe('F5ConfigComponent', () => {
     };
     mockF5ConfigStateManagementService = {
       filterVirtualServers: jest.fn(),
+      getF5Configs: jest.fn().mockReturnValue(of('mock data')),
     };
     TestBed.configureTestingModule({
       declarations: [F5ConfigComponent, MockComponent({ selector: 'app-f5-config-filter', inputs: ['showPartitionFilter'] })],

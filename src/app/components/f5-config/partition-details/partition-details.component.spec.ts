@@ -5,19 +5,29 @@ import { F5ConfigService } from '../f5-config.service';
 import { MockComponent, MockFontAwesomeComponent } from '../../../../test/mock-components';
 import { of } from 'rxjs';
 import { ApplicationPipesModule } from '../../../pipes/application-pipes.module';
+import { ActivatedRoute } from '@angular/router';
 
 describe('PartitionDetailsComponent', () => {
   let component: PartitionDetailsComponent;
   let fixture: ComponentFixture<PartitionDetailsComponent>;
   let f5ConfigStateManagementService: any;
   let data: any;
+  let mockActivatedRoute: any;
 
   beforeEach(() => {
+    mockActivatedRoute = {
+      params: of({ id: 'id' }),
+    };
     f5ConfigStateManagementService = {
       filterVirtualServers: jest.fn().mockReturnValue({ partition1: [{ name: 'virtualServer1' }] }),
-      currentF5Config: of({
-        data,
-      }),
+      getF5Configs: jest.fn().mockReturnValue(
+        of([
+          {
+            id: 'id',
+            data,
+          },
+        ]),
+      ),
     };
     TestBed.configureTestingModule({
       declarations: [
@@ -26,12 +36,14 @@ describe('PartitionDetailsComponent', () => {
         MockComponent({ selector: 'app-virtual-server-card', inputs: ['virtualServer'] }),
         MockComponent({ selector: 'app-f5-config-filter', inputs: ['showPartitionFilter'] }),
       ],
-      providers: [{ provide: F5ConfigService, useValue: f5ConfigStateManagementService }],
+      providers: [
+        { provide: F5ConfigService, useValue: f5ConfigStateManagementService },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+      ],
       imports: [ApplicationPipesModule],
     });
     fixture = TestBed.createComponent(PartitionDetailsComponent);
     component = fixture.componentInstance;
-    component.f5ConfigSubscription = { unsubscribe: jest.fn() } as any;
     fixture.detectChanges();
   });
 

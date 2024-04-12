@@ -1,17 +1,35 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { V1RuntimeDataF5ConfigService } from '../../../../client';
+import { catchError, filter, map, tap } from 'rxjs/operators';
+import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class F5ConfigService {
-  private f5ConfigSource = new BehaviorSubject<any>(null);
-  currentF5Config = this.f5ConfigSource.asObservable();
+  f5Configs: any;
 
-  constructor() {}
+  constructor(private v1F5ConfigService: V1RuntimeDataF5ConfigService) {
+    this.getF5Configs().subscribe(data => {
+      this.f5Configs = data;
+    });
+  }
 
-  changeF5Config(f5Config: any) {
-    this.f5ConfigSource.next(f5Config);
+  public getF5Configs(): Observable<any> {
+    if (this.f5Configs) {
+      return of(this.f5Configs);
+    } else {
+      return this.v1F5ConfigService.getManyF5Config({}).pipe(
+        tap(data => {
+          this.f5Configs = data;
+        }),
+        catchError(error => {
+          console.error('Error fetching F5 Configs', error);
+          return of(null);
+        }),
+      );
+    }
   }
 
   filterVirtualServers(partitionInfo: any, query: string): any {
