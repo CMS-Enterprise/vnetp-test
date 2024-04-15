@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { V1RuntimeDataF5ConfigService } from '../../../../client';
-import { catchError, filter, map, tap } from 'rxjs/operators';
-import { ActivatedRoute, NavigationEnd, Router, UrlSegment } from '@angular/router';
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
