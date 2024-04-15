@@ -1,8 +1,7 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { F5ConfigService } from '../f5-config.service';
-import { Observable, Subscription } from 'rxjs';
 import { F5Runtime } from '../../../../../client';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-partition-details',

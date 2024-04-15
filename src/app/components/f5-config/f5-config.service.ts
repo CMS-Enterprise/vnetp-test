@@ -104,8 +104,8 @@ export class F5ConfigService {
   }
 
   getVirtualServerStatus(virtualServer: any): string {
-    const availabilityState = virtualServer?.stats?.nestedStats?.entries['status.availabilityState']?.description;
-    const enabledState = virtualServer?.stats?.nestedStats?.entries['status.enabledState']?.description;
+    const availabilityState = virtualServer?.stats?.nestedStats?.entries?.['status.availabilityState']?.description;
+    const enabledState = virtualServer?.stats?.nestedStats?.entries?.['status.enabledState']?.description;
 
     if (availabilityState === 'available' && enabledState === 'enabled') {
       return 'up';

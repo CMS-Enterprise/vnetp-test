@@ -8,8 +8,8 @@ export class SortVirtualServersByStatusPipe implements PipeTransform {
     }
 
     const statusSortValue = (virtualServer: any): number => {
-      const availabilityState = virtualServer?.stats?.nestedStats?.entries['status.availabilityState']?.description;
-      const enabledState = virtualServer?.stats?.nestedStats?.entries['status.enabledState']?.description;
+      const availabilityState = virtualServer?.stats?.nestedStats?.entries?.['status.availabilityState']?.description;
+      const enabledState = virtualServer?.stats?.nestedStats?.entries?.['status.enabledState']?.description;
       if (availabilityState === 'available' && enabledState === 'enabled') {
         return 4; // Green
       } else if (availabilityState === 'available' && enabledState === 'disabled') {

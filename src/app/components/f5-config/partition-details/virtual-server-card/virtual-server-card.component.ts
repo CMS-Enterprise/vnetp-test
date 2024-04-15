@@ -32,13 +32,13 @@ export class VirtualServerCardComponent implements OnInit {
     this.poolName = this.virtualServer?.poolReference?.items?.name;
     this.members = this.virtualServer?.poolReference?.items?.membersReference?.items;
     this.virtualServerStatus = this.getStatusClass(
-      this.virtualServer?.stats?.nestedStats?.entries['status.availabilityState'],
-      this.virtualServer?.stats?.nestedStats?.entries['status.enabledState'],
+      this.virtualServer?.stats?.nestedStats?.entries?.['status.availabilityState'],
+      this.virtualServer?.stats?.nestedStats?.entries?.['status.enabledState'],
     );
     this.pool = this.virtualServer?.poolReference?.items;
     this.poolStats = this.virtualServer?.poolReference?.stats?.nestedStats?.entries;
     this.virtualServerTableData = this.getVirtualServerTableData(this.virtualServer);
-    this.poolStatus = this.getStatusClass(this.poolStats['status.availabilityState'], this.poolStats['status.enabledState']);
+    this.poolStatus = this.getStatusClass(this.poolStats?.['status.availabilityState'], this.poolStats?.['status.enabledState']);
     this.poolTableData = this.getPoolTableData(this.poolStats);
   }
 
