@@ -1,5 +1,5 @@
 .card {
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem; /* 20px / 16px */
 }
 
 .expanded-card {
@@ -12,57 +12,72 @@
 }
 
 .card.collapsed:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a shadow around the card */
-  transition: box-shadow 0.3s ease-in-out; /* Smooth transition */
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2); /* 4px / 16px, 8px / 16px */
+  transition: box-shadow 0.3s ease-in-out;
   cursor: pointer;
 }
 
 .card.collapsed:focus {
-  outline: none; /* Removes the default focus outline */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Example: Adds a shadow to indicate focus */
+  outline: none;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2); /* Same conversion for consistency */
 }
 
 .card.collapsed:active {
-  transform: scale(0.98); /* Slightly reduces the size to simulate a button press */
+  transform: scale(0.98);
 }
 
 .close-button {
   position: absolute;
   top: 0;
   right: 0;
-  border: none; /* Optionally remove border */
-  background: transparent; /* Optionally make background transparent */
-  cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
-  font-size: 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.5rem; /* 24px / 16px */
 }
 
 .close-button:hover {
-  background-color: rgba(0,0,0,0.1); /* Example hover effect */
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 #myCustomTable th.column-border {
-  position: relative; /* Establishes positioning context */
-  /* Ensure there's enough space at the bottom for the border */
-  padding-bottom: 10px; /* Adjust based on your table's styling */
+  position: relative;
+  padding-bottom: 0.625rem; /* 10px / 16px */
 }
 
 #myCustomTable th.column-border::after {
   content: '';
   position: absolute;
-  left: 10%; /* Adjust if the border needs to be shorter */
-  right: 10%; /* Adjust to match the left value for symmetry */
-  bottom: -1px; /* Slightly adjust to align right below the header; may need tuning */
-  border-bottom: 2px solid #000; /* Custom border style */
+  left: 10%;
+  right: 10%;
+  bottom: -0.0625rem; /* -1px / 16px */
+  border-bottom: 2px solid #000;
   display: block;
 }
 
-/* Ensure that the main headers in the first row do not have a bottom border */
 #myCustomTable thead th {
   border-bottom: 0;
   border-top: 0;
 }
 
 .tight-spacing {
-  line-height: 1.0; /* Reduce line height for tighter spacing */
-  margin-top: -10px; /* Optional: Pull the element up closer to the preceding element */
+  line-height: 1;
+  margin-top: -0.625rem; /* -10px / 16px */
+}
+
+.pool-vs-title {
+  flex: 1 1 auto; /* Allows the item to grow and shrink, adjusting `flex-basis` as necessary */
+  min-width: 0; /* Important for allowing text wrapping in flex items */
+}
+
+.member-list {
+  max-height: 12.5rem; /* Adjust this value based on your design requirements; equivalent to 200px */
+  overflow-y: auto; /* Ensures that scrolling is possible within the member list area */
+}
+
+.non-expanded-card-body {
+  max-height: 18.75rem;
+  min-height: 18.75rem;
+  overflow-y: auto; /* Enables vertical scrolling if the content is too tall */
+  overflow-x: hidden;
 }

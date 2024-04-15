@@ -96,10 +96,13 @@ export class F5ConfigService {
     const memberFullPath = member?.fullPath?.split('/')?.at(-1);
     const memberIp = memberFullPath?.split(':')?.at(0);
     const memberPort = memberFullPath?.split(':')?.at(1);
+    const address = member?.address;
+
     return (
       memberName?.toLowerCase()?.includes(searchQuery) ||
       memberIp?.toLowerCase()?.includes(searchQuery) ||
-      memberPort?.toLowerCase()?.includes(searchQuery)
+      memberPort?.toLowerCase()?.includes(searchQuery) ||
+      address?.toLowerCase()?.includes(searchQuery)
     );
   }
 
