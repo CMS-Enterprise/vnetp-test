@@ -9,7 +9,7 @@ import { NavbarModule } from 'src/app/common/navbar/navbar.module';
 import { SubnetsVlansModule } from '../../components/subnets-vlans/subnets-vlans.module';
 import { TiersModule } from '../../components/tiers/tiers.module';
 import { DeployModule } from '../../components/deploy/deploy.module';
-import { AuditLogModule } from '../../components/audit-log/audit-log.module';
+import { AuditLogModule } from '../../common/audit-log/audit-log.module';
 import { NetworkObjectsGroupsModule } from '../../components/network-objects-groups/network-objects-groups.module';
 import { ServiceObjectsGroupsModule } from '../../components/service-objects-groups/service-objects-groups.module';
 import { NatRulesModule } from '../../components/nat-rules/nat-rules.module';
@@ -57,7 +57,7 @@ const routes: Routes = [
         path: 'audit-log',
         canActivate: [AuthGuard],
         data: { breadcrumb: 'Audit Log', title: 'Automation - Audit Log' },
-        loadChildren: () => import('../../components/audit-log/audit-log.module').then(m => m.AuditLogModule),
+        loadChildren: () => import('../../common/audit-log/audit-log.module').then(m => m.AuditLogModule),
       },
       {
         path: 'network-objects-groups',
