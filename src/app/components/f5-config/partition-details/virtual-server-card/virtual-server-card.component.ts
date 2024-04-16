@@ -25,6 +25,8 @@ export class VirtualServerCardComponent implements OnInit {
   poolStatus: any;
   poolTableData;
 
+  showScrollFade = true;
+
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -40,6 +42,15 @@ export class VirtualServerCardComponent implements OnInit {
     this.virtualServerTableData = this.getVirtualServerTableData(this.virtualServer);
     this.poolStatus = this.getStatusClass(this.poolStats?.['status.availabilityState'], this.poolStats?.['status.enabledState']);
     this.poolTableData = this.getPoolTableData(this.poolStats);
+  }
+
+  checkScroll(event: any): void {
+    const target = event?.target;
+    const maxScroll = target?.scrollHeight - target?.offsetHeight; // Maximum scrollable height
+    const currentScroll = target?.scrollTop; // Current scroll position
+
+    // Check if the current scroll position is close to the maximum scrollable height
+    this.showScrollFade = currentScroll < maxScroll - 5; // '5' is a buffer, adjust as needed
   }
 
   toggleExpanded(): void {

@@ -1,5 +1,5 @@
 <div *ngIf="!expanded" class="card" [ngClass]="{ collapsed: !expanded }" (click)="toggleExpanded(); $event.stopPropagation()">
-  <div class="card-body non-expanded-card-body">
+  <div class="card-body non-expanded-card-body" (scroll)="checkScroll($event)" >
     <div class="d-flex align-items-center">
       <fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon>
       <h5 class="card-title pool-vs-title mb-0">{{ virtualServerName }}</h5>
@@ -9,7 +9,7 @@
       <p class="card-text pool-vs-title mb-0">{{ poolName }}</p>
     </div>
     <!-- Scrollable member list -->
-    <div class="member-list" [class.scroll-indicator]="members.length > 3">
+    <div class="member-list" [class.scroll-indicator]="showScrollFade">
       <div *ngFor="let member of members" class="ml-5 mb-3">
         <p class="card-text mb-0">{{ member?.name }}</p>
         <p class="card-text mb-0 mt-0 tight-spacing">
