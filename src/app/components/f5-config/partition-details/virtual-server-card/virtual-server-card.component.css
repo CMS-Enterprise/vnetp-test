@@ -72,12 +72,22 @@
 
 .member-list {
   max-height: 12.5rem; /* Adjust this value based on your design requirements; equivalent to 200px */
-  overflow-y: auto; /* Ensures that scrolling is possible within the member list area */
+  /* overflow-y: auto; Ensures that scrolling is possible within the member list area */
 }
 
 .non-expanded-card-body {
   max-height: 18.75rem;
   min-height: 18.75rem;
-  overflow-y: auto; /* Enables vertical scrolling if the content is too tall */
+  /* overflow-y: auto; Enables vertical scrolling if the content is too tall */
   overflow-x: hidden;
+}
+
+.member-list.scroll-indicator::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 20px; /* Height of the fading effect */
+  background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
 }

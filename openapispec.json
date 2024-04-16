@@ -19754,39 +19754,6 @@
         ]
       }
     },
-    "/v1/runtime-data/f5-config/create-f5-runtime": {
-      "post": {
-        "operationId": "createRuntimefDataJobDefinitionF5Config",
-        "summary": "",
-        "description": "Create new F5 Runtime",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/F5Runtime"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/F5Runtime"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v1/runtime-data/f5-config"
-        ]
-      }
-    },
     "/v1/runtime-data/f5-config/create-runtime-data-job": {
       "post": {
         "operationId": "createRuntimeDataJobF5Config",
@@ -19813,41 +19780,6 @@
                 }
               }
             }
-          }
-        },
-        "tags": [
-          "v1/runtime-data/f5-config"
-        ]
-      }
-    },
-    "/v1/runtime-data/f5-config/upload-runtime-data-job-results": {
-      "post": {
-        "operationId": "uploadRuntimeDataJobResultsF5Config",
-        "summary": "",
-        "description": "Upload Runtime F5 Config Data",
-        "parameters": [
-          {
-            "name": "tenant",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/F5ConfigJobResultDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": ""
           }
         },
         "tags": [
@@ -25020,11 +24952,15 @@
           },
           "groupId": {
             "type": "string"
+          },
+          "datacenterId": {
+            "type": "string"
           }
         },
         "required": [
           "type",
-          "groupId"
+          "groupId",
+          "datacenterId"
         ]
       },
       "HitcountData": {
@@ -25127,49 +25063,6 @@
         "required": [
           "type",
           "id"
-        ]
-      },
-      "F5DataDto": {
-        "type": "object",
-        "properties": {
-          "partitionInfo": {
-            "type": "object"
-          },
-          "hostInfo": {
-            "type": "object"
-          },
-          "hostname": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "partitionInfo",
-          "hostInfo",
-          "hostname"
-        ]
-      },
-      "F5ConfigJobResultDto": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "FirewallRule",
-              "NatRule",
-              "F5Config"
-            ]
-          },
-          "hostName": {
-            "type": "string"
-          },
-          "data": {
-            "$ref": "#/components/schemas/F5DataDto"
-          }
-        },
-        "required": [
-          "type",
-          "hostName",
-          "data"
         ]
       }
     }

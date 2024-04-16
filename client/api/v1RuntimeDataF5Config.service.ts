@@ -18,7 +18,6 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { F5ConfigJobCreateDto } from '../model/models';
-import { F5ConfigJobResultDto } from '../model/models';
 import { F5Runtime } from '../model/models';
 import { Job } from '../model/models';
 
@@ -28,10 +27,6 @@ import { Configuration }                                     from '../configurat
 
 export interface CreateRuntimeDataJobF5ConfigRequestParams {
     f5ConfigJobCreateDto: F5ConfigJobCreateDto;
-}
-
-export interface CreateRuntimefDataJobDefinitionF5ConfigRequestParams {
-    f5Runtime: F5Runtime;
 }
 
 export interface GetManyF5ConfigRequestParams {
@@ -55,11 +50,6 @@ export interface GetManyF5ConfigRequestParams {
     fields?: Array<string>;
     /** Where object for advanced AND/OR queries. */
     s?: string;
-}
-
-export interface UploadRuntimeDataJobResultsF5ConfigRequestParams {
-    f5ConfigJobResultDto: F5ConfigJobResultDto;
-    tenant?: string;
 }
 
 
@@ -180,62 +170,6 @@ export class V1RuntimeDataF5ConfigService {
     }
 
     /**
-     * Create new F5 Runtime
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public createRuntimefDataJobDefinitionF5Config(requestParameters: CreateRuntimefDataJobDefinitionF5ConfigRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<F5Runtime>;
-    public createRuntimefDataJobDefinitionF5Config(requestParameters: CreateRuntimefDataJobDefinitionF5ConfigRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<F5Runtime>>;
-    public createRuntimefDataJobDefinitionF5Config(requestParameters: CreateRuntimefDataJobDefinitionF5ConfigRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<F5Runtime>>;
-    public createRuntimefDataJobDefinitionF5Config(requestParameters: CreateRuntimefDataJobDefinitionF5ConfigRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const f5Runtime = requestParameters.f5Runtime;
-        if (f5Runtime === null || f5Runtime === undefined) {
-            throw new Error('Required parameter f5Runtime was null or undefined when calling createRuntimefDataJobDefinitionF5Config.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.post<F5Runtime>(`${this.configuration.basePath}/v1/runtime-data/f5-config/create-f5-runtime`,
-            f5Runtime,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
      * Get many F5Runtime
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -331,69 +265,6 @@ export class V1RuntimeDataF5ConfigService {
         }
 
         return this.httpClient.get<Array<F5Runtime>>(`${this.configuration.basePath}/v1/runtime-data/f5-config`,
-            {
-                params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Upload Runtime F5 Config Data
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public uploadRuntimeDataJobResultsF5Config(requestParameters: UploadRuntimeDataJobResultsF5ConfigRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public uploadRuntimeDataJobResultsF5Config(requestParameters: UploadRuntimeDataJobResultsF5ConfigRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public uploadRuntimeDataJobResultsF5Config(requestParameters: UploadRuntimeDataJobResultsF5ConfigRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public uploadRuntimeDataJobResultsF5Config(requestParameters: UploadRuntimeDataJobResultsF5ConfigRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const f5ConfigJobResultDto = requestParameters.f5ConfigJobResultDto;
-        if (f5ConfigJobResultDto === null || f5ConfigJobResultDto === undefined) {
-            throw new Error('Required parameter f5ConfigJobResultDto was null or undefined when calling uploadRuntimeDataJobResultsF5Config.');
-        }
-        const tenant = requestParameters.tenant;
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (tenant !== undefined && tenant !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>tenant, 'tenant');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/runtime-data/f5-config/upload-runtime-data-job-results`,
-            f5ConfigJobResultDto,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

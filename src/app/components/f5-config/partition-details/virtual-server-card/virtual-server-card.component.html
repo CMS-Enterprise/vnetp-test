@@ -1,5 +1,5 @@
 <div *ngIf="!expanded" class="card" [ngClass]="{ collapsed: !expanded }" (click)="toggleExpanded(); $event.stopPropagation()">
-  <div class="card-body non-expanded-card-body ">
+  <div class="card-body non-expanded-card-body">
     <div class="d-flex align-items-center">
       <fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon>
       <h5 class="card-title pool-vs-title mb-0">{{ virtualServerName }}</h5>
@@ -9,7 +9,7 @@
       <p class="card-text pool-vs-title mb-0">{{ poolName }}</p>
     </div>
     <!-- Scrollable member list -->
-    <div class="member-list" style="max-height: 200px; overflow-y: auto;">
+    <div class="member-list" [class.scroll-indicator]="members.length > 3">
       <div *ngFor="let member of members" class="ml-5 mb-3">
         <p class="card-text mb-0">{{ member?.name }}</p>
         <p class="card-text mb-0 mt-0 tight-spacing">
@@ -26,7 +26,9 @@
     <div class="virtual-server-section mb-4">
       <h5>Virtual Server</h5>
       <table id="myCustomTable" class="table">
-        <caption>Virtual Server Diagnostic Data</caption>
+        <caption>
+          Virtual Server Diagnostic Data
+        </caption>
         <thead>
           <tr>
             <th class="column-border" id="empty-header-1"></th>
@@ -88,7 +90,9 @@
     <div class="pools-section">
       <h5>Pools</h5>
       <table id="myCustomTable" class="table">
-        <caption>Pool Diagnostic Data</caption>
+        <caption>
+          Pool Diagnostic Data
+        </caption>
         <thead>
           <tr>
             <th class="column-border" id="empty-header-4"></th>

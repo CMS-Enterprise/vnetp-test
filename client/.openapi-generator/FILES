@@ -96,8 +96,6 @@ model/datacenter.ts
 model/dcsPermissions.ts
 model/endpointGroup.ts
 model/f5ConfigJobCreateDto.ts
-model/f5ConfigJobResultDto.ts
-model/f5DataDto.ts
 model/f5Runtime.ts
 model/filter.ts
 model/filterEntry.ts

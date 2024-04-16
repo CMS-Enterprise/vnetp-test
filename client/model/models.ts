@@ -44,8 +44,6 @@ export * from './datacenter';
 export * from './dcsPermissions';
 export * from './endpointGroup';
 export * from './f5ConfigJobCreateDto';
-export * from './f5ConfigJobResultDto';
-export * from './f5DataDto';
 export * from './f5Runtime';
 export * from './filter';
 export * from './filterEntry';

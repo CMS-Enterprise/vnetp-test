@@ -14,6 +14,7 @@
 export interface HitcountJobCreateDto { 
     type: HitcountJobCreateDtoTypeEnum;
     groupId: string;
+    datacenterId: string;
 }
 export enum HitcountJobCreateDtoTypeEnum {
     FirewallRule = 'FirewallRule',
