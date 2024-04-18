@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Datacenter, Tier, UserDto } from '../../../../client';
 import { environment } from 'src/environments/environment';
-import { UndeployedChangesService } from '../../services/undeployed-changes.service';
 import { DatacenterContextService } from '../../services/datacenter-context.service';
 import { TierContextService } from '../../services/tier-context.service';
 
@@ -23,11 +22,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private currentTenantSubscription: Subscription;
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
-  private undeployedChangesSubscription: Subscription;
-  private undeployedChangesObjectSubscription: Subscription;
   public currentDatacenter: Datacenter;
   public currentTier: Tier;
-  public undeployedChanges: boolean;
   public undeployedChangeObjects: any;
   public environment = environment;
   public dcsVersion: string = this.environment?.dynamic?.dcsVersion;
@@ -37,7 +33,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private datacenterContextService: DatacenterContextService,
     private tierContextService: TierContextService,
-    private undeployedChangesService: UndeployedChangesService,
   ) {}
 
   public openLogoutModal(): void {
@@ -47,10 +42,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public logout(): void {
     this.ngx.close('logoutModal');
     this.auth.logout();
-  }
-
-  public openUndeployedChangesModal(): void {
-    this.ngx.getModal('undeployedChangesModal').open();
   }
 
   ngOnInit(): void {
@@ -88,14 +79,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
         });
       }
     });
-
-    this.undeployedChangesSubscription = this.undeployedChangesService.undeployedChanges.subscribe(undeployedChanges => {
-      this.undeployedChanges = undeployedChanges;
-    });
-
-    this.undeployedChangesObjectSubscription = this.undeployedChangesService.undeployedChangeObjects.subscribe(undeployedChangeObjects => {
-      this.undeployedChangeObjects = undeployedChangeObjects;
-    });
   }
 
   ngOnDestroy(): void {
@@ -104,8 +87,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.currentTenantSubscription,
       this.currentDatacenterSubscription,
       this.currentTierSubscription,
-      this.undeployedChangesSubscription,
-      this.undeployedChangesObjectSubscription,
     ]);
   }
 }
