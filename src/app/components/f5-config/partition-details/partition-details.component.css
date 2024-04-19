@@ -1,0 +1,9 @@
+.empty-state-container {
+  text-align: center;
+  padding: 1.25rem; /* 20px / 16px */
+}
+
+.empty-state-image {
+  width: 6.25rem; /* 100px / 16px */
+  margin-bottom: 0.9375rem; /* 15px / 16px */
+}

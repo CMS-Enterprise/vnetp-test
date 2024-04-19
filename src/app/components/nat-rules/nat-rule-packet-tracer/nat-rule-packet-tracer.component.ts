@@ -1,8 +1,8 @@
-/* tslint:disable */
+/* eslint-disable */
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { IpAddressAnyValidator, IsIpV4NoSubnetValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
+import { IsIpV4NoSubnetValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
 import { NatRule, NetworkObject, NetworkObjectGroup } from '../../../../../client';
 import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';

@@ -21,6 +21,7 @@
         [exportObject]="contracts"
         exportFileName="contracts"
         [disableJson]="false"
+        (import)="importContracts($event)"
       ></app-import-export>
     </section>
   </ng-container>

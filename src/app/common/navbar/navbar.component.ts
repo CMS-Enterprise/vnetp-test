@@ -3,8 +3,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { UserDto } from '../../../../client';
+import { Datacenter, Tier, UserDto } from '../../../../client';
 import { environment } from 'src/environments/environment';
+import { DatacenterContextService } from '../../services/datacenter-context.service';
+import { TierContextService } from '../../services/tier-context.service';
 
 @Component({
   selector: 'app-navbar',
@@ -18,10 +20,20 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public tenantAccountNumber: string;
   private currentUserSubscription: Subscription;
   private currentTenantSubscription: Subscription;
+  private currentDatacenterSubscription: Subscription;
+  private currentTierSubscription: Subscription;
+  public currentDatacenter: Datacenter;
+  public currentTier: Tier;
+  public undeployedChangeObjects: any;
   public environment = environment;
   public dcsVersion: string = this.environment?.dynamic?.dcsVersion;
 
-  constructor(private ngx: NgxSmartModalService, private auth: AuthService) {}
+  constructor(
+    private ngx: NgxSmartModalService,
+    private auth: AuthService,
+    private datacenterContextService: DatacenterContextService,
+    private tierContextService: TierContextService,
+  ) {}
 
   public openLogoutModal(): void {
     this.ngx.getModal('logoutModal').open();
@@ -56,9 +68,25 @@ export class NavbarComponent implements OnInit, OnDestroy {
         }
       });
     });
+
+    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(datacenter => {
+      if (datacenter) {
+        this.currentDatacenter = datacenter;
+        this.currentTierSubscription = this.tierContextService.currentTier.subscribe(tier => {
+          if (tier) {
+            this.currentTier = tier;
+          }
+        });
+      }
+    });
   }
 
   ngOnDestroy(): void {
-    SubscriptionUtil.unsubscribe([this.currentUserSubscription, this.currentTenantSubscription]);
+    SubscriptionUtil.unsubscribe([
+      this.currentUserSubscription,
+      this.currentTenantSubscription,
+      this.currentDatacenterSubscription,
+      this.currentTierSubscription,
+    ]);
   }
 }

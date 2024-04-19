@@ -13,6 +13,7 @@
         [exportObject]="filters"
         exportFileName="filters"
         [disableJson]="false"
+        (import)="importFilters($event)"
       ></app-import-export>
     </section>
   </ng-container>

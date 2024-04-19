@@ -28,4 +28,13 @@
       color: $c-red-700;
     }
   }
+
+  &--info {
+    color: $c-blue-400;
+
+    &:hover,
+    &:focus {
+      color: $c-blue-700;
+    }
+  }
 }
