@@ -2,7 +2,7 @@ def nodeImage = 'node:18.18'
 def sonarImage = 'sonarsource/sonar-scanner-cli'
 
 pipeline {
-    agent any
+    agent { label 'rehl8-prod' }
     environment { npm_config_cache = 'npm-cache' }
     stages {
         stage('Build') {
@@ -19,45 +19,44 @@ pipeline {
                 sh 'npm i'
                 sh 'npm run build:prod'
             }
-        }
+    }
 
-        stage('Test') {
-            agent {
-                docker {
-                    image "${nodeImage}"
-                    args '--userns=keep-id -e HOME=/tmp/home --security-opt label=disable'
-                    label 'rehl8-prod'
+    stage('Test') {
+       agent {
+          docker {
+                image "${nodeImage}"
+                args '--userns=keep-id -e HOME=/tmp/home --security-opt label=disable'
+                label 'rehl8-prod'
                 }
             }
             steps {
                 sh 'npm --version'
                 sh 'npm run test:ci'
             }
-        }
+    }
 
-        stage('SonarQube - Static Analysis') {
+    stage('SonarQube - Static Analysis') {
             when {
-                expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'dev' }
+                expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'int'}
             }
             agent { label 'rehl8-prod' }
             steps {
-                withSonarQubeEnv('CB2Sonarrehl8') {
                     script {
-                        def readContent = readFile 'sonar-project.properties'
-                        writeFile file: 'sonar-project.properties', text: "$readContent \nsonar.branch.name=$BRANCH_NAME\n"
-                        docker.image("${sonarImage}").withRun('--security-opt label=disable -v "$PWD:/usr/src"') { c ->
-                            // NEED THIS LINE TO WORK!
-                            sh 'while [ ! -f ./.scannerwork/report-task.txt ]; do sleep 5; done'
-                            sh 'sleep 10'
-                            sh 'if [ -d ./.scannerwork ]; then chmod -R 777 ./.scannerwork; fi'
-                            sh 'if [ -d ./.scannerwork ]; then rm -Rf ./.scannerwork; fi'
-                        }
+                           try {
+                                sh '''
+	                                pwd
+  	                              cp -R /var/cbjenkins/sonar-scanner  "${PWD}/node_modules"   
+                                  "${PWD}/node_modules"/sonar-scanner/bin/sonar-scanner -Dproject.settings="${PWD}"/sonar-project.properties    
+                                  if [ -d ${PWD}/.scannerwork ]; then rm -Rf ${PWD}/.scannerwork; fi  
+                                '''  
+                        } catch (Exception e) {
+                           error('Failing sonarqube Test')
+                           }
                     }
-                }
             }
-        }
+     }
 
-        stage('Publish') {
+    stage('Publish') {
             agent { label 'rehl8-prod' }
             steps {
                 script {
@@ -68,7 +67,6 @@ pipeline {
               rm -f dist.tar.gz
               gzip dist.tar
               mv dist.tar.gz builds/$GIT_COMMIT/dist.tar.gz
-
              if (findmnt -T /mnt/buildartifacts)
              then mkdir -p /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && cp builds/$GIT_COMMIT/dist.tar.gz  /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && chmod -R 755 /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT
              else echo 'NFS Mount not available'; exit 1
@@ -76,9 +74,10 @@ pipeline {
           '''
                 }
             }
-        }
-
-        stage('Selenium-uiTest') {
+     }
+      
+ 
+    stage('Selenium-uiTest') {
             agent { label 'rehl8-Selenium' }
             steps {
                 script {
@@ -87,10 +86,10 @@ pipeline {
                     }
                 }
             }
-        }
-    }
+      }
+  }
 
-    post {
+   post {
         always {
             echo 'send to cds-draas-jenkins channel in Slack'
         }
