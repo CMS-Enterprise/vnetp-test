@@ -183,12 +183,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
         id: this.Id,
       })
       .subscribe(data => {
-        this.NatRuleGroup = {
-          name: data.name,
-          type: data.type,
-          id: data.id,
-        } as NatRuleGroup;
-
+        this.NatRuleGroup = data;
         this.TierId = data.tierId;
         this.natRuleGroupName = data.name;
 
@@ -603,5 +598,15 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         this.packetTracerObjects.networkObjectGroups = response.data;
       });
+  }
+
+  checkUndeployedChanges(rule: NatRule): boolean {
+    console.log('rule', rule);
+    console.log('this.NatRuleGroup', this.NatRuleGroup);
+    if (!this.NatRuleGroup.provisionedAt || !rule.updatedAt) {
+      return false;
+    }
+
+    return rule.updatedAt > this.NatRuleGroup.provisionedAt;
   }
 }

@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { UndeployedChangesService } from '../../../../services/undeployed-changes.service';
 
 @Component({
   selector: 'app-datacenter-select',
@@ -24,12 +25,15 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
   private datacenterLockSubscription: Subscription;
   private datacentersSubscription: Subscription;
   private routeChangesSubscription: Subscription;
+  private undeployedChangesSubscription: Subscription;
+  public undeployedChanges: boolean;
 
   constructor(
     private datacenterContextService: DatacenterContextService,
     private ngx: NgxSmartModalService,
     private toastrService: ToastrService,
     private router: Router,
+    private undeployedChangesService: UndeployedChangesService,
     private activedRoute: ActivatedRoute,
   ) {}
 
@@ -65,6 +69,10 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
       const currentRoute = this.router.url.split('?')[0];
       this.disableSelect = !currentRoute.includes('/dashboard');
     });
+
+    this.undeployedChangesSubscription = this.undeployedChangesService.undeployedChanges.subscribe(undeployedChanges => {
+      this.undeployedChanges = undeployedChanges;
+    });
   }
 
   ngOnDestroy() {
@@ -73,6 +81,7 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
       this.currentDatacenterSubscription,
       this.datacenterLockSubscription,
       this.routeChangesSubscription,
+      this.undeployedChangesSubscription,
     ]);
   }
 }

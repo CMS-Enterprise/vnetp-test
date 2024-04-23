@@ -58,6 +58,7 @@ export interface NatRule {
     readonly translatedServiceObject?: ServiceObject;
     readonly toZone?: Zone;
     fromZone?: Array<Zone>;
+    hitCount?: number;
 }
 export enum NatRuleTranslationTypeEnum {
     Static = 'Static',

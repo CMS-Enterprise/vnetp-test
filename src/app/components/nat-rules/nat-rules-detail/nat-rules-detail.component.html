@@ -32,18 +32,20 @@
     (tableEvent)="onTableEvent($event)"
   ></app-table>
 </ng-container>
-
 <ng-template #actionsTemplate let-natRule="datum">
   <section class="table__actions">
+    <app-icon-button *ngIf="checkUndeployedChanges(natRule)" icon="asterisk" label="Undeployed Changes"
+      [type]="'info'"></app-icon-button>
+
     <app-icon-button
-      *ngIf="!natRule?.deletedAt"
-      icon="add"
+      *ngIf="!natRule?.deletedAt && NatRuleGroup?.type !== 'ZoneBased'"
+      icon="clone"
       label="Move/Clone Nat Rule"
       (handleClick)="openNatRuleOperationModal(natRule)"
     ></app-icon-button>
 
     <app-icon-button
-      *ngIf="!natRule?.deletedAt && NatRuleGroup?.type !== 'ZoneBased'"
+      *ngIf="!natRule?.deletedAt "
       icon="edit"
       label="Edit Nat Rule"
       (handleClick)="openNatRuleModal(ModalMode.Edit, natRule)"

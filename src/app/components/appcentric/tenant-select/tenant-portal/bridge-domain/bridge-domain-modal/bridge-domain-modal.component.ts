@@ -20,6 +20,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { MacAddressValidator } from 'src/app/validators/network-form-validators';
@@ -245,7 +246,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       this.editBridgeDomain(bridgeDomain);
     }
   }
-  public getL3OutsTableData(event?): void {
+  public getL3OutsTableData(): void {
     this.isLoading = true;
     this.bridgeDomainService
       .getOneBridgeDomain({
@@ -374,5 +375,66 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
 
   private unsubAll(): void {
     SubscriptionUtil.unsubscribe([this.l3OutForRouteProfileSubscription]);
+  }
+
+  public sanitizeData(entities) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'bridgeDomainName') {
+        obj.bridgeDomainId = this.bridgeDomainId;
+        delete obj[key];
+      }
+      if (key === 'l3OutName') {
+        obj.l3OutId = ObjectUtil.getObjectId(val as string, this.l3Outs);
+        delete obj[key];
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  // need to revisit these tests
+  public importBridgeDomainL3OutRelation(event): void {
+    const modalDto = new YesNoModalDto(
+      'Import L3 Outs',
+      `Are you sure you would like to import ${event.length} L3 Out${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      dto.map(relation => {
+        this.bridgeDomainService.addL3OutToBridgeDomainBridgeDomain(relation).subscribe(
+          () => {},
+          () => {},
+          () => {
+            this.getL3OutsTableData();
+          },
+        );
+      });
+    };
+
+    const onClose = () => {
+      this.getL3OutsTableData();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }

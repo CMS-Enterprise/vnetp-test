@@ -6,6 +6,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 
 @Component({
   selector: 'app-firewall-rules',
@@ -98,5 +99,9 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.currentTierSubscription]);
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }

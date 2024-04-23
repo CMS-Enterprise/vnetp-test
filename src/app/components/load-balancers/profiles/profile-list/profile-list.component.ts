@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
   GetManyLoadBalancerProfileResponseDto,
   LoadBalancerProfile,
@@ -21,6 +21,7 @@ import { ProfileModalDto } from '../profile-modal/profile-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { ProfileReverseProxyType } from '../profile-modal/profile-modal.component';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface ProfileView extends LoadBalancerProfile {
   nameView: string;
@@ -131,7 +132,7 @@ export class ProfileListComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -238,6 +239,10 @@ export class ProfileListComponent implements OnInit, OnDestroy {
       this.ngx.resetModalData('profileModal');
       this.profileChanges.unsubscribe();
     });
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }
 

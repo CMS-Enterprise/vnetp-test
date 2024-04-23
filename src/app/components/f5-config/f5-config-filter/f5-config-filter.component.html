@@ -1,0 +1,36 @@
+<div class="search-bar-component">
+  <div class="input-group mb-3 d-flex align-items-center">
+    <ng-container>
+      <!-- Flex container -->
+      <p [class.text-muted]="!showPartitionFilter" class="mb-0">Partitions:&nbsp;</p>
+      <div
+        class="custom-dropdown"
+        [class.disabled]="!showPartitionFilter"
+        [class.show]="showDropdown"
+        (mouseleave)="showDropdown = !showPartitionFilter ? false : showDropdown"
+      >
+        <div
+          class="dropdown-toggle"
+          [ngClass]="showPartitionFilter ? 'border-enabled' : 'border-disabled'"
+          [class.disabled]="!showPartitionFilter"
+          (click)="showPartitionFilter ? (showDropdown = !showDropdown) : null"
+        >
+          {{ selectedPartition }}
+        </div>
+        <div class="dropdown-menu" *ngIf="showDropdown">
+          <div class="dropdown-item" *ngFor="let partition of partitions" (click)="showPartitionFilter ? selectPartition(partition) : null">
+            {{ partition }}
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <input
+      type="text"
+      class="search-input ml-1"
+      placeholder="Search..."
+      aria-label="Search"
+      [(ngModel)]="searchQuery"
+      (input)="onSearch()"
+    />
+  </div>
+</div>

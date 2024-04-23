@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
   GetManyLoadBalancerVirtualServerResponseDto,
   LoadBalancerVirtualServer,
@@ -19,6 +19,7 @@ import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.com
 import { VirtualServerModalDto } from '../virtual-server-modal/virtual-server-modal.dto';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import UndeployedChangesUtil from '../../../../utils/UndeployedChangesUtil';
 
 export interface VirtualServerView extends LoadBalancerVirtualServer {
   nameView: string;
@@ -134,7 +135,7 @@ export class VirtualServerListComponent implements OnInit, OnDestroy {
         filter: [`tierId||eq||${this.currentTier.id}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        sort: ['name,ASC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(
         response => {
@@ -229,5 +230,9 @@ export class VirtualServerListComponent implements OnInit, OnDestroy {
       this.ngx.resetModalData('virtualServerModal');
       this.virtualServerChanges.unsubscribe();
     });
+  }
+
+  checkUndeployedChanges(object) {
+    return UndeployedChangesUtil.hasUndeployedChanges(object);
   }
 }

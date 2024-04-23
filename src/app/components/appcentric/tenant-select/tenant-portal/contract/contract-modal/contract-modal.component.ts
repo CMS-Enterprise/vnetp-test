@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { V2AppCentricContractsService, Contract, V2AppCentricSubjectsService, Subject, GetManySubjectResponseDto } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -273,5 +272,58 @@ export class ContractModalComponent implements OnInit {
         this.getSubjects();
       }
     });
+  }
+
+  sanitizeData(entities: any) {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+      if (key === 'contractName') {
+        obj.contractId = this.contractId;
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+
+  public importSubjects(event): void {
+    const modalDto = new YesNoModalDto(
+      'Import Subjects',
+      `Are you sure you would like to import ${event.length} Subject${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.subjectsService.createManySubject({ createManySubjectDto: { bulk: dto } }).subscribe(
+        () => {},
+        () => {},
+        () => {
+          this.getSubjects();
+        },
+      );
+    };
+    const onClose = () => {
+      this.getSubjects();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }

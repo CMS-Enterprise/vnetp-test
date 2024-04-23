@@ -23,6 +23,12 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface GetAllAppCentricLogsAuditLogRequestParams {
+    page: number;
+    perPage: number;
+    tenant?: string;
+}
+
 export interface GetAuditLogAuditLogRequestParams {
     datacenterId: string;
     page: number;
@@ -30,6 +36,14 @@ export interface GetAuditLogAuditLogRequestParams {
     entityType?: string;
     actionType?: string;
     tenant?: string;
+}
+
+export interface GetAuditLogByEntityIdAuditLogRequestParams {
+    entityId: string;
+    entityType: string;
+    tenant: string;
+    /** Return audit logs after timestamp in YYYY-MM-DD HH:MM:SS format. */
+    afterTimestamp: string;
 }
 
 
@@ -91,6 +105,72 @@ export class V1AuditLogService {
             throw Error("key may not be null if value is not object or array");
         }
         return httpParams;
+    }
+
+    /**
+     * Get App Centric Audit Logs
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAllAppCentricLogsAuditLog(requestParameters: GetAllAppCentricLogsAuditLogRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<AuditLog>>;
+    public getAllAppCentricLogsAuditLog(requestParameters: GetAllAppCentricLogsAuditLogRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<AuditLog>>>;
+    public getAllAppCentricLogsAuditLog(requestParameters: GetAllAppCentricLogsAuditLogRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<AuditLog>>>;
+    public getAllAppCentricLogsAuditLog(requestParameters: GetAllAppCentricLogsAuditLogRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const page = requestParameters.page;
+        if (page === null || page === undefined) {
+            throw new Error('Required parameter page was null or undefined when calling getAllAppCentricLogsAuditLog.');
+        }
+        const perPage = requestParameters.perPage;
+        if (perPage === null || perPage === undefined) {
+            throw new Error('Required parameter perPage was null or undefined when calling getAllAppCentricLogsAuditLog.');
+        }
+        const tenant = requestParameters.tenant;
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (tenant !== undefined && tenant !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>tenant, 'tenant');
+        }
+        if (page !== undefined && page !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
+        }
+        if (perPage !== undefined && perPage !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>perPage, 'perPage');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<Array<AuditLog>>(`${this.configuration.basePath}/v1/audit-log/app-centric`,
+            {
+                params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
     /**
@@ -166,6 +246,83 @@ export class V1AuditLogService {
         }
 
         return this.httpClient.get<Array<AuditLog>>(`${this.configuration.basePath}/v1/audit-log`,
+            {
+                params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get Audit Log by Entity Id
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAuditLogByEntityIdAuditLog(requestParameters: GetAuditLogByEntityIdAuditLogRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<AuditLog>>;
+    public getAuditLogByEntityIdAuditLog(requestParameters: GetAuditLogByEntityIdAuditLogRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<AuditLog>>>;
+    public getAuditLogByEntityIdAuditLog(requestParameters: GetAuditLogByEntityIdAuditLogRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<AuditLog>>>;
+    public getAuditLogByEntityIdAuditLog(requestParameters: GetAuditLogByEntityIdAuditLogRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const entityId = requestParameters.entityId;
+        if (entityId === null || entityId === undefined) {
+            throw new Error('Required parameter entityId was null or undefined when calling getAuditLogByEntityIdAuditLog.');
+        }
+        const entityType = requestParameters.entityType;
+        if (entityType === null || entityType === undefined) {
+            throw new Error('Required parameter entityType was null or undefined when calling getAuditLogByEntityIdAuditLog.');
+        }
+        const tenant = requestParameters.tenant;
+        if (tenant === null || tenant === undefined) {
+            throw new Error('Required parameter tenant was null or undefined when calling getAuditLogByEntityIdAuditLog.');
+        }
+        const afterTimestamp = requestParameters.afterTimestamp;
+        if (afterTimestamp === null || afterTimestamp === undefined) {
+            throw new Error('Required parameter afterTimestamp was null or undefined when calling getAuditLogByEntityIdAuditLog.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (entityId !== undefined && entityId !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>entityId, 'entityId');
+        }
+        if (entityType !== undefined && entityType !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>entityType, 'entityType');
+        }
+        if (tenant !== undefined && tenant !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>tenant, 'tenant');
+        }
+        if (afterTimestamp !== undefined && afterTimestamp !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>afterTimestamp, 'afterTimestamp');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<Array<AuditLog>>(`${this.configuration.basePath}/v1/audit-log/entity`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

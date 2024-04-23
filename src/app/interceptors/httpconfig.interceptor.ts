@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -6,10 +6,11 @@ import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
+import { UndeployedChangesService } from '../services/undeployed-changes.service';
 
 @Injectable()
 export class HttpConfigInterceptor {
-  constructor(private auth: AuthService, private toastr: ToastrService, private route: ActivatedRoute) {}
+  constructor(private auth: AuthService, private injector: Injector, private toastr: ToastrService, private route: ActivatedRoute) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const currentUser = this.auth.currentUserValue;
@@ -79,7 +80,6 @@ export class HttpConfigInterceptor {
       }),
       catchError((errorResponse: HttpErrorResponse) => {
         let toastrMessage = 'Request Failed!';
-
         if (!isLogin) {
           switch (errorResponse.status) {
             case 400:
@@ -116,16 +116,39 @@ export class HttpConfigInterceptor {
 
   // if not a GET request, show appropriate success message
   processSuccessRequest(request, responseEvent) {
+    // Early return for GET requests since no further processing is needed
     if (request.method === 'GET') {
       return;
     }
+
+    this.handleNonGetRequests(responseEvent);
+    this.showSuccessMessage(responseEvent);
+  }
+
+  private handleNonGetRequests(responseEvent) {
+    // Fetch undeployed changes only for specific non-auth and non-bulk URLs
+    if (!responseEvent.url.includes('auth/') && !responseEvent.url.includes('bulk')) {
+      const undeployedChanges = this.injector.get(UndeployedChangesService);
+      undeployedChanges.getUndeployedChanges();
+    }
+  }
+
+  private showSuccessMessage(responseEvent) {
+    // Messages defined based on URL patterns
     const loginNotificationMsg = 'Login Successful';
     const postNotificationMsg = 'Request Successful';
     const bulkNotificationMessage = 'Bulk Upload Successful';
-    return responseEvent.url.includes('auth/')
-      ? this.toastr.success(loginNotificationMsg)
-      : responseEvent.url.includes('bulk')
-      ? this.toastr.success(bulkNotificationMessage)
-      : this.toastr.success(postNotificationMsg);
+
+    // Determine and display the appropriate success message
+    let message;
+    if (responseEvent.url.includes('auth/')) {
+      message = loginNotificationMsg;
+    } else if (responseEvent.url.includes('bulk')) {
+      message = bulkNotificationMessage;
+    } else {
+      message = postNotificationMsg;
+    }
+
+    this.toastr.success(message);
   }
 }
