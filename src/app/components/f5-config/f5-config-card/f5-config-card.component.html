@@ -8,9 +8,6 @@
         [class.text-success]="highAvailabilityStatus === 'ACTIVE'"
         [class.text-muted]="highAvailabilityStatus !== 'ACTIVE'"
       ></fa-icon>
-      <p class="mb-0">
-        <span>{{ highAvailabilityStatus }}</span>
-      </p>
     </div>
     <!-- Icons and refresh button on the right -->
     <div class="d-flex align-items-center">
@@ -28,6 +25,7 @@
       </p>
       <button
         type="button"
+        title="Refresh F5 Config"
         class="btn btn-icon"
         (click)="refreshF5Config(); $event.stopPropagation()"
         [disabled]="isRecentlyRefreshed() || isRefreshingRuntimeData"
@@ -40,7 +38,7 @@
   <div class="card-body pb-0">
     <h5 class="card-title">{{ displayName }}</h5>
     <p class="card-text mb-0">
-      <small class="text-muted">Version: {{ softwareVersion }}</small>
+      <small style="color: #717579">Version: {{ softwareVersion }}</small>
     </p>
   </div>
 </div>
