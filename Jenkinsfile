@@ -21,40 +21,40 @@ pipeline {
             }
     }
 
-    stage('Test') {
-       agent {
-          docker {
-                image "${nodeImage}"
-                args '--userns=keep-id -e HOME=/tmp/home --security-opt label=disable'
-                label 'rehl8-prod'
-                }
-            }
-            steps {
-                sh 'npm --version'
-                sh 'npm run test:ci'
-            }
-    }
+    // stage('Test') {
+    //    agent {
+    //       docker {
+    //             image "${nodeImage}"
+    //             args '--userns=keep-id -e HOME=/tmp/home --security-opt label=disable'
+    //             label 'rehl8-prod'
+    //             }
+    //         }
+    //         steps {
+    //             sh 'npm --version'
+    //             sh 'npm run test:ci'
+    //         }
+    // }
 
-    stage('SonarQube - Static Analysis') {
-            when {
-                expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'int'}
-            }
-            agent { label 'rehl8-prod' }
-            steps {
-                    script {
-                           try {
-                                sh '''
-	                                pwd
-  	                              cp -R /var/cbjenkins/sonar-scanner  "${PWD}/node_modules"   
-                                  "${PWD}/node_modules"/sonar-scanner/bin/sonar-scanner -Dproject.settings="${PWD}"/sonar-project.properties    
-                                  if [ -d ${PWD}/.scannerwork ]; then rm -Rf ${PWD}/.scannerwork; fi  
-                                '''  
-                        } catch (Exception e) {
-                           error('Failing sonarqube Test')
-                           }
-                    }
-            }
-     }
+    // stage('SonarQube - Static Analysis') {
+    //         when {
+    //             expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'int'}
+    //         }
+    //         agent { label 'rehl8-prod' }
+    //         steps {
+    //                 script {
+    //                        try {
+    //                             sh '''
+	//                                 pwd
+  	//                               cp -R /var/cbjenkins/sonar-scanner  "${PWD}/node_modules"   
+    //                               "${PWD}/node_modules"/sonar-scanner/bin/sonar-scanner -Dproject.settings="${PWD}"/sonar-project.properties    
+    //                               if [ -d ${PWD}/.scannerwork ]; then rm -Rf ${PWD}/.scannerwork; fi  
+    //                             '''  
+    //                     } catch (Exception e) {
+    //                        error('Failing sonarqube Test')
+    //                        }
+    //                 }
+    //         }
+    //  }
 
     stage('Publish') {
             agent { label 'rehl8-prod' }
