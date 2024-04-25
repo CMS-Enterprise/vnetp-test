@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { F5ConfigService } from '../f5-config.service';
 import { F5Runtime } from '../../../../../client';
 import { ActivatedRoute } from '@angular/router';
@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './partition-details.component.html',
   styleUrls: ['./partition-details.component.css'],
 })
-export class PartitionDetailsComponent implements OnInit {
+export class PartitionDetailsComponent implements OnInit, OnDestroy {
   urlF5Id: string;
   f5Config: F5Runtime;
   partitionInfo: any;
@@ -43,6 +43,16 @@ export class PartitionDetailsComponent implements OnInit {
 
   onPartitionSelected(partition: string): void {
     this.selectedPartition = partition;
+  }
+
+  ngOnDestroy(): void {
+    for (const partition in this.filteredPartitionInfo) {
+      if (this.filteredPartitionInfo.hasOwnProperty(partition)) {
+        this.filteredPartitionInfo[partition].forEach(vs => {
+          vs.expanded = false;
+        });
+      }
+    }
   }
 
   onSearch(searchQuery: string): void {
