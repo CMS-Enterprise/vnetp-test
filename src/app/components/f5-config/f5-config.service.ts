@@ -31,15 +31,16 @@ export class F5ConfigService {
     }
   }
 
-  refreshF5Config(id: string): Promise<F5Runtime> {
-    return this.v1F5ConfigService
-      .getManyF5Config({ filter: [`id||eq||${id}`] })
-      .toPromise()
-      .then(data => {
-        const f5ConfigToRefreshIndex = this.f5Configs.findIndex(f5Config => f5Config.id === id);
-        this.f5Configs[f5ConfigToRefreshIndex] = data[0];
-        return data[0];
-      });
+  async refreshF5Config(id: string): Promise<F5Runtime> {
+    try {
+      const data = await firstValueFrom(this.v1F5ConfigService.getManyF5Config({ filter: [`id||eq||${id}`] }));
+      const f5ConfigToRefreshIndex = this.f5Configs.findIndex(f5Config => f5Config.id === id);
+      this.f5Configs[f5ConfigToRefreshIndex] = data[0];
+      return data[0];
+    } catch (error) {
+      console.error('Failed to refresh F5 Config:', error);
+      throw error;
+    }
   }
 
   filterVirtualServers(partitionInfo: any, query: string): any {
@@ -130,4 +131,7 @@ export class F5ConfigService {
       return 'unknown';
     }
   }
+}
+function firstValueFrom(arg0: Observable<F5Runtime[]>) {
+  throw new Error('Function not implemented.');
 }
