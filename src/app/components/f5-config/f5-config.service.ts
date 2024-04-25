@@ -36,6 +36,7 @@ export class F5ConfigService {
       const data = await firstValueFrom(this.v1F5ConfigService.getManyF5Config({ filter: [`id||eq||${id}`] }));
       const f5ConfigToRefreshIndex = this.f5Configs.findIndex(f5Config => f5Config.id === id);
       this.f5Configs[f5ConfigToRefreshIndex] = data[0];
+      console.log('F5 Config Refreshed: ', data[0]);
       return data[0];
     } catch (error) {
       console.error('Failed to refresh F5 Config:', error);
