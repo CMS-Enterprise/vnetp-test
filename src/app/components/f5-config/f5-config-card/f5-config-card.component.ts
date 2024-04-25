@@ -53,6 +53,12 @@ export class F5ConfigCardComponent implements OnInit {
     });
   }
 
+  handleKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && !this.isRefreshingRuntimeData) {
+      this.navigateToDetails();
+    }
+  }
+
   refreshF5Config(): void {
     if (this.isRecentlyRefreshed() || this.isRefreshingRuntimeData) {
       return;
