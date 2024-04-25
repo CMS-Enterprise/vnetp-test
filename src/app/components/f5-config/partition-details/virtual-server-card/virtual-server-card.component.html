@@ -25,7 +25,7 @@
     <button type="button" class="close-button" aria-label="Close" (click)="toggleExpanded()">&times;</button>
     <div class="virtual-server-section mb-4">
       <h5>Virtual Server</h5>
-      <table id="myCustomTable" class="table">
+      <table id="myCustomTable2" class="table">
         <caption>
           Virtual Server Diagnostic Data
         </caption>
@@ -62,24 +62,24 @@
         </thead>
         <tbody>
           <tr>
-            <td class="text-right"><fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon></td>
-            <td>{{ virtualServerName }}</td>
+            <td headers="empty-header-1" class="text-right"><fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon></td>
+            <td headers="name-header">{{ virtualServerName }}</td>
             <!-- Bits data -->
-            <td>{{ virtualServerTableData.bitsIn }}</td>
-            <td>{{ virtualServerTableData.bitsOut }}</td>
+            <td headers="bits-in-header">{{ virtualServerTableData.bitsIn }}</td>
+            <td headers="bits-out-header">{{ virtualServerTableData.bitsOut }}</td>
             <!-- Packets data -->
-            <td>{{ virtualServerTableData.packetsIn }}</td>
-            <td>{{ virtualServerTableData.packetsOut }}</td>
+            <td headers="packets-in-header">{{ virtualServerTableData.packetsIn }}</td>
+            <td headers="packets-out-header">{{ virtualServerTableData.packetsOut }}</td>
             <!-- Connections data -->
-            <td>{{ virtualServerTableData.currentConnections }}</td>
-            <td>{{ virtualServerTableData.maxConnections }}</td>
-            <td>{{ virtualServerTableData.totalConnections }}</td>
+            <td headers="current-connections-header">{{ virtualServerTableData.currentConnections }}</td>
+            <td headers="max-connections-header">{{ virtualServerTableData.maxConnections }}</td>
+            <td headers="total-connections-header">{{ virtualServerTableData.totalConnections }}</td>
             <!-- Requests data -->
-            <td>{{ virtualServerTableData.totalRequests }}</td>
+            <td headers="total-request-header">{{ virtualServerTableData.totalRequests }}</td>
             <!-- CPU Utilization Average data -->
-            <td>{{ virtualServerTableData.fiveSecAvgUsageRatio }}</td>
-            <td>{{ virtualServerTableData.oneMinAvgUsageRatio }}</td>
-            <td>{{ virtualServerTableData.fiveMinAvgUsageRatio }}</td>
+            <td headers="cpu-ua-5sec-header">{{ virtualServerTableData.fiveSecAvgUsageRatio }}</td>
+            <td headers="cpu-ua-1min-header">{{ virtualServerTableData.oneMinAvgUsageRatio }}</td>
+            <td headers="cpu-ua-5min-header">{{ virtualServerTableData.fiveMinAvgUsageRatio }}</td>
           </tr>
           <!-- Add more rows as necessary -->
         </tbody>
@@ -126,17 +126,17 @@
         <tbody>
           <tr>
             <td class="text-right"><fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon></td>
-            <td>{{ pool.name }}</td>
-            <td>{{ poolTableData.bitsIn }}</td>
-            <td>{{ poolTableData.bitsOut }}</td>
-            <td>{{ poolTableData.packetsIn }}</td>
-            <td>{{ poolTableData.packetsOut }}</td>
-            <td>{{ poolTableData.currentConnections }}</td>
-            <td>{{ poolTableData.maxConnections }}</td>
-            <td>{{ poolTableData.totalConnections }}</td>
-            <td>{{ poolTableData.totalRequests }}</td>
-            <td>{{ poolTableData.depth }}</td>
-            <td>{{ poolTableData.maxAge }}</td>
+            <td headers="pool-name-header">{{ pool.name }}</td>
+            <td headers="pool-bits-in-header">{{ poolTableData.bitsIn }}</td>
+            <td headers="pool-bits-out-header">{{ poolTableData.bitsOut }}</td>
+            <td headers="pool-packets-in-header">{{ poolTableData.packetsIn }}</td>
+            <td headers="pool-packets-out-header">{{ poolTableData.packetsOut }}</td>
+            <td headers="pool-current-connections-header">{{ poolTableData.currentConnections }}</td>
+            <td headers="pool-max-connections-header">{{ poolTableData.maxConnections }}</td>
+            <td headers="pool-total-connections-header">{{ poolTableData.totalConnections }}</td>
+            <td headers="pool-total-request-header">{{ poolTableData.totalRequests }}</td>
+            <td headers="depth-header">{{ poolTableData.depth }}</td>
+            <td headers="max-age-header">{{ poolTableData.maxAge }}</td>
           </tr>
         </tbody>
       </table>
