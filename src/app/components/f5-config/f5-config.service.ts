@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { V1RuntimeDataF5ConfigService } from '../../../../client';
+import { F5Runtime, V1RuntimeDataF5ConfigService } from '../../../../client';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class F5ConfigService {
-  f5Configs: any;
+  f5Configs: F5Runtime[];
 
   constructor(private v1F5ConfigService: V1RuntimeDataF5ConfigService) {
     this.getF5Configs().subscribe(data => {
