@@ -32,6 +32,10 @@ export class F5ConfigCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.initilizeValues();
+  }
+
+  initilizeValues(): void {
     const f5Data = this.f5Config.data as any;
     this.softwareVersion = f5Data?.hostInfo?.softwareVersion;
     this.highAvailabilityStatus = f5Data?.hostInfo?.availability?.status;
@@ -80,6 +84,7 @@ export class F5ConfigCardComponent implements OnInit {
                 this.f5Config = data[0];
                 const i = this.f5StateManagementService.f5Configs.findIndex(f5Config => f5Config.id === this.f5Config.id);
                 this.f5StateManagementService.f5Configs[i] = data[0];
+                this.initilizeValues();
               });
             }
             this.jobStatus = status;
