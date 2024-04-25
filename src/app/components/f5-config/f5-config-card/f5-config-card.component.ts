@@ -76,21 +76,19 @@ export class F5ConfigCardComponent implements OnInit {
           complete: () => {
             this.isRefreshingRuntimeData = false;
             if (status === 'successful') {
-              this.updateF5Config();
+              this.f5StateManagementService
+                .refreshF5Config(this.f5Config.id)
+                .then(refreshedConfig => {
+                  this.f5Config = refreshedConfig;
+                })
+                .catch(error => {
+                  console.error('Failed to refresh F5 Config:', error);
+                });
             }
             this.jobStatus = status;
           },
         });
       });
-  }
-
-  private updateF5Config(): void {
-    this.f5ConfigService.getManyF5Config({ filter: [`hostname||eq||${this.f5Config.hostname}`] }).subscribe(data => {
-      if (data.length !== 1) {
-        return;
-      }
-      this.f5Config = data[0];
-    });
   }
 
   isRecentlyRefreshed(): boolean {

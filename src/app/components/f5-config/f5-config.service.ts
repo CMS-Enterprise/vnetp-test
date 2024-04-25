@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { V1RuntimeDataF5ConfigService } from '../../../../client';
+import { F5Runtime, V1RuntimeDataF5ConfigService } from '../../../../client';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class F5ConfigService {
-  f5Configs: any;
+  f5Configs: F5Runtime[];
 
   constructor(private v1F5ConfigService: V1RuntimeDataF5ConfigService) {
     this.getF5Configs().subscribe(data => {
@@ -29,6 +29,17 @@ export class F5ConfigService {
         }),
       );
     }
+  }
+
+  refreshF5Config(id: string): Promise<F5Runtime> {
+    return this.v1F5ConfigService
+      .getManyF5Config({ filter: [`id||eq||${id}`] })
+      .toPromise()
+      .then(data => {
+        const f5ConfigToRefreshIndex = this.f5Configs.findIndex(f5Config => f5Config.id === id);
+        this.f5Configs[f5ConfigToRefreshIndex] = data[0];
+        return data[0];
+      });
   }
 
   filterVirtualServers(partitionInfo: any, query: string): any {
