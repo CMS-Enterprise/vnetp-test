@@ -120,6 +120,3 @@ export class F5ConfigService {
     }
   }
 }
-function firstValueFrom(arg0: Observable<F5Runtime[]>) {
-  throw new Error('Function not implemented.');
-}

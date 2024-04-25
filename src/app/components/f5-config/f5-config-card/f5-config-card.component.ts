@@ -88,8 +88,10 @@ export class F5ConfigCardComponent implements OnInit {
             if (status === 'successful') {
               this.f5ConfigService.getManyF5Config({ filter: [`id||eq||${this.f5Config.id}`] }).subscribe(data => {
                 this.f5Config = data[0];
-                const i = this.f5StateManagementService.f5Configs.findIndex(f5Config => f5Config.id === this.f5Config.id);
-                this.f5StateManagementService.f5Configs[i] = data[0];
+                const i = this.f5StateManagementService?.f5Configs?.findIndex(f5Config => f5Config.id === this.f5Config.id);
+                if (i !== -1 && i !== undefined) {
+                  this.f5StateManagementService.f5Configs[i] = data[0];
+                }
                 this.initilizeValues();
               });
             }
