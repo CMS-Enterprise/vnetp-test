@@ -111,3 +111,7 @@
   height: 20px; /* Height of the fading effect */
   background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
 }
+
+.grey-test {
+  color: #717579;
+}
