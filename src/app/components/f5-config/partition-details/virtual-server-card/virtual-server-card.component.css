@@ -60,6 +60,26 @@
   border-top: 0;
 }
 
+#myCustomTable2 th.column-border {
+  position: relative;
+  padding-bottom: 0.625rem; /* 10px / 16px */
+}
+
+#myCustomTable2 th.column-border::after {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: -0.0625rem; /* -1px / 16px */
+  border-bottom: 2px solid #000;
+  display: block;
+}
+
+#myCustomTable2 thead th {
+  border-bottom: 0;
+  border-top: 0;
+}
+
 .tight-spacing {
   line-height: 1;
   margin-top: -0.625rem; /* -10px / 16px */
@@ -90,4 +110,8 @@
   bottom: 0;
   height: 20px; /* Height of the fading effect */
   background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+}
+
+.grey-test {
+  color: #717579;
 }

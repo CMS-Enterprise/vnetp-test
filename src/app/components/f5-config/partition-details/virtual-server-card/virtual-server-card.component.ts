@@ -61,6 +61,12 @@ export class VirtualServerCardComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
+  handleKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.toggleExpanded();
+    }
+  }
+
   getStatusClass(availablityState?: any, enabledState?: any): string {
     if (availablityState?.description === 'available' && enabledState?.description === 'enabled') {
       return 'text-success';
