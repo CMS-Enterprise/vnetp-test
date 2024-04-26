@@ -32,6 +32,10 @@ export class F5ConfigCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.initilizeValues();
+  }
+
+  initilizeValues(): void {
     const f5Data = this.f5Config.data as any;
     this.softwareVersion = f5Data?.hostInfo?.softwareVersion;
     this.highAvailabilityStatus = f5Data?.hostInfo?.availability?.status;
@@ -47,6 +51,12 @@ export class F5ConfigCardComponent implements OnInit {
       relativeTo: this.route,
       queryParams: currentQueryParams,
     });
+  }
+
+  handleKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && !this.isRefreshingRuntimeData) {
+      this.navigateToDetails();
+    }
   }
 
   refreshF5Config(): void {
@@ -76,21 +86,19 @@ export class F5ConfigCardComponent implements OnInit {
           complete: () => {
             this.isRefreshingRuntimeData = false;
             if (status === 'successful') {
-              this.updateF5Config();
+              this.f5ConfigService.getManyF5Config({ filter: [`id||eq||${this.f5Config.id}`] }).subscribe(data => {
+                this.f5Config = data[0];
+                const i = this.f5StateManagementService?.f5Configs?.findIndex(f5Config => f5Config.id === this.f5Config.id);
+                if (i !== -1 && i !== undefined) {
+                  this.f5StateManagementService.f5Configs[i] = data[0];
+                }
+                this.initilizeValues();
+              });
             }
             this.jobStatus = status;
           },
         });
       });
-  }
-
-  private updateF5Config(): void {
-    this.f5ConfigService.getManyF5Config({ filter: [`hostname||eq||${this.f5Config.hostname}`] }).subscribe(data => {
-      if (data.length !== 1) {
-        return;
-      }
-      this.f5Config = data[0];
-    });
   }
 
   isRecentlyRefreshed(): boolean {

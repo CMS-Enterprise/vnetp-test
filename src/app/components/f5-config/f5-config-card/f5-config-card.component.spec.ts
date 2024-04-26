@@ -25,6 +25,7 @@ describe('F5ConfigCardComponent', () => {
     };
     mockF5ConfigStateManagementService = {
       changeF5Config: jest.fn(),
+      f5Configs: [],
     };
     mockF5ConfigService = {
       createRuntimeDataJobF5Config: jest.fn(),
@@ -104,7 +105,13 @@ describe('F5ConfigCardComponent', () => {
       // Mock job creation response
       const jobCreationResponse = of({ id: 'jobId' });
       jest.spyOn(mockF5ConfigService, 'createRuntimeDataJobF5Config').mockReturnValue(jobCreationResponse);
-      const updateSpy = jest.spyOn(component as any, 'updateF5Config').mockImplementation();
+      jest
+        .spyOn(mockF5ConfigService, 'getManyF5Config')
+        .mockReturnValue(of([{ id: 'id', data: { hostInfo: { softwareVersion: 2, availability: { status: 'available' } } } }]));
+      mockF5ConfigStateManagementService.f5Configs = [
+        { id: 'id', data: { hostInfo: { softwareVersion: 1, availability: { status: 'available' } } } },
+      ];
+      const updateSpy = jest.spyOn(component, 'initilizeValues').mockImplementation();
 
       // Mock polling response with different statuses
       const statuses = ['successful', 'failed', 'running'];
@@ -147,21 +154,6 @@ describe('F5ConfigCardComponent', () => {
       expect(component.jobStatus).toEqual('error');
       expect(component.isRefreshingRuntimeData).toBeFalsy();
     }));
-  });
-
-  describe('updateF5Config', () => {
-    it('should update f5Config', () => {
-      component.f5Config = { hostname: 'hostname' } as any;
-      jest.spyOn(mockF5ConfigService, 'getManyF5Config').mockReturnValue(of([{ hostname: 'new hostname' } as any]));
-      (component as any).updateF5Config();
-      expect(component.f5Config.hostname).toEqual('new hostname');
-    });
-    it('should not update f5Config if there is no data', () => {
-      component.f5Config = { hostname: 'hostname' } as any;
-      jest.spyOn(mockF5ConfigService, 'getManyF5Config').mockReturnValue(of([]));
-      (component as any).updateF5Config();
-      expect(component.f5Config.hostname).toEqual('hostname');
-    });
   });
 
   describe('getTooltipMessage', () => {

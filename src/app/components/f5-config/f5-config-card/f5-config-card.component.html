@@ -1,4 +1,9 @@
-<div class="card" [class.card-disabled]="isRefreshingRuntimeData" (click)="!isRefreshingRuntimeData && navigateToDetails()">
+<div
+  class="card"
+  [class.card-disabled]="isRefreshingRuntimeData"
+  (click)="!isRefreshingRuntimeData && navigateToDetails()"
+  (keydown)="handleKeyDown($event)"
+>
   <div class="card-header d-flex justify-content-between align-items-center">
     <!-- Status message on the left -->
     <div class="d-flex align-items-center custom-align-items">

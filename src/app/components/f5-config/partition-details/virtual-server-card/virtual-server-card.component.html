@@ -1,5 +1,11 @@
-<div *ngIf="!expanded" class="card" [ngClass]="{ collapsed: !expanded }" (click)="toggleExpanded(); $event.stopPropagation()">
-  <div class="card-body non-expanded-card-body" (scroll)="checkScroll($event)" >
+<div
+  *ngIf="!expanded"
+  class="card"
+  [ngClass]="{ collapsed: !expanded }"
+  (click)="toggleExpanded(); $event.stopPropagation()"
+  (keydown)="handleKeyDown($event)"
+>
+  <div class="card-body non-expanded-card-body" (scroll)="checkScroll($event)">
     <div class="d-flex align-items-center">
       <fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon>
       <h5 class="card-title pool-vs-title mb-0">{{ virtualServerName }}</h5>
@@ -31,7 +37,7 @@
         </caption>
         <thead>
           <tr>
-            <th class="column-border" id="empty-header-1"></th>
+            <th class="column-border" id="empty-header-1 empty-header-2"></th>
             <th class="text column-border text-center" id="name-header">Name</th>
             <th colspan="2" class="text column-border text-center" id="bits-header">Bits</th>
             <th colspan="2" class="text column-border text-center" id="packets-header">Packets</th>
@@ -62,24 +68,26 @@
         </thead>
         <tbody>
           <tr>
-            <td headers="empty-header-1" class="text-right"><fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon></td>
-            <td headers="name-header">{{ virtualServerName }}</td>
+            <td headers="empty-header-1 empty-header-2 empty-header-2" class="text-right">
+              <fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon>
+            </td>
+            <td headers="empty-header-3 name-header">{{ virtualServerName }}</td>
             <!-- Bits data -->
-            <td headers="bits-in-header">{{ virtualServerTableData.bitsIn }}</td>
-            <td headers="bits-out-header">{{ virtualServerTableData.bitsOut }}</td>
+            <td headers="bits-header bits-in-header">{{ virtualServerTableData.bitsIn }}</td>
+            <td headers="bits-header bits-out-header">{{ virtualServerTableData.bitsOut }}</td>
             <!-- Packets data -->
-            <td headers="packets-in-header">{{ virtualServerTableData.packetsIn }}</td>
-            <td headers="packets-out-header">{{ virtualServerTableData.packetsOut }}</td>
+            <td headers="packets-header packets-in-header">{{ virtualServerTableData.packetsIn }}</td>
+            <td headers="packets-header packets-out-header">{{ virtualServerTableData.packetsOut }}</td>
             <!-- Connections data -->
-            <td headers="current-connections-header">{{ virtualServerTableData.currentConnections }}</td>
-            <td headers="max-connections-header">{{ virtualServerTableData.maxConnections }}</td>
-            <td headers="total-connections-header">{{ virtualServerTableData.totalConnections }}</td>
+            <td headers="connections-header current-connections-header">{{ virtualServerTableData.currentConnections }}</td>
+            <td headers="connections-header max-connections-header">{{ virtualServerTableData.maxConnections }}</td>
+            <td headers="connections-header total-connections-header">{{ virtualServerTableData.totalConnections }}</td>
             <!-- Requests data -->
-            <td headers="total-request-header">{{ virtualServerTableData.totalRequests }}</td>
+            <td headers="requests-header total-request-header">{{ virtualServerTableData.totalRequests }}</td>
             <!-- CPU Utilization Average data -->
-            <td headers="cpu-ua-5sec-header">{{ virtualServerTableData.fiveSecAvgUsageRatio }}</td>
-            <td headers="cpu-ua-1min-header">{{ virtualServerTableData.oneMinAvgUsageRatio }}</td>
-            <td headers="cpu-ua-5min-header">{{ virtualServerTableData.fiveMinAvgUsageRatio }}</td>
+            <td headers="cpu-ua-5sec-header cpu-ua-header">{{ virtualServerTableData.fiveSecAvgUsageRatio }}</td>
+            <td headers="cpu-ua-1min-header cpu-ua-header">{{ virtualServerTableData.oneMinAvgUsageRatio }}</td>
+            <td headers="cpu-ua-5min-header cpu-ua-header">{{ virtualServerTableData.fiveMinAvgUsageRatio }}</td>
           </tr>
           <!-- Add more rows as necessary -->
         </tbody>
@@ -125,18 +133,18 @@
         </thead>
         <tbody>
           <tr>
-            <td class="text-right"><fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon></td>
-            <td headers="pool-name-header">{{ pool.name }}</td>
-            <td headers="pool-bits-in-header">{{ poolTableData.bitsIn }}</td>
-            <td headers="pool-bits-out-header">{{ poolTableData.bitsOut }}</td>
-            <td headers="pool-packets-in-header">{{ poolTableData.packetsIn }}</td>
-            <td headers="pool-packets-out-header">{{ poolTableData.packetsOut }}</td>
-            <td headers="pool-current-connections-header">{{ poolTableData.currentConnections }}</td>
-            <td headers="pool-max-connections-header">{{ poolTableData.maxConnections }}</td>
-            <td headers="pool-total-connections-header">{{ poolTableData.totalConnections }}</td>
-            <td headers="pool-total-request-header">{{ poolTableData.totalRequests }}</td>
-            <td headers="depth-header">{{ poolTableData.depth }}</td>
-            <td headers="max-age-header">{{ poolTableData.maxAge }}</td>
+            <td headers="empty-header-4 empty-header-5" class="text-right"><fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon></td>
+            <td headers="empty-header-6 pool-name-header">{{ pool.name }}</td>
+            <td headers="pool-bits-header pool-bits-in-header">{{ poolTableData.bitsIn }}</td>
+            <td headers="pool-bits-header pool-bits-out-header">{{ poolTableData.bitsOut }}</td>
+            <td headers="pool-packets-header pool-packets-in-header">{{ poolTableData.packetsIn }}</td>
+            <td headers="pool-packets-header pool-packets-out-header">{{ poolTableData.packetsOut }}</td>
+            <td headers="pool-connections-header pool-current-connections-header">{{ poolTableData.currentConnections }}</td>
+            <td headers="pool-connections-header pool-max-connections-header">{{ poolTableData.maxConnections }}</td>
+            <td headers="pool-connections-header pool-total-connections-header">{{ poolTableData.totalConnections }}</td>
+            <td headers="pool-requests-header pool-total-request-header">{{ poolTableData.totalRequests }}</td>
+            <td headers="depth-header requests-queue-header">{{ poolTableData.depth }}</td>
+            <td headers="max-age-header requests-queue-header">{{ poolTableData.maxAge }}</td>
           </tr>
         </tbody>
       </table>
