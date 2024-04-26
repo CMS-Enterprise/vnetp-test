@@ -34,9 +34,9 @@ export class VirtualServerCardComponent implements OnInit {
     this.virtualServerName = this.virtualServer?.name;
 
     if (this.virtualServer?.destination) {
-      const nameSplit = this.virtualServer?.destination.split('/');
-      if (nameSplit.length > 2) {
-        this.virtualServerAddress = nameSplit[2];
+      const addressSplit = this.virtualServer?.destination.split('/');
+      if (addressSplit.length > 2) {
+        this.virtualServerAddress = addressSplit[2];
       }
     }
 
