@@ -25,8 +25,8 @@
       ></fa-icon>
       <p class="mb-0">
         <small *ngIf="!isRecentlyRefreshed() && !isRefreshingRuntimeData">{{ lastRefreshed }}</small>
-        <small *ngIf="isRefreshingRuntimeData" class="text-muted">Refreshing</small>
-        <small *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" class="text-muted">Refreshed</small>
+        <small *ngIf="isRefreshingRuntimeData" style="color: #717579">Refreshing</small>
+        <small *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" style="color: #717579">Refreshed</small>
       </p>
       <button
         type="button"
