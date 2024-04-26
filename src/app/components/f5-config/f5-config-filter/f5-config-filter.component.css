@@ -63,7 +63,7 @@
 .custom-dropdown.disabled,
 .custom-dropdown .disabled {
   pointer-events: none;
-  color: #6c757d; /* Bootstrap's text-muted color */
+  color: #717579;
 }
 
 .search-input {
@@ -76,4 +76,8 @@
 .search-input:focus {
   outline: none;
   border-color: #007bff;
+}
+
+.grey-text {
+  color: #717579;
 }
