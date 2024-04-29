@@ -19,6 +19,7 @@ describe('VirtualServerCardComponent', () => {
 
     component.virtualServer = {
       name: 'TestServer',
+      destination: '/Test/192.168.1.1:80',
       poolReference: {
         items: {
           name: 'TestPool',
@@ -50,6 +51,7 @@ describe('VirtualServerCardComponent', () => {
 
   it('should initialize properties correctly', () => {
     expect(component.virtualServerName).toEqual('TestServer');
+    expect(component.virtualServerAddress).toEqual('192.168.1.1:80');
     expect(component.poolName).toEqual('TestPool');
     expect(component.members).toEqual([{ id: 1, name: 'Member1' }]);
     expect(component.getStatusClass).toHaveBeenCalled();

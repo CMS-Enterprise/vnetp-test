@@ -15,6 +15,7 @@ export class VirtualServerCardComponent implements OnInit {
 
   @Input() virtualServer: any;
   virtualServerName: string;
+  virtualServerAddress: string;
   @Output() expandedChange = new EventEmitter<boolean>();
   poolName: string;
   members: any;
@@ -31,6 +32,14 @@ export class VirtualServerCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.virtualServerName = this.virtualServer?.name;
+
+    if (this.virtualServer?.destination) {
+      const addressSplit = this.virtualServer?.destination.split('/');
+      if (addressSplit.length > 2) {
+        this.virtualServerAddress = addressSplit[2];
+      }
+    }
+
     this.poolName = this.virtualServer?.poolReference?.items?.name;
     this.members = this.virtualServer?.poolReference?.items?.membersReference?.items;
     this.virtualServerStatus = this.getStatusClass(
