@@ -32,7 +32,7 @@
           {{ getTierName(firewallRuleGroup.tierId) }}
         </td>
         <td>
-          <a routerLink="/netcentric/firewall-rules/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge"
+          <a id="ruleGroupLink" routerLink="/netcentric/firewall-rules/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge"
             >{{ firewallRuleGroup.name | slice: 0:20 }}{{ firewallRuleGroup.name.length > 20 ? '...' : '' }}</a
           >
         </td>
