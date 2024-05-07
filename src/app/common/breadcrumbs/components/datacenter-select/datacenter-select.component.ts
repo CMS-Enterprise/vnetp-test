@@ -25,10 +25,8 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
   private datacenterLockSubscription: Subscription;
   private datacentersSubscription: Subscription;
   private routeChangesSubscription: Subscription;
-  undeployedChangesSubscription: Subscription;
-  undeployedChangesObjectSubscription: Subscription;
-  undeployedChangeObjects: any;
-  undeployedChanges: boolean;
+  private undeployedChangesSubscription: Subscription;
+  public undeployedChanges: boolean;
 
   constructor(
     private datacenterContextService: DatacenterContextService,
@@ -75,10 +73,6 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
     this.undeployedChangesSubscription = this.undeployedChangesService.undeployedChanges.subscribe(undeployedChanges => {
       this.undeployedChanges = undeployedChanges;
     });
-
-    this.undeployedChangesObjectSubscription = this.undeployedChangesService.undeployedChangeObjects.subscribe(undeployedChangeObjects => {
-      this.undeployedChangeObjects = undeployedChangeObjects;
-    });
   }
 
   ngOnDestroy() {
@@ -87,6 +81,7 @@ export class DatacenterSelectComponent implements OnInit, OnDestroy {
       this.currentDatacenterSubscription,
       this.datacenterLockSubscription,
       this.routeChangesSubscription,
+      this.undeployedChangesSubscription,
     ]);
   }
 }

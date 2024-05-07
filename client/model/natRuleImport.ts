@@ -58,6 +58,7 @@ export interface NatRuleImport {
     readonly translatedServiceObject?: ServiceObject;
     readonly toZone?: Zone;
     fromZone?: Array<Zone>;
+    hitCount?: number;
     tierName: string;
     natRuleGroupType: string;
 }

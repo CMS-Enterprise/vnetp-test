@@ -1,0 +1,49 @@
+.card {
+  margin-bottom: 1.25rem; /* 20px / 16px */
+  cursor: pointer;
+}
+
+.card:hover {
+  box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.2); /* 4px / 16px, 8px / 16px */
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.card:focus {
+  outline: none;
+  box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.2);
+}
+
+.card:not(.card-disabled):active {
+  transform: scale(0.98);
+}
+
+.btn-icon:not(:disabled):hover {
+  transform: rotate(70deg);
+  transition: transform 0.3s ease;
+}
+
+.card-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.card-disabled:hover {
+  box-shadow: none;
+}
+
+.card-disabled .btn-icon {
+  pointer-events: none;
+}
+
+.custom-align-items {
+  display: flex;
+  align-items: center;
+}
+
+.icon-align {
+  margin-right: 0.25rem; /* 4px / 16px */
+}
+
+.custom-align-items p {
+  margin-bottom: 0;
+}

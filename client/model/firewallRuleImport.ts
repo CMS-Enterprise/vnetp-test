@@ -52,6 +52,7 @@ export interface FirewallRuleImport {
     readonly serviceObjectGroup?: ServiceObjectGroup;
     toZone?: Array<Zone>;
     fromZone?: Array<Zone>;
+    hitCount?: number;
     tierName: string;
     firewallRuleGroupType: string;
 }
