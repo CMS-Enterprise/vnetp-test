@@ -65,18 +65,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "automation-ui:build"
+            "buildTarget": "automation-ui:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "automation-ui:build:production"
+              "buildTarget": "automation-ui:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "automation-ui:build"
+            "buildTarget": "automation-ui:build"
           }
         }
       }
