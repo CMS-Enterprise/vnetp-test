@@ -7,7 +7,15 @@
   </section>
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-table [config]="config" [data]="filters" (clearResults)="getFilters($event)" (searchParams)="getFilters($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+    <app-table
+      [config]="config"
+      [data]="filters"
+      (clearResults)="getFilters($event)"
+      (searchParams)="getFilters($event)"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
     <section class="btn-toolbar" role="toolbar">
       <app-import-export
         [exportObject]="filters"
@@ -22,26 +30,26 @@
 <ng-template #actionsTemplate let-filter="datum">
   <section class="table__actions">
     <app-icon-button
-            *ngIf="!filter?.deletedAt"
-            icon="edit"
-            label="Edit Filter"
-            (handleClick)="openFilterModal(ModalMode.Edit, filter)"
-          ></app-icon-button>
+      *ngIf="!filter?.deletedAt"
+      icon="edit"
+      label="Edit Filter"
+      (handleClick)="openFilterModal(ModalMode.Edit, filter)"
+    ></app-icon-button>
 
-          <app-icon-button
-          *ngIf="filter?.deletedAt"
-          icon="undo"
-          label="Restore Filter"
-          type="success"
-          (handleClick)="restoreFilter(filter)"
-        ></app-icon-button>
+    <app-icon-button
+      *ngIf="filter?.deletedAt"
+      icon="undo"
+      label="Restore Filter"
+      type="success"
+      (handleClick)="restoreFilter(filter)"
+    ></app-icon-button>
 
-        <app-icon-button
-        icon="delete"
-        label="Soft-Delete/Delete Filter"
-        [type]="filter?.deletedAt ? 'danger' : 'default'"
-        (handleClick)="deleteFilter(filter)"
-      ></app-icon-button>
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Filter"
+      [type]="filter?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteFilter(filter)"
+    ></app-icon-button>
   </section>
 </ng-template>
 

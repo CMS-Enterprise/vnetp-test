@@ -1,12 +1,17 @@
-<ngx-smart-modal #natRuleObjectInfoModal (onOpenFinished)="getData()" identifier="natRuleObjectInfoModal" [dismissable]="false" customClass="large-modal">
-    <header class="modal-header">
-      <h4 class="modal-title">{{ modalTitle || 'Title' }}</h4>
-    </header>
-  
-    <div class="modal-body">
-      <div *ngFor="let element of modalBody">
-        {{element}}
-      </div>
+<ngx-smart-modal
+  #natRuleObjectInfoModal
+  (onOpenFinished)="getData()"
+  identifier="natRuleObjectInfoModal"
+  [dismissable]="false"
+  customClass="large-modal"
+>
+  <header class="modal-header">
+    <h4 class="modal-title">{{ modalTitle || 'Title' }}</h4>
+  </header>
+
+  <div class="modal-body">
+    <div *ngFor="let element of modalBody">
+      {{ element }}
     </div>
-  </ngx-smart-modal>
-  
+  </div>
+</ngx-smart-modal>
