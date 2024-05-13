@@ -13,7 +13,6 @@ import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.modul
 import { TenantSelectModalComponent } from './tenant-select-modal/tenant-select-modal.component';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TypeDeleteModalComponent } from 'src/app/common/type-delete-modal/type-delete-modal.component';
 import { TypeDeleteModalModule } from 'src/app/common/type-delete-modal/type-delete-modal.module';
 
 const routes: Routes = [
