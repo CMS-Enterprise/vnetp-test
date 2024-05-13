@@ -11,8 +11,8 @@
 </ng-container>
 <ng-template #nameTemplate let-tier="datum">
   <a routerLink="/netcentric/static-routes/edit/{{ tier?.id }}" queryParamsHandling="merge"
-            >{{ tier.name | slice: 0:20 }}{{ tier.name.length > 20 ? '...' : '' }}</a
-          >
+    >{{ tier.name | slice : 0 : 20 }}{{ tier.name.length > 20 ? '...' : '' }}</a
+  >
 </ng-template>
 <ng-template #staticRouteTemplate let-tier="datum">
   {{ tier.staticRoutes.length }}

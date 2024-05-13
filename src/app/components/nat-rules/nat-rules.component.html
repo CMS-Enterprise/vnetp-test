@@ -22,28 +22,23 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="
-          let natRuleGroup of natRuleGroups
-            | paginate: { itemsPerPage: perPage, currentPage: currentNatRulePage }
-        "
-      >
+      <tr *ngFor="let natRuleGroup of natRuleGroups | paginate : { itemsPerPage: perPage, currentPage: currentNatRulePage }">
         <td>
           {{ getTierName(natRuleGroup.tierId) }}
         </td>
         <td>
           <a id="ruleGroupLink" routerLink="/netcentric/nat-rules/edit/{{ natRuleGroup.id }}" queryParamsHandling="merge"
-            >{{ natRuleGroup.name | slice: 0:20 }}{{ natRuleGroup.name.length > 20 ? '...' : '' }}</a
+            >{{ natRuleGroup.name | slice : 0 : 20 }}{{ natRuleGroup.name.length > 20 ? '...' : '' }}</a
           >
         </td>
         <td>{{ natRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
         <td>
           <app-icon-button
-          *ngIf="checkUndeployedChangesGroup(natRuleGroup)"
-          icon="asterisk"
-          label="Undeployed Changes"
-          [type]="'info'"
-        ></app-icon-button>
+            *ngIf="checkUndeployedChangesGroup(natRuleGroup)"
+            icon="asterisk"
+            label="Undeployed Changes"
+            [type]="'info'"
+          ></app-icon-button>
         </td>
       </tr>
       <tr *ngIf="natRuleGroups?.length === 0" class="text-center">

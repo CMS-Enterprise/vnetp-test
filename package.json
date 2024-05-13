@@ -8,7 +8,7 @@
     "build:stats": "ng build --stats-json",
     "build:prod": "ng build --configuration production",
     "documentation": "compodoc --watch --serve --open",
-    "format": "prettier --write \"src/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.{ts,js,html,css,scss}\"",
     "test": "jest --no-cache --runInBand",
     "test:ci": "jest --ci --no-cache --runInBand --coverage --verbose --silent",
     "lint": "eslint \"src/**/*.{ts,tsx}\" --fix",
@@ -73,7 +73,7 @@
     }
   },
   "lint-staged": {
-    "!(client)/**/*.{js,ts}": [
+    "!(client)/**/*.{js,ts,html,css,scss}": [
       "prettier --write"
     ]
   }

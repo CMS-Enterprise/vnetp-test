@@ -1,6 +1,6 @@
 <app-tier-select></app-tier-select>
 <h1>Firewall Rule Groups</h1>
-<ng-container *ngIf="currentTier; else warningMessage"> 
+<ng-container *ngIf="currentTier; else warningMessage">
   <section class="btn-toolbar" role="toolbar">
     <button type="button" class="btn btn-info" (click)="getTiers()">
       <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
@@ -24,8 +24,8 @@
       <tr
         *ngFor="
           let firewallRuleGroup of firewallRuleGroups
-            | filter: filterFirewallRuleGroup
-            | paginate: { itemsPerPage: perPage, currentPage: currentFirewallRulePage }
+            | filter : filterFirewallRuleGroup
+            | paginate : { itemsPerPage: perPage, currentPage: currentFirewallRulePage }
         "
       >
         <td>
@@ -33,17 +33,17 @@
         </td>
         <td>
           <a id="ruleGroupLink" routerLink="/netcentric/firewall-rules/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge"
-            >{{ firewallRuleGroup.name | slice: 0:20 }}{{ firewallRuleGroup.name.length > 20 ? '...' : '' }}</a
+            >{{ firewallRuleGroup.name | slice : 0 : 20 }}{{ firewallRuleGroup.name.length > 20 ? '...' : '' }}</a
           >
         </td>
         <td>{{ firewallRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</td>
         <td>
           <app-icon-button
-          *ngIf="checkUndeployedChanges(firewallRuleGroup)"
-          icon="asterisk"
-          label="Undeployed Changes"
-          [type]="'info'"
-        ></app-icon-button>
+            *ngIf="checkUndeployedChanges(firewallRuleGroup)"
+            icon="asterisk"
+            label="Undeployed Changes"
+            [type]="'info'"
+          ></app-icon-button>
         </td>
       </tr>
       <tr *ngIf="firewallRuleGroups?.length === 0" class="text-center">
@@ -62,7 +62,6 @@
   </section>
 </ng-container>
 
-
 <ng-template #nameTemplate let-firewallRuleGroup="datum">
   <section>
     {{ getTierName(firewallRuleGroup.tierId) }}
@@ -72,8 +71,8 @@
 <ng-template #fwRuleTemplate let-firewallRuleGroup="datum">
   <section>
     <a routerLink="/netcentric/firewall-rules/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge"
-          >{{ firewallRuleGroup.name | slice: 0:20 }}{{ firewallRuleGroup.name.length > 20 ? '...' : '' }}</a
-        >
+      >{{ firewallRuleGroup.name | slice : 0 : 20 }}{{ firewallRuleGroup.name.length > 20 ? '...' : '' }}</a
+    >
   </section>
 </ng-template>
 

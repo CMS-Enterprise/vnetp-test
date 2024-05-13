@@ -4,12 +4,11 @@
 <div id="main">
   <select aria-label="searchColumn" id="searchColumn" [(ngModel)]="searchColumn" placeholder="Column">
     <optgroup aria-label="search-properties">
-      <option [ngValue]="defaultSearch.propertyName" selected> {{ defaultSearch.displayName }} </option>
+      <option [ngValue]="defaultSearch.propertyName" selected>{{ defaultSearch.displayName }}</option>
       <option *ngFor="let column of columns" [ngValue]="column.propertyName">
         {{ column.displayName }}
       </option>
     </optgroup>
-
   </select>
   <input (keyup.enter)="searchThis()" aria-label="searchText" type="search" [(ngModel)]="searchText" placeholder="Search" />
   <a id="search-button" aria-label="searchButton" (click)="searchThis()">
