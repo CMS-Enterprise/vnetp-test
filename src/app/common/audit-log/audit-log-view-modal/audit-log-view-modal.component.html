@@ -1,44 +1,38 @@
 <ngx-smart-modal #auditLogViewModal identifier="auditLogViewModal" [dismissable]="true" customClass="large-modal">
-    <header class="modal-header">
-      <h4 class="modal-title">{{ auditLog?.id }}</h4>
-    </header>
+  <header class="modal-header">
+    <h4 class="modal-title">{{ auditLog?.id }}</h4>
+  </header>
 
-    <main class="modal-body">
-      <app-table [config]="config" [data]="auditLog"></app-table>
-    </main>
+  <main class="modal-body">
+    <app-table [config]="config" [data]="auditLog"></app-table>
+  </main>
 
-    <footer class="modal-footer">
-      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="auditLogViewModal.close()">
-        Close
-      </button>
-    </footer>
-  </ngx-smart-modal>
+  <footer class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="auditLogViewModal.close()">Close</button>
+  </footer>
+</ngx-smart-modal>
 
-  <ng-template #changedTemplate let-auditLog="datum">
-    <div *ngIf="auditLog.changedProperties">
-      <table class="table table-striped table-sm table-bordered">
-        <thead>
-          <tr>
-            <th scope="col" *ngFor="let prop of changedPropsConfig.columns">{{ prop.name }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="
-              let changedProperty of auditLog.changedProperties
-            "
-          >
-            <td>
-              <p>{{ changedProperty.propertyName }}</p>
-            </td>
-            <td>
-              <p style="overflow-wrap:anywhere">{{ changedProperty?.before }}</p>
-            </td>
-            <td>
-              <p style="overflow-wrap:anywhere">{{ changedProperty?.after }}</p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </ng-template>
+<ng-template #changedTemplate let-auditLog="datum">
+  <div *ngIf="auditLog.changedProperties">
+    <table class="table table-striped table-sm table-bordered">
+      <thead>
+        <tr>
+          <th scope="col" *ngFor="let prop of changedPropsConfig.columns">{{ prop.name }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let changedProperty of auditLog.changedProperties">
+          <td>
+            <p>{{ changedProperty.propertyName }}</p>
+          </td>
+          <td>
+            <p style="overflow-wrap: anywhere">{{ changedProperty?.before }}</p>
+          </td>
+          <td>
+            <p style="overflow-wrap: anywhere">{{ changedProperty?.after }}</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>

@@ -29,11 +29,11 @@
     ></app-table>
   </div>
   <app-import-export
-        [exportObject]="subnets"
-        exportFileName="subnets"
-        [disableJson]="subnets"
-        (import)="importSubnets($event)"
-      ></app-import-export>
+    [exportObject]="subnets"
+    exportFileName="subnets"
+    [disableJson]="subnets"
+    (import)="importSubnets($event)"
+  ></app-import-export>
 </ngx-smart-modal>
 
 <app-subnets-edit-modal [bridgeDomainId]="bridgeDomainId" [tenantId]="tenantId"></app-subnets-edit-modal>

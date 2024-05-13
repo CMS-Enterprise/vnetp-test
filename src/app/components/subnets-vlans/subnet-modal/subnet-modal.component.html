@@ -74,12 +74,8 @@
           aria-label="Network"
         />
         <div *ngIf="submitted && f.network.errors" class="invalid-feedback">
-          <div *ngIf="f.network.errors.required">
-            Network is required
-          </div>
-          <div *ngIf="f.network.errors.invalidIpCidr">
-            Invalid IP address, must be a valid IPv4/IPv6 CIDR.
-          </div>
+          <div *ngIf="f.network.errors.required">Network is required</div>
+          <div *ngIf="f.network.errors.invalidIpCidr">Invalid IP address, must be a valid IPv4/IPv6 CIDR.</div>
         </div>
       </div>
 
@@ -95,20 +91,22 @@
           aria-label="Gateway"
         />
         <div *ngIf="submitted && f.gateway.errors" class="invalid-feedback">
-          <div *ngIf="f.gateway.errors.required">
-            Gateway is required
-          </div>
-          <div *ngIf="f.gateway.errors.invalidIpAddress">
-            IP Address is invalid, must be a valid IPv4/IPv6 address.
-          </div>
+          <div *ngIf="f.gateway.errors.required">Gateway is required</div>
+          <div *ngIf="f.gateway.errors.invalidIpAddress">IP Address is invalid, must be a valid IPv4/IPv6 address.</div>
         </div>
       </div>
 
-      <hr/>
+      <hr />
 
       <div class="form-group">
         <div class="form-check form-check-inline">
-          <input type="checkbox" name="sharedBetweenVrfs" class="form-check-input" formControlName="sharedBetweenVrfs" aria-label="Shared Between Vrfs" />
+          <input
+            type="checkbox"
+            name="sharedBetweenVrfs"
+            class="form-check-input"
+            formControlName="sharedBetweenVrfs"
+            aria-label="Shared Between Vrfs"
+          />
           <label class="form-check-label" for="sharedBetweenVrfs">Shared between VRFs</label>
           <tooltip [message]="helpText.SharedBetweenVrfs"></tooltip>
         </div>
@@ -116,9 +114,7 @@
     </div>
 
     <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
-        Cancel
-      </button>
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">Cancel</button>
 
       <button class="btn btn-success" data-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>

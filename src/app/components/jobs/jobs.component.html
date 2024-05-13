@@ -13,10 +13,10 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let job of jobs | paginate: { itemsPerPage: perPage, currentPage: currentJobsPage }">
+    <tr *ngFor="let job of jobs | paginate : { itemsPerPage: perPage, currentPage: currentJobsPage }">
       <td>{{ job?.jobType }}</td>
-      <td>{{ job?.createdAt | date: 'medium' }}</td>
-      <td>{{ job?.completedAt | date: 'medium' }}</td>
+      <td>{{ job?.createdAt | date : 'medium' }}</td>
+      <td>{{ job?.completedAt | date : 'medium' }}</td>
     </tr>
     <tr *ngIf="!jobs?.length" class="text-center">
       <td colspan="3">No Jobs</td>

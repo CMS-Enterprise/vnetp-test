@@ -6,7 +6,15 @@
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
-  <app-table [config]="config" [data]="healthMonitors" (clearResults)="loadHealthMonitors($event)" (searchParams)="loadHealthMonitors($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+  <app-table
+    [config]="config"
+    [data]="healthMonitors"
+    (clearResults)="loadHealthMonitors($event)"
+    (searchParams)="loadHealthMonitors($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
   <section class="btn-toolbar" role="toolbar" *ngIf="currentTier">
     <app-import-export
       [exportObject]="healthMonitors"
@@ -19,11 +27,11 @@
 <ng-template #actionsTemplate let-healthMonitor="datum">
   <section class="table__actions">
     <app-icon-button
-    *ngIf="checkUndeployedChanges(healthMonitor)"
-          icon="asterisk"
-          [label]="'Undeployed Changes'"
-          [type]="'info'"
-  ></app-icon-button>
+      *ngIf="checkUndeployedChanges(healthMonitor)"
+      icon="asterisk"
+      [label]="'Undeployed Changes'"
+      [type]="'info'"
+    ></app-icon-button>
 
     <app-icon-button
       *ngIf="!healthMonitor?.deletedAt"
