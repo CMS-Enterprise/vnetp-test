@@ -19,11 +19,7 @@
       (tableEvent)="onTableEvent($event)"
     ></app-table>
     <section class="btn-toolbar" role="toolbar">
-      <app-import-export
-        [exportObject]="tenants"
-        exportFileName="tenants"
-        [disableJson]="false"
-      ></app-import-export>
+      <app-import-export [exportObject]="tenants" exportFileName="tenants" [disableJson]="false"></app-import-export>
     </section>
   </ng-container>
 </ng-container>

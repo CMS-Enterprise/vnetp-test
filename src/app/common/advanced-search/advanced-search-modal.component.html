@@ -44,19 +44,19 @@
           <div *ngFor="let formInput of formInputs" class="col-md-6 mb-3">
             <div class="form-group">
               <label>{{ formInput.displayName }}</label>
-              <ng-select *ngIf="showPropertyList(formInput)" [formControlName]="formInput.propertyName" [items]="ngSelectOptions[formInput.propertyName]" ></ng-select>
+              <ng-select
+                *ngIf="showPropertyList(formInput)"
+                [formControlName]="formInput.propertyName"
+                [items]="ngSelectOptions[formInput.propertyName]"
+              ></ng-select>
               <input *ngIf="!showPropertyList(formInput)" type="text" class="form-control" [formControlName]="formInput.propertyName" />
             </div>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="closeModal()">
-          Cancel
-        </button>
-        <button type="submit" class="btn btn-primary" data-dismiss="modal">
-          Search
-        </button>
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" data-dismiss="modal">Search</button>
       </div>
     </form>
   </div>

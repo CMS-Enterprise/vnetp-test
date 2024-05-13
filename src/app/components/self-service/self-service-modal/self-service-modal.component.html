@@ -1,5 +1,4 @@
-<ngx-smart-modal #selfServiceModal identifier="selfServiceModal" [dismissable]="false" customClass="large-modal"
-  (onClose)="onClose()">
+<ngx-smart-modal #selfServiceModal identifier="selfServiceModal" [dismissable]="false" customClass="large-modal" (onClose)="onClose()">
   <header class="modal-header">
     <h4 class="modal-title">Managed Network</h4>
   </header>
@@ -8,11 +7,15 @@
     <div [hidden]="submittedInitialForm && showSecondForm">
       <form [formGroup]="initialForm">
         <div class="form-row">
-
           <div class="form-group col-md-2">
             <label for="deviceType">Device Type</label>
-            <select id="deviceType" formControlName="deviceType" class="form-control"
-              [class.is-invalid]="submittedInitialForm && f.deviceType.errors" aria-label="Device Type">
+            <select
+              id="deviceType"
+              formControlName="deviceType"
+              class="form-control"
+              [class.is-invalid]="submittedInitialForm && f.deviceType.errors"
+              aria-label="Device Type"
+            >
               <option></option>
               <option value="ASA">ASA</option>
               <option value="PA">PA</option>
@@ -24,9 +27,14 @@
 
           <div class="form-group col-md-3">
             <label for="DCSTierSelect">Select a Tier</label>
-            <ng-select [class.is-invalid]="submittedInitialForm && f.DCSTierSelect.errors"
-              formControlName="DCSTierSelect" id="DCSTierSelect" [items]="tiers" bindLabel="name"
-              bindValue="name"></ng-select>
+            <ng-select
+              [class.is-invalid]="submittedInitialForm && f.DCSTierSelect.errors"
+              formControlName="DCSTierSelect"
+              id="DCSTierSelect"
+              [items]="tiers"
+              bindLabel="name"
+              bindValue="name"
+            ></ng-select>
             <div *ngIf="submittedInitialForm && f.DCSTierSelect.errors" class="invalid-feedback">
               <div *ngIf="f.DCSTierSelect.errors.required">Please select a tier</div>
             </div>
@@ -34,28 +42,44 @@
 
           <div *ngIf="f.deviceType.value" class="form-group col">
             <label for="deviceConfig">Device Config</label>
-            <input [class.is-invalid]="f.deviceConfig.errors" formControlName="deviceConfig" id="deviceConfig"
-              type="file" class="form-control-file" (change)="deviceConfigFileChange($event)">
+            <input
+              [class.is-invalid]="f.deviceConfig.errors"
+              formControlName="deviceConfig"
+              id="deviceConfig"
+              type="file"
+              class="form-control-file"
+              (change)="deviceConfigFileChange($event)"
+            />
             <div *ngIf="f.deviceConfig.errors" class="invalid-feedback">
-              <div *ngIf="f.deviceConfig.errors.incorrectFileType">Please upload a config file with the correct type for
-                the device chosen</div>
+              <div *ngIf="f.deviceConfig.errors.incorrectFileType">
+                Please upload a config file with the correct type for the device chosen
+              </div>
             </div>
           </div>
 
           <div *ngIf="f.deviceType.value === 'PA'" class="form-group col">
             <label for="intervrfSubnets">Intervrf Subnets</label>
-            <input [class.is-invalid]="submittedInitialForm && f.intervrfSubnets.errors" id="intervrfSubnets"
-              type="file" class="form-control-file" (change)="intervrfSubnetsFileChange($event)">
+            <input
+              [class.is-invalid]="submittedInitialForm && f.intervrfSubnets.errors"
+              id="intervrfSubnets"
+              type="file"
+              class="form-control-file"
+              (change)="intervrfSubnetsFileChange($event)"
+            />
             <div *ngIf="submittedInitialForm && f.intervrfSubnets.errors" class="invalid-feedback">
-              <div *ngIf="f.intervrfSubnets.errors.required">Please upload an intervrf subnets file for PA conversion
-              </div>
+              <div *ngIf="f.intervrfSubnets.errors.required">Please upload an intervrf subnets file for PA conversion</div>
             </div>
           </div>
 
           <div *ngIf="tiersFromConfig && tiersFromConfig.length > 0" class="form-group col">
             <label for="selectedTiersFromConfig">Select Tier(s) from the config</label>
-            <ng-select [class.is-invalid]="submittedInitialForm && f.selectedTiersFromConfig.errors" [multiple]="true"
-              formControlName="selectedTiersFromConfig" id="selectedTiersFromConfig" [items]="tiersFromConfig">
+            <ng-select
+              [class.is-invalid]="submittedInitialForm && f.selectedTiersFromConfig.errors"
+              [multiple]="true"
+              formControlName="selectedTiersFromConfig"
+              id="selectedTiersFromConfig"
+              [items]="tiersFromConfig"
+            >
             </ng-select>
             <div *ngIf="submittedInitialForm && f.selectedTiersFromConfig.errors" class="invalid-feedback">
               <div *ngIf="f.selectedTiersFromConfig.errors.required">Please select a tier</div>
@@ -63,14 +87,14 @@
           </div>
         </div>
 
-        <ul style="margin-left: 66%"
-          *ngIf="f.selectedTiersFromConfig && f.selectedTiersFromConfig.value && f.selectedTiersFromConfig.value.length > 0">
+        <ul
+          style="margin-left: 66%"
+          *ngIf="f.selectedTiersFromConfig && f.selectedTiersFromConfig.value && f.selectedTiersFromConfig.value.length > 0"
+        >
           <label><u>Selected Tiers</u></label>
-          <li *ngFor="let tier of f.selectedTiersFromConfig.value">{{tier}}
-          </li>
+          <li *ngFor="let tier of f.selectedTiersFromConfig.value">{{ tier }}</li>
         </ul>
       </form>
-
     </div>
 
     <div *ngIf="submittedInitialForm && showSecondForm && !receivedConfig && !showSpinner">
@@ -78,51 +102,61 @@
         <div class="form-group col">
           <ul>
             <li style="margin-bottom: inherit" *ngFor="let tier of selectedTiers">
-              <span>{{tier.hostname}} - Interfaces</span>
-              <div class="hostNeedsInsidePrefix" *ngIf="tier.tooManyInside">Only one interface may be inside for tier
-                "{{tier.hostname}}"</div>
+              <span>{{ tier.hostname }} - Interfaces</span>
+              <div class="hostNeedsInsidePrefix" *ngIf="tier.tooManyInside">
+                Only one interface may be inside for tier "{{ tier.hostname }}"
+              </div>
 
               <div>
                 <ul>
-                  <li *ngFor="let interface of tier.interfaces">{{interface.interface}} -
-                    <input (keyup.enter)="markInterfaceIntervrf(interface)"  [(ngModel)]="interface.intervrf" type="checkbox" (click)="markInterfaceIntervrf(interface)">
+                  <li *ngFor="let interface of tier.interfaces">
+                    {{ interface.interface }} -
+                    <input
+                      (keyup.enter)="markInterfaceIntervrf(interface)"
+                      [(ngModel)]="interface.intervrf"
+                      type="checkbox"
+                      (click)="markInterfaceIntervrf(interface)"
+                    />
                     Intervrf
-                    <input (keyup.enter)="markInterfaceExternal(interface)" [(ngModel)]="interface.external" type="checkbox" (click)="markInterfaceExternal(interface)">
+                    <input
+                      (keyup.enter)="markInterfaceExternal(interface)"
+                      [(ngModel)]="interface.external"
+                      type="checkbox"
+                      (click)="markInterfaceExternal(interface)"
+                    />
                     External
                     <div style="display: inline-block" *ngIf="interface.needsSelection">
                       <div class="interfaceNeedsSelection">Make a selection</div>
-
                     </div>
-
                   </li>
                 </ul>
                 <div>
-                  <div class="hostNeedsInsidePrefix" *ngIf="tier.needsInsidePrefix">Please provide an inside prefix for
-                    "{{tier.hostname}}"</div>
-                  <div class="hostNeedsInsidePrefix" *ngIf="tier.insidePrefixTooLong">Inside Prefix cannot be longer
-                    than 50 characters</div>
-                    <div class="hostNeedsInsidePrefix" *ngIf="tier.insidePrefixAlphanumericalFail">Inside Prefix must be alphanumeric</div>
+                  <div class="hostNeedsInsidePrefix" *ngIf="tier.needsInsidePrefix">
+                    Please provide an inside prefix for "{{ tier.hostname }}"
+                  </div>
+                  <div class="hostNeedsInsidePrefix" *ngIf="tier.insidePrefixTooLong">
+                    Inside Prefix cannot be longer than 50 characters
+                  </div>
+                  <div class="hostNeedsInsidePrefix" *ngIf="tier.insidePrefixAlphanumericalFail">Inside Prefix must be alphanumeric</div>
                   <textarea placeholder="Inside Prefix" [(ngModel)]="tier.insidePrefix"></textarea>
-
                 </div>
 
                 <div>
                   <textarea placeholder="Namespace" [(ngModel)]="tier.namespace"></textarea>
                 </div>
                 <div class="hostNeedsInsidePrefix" *ngIf="tier.namespaceAlphanumericalFail">Namespace must be alphanumeric</div>
-                <div class="hostNeedsNamespace" *ngIf="tier.needsNamespace">Please add a namespace to append to all
-                  objects coming into DCS from this host</div>
-                <div class="hostNeedsNamespace" *ngIf="tier.sameNamespace">Namespaces cannot be the same for different
-                  hosts</div>
-                <div class="namespaceTooLong" *ngIf="tier.namespaceTooLong">Namespaces cannot be longer than 11
-                  characters</div>
+                <div class="hostNeedsNamespace" *ngIf="tier.needsNamespace">
+                  Please add a namespace to append to all objects coming into DCS from this host
+                </div>
+                <div class="hostNeedsNamespace" *ngIf="tier.sameNamespace">Namespaces cannot be the same for different hosts</div>
+                <div class="namespaceTooLong" *ngIf="tier.namespaceTooLong">Namespaces cannot be longer than 11 characters</div>
               </div>
             </li>
           </ul>
         </div>
 
         <div class="form-group col">
-          <h3> Interface Matrix Information</h3>
+          <h3>Interface Matrix Information</h3>
           <textarea rows="12" cols="50" readonly>
             
             The interface matrix is used to translate tenant network configurations into the DRaaS environment. This is done by identifying detected interfaces in the provided configuration and allowing them to be designated as Intervrf or External. This is necessary since it gives our conversion process a map of the interface/zone names from the source environment and allows it to translate it to the DRaaS environment based on the to/from interfaces/zones of each NAT/FW rule in the configuration. In the case of PANOS conversions, a list of subnets must be provided that would classify a rule as Intervrf IF that rules source/destination ip address or object fall within one of those subnets.
@@ -133,15 +167,11 @@
           </textarea>
         </div>
       </div>
-
-
     </div>
-
 
     <div *ngIf="showSpinner">
       <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
     </div>
-
   </main>
 
   <footer *ngIf="showFooter" class="modal-footer">
@@ -150,19 +180,20 @@
       <span>Reset</span>
     </button>
 
-    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="onClose()">
-      Cancel
-    </button>
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="onClose()">Cancel</button>
 
-    <button [hidden]="submittedInitialForm && showSecondForm"
+    <button
+      [hidden]="submittedInitialForm && showSecondForm"
       *ngIf="f.selectedTiersFromConfig && f.selectedTiersFromConfig.value && f.selectedTiersFromConfig.value.length > 0"
-      type="button" class="btn btn-primary" (click)="saveTiers()">
+      type="button"
+      class="btn btn-primary"
+      (click)="saveTiers()"
+    >
       <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
       <span>Next</span>
     </button>
 
-    <button *ngIf="showSecondForm" type="submit" class="btn btn-primary" data-dismiss="modal"
-      (click)="saveNameSpaces()">
+    <button *ngIf="showSecondForm" type="submit" class="btn btn-primary" data-dismiss="modal" (click)="saveNameSpaces()">
       <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
       <span>Submit</span>
     </button>

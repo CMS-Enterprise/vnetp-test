@@ -1,26 +1,26 @@
 @import '../../../assets/styles/variables';
 a {
-    cursor: pointer;
+  cursor: pointer;
 }
 .icon {
-    display: flex;
-    padding-top: 7px;
+  display: flex;
+  padding-top: 7px;
 }
 
 #main {
-    display: flex;
-    column-gap: 5px;
+  display: flex;
+  column-gap: 5px;
 }
 
 #clear {
-    color: rgb(0, 38, 255);
-    text-decoration: underline;
-    display: inline-flex;
-    font-weight: 100;
-    
-    &:hover {
-        cursor: pointer
-    }
+  color: rgb(0, 38, 255);
+  text-decoration: underline;
+  display: inline-flex;
+  font-weight: 100;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 select {
@@ -28,10 +28,10 @@ select {
 }
 
 span {
-    display: block;
-    color: red;
+  display: block;
+  color: red;
 }
 
 #error {
-    display: inline-flex;
+  display: inline-flex;
 }

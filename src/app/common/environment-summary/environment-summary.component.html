@@ -15,7 +15,9 @@
 
 <ng-template #nameNavigateTemplate let-environmentSummary="datum">
   <section *ngIf="environmentSummary.type === 'Appcentric'">
-    <a routerLink="/appcentric/tenant-select/edit/{{ environmentSummary.id }}/home" queryParamsHandling="merge">{{ environmentSummary.name }}</a>
+    <a routerLink="/appcentric/tenant-select/edit/{{ environmentSummary.id }}/home" queryParamsHandling="merge">{{
+      environmentSummary.name
+    }}</a>
   </section>
   <section *ngIf="environmentSummary.type === 'Netcentric'">
     <a (click)="switchDatacenter(environmentSummary.id)" class="clickable-link">{{ environmentSummary.name }}</a>
