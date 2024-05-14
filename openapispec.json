@@ -20463,8 +20463,6 @@
           "protocol": {
             "type": "string",
             "enum": [
-              "IP",
-              "ICMP",
               "TCP",
               "UDP"
             ]
