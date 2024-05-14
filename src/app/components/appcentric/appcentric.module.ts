@@ -10,6 +10,7 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { AppcentricDashboardComponent } from './appcentric-dashboard/appcentric-dashboard.component';
 import { TenantSelectModule } from './tenant-select/tenant-select.module';
 import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module';
+import { TypeDeleteModalModule } from 'src/app/common/type-delete-modal/type-delete-modal.module';
 import { AuditLogModule } from '../../common/audit-log/audit-log.module';
 
 const routes: Routes = [
@@ -55,6 +56,7 @@ const routes: Routes = [
     NgxSmartModalModule,
     TenantSelectModule,
     BreadcrumbsModule,
+    TypeDeleteModalModule,
     AuditLogModule,
   ],
 })
