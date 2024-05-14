@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { IncidentService } from 'src/app/services/incident.service';
@@ -15,7 +15,7 @@ export class ChangeRequestModalComponent implements OnInit {
   public form: UntypedFormGroup;
   // public changeRequest;
   private changeRequestSubscription: Subscription;
-  submitted;
+  submitted: boolean;
 
   constructor(private formBuilder: UntypedFormBuilder, private incidentService: IncidentService, private ngx: NgxSmartModalService) {}
   ngOnInit(): void {

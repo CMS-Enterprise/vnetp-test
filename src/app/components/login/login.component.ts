@@ -6,7 +6,6 @@ import { ToastrService } from 'ngx-toastr';
 import { UserPass } from 'client/model/userPass';
 import { TenantName } from '../../models/other/tenant-name';
 import { environment } from 'src/environments/environment';
-import { IncidentService } from 'src/app/services/incident.service';
 
 @Component({
   selector: 'app-login',

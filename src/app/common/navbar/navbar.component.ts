@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, OnChanges, DoCheck } from '@angular/core';
+import { Component, OnInit, OnDestroy, DoCheck } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -6,7 +6,6 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Datacenter, Tier, UserDto } from '../../../../client';
 import { environment } from 'src/environments/environment';
 import { IncidentService } from 'src/app/services/incident.service';
-import { UndeployedChangesService } from '../../services/undeployed-changes.service';
 import { DatacenterContextService } from '../../services/datacenter-context.service';
 import { TierContextService } from '../../services/tier-context.service';
 import { Router } from '@angular/router';
