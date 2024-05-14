@@ -58,7 +58,6 @@
               <option value="TCP">TCP</option>
               <option value="UDP">UDP</option>
             </optgroup>
-            
           </select>
           <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
             <div *ngIf="f.type.errors.required">Type is required</div>
@@ -127,9 +126,7 @@
     </div>
 
     <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
-        Cancel
-      </button>
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">Cancel</button>
 
       <button class="btn btn-success" data-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>

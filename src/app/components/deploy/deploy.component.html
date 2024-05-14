@@ -26,7 +26,7 @@
         {{ tier?.item?.name }}
       </td>
       <td>
-        {{ tier?.item?.provisionedAt}}
+        {{ tier?.item?.provisionedAt }}
       </td>
       <td>
         {{ tier?.item?.tierClass }}
@@ -35,14 +35,19 @@
         {{ tier?.item?.tierType }}
       </td>
       <td>
-        {{ tier?.item?.tierGroupId | resolve: getTierGroupName }}
+        {{ tier?.item?.tierGroupId | resolve : getTierGroupName }}
       </td>
       <td>
         {{ tier?.item?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}
       </td>
       <td>
-        <app-icon-button *ngIf="checkUndeployedChanges(tier?.item)" icon="asterisk" label="Undeployed Changes"
-        [type]="'info'" (handleClick)=getChangeReport(tier.item)></app-icon-button>
+        <app-icon-button
+          *ngIf="checkUndeployedChanges(tier?.item)"
+          icon="asterisk"
+          label="Undeployed Changes"
+          [type]="'info'"
+          (handleClick)="getChangeReport(tier.item)"
+        ></app-icon-button>
       </td>
     </tr>
     <tr *ngIf="!tiers?.length" class="text-center">
@@ -52,9 +57,7 @@
 </table>
 
 <section class="btn-toolbar" role="toolbar">
-  <button (keyup.enter)="deployTiers" class="btn btn-danger" (click)="deployTiers()">
-    Deploy Selected Tiers
-  </button>
+  <button (keyup.enter)="(deployTiers)" class="btn btn-danger" (click)="deployTiers()">Deploy Selected Tiers</button>
 </section>
 
 <app-yes-no-modal></app-yes-no-modal>
@@ -66,46 +69,46 @@
 
   <div class="modal-body">
     <p class="mb-3">The following objects have changes:</p>
-    
+
     <ng-container *ngFor="let group of reportGroups">
       <ng-container *ngIf="group.data.length > 0">
-        <div class="scrollable-table-container" style="overflow-y: auto; max-height: 200px; margin-bottom: 20px;">
-          <span>{{ group.name }} <span class="badge bg-secondary">{{ group.data.length }}</span></span>
+        <div class="scrollable-table-container" style="overflow-y: auto; max-height: 200px; margin-bottom: 20px">
+          <span
+            >{{ group.name }} <span class="badge bg-secondary">{{ group.data.length }}</span></span
+          >
 
-        <table class="table table-sm table-striped table-bordered">
-          <caption>
-            <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-            <span>{{ group?.name }}</span>
-          </caption>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Last Updated At</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let obj of group.data">
-              <td>{{ obj.name }}</td>
-              <td>{{ obj.updatedAt }}</td>
-              <td>
-                <span *ngIf="obj.provisionedVersion === null">Not Provisioned</span>
-                <span *ngIf="obj.provisionedVersion !== null">Updated</span>
-              </td>
-              <td>
-                <button class="btn btn-link p-0" (click)="getObjectAuditLogEvents(obj, group.type)">Show Diff</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+          <table class="table table-sm table-striped table-bordered">
+            <caption>
+              <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+              <span>{{ group?.name }}</span>
+            </caption>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Last Updated At</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let obj of group.data">
+                <td>{{ obj.name }}</td>
+                <td>{{ obj.updatedAt }}</td>
+                <td>
+                  <span *ngIf="obj.provisionedVersion === null">Not Provisioned</span>
+                  <span *ngIf="obj.provisionedVersion !== null">Updated</span>
+                </td>
+                <td>
+                  <button class="btn btn-link p-0" (click)="getObjectAuditLogEvents(obj, group.type)">Show Diff</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </ng-container>
     </ng-container>
   </div>
 </ngx-smart-modal>
-
-
 
 <ngx-smart-modal #changeReportDetailModal identifier="changeReportDetailModal" [dismissable]="true" customClass="large-modal">
   <header class="modal-header">
@@ -113,7 +116,7 @@
   </header>
 
   <div class="modal-body">
-    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+    <div class="table-responsive" style="max-height: 400px; overflow-y: auto">
       <table class="table table-sm table-striped table-bordered">
         <caption>
           <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
@@ -129,14 +132,12 @@
         </thead>
         <tbody>
           <ng-container *ngFor="let entry of report; let i = index">
-            <tr (click)="toggleExpand(i)" style="cursor: pointer;">
+            <tr (click)="toggleExpand(i)" style="cursor: pointer">
               <td>{{ entry.name }}</td>
               <td>{{ entry.timestamp }}</td>
               <td>{{ entry.actionType }}</td>
               <td>
-                <button class="btn btn-link p-0" (click)="$event.stopPropagation(); toggleExpand(i)">
-                  View Details
-                </button>
+                <button class="btn btn-link p-0" (click)="$event.stopPropagation(); toggleExpand(i)">View Details</button>
               </td>
             </tr>
             <tr *ngIf="expandedRows.includes(i)">

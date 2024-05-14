@@ -17,7 +17,15 @@
     </section>
 
     <ng-container *ngIf="!isLoadingSubnets; else loading">
-      <app-table [config]="subnetConfig" [data]="subnets" (clearResults)="getSubnets($event)" (searchParams)="getSubnets($event)" [searchColumns]="subnetSearchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onSubnetTableEvent($event)"></app-table>
+      <app-table
+        [config]="subnetConfig"
+        [data]="subnets"
+        (clearResults)="getSubnets($event)"
+        (searchParams)="getSubnets($event)"
+        [searchColumns]="subnetSearchColumns"
+        [(itemsPerPage)]="perPage"
+        (tableEvent)="onSubnetTableEvent($event)"
+      ></app-table>
       <section class="btn-toolbar" role="toolbar">
         <app-import-export
           [exportObject]="subnets"
@@ -50,27 +58,27 @@
         ></app-icon-button>
 
         <app-icon-button
-        *ngIf="!subnet?.deletedAt"
-        icon="edit"
-        label="Edit Subnet"
-        (handleClick)="openSubnetModal(ModalMode.Edit, subnet)"
-      ></app-icon-button>
-    
-      <app-icon-button
-        *ngIf="subnet?.deletedAt"
-        icon="undo"
-        label="Restore Subnet"
-        type="success"
-        (handleClick)="restoreSubnet(subnet)"
-      ></app-icon-button>
-    
-      <app-icon-button
-        icon="delete"
-        id="softDeleteSubnet"
-        label="Soft-Delete/Delete Subnet"
-        [type]="subnet?.deletedAt ? 'danger' : 'default'"
-        (handleClick)="deleteSubnet(subnet)"
-      ></app-icon-button>
+          *ngIf="!subnet?.deletedAt"
+          icon="edit"
+          label="Edit Subnet"
+          (handleClick)="openSubnetModal(ModalMode.Edit, subnet)"
+        ></app-icon-button>
+
+        <app-icon-button
+          *ngIf="subnet?.deletedAt"
+          icon="undo"
+          label="Restore Subnet"
+          type="success"
+          (handleClick)="restoreSubnet(subnet)"
+        ></app-icon-button>
+
+        <app-icon-button
+          icon="delete"
+          id="softDeleteSubnet"
+          label="Soft-Delete/Delete Subnet"
+          [type]="subnet?.deletedAt ? 'danger' : 'default'"
+          (handleClick)="deleteSubnet(subnet)"
+        ></app-icon-button>
       </section>
     </ng-template>
   </div>
@@ -85,7 +93,15 @@
     </section>
 
     <ng-container *ngIf="!isLoadingVlans; else loading">
-      <app-table [config]="vlanConfig" [data]="vlans" (clearResults)="getVlans(false,$event)" (searchParams)="getVlans(false,$event)" [(itemsPerPage)]="perPage" [searchColumns]="vlanSearchColumns" (tableEvent)="onVlanTableEvent($event)"></app-table>
+      <app-table
+        [config]="vlanConfig"
+        [data]="vlans"
+        (clearResults)="getVlans(false, $event)"
+        (searchParams)="getVlans(false, $event)"
+        [(itemsPerPage)]="perPage"
+        [searchColumns]="vlanSearchColumns"
+        (tableEvent)="onVlanTableEvent($event)"
+      ></app-table>
       <section class="btn-toolbar" role="toolbar">
         <app-import-export
           [exportObject]="vlans"
@@ -104,34 +120,29 @@
 
     <ng-template #actionsTemplate let-vlan="datum">
       <section class="table__actions">
+        <app-icon-button *ngIf="checkUndeployedChanges(vlan)" icon="asterisk" label="Undeployed Changes" [type]="'info'"></app-icon-button>
+
         <app-icon-button
-          *ngIf="checkUndeployedChanges(vlan)"
-          icon="asterisk"
-          label="Undeployed Changes"
-          [type]="'info'"
+          *ngIf="!vlan?.deletedAt"
+          icon="edit"
+          label="Edit Vlan"
+          (handleClick)="openVlanModal(ModalMode.Edit, vlan)"
         ></app-icon-button>
 
         <app-icon-button
-        *ngIf="!vlan?.deletedAt"
-        icon="edit"
-        label="Edit Vlan"
-        (handleClick)="openVlanModal(ModalMode.Edit, vlan)"
-      ></app-icon-button>
-    
-      <app-icon-button
-        *ngIf="vlan?.deletedAt"
-        icon="undo"
-        label="Restore Vlan"
-        type="success"
-        (handleClick)="restoreVlan(vlan)"
-      ></app-icon-button>
-    
-      <app-icon-button
-        icon="delete"
-        label="Soft-Delete/Delete Vlan"
-        [type]="vlan?.deletedAt ? 'danger' : 'default'"
-        (handleClick)="deleteVlan(vlan)"
-      ></app-icon-button>
+          *ngIf="vlan?.deletedAt"
+          icon="undo"
+          label="Restore Vlan"
+          type="success"
+          (handleClick)="restoreVlan(vlan)"
+        ></app-icon-button>
+
+        <app-icon-button
+          icon="delete"
+          label="Soft-Delete/Delete Vlan"
+          [type]="vlan?.deletedAt ? 'danger' : 'default'"
+          (handleClick)="deleteVlan(vlan)"
+        ></app-icon-button>
       </section>
     </ng-template>
   </div>

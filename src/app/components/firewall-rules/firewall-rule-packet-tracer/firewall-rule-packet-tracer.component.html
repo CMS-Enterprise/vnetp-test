@@ -110,11 +110,15 @@
       <hr />
 
       <div class="form-row">
-
         <div class="form-group col-md-2">
           <label for="ruleName">Action</label>
-          <select id="action" formControlName="action" class="form-control"
-            [class.is-invalid]="submitted && f.action.errors" aria-label="Action">
+          <select
+            id="action"
+            formControlName="action"
+            class="form-control"
+            [class.is-invalid]="submitted && f.action.errors"
+            aria-label="Action"
+          >
             <option></option>
             <option value="Deny">Deny</option>
             <option value="Permit">Permit</option>

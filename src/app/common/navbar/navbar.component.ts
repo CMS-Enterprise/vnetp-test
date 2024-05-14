@@ -25,11 +25,8 @@ export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
   private currentTenantSubscription: Subscription;
   private currentDatacenterSubscription: Subscription;
   private currentTierSubscription: Subscription;
-  private undeployedChangesSubscription: Subscription;
-  private undeployedChangesObjectSubscription: Subscription;
   public currentDatacenter: Datacenter;
   public currentTier: Tier;
-  public undeployedChanges: boolean;
   public undeployedChangeObjects: any;
   public environment = environment;
   public dcsVersion: string = this.environment?.dynamic?.dcsVersion;
@@ -44,7 +41,6 @@ export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
     private auth: AuthService,
     private datacenterContextService: DatacenterContextService,
     private tierContextService: TierContextService,
-    private undeployedChangesService: UndeployedChangesService,
     private incidentService: IncidentService,
     private router: Router,
   ) {}
@@ -56,10 +52,6 @@ export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
   public logout(): void {
     this.ngx.close('logoutModal');
     this.auth.logout();
-  }
-
-  public openUndeployedChangesModal(): void {
-    this.ngx.getModal('undeployedChangesModal').open();
   }
 
   ngOnInit(): void {
@@ -104,14 +96,6 @@ export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
         });
       }
     });
-
-    this.undeployedChangesSubscription = this.undeployedChangesService.undeployedChanges.subscribe(undeployedChanges => {
-      this.undeployedChanges = undeployedChanges;
-    });
-
-    this.undeployedChangesObjectSubscription = this.undeployedChangesService.undeployedChangeObjects.subscribe(undeployedChangeObjects => {
-      this.undeployedChangeObjects = undeployedChangeObjects;
-    });
   }
 
   ngOnDestroy(): void {
@@ -122,8 +106,6 @@ export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
       this.changeRequestModalSubscription,
       this.currentDatacenterSubscription,
       this.currentTierSubscription,
-      this.undeployedChangesSubscription,
-      this.undeployedChangesObjectSubscription,
     ]);
   }
 

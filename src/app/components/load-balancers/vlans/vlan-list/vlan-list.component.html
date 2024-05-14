@@ -6,7 +6,15 @@
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
-  <app-table [config]="config" [data]="vlans" (clearResults)="loadVlans($event)" (searchParams)="loadVlans($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+  <app-table
+    [config]="config"
+    [data]="vlans"
+    (clearResults)="loadVlans($event)"
+    (searchParams)="loadVlans($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
   <section class="btn-toolbar" role="toolbar">
     <app-import-export
       [exportObject]="vlans"
@@ -18,12 +26,7 @@
 
 <ng-template #actionsTemplate let-vlan="datum">
   <section class="table__actions">
-    <app-icon-button
-    *ngIf="checkUndeployedChanges(vlan)"
-          icon="asterisk"
-          [label]="'Undeployed Changes'"
-          [type]="'info'"
-  ></app-icon-button>
+    <app-icon-button *ngIf="checkUndeployedChanges(vlan)" icon="asterisk" [label]="'Undeployed Changes'" [type]="'info'"></app-icon-button>
 
     <app-icon-button
       *ngIf="vlan?.deletedAt"

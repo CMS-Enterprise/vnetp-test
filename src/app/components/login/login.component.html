@@ -3,7 +3,6 @@
     <img src="/assets/img/logo-alt.png" class="logo" alt="CMS DRaaS Logo" />
 
     <form name="loginForm" (ngSubmit)="form.form.valid && login()" #form="ngForm" novalidate>
-
       <div class="form-group">
         <label for="location">Location</label>
         <select
@@ -67,9 +66,7 @@
         />
 
         <div class="form-group col-md-3">
-          <button id="getAccountsButton" *ngIf="!showTenantButton" class="btn btn-primary btn-lg" type="submit">
-            Get Accounts
-          </button>
+          <button id="getAccountsButton" *ngIf="!showTenantButton" class="btn btn-primary btn-lg" type="submit">Get Accounts</button>
         </div>
 
         <div *ngIf="form.submitted && password.invalid" class="invalid-feedback">
@@ -129,9 +126,7 @@
         </select>
       </div>
 
-      <button *ngIf="showTenantButton" class="btn btn-primary btn-lg" type="submit">
-        Select Account
-      </button>
+      <button *ngIf="showTenantButton" class="btn btn-primary btn-lg" type="submit">Select Account</button>
     </form>
   </div>
 </div>

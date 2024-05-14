@@ -33,7 +33,8 @@
       <tr
         *ngFor="
           let datum of data?.data
-            | paginate: { itemsPerPage: data?.total / data?.pageCount, currentPage: data?.page, id: uniqueTableId, totalItems: data?.total }
+            | paginate
+              : { itemsPerPage: data?.total / data?.pageCount, currentPage: data?.page, id: uniqueTableId, totalItems: data?.total }
         "
         [ngStyle]="config.rowStyle ? config.rowStyle(datum) : null"
       >
@@ -56,7 +57,7 @@
         <span
           *ngIf="show"
           class="badge badge-pill badge-secondary ml-2 py-1 px-2 align-middle"
-          style="font-size: 0.8em; vertical-align: middle;"
+          style="font-size: 0.8em; vertical-align: middle"
           >{{ hasSearchResults ? 'Matched Entries' : 'Current Entries' }}: {{ data?.total }}</span
         >
       </td>
