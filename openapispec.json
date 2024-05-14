@@ -13541,6 +13541,31 @@
         ]
       }
     },
+    "/v2/app-centric/tenants/{id}/cascade": {
+      "delete": {
+        "operationId": "cascadeDeleteTenantTenant",
+        "summary": "",
+        "description": "Cascade Delete Tenant",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
+      }
+    },
     "/v2/app-centric/tenants": {
       "post": {
         "operationId": "createOneTenant",

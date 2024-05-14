@@ -27,7 +27,7 @@
           {{ getTierName(natRuleGroup.tierId) }}
         </td>
         <td>
-          <a routerLink="/netcentric/nat-rules/edit/{{ natRuleGroup.id }}" queryParamsHandling="merge"
+          <a id="ruleGroupLink" routerLink="/netcentric/nat-rules/edit/{{ natRuleGroup.id }}" queryParamsHandling="merge"
             >{{ natRuleGroup.name | slice : 0 : 20 }}{{ natRuleGroup.name.length > 20 ? '...' : '' }}</a
           >
         </td>

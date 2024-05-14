@@ -28,6 +28,7 @@ describe('TenantSelectComponent', () => {
         MockIconButtonComponent,
         MockImportExportComponent,
         MockYesNoModalComponent,
+        MockComponent({ selector: 'app-type-delete-modal', inputs: ['objectToDelete', 'objectType'] }),
       ],
       imports: [RouterModule, RouterTestingModule],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricTenantsService)],
