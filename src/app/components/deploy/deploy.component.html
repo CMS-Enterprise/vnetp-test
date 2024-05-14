@@ -20,7 +20,7 @@
   <tbody>
     <tr *ngFor="let tier of tiers">
       <td>
-        <input (keyup.enter)="tier.isSelected = !tier.isSelected" type="checkbox" [(ngModel)]="tier.isSelected" />
+        <input aria-label="tierSelected" (keyup.enter)="tier.isSelected = !tier.isSelected" type="checkbox" [(ngModel)]="tier.isSelected" />
       </td>
       <td>
         {{ tier?.item?.name }}
