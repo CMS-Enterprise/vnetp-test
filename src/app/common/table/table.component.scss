@@ -10,12 +10,16 @@ td {
 }
 
 tr.expandableRow:hover {
-    background-color: #e8f4ff; /* or any subtle shade */
+    background-color: #e8f4ff;
     cursor: pointer;
 }
 
 tr.expandableRow {
     transition: background-color 0.3s ease;
+
+    &.expanded {
+        background-color: #e8f4ff;
+    }
 }
 
 tr.expandableContent {
