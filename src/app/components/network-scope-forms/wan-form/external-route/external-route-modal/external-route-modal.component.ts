@@ -1,18 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { ExternalRouteModalDto } from 'src/app/models/network-scope-forms/external-route-modal.dto';
-import { ModalMode } from 'src/app/models/other/modal-mode';
-import {
-  IpAddressCidrValidator,
-  IpAddressHostNetworkCidrValidator,
-  validateWanFormExternalRouteIp,
-} from 'src/app/validators/network-form-validators';
-import { ExternalRoute } from '../../../../../../../client/model/externalRoute';
+import { Subscription } from 'rxjs';
 // eslint-disable-next-line max-len
 import { V1NetworkScopeFormsWanFormExternalRouteService } from '../../../../../../../client/api/v1NetworkScopeFormsWanFormExternalRoute.service';
+import { ExternalRoute } from '../../../../../../../client/model/externalRoute';
+import { ExternalRouteModalDto } from '../../../../../models/network-scope-forms/external-route-modal.dto';
+import { ModalMode } from '../../../../../models/other/modal-mode';
 import { DatacenterContextService } from '../../../../../services/datacenter-context.service';
-import { Subscription } from 'rxjs';
+import {
+  IpAddressCidrValidator,
+  validateWanFormExternalRouteIp,
+  IpAddressHostNetworkCidrValidator,
+} from '../../../../../validators/network-form-validators';
 
 @Component({
   selector: 'app-external-route-modal',
@@ -119,6 +119,7 @@ export class ExternalRouteModalComponent implements OnInit, OnDestroy {
         this.closeModal();
       });
     } else {
+      delete externalRoute.wanFormId;
       this.externalRouteService
         .updateOneExternalRoute({
           id: this.externalRouteId,

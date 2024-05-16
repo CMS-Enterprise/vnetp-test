@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { WanForm } from './wanForm';
 
 
 export interface SubnetImport { 
@@ -26,6 +27,7 @@ export interface SubnetImport {
     sharedBetweenVrfs?: boolean;
     vlanId: string;
     tierId: string;
+    wanForms?: Array<WanForm>;
     tierName: string;
 }
 

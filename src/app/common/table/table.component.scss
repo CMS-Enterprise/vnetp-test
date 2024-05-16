@@ -1,7 +1,31 @@
+
+ 
+
 // tooltip {
 //     margin-left: 237px;
 // }
 
 td {
     overflow-wrap: anywhere;
+}
+
+tr.expandableRow:hover {
+    background-color: #e8f4ff; /* or any subtle shade */
+    cursor: pointer;
+}
+
+tr.expandableRow {
+    transition: background-color 0.3s ease;
+}
+
+tr.expandableContent {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+}
+
+tr.expanded {
+    opacity: 1;
+    background-color: white;
 }

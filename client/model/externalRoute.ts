@@ -17,6 +17,9 @@ export interface ExternalRoute {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
+    readonly deletedAt?: string;
+    readonly provisionedAt?: string;
+    readonly provisionedVersion?: number;
     description?: string;
     externalRouteIp: string;
     vrf: ExternalRouteVrfEnum;

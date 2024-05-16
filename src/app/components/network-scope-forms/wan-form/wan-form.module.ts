@@ -13,17 +13,23 @@ import { TableModule } from 'src/app/common/table/table.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { WanFormModalComponent } from './wan-form-modal/wan-form-modal.component';
-import { ExternalRouteModalComponent } from './wan-form-modal/external-route-modal/external-route-modal.component';
 import { YesNoModalModule } from '../../../common/yes-no-modal/yes-no-modal.module';
+import { WanFormDetailComponent } from './wan-form-detail/wan-form-detail.component';
+import { ExternalRouteComponent } from './external-route/external-route.component';
+import { ExternalRouteModalComponent } from './external-route/external-route-modal/external-route-modal.component';
 
 const routes: Routes = [
   {
     path: '',
     component: WanFormComponent,
   },
+  {
+    path: ':id/external-routes',
+    component: ExternalRouteComponent,
+  },
 ];
 @NgModule({
-  declarations: [WanFormComponent, WanFormModalComponent, ExternalRouteModalComponent],
+  declarations: [WanFormComponent, WanFormModalComponent, ExternalRouteModalComponent, WanFormDetailComponent, ExternalRouteComponent],
   imports: [
     CommonModule,
     CommonModule,

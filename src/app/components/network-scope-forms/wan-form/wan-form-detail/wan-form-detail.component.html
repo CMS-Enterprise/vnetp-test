@@ -1,0 +1,23 @@
+<h3>External Routes</h3>
+<div class="table-container mb-4">
+  <table>
+    <thead>
+      <tr>
+        <th>IP</th>
+        <th>Description</th>
+        <th>VRF</th>
+        <th>Environment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let externalRoute of wanForm?.externalRoutes">
+        <td>{{ externalRoute.externalRouteIp }}</td>
+        <td>{{ externalRoute.description || '-' }}</td>
+        <td>{{ externalRoute.vrf }}</td>
+        <td>{{ externalRoute.environment }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Subnets</h3>

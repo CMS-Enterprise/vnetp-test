@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { ExternalRoute } from './externalRoute';
+import { Subnet } from './subnet';
 
 
 export interface WanForm { 
@@ -17,10 +18,14 @@ export interface WanForm {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
+    readonly deletedAt?: string;
+    readonly provisionedAt?: string;
+    readonly provisionedVersion?: number;
     name: string;
     description?: string;
     datacenterId: string;
-    active?: string;
+    active?: boolean;
     readonly externalRoutes?: Array<ExternalRoute>;
+    subnets?: Array<Subnet>;
 }
 

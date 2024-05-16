@@ -32,6 +32,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('activeTemplate') activeTemplate: TemplateRef<any>;
+  @ViewChild('expandedRows') expandedRows: TemplateRef<any>;
 
   public config: TableConfig<any> = {
     description: 'Wan Forms',
@@ -42,6 +43,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
       { name: 'Active', template: () => this.activeTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
+    expandableRows: () => this.expandedRows,
   };
 
   constructor(
@@ -113,6 +115,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
     this.wanFormService
       .getManyWanForm({
         filter: [`datacenterId||eq||${this.datacenterId}`, eventParams],
+        join: ['externalRoutes'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })
@@ -137,5 +140,53 @@ export class WanFormComponent implements OnInit, OnDestroy {
       });
     };
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  }
+
+  public deleteWanForm(wanForm: WanForm): void {
+    this.isLoading = true;
+    if (wanForm.deletedAt) {
+      this.wanFormService
+        .deleteOneWanForm({
+          id: wanForm.id,
+        })
+        .subscribe(
+          () => {
+            this.getWanForms();
+          },
+          () => {
+            this.isLoading = false;
+          },
+          () => {
+            this.isLoading = false;
+          },
+        );
+    } else {
+      this.wanFormService.softDeleteOneWanForm({ id: wanForm.id }).subscribe(
+        () => {
+          this.getWanForms();
+        },
+        () => {
+          this.isLoading = false;
+        },
+        () => {
+          this.isLoading = false;
+        },
+      );
+    }
+  }
+
+  public restoreWanForm(wanForm: WanForm): void {
+    this.isLoading = true;
+    this.wanFormService.restoreOneWanForm({ id: wanForm.id }).subscribe(
+      () => {
+        this.getWanForms();
+      },
+      () => {
+        this.isLoading = false;
+      },
+      () => {
+        this.isLoading = false;
+      },
+    );
   }
 }

@@ -19886,6 +19886,106 @@
         ]
       }
     },
+    "/v1/network-scope-forms/wan-form/external-route/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneExternalRoute",
+        "summary": "Soft delete one ExternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form/external-route"
+        ]
+      }
+    },
+    "/v1/network-scope-forms/wan-form/external-route/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneExternalRoute",
+        "summary": "Restore one ExternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form/external-route"
+        ]
+      }
+    },
+    "/v1/network-scope-forms/wan-form/external-route/{id}/provision": {
+      "put": {
+        "operationId": "provisionOneExternalRoute",
+        "summary": "Provision one ExternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form/external-route"
+        ]
+      }
+    },
+    "/v1/network-scope-forms/wan-form/external-route/{id}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionOneExternalRoute",
+        "summary": "Deprovision one ExternalRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form/external-route"
+        ]
+      }
+    },
     "/v1/network-scope-forms/wan-form/{id}/activate": {
       "put": {
         "operationId": "activateWanFormWanForm",
@@ -19915,6 +20015,58 @@
         "responses": {
           "200": {
             "description": "Successfully activated the WAN form",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WanForm"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form"
+        ]
+      }
+    },
+    "/v1/network-scope-forms/wan-form/{id}/add-subnet/{subnetId}": {
+      "put": {
+        "operationId": "addSubnetToWanFormWanForm",
+        "summary": "Add a subnet to an existing WAN form",
+        "security": [
+          {
+            "bearerAuth": [],
+            "roles": [
+              "admin",
+              "network_admin",
+              "ro",
+              "network_ro"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the WAN form to add a subnet to",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subnetId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the subnet to add to the WAN form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully added subnet to the WAN form",
             "content": {
               "application/json": {
                 "schema": {
@@ -20294,6 +20446,106 @@
           "v1/network-scope-forms/wan-form"
         ]
       }
+    },
+    "/v1/network-scope-forms/wan-form/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneWanForm",
+        "summary": "Soft delete one WanForm",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form"
+        ]
+      }
+    },
+    "/v1/network-scope-forms/wan-form/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneWanForm",
+        "summary": "Restore one WanForm",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form"
+        ]
+      }
+    },
+    "/v1/network-scope-forms/wan-form/{id}/provision": {
+      "put": {
+        "operationId": "provisionOneWanForm",
+        "summary": "Provision one WanForm",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form"
+        ]
+      }
+    },
+    "/v1/network-scope-forms/wan-form/{id}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionOneWanForm",
+        "summary": "Deprovision one WanForm",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form"
+        ]
+      }
     }
   },
   "info": {
@@ -20517,6 +20769,160 @@
           "tierId"
         ]
       },
+      "ExternalRoute": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "externalRouteIp": {
+            "type": "string"
+          },
+          "vrf": {
+            "type": "string",
+            "enum": [
+              "appprod",
+              "appdev",
+              "dataprod",
+              "datadev",
+              "edcmgmt",
+              "transport"
+            ]
+          },
+          "environment": {
+            "type": "string",
+            "enum": [
+              "prod",
+              "dev",
+              "val",
+              "imp"
+            ]
+          },
+          "wanFormId": {
+            "type": "string"
+          },
+          "wanForm": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WanForm"
+              }
+            ]
+          },
+          "datacenterId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "externalRouteIp",
+          "vrf",
+          "environment",
+          "wanFormId",
+          "datacenterId"
+        ]
+      },
+      "WanForm": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 28
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "externalRoutes": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalRoute"
+            }
+          },
+          "subnets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Subnet"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "datacenterId"
+        ]
+      },
       "Subnet": {
         "type": "object",
         "properties": {
@@ -20575,6 +20981,12 @@
           },
           "tierId": {
             "type": "string"
+          },
+          "wanForms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WanForm"
+            }
           }
         },
         "required": [
@@ -22955,126 +23367,6 @@
           "datacenterId"
         ]
       },
-      "ExternalRoute": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "externalRouteIp": {
-            "type": "string"
-          },
-          "vrf": {
-            "type": "string",
-            "enum": [
-              "appprod",
-              "appdev",
-              "dataprod",
-              "datadev",
-              "edcmgmt",
-              "transport"
-            ]
-          },
-          "environment": {
-            "type": "string",
-            "enum": [
-              "prod",
-              "dev",
-              "val",
-              "imp"
-            ]
-          },
-          "wanFormId": {
-            "type": "string"
-          },
-          "wanForm": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/WanForm"
-              }
-            ]
-          },
-          "datacenterId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "externalRouteIp",
-          "vrf",
-          "environment",
-          "wanFormId",
-          "datacenterId"
-        ]
-      },
-      "WanForm": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 28
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "datacenterId": {
-            "type": "string"
-          },
-          "active": {
-            "type": "string"
-          },
-          "externalRoutes": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExternalRoute"
-            }
-          }
-        },
-        "required": [
-          "name",
-          "datacenterId"
-        ]
-      },
       "Datacenter": {
         "type": "object",
         "properties": {
@@ -23886,6 +24178,12 @@
           },
           "tierId": {
             "type": "string"
+          },
+          "wanForms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WanForm"
+            }
           },
           "tierName": {
             "type": "string"

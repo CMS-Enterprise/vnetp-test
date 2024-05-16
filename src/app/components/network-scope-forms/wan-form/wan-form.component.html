@@ -22,6 +22,21 @@
 <ng-template #actionsTemplate let-wanForm="datum">
   <section class="table__actions">
     <app-icon-button icon="edit" label="Edit Wan Form" (handleClick)="openModal(ModalMode.Edit, wanForm)"></app-icon-button>
+    <app-icon-button
+      *ngIf="wanForm?.deletedAt"
+      icon="undo"
+      label="Restore Wan Form"
+      type="success"
+      (handleClick)="restoreWanForm(wanForm)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Wan Form"
+      [type]="wanForm.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteWanForm(wanForm)"
+    >
+    </app-icon-button>
   </section>
 </ng-template>
 
@@ -30,12 +45,23 @@
     <app-icon-button icon="check" label="WAN Form is active" title="WAN Form is active"></app-icon-button>
   </span>
   <span *ngIf="!wanForm.active" class="dot-container">
-    <app-icon-button icon="times" label="Activate Wan Form" title="Activate Wan Form" (handleClick)="activateWanForm(wanForm)"></app-icon-button>
+    <app-icon-button
+      icon="times"
+      label="Activate Wan Form"
+      title="Activate Wan Form"
+      (handleClick)="activateWanForm(wanForm)"
+    ></app-icon-button>
   </span>
 </ng-template>
 
 <ng-template #loading>
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<ng-template #expandedRows let-wanForm="datum">
+  <section class="table__expanded-row">
+    <app-wan-form-detail [wanForm]="wanForm"></app-wan-form-detail>
+  </section>
 </ng-template>
 
 <app-wan-form-modal></app-wan-form-modal>
