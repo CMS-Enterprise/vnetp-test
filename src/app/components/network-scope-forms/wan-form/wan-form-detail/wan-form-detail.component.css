@@ -52,7 +52,7 @@ th {
 :host .table-container {
   width: 100%;
   overflow-y: auto;
-  max-height: 200px; 
+  max-height: 200px;
   border: 1px solid #ddd;
   border-radius: 8px;
 }
@@ -62,7 +62,8 @@ th {
   border-collapse: collapse;
 }
 
-:host th, :host td {
+:host th,
+:host td {
   padding: 8px 16px;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -75,14 +76,14 @@ th {
   z-index: 2;
 }
 
-:host th, :host td {
+:host th,
+:host td {
   font-size: 14px;
   color: #333;
 }
 
 :host th {
   font-weight: bold;
-  color: #e74c3c;
 }
 
 :host .table-container::-webkit-scrollbar {
@@ -92,4 +93,22 @@ th {
 :host .table-container::-webkit-scrollbar-thumb {
   background-color: #ccc;
   border-radius: 4px;
+}
+
+.header-with-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.inline-button {
+  color: black;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-bottom: 1px solid black;
+}
+.inline-button:hover {
+  text-decoration: none;
+  border-bottom: 1px solid #007bff;
 }

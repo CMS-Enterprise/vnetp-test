@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'app-wan-form-detail',
   templateUrl: './wan-form-detail.component.html',
   styleUrls: ['./wan-form-detail.component.css'],
-  // encapsulation: ViewEncapsulation.ShadowDom,
+  encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class WanFormDetailComponent {
   @Input() wanForm: WanForm;
@@ -22,4 +22,6 @@ export class WanFormDetailComponent {
       state: { data: this.wanForm },
     });
   }
+
+  openSubnetsDrawer(): void {}
 }

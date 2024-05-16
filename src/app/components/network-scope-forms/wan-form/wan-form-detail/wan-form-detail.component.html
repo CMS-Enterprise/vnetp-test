@@ -1,4 +1,7 @@
-<h3>External Routes</h3>
+<h3 class="header-with-button">
+  External Routes
+  <button class="inline-button" (click)="navigateToExternalRoutes()">Manage External Routes</button>
+</h3>
 <div class="table-container mb-4">
   <table>
     <thead>
@@ -20,4 +23,27 @@
   </table>
 </div>
 
-<h3>Subnets</h3>
+<h3 class="header-with-button">
+  Subnets
+  <button class="inline-button" (click)="openSubnetsDrawer()">Manage Subnets</button>
+</h3>
+<div class="table-container mb-4">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Network</th>
+        <th>SharedBetweenVrfs</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let subnet of wanForm?.subnets">
+        <td>{{ subnet.name }}</td>
+        <td>{{ subnet.description || '-' }}</td>
+        <td>{{ subnet.network }}</td>
+        <td>{{ subnet.sharedBetweenVrfs }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -13,6 +13,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableContextService } from '../../../../services/table-context.service';
 import { Subscription } from 'rxjs';
 import { ExternalRouteModalDto } from '../../../../models/network-scope-forms/external-route-modal.dto';
+import { V1NetworkScopeFormsWanFormService } from '../../../../../../client/api/v1NetworkScopeFormsWanForm.service';
 
 @Component({
   selector: 'app-external-route',
@@ -57,6 +58,7 @@ export class ExternalRouteComponent implements OnInit {
     private router: Router,
     private ngx: NgxSmartModalService,
     private tableContextService: TableContextService,
+    private wanFormService: V1NetworkScopeFormsWanFormService,
   ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
@@ -67,6 +69,11 @@ export class ExternalRouteComponent implements OnInit {
   ngOnInit(): void {
     this.wanFormId = this.route.snapshot.params.id;
     this.getExternalRoutes();
+    if (!this.wanForm) {
+      this.wanFormService.getOneWanForm({ id: this.wanFormId }).subscribe(data => {
+        this.wanForm = data;
+      });
+    }
   }
 
   public onTableEvent(event): void {
