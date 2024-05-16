@@ -3,11 +3,14 @@
 <ng-container *ngIf="currentDatacenter; else warningMessage">
   <ng-container *ngIf="!isLoading; else loading">
     <app-table
+      (clearResults)="getAuditLogs($event)"
       *ngIf="!showingAppCentricLogs"
       [config]="config"
       [data]="auditLogs"
       [(itemsPerPage)]="perPage"
       (tableEvent)="onTableEvent($event)"
+      [searchColumns]="searchColumns"
+      (searchParams)="searchAuditLogs($event)"
     >
     </app-table>
     <app-table
@@ -16,6 +19,9 @@
       [config]="appCentricConfig"
       [data]="auditLogs"
       [(itemsPerPage)]="perPage"
+      (clearResults)="getAppCentricAuditLogs($event)"
+      (searchParams)="searchAppCentricAuditLogs($event)"
+      [searchColumns]="searchColumns"
     >
     </app-table>
   </ng-container>
