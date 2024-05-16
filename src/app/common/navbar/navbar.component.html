@@ -104,7 +104,7 @@
           <span *ngIf="tenant">{{ tenant }}</span>
         </a>
       </li>
-      <li (click)="openChangeRequestModal()" id="changeRequestNumber" class="nav-item">
+      <li *ngIf="changeRequest !== null" (click)="openChangeRequestModal()" id="changeRequestNumber" class="nav-item">
         <a>
           <button [disabled]="lockChangeRequest" *ngIf="changeRequest" style="color: black">{{ changeRequest }}</button>
         </a>
@@ -154,6 +154,7 @@
             href="{{ environment?.dynamic?.wikiBase }}"
             >Documentation</a
           >
+          <a id="change-request-link" class="dropdown-item" (click)="openChangeRequestModal()">Change Request</a>
           <a tabindex="0" (keyup.enter)="openLogoutModal()" name="logout-link" class="dropdown-item" (click)="openLogoutModal()">Logout</a>
           <div class="dropdown-divider" *ngIf="dcsVersion"></div>
           <a name="version" class="dropdown-item" target="_blank" rel="noopener noreferrer" *ngIf="dcsVersion">v{{ dcsVersion }}</a>

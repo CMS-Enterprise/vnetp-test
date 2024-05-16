@@ -46,7 +46,7 @@
           <span *ngIf="tenant">Appcentric - {{ tenant }}</span>
         </a>
       </li>
-      <li (click)="openChangeRequestModal()" id="changeRequestNumber" class="nav-item">
+      <li *ngIf="changeRequest !== null" (click)="openChangeRequestModal()" id="changeRequestNumber" class="nav-item">
         <a>
           <button [disabled]="lockChangeRequest" *ngIf="changeRequest" style="color: black">{{ changeRequest }}</button>
         </a>
@@ -78,6 +78,7 @@
             queryParamsHandling="preserve"
             >Audit Log</a
           >
+          <a id="change-request-link" class="dropdown-item" (click)="openChangeRequestModal()">Change Request</a>
           <a class="dropdown-item" (click)="openLogoutModal()">Logout</a>
         </div>
       </li>

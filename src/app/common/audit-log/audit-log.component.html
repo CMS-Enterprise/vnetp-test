@@ -1,6 +1,6 @@
 <h1 *ngIf="!showingAppCentricLogs">Net Centric Audit Log</h1>
 <h1 *ngIf="showingAppCentricLogs">App Centric Audit Log</h1>
-<ng-container *ngIf="currentDatacenter; else warningMessage">
+<ng-container *ngIf="currentDatacenter || showingAppCentricLogs; else warningMessage">
   <ng-container *ngIf="!isLoading; else loading">
     <app-table
       (clearResults)="getAuditLogs($event)"
