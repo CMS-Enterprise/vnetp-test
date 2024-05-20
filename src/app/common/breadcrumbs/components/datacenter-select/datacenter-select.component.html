@@ -1,10 +1,5 @@
 <div class="select-wrap">
-  <app-icon-button
-  *ngIf="undeployedChanges"
-  icon="asterisk"
-  [label]="'Undeployed Changes'"
-  [type]="'info'"
-></app-icon-button>
+  <app-icon-button *ngIf="undeployedChanges" icon="asterisk" [label]="'Undeployed Changes'" [type]="'info'"></app-icon-button>
 
   <span *ngIf="currentDatacenter">
     Current Datacenter: <span class="text-bold ml-1">{{ currentDatacenter.name }}</span>
@@ -16,7 +11,6 @@
   <button class="btn btn-primary ml-3" [disabled]="lockCurrentDatacenter || disableSelect" (click)="openDatacenterSwitchModal()">
     {{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter
   </button>
-
 </div>
 
 <ngx-smart-modal #datacenterSwitchModal identifier="datacenterSwitchModal">
@@ -35,9 +29,7 @@
   </div>
 
   <footer class="modal-footer">
-    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="datacenterSwitchModal.close()">
-      Cancel
-    </button>
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="datacenterSwitchModal.close()">Cancel</button>
 
     <button
       type="button"

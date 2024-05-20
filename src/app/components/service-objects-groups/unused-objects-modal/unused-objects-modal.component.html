@@ -1,26 +1,22 @@
-<ngx-smart-modal [dismissable]="false" #unusedObjectsModal identifier="unusedObjectsModal"
-    customClass="large-modal">
+<ngx-smart-modal [dismissable]="false" #unusedObjectsModal identifier="unusedObjectsModal" customClass="large-modal">
+  <header class="modal-header">
+    <h4>Unused Service Objects/Groups</h4>
+  </header>
 
-    <header class="modal-header">
-        <h4>Unused Service Objects/Groups</h4>
-    </header>
-
-    <main class="modal-body">
-
-        <ng-container>
-            <app-table [config]="config" [data]="unusedObjectsInput"></app-table>
-        </ng-container>
-    </main>
+  <main class="modal-body">
+    <ng-container>
+      <app-table [config]="config" [data]="unusedObjectsInput"></app-table>
+    </ng-container>
+  </main>
 </ngx-smart-modal>
 
 <ng-template #actionsTemplate let-serObj="datum">
-    <section class="table__actions">
-            <app-icon-button
-              icon="delete"
-              label="Soft-Delete Service Object"
-              [type]="serObj?.deletedAt ? 'danger' : 'default'"
-              (handleClick)="softDeleteServiceObject(serObj)"
-            ></app-icon-button>
-
-      </section>
-  </ng-template>
+  <section class="table__actions">
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete Service Object"
+      [type]="serObj?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="softDeleteServiceObject(serObj)"
+    ></app-icon-button>
+  </section>
+</ng-template>

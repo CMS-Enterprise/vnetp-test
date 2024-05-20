@@ -20,7 +20,13 @@
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
-  <app-table [config]="config" [data]="staticRoutes" (clearResults)="getStaticRoutes()" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage"></app-table>
+  <app-table
+    [config]="config"
+    [data]="staticRoutes"
+    (clearResults)="getStaticRoutes()"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+  ></app-table>
 </ng-container>
 
 <ng-template #stateTemplate let-staticRoute="datum">
@@ -32,26 +38,26 @@
 <ng-template #actionsTemplate let-staticRoute="datum">
   <section class="table__actions">
     <app-icon-button
-    *ngIf="!staticRoute?.deletedAt"
-    icon="edit"
-    label="Edit Static Route"
-    (handleClick)="openStaticRouteModal(ModalMode.Edit, staticRoute)"
-  ></app-icon-button>
+      *ngIf="!staticRoute?.deletedAt"
+      icon="edit"
+      label="Edit Static Route"
+      (handleClick)="openStaticRouteModal(ModalMode.Edit, staticRoute)"
+    ></app-icon-button>
 
-  <app-icon-button
-    *ngIf="staticRoute?.deletedAt"
-    icon="undo"
-    label="Restore Static Route"
-    type="success"
-    (handleClick)="restoreStaticRoute(staticRoute)"
-  ></app-icon-button>
+    <app-icon-button
+      *ngIf="staticRoute?.deletedAt"
+      icon="undo"
+      label="Restore Static Route"
+      type="success"
+      (handleClick)="restoreStaticRoute(staticRoute)"
+    ></app-icon-button>
 
-  <app-icon-button
-    icon="delete"
-    label="Soft-Delete/Delete Static Route"
-    [type]="staticRoute?.deletedAt ? 'danger' : 'default'"
-    (handleClick)="deleteStaticRoute(staticRoute)"
-  ></app-icon-button>
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Static Route"
+      [type]="staticRoute?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteStaticRoute(staticRoute)"
+    ></app-icon-button>
   </section>
 </ng-template>
 

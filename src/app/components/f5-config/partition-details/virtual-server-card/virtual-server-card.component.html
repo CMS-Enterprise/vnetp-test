@@ -10,6 +10,9 @@
       <fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon>
       <h5 class="card-title pool-vs-title mb-0">{{ virtualServerName }}</h5>
     </div>
+    <p class="card-text ml-4 mt-1 tight-spacing">
+      <small class="grey-text tight-spacing">{{ virtualServerAddress }}</small>
+    </p>
     <div class="d-flex align-items-center ml-3 mt-3">
       <fa-icon [ngClass]="['icon', virtualServerStatus, 'fa-sm']" [icon]="['fas', 'circle']"></fa-icon>
       <p class="card-text pool-vs-title mb-0">{{ poolName }}</p>
@@ -133,7 +136,9 @@
         </thead>
         <tbody>
           <tr>
-            <td headers="empty-header-4 empty-header-5" class="text-right"><fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon></td>
+            <td headers="empty-header-4 empty-header-5" class="text-right">
+              <fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon>
+            </td>
             <td headers="empty-header-6 pool-name-header">{{ pool.name }}</td>
             <td headers="pool-bits-header pool-bits-in-header">{{ poolTableData.bitsIn }}</td>
             <td headers="pool-bits-header pool-bits-out-header">{{ poolTableData.bitsOut }}</td>

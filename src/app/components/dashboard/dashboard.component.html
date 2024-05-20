@@ -25,7 +25,7 @@
           <span class="inline-block ml-auto">
             {{ datacenters || 0 }}
           </span>
-          <fa-icon class="icon" [icon]="['fas', 'chevron-right']" style="visibility: hidden;"></fa-icon>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']" style="visibility: hidden"></fa-icon>
         </a>
       </li>
       <li class="dash-card__item">
@@ -41,12 +41,9 @@
         </a>
       </li>
 
-    
       <li class="dash-card__item">
         <a routerLink="/netcentric/subnets-vlans" queryParamsHandling="merge">
-          <span>
-            Subnets
-          </span>
+          <span> Subnets </span>
           <span class="inline-block ml-auto">
             {{ subnetCount || 0 }}
           </span>
@@ -55,9 +52,7 @@
       </li>
       <li class="dash-card__item">
         <a routerLink="/netcentric/subnets-vlans" queryParamsHandling="merge">
-          <span>
-            Vlans
-          </span>
+          <span> Vlans </span>
           <span class="inline-block ml-auto">
             {{ vlanCount || 0 }}
           </span>
@@ -67,26 +62,21 @@
     </ul>
   </aside>
 
-
   <aside class="dashboard__card">
     <h4 class="dashboard__heading">Network Security</h4>
     <ul class="dash-card">
       <li class="dash-card__item">
         <a routerLink="/netcentric/network-objects-groups" queryParamsHandling="merge">
-          <span>
-            Network Objects
-          </span>
+          <span> Network Objects </span>
           <span class="inline-block ml-auto">
-            {{ networkObjectCount || 0 }} 
+            {{ networkObjectCount || 0 }}
           </span>
           <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
         </a>
       </li>
       <li class="dash-card__item">
         <a routerLink="/netcentric/network-objects-groups" queryParamsHandling="merge">
-          <span>
-            Network Object Groups
-          </span>
+          <span> Network Object Groups </span>
           <span class="inline-block ml-auto">
             {{ networkObjectGroupCount || 0 }}
           </span>
@@ -95,20 +85,16 @@
       </li>
       <li class="dash-card__item">
         <a routerLink="/netcentric/service-objects-groups" queryParamsHandling="merge">
-          <span>
-            Service Objects 
-          </span>
+          <span> Service Objects </span>
           <span class="inline-block ml-auto">
-            {{ serviceObjectCount || 0 }} 
+            {{ serviceObjectCount || 0 }}
           </span>
           <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
         </a>
       </li>
       <li class="dash-card__item">
         <a routerLink="/netcentric/service-objects-groups" queryParamsHandling="merge">
-          <span>
-            Service Object Groups
-          </span>
+          <span> Service Object Groups </span>
           <span class="inline-block ml-auto">
             {{ serviceObjectCount || 0 }}
           </span>
@@ -117,9 +103,7 @@
       </li>
       <li class="dash-card__item">
         <a routerLink="/netcentric/firewall-rules" queryParamsHandling="merge">
-          <span>
-            Firewall Rules
-          </span>
+          <span> Firewall Rules </span>
           <span class="inline-block ml-auto">
             {{ firewallRuleCount || 0 }}
           </span>
@@ -128,9 +112,7 @@
       </li>
       <li class="dash-card__item">
         <a routerLink="/netcentric/nat-rules" queryParamsHandling="merge">
-          <span>
-            Nat Rules
-          </span>
+          <span> Nat Rules </span>
           <span class="inline-block ml-auto">
             {{ natRuleCount || 0 }}
           </span>

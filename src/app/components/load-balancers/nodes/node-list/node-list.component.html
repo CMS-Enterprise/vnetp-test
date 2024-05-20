@@ -6,7 +6,15 @@
 </section>
 
 <ng-container *ngIf="!isLoading; else loading">
-  <app-table [config]="config" [data]="nodes" (clearResults)="loadNodes($event)" (searchParams)="loadNodes($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+  <app-table
+    [config]="config"
+    [data]="nodes"
+    (clearResults)="loadNodes($event)"
+    (searchParams)="loadNodes($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
   <section class="btn-toolbar" role="toolbar">
     <app-import-export
       [exportObject]="nodes"
@@ -18,12 +26,7 @@
 
 <ng-template #actionsTemplate let-node="datum">
   <section class="table__actions">
-    <app-icon-button
-    *ngIf="checkUndeployedChanges(node)"
-          icon="asterisk"
-          [label]="'Undeployed Changes'"
-          [type]="'info'"
-  ></app-icon-button>
+    <app-icon-button *ngIf="checkUndeployedChanges(node)" icon="asterisk" [label]="'Undeployed Changes'" [type]="'info'"></app-icon-button>
 
     <app-icon-button *ngIf="!node?.deletedAt" icon="edit" label="Edit Node" (handleClick)="openModal(node)"></app-icon-button>
 
