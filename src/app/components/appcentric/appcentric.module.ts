@@ -39,7 +39,7 @@ const routes: Routes = [
       {
         path: 'audit-log',
         canActivate: [AuthGuard],
-        data: { breadcrumb: 'Audit Log', title: 'Automation - Audit Log' },
+        data: { breadcrumb: 'Audit Log', title: 'vNETP - Audit Log' },
         loadChildren: () => import('../../common/audit-log/audit-log.module').then(m => m.AuditLogModule),
       },
     ],
