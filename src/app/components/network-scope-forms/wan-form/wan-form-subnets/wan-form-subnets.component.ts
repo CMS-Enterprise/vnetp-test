@@ -1,33 +1,41 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { TableConfig } from '../../../../common/table/table.component';
-import { ExternalRoute } from '../../../../../../client/model/externalRoute';
-import { GetManyExternalRouteResponseDto } from '../../../../../../client/model/getManyExternalRouteResponseDto';
-import { TableComponentDto } from '../../../../models/other/table-component-dto';
-// eslint-disable-next-line max-len
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ModalMode } from '../../../../models/other/modal-mode';
+import { TableComponentDto } from '../../../../models/other/table-component-dto';
+import {
+  BridgeDomain,
+  GetManyWanFormSubnetResponseDto,
+  V1NetworkScopeFormsWanFormService,
+  V1NetworkScopeFormsWanFormSubnetService,
+  V1NetworkSubnetsService,
+  V2AppCentricAppCentricSubnetsService,
+  Vlan,
+  WanForm,
+  WanFormSubnet,
+} from '../../../../../../client';
+import { TableConfig } from '../../../../common/table/table.component';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
-import { WanForm } from '../../../../../../client/model/wanForm';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableContextService } from '../../../../services/table-context.service';
-import { Subscription } from 'rxjs';
-import { ExternalRouteModalDto } from '../../../../models/network-scope-forms/external-route-modal.dto';
-import { V1NetworkScopeFormsWanFormService } from '../../../../../../client/api/v1NetworkScopeFormsWanForm.service';
-import { V1NetworkScopeFormsExternalRouteService } from '../../../../../../client';
+import { WanFormSubnetModalDto } from '../../../../models/network-scope-forms/wan-form-subnet-modal.dto';
 
 @Component({
-  selector: 'app-external-route',
-  templateUrl: './external-route.component.html',
-  styleUrls: ['./external-route.component.css'],
+  selector: 'app-wan-form-subnets',
+  templateUrl: './wan-form-subnets.component.html',
+  styleUrl: './wan-form-subnets.component.css',
 })
-export class ExternalRouteComponent implements OnInit {
+export class WanFormSubnetsComponent {
   public wanForm: WanForm;
-  public externalRoutes: GetManyExternalRouteResponseDto;
+  public wanFormSubnets: GetManyWanFormSubnetResponseDto;
   public isLoading = false;
   public tableComponentDto = new TableComponentDto();
   public wanFormId: string;
   public ModalMode = ModalMode;
   public perPage = 20;
+
+  public subnetVlans = new Map<string, Vlan>();
+  public subnetBridgeDomains = new Map<string, BridgeDomain>();
 
   private modalSubscription: Subscription;
 
@@ -35,33 +43,37 @@ export class ExternalRouteComponent implements OnInit {
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('vrfNameTemplate') vrfNameTemplate: TemplateRef<any>;
+  @ViewChild('expandableRows') expandableRows: TemplateRef<any>;
 
   public config: TableConfig<any> = {
     description: 'External Routes',
     columns: [
-      { name: 'IP', property: 'externalRouteIp' },
+      { name: 'Name', property: 'name' },
       { name: 'Description', property: 'description' },
       { name: 'VRF/Zone', template: () => this.vrfNameTemplate },
       { name: 'Environment', property: 'environment' },
       { name: '', template: () => this.actionsTemplate },
     ],
+    expandableRows: () => this.expandableRows,
     hideAdvancedSearch: true,
   };
 
   public searchColumns: SearchColumnConfig[] = [
-    { propertyName: 'externalRouteIp', displayName: 'IP' },
+    { propertyName: 'name', displayName: 'Name' },
     { displayName: 'Description', propertyName: 'description' },
     { displayName: 'VRF/Zone', propertyName: 'vrfName' },
     { displayName: 'Environment', propertyName: 'environment' },
   ];
 
   constructor(
-    private externalRouteService: V1NetworkScopeFormsExternalRouteService,
+    private wanFormSubnetService: V1NetworkScopeFormsWanFormSubnetService,
     private route: ActivatedRoute,
     private router: Router,
     private ngx: NgxSmartModalService,
     private tableContextService: TableContextService,
     private wanFormService: V1NetworkScopeFormsWanFormService,
+    private netcentricSubnetService: V1NetworkSubnetsService,
+    private appcentricSubnetService: V2AppCentricAppCentricSubnetsService,
   ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
@@ -72,47 +84,50 @@ export class ExternalRouteComponent implements OnInit {
   ngOnInit(): void {
     this.wanFormId = this.route.snapshot.params.id;
     this.dcsMode = this.route.snapshot.data.mode;
-    this.getExternalRoutes();
+    this.getWanFormSubnets();
     if (!this.wanForm) {
       this.wanFormService.getOneWanForm({ id: this.wanFormId }).subscribe(data => {
         this.wanForm = data;
+        this.getChildren();
       });
+    } else {
+      this.getChildren();
     }
   }
 
   public onTableEvent(event): void {
     this.tableComponentDto = event;
-    this.getExternalRoutes(event);
+    this.getWanFormSubnets(event);
   }
 
-  public openModal(modalMode: ModalMode, externalRoute?: ExternalRoute): void {
-    const dto = new ExternalRouteModalDto();
+  public openModal(modalMode: ModalMode, wanFormSubnet?: WanFormSubnet): void {
+    const dto = new WanFormSubnetModalDto();
 
     dto.modalMode = modalMode;
     dto.wanFormId = this.wanFormId;
-    dto.externalRoute = externalRoute;
+    dto.wanFormSubnet = wanFormSubnet;
 
     this.subscribeToModal();
-    this.ngx.setModalData(dto, 'externalRouteModal');
-    this.ngx.getModal('externalRouteModal').open();
+    this.ngx.setModalData(dto, 'wanFormSubnetModal');
+    this.ngx.getModal('wanFormSubnetModal').open();
   }
 
   private subscribeToModal(): void {
-    this.modalSubscription = this.ngx.getModal('externalRouteModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('externalRouteModal');
+    this.modalSubscription = this.ngx.getModal('wanFormSubnetModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('wanFormSubnetModal');
       this.modalSubscription.unsubscribe();
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
 
       if (filteredResults) {
-        this.getExternalRoutes(params);
+        this.getWanFormSubnets(params);
       } else {
-        this.getExternalRoutes();
+        this.getWanFormSubnets();
       }
     });
   }
 
-  public getExternalRoutes(event?) {
+  public getWanFormSubnets(event?) {
     this.isLoading = true;
     let eventParams;
     if (event) {
@@ -124,18 +139,19 @@ export class ExternalRouteComponent implements OnInit {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
-    this.externalRouteService
-      .getManyExternalRoute({
+    this.wanFormSubnetService
+      .getManyWanFormSubnet({
         filter: [`wanFormId||eq||${this.wanFormId}`, eventParams],
+        join: ['netcentricSubnet', 'appcentricSubnet'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })
       .subscribe(
         data => {
-          this.externalRoutes = data;
+          this.wanFormSubnets = data;
         },
         () => {
-          this.externalRoutes = null;
+          this.wanFormSubnets = null;
         },
         () => {
           this.isLoading = false;
@@ -143,16 +159,16 @@ export class ExternalRouteComponent implements OnInit {
       );
   }
 
-  public deleteExternalRoute(externalRoute: ExternalRoute): void {
+  public deleteWanFormSubnet(wanFormSubnet: WanFormSubnet): void {
     this.isLoading = true;
-    if (externalRoute.deletedAt) {
-      this.externalRouteService
-        .deleteOneExternalRoute({
-          id: externalRoute.id,
+    if (wanFormSubnet.deletedAt) {
+      this.wanFormSubnetService
+        .deleteOneWanFormSubnet({
+          id: wanFormSubnet.id,
         })
         .subscribe(
           () => {
-            this.getExternalRoutes();
+            this.getWanFormSubnets();
           },
           () => {
             this.isLoading = false;
@@ -162,9 +178,9 @@ export class ExternalRouteComponent implements OnInit {
           },
         );
     } else {
-      this.externalRouteService.softDeleteOneExternalRoute({ id: externalRoute.id }).subscribe(
+      this.wanFormSubnetService.softDeleteOneWanFormSubnet({ id: wanFormSubnet.id }).subscribe(
         () => {
-          this.getExternalRoutes();
+          this.getWanFormSubnets();
         },
         () => {
           this.isLoading = false;
@@ -176,11 +192,11 @@ export class ExternalRouteComponent implements OnInit {
     }
   }
 
-  public restoreExternalRoute(externalRoute: ExternalRoute): void {
+  public restoreWanFormSubnet(wanFormSubnet: WanFormSubnet): void {
     this.isLoading = true;
-    this.externalRouteService.restoreOneExternalRoute({ id: externalRoute.id }).subscribe(
+    this.wanFormSubnetService.restoreOneWanFormSubnet({ id: wanFormSubnet.id }).subscribe(
       () => {
-        this.getExternalRoutes();
+        this.getWanFormSubnets();
       },
       () => {
         this.isLoading = false;
@@ -195,5 +211,31 @@ export class ExternalRouteComponent implements OnInit {
     const currentQueryParams = this.route.snapshot.queryParams;
 
     this.router.navigate([`/${this.dcsMode}/wan-form`], { queryParams: currentQueryParams });
+  }
+
+  getChildren(): void {
+    if (this.dcsMode === 'netcentric') {
+      this.getSubnetVlans();
+    } else {
+      this.getSubnetBridgeDomains();
+    }
+  }
+
+  getSubnetBridgeDomains(): void {
+    this.appcentricSubnetService
+      .getManyAppCentricSubnet({ filter: [`tenantId||eq||${this.wanForm.tenantId}`], join: ['bridgeDomain'] })
+      .subscribe((data: any) => {
+        data.forEach(subnet => {
+          this.subnetBridgeDomains.set(subnet.id, subnet.bridgeDomain);
+        });
+      });
+  }
+
+  getSubnetVlans(): void {
+    this.netcentricSubnetService.getSubnetsByDatacenterIdSubnet({ datacenterId: this.wanForm.datacenterId }).subscribe(data => {
+      data.forEach(subnet => {
+        this.subnetVlans.set(subnet.id, subnet.vlan);
+      });
+    });
   }
 }

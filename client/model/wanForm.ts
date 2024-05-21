@@ -9,8 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Tenant } from './tenant';
 import { ExternalRoute } from './externalRoute';
-import { Subnet } from './subnet';
+import { Datacenter } from './datacenter';
+import { WanFormSubnet } from './wanFormSubnet';
 
 
 export interface WanForm { 
@@ -23,9 +25,12 @@ export interface WanForm {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    datacenterId: string;
+    datacenterId?: string;
+    readonly datacenter?: Datacenter;
     active?: boolean;
     readonly externalRoutes?: Array<ExternalRoute>;
-    subnets?: Array<Subnet>;
+    readonly wanFormSubnets?: Array<WanFormSubnet>;
+    readonly tenant?: Tenant;
+    tenantId?: string;
 }
 

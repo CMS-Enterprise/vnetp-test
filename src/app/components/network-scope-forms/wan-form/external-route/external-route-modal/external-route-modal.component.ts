@@ -3,7 +3,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 // eslint-disable-next-line max-len
-import { V1NetworkScopeFormsWanFormExternalRouteService } from '../../../../../../../client/api/v1NetworkScopeFormsWanFormExternalRoute.service';
 import { ExternalRoute } from '../../../../../../../client/model/externalRoute';
 import { ExternalRouteModalDto } from '../../../../../models/network-scope-forms/external-route-modal.dto';
 import { ModalMode } from '../../../../../models/other/modal-mode';
@@ -13,6 +12,7 @@ import {
   validateWanFormExternalRouteIp,
   IpAddressHostNetworkCidrValidator,
 } from '../../../../../validators/network-form-validators';
+import { V1NetworkScopeFormsExternalRouteService } from '../../../../../../../client';
 
 @Component({
   selector: 'app-external-route-modal',
@@ -31,7 +31,7 @@ export class ExternalRouteModalComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
-    private externalRouteService: V1NetworkScopeFormsWanFormExternalRouteService,
+    private externalRouteService: V1NetworkScopeFormsExternalRouteService,
     private datacenterContextService: DatacenterContextService,
   ) {}
 

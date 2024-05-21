@@ -9,11 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { WanFormSubnet } from './wanFormSubnet';
 
 
-export interface F5DataDto { 
-    partitionInfo: object;
-    hostInfo: object;
-    hostname: string;
+export interface GetManyWanFormSubnetResponseDto { 
+    totalPages: number;
+    count: number;
+    total: number;
+    page: number;
+    pageCount: number;
+    data: Array<WanFormSubnet>;
 }
 

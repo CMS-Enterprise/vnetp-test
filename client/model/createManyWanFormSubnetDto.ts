@@ -9,15 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { WanFormSubnet } from './wanFormSubnet';
 
 
-export interface F5Runtime { 
-    readonly id?: string;
-    displayName: string;
-    hostname: string;
-    data: object;
-    readonly createdAt?: string | null;
-    partitions: Array<string>;
-    runtimeDataLastRefreshed?: string;
+export interface CreateManyWanFormSubnetDto { 
+    bulk: Array<WanFormSubnet>;
 }
 

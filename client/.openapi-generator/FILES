@@ -16,8 +16,9 @@ api/v1LoadBalancerRoutes.service.ts
 api/v1LoadBalancerSelfIps.service.ts
 api/v1LoadBalancerVirtualServers.service.ts
 api/v1LoadBalancerVlans.service.ts
+api/v1NetworkScopeFormsExternalRoute.service.ts
 api/v1NetworkScopeFormsWanForm.service.ts
-api/v1NetworkScopeFormsWanFormExternalRoute.service.ts
+api/v1NetworkScopeFormsWanFormSubnet.service.ts
 api/v1NetworkSecurityFirewallRuleGroups.service.ts
 api/v1NetworkSecurityFirewallRules.service.ts
 api/v1NetworkSecurityNatRuleGroups.service.ts
@@ -93,6 +94,7 @@ model/createManyTierGroupDto.ts
 model/createManyVlanDto.ts
 model/createManyVrfDto.ts
 model/createManyWanFormDto.ts
+model/createManyWanFormSubnetDto.ts
 model/createManyZoneDto.ts
 model/datacenter.ts
 model/dcsPermissions.ts
@@ -144,6 +146,7 @@ model/getManyTierResponseDto.ts
 model/getManyVlanResponseDto.ts
 model/getManyVrfResponseDto.ts
 model/getManyWanFormResponseDto.ts
+model/getManyWanFormSubnetResponseDto.ts
 model/getManyZoneResponseDto.ts
 model/job.ts
 model/l3Out.ts
@@ -196,5 +199,6 @@ model/virtualServerImportDto.ts
 model/vlan.ts
 model/vrf.ts
 model/wanForm.ts
+model/wanFormSubnet.ts
 model/zone.ts
 variables.ts

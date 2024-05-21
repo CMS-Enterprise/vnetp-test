@@ -17,38 +17,33 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CreateManyWanFormDto } from '../model/models';
-import { GetManyWanFormResponseDto } from '../model/models';
-import { WanForm } from '../model/models';
+import { CreateManyExternalRouteDto } from '../model/models';
+import { ExternalRoute } from '../model/models';
+import { GetManyExternalRouteResponseDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface ActivateWanFormWanFormRequestParams {
-    /** ID of the WAN form to activate */
-    id: string;
+export interface CreateManyExternalRouteRequestParams {
+    createManyExternalRouteDto: CreateManyExternalRouteDto;
 }
 
-export interface CreateManyWanFormRequestParams {
-    createManyWanFormDto: CreateManyWanFormDto;
+export interface CreateOneExternalRouteRequestParams {
+    externalRoute: ExternalRoute;
 }
 
-export interface CreateOneWanFormRequestParams {
-    wanForm: WanForm;
-}
-
-export interface DeleteOneWanFormRequestParams {
+export interface DeleteOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface DeprovisionOneWanFormRequestParams {
+export interface DeprovisionOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface GetManyWanFormRequestParams {
+export interface GetManyExternalRouteRequestParams {
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -71,7 +66,7 @@ export interface GetManyWanFormRequestParams {
     s?: string;
 }
 
-export interface GetOneWanFormRequestParams {
+export interface GetOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
     /** Comma-seperated array of relations to join. */
@@ -80,32 +75,32 @@ export interface GetOneWanFormRequestParams {
     join?: Array<string>;
 }
 
-export interface ProvisionOneWanFormRequestParams {
+export interface ProvisionOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface RestoreOneWanFormRequestParams {
+export interface RestoreOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface SoftDeleteOneWanFormRequestParams {
+export interface SoftDeleteOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface UpdateOneWanFormRequestParams {
+export interface UpdateOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
-    wanForm: WanForm;
+    externalRoute: ExternalRoute;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V1NetworkScopeFormsWanFormService {
+export class V1NetworkScopeFormsExternalRouteService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -163,65 +158,18 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Activate an existing WAN form
+     * Create many ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public activateWanFormWanForm(requestParameters: ActivateWanFormWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanForm>;
-    public activateWanFormWanForm(requestParameters: ActivateWanFormWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanForm>>;
-    public activateWanFormWanForm(requestParameters: ActivateWanFormWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanForm>>;
-    public activateWanFormWanForm(requestParameters: ActivateWanFormWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling activateWanFormWanForm.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.put<WanForm>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(id))}/activate`,
-            null,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Create many WanForm
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public createManyWanForm(requestParameters: CreateManyWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<WanForm>>;
-    public createManyWanForm(requestParameters: CreateManyWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<WanForm>>>;
-    public createManyWanForm(requestParameters: CreateManyWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<WanForm>>>;
-    public createManyWanForm(requestParameters: CreateManyWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const createManyWanFormDto = requestParameters.createManyWanFormDto;
-        if (createManyWanFormDto === null || createManyWanFormDto === undefined) {
-            throw new Error('Required parameter createManyWanFormDto was null or undefined when calling createManyWanForm.');
+    public createManyExternalRoute(requestParameters: CreateManyExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ExternalRoute>>;
+    public createManyExternalRoute(requestParameters: CreateManyExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ExternalRoute>>>;
+    public createManyExternalRoute(requestParameters: CreateManyExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ExternalRoute>>>;
+    public createManyExternalRoute(requestParameters: CreateManyExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const createManyExternalRouteDto = requestParameters.createManyExternalRouteDto;
+        if (createManyExternalRouteDto === null || createManyExternalRouteDto === undefined) {
+            throw new Error('Required parameter createManyExternalRouteDto was null or undefined when calling createManyExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -253,8 +201,8 @@ export class V1NetworkScopeFormsWanFormService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<WanForm>>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/bulk`,
-            createManyWanFormDto,
+        return this.httpClient.post<Array<ExternalRoute>>(`${this.configuration.basePath}/v1/network-scope-forms/external-route/bulk`,
+            createManyExternalRouteDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -266,18 +214,18 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Create one WanForm
+     * Create one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneWanForm(requestParameters: CreateOneWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanForm>;
-    public createOneWanForm(requestParameters: CreateOneWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanForm>>;
-    public createOneWanForm(requestParameters: CreateOneWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanForm>>;
-    public createOneWanForm(requestParameters: CreateOneWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const wanForm = requestParameters.wanForm;
-        if (wanForm === null || wanForm === undefined) {
-            throw new Error('Required parameter wanForm was null or undefined when calling createOneWanForm.');
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const externalRoute = requestParameters.externalRoute;
+        if (externalRoute === null || externalRoute === undefined) {
+            throw new Error('Required parameter externalRoute was null or undefined when calling createOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -309,8 +257,8 @@ export class V1NetworkScopeFormsWanFormService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<WanForm>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form`,
-            wanForm,
+        return this.httpClient.post<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/external-route`,
+            externalRoute,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -322,18 +270,18 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Delete one WanForm
+     * Delete one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneWanForm(requestParameters: DeleteOneWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanForm>;
-    public deleteOneWanForm(requestParameters: DeleteOneWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanForm>>;
-    public deleteOneWanForm(requestParameters: DeleteOneWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanForm>>;
-    public deleteOneWanForm(requestParameters: DeleteOneWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public deleteOneExternalRoute(requestParameters: DeleteOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
+    public deleteOneExternalRoute(requestParameters: DeleteOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
+    public deleteOneExternalRoute(requestParameters: DeleteOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
+    public deleteOneExternalRoute(requestParameters: DeleteOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteOneWanForm.');
+            throw new Error('Required parameter id was null or undefined when calling deleteOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -356,7 +304,7 @@ export class V1NetworkScopeFormsWanFormService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<WanForm>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/external-route/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -368,18 +316,18 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Deprovision one WanForm
+     * Deprovision one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deprovisionOneWanForm(requestParameters: DeprovisionOneWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public deprovisionOneWanForm(requestParameters: DeprovisionOneWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public deprovisionOneWanForm(requestParameters: DeprovisionOneWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public deprovisionOneWanForm(requestParameters: DeprovisionOneWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public deprovisionOneExternalRoute(requestParameters: DeprovisionOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public deprovisionOneExternalRoute(requestParameters: DeprovisionOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public deprovisionOneExternalRoute(requestParameters: DeprovisionOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public deprovisionOneExternalRoute(requestParameters: DeprovisionOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deprovisionOneWanForm.');
+            throw new Error('Required parameter id was null or undefined when calling deprovisionOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -401,7 +349,7 @@ export class V1NetworkScopeFormsWanFormService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(id))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-scope-forms/external-route/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -414,15 +362,15 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Get many WanForm
+     * Get many ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getManyWanForm(requestParameters: GetManyWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyWanFormResponseDto>;
-    public getManyWanForm(requestParameters: GetManyWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyWanFormResponseDto>>;
-    public getManyWanForm(requestParameters: GetManyWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyWanFormResponseDto>>;
-    public getManyWanForm(requestParameters: GetManyWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyExternalRoute(requestParameters: GetManyExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetManyExternalRouteResponseDto>;
+    public getManyExternalRoute(requestParameters: GetManyExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetManyExternalRouteResponseDto>>;
+    public getManyExternalRoute(requestParameters: GetManyExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetManyExternalRouteResponseDto>>;
+    public getManyExternalRoute(requestParameters: GetManyExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
@@ -508,7 +456,7 @@ export class V1NetworkScopeFormsWanFormService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetManyWanFormResponseDto>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form`,
+        return this.httpClient.get<GetManyExternalRouteResponseDto>(`${this.configuration.basePath}/v1/network-scope-forms/external-route`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -521,18 +469,18 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Get one WanForm
+     * Get one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getOneWanForm(requestParameters: GetOneWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanForm>;
-    public getOneWanForm(requestParameters: GetOneWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanForm>>;
-    public getOneWanForm(requestParameters: GetOneWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanForm>>;
-    public getOneWanForm(requestParameters: GetOneWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getOneExternalRoute(requestParameters: GetOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
+    public getOneExternalRoute(requestParameters: GetOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
+    public getOneExternalRoute(requestParameters: GetOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
+    public getOneExternalRoute(requestParameters: GetOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getOneWanForm.');
+            throw new Error('Required parameter id was null or undefined when calling getOneExternalRoute.');
         }
         const relations = requestParameters.relations;
         const join = requestParameters.join;
@@ -571,7 +519,7 @@ export class V1NetworkScopeFormsWanFormService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<WanForm>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/external-route/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -584,18 +532,18 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Provision one WanForm
+     * Provision one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public provisionOneWanForm(requestParameters: ProvisionOneWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public provisionOneWanForm(requestParameters: ProvisionOneWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public provisionOneWanForm(requestParameters: ProvisionOneWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public provisionOneWanForm(requestParameters: ProvisionOneWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public provisionOneExternalRoute(requestParameters: ProvisionOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public provisionOneExternalRoute(requestParameters: ProvisionOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public provisionOneExternalRoute(requestParameters: ProvisionOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public provisionOneExternalRoute(requestParameters: ProvisionOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling provisionOneWanForm.');
+            throw new Error('Required parameter id was null or undefined when calling provisionOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -617,7 +565,7 @@ export class V1NetworkScopeFormsWanFormService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(id))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v1/network-scope-forms/external-route/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -630,18 +578,18 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Restore one WanForm
+     * Restore one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public restoreOneWanForm(requestParameters: RestoreOneWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public restoreOneWanForm(requestParameters: RestoreOneWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public restoreOneWanForm(requestParameters: RestoreOneWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public restoreOneWanForm(requestParameters: RestoreOneWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public restoreOneExternalRoute(requestParameters: RestoreOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public restoreOneExternalRoute(requestParameters: RestoreOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public restoreOneExternalRoute(requestParameters: RestoreOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public restoreOneExternalRoute(requestParameters: RestoreOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling restoreOneWanForm.');
+            throw new Error('Required parameter id was null or undefined when calling restoreOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -663,7 +611,7 @@ export class V1NetworkScopeFormsWanFormService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(id))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-scope-forms/external-route/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -676,18 +624,18 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Soft delete one WanForm
+     * Soft delete one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public softDeleteOneWanForm(requestParameters: SoftDeleteOneWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public softDeleteOneWanForm(requestParameters: SoftDeleteOneWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public softDeleteOneWanForm(requestParameters: SoftDeleteOneWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public softDeleteOneWanForm(requestParameters: SoftDeleteOneWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public softDeleteOneExternalRoute(requestParameters: SoftDeleteOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public softDeleteOneExternalRoute(requestParameters: SoftDeleteOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public softDeleteOneExternalRoute(requestParameters: SoftDeleteOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public softDeleteOneExternalRoute(requestParameters: SoftDeleteOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling softDeleteOneWanForm.');
+            throw new Error('Required parameter id was null or undefined when calling softDeleteOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -709,7 +657,7 @@ export class V1NetworkScopeFormsWanFormService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(id))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network-scope-forms/external-route/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -721,22 +669,22 @@ export class V1NetworkScopeFormsWanFormService {
     }
 
     /**
-     * Update one WanForm
+     * Update one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateOneWanForm(requestParameters: UpdateOneWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WanForm>;
-    public updateOneWanForm(requestParameters: UpdateOneWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WanForm>>;
-    public updateOneWanForm(requestParameters: UpdateOneWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WanForm>>;
-    public updateOneWanForm(requestParameters: UpdateOneWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public updateOneExternalRoute(requestParameters: UpdateOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
+    public updateOneExternalRoute(requestParameters: UpdateOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
+    public updateOneExternalRoute(requestParameters: UpdateOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
+    public updateOneExternalRoute(requestParameters: UpdateOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateOneWanForm.');
+            throw new Error('Required parameter id was null or undefined when calling updateOneExternalRoute.');
         }
-        const wanForm = requestParameters.wanForm;
-        if (wanForm === null || wanForm === undefined) {
-            throw new Error('Required parameter wanForm was null or undefined when calling updateOneWanForm.');
+        const externalRoute = requestParameters.externalRoute;
+        if (externalRoute === null || externalRoute === undefined) {
+            throw new Error('Required parameter externalRoute was null or undefined when calling updateOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -768,8 +716,8 @@ export class V1NetworkScopeFormsWanFormService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<WanForm>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/${encodeURIComponent(String(id))}`,
-            wanForm,
+        return this.httpClient.put<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/external-route/${encodeURIComponent(String(id))}`,
+            externalRoute,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

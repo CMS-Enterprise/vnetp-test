@@ -25,7 +25,7 @@
 
 <h3 class="header-with-button">
   Subnets
-  <button class="inline-button" (click)="openSubnetsDrawer()">Manage Subnets</button>
+  <button class="inline-button" (click)="navigateToWanFormSubnets()">Manage Subnets</button>
 </h3>
 <div class="table-container mb-4">
   <table>
@@ -33,16 +33,16 @@
       <tr>
         <th>Name</th>
         <th>Description</th>
-        <th>Network</th>
-        <th>SharedBetweenVrfs</th>
+        <th>VRF</th>
+        <th>Environment</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let subnet of wanForm?.subnets">
+      <tr *ngFor="let subnet of wanForm?.wanFormSubnets">
         <td>{{ subnet.name }}</td>
         <td>{{ subnet.description || '-' }}</td>
-        <td>{{ subnet.network }}</td>
-        <td>{{ subnet.sharedBetweenVrfs }}</td>
+        <td>{{ subnet.vrf }}</td>
+        <td>{{ subnet.environment }}</td>
       </tr>
     </tbody>
   </table>

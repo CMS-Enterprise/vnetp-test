@@ -127,6 +127,7 @@ export class AppModule {
       faCheck,
       faTimes,
       faCog,
+      faChevronLeft,
     );
   }
 }

@@ -13,6 +13,9 @@ import { TableContextService } from 'src/app/services/table-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { GetManyWanFormResponseDto } from '../../../../../client/model/getManyWanFormResponseDto';
 import { SearchColumnConfig } from '../../../common/search-bar/search-bar.component';
+import { MatSidenav } from '@angular/material/sidenav';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Tenant, V2AppCentricTenantsService } from '../../../../../client';
 
 @Component({
   selector: 'app-wan-form',
@@ -23,16 +26,26 @@ export class WanFormComponent implements OnInit, OnDestroy {
   public isLoading = false;
   public wanForms: GetManyWanFormResponseDto;
   public perPage = 20;
-  public searchColumns: SearchColumnConfig[] = [];
   public tableComponentDto = new TableComponentDto();
   public wanFormModalSubscription: Subscription;
   public ModalMode = ModalMode;
   public datacenterId: string;
   public currentDatacenterSubscription: Subscription;
+  public dcsMode: string;
+  public selectedTenant: string;
+  public tenants: Tenant[];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('activeTemplate') activeTemplate: TemplateRef<any>;
   @ViewChild('expandedRows') expandedRows: TemplateRef<any>;
+  @ViewChild('drawer') drawer: MatSidenav;
+
+  public searchColumns: SearchColumnConfig[] = [
+    { propertyName: 'name', displayName: 'Name' },
+    { displayName: 'Description', propertyName: 'description' },
+    { displayName: 'Created At', propertyName: 'createdAt' },
+    { displayName: 'Active', propertyName: 'active', propertyType: 'boolean' },
+  ];
 
   public config: TableConfig<any> = {
     description: 'Wan Forms',
@@ -44,6 +57,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
       { name: '', template: () => this.actionsTemplate },
     ],
     expandableRows: () => this.expandedRows,
+    hideAdvancedSearch: true,
   };
 
   constructor(
@@ -51,19 +65,33 @@ export class WanFormComponent implements OnInit, OnDestroy {
     private ngx: NgxSmartModalService,
     private tableContextService: TableContextService,
     private datacenterContextService: DatacenterContextService,
-  ) {}
+    private route: ActivatedRoute,
+    private router: Router,
+    private tenantService: V2AppCentricTenantsService,
+  ) {
+    this.selectedTenant = this.route.snapshot.queryParams.tenantId;
+  }
 
   ngOnInit(): void {
-    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
-      if (cd) {
-        this.datacenterId = cd.id;
+    this.dcsMode = this.route.snapshot.data.mode;
+    if (this.dcsMode === 'netcentric') {
+      this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+        if (cd) {
+          this.datacenterId = cd.id;
+          this.getWanForms();
+        }
+      });
+    } else {
+      if (!this.selectedTenant) {
+        this.getTenants();
+      } else {
         this.getWanForms();
       }
-    });
+    }
   }
 
   ngOnDestroy(): void {
-    this.currentDatacenterSubscription.unsubscribe();
+    this.currentDatacenterSubscription?.unsubscribe();
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -112,10 +140,11 @@ export class WanFormComponent implements OnInit, OnDestroy {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
+    const filerParam = this.dcsMode === 'netcentric' ? `datacenterId||eq||${this.datacenterId}` : `tenantId||eq||${this.selectedTenant}`;
     this.wanFormService
       .getManyWanForm({
-        filter: [`datacenterId||eq||${this.datacenterId}`, eventParams],
-        join: ['externalRoutes', 'subnets'],
+        filter: [filerParam, eventParams],
+        join: ['externalRoutes', 'wanFormSubnets'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })
@@ -188,5 +217,19 @@ export class WanFormComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
     );
+  }
+
+  public getTenants(): void {
+    this.tenantService.getManyTenant({}).subscribe(data => {
+      this.tenants = data as any;
+    });
+  }
+
+  public onTenantSelect(tenant: Tenant): void {
+    const currentQueryParams = this.route.snapshot.queryParams;
+    const queryParams = { ...currentQueryParams, tenantId: tenant.id };
+    this.router.navigate(['/appcentric/wan-form'], {
+      queryParams,
+    });
   }
 }

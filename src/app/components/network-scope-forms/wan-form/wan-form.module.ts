@@ -18,6 +18,16 @@ import { WanFormDetailComponent } from './wan-form-detail/wan-form-detail.compon
 import { ExternalRouteComponent } from './external-route/external-route.component';
 import { ExternalRouteModalComponent } from './external-route/external-route-modal/external-route-modal.component';
 
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatTooltip } from '@angular/material/tooltip';
+import { WanFormSubnetsComponent } from './wan-form-subnets/wan-form-subnets.component';
+import { WanFormSubnetsModalComponent } from './wan-form-subnets/wan-form-subnets-modal/wan-form-subnets-modal.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -27,9 +37,21 @@ const routes: Routes = [
     path: ':id/external-routes',
     component: ExternalRouteComponent,
   },
+  {
+    path: ':id/wan-form-subnets',
+    component: WanFormSubnetsComponent,
+  },
 ];
 @NgModule({
-  declarations: [WanFormComponent, WanFormModalComponent, ExternalRouteModalComponent, WanFormDetailComponent, ExternalRouteComponent],
+  declarations: [
+    WanFormComponent,
+    WanFormModalComponent,
+    ExternalRouteModalComponent,
+    WanFormDetailComponent,
+    ExternalRouteComponent,
+    WanFormSubnetsComponent,
+    WanFormSubnetsModalComponent,
+  ],
   imports: [
     CommonModule,
     CommonModule,
@@ -49,6 +71,13 @@ const routes: Routes = [
     FontAwesomeModule,
     TableModule,
     YesNoModalModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    MatTableModule,
+    MatToolbar,
+    MatTooltip,
   ],
 })
 export class WanFormModule {}
