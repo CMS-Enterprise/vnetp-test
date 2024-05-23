@@ -13058,6 +13058,38 @@
         ]
       }
     },
+    "/v1/jobs/{id}/status": {
+      "get": {
+        "operationId": "getJobStatusJob",
+        "summary": "Get Job Status",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TowerJobDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/jobs"
+        ]
+      }
+    },
     "/v1/audit-log": {
       "get": {
         "operationId": "getAuditLogAuditLog",
@@ -13241,6 +13273,31 @@
         },
         "tags": [
           "v1/audit-log"
+        ]
+      }
+    },
+    "/v2/app-centric/tenants/{id}/cascade": {
+      "delete": {
+        "operationId": "cascadeDeleteTenantTenant",
+        "summary": "",
+        "description": "Cascade Delete Tenant",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/tenants"
         ]
       }
     },
@@ -19544,6 +19601,241 @@
         ]
       }
     },
+    "/v1/runtime-data/hitcount/create-runtime-data-job": {
+      "post": {
+        "operationId": "createRuntimeDataJobHitcount",
+        "summary": "",
+        "description": "Create Runtime Data Hitcount Collection Job",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HitcountJobCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/hitcount"
+        ]
+      }
+    },
+    "/v1/runtime-data/hitcount/upload-runtime-data-job-results": {
+      "post": {
+        "operationId": "uploadRuntimeDataJobResultsHitcount",
+        "summary": "",
+        "description": "Update Runtime Hitcount Data",
+        "parameters": [
+          {
+            "name": "tenant",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HitcountJobResultDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/runtime-data/hitcount"
+        ]
+      }
+    },
+    "/v1/runtime-data/f5-config": {
+      "get": {
+        "operationId": "getManyF5Config",
+        "summary": "Get many F5Runtime",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/F5Runtime"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/f5-config"
+        ]
+      }
+    },
+    "/v1/runtime-data/f5-config/create-runtime-data-job": {
+      "post": {
+        "operationId": "createRuntimeDataJobF5Config",
+        "summary": "",
+        "description": "Create Runtime Data F5 Config Collection Job",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/F5ConfigJobCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/f5-config"
+        ]
+      }
+    },
     "/v1/network-scope-forms/external-route": {
       "post": {
         "operationId": "createOneExternalRoute",
@@ -20039,6 +20331,49 @@
         "responses": {
           "200": {
             "description": "Successfully activated the WAN form",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WanForm"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form"
+        ]
+      }
+    },
+    "/v1/network-scope-forms/wan-form/{id}/deactivate": {
+      "put": {
+        "operationId": "deactivateWanFormWanForm",
+        "summary": "Deactivate an existing WAN form",
+        "security": [
+          {
+            "bearerAuth": [],
+            "roles": [
+              "admin",
+              "network_admin",
+              "ro",
+              "network_ro"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID of the WAN form to deactivate",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deactivated the WAN form",
             "content": {
               "application/json": {
                 "schema": {
@@ -21644,8 +21979,6 @@
           "protocol": {
             "type": "string",
             "enum": [
-              "IP",
-              "ICMP",
               "TCP",
               "UDP"
             ]
@@ -21911,6 +22244,9 @@
             "items": {
               "$ref": "#/components/schemas/Zone"
             }
+          },
+          "hitCount": {
+            "type": "number"
           }
         },
         "required": [
@@ -22195,6 +22531,9 @@
             "items": {
               "$ref": "#/components/schemas/Zone"
             }
+          },
+          "hitCount": {
+            "type": "number"
           }
         },
         "required": [
@@ -22269,6 +22608,10 @@
             "items": {
               "$ref": "#/components/schemas/FirewallRule"
             }
+          },
+          "runtimeDataLastRefreshed": {
+            "format": "date-time",
+            "type": "string"
           }
         },
         "required": [
@@ -22335,6 +22678,10 @@
             "items": {
               "$ref": "#/components/schemas/NatRule"
             }
+          },
+          "runtimeDataLastRefreshed": {
+            "format": "date-time",
+            "type": "string"
           }
         },
         "required": [
@@ -25407,6 +25754,9 @@
               "$ref": "#/components/schemas/Zone"
             }
           },
+          "hitCount": {
+            "type": "number"
+          },
           "tierName": {
             "type": "string"
           },
@@ -25814,6 +26164,9 @@
             "items": {
               "$ref": "#/components/schemas/Zone"
             }
+          },
+          "hitCount": {
+            "type": "number"
           },
           "tierName": {
             "type": "string"
@@ -26393,6 +26746,26 @@
           "nodes"
         ]
       },
+      "TowerJobDto": {
+        "type": "object",
+        "properties": {
+          "finished": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "failed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "finished",
+          "status",
+          "failed"
+        ]
+      },
       "SelfServiceRawConfig": {
         "type": "object",
         "properties": {
@@ -26411,6 +26784,132 @@
         },
         "required": [
           "type"
+        ]
+      },
+      "HitcountJobCreateDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "FirewallRule",
+              "NatRule",
+              "F5Config"
+            ]
+          },
+          "groupId": {
+            "type": "string"
+          },
+          "datacenterId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "groupId",
+          "datacenterId"
+        ]
+      },
+      "HitcountData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "hitCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "hitCount"
+        ]
+      },
+      "HitcountJobResultDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "FirewallRule",
+              "NatRule",
+              "F5Config"
+            ]
+          },
+          "groupId": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HitcountData"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "groupId",
+          "data"
+        ]
+      },
+      "F5Runtime": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "hostname": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true,
+            "nullable": true
+          },
+          "partitions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "runtimeDataLastRefreshed": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "displayName",
+          "hostname",
+          "data",
+          "partitions"
+        ]
+      },
+      "F5ConfigJobCreateDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "FirewallRule",
+              "NatRule",
+              "F5Config"
+            ]
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
         ]
       }
     }

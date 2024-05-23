@@ -161,10 +161,20 @@ export class WanFormComponent implements OnInit, OnDestroy {
       );
   }
 
-  public activateWanForm(wanForm: WanForm) {
+  public activateWanForm(wanForm: WanForm): void {
     const modalDto = new YesNoModalDto('Activate WAN Form', `Are you sure you want to activate: '${wanForm.name}'?`);
     const onConfirm = () => {
       this.wanFormService.activateWanFormWanForm({ id: wanForm.id }).subscribe(() => {
+        this.getWanForms();
+      });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  }
+
+  public deactivateWanForm(wanForm: WanForm) {
+    const modalDto = new YesNoModalDto('Deactivate WAN Form', `Are you sure you want to deactivate: '${wanForm.name}'?`);
+    const onConfirm = () => {
+      this.wanFormService.deactivateWanFormWanForm({ id: wanForm.id }).subscribe(() => {
         this.getWanForms();
       });
     };

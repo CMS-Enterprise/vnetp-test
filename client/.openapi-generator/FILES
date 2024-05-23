@@ -31,6 +31,8 @@ api/v1NetworkSecurityZones.service.ts
 api/v1NetworkStaticRoutes.service.ts
 api/v1NetworkSubnets.service.ts
 api/v1NetworkVlans.service.ts
+api/v1RuntimeDataF5Config.service.ts
+api/v1RuntimeDataHitcount.service.ts
 api/v1SelfService.service.ts
 api/v1Status.service.ts
 api/v1TierGroups.service.ts
@@ -100,6 +102,8 @@ model/datacenter.ts
 model/dcsPermissions.ts
 model/endpointGroup.ts
 model/externalRoute.ts
+model/f5ConfigJobCreateDto.ts
+model/f5Runtime.ts
 model/filter.ts
 model/filterEntry.ts
 model/firewallRule.ts
@@ -148,6 +152,9 @@ model/getManyVrfResponseDto.ts
 model/getManyWanFormResponseDto.ts
 model/getManyWanFormSubnetResponseDto.ts
 model/getManyZoneResponseDto.ts
+model/hitcountData.ts
+model/hitcountJobCreateDto.ts
+model/hitcountJobResultDto.ts
 model/job.ts
 model/l3Out.ts
 model/loadBalancerHealthMonitor.ts
@@ -192,6 +199,7 @@ model/subnetImportCollectionDto.ts
 model/tenant.ts
 model/tier.ts
 model/tierGroup.ts
+model/towerJobDto.ts
 model/userDto.ts
 model/userPass.ts
 model/virtualServerImportCollectionDto.ts

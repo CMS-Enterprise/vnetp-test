@@ -29,8 +29,6 @@ export interface ServiceObject {
     readonly serviceObjectGroups?: Array<ServiceObjectGroup>;
 }
 export enum ServiceObjectProtocolEnum {
-    Ip = 'IP',
-    Icmp = 'ICMP',
     Tcp = 'TCP',
     Udp = 'UDP'
 };
