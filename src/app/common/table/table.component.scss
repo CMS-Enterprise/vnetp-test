@@ -1,35 +1,32 @@
-
- 
-
 // tooltip {
 //     margin-left: 237px;
 // }
 
 td {
-    overflow-wrap: anywhere;
+  overflow-wrap: anywhere;
 }
 
 tr.expandableRow:hover {
-    background-color: #e8f4ff;
-    cursor: pointer;
+  background-color: #e8f4ff;
+  cursor: pointer;
 }
 
 tr.expandableRow {
-    transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;
 
-    &.expanded {
-        background-color: #e8f4ff;
-    }
+  &.expanded {
+    background-color: #e8f4ff;
+  }
 }
 
 tr.expandableContent {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
 }
 
 tr.expanded {
-    opacity: 1;
-    background-color: white;
+  opacity: 1;
+  background-color: white;
 }

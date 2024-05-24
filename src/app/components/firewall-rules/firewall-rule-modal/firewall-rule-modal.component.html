@@ -144,7 +144,7 @@
         </div>
       </div>
 
-      <hr *ngIf="firewallRuleGroupType === 'ZoneBased'"/>
+      <hr *ngIf="firewallRuleGroupType === 'ZoneBased'" />
 
       <div class="form-row" *ngIf="firewallRuleGroupType === 'ZoneBased'">
         <div class="form-group col-md-6">
@@ -159,8 +159,11 @@
               <tr *ngFor="let selectedFromZone of selectedFromZones">
                 <td>{{ selectedFromZone.name }}</td>
                 <td class="table__actions">
-                  <app-icon-button icon="delete" label="Remove From Zone"
-                    (click)="removeZone('from', selectedFromZone.id)"></app-icon-button>
+                  <app-icon-button
+                    icon="delete"
+                    label="Remove From Zone"
+                    (click)="removeZone('from', selectedFromZone.id)"
+                  ></app-icon-button>
                 </td>
               </tr>
               <tr *ngIf="!selectedFromZones?.length" class="text-center">
@@ -168,11 +171,8 @@
               </tr>
             </tbody>
           </table>
-      
-
         </div>
-      
-      
+
         <div class="form-group col-md-6">
           <table class="table table-striped table-sm table-bordered">
             <thead>
@@ -185,8 +185,7 @@
               <tr *ngFor="let selectedToZone of selectedToZones">
                 <td>{{ selectedToZone.name }}</td>
                 <td class="table__actions">
-                  <app-icon-button icon="delete" label="Remove To Zone"
-                    (click)="removeZone('to', selectedToZone.id)"></app-icon-button>
+                  <app-icon-button icon="delete" label="Remove To Zone" (click)="removeZone('to', selectedToZone.id)"></app-icon-button>
                 </td>
               </tr>
               <tr *ngIf="!selectedToZones?.length" class="text-center">
@@ -194,10 +193,7 @@
               </tr>
             </tbody>
           </table>
-      
-
         </div>
-
       </div>
       <div class="form-row" *ngIf="firewallRuleGroupType === 'ZoneBased'">
         <div class="form-group col-md-6">
@@ -206,7 +202,7 @@
               <option></option>
               <option *ngFor="let zone of zones" [ngValue]="zone.id">{{ zone.name }}</option>
             </select>
-      
+
             <button type="button" class="btn btn-info" (click)="addZone('from')" [disabled]="!f.selectedFromZone.value">
               <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
               <span>Add From Zone</span>
@@ -214,13 +210,13 @@
           </div>
         </div>
 
-      <div class="form-group col-md-6">
+        <div class="form-group col-md-6">
           <div class="input-group align-items-center">
             <select id="availableToZones" class="form-control mr-3" formControlName="selectedToZone">
               <option></option>
               <option *ngFor="let zone of zones" [ngValue]="zone.id">{{ zone.name }}</option>
             </select>
-      
+
             <button type="button" class="btn btn-info" (click)="addZone('to')" [disabled]="!f.selectedToZone.value">
               <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
               <span>Add To Zone</span>
@@ -280,7 +276,7 @@
           <span
             *ngIf="f.sourceNetworkType.value === 'NetworkObject'"
             (click)="getObjectInfo('Source NetworkObject', f.sourceNetworkType.value, f.sourceNetworkObject.value)"
-            style="color:blue;cursor: pointer;"
+            style="color: blue; cursor: pointer"
             >(object info)</span
           >
 
@@ -307,7 +303,7 @@
           <span
             *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'"
             (click)="getObjectInfo('Source NetworkObjectGroup', f.sourceNetworkType.value, f.sourceNetworkObjectGroup.value)"
-            style="color:blue;cursor: pointer;"
+            style="color: blue; cursor: pointer"
             >(object info)</span
           >
         </div>
@@ -370,7 +366,7 @@
           <span
             *ngIf="f.destinationNetworkType.value === 'NetworkObject'"
             (click)="getObjectInfo('Destination NetworkObject', f.destinationNetworkType.value, f.destinationNetworkObject.value)"
-            style="color:blue;cursor: pointer;"
+            style="color: blue; cursor: pointer"
             >(object info)</span
           >
 
@@ -397,7 +393,7 @@
           <span
             *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'"
             (click)="getObjectInfo('Destination NetworkObjectGroup', f.destinationNetworkType.value, f.destinationNetworkObjectGroup.value)"
-            style="color:blue;cursor: pointer;"
+            style="color: blue; cursor: pointer"
             >(object info)</span
           >
         </div>
@@ -475,7 +471,7 @@
             <span
               *ngIf="f.serviceType.value === 'ServiceObject'"
               (click)="getObjectInfo('Service Object', f.serviceType.value, f.serviceObject.value)"
-              style="color:blue;cursor: pointer;"
+              style="color: blue; cursor: pointer"
               >(object info)</span
             >
 
@@ -500,7 +496,7 @@
             <span
               *ngIf="f.serviceType.value === 'ServiceObjectGroup'"
               (click)="getObjectInfo('Service Object Group', f.serviceType.value, f.serviceObjectGroup.value)"
-              style="color:blue;cursor: pointer;"
+              style="color: blue; cursor: pointer"
               >(object info)</span
             >
           </div>
@@ -509,9 +505,7 @@
     </div>
 
     <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">
-        Cancel
-      </button>
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">Cancel</button>
 
       <button class="btn btn-success" data-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>

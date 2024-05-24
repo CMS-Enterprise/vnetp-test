@@ -1,7 +1,5 @@
 <div class="form-row pb-2 justify-content-center align-items-center">
-  <span class="col-form-label mr-2">
-    Current Tier:
-  </span>
+  <span class="col-form-label mr-2"> Current Tier: </span>
   <strong>{{ currentTier?.name || 'No Tier Selected' }}</strong>
 
   <button type="button" class="btn btn-primary ml-3" (click)="openTierModal()" [disabled]="!datacenterId">
@@ -20,9 +18,7 @@
   </div>
 
   <footer class="modal-footer">
-    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="tierSwitchModal.close(); clearTier()">
-      Cancel
-    </button>
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="tierSwitchModal.close(); clearTier()">Cancel</button>
 
     <button
       type="button"

@@ -48,7 +48,7 @@
           <tr *ngIf="filteredRules && filteredRules?.length === 0" class="text-center">
             <td [attr.colspan]="12">No Matches</td>
           </tr>
-          <tr *ngFor="let rule of filteredRules | paginate: { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }">
+          <tr *ngFor="let rule of filteredRules | paginate : { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }">
             <td>
               <span class="d-flex">
                 {{ rule.name }}
@@ -116,7 +116,7 @@
         </tbody>
         <tfoot>
           <td [attr.colspan]="12">
-            <pagination-controls id="rulesMatch" (pageChange)="currentPage = $event;"></pagination-controls>
+            <pagination-controls id="rulesMatch" (pageChange)="currentPage = $event"></pagination-controls>
           </td>
         </tfoot>
       </table>
@@ -125,27 +125,34 @@
 
   <form [formGroup]="form" (ngSubmit)="search()">
     <div class="modal-body">
-
       <div class="form-row">
         <div class="form-group col-md-2">
-            <label for="biDirectional">biDirectional</label>
-            <select id="biDirectional" formControlName="biDirectional" class="form-control"
-              [class.is-invalid]="submitted && f.biDirectional.errors" aria-label="Direction">
-              <option></option>
-              <option [ngValue]="false">False</option>
-              <option [ngValue]="true">True</option>
-            </select>
-            <div *ngIf="submitted && f.biDirectional.errors" class="invalid-feedback">
-              <div *ngIf="f.biDirectional.errors.required">biDirectional is required</div>
-            </div>
+          <label for="biDirectional">biDirectional</label>
+          <select
+            id="biDirectional"
+            formControlName="biDirectional"
+            class="form-control"
+            [class.is-invalid]="submitted && f.biDirectional.errors"
+            aria-label="Direction"
+          >
+            <option></option>
+            <option [ngValue]="false">False</option>
+            <option [ngValue]="true">True</option>
+          </select>
+          <div *ngIf="submitted && f.biDirectional.errors" class="invalid-feedback">
+            <div *ngIf="f.biDirectional.errors.required">biDirectional is required</div>
           </div>
-
-
+        </div>
 
         <div class="form-group col-md-2">
           <label for="direction">Direction</label>
-          <select id="direction" formControlName="direction" class="form-control"
-            [class.is-invalid]="submitted && f.direction.errors" aria-label="Direction">
+          <select
+            id="direction"
+            formControlName="direction"
+            class="form-control"
+            [class.is-invalid]="submitted && f.direction.errors"
+            aria-label="Direction"
+          >
             <option></option>
             <option value="In">In</option>
             <option value="Out">Out</option>
@@ -155,27 +162,23 @@
           </div>
         </div>
 
-
         <div class="form-group col-md-2">
-            <label for="enabled">Enabled</label>
-            <select
-              id="enabled"
-              formControlName="enabled"
-              class="form-control"
-              [class.is-invalid]="submitted && f.enabled.errors"
-              aria-label="Enabled"
-            >
-              <option></option>
-              <option value="false">False</option>
-              <option value="true">True</option>
-            </select>
-            <div *ngIf="submitted && f.enabled.errors" class="invalid-feedback">
-              <div *ngIf="f.enabled.errors.required">Enabled is required</div>
-            </div>
+          <label for="enabled">Enabled</label>
+          <select
+            id="enabled"
+            formControlName="enabled"
+            class="form-control"
+            [class.is-invalid]="submitted && f.enabled.errors"
+            aria-label="Enabled"
+          >
+            <option></option>
+            <option value="false">False</option>
+            <option value="true">True</option>
+          </select>
+          <div *ngIf="submitted && f.enabled.errors" class="invalid-feedback">
+            <div *ngIf="f.enabled.errors.required">Enabled is required</div>
           </div>
-
-
-
+        </div>
       </div>
 
       <hr />
@@ -183,8 +186,14 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="originalSourceIp">Original Source IP</label>
-          <input type="text" formControlName="originalSourceIp" id="originalSourceIp" class="form-control"
-            [class.is-invalid]="submitted && f.originalSourceIp.errors" aria-label="Source IP" />
+          <input
+            type="text"
+            formControlName="originalSourceIp"
+            id="originalSourceIp"
+            class="form-control"
+            [class.is-invalid]="submitted && f.originalSourceIp.errors"
+            aria-label="Source IP"
+          />
           <div *ngIf="submitted && f.originalSourceIp.errors" class="invalid-feedback">
             <div *ngIf="f.originalSourceIp.errors.required">Original Source IP Address is required</div>
             <div *ngIf="f.originalSourceIp.errors.invalidIpAny">Original Source IP address, must be a valid IPv4 address</div>
@@ -193,11 +202,16 @@
       </div>
 
       <div class="form-row">
-
         <div class="form-group col-md-6">
           <label for="originalDestinationIp">Original Destination IP</label>
-          <input type="text" id="originalDestinationIp" formControlName="originalDestinationIp" class="form-control"
-            [class.is-invalid]="submitted && f.originalDestinationIp.errors" aria-label="Destination IP" />
+          <input
+            type="text"
+            id="originalDestinationIp"
+            formControlName="originalDestinationIp"
+            class="form-control"
+            [class.is-invalid]="submitted && f.originalDestinationIp.errors"
+            aria-label="Destination IP"
+          />
           <div *ngIf="submitted && f.originalDestinationIp.errors" class="invalid-feedback">
             <div *ngIf="f.originalDestinationIp.errors.required">Original Destination IP is required</div>
             <div *ngIf="f.originalDestinationIp.errors.invalidIpAny">Original Destination IP address, must be a valid IPv4 address</div>
@@ -208,11 +222,18 @@
       <hr />
 
       <div class="form-row">
-
         <div class="form-group col-md-6">
           <label for="translatedSourceIp">Translated Source IP</label>
-          <input type="text" id="translatedSourceIp" formControlName="translatedSourceIp" class="form-control"
-            [class.is-invalid]="submitted && f.translatedSourceIp.errors" aria-label="Translated Source IP" aria-placeholder="None" placeholder="None"/>
+          <input
+            type="text"
+            id="translatedSourceIp"
+            formControlName="translatedSourceIp"
+            class="form-control"
+            [class.is-invalid]="submitted && f.translatedSourceIp.errors"
+            aria-label="Translated Source IP"
+            aria-placeholder="None"
+            placeholder="None"
+          />
           <div *ngIf="submitted && f.translatedSourceIp.errors" class="invalid-feedback">
             <div *ngIf="f.translatedSourceIp.errors.required">Translated Source IP is required</div>
             <div *ngIf="f.translatedSourceIp.errors.invalidIpAny">Translated Source IP address must be a valid IPv4 address</div>
@@ -221,11 +242,18 @@
       </div>
 
       <div class="form-row">
-
         <div class="form-group col-md-6">
           <label for="translatedDestinationIp">Translated Destination IP</label>
-          <input type="text" id="translatedDestinationIp" formControlName="translatedDestinationIp" class="form-control"
-            [class.is-invalid]="submitted && f.translatedDestinationIp.errors" aria-label="Translated Destination IP" aria-placeholder="None" placeholder="None" />
+          <input
+            type="text"
+            id="translatedDestinationIp"
+            formControlName="translatedDestinationIp"
+            class="form-control"
+            [class.is-invalid]="submitted && f.translatedDestinationIp.errors"
+            aria-label="Translated Destination IP"
+            aria-placeholder="None"
+            placeholder="None"
+          />
           <div *ngIf="submitted && f.translatedDestinationIp.errors" class="invalid-feedback">
             <div *ngIf="f.translatedDestinationIp.errors.required">Translated Destination IP is required</div>
             <div *ngIf="f.translatedDestinationIp.errors.invalidIpAny">Translated Destination IP address must be a valid IPv4 address</div>
@@ -236,51 +264,80 @@
       <hr />
 
       <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="originalSourcePort">Original Source Port</label>
+          <input
+            type="text"
+            id="originalSourcePort"
+            formControlName="originalSourcePort"
+            class="form-control"
+            [class.is-invalid]="submitted && f.originalSourcePort.errors"
+            aria-label="Original Source Port"
+            aria-placeholder="any"
+            placeholder="any"
+          />
+          <div *ngIf="submitted && f.originalSourcePort.errors" class="invalid-feedback">
+            <div *ngIf="f.originalSourcePort.errors.invalidPortNumber">Original Source Port must be between 1-65535</div>
+            <div *ngIf="f.originalSourcePort.errors.required">Original Source Port is required</div>
+          </div>
+        </div>
 
+        <div class="form-group col-md-6">
+          <label for="originalDestinationPort">Original Destination Port</label>
+          <input
+            type="text"
+            id="originalDestinationPort"
+            formControlName="originalDestinationPort"
+            class="form-control"
+            [class.is-invalid]="submitted && f.originalDestinationPort.errors"
+            aria-label="Original Destination Port"
+            aria-placeholder="any"
+            placeholder="any"
+          />
+          <div *ngIf="submitted && f.originalDestinationPort.errors" class="invalid-feedback">
+            <div *ngIf="f.originalDestinationPort.errors.invalidPortNumber">Original Destination Port must be between 1-65535</div>
+            <div *ngIf="f.originalDestinationPort.errors.required">Original Destination Port is required</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="translatedSourcePort">Translated Source Port</label>
+          <input
+            type="text"
+            id="translatedSourcePort"
+            formControlName="translatedSourcePort"
+            class="form-control"
+            [class.is-invalid]="submitted && f.translatedSourcePort.errors"
+            aria-label="Translated Source Port"
+            aria-placeholder="None"
+            placeholder="None"
+          />
+          <div *ngIf="submitted && f.translatedSourcePort.errors" class="invalid-feedback">
+            <div *ngIf="f.translatedSourcePort.errors.invalidPortNumber">Translated Source Port must be between 1-65535</div>
+            <div *ngIf="f.translatedSourcePort.errors.required">Translated Source Port is required</div>
+          </div>
+        </div>
 
         <div class="form-group col-md-6">
-            <label for="originalSourcePort">Original Source Port</label>
-            <input type="text" id="originalSourcePort" formControlName="originalSourcePort" class="form-control"
-                   [class.is-invalid]="submitted && f.originalSourcePort.errors" aria-label="Original Source Port" aria-placeholder="any" placeholder="any" />
-            <div *ngIf="submitted && f.originalSourcePort.errors" class="invalid-feedback">
-                <div *ngIf="f.originalSourcePort.errors.invalidPortNumber">Original Source Port must be between 1-65535</div>
-                <div *ngIf="f.originalSourcePort.errors.required">Original Source Port is required</div>
-            </div>
+          <label for="translatedDestinationPort">Translated Destination Port</label>
+          <input
+            type="text"
+            id="translatedDestinationPort"
+            formControlName="translatedDestinationPort"
+            class="form-control"
+            [class.is-invalid]="submitted && f.translatedDestinationPort.errors"
+            aria-label="Translated Destination Port"
+            aria-placeholder="None"
+            placeholder="None"
+          />
+          <div *ngIf="submitted && f.translatedDestinationPort.errors" class="invalid-feedback">
+            <div *ngIf="f.translatedDestinationPort.errors.invalidPortNumber">Translated Destination Port must be between 1-65535</div>
+            <div *ngIf="f.translatedDestinationPort.errors.required">Translated Destination Port is required</div>
+          </div>
         </div>
-    
-        <div class="form-group col-md-6">
-            <label for="originalDestinationPort">Original Destination Port</label>
-            <input type="text" id="originalDestinationPort" formControlName="originalDestinationPort" class="form-control"
-                   [class.is-invalid]="submitted && f.originalDestinationPort.errors" aria-label="Original Destination Port" aria-placeholder="any" placeholder="any"/>
-            <div *ngIf="submitted && f.originalDestinationPort.errors" class="invalid-feedback">
-                <div *ngIf="f.originalDestinationPort.errors.invalidPortNumber">Original Destination Port must be between 1-65535</div>
-                <div *ngIf="f.originalDestinationPort.errors.required">Original Destination Port is required</div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="translatedSourcePort">Translated Source Port</label>
-            <input type="text" id="translatedSourcePort" formControlName="translatedSourcePort" class="form-control"
-                   [class.is-invalid]="submitted && f.translatedSourcePort.errors" aria-label="Translated Source Port"  aria-placeholder="None" placeholder="None"/>
-            <div *ngIf="submitted && f.translatedSourcePort.errors" class="invalid-feedback">
-                <div *ngIf="f.translatedSourcePort.errors.invalidPortNumber">Translated Source Port must be between 1-65535</div>
-                <div *ngIf="f.translatedSourcePort.errors.required">Translated Source Port is required</div>
-            </div>
-        </div>
-    
-        <div class="form-group col-md-6">
-            <label for="translatedDestinationPort">Translated Destination Port</label>
-            <input type="text" id="translatedDestinationPort" formControlName="translatedDestinationPort" class="form-control"
-                   [class.is-invalid]="submitted && f.translatedDestinationPort.errors" aria-label="Translated Destination Port"  aria-placeholder="None" placeholder="None"/>
-            <div *ngIf="submitted && f.translatedDestinationPort.errors" class="invalid-feedback">
-                <div *ngIf="f.translatedDestinationPort.errors.invalidPortNumber">Translated Destination Port must be between 1-65535</div>
-                <div *ngIf="f.translatedDestinationPort.errors.required">Translated Destination Port is required</div>
-            </div>
-        </div>
-    </div>
-    
+      </div>
     </div>
 
     <footer class="modal-footer">

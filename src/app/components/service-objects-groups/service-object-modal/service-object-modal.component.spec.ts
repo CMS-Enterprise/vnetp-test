@@ -109,7 +109,7 @@ describe('ServiceObjectModalComponent', () => {
     component.ModalMode = ModalMode.Create;
     component.form.setValue({
       name: 'Test',
-      protocol: ServiceObjectProtocolEnum.Ip,
+      protocol: ServiceObjectProtocolEnum.Tcp,
       destinationPorts: 'any',
       sourcePorts: 'any',
     });
@@ -121,7 +121,7 @@ describe('ServiceObjectModalComponent', () => {
       serviceObject: {
         tierId: '1',
         name: 'Test',
-        protocol: ServiceObjectProtocolEnum.Ip,
+        protocol: ServiceObjectProtocolEnum.Tcp,
         destinationPorts: 'any',
         sourcePorts: 'any',
       },
@@ -135,7 +135,7 @@ describe('ServiceObjectModalComponent', () => {
     component.ModalMode = ModalMode.Edit;
     component.form.setValue({
       name: 'Test',
-      protocol: ServiceObjectProtocolEnum.Ip,
+      protocol: ServiceObjectProtocolEnum.Udp,
       destinationPorts: 'any',
       sourcePorts: 'any',
     });
@@ -159,7 +159,7 @@ describe('ServiceObjectModalComponent', () => {
         tierId: '1',
         id: '2',
         name: 'ServiceObject',
-        protocol: ServiceObjectProtocolEnum.Ip,
+        protocol: ServiceObjectProtocolEnum.Udp,
         destinationPorts: 'any',
         sourcePorts: 'any',
       },

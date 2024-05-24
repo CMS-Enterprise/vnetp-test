@@ -118,6 +118,12 @@ const routes: Routes = [
         loadChildren: () => import('../../common/environment-summary/environment-summary.module').then(m => m.EnvironmentSummaryModule),
       },
       {
+        path: 'f5-config',
+        canActivate: [AuthGuard],
+        data: { breadcrumb: 'F5 Config', title: 'Automation - F5 Config' },
+        loadChildren: () => import('../../components/f5-config/f5-config.module').then(m => m.F5ConfigModule),
+      },
+      {
         path: 'wan-form',
         canActivate: [AuthGuard],
         data: { breadcrumb: 'WAN Form', title: 'Automation - WAN Form', mode: 'netcentric' },
