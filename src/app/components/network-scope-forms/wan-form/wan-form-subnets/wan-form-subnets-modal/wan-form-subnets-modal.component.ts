@@ -70,8 +70,8 @@ export class WanFormSubnetsModalComponent {
   }
 
   public closeModal(): void {
-    this.ngx.close('wanFormSubnetModal');
     this.reset();
+    this.ngx.close('wanFormSubnetModal');
   }
 
   public getData(): void {
@@ -81,6 +81,10 @@ export class WanFormSubnetsModalComponent {
 
     if (this.modalMode === ModalMode.Edit) {
       this.wanFormSubnetId = dto.wanFormSubnet.id;
+    } else {
+      this.form.controls.name.enable();
+      this.form.controls.netcentricSubnetId.enable();
+      this.form.controls.appcentricSubnetId.enable();
     }
 
     const wanFormSubnet = dto.wanFormSubnet;
@@ -90,6 +94,8 @@ export class WanFormSubnetsModalComponent {
       this.form.controls.description.setValue(wanFormSubnet.description);
       this.form.controls.vrf.setValue(wanFormSubnet.vrf);
       this.form.controls.environment.setValue(wanFormSubnet.environment);
+      this.form.controls.netcentricSubnetId.setValue(wanFormSubnet?.netcentricSubnetId);
+      this.form.controls.appcentricSubnetId.setValue(wanFormSubnet?.appcentricSubnetId);
     }
     this.ngx.resetModalData('wanFormSubnetModal');
   }
