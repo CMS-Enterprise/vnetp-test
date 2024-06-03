@@ -34,8 +34,6 @@ export class WanFormSubnetsModalComponent {
   public currentDcsMode: string;
   public tenantId: string;
 
-  public ModalMode = ModalMode;
-
   constructor(
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
@@ -100,6 +98,10 @@ export class WanFormSubnetsModalComponent {
       this.form.controls.environment.setValue(wanFormSubnet.environment);
       this.form.controls.netcentricSubnetId.setValue(wanFormSubnet?.netcentricSubnetId);
       this.form.controls.appcentricSubnetId.setValue(wanFormSubnet?.appcentricSubnetId);
+      this.form.controls.netcentricSubnetId.disable();
+      this.form.controls.appcentricSubnetId.disable();
+      this.form.controls.vrf.disable();
+      this.form.controls.environment.disable();
     }
     this.ngx.resetModalData('wanFormSubnetModal');
   }
@@ -122,10 +124,6 @@ export class WanFormSubnetsModalComponent {
 
     if (this.modalMode === ModalMode.Edit) {
       this.form.controls.name.disable();
-      this.form.controls.netcentricSubnetId.disable();
-      this.form.controls.appcentricSubnetId.disable();
-      this.form.controls.vrf.disable();
-      this.form.controls.environment.disable();
     }
   }
 

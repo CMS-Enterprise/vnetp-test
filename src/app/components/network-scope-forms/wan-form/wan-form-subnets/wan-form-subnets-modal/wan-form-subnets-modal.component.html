@@ -52,7 +52,6 @@
           class="form-control"
           [class.is-invalid]="submitted && f.vrf.errors"
           aria-label="Policy Control Enforced"
-          [disabled]="modalMode === ModalMode.Edit"
         >
           <option></option>
           <option value="appprod">appprod (vpn_app_unix)</option>
@@ -75,7 +74,6 @@
           class="form-control"
           [class.is-invalid]="submitted && f.environment.errors"
           aria-label="Environment"
-          [disabled]="modalMode === ModalMode.Edit"
         >
           <option></option>
           <option value="prod">Prod</option>
@@ -96,7 +94,6 @@
           class="form-control"
           [class.is-invalid]="submitted && f.netcentricSubnetId.errors"
           aria-label="Netcentric Subnet"
-          [disabled]="modalMode === ModalMode.Edit"
         >
           <option *ngFor="let subnet of availableNetcentricSubnets" [value]="subnet.id">
             {{ subnet.name }} - {{ subnet.description }} ({{ subnet.network }}, {{ subnet.gateway }}, VLAN: {{ subnet.vlanInfo }}, Tier:
@@ -116,7 +113,6 @@
           class="form-control"
           [class.is-invalid]="submitted && f.appcentricSubnetId.errors"
           aria-label="Appcentric Subnet"
-          [disabled]="modalMode === ModalMode.Edit"
         >
           <option *ngFor="let subnet of availableAppcentricSubnets" [value]="subnet.id">
             {{ subnet.name }} - {{ subnet.alias }} - {{ subnet.description }} (Gateway IP: {{ subnet.gatewayIp }}, Treat As Virtual IP
