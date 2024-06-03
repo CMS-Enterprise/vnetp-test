@@ -238,6 +238,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
   public onTenantSelect(tenant: Tenant): void {
     const currentQueryParams = this.route.snapshot.queryParams;
     const queryParams = { ...currentQueryParams, tenantId: tenant.id };
+    this.selectedTenant = tenant.id;
     this.router.navigate(['/appcentric/wan-form'], {
       queryParams,
     });

@@ -71,6 +71,8 @@ export class ExternalRouteModalComponent implements OnInit, OnDestroy {
       this.form.controls.description.setValue(externalRoute.description);
       this.form.controls.vrf.setValue(externalRoute.vrf);
       this.form.controls.environment.setValue(externalRoute.environment);
+      this.form.controls.vrf.disable();
+      this.form.controls.environment.disable();
     }
     this.ngx.resetModalData('externalRouteModal');
   }
