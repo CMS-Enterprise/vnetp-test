@@ -88,7 +88,7 @@
               <p><strong>Description:</strong> {{ subnetVlans.get(subnet.netcentricSubnetId).description || '-' }}</p>
             </div>
             <div class="col-sm-6">
-              <p><strong>VLAN Numbrt:</strong> {{ subnetVlans.get(subnet.netcentricSubnetId).vlanNumber }}</p>
+              <p><strong>VLAN Number:</strong> {{ subnetVlans.get(subnet.netcentricSubnetId).vlanNumber }}</p>
             </div>
             <div class="col-sm-6">
               <p><strong>VCD VLAN Type:</strong> {{ subnetVlans.get(subnet.netcentricSubnetId).vcdVlanType }}</p>
@@ -157,7 +157,10 @@
               <p><strong>Limit Local IP Learning:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).limitLocalIpLearning }}</p>
             </div>
             <div class="col-sm-6">
-              <p><strong>EP Move Detection Mode GARP:</strong> {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).epMoveDetectionModeGarp }}</p>
+              <p>
+                <strong>EP Move Detection Mode GARP:</strong>
+                {{ subnetBridgeDomains.get(subnet.appcentricSubnetId).epMoveDetectionModeGarp }}
+              </p>
             </div>
           </div>
         </div>
