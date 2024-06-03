@@ -121,10 +121,6 @@ export class WanFormSubnetsModalComponent {
       netcentricSubnetId: [''],
       appcentricSubnetId: [''],
     });
-
-    if (this.modalMode === ModalMode.Edit) {
-      this.form.controls.name.disable();
-    }
   }
 
   public save(): void {
