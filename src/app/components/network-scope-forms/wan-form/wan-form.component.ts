@@ -41,7 +41,6 @@ export class WanFormComponent implements OnInit, OnDestroy {
   @ViewChild('drawer') drawer: MatSidenav;
 
   public searchColumns: SearchColumnConfig[] = [
-    { propertyName: 'name', displayName: 'Name' },
     { displayName: 'Description', propertyName: 'description' },
     { displayName: 'Created At', propertyName: 'createdAt' },
     { displayName: 'Active', propertyName: 'active', propertyType: 'boolean' },

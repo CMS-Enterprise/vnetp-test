@@ -13,7 +13,13 @@ import { WanFormSubnetModalDto } from '../../../../models/network-scope-forms/wa
 import { ModalMode } from '../../../../models/other/modal-mode';
 import { TableContextService } from '../../../../services/table-context.service';
 import { WanFormSubnetsComponent } from './wan-form-subnets.component';
-import { MockComponent, MockFontAwesomeComponent } from '../../../../../test/mock-components';
+import {
+  MockComponent,
+  MockFontAwesomeComponent,
+  MockIconButtonComponent,
+  MockNgxSmartModalComponent,
+} from '../../../../../test/mock-components';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('WanFormSubnetsComponent', () => {
   let component: WanFormSubnetsComponent;
@@ -81,11 +87,13 @@ describe('WanFormSubnetsComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [
+        MockNgxSmartModalComponent,
         WanFormSubnetsComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockComponent('app-wan-form-subnets-modal'),
       ],
+      imports: [FormsModule, ReactiveFormsModule],
       providers: [
         { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
         { provide: V1NetworkScopeFormsWanFormSubnetService, useValue: mockWanFormSubnetService },

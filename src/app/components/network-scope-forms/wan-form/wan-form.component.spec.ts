@@ -9,6 +9,8 @@ import { DatacenterContextService } from '../../../services/datacenter-context.s
 import { TableContextService } from '../../../services/table-context.service';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { WanFormComponent } from './wan-form.component';
+import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockYesNoModalComponent } from 'src/test/mock-components';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('WanFormComponent', () => {
   let component: WanFormComponent;
@@ -71,7 +73,14 @@ describe('WanFormComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [WanFormComponent],
+      declarations: [
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockComponent({ selector: 'app-wan-form-modal' }),
+        WanFormComponent,
+        MockYesNoModalComponent,
+        MockFontAwesomeComponent,
+      ],
+      imports: [FormsModule, ReactiveFormsModule],
       providers: [
         { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
         { provide: V1NetworkScopeFormsWanFormService, useValue: mockWanFormService },

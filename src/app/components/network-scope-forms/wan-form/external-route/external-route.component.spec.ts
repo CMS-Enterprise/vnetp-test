@@ -8,6 +8,8 @@ import { ModalMode } from '../../../../models/other/modal-mode';
 import { DatacenterContextService } from '../../../../services/datacenter-context.service';
 import { TableContextService } from '../../../../services/table-context.service';
 import { ExternalRouteComponent } from './external-route.component';
+import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 describe('ExternalRouteComponent', () => {
   let component: ExternalRouteComponent;
@@ -69,7 +71,15 @@ describe('ExternalRouteComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [ExternalRouteComponent],
+      imports: [NgxPaginationModule],
+      declarations: [
+        MockNgxSmartModalComponent,
+        MockComponent({ selector: 'app-external-route-modal' }),
+        ExternalRouteComponent,
+        MockFontAwesomeComponent,
+        MockIconButtonComponent,
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+      ],
       providers: [
         { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
         { provide: V1NetworkScopeFormsExternalRouteService, useValue: mockExternalRouteService },

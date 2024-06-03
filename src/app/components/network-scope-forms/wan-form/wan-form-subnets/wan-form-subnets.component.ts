@@ -59,7 +59,6 @@ export class WanFormSubnetsComponent {
   };
 
   public searchColumns: SearchColumnConfig[] = [
-    { propertyName: 'name', displayName: 'Name' },
     { displayName: 'Description', propertyName: 'description' },
     { displayName: 'VRF/Zone', propertyName: 'vrfName' },
     { displayName: 'Environment', propertyName: 'environment' },
