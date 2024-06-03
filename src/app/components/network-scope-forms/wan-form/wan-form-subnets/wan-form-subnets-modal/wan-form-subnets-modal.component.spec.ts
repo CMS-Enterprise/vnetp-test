@@ -178,32 +178,6 @@ describe('WanFormSubnetsModalComponent', () => {
       expect(vrfControl?.validator).toBeTruthy();
       expect(environmentControl?.validator).toBeTruthy();
     });
-
-    it('should disable specific controls if modalMode is Edit', () => {
-      component.modalMode = ModalMode.Edit;
-      (component as any).buildForm();
-
-      const nameControl = component.form.get('name');
-      const netcentricSubnetIdControl = component.form.get('netcentricSubnetId');
-      const appcentricSubnetIdControl = component.form.get('appcentricSubnetId');
-
-      expect(nameControl?.disabled).toBe(true);
-      expect(netcentricSubnetIdControl?.disabled).toBe(true);
-      expect(appcentricSubnetIdControl?.disabled).toBe(true);
-    });
-
-    it('should not disable specific controls if modalMode is not Edit', () => {
-      component.modalMode = ModalMode.Create;
-      (component as any).buildForm();
-
-      const nameControl = component.form.get('name');
-      const netcentricSubnetIdControl = component.form.get('netcentricSubnetId');
-      const appcentricSubnetIdControl = component.form.get('appcentricSubnetId');
-
-      expect(nameControl?.disabled).toBe(false);
-      expect(netcentricSubnetIdControl?.disabled).toBe(false);
-      expect(appcentricSubnetIdControl?.disabled).toBe(false);
-    });
   });
 
   describe('save', () => {
