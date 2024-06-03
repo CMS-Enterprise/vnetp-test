@@ -9,7 +9,7 @@ import { DatacenterContextService } from '../../../services/datacenter-context.s
 import { TableContextService } from '../../../services/table-context.service';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { WanFormComponent } from './wan-form.component';
-import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockYesNoModalComponent } from 'src/test/mock-components';
+import { MockComponent, MockFontAwesomeComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('WanFormComponent', () => {

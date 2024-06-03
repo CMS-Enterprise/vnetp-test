@@ -13,12 +13,7 @@ import { WanFormSubnetModalDto } from '../../../../models/network-scope-forms/wa
 import { ModalMode } from '../../../../models/other/modal-mode';
 import { TableContextService } from '../../../../services/table-context.service';
 import { WanFormSubnetsComponent } from './wan-form-subnets.component';
-import {
-  MockComponent,
-  MockFontAwesomeComponent,
-  MockIconButtonComponent,
-  MockNgxSmartModalComponent,
-} from '../../../../../test/mock-components';
+import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent } from '../../../../../test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('WanFormSubnetsComponent', () => {
