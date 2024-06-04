@@ -71,6 +71,7 @@ export class WanFormModalComponent implements OnInit, OnDestroy {
   }
 
   public getData(): void {
+    this.tenantId = this.route.snapshot.queryParams.tenantId;
     const dto = Object.assign({}, this.ngx.getModalData('wanFormModal') as WanFormModalDto);
     this.modalMode = dto.modalMode;
     if (this.modalMode === ModalMode.Edit) {

@@ -6,7 +6,7 @@ import { V1NetworkScopeFormsExternalRouteService } from '../../../../../../../cl
 import { DatacenterContextService } from '../../../../../services/datacenter-context.service';
 import { ExternalRouteModalComponent } from './external-route-modal.component';
 import { ModalMode } from '../../../../../models/other/modal-mode';
-import { MockFontAwesomeComponent, MockIconButtonComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 
 describe('ExternalRouteModalComponent', () => {
   let component: ExternalRouteModalComponent;
@@ -46,7 +46,7 @@ describe('ExternalRouteModalComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
-      declarations: [ExternalRouteModalComponent, MockFontAwesomeComponent, MockIconButtonComponent],
+      declarations: [ExternalRouteModalComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
         { provide: V1NetworkScopeFormsExternalRouteService, useValue: mockExternalRouteService },

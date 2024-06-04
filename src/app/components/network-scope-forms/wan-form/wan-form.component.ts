@@ -241,5 +241,6 @@ export class WanFormComponent implements OnInit, OnDestroy {
     this.router.navigate(['/appcentric/wan-form'], {
       queryParams,
     });
+    this.getWanForms();
   }
 }

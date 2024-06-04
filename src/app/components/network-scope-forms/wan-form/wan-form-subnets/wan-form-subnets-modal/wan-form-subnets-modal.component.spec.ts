@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WanFormSubnetsModalComponent } from './wan-form-subnets-modal.component';
-import { MockNgxSmartModalComponent } from '../../../../../../test/mock-components';
+import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from '../../../../../../test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   V1NetworkScopeFormsWanFormSubnetService,
@@ -11,8 +11,9 @@ import {
 import { DatacenterContextService } from '../../../../../services/datacenter-context.service';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalMode } from '../../../../../models/other/modal-mode';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 describe('WanFormSubnetsModalComponent', () => {
   let component: WanFormSubnetsModalComponent;
@@ -82,8 +83,8 @@ describe('WanFormSubnetsModalComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [],
-      declarations: [WanFormSubnetsModalComponent, MockNgxSmartModalComponent],
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [WanFormSubnetsModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
         { provide: V1NetworkScopeFormsWanFormSubnetService, useValue: mockWanFormSubnetService },
