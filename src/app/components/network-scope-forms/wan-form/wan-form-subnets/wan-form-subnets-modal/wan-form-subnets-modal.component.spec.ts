@@ -13,7 +13,6 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalMode } from '../../../../../models/other/modal-mode';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 describe('WanFormSubnetsModalComponent', () => {
   let component: WanFormSubnetsModalComponent;
