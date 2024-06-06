@@ -9,9 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ExternalRoute } from './externalRoute';
 import { Tier } from './tier';
 import { TierGroup } from './tierGroup';
 import { SelfService } from './selfService';
+import { WanForm } from './wanForm';
 import { Job } from './job';
 import { AuditLog } from './auditLog';
 
@@ -29,5 +31,7 @@ export interface Datacenter {
     readonly jobs?: Array<Job>;
     readonly auditLogs?: Array<AuditLog>;
     readonly selfServices?: SelfService;
+    readonly wanForms?: Array<WanForm>;
+    readonly externalRoutes?: Array<ExternalRoute>;
 }
 

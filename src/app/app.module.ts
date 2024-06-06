@@ -9,6 +9,7 @@ import { faClone, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import {
   faBars,
   faBolt,
+  faCheck,
   faChevronDown,
   faChevronLeft,
   faChevronRight,
@@ -25,12 +26,12 @@ import {
   faSpinner,
   faSyncAlt,
   faTable,
+  faTimes,
   faTrash,
   faUndo,
   faUpload,
   faAsterisk,
-  faCircle,
-  faCheck,
+  faCog,
 } from '@fortawesome/free-solid-svg-icons';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
@@ -123,10 +124,10 @@ export class AppModule {
       faExclamationTriangle,
       faAsterisk,
       faClone,
-      faCircle,
       faCheck,
-      faSyncAlt,
-      faExclamationTriangle,
+      faTimes,
+      faCog,
+      faChevronLeft,
     );
   }
 }
