@@ -321,6 +321,7 @@ describe('WanFormSubnetsModalComponent', () => {
 
       expect(mockAppcentricSubnetService.getManyAppCentricSubnet).toHaveBeenCalledWith({
         filter: ['tenantId||eq||testTenantId'],
+        relations: ['tenant', 'bridgeDomain'],
       });
     });
 

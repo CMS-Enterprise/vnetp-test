@@ -96,8 +96,8 @@
           aria-label="Netcentric Subnet"
         >
           <option *ngFor="let subnet of availableNetcentricSubnets" [value]="subnet.id">
-            {{ subnet.name }} - {{ subnet.description }} ({{ subnet.network }}, {{ subnet.gateway }}, VLAN: {{ subnet.vlan.name }}, Tier:
-            {{ subnet.tier.name }}, Shared: {{ subnet.sharedBetweenVrfs ? 'Yes' : 'No' }})
+            {{ subnet.name }} - {{ subnet.description }} ({{ subnet.network }}, {{ subnet.gateway }}, VLAN: {{ subnet.vlan?.name }}, Tier:
+            {{ subnet.tier?.name }}, Shared: {{ subnet.sharedBetweenVrfs ? 'Yes' : 'No' }})
           </option>
         </select>
         <div *ngIf="submitted && f.netcentricSubnetId.errors" class="invalid-feedback">
@@ -119,7 +119,7 @@
             Address: {{ subnet.treatAsVirtualIpAddress ? 'Yes' : 'No' }}, Primary IP Address: {{ subnet.primaryIpAddress ? 'Yes' : 'No' }},
             Advertised Externally: {{ subnet.advertisedExternally ? 'Yes' : 'No' }}, Preferred: {{ subnet.preferred ? 'Yes' : 'No' }},
             Shared Between VRFs: {{ subnet.sharedBetweenVrfs ? 'Yes' : 'No' }}, IP Data Plane Learning:
-            {{ subnet.ipDataPlaneLearning ? 'Yes' : 'No' }}, Tenant: {{ subnet.tenant.name }}, Bridge Domain:
+            {{ subnet.ipDataPlaneLearning ? 'Yes' : 'No' }}, Tenant: {{ subnet.tenant?.name }}, Bridge Domain:
             {{ subnet.bridgeDomain.name }})
           </option>
         </select>
