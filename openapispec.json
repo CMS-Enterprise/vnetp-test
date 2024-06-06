@@ -20312,7 +20312,6 @@
             "roles": [
               "admin",
               "network_admin",
-              "ro",
               "network_ro"
             ]
           }
@@ -20355,7 +20354,6 @@
             "roles": [
               "admin",
               "network_admin",
-              "ro",
               "network_ro"
             ]
           }
@@ -23772,7 +23770,10 @@
               "FilterEntry",
               "Subject",
               "Vrf",
-              "RouteProfile"
+              "RouteProfile",
+              "WanForm",
+              "ExternalRoute",
+              "WanFormSubnet"
             ]
           },
           "entityBefore": {
@@ -24075,14 +24076,16 @@
           },
           "datacenterId": {
             "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
           }
         },
         "required": [
           "externalRouteIp",
           "vrf",
           "environment",
-          "wanFormId",
-          "datacenterId"
+          "wanFormId"
         ]
       },
       "Datacenter": {

@@ -26,7 +26,8 @@ export interface ExternalRoute {
     environment: ExternalRouteEnvironmentEnum;
     wanFormId: string;
     readonly wanForm?: WanForm;
-    datacenterId: string;
+    datacenterId?: string;
+    tenantId?: string;
 }
 export enum ExternalRouteVrfEnum {
     Appprod = 'appprod',
