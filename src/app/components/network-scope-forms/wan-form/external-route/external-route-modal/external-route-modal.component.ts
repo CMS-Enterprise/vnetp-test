@@ -65,7 +65,7 @@ export class ExternalRouteModalComponent implements OnInit, OnDestroy {
   }
 
   public getData(): void {
-    this.tenantId = this.route.snapshot.queryParams.tenantId;
+    this.tenantId = this.route.snapshot.queryParams?.tenantId;
     const dto = Object.assign({}, this.ngx.getModalData('externalRouteModal') as ExternalRouteModalDto);
     this.wanFormId = dto.wanFormId;
     this.modalMode = dto.modalMode;

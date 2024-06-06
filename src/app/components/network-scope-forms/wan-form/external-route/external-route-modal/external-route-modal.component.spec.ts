@@ -7,6 +7,7 @@ import { DatacenterContextService } from '../../../../../services/datacenter-con
 import { ExternalRouteModalComponent } from './external-route-modal.component';
 import { ModalMode } from '../../../../../models/other/modal-mode';
 import { MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
+import { ActivatedRoute } from '@angular/router';
 
 describe('ExternalRouteModalComponent', () => {
   let component: ExternalRouteModalComponent;
@@ -52,6 +53,7 @@ describe('ExternalRouteModalComponent', () => {
         { provide: V1NetworkScopeFormsExternalRouteService, useValue: mockExternalRouteService },
         { provide: DatacenterContextService, useValue: mockDatacenterContextService },
         { provide: FormBuilder, useValue: formBuilder },
+        { provide: ActivatedRoute, useValue: { snapshot: { data: { mode: 'netcentric' } } } },
       ],
     }).compileComponents();
 
