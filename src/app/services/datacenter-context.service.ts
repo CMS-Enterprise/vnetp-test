@@ -53,9 +53,11 @@ export class DatacenterContextService {
         this.ignoreNextQueryParamEvent = false;
         return;
       }
+      const isAppcentric = this.router.url.includes('appcentric');
+
       const fetch = !this.routesNotToRender.some(route => route === this.router.url);
 
-      if (fetch) {
+      if (fetch && !isAppcentric) {
         this.getDatacenters(queryParams.get('datacenter'));
       }
     });
