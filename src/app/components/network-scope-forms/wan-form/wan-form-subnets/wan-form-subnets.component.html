@@ -1,13 +1,15 @@
-<button class="btn float-left mr-3" (click)="navigateToWanForm()"><fa-icon [icon]="['fas', 'chevron-left']"></fa-icon></button>
+<button class="btn float-left mr-3" (click)="navigateToWanForm()" aria-label="navigate-to-wan-form">
+  <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+</button>
 
 <h1>Advertised Internal Subnets for: {{ wanForm?.name }}</h1>
 
-<fieldset class="btn-toolbar" role="group">
+<section class="btn-toolbar" role="toolbar" aria-label="create-internal-subnet">
   <button type="button" class="btn btn-success" (click)="openModal(ModalMode.Create)">
     <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
     <span>Create Subnet</span>
   </button>
-</fieldset>
+</section>
 
 <app-table
   *ngIf="!isLoading; else loading"
@@ -46,7 +48,8 @@
   <span *ngIf="wanFormSubnet.vrf === 'appdev'">appdev (vpn_app_unix_imp)</span>
   <span *ngIf="wanFormSubnet.vrf === 'dataprod'">dataprod (vpn_data_unix)</span>
   <span *ngIf="wanFormSubnet.vrf === 'datadev'">datadev (vpn_data_unix_imp)</span>
-  <span *ngIf="wanFormSubnet.vrf === 'edcmgmt '">edcmgmt (vpn_edc_mgmt)</span>
+  <span *ngIf="wanFormSubnet.vrf === 'edcmgmt'">edcmgmt (vpn_edc_mgmt)</span>
+  <span *ngIf="wanFormSubnet.vrf === 'transport'">Transport</span>
 </ng-template>
 
 <ng-template #loading>
