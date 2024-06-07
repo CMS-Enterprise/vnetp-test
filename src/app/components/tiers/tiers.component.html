@@ -9,16 +9,28 @@
   </section>
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-table [config]="config" [data]="tiers" (clearResults)="getTiers($event)" (searchParams)="getTiers($event)"
-      [searchColumns]="searchColumns" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+    <app-table
+      [config]="config"
+      [data]="tiers"
+      (clearResults)="getTiers($event)"
+      (searchParams)="getTiers($event)"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
     <section class="btn-toolbar" role="toolbar">
       <a class="btn btn-info" title="Get Tier Export" (click)="getExportTiers()">
         <fa-icon class="icon" [icon]="['fas', 'download']"></fa-icon>
         <span>Get Tier Export</span>
       </a>
-      <app-import-export *ngIf="exportTiersLoaded" [exportObject]="exportTiers"
-        exportFileName="tiers-{{ currentDatacenter?.name }}" [disableJson]="false" [disableImport]="true"
-        (import)="importTiersConfig($event)"></app-import-export>
+      <app-import-export
+        *ngIf="exportTiersLoaded"
+        [exportObject]="exportTiers"
+        exportFileName="tiers-{{ currentDatacenter?.name }}"
+        [disableJson]="false"
+        [disableImport]="true"
+        (import)="importTiersConfig($event)"
+      ></app-import-export>
     </section>
   </ng-container>
 </ng-container>
@@ -31,23 +43,36 @@
 
 <ng-template #tierGroupTemplate let-tier="datum">
   <section>
-    <span>{{ tier?.tierGroupId | resolve: getTierGroupName }}</span>
+    <span>{{ tier?.tierGroupId | resolve : getTierGroupName }}</span>
   </section>
 </ng-template>
 
 <ng-template #actionsTemplate let-tier="datum">
   <section class="table__actions">
-    <app-icon-button *ngIf="checkUndeployedChanges(tier)" icon="asterisk" label="Undeployed Changes"
-      [type]="'info'"></app-icon-button>
+    <app-icon-button *ngIf="checkUndeployedChanges(tier)" icon="asterisk" label="Undeployed Changes" [type]="'info'"></app-icon-button>
 
-    <app-icon-button *ngIf="!tier?.deletedAt" icon="edit" label="Edit Tier"
-      (handleClick)="openTierModal(ModalMode.Edit, tier)"></app-icon-button>
+    <app-icon-button
+      *ngIf="!tier?.deletedAt"
+      icon="edit"
+      label="Edit Tier"
+      (handleClick)="openTierModal(ModalMode.Edit, tier)"
+    ></app-icon-button>
 
-    <app-icon-button *ngIf="tier?.deletedAt" icon="undo" label="Restore Tier" type="success"
-      (handleClick)="restoreTier(tier)"></app-icon-button>
+    <app-icon-button
+      *ngIf="tier?.deletedAt"
+      icon="undo"
+      label="Restore Tier"
+      type="success"
+      (handleClick)="restoreTier(tier)"
+    ></app-icon-button>
 
-    <app-icon-button *ngIf="!tier?.provisionedAt" icon="delete" label="Soft-Delete/Delete Tier"
-      [type]="tier?.deletedAt ? 'danger' : 'default'" (handleClick)="deleteTier(tier)"></app-icon-button>
+    <app-icon-button
+      *ngIf="!tier?.provisionedAt"
+      icon="delete"
+      label="Soft-Delete/Delete Tier"
+      [type]="tier?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteTier(tier)"
+    ></app-icon-button>
   </section>
 </ng-template>
 
@@ -60,4 +85,4 @@
 <ng-template #warningMessage>
   <p>Select a Datacenter to display Tier details</p>
 </ng-template>
-<app-type-delete-modal [tierToDelete]="selectedTierToDelete"></app-type-delete-modal>
+<app-type-delete-modal [objectType]="objectType" [objectToDelete]="selectedTierToDelete"></app-type-delete-modal>

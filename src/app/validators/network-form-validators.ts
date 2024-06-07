@@ -1,8 +1,8 @@
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl, UntypedFormControl } from '@angular/forms';
 import { isFQDN, isIP, isMACAddress } from 'validator';
 
 export function IpAddressAnyValidator(control: UntypedFormControl): { invalidIpAny: boolean } {
-  if (!control || !control.value) {
+  if (!control?.value) {
     return null;
   }
 
@@ -22,8 +22,22 @@ export function IpAddressAnyValidator(control: UntypedFormControl): { invalidIpA
   return { invalidIpAny: true };
 }
 
+export function validateWanFormExternalRouteIp(control: FormControl): { invalidExternalRouteIp: boolean } {
+  if (!control?.value) {
+    return null;
+  }
+
+  const octets = control.value.split('.');
+
+  if (octets[0] === '10' || (octets[0] === '158' && octets[1] === '73') || (octets[0] === '192' && octets[1] === '168')) {
+    return null;
+  }
+
+  return { invalidExternalRouteIp: true };
+}
+
 export function IpAddressCidrValidator(control: UntypedFormControl): { invalidIpCidr: boolean } {
-  if (!control || !control.value) {
+  if (!control?.value) {
     return null;
   }
   const valueArray = control.value.split('/');
@@ -40,8 +54,20 @@ export function IpAddressCidrValidator(control: UntypedFormControl): { invalidIp
   return { invalidIpCidr: true };
 }
 
+export function IpAddressHostNetworkCidrValidator(control: FormControl): { invalidHost: true } {
+  if (!control?.value) {
+    return null;
+  }
+
+  if (isCidrValid(control.value)) {
+    return null;
+  }
+
+  return { invalidHost: true };
+}
+
 export function IsIpV4NoSubnetValidator(control: UntypedFormControl): { invalidIpNoSubnet: boolean } | { invalidIp: boolean } {
-  if (!control || !control.value) {
+  if (!control?.value) {
     return null;
   }
 
@@ -59,7 +85,7 @@ export function IsIpV4NoSubnetValidator(control: UntypedFormControl): { invalidI
 }
 
 export function IpAddressIpValidator(control: UntypedFormControl): { invalidIpAddress: boolean } {
-  if (!control || !control.value) {
+  if (!control?.value) {
     return null;
   }
   const valueArray = control.value.split('/');
@@ -77,7 +103,7 @@ export function IpAddressIpValidator(control: UntypedFormControl): { invalidIpAd
 }
 
 export function FqdnValidator(control: UntypedFormControl): { invalidFqdn: boolean } {
-  if (!control || !control.value) {
+  if (!control?.value) {
     return null;
   }
 
@@ -90,7 +116,7 @@ export function FqdnValidator(control: UntypedFormControl): { invalidFqdn: boole
 }
 
 export function MacAddressValidator(control: UntypedFormControl): { invalidMacAddress: boolean } {
-  if (!control || !control.value) {
+  if (!control?.value) {
     return null;
   }
 
@@ -106,7 +132,7 @@ export function ValidatePortRange(control: UntypedFormControl): { invalidPortNum
   if (control.value?.includes(' ')) {
     return { invalidPortNumber: true };
   }
-  if (!control || !control.value) {
+  if (!control?.value) {
     return null;
   }
 
@@ -147,7 +173,7 @@ export function ValidatePortRange(control: UntypedFormControl): { invalidPortNum
 }
 
 export function ValidatePortNumber(control: UntypedFormControl): { invalidPortNumber: boolean } | { portRangeNotAllowed: boolean } {
-  if (!control || !control.value) {
+  if (!control?.value) {
     return null;
   }
 
@@ -199,4 +225,28 @@ function ValidateNetMask(netMask: number, ipVersion: number): boolean {
     return netMask <= 32;
   }
   return netMask <= 128;
+}
+
+function isCidrValid(cidr: string): boolean {
+  const [ipAddress, mask] = cidr.split('/');
+  const maskValue = parseInt(mask, 10);
+
+  if (maskValue < 0 || maskValue > 32) {
+    return false; // invalid mask value
+  }
+
+  const octets = ipAddress.split('.').map(octet => parseInt(octet, 10));
+  if (octets.some(octet => octet < 0 || octet > 255)) {
+    return false; // invalid IP address octet
+  }
+
+  const binaryIp = octets.map(octet => octet.toString(2).padStart(8, '0')).join('');
+
+  const hostBits = binaryIp.slice(maskValue);
+
+  if (hostBits !== '0'.repeat(32 - maskValue)) {
+    return false; // invalid host bits
+  }
+
+  return true;
 }

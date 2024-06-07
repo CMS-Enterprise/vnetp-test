@@ -53,7 +53,7 @@
         <tooltip
           message="Please note that a rule with the same name must not already exist in order for the new rule to be moved/cloned."
         ></tooltip>
-        <input class="form-control" id="name" type="text" formControlName="name" />
+        <input aria-label="name" class="form-control" id="name" type="text" formControlName="name" />
         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
           <div *ngIf="f.name.errors.required">Name is required</div>
           <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
@@ -67,16 +67,14 @@
         <tooltip
           message="Please note that a rule with the same rule index must not already exist in order for the new rule to be moved/cloned."
         ></tooltip>
-        <input class="form-control" id="ruleIndex" type="number" formControlName="ruleIndex" />
+        <input aria-label="ruleIndex" class="form-control" id="ruleIndex" type="number" formControlName="ruleIndex" />
         <div *ngIf="submitted && f.ruleIndex.errors" class="invalid-feedback">
           <div *ngIf="f.ruleIndex.errors.required">Rule Index is required</div>
         </div>
       </div>
     </div>
     <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
-        Cancel
-      </button>
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">Cancel</button>
       <button class="btn btn-success" data-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>

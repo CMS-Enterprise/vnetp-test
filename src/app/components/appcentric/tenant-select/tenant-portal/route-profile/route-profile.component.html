@@ -7,28 +7,49 @@
   </section>
 
   <ng-container *ngIf="!isLoading; else loading">
-    <app-table [config]="config" [data]="routeProfiles" (clearResults)="getRouteProfile($event)"
-      (searchParams)="getRouteProfile($event)" [searchColumns]="searchColumns" [(itemsPerPage)]="perPage"
-      (tableEvent)="onTableEvent($event)"></app-table>
+    <app-table
+      [config]="config"
+      [data]="routeProfiles"
+      (clearResults)="getRouteProfile($event)"
+      (searchParams)="getRouteProfile($event)"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
     <section class="btn-toolbar" role="toolbar">
-      <app-import-export [exportObject]="routeProfiles" exportFileName="routeProfiles" [disableJson]="false"
-      (import)="importRouteProfiles($event)"
-        ></app-import-export>
+      <app-import-export
+        [exportObject]="routeProfiles"
+        exportFileName="routeProfiles"
+        [disableJson]="false"
+        (import)="importRouteProfiles($event)"
+      ></app-import-export>
     </section>
   </ng-container>
 </ng-container>
 
 <ng-template #actionsTemplate let-routeProfile="datum">
   <section class="table__actions">
-    <app-icon-button *ngIf="!routeProfile?.deletedAt" icon="edit" label="Edit Route Profile"
-      (handleClick)="openRouteProfileModal(ModalMode.Edit, routeProfile)"></app-icon-button>
+    <app-icon-button
+      *ngIf="!routeProfile?.deletedAt"
+      icon="edit"
+      label="Edit Route Profile"
+      (handleClick)="openRouteProfileModal(ModalMode.Edit, routeProfile)"
+    ></app-icon-button>
 
-    <app-icon-button *ngIf="routeProfile?.deletedAt" icon="undo" label="Restore Route Profile" type="success"
-      (handleClick)="restoreRouteProfile(routeProfile)"></app-icon-button>
+    <app-icon-button
+      *ngIf="routeProfile?.deletedAt"
+      icon="undo"
+      label="Restore Route Profile"
+      type="success"
+      (handleClick)="restoreRouteProfile(routeProfile)"
+    ></app-icon-button>
 
-    <app-icon-button icon="delete" label="Soft-Delete/Delete Route Profile"
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Route Profile"
       [type]="routeProfile?.deletedAt ? 'danger' : 'default'"
-      (handleClick)="deleteRouteProfile(routeProfile)"></app-icon-button>
+      (handleClick)="deleteRouteProfile(routeProfile)"
+    ></app-icon-button>
   </section>
 </ng-template>
 

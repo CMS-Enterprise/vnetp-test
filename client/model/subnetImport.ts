@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Vlan } from './vlan';
 
 
 export interface SubnetImport { 
@@ -26,6 +27,7 @@ export interface SubnetImport {
     sharedBetweenVrfs?: boolean;
     vlanId: string;
     tierId: string;
+    readonly vlan?: Vlan;
     tierName: string;
 }
 

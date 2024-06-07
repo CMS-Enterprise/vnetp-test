@@ -36,6 +36,13 @@
             queryParamsHandling="merge"
             >Tenant Select</a
           >
+          <!-- <a
+            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
+            class="dropdown-item"
+            routerLink="wan-form"
+            queryParamsHandling="merge"
+            >Wan Form</a
+          > -->
         </div>
       </li>
     </ul>
@@ -91,9 +98,7 @@
   </div>
 
   <footer class="modal-footer">
-    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="logoutModal.close()">
-      Cancel
-    </button>
+    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="logoutModal.close()">Cancel</button>
 
     <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="logout()">
       <fa-icon class="icon" [icon]="['fas', 'sign-out-alt']"></fa-icon>
