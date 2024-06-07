@@ -1,5 +1,5 @@
 /* eslint-disable */
-import 'zone.js/dist/zone-node';
+import 'zone.js';
 import 'jest-preset-angular/setup-jest';
 
 /* global mocks for jsdom */

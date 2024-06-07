@@ -1,0 +1,49 @@
+<h3 class="header-with-button">
+  Allowed External Routes
+  <button class="inline-button" (click)="navigateToExternalRoutes()">Manage External Routes</button>
+</h3>
+<div class="table-container mb-4">
+  <table>
+    <thead>
+      <tr>
+        <th>IP</th>
+        <th>Description</th>
+        <th>VRF</th>
+        <th>Environment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let externalRoute of wanForm?.externalRoutes">
+        <td>{{ externalRoute.externalRouteIp }}</td>
+        <td>{{ externalRoute.description || '-' }}</td>
+        <td>{{ externalRoute.vrf }}</td>
+        <td>{{ externalRoute.environment }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3 class="header-with-button">
+  Advertised Internal Subnets
+  <button class="inline-button" (click)="navigateToWanFormSubnets()">Manage Subnets</button>
+</h3>
+<div class="table-container mb-4">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>VRF</th>
+        <th>Environment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let subnet of wanForm?.wanFormSubnets">
+        <td>{{ subnet.name }}</td>
+        <td>{{ subnet.description || '-' }}</td>
+        <td>{{ subnet.vrf }}</td>
+        <td>{{ subnet.environment }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -80,6 +80,11 @@ export interface GetOneSubnetRequestParams {
     join?: Array<string>;
 }
 
+export interface GetSubnetsByDatacenterIdSubnetRequestParams {
+    /** ID of the datacenter assocaited with the tier of the subnet */
+    datacenterId: any;
+}
+
 export interface ProvisionOneSubnetRequestParams {
     /** UUID. */
     id: string;
@@ -582,6 +587,51 @@ export class V1NetworkSubnetsService {
         return this.httpClient.get<Subnet>(`${this.configuration.basePath}/v1/network/subnets/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get Subnets by Datacenter ID
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getSubnetsByDatacenterIdSubnet(requestParameters: GetSubnetsByDatacenterIdSubnetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public getSubnetsByDatacenterIdSubnet(requestParameters: GetSubnetsByDatacenterIdSubnetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public getSubnetsByDatacenterIdSubnet(requestParameters: GetSubnetsByDatacenterIdSubnetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public getSubnetsByDatacenterIdSubnet(requestParameters: GetSubnetsByDatacenterIdSubnetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const datacenterId = requestParameters.datacenterId;
+        if (datacenterId === null || datacenterId === undefined) {
+            throw new Error('Required parameter datacenterId was null or undefined when calling getSubnetsByDatacenterIdSubnet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/network/subnets/get-by-datacenter-id/${encodeURIComponent(String(datacenterId))}`,
+            {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
