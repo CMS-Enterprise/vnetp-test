@@ -50,7 +50,13 @@
 
       <div class="form-group">
         <label for="tierClass">Tier Class</label>
-        <select id="tierClass" formControlName="tierClass" class="form-control" aria-label="Tier Class">
+        <select
+          id="tierClass"
+          formControlName="tierClass"
+          class="form-control"
+          aria-label="Tier Class"
+          [class.is-invalid]="submitted && f.tierClass.errors"
+        >
           <option></option>
           <option value="PRD">Production</option>
           <option value="DEV">Development</option>
