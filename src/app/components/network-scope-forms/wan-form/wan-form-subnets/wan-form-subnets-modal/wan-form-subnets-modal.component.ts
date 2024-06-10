@@ -174,8 +174,13 @@ export class WanFormSubnetsModalComponent {
   }
 
   getAppcentricSubnets(): void {
-    this.appcentricSubnetService.getManyAppCentricSubnet({ filter: [`tenantId||eq||${this.tenantId}`] }).subscribe(data => {
-      this.availableAppcentricSubnets = data as unknown as AppCentricSubnet[];
-    });
+    this.appcentricSubnetService
+      .getManyAppCentricSubnet({
+        filter: [`tenantId||eq||${this.tenantId}`],
+        relations: ['tenant', 'bridgeDomain'],
+      })
+      .subscribe(data => {
+        this.availableAppcentricSubnets = data as unknown as AppCentricSubnet[];
+      });
   }
 }

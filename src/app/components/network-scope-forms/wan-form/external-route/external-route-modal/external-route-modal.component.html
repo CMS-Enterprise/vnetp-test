@@ -58,7 +58,7 @@
           <option value="appdev">appdev (vpn_app_unix_imp)</option>
           <option value="dataprod">dataprod (vpn_data_unix)</option>
           <option value="datadev">appprod (vpn_data_unix_imp)</option>
-          <option value="edcmgmt ">edcmgmt (vpn_edc_mgmt)</option>
+          <option value="edcmgmt">edcmgmt (vpn_edc_mgmt)</option>
           <option value="transport">Transport</option>
         </select>
         <div *ngIf="submitted && f.vrf.errors" class="invalid-feedback">
@@ -88,9 +88,7 @@
     </div>
 
     <footer class="modal-footer">
-      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">
-        Cancel
-      </button>
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">Cancel</button>
       <button class="btn btn-success" data-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>

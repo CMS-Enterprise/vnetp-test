@@ -13,6 +13,7 @@ import {
   IpAddressHostNetworkCidrValidator,
 } from '../../../../../validators/network-form-validators';
 import { V1NetworkScopeFormsExternalRouteService } from '../../../../../../../client';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-external-route-modal',
@@ -27,21 +28,27 @@ export class ExternalRouteModalComponent implements OnInit, OnDestroy {
   public wanFormId: string;
   private datacenterId: string;
   private datacenterSubscription: Subscription;
+  private tenantId: string;
+  public dcsMode: string;
 
   constructor(
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
     private externalRouteService: V1NetworkScopeFormsExternalRouteService,
     private datacenterContextService: DatacenterContextService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
     this.buildForm();
-    this.datacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
-      if (cd) {
-        this.datacenterId = cd.id;
-      }
-    });
+    this.dcsMode = this.route.snapshot.data.mode;
+    if (this.dcsMode === 'netcentric') {
+      this.datacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+        if (cd) {
+          this.datacenterId = cd.id;
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -58,6 +65,7 @@ export class ExternalRouteModalComponent implements OnInit, OnDestroy {
   }
 
   public getData(): void {
+    this.tenantId = this.route.snapshot.queryParams?.tenantId;
     const dto = Object.assign({}, this.ngx.getModalData('externalRouteModal') as ExternalRouteModalDto);
     this.wanFormId = dto.wanFormId;
     this.modalMode = dto.modalMode;
@@ -113,8 +121,13 @@ export class ExternalRouteModalComponent implements OnInit, OnDestroy {
       vrf,
       environment,
       wanFormId: this.wanFormId,
-      datacenterId: this.datacenterId,
     } as ExternalRoute;
+
+    if (this.dcsMode === 'netcentric') {
+      externalRoute.datacenterId = this.datacenterId;
+    } else {
+      externalRoute.tenantId = this.tenantId;
+    }
 
     if (this.modalMode === ModalMode.Create) {
       this.externalRouteService.createOneExternalRoute({ externalRoute }).subscribe(() => {
