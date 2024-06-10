@@ -52,7 +52,7 @@ export class ExternalRouteModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.datacenterSubscription.unsubscribe();
+    this.datacenterSubscription?.unsubscribe();
   }
 
   get f() {

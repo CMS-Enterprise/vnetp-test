@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
+import { NavigationInterceptorService } from './services/navigation-interceptor.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,12 @@ import { filter, map, mergeMap } from 'rxjs/operators';
   styles: [''],
 })
 export class AppComponent implements OnInit {
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private title: Title) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private title: Title,
+    private navigationInterceptorService: NavigationInterceptorService,
+  ) {}
 
   ngOnInit(): void {
     this.router.events
