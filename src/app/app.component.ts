@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
-import { NavigationInterceptorService } from './services/navigation-interceptor.service';
+import { NavigationInterceptorService } from './interceptors/navigation-interceptor.service';
 
 @Component({
   selector: 'app-root',

@@ -47,7 +47,7 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavbarModule } from './common/navbar/navbar.module';
 import { BreadcrumbsModule } from './common/breadcrumbs/breadcrumbs.module';
-import { NavigationInterceptorService } from './services/navigation-interceptor.service';
+import { NavigationInterceptorService } from './interceptors/navigation-interceptor.service';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
