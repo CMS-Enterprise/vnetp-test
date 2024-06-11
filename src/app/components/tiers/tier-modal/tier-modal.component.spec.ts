@@ -163,7 +163,6 @@ describe('TierModalComponent', () => {
         description: 'Description',
         tierGroupId: '2',
         tierType: 'Presentation',
-        tierClass: 'Production',
       },
     });
   });
