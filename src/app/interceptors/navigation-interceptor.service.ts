@@ -1,18 +1,21 @@
-import { Injectable } from '@angular/core';
-import { Router, NavigationStart, UrlTree, DefaultUrlSerializer } from '@angular/router';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Router, NavigationStart, UrlTree } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class NavigationInterceptorService {
+export class NavigationInterceptorService implements OnDestroy {
   private config: { [key: string]: string[] } = {
     'wan-form': ['tenantId'], // Remove tenantId if the URL does not include 'wan-form'
     netcentric: ['datacenter'], // Remove datacenterId if the URL does not include 'netcentric'
     // Add more configurations as needed
   };
 
+  private subscription: Subscription;
+
   constructor(private router: Router) {
-    this.router.events.subscribe(event => {
+    this.subscription = this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         this.handleNavigationStart(event);
       }
@@ -46,8 +49,10 @@ export class NavigationInterceptorService {
       preserveFragment: true,
     });
 
-    const newUrl = new DefaultUrlSerializer().serialize(newUrlTree);
+    this.router.navigateByUrl(newUrlTree, { replaceUrl: true });
+  }
 
-    this.router.navigateByUrl(newUrl, { replaceUrl: true });
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
   }
 }

@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NavigationInterceptorService } from './navigation-interceptor.service';
-import { DefaultUrlSerializer, NavigationStart, Router } from '@angular/router';
+import { Router, NavigationStart, DefaultUrlSerializer } from '@angular/router';
 import { Subject } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+import { NavigationInterceptorService } from './navigation-interceptor.service';
 
 describe('NavigationInterceptorService', () => {
   let service: NavigationInterceptorService;
@@ -42,10 +43,10 @@ describe('NavigationInterceptorService', () => {
 
     expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/some-path'], {
       queryParams: {},
-      fragment: null,
+      fragment: urlTree.fragment,
       preserveFragment: true,
     });
-    expect(mockRouter.navigateByUrl).toHaveBeenCalledWith('/some-path', { replaceUrl: true });
+    expect(mockRouter.navigateByUrl).toHaveBeenCalledWith(newUrlTree, { replaceUrl: true });
   });
 
   it('should not navigate by url when no modification happens', () => {
