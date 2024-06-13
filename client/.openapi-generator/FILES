@@ -16,6 +16,9 @@ api/v1LoadBalancerRoutes.service.ts
 api/v1LoadBalancerSelfIps.service.ts
 api/v1LoadBalancerVirtualServers.service.ts
 api/v1LoadBalancerVlans.service.ts
+api/v1NetworkScopeFormsExternalRoute.service.ts
+api/v1NetworkScopeFormsWanForm.service.ts
+api/v1NetworkScopeFormsWanFormSubnet.service.ts
 api/v1NetworkSecurityFirewallRuleGroups.service.ts
 api/v1NetworkSecurityFirewallRules.service.ts
 api/v1NetworkSecurityNatRuleGroups.service.ts
@@ -61,6 +64,7 @@ model/createManyBridgeDomainDto.ts
 model/createManyContractDto.ts
 model/createManyDatacenterDto.ts
 model/createManyEndpointGroupDto.ts
+model/createManyExternalRouteDto.ts
 model/createManyFilterDto.ts
 model/createManyFilterEntryDto.ts
 model/createManyFirewallRuleDto.ts
@@ -91,10 +95,13 @@ model/createManyTierDto.ts
 model/createManyTierGroupDto.ts
 model/createManyVlanDto.ts
 model/createManyVrfDto.ts
+model/createManyWanFormDto.ts
+model/createManyWanFormSubnetDto.ts
 model/createManyZoneDto.ts
 model/datacenter.ts
 model/dcsPermissions.ts
 model/endpointGroup.ts
+model/externalRoute.ts
 model/f5ConfigJobCreateDto.ts
 model/f5Runtime.ts
 model/filter.ts
@@ -110,6 +117,7 @@ model/getManyBridgeDomainResponseDto.ts
 model/getManyContractResponseDto.ts
 model/getManyDatacenterResponseDto.ts
 model/getManyEndpointGroupResponseDto.ts
+model/getManyExternalRouteResponseDto.ts
 model/getManyFilterEntryResponseDto.ts
 model/getManyFilterResponseDto.ts
 model/getManyFirewallRuleGroupResponseDto.ts
@@ -141,6 +149,8 @@ model/getManyTierGroupResponseDto.ts
 model/getManyTierResponseDto.ts
 model/getManyVlanResponseDto.ts
 model/getManyVrfResponseDto.ts
+model/getManyWanFormResponseDto.ts
+model/getManyWanFormSubnetResponseDto.ts
 model/getManyZoneResponseDto.ts
 model/hitcountData.ts
 model/hitcountJobCreateDto.ts
@@ -196,5 +206,7 @@ model/virtualServerImportCollectionDto.ts
 model/virtualServerImportDto.ts
 model/vlan.ts
 model/vrf.ts
+model/wanForm.ts
+model/wanFormSubnet.ts
 model/zone.ts
 variables.ts

@@ -1,0 +1,59 @@
+<button aria-label="navigate-to-wan-form" class="btn float-left mr-3" (click)="navigateToWanForm()">
+  <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+</button>
+
+<h1>External Routes for: {{ wanForm?.name }}</h1>
+
+<section class="btn-toolbar" role="toolbar" aria-label="create-external-route">
+  <button type="button" class="btn btn-success" (click)="openModal(ModalMode.Create)">
+    <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+    <span>Create External Route</span>
+  </button>
+</section>
+
+<app-table
+  *ngIf="!isLoading; else loading"
+  [config]="config"
+  [data]="externalRoutes"
+  (clearResults)="getExternalRoutes($event)"
+  (searchParams)="getExternalRoutes($event)"
+  [searchColumns]="searchColumns"
+  [(itemsPerPage)]="perPage"
+  (tableEvent)="onTableEvent($event)"
+></app-table>
+
+<ng-template #actionsTemplate let-externalRoute="datum">
+  <section>
+    <app-icon-button icon="edit" label="Edit External Route" (handleClick)="openModal(ModalMode.Edit, externalRoute)"></app-icon-button>
+    <app-icon-button
+      *ngIf="externalRoute?.deletedAt"
+      icon="undo"
+      label="Restore External Route"
+      type="success"
+      (handleClick)="restoreExternalRoute(externalRoute)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Extnernal Route"
+      [type]="externalRoute.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteExternalRoute(externalRoute)"
+    >
+    </app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #vrfNameTemplate let-externalRoute="datum">
+  <span *ngIf="externalRoute.vrf === 'appprod'">appprod (vpn_app_unix)</span>
+  <span *ngIf="externalRoute.vrf === 'appdev'">appdev (vpn_app_unix_imp)</span>
+  <span *ngIf="externalRoute.vrf === 'dataprod'">dataprod (vpn_data_unix)</span>
+  <span *ngIf="externalRoute.vrf === 'datadev'">datadev (vpn_data_unix_imp)</span>
+  <span *ngIf="externalRoute.vrf === 'edcmgmt'">edcmgmt (vpn_edc_mgmt)</span>
+  <span *ngIf="externalRoute.vrf === 'transport'">Transport</span>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<app-external-route-modal></app-external-route-modal>

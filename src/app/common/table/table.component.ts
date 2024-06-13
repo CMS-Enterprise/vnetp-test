@@ -22,6 +22,7 @@ export interface TableConfig<T> {
   hideAdvancedSearch?: boolean;
   hideSearchBar?: boolean;
   hideDefaultSearch?: boolean;
+  expandableRows?: () => TemplateRef<any>;
 }
 
 /**
@@ -77,6 +78,8 @@ export class TableComponent<T> implements AfterViewInit {
   public paginationControlsOn = true;
 
   public advancedSearchAdapterSubject: Subject<any> = new Subject<any>();
+
+  public expandableRows: boolean;
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -149,6 +152,8 @@ export class TableComponent<T> implements AfterViewInit {
       this.paginationControlsOn = false;
     }
 
+    this.expandableRows = Boolean(this.config.expandableRows);
+
     this.changeRef.detectChanges();
   }
 
@@ -212,5 +217,26 @@ export class TableComponent<T> implements AfterViewInit {
   openAdvancedSearch(event?) {
     this.subscribeToAdvancedSearch();
     this.ngx.getModal('advancedSearch').open();
+  }
+
+  handleRowClick(event: Event, datum: any): void {
+    if (!this.isEventFromButton(event)) {
+      if (this.expandableRows) {
+        datum.expanded = !datum.expanded;
+      }
+    }
+  }
+
+  isEventFromButton(event: Event): boolean {
+    let targetElement: HTMLElement | null = event.target as HTMLElement;
+
+    while (targetElement) {
+      if (targetElement.tagName === 'BUTTON') {
+        return true;
+      }
+      targetElement = targetElement.parentElement;
+    }
+
+    return false;
   }
 }

@@ -15,6 +15,7 @@ import { EndpointGroup } from './endpointGroup';
 import { AppCentricSubnet } from './appCentricSubnet';
 import { BridgeDomain } from './bridgeDomain';
 import { Vrf } from './vrf';
+import { WanForm } from './wanForm';
 import { ApplicationProfile } from './applicationProfile';
 import { Contract } from './contract';
 import { AuditLog } from './auditLog';
@@ -42,5 +43,6 @@ export interface Tenant {
     readonly subjects?: Array<Subject>;
     readonly filterEntries?: Array<FilterEntry>;
     readonly auditLogs?: Array<AuditLog>;
+    readonly wanForms?: WanForm;
 }
 

@@ -30,22 +30,35 @@
       <tr *ngIf="data && data?.data?.length === 0" class="text-center">
         <td [attr.colspan]="config.columns.length">No Objects in this Tier</td>
       </tr>
-      <tr
-        *ngFor="
-          let datum of data?.data
+      <ng-template
+        ngFor
+        let-datum
+        [ngForOf]="
+          data?.data
             | paginate
               : { itemsPerPage: data?.total / data?.pageCount, currentPage: data?.page, id: uniqueTableId, totalItems: data?.total }
         "
-        [ngStyle]="config.rowStyle ? config.rowStyle(datum) : null"
       >
-        <td *ngFor="let column of config.columns">
-          <ng-container *ngIf="column.property">{{ datum[column.property] }}</ng-container>
-          <ng-container *ngIf="!column.property && column.value">{{ column.value(datum) }}</ng-container>
-          <ng-container *ngIf="!column.property && column.template">
-            <ng-container *ngTemplateOutlet="column.template(); context: { datum: datum }"></ng-container>
-          </ng-container>
-        </td>
-      </tr>
+        <tr
+          [ngStyle]="config.rowStyle ? config.rowStyle(datum) : null"
+          (click)="handleRowClick($event, datum)"
+          [class.expandableRow]="expandableRows"
+          [attr.aria-expanded]="datum.expanded ? 'true' : 'false'"
+          [ngClass]="{ expanded: datum.expanded }"
+        >
+          <td *ngFor="let column of config.columns">
+            <ng-container *ngIf="column.property">{{ datum[column.property] }}</ng-container>
+            <ng-container *ngIf="!column.property && column.template">
+              <ng-container *ngTemplateOutlet="column.template(); context: { datum: datum }"></ng-container>
+            </ng-container>
+          </td>
+        </tr>
+        <tr *ngIf="datum.expanded && expandableRows" [class.expanded]="datum.expanded" class="expandableContent">
+          <td [attr.colspan]="config.columns.length">
+            <ng-container *ngTemplateOutlet="config.expandableRows(); context: { datum: datum }"></ng-container>
+          </td>
+        </tr>
+      </ng-template>
     </tbody>
     <tfoot *ngIf="paginationControlsOn">
       <td [attr.colspan]="config.columns.length">

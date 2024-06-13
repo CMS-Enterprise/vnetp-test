@@ -43,6 +43,12 @@ const routes: Routes = [
         data: { breadcrumb: 'Audit Log', title: 'Automation - Audit Log' },
         loadChildren: () => import('../../common/audit-log/audit-log.module').then(m => m.AuditLogModule),
       },
+      {
+        path: 'wan-form',
+        canActivate: [AuthGuard],
+        data: { breadcrumb: 'WAN Form', title: 'WAN Form', mode: 'appcentric' },
+        loadChildren: () => import('../network-scope-forms/wan-form/wan-form.module').then(m => m.WanFormModule),
+      },
     ],
   },
 ];
