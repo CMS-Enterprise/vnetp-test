@@ -114,9 +114,7 @@ export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   subscribeToChangeRequestModal() {
-    console.log('hit');
     try {
-      console.log('hit try');
       this.changeRequestModalSubscription = this.ngx.getModal('changeRequestModal').onCloseFinished.subscribe(() => {
         this.ngx.resetModalData('changeRequestModal');
         this.changeRequestModalSubscription.unsubscribe();

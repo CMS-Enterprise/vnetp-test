@@ -236,16 +236,16 @@ export class AuditLogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
-      if (cd) {
-        this.currentDatacenter = cd;
-        if (this.showingAppCentricLogs) {
-          this.getAppCentricAuditLogs();
-        } else {
+    if (this.showingAppCentricLogs) {
+      this.getAppCentricAuditLogs();
+    } else {
+      this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
+        if (cd) {
+          this.currentDatacenter = cd;
           this.getAuditLogs();
         }
-      }
-    });
+      });
+    }
   }
 
   public onTableEvent(event: TableComponentDto): void {

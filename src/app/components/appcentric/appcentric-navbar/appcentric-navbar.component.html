@@ -85,7 +85,10 @@
             queryParamsHandling="preserve"
             >Audit Log</a
           >
-          <a id="change-request-link" class="dropdown-item" (click)="openChangeRequestModal()">Change Request</a>
+          <a *ngIf="!lockChangeRequest" id="change-request-link" class="dropdown-item" (click)="openChangeRequestModal()">Change Request</a>
+          <a *ngIf="lockChangeRequest" style="color: grey; cursor: not-allowed" id="change-request-link2" class="dropdown-item"
+            >Change Request</a
+          >
           <a class="dropdown-item" (click)="openLogoutModal()">Logout</a>
         </div>
       </li>
