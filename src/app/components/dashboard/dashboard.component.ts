@@ -21,7 +21,6 @@ import { Subscription } from 'rxjs';
 import SubscriptionUtil from '../../utils/SubscriptionUtil';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TableConfig } from 'src/app/common/table/table.component';
-import { NgxSmartModalService } from 'ngx-smart-modal';
 
 @Component({
   selector: 'app-dashboard',
@@ -53,7 +52,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private natRuleService: V1NetworkSecurityNatRulesService,
     private auditLogService: V1AuditLogService,
     private datacenterContextService: DatacenterContextService,
-    private ngx: NgxSmartModalService,
   ) {}
 
   datacenters: number;
@@ -122,15 +120,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getTiers();
     if (roles && roles.includes('admin')) {
       this.getFWRules();
-      console.log('dashboard1');
       this.getNatRules();
-      console.log('dashboard2');
       this.getNetworkObjects();
-      console.log('dashboard3');
       this.getNetworkObjectGroups();
-      console.log('dashboard4');
       this.getServiceObjects();
-      console.log('dashboard5');
       this.getServiceObjectGroups();
       this.getSubnets();
       this.getVlans();
@@ -221,16 +214,4 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.serviceObjectGroupCount = data.total;
       });
   }
-
-  // public openChangeRequestModal(): void {
-  //   this.subscribeToChangeRequestModal();
-  //   this.ngx.getModal('changeRequestModal').open();
-  // }
-
-  // subscribeToChangeRequestModal() {
-  //   this.changeRequestModalSubscription = this.ngx.getModal('changeRequestModal').onCloseFinished.subscribe(() => {
-  //     this.ngx.resetModalData('changeRequestModal');
-  //     this.changeRequestModalSubscription.unsubscribe();
-  //   });
-  // }
 }

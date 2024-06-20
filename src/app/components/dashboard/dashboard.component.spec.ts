@@ -48,7 +48,6 @@ describe('DashboardComponent', () => {
         MockTooltipComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
-        MockComponent({ selector: 'app-change-request-modal' }),
       ],
       providers: [
         { provide: V1DatacentersService, useValue: datacenterService },
@@ -65,7 +64,6 @@ describe('DashboardComponent', () => {
         MockProvider(V1NetworkSubnetsService),
         MockProvider(V1NetworkVlansService),
         MockProvider(DatacenterContextService),
-        MockProvider(NgxSmartModalService),
       ],
     })
       .compileComponents()

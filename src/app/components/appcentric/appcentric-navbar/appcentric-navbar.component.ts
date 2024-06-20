@@ -23,7 +23,7 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
   private changeRequestModalSubscription: Subscription;
   private currentChangeRequestSubscription: Subscription;
   changeRequest: string;
-  lockChangeRequest;
+  lockChangeRequest: boolean;
 
   constructor(
     private ngx: NgxSmartModalService,
@@ -95,8 +95,7 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
     });
   }
 
-  removeChangeRequest(event) {
-    console.log('event', event);
+  removeChangeRequest(event): void {
     const modalDto = new YesNoModalDto('Remove Change Request', `Are you sure you would like to remove Change Request : "${event}"`);
     const onConfirm = () => {
       this.incidentService.removeIncidentNumberLocalStorage();
@@ -110,7 +109,7 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
   }
 
   // url check to lock change request modal except for on the dashboard component
-  ngDoCheck() {
+  ngDoCheck(): void {
     if (!this.router.url.includes('dashboard')) {
       this.lockChangeRequest = true;
     } else {

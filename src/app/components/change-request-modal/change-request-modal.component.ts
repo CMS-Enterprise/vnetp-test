@@ -4,7 +4,8 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { IncidentService } from 'src/app/services/incident.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { ChangeRequestValidator } from 'src/app/validators/change-request-validator';
+// import { ChangeRequestValidator } from 'src/app/validators/change-request-validator';
+import { NameValidator } from 'src/app/validators/name-validator';
 
 @Component({
   selector: 'app-change-request-modal',
@@ -26,7 +27,7 @@ export class ChangeRequestModalComponent implements OnInit {
     return this.form.controls;
   }
 
-  public save() {
+  public save(): boolean {
     // if (this.changeRequest === null || this.changeRequest === undefined) {
     //   return null;
     // }
@@ -39,14 +40,14 @@ export class ChangeRequestModalComponent implements OnInit {
     this.closeModal();
   }
 
-  public removeCRFromLocalStorage() {
+  public removeCRFromLocalStorage(): void {
     this.incidentService.currentIncidentValue = '';
     this.incidentService.removeIncidentNumberLocalStorage();
     this.unsub();
     this.closeModal();
   }
 
-  public getData() {
+  public getData(): void {
     this.changeRequestSubscription = this.incidentService.currentIncident.subscribe(inc => {
       this.f.changeRequest.setValue(inc);
     });
@@ -54,7 +55,7 @@ export class ChangeRequestModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      changeRequest: ['', ChangeRequestValidator()],
+      changeRequest: ['', NameValidator()],
     });
   }
 
@@ -65,7 +66,7 @@ export class ChangeRequestModalComponent implements OnInit {
     this.submitted = false;
   }
 
-  public unsub() {
+  public unsub(): void {
     SubscriptionUtil.unsubscribe([this.changeRequestSubscription]);
   }
 }

@@ -15,15 +15,7 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  imports: [
-    ChangeRequestModalModule,
-    CommonModule,
-    FontAwesomeModule,
-    RouterModule.forChild(routes),
-    TableModule,
-    TooltipModule,
-    NgxSmartModalModule,
-  ],
+  imports: [CommonModule, FontAwesomeModule, RouterModule.forChild(routes), TableModule, TooltipModule],
   declarations: [DashboardComponent],
 })
 export class DashboardModule {}
