@@ -111,11 +111,11 @@
           <span *ngIf="tenant">{{ tenant }}</span>
         </a>
       </li>
-      <li *ngIf="changeRequest !== null" (click)="openChangeRequestModal()" id="changeRequestNumber" class="nav-item">
+      <!-- <li *ngIf="changeRequest !== null" (click)="openChangeRequestModal()" id="changeRequestNumber" class="nav-item">
         <a>
           <button [disabled]="lockChangeRequest" *ngIf="changeRequest" style="color: black">{{ changeRequest }}</button>
         </a>
-      </li>
+      </li> -->
     </ul>
 
     <ul class="navbar-nav ml-auto align-items-lg-center">
@@ -177,6 +177,17 @@
     </ul>
   </div>
 </nav>
+<div class="notification-bar" style="width: 100%; background-color: #d1ecf1; color: #0c5460; text-align: center; padding: 5px 0">
+  <span *ngIf="changeRequest">{{ changeRequest }}</span>
+  <span *ngIf="!changeRequest">No Change Request Selected - Create a CR# from the User dropdown to the right</span>
+  <fa-icon
+    *ngIf="changeRequest"
+    (click)="removeChangeRequest(changeRequest)"
+    style="cursor: pointer"
+    class="icon"
+    [icon]="['fas', 'trash']"
+  ></fa-icon>
+</div>
 
 <!-- Logout -->
 <ngx-smart-modal #logoutModal identifier="logoutModal">
@@ -199,3 +210,4 @@
 </ngx-smart-modal>
 
 <app-change-request-modal></app-change-request-modal>
+<app-yes-no-modal></app-yes-no-modal>

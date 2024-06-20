@@ -6,10 +6,21 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { RouterModule } from '@angular/router';
 import { ChangeRequestModalModule } from 'src/app/components/change-request-modal/change-request-modal.module';
 import { IconButtonModule } from '../icon-button/icon-button.module';
+import { TooltipModule } from '../tooltip/tooltip.module';
+import { YesNoModalModule } from '../yes-no-modal/yes-no-modal.module';
 
 @NgModule({
   declarations: [NavbarComponent],
-  imports: [ChangeRequestModalModule, CommonModule, FontAwesomeModule, NgxSmartModalModule, RouterModule, IconButtonModule],
+  imports: [
+    YesNoModalModule,
+    ChangeRequestModalModule,
+    CommonModule,
+    FontAwesomeModule,
+    NgxSmartModalModule,
+    RouterModule,
+    IconButtonModule,
+    TooltipModule,
+  ],
   exports: [NavbarComponent],
 })
 export class NavbarModule {}

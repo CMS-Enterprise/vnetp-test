@@ -9,6 +9,7 @@ import { IncidentService } from 'src/app/services/incident.service';
 import { DatacenterContextService } from '../../services/datacenter-context.service';
 import { TierContextService } from '../../services/tier-context.service';
 import { Router } from '@angular/router';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
   selector: 'app-navbar',
@@ -122,6 +123,19 @@ export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
     } catch (e) {
       console.log('hit catch', e);
     }
+  }
+
+  removeChangeRequest(event) {
+    const modalDto = new YesNoModalDto('Remove Change Request', `Are you sure you would like to remove Change Request : "${event}"`);
+    const onConfirm = () => {
+      this.incidentService.removeIncidentNumberLocalStorage();
+    };
+
+    const onClose = () => {
+      this.changeRequest = null;
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
   // url check to lock change request modal except for on the dashboard component

@@ -13,6 +13,7 @@ import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module
 import { ChangeRequestModalModule } from '../change-request-modal/change-request-modal.module';
 import { TypeDeleteModalModule } from 'src/app/common/type-delete-modal/type-delete-modal.module';
 import { AuditLogModule } from '../../common/audit-log/audit-log.module';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 
 const routes: Routes = [
   {
@@ -66,6 +67,7 @@ const routes: Routes = [
     ChangeRequestModalModule,
     TypeDeleteModalModule,
     AuditLogModule,
+    YesNoModalModule,
   ],
 })
 export class AppcentricModule {}
