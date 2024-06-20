@@ -28,9 +28,6 @@ export class ChangeRequestModalComponent implements OnInit {
   }
 
   public save(): boolean {
-    // if (this.changeRequest === null || this.changeRequest === undefined) {
-    //   return null;
-    // }
     this.submitted = true;
     if (this.form.invalid) {
       return false;
