@@ -19,7 +19,6 @@ import { of } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { MockProvider } from 'src/test/mock-providers';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { NgxSmartModalService } from 'ngx-smart-modal';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
