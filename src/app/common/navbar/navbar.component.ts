@@ -126,8 +126,6 @@ export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   removeChangeRequest(event): void {
-    this.ngx.getModal('yesNoModal');
-
     const modalDto = new YesNoModalDto('Remove Change Request', `Are you sure you would like to remove Change Request : "${event}"`);
     const onConfirm = () => {
       this.incidentService.currentIncidentValue = '';

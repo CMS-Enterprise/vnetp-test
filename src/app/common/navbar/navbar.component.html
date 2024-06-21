@@ -173,16 +173,23 @@
   </div>
 </nav>
 <div class="notification-bar" style="width: 100%; background-color: #d1ecf1; color: #0c5460; text-align: center; padding: 5px 0">
-  <span (click)="openChangeRequestModal()" style="cursor: pointer" *ngIf="changeRequest && !lockChangeRequest">{{ changeRequest }}</span>
+  <span *ngIf="changeRequest && !lockChangeRequest" (click)="openChangeRequestModal()" style="cursor: pointer">{{ changeRequest }}</span>
   <span *ngIf="changeRequest && lockChangeRequest" style="color: grey; cursor: not-allowed">{{ changeRequest }}</span>
   <span *ngIf="!changeRequest" style="cursor: pointer" (click)="openChangeRequestModal()">No Change Request Selected - Create a CR# </span>
   <fa-icon
-    [hidden]="lockChangeRequest"
+    *ngIf="!lockChangeRequest && changeRequest"
     (click)="removeChangeRequest(changeRequest)"
     style="cursor: pointer"
     class="icon"
     [icon]="['fas', 'trash']"
   ></fa-icon>
+  <!-- <fa-icon
+    [hidden]="lockChangeRequest"
+    (click)="removeChangeRequest(changeRequest)"
+    style="cursor: pointer"
+    class="icon"
+    [icon]="['fas', 'trash']"
+  ></fa-icon> -->
   <fa-icon [hidden]="!lockChangeRequest" style="color: grey; cursor: not-allowed" class="icon" [icon]="['fas', 'trash']"></fa-icon>
 </div>
 
