@@ -156,10 +156,10 @@
             href="{{ environment?.dynamic?.wikiBase }}"
             >Documentation</a
           >
-          <a *ngIf="!lockChangeRequest" id="change-request-link" class="dropdown-item" (click)="openChangeRequestModal()">Change Request</a>
+          <!-- <a *ngIf="!lockChangeRequest" id="change-request-link" class="dropdown-item" (click)="openChangeRequestModal()">Change Request</a>
           <a *ngIf="lockChangeRequest" style="color: grey; cursor: not-allowed" id="change-request-link2" class="dropdown-item"
             >Change Request</a
-          >
+          > -->
           <a tabindex="0" (keyup.enter)="openLogoutModal()" name="logout-link" class="dropdown-item" (click)="openLogoutModal()">Logout</a>
           <div class="dropdown-divider" *ngIf="dcsVersion"></div>
           <a name="version" class="dropdown-item" target="_blank" rel="noopener noreferrer" *ngIf="dcsVersion">v{{ dcsVersion }}</a>
@@ -173,15 +173,17 @@
   </div>
 </nav>
 <div class="notification-bar" style="width: 100%; background-color: #d1ecf1; color: #0c5460; text-align: center; padding: 5px 0">
-  <span *ngIf="changeRequest">{{ changeRequest }}</span>
-  <span *ngIf="!changeRequest">No Change Request Selected - Create a CR# from the User dropdown to the right</span>
+  <span (click)="openChangeRequestModal()" style="cursor: pointer" *ngIf="changeRequest && !lockChangeRequest">{{ changeRequest }}</span>
+  <span *ngIf="changeRequest && lockChangeRequest" style="color: grey; cursor: not-allowed">{{ changeRequest }}</span>
+  <span *ngIf="!changeRequest" style="cursor: pointer" (click)="openChangeRequestModal()">No Change Request Selected - Create a CR# </span>
   <fa-icon
-    *ngIf="changeRequest"
+    [hidden]="lockChangeRequest"
     (click)="removeChangeRequest(changeRequest)"
     style="cursor: pointer"
     class="icon"
     [icon]="['fas', 'trash']"
   ></fa-icon>
+  <fa-icon [hidden]="!lockChangeRequest" style="color: grey; cursor: not-allowed" class="icon" [icon]="['fas', 'trash']"></fa-icon>
 </div>
 
 <!-- Logout -->
@@ -204,5 +206,6 @@
   </footer>
 </ngx-smart-modal>
 
-<app-change-request-modal></app-change-request-modal>
 <app-yes-no-modal></app-yes-no-modal>
+
+<app-change-request-modal></app-change-request-modal>

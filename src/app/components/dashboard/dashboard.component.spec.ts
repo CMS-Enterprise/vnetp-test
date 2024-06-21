@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
-import { MockFontAwesomeComponent, MockTooltipComponent, MockComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import {
   V1DatacentersService,
   V1TiersService,
@@ -47,6 +47,7 @@ describe('DashboardComponent', () => {
         MockTooltipComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockYesNoModalComponent,
       ],
       providers: [
         { provide: V1DatacentersService, useValue: datacenterService },

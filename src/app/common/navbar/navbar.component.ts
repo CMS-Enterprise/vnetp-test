@@ -114,7 +114,7 @@ export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
     this.ngx.getModal('changeRequestModal').open();
   }
 
-  subscribeToChangeRequestModal() {
+  subscribeToChangeRequestModal(): void {
     try {
       this.changeRequestModalSubscription = this.ngx.getModal('changeRequestModal').onCloseFinished.subscribe(() => {
         this.ngx.resetModalData('changeRequestModal');
@@ -125,21 +125,25 @@ export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
     }
   }
 
-  removeChangeRequest(event) {
+  removeChangeRequest(event): void {
+    this.ngx.getModal('yesNoModal');
+
     const modalDto = new YesNoModalDto('Remove Change Request', `Are you sure you would like to remove Change Request : "${event}"`);
     const onConfirm = () => {
+      this.incidentService.currentIncidentValue = '';
       this.incidentService.removeIncidentNumberLocalStorage();
+      this.changeRequest = this.incidentService.getIncidentLocalStorage();
     };
 
     const onClose = () => {
-      this.changeRequest = null;
+      console.log('idk');
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
   // url check to lock change request modal except for on the dashboard component
-  ngDoCheck() {
+  ngDoCheck(): void {
     if (!this.router.url.includes('dashboard')) {
       this.lockChangeRequest = true;
     } else {
