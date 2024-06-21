@@ -10,6 +10,7 @@ import { DatacenterContextService } from '../../services/datacenter-context.serv
 import { TierContextService } from '../../services/tier-context.service';
 import { Router } from '@angular/router';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { ChangeRequestNavbarHelpText, DashboardHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-navbar',
@@ -31,7 +32,7 @@ export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
   public environment = environment;
   public dcsVersion: string = this.environment?.dynamic?.dcsVersion;
   changeRequest: string;
-  lockChangeRequest;
+  lockChangeRequest: boolean;
 
   private changeRequestModalSubscription: Subscription;
   private currentChangeRequestSubscription: Subscription;
@@ -43,6 +44,7 @@ export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
     private tierContextService: TierContextService,
     private incidentService: IncidentService,
     private router: Router,
+    public helpText: ChangeRequestNavbarHelpText,
   ) {}
 
   public openLogoutModal(): void {

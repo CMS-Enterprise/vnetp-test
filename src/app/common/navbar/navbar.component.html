@@ -176,6 +176,7 @@
   <span *ngIf="changeRequest && !lockChangeRequest" (click)="openChangeRequestModal()" style="cursor: pointer">{{ changeRequest }}</span>
   <span *ngIf="changeRequest && lockChangeRequest" style="color: grey; cursor: not-allowed">{{ changeRequest }}</span>
   <span *ngIf="!changeRequest" style="cursor: pointer" (click)="openChangeRequestModal()">No Change Request Selected - Create a CR# </span>
+
   <fa-icon
     *ngIf="!lockChangeRequest && changeRequest"
     (click)="removeChangeRequest(changeRequest)"
@@ -191,6 +192,7 @@
     [icon]="['fas', 'trash']"
   ></fa-icon> -->
   <fa-icon [hidden]="!lockChangeRequest" style="color: grey; cursor: not-allowed" class="icon" [icon]="['fas', 'trash']"></fa-icon>
+  <tooltip [message]="helpText.CRInfo"></tooltip>
 </div>
 
 <!-- Logout -->

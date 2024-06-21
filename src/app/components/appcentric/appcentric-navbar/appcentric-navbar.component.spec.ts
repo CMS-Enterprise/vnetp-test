@@ -5,7 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { AuthService } from 'src/app/services/auth.service';
-import { MockFontAwesomeComponent, MockNgxSmartModalComponent, MockComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockNgxSmartModalComponent, MockComponent, MockTooltipComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 
 import { AppcentricNavbarComponent } from './appcentric-navbar.component';
@@ -25,6 +25,7 @@ describe('AppcentricNavbarComponent', () => {
         MockNgxSmartModalComponent,
         MockComponent({ selector: 'app-change-request-modal' }),
         YesNoModalComponent,
+        MockTooltipComponent,
       ],
       providers: [MockProvider(NgxSmartModalService), AuthService],
     })

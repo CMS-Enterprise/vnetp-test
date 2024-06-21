@@ -98,11 +98,13 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
   removeChangeRequest(event): void {
     const modalDto = new YesNoModalDto('Remove Change Request', `Are you sure you would like to remove Change Request : "${event}"`);
     const onConfirm = () => {
+      this.incidentService.currentIncidentValue = '';
       this.incidentService.removeIncidentNumberLocalStorage();
+      this.changeRequest = this.incidentService.getIncidentLocalStorage();
     };
 
     const onClose = () => {
-      this.changeRequest = null;
+      console.log('idk');
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);

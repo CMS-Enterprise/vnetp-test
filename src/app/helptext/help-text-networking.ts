@@ -281,3 +281,11 @@ export class AppcentricDashboardHelpText {
   BridgeDomains = 'Total Bridge Domains within the current tenant.';
   Contracts = 'Total Contracts within the current tenant.';
 }
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ChangeRequestNavbarHelpText {
+  CRInfo =
+    'When you add a change request or other tracking id here, it will be associated to all audit log entries for changes that you make. vNETP does not integrate with SNOW and this feature simply allows more detailed audit logging of changes within vNETP.';
+}
