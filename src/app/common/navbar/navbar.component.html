@@ -156,10 +156,6 @@
             href="{{ environment?.dynamic?.wikiBase }}"
             >Documentation</a
           >
-          <!-- <a *ngIf="!lockChangeRequest" id="change-request-link" class="dropdown-item" (click)="openChangeRequestModal()">Change Request</a>
-          <a *ngIf="lockChangeRequest" style="color: grey; cursor: not-allowed" id="change-request-link2" class="dropdown-item"
-            >Change Request</a
-          > -->
           <a tabindex="0" (keyup.enter)="openLogoutModal()" name="logout-link" class="dropdown-item" (click)="openLogoutModal()">Logout</a>
           <div class="dropdown-divider" *ngIf="dcsVersion"></div>
           <a name="version" class="dropdown-item" target="_blank" rel="noopener noreferrer" *ngIf="dcsVersion">v{{ dcsVersion }}</a>
@@ -171,22 +167,6 @@
       </li>
     </ul>
   </div>
-  <!-- <div class="notification-bar" style="width: 100%; background-color: #d1ecf1; color: black; text-align: center; padding: 5px 0" [ngStyle]="{'background-color': changeRequest === null ? 'red' : '#d1ecf1'}">
-      <span *ngIf="changeRequest && !lockChangeRequest" (click)="openChangeRequestModal()" style="cursor: pointer">{{ changeRequest }}</span>
-      <span *ngIf="changeRequest && lockChangeRequest" style="color: grey; cursor: not-allowed">{{ changeRequest }}</span>
-      <span *ngIf="!changeRequest" style="cursor: pointer" (click)="openChangeRequestModal()">No Active Change Request </span>
-    
-      <fa-icon *ngIf="!changeRequest" class="icon" style="cursor: pointer" (click)="openChangeRequestModal()" [icon]="['fas', 'plus']"></fa-icon>
-    
-      <fa-icon
-        *ngIf="!lockChangeRequest && changeRequest"
-        (click)="removeChangeRequest(changeRequest)"
-        style="cursor: pointer"
-        class="icon"
-        [icon]="['fas', 'trash']"
-      ></fa-icon>
-      <tooltip [message]="helpText.CRInfo"></tooltip>
-    </div> -->
 </nav>
 <div
   class="notification-bar"
