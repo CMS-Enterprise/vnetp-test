@@ -171,13 +171,39 @@
       </li>
     </ul>
   </div>
+  <!-- <div class="notification-bar" style="width: 100%; background-color: #d1ecf1; color: black; text-align: center; padding: 5px 0" [ngStyle]="{'background-color': changeRequest === null ? 'red' : '#d1ecf1'}">
+      <span *ngIf="changeRequest && !lockChangeRequest" (click)="openChangeRequestModal()" style="cursor: pointer">{{ changeRequest }}</span>
+      <span *ngIf="changeRequest && lockChangeRequest" style="color: grey; cursor: not-allowed">{{ changeRequest }}</span>
+      <span *ngIf="!changeRequest" style="cursor: pointer" (click)="openChangeRequestModal()">No Active Change Request </span>
+    
+      <fa-icon *ngIf="!changeRequest" class="icon" style="cursor: pointer" (click)="openChangeRequestModal()" [icon]="['fas', 'plus']"></fa-icon>
+    
+      <fa-icon
+        *ngIf="!lockChangeRequest && changeRequest"
+        (click)="removeChangeRequest(changeRequest)"
+        style="cursor: pointer"
+        class="icon"
+        [icon]="['fas', 'trash']"
+      ></fa-icon>
+      <tooltip [message]="helpText.CRInfo"></tooltip>
+    </div> -->
 </nav>
-<div class="notification-bar" style="width: 100%; background-color: #d1ecf1; color: #0c5460; text-align: center; padding: 5px 0">
+<div
+  class="notification-bar"
+  style="width: 100%; background-color: #d1ecf1; color: black; text-align: center; padding: 5px 0"
+  [ngStyle]="{ 'background-color': changeRequest === null ? 'red' : '#d1ecf1' }"
+>
   <span *ngIf="changeRequest && !lockChangeRequest" (click)="openChangeRequestModal()" style="cursor: pointer">{{ changeRequest }}</span>
   <span *ngIf="changeRequest && lockChangeRequest" style="color: grey; cursor: not-allowed">{{ changeRequest }}</span>
   <span *ngIf="!changeRequest" style="cursor: pointer" (click)="openChangeRequestModal()">No Active Change Request </span>
 
-  <fa-icon class="icon" style="cursor: pointer" (click)="openChangeRequestModal()" [icon]="['fas', 'plus']"></fa-icon>
+  <fa-icon
+    *ngIf="!changeRequest"
+    class="icon"
+    style="cursor: pointer"
+    (click)="openChangeRequestModal()"
+    [icon]="['fas', 'plus']"
+  ></fa-icon>
 
   <fa-icon
     *ngIf="!lockChangeRequest && changeRequest"
@@ -186,14 +212,6 @@
     class="icon"
     [icon]="['fas', 'trash']"
   ></fa-icon>
-  <!-- <fa-icon
-    [hidden]="lockChangeRequest"
-    (click)="removeChangeRequest(changeRequest)"
-    style="cursor: pointer"
-    class="icon"
-    [icon]="['fas', 'trash']"
-  ></fa-icon> -->
-  <fa-icon [hidden]="!lockChangeRequest" style="color: grey; cursor: not-allowed" class="icon" [icon]="['fas', 'trash']"></fa-icon>
   <tooltip [message]="helpText.CRInfo"></tooltip>
 </div>
 

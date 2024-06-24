@@ -10,7 +10,7 @@ import {
 import { of } from 'rxjs';
 import { AppcentricDashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { AuthService } from 'src/app/services/auth.service';
-import { MockFontAwesomeComponent, MockTooltipComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockTooltipComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 
 import { AppcentricDashboardComponent } from './appcentric-dashboard.component';
@@ -41,7 +41,7 @@ describe('AppcentricDashboardComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [AppcentricDashboardComponent, MockTooltipComponent, MockFontAwesomeComponent],
+      declarations: [AppcentricDashboardComponent, MockTooltipComponent, MockFontAwesomeComponent, MockYesNoModalComponent],
       imports: [RouterModule, RouterTestingModule],
       providers: [
         { provide: V2AppCentricTenantsService, useValue: tenantsService },
