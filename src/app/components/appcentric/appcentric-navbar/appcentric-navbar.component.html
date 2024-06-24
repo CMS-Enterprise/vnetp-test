@@ -80,10 +80,10 @@
             queryParamsHandling="preserve"
             >Audit Log</a
           >
-          <a *ngIf="!lockChangeRequest" id="change-request-link" class="dropdown-item" (click)="openChangeRequestModal()">Change Request</a>
+          <!-- <a *ngIf="!lockChangeRequest" id="change-request-link" class="dropdown-item" (click)="openChangeRequestModal()">Change Request</a>
           <a *ngIf="lockChangeRequest" style="color: grey; cursor: not-allowed" id="change-request-link2" class="dropdown-item"
             >Change Request</a
-          >
+          > -->
           <a class="dropdown-item" (click)="openLogoutModal()">Logout</a>
         </div>
       </li>
@@ -93,7 +93,7 @@
 <div class="notification-bar" style="width: 100%; background-color: #d1ecf1; color: #0c5460; text-align: center; padding: 5px 0">
   <span *ngIf="changeRequest && !lockChangeRequest" (click)="openChangeRequestModal()" style="cursor: pointer">{{ changeRequest }}</span>
   <span *ngIf="changeRequest && lockChangeRequest" style="color: grey; cursor: not-allowed">{{ changeRequest }}</span>
-  <span *ngIf="!changeRequest" style="cursor: pointer" (click)="openChangeRequestModal()">No Change Request Selected - Create a CR# </span>
+  <span *ngIf="!changeRequest" style="cursor: pointer" (click)="openChangeRequestModal()">No Active Change Request</span>
 
   <fa-icon
     *ngIf="!lockChangeRequest && changeRequest"
@@ -110,7 +110,7 @@
     [icon]="['fas', 'trash']"
   ></fa-icon> -->
   <fa-icon [hidden]="!lockChangeRequest" style="color: grey; cursor: not-allowed" class="icon" [icon]="['fas', 'trash']"></fa-icon>
-  <!-- <tooltip [message]="helpText.CRInfo"></tooltip> -->
+  <tooltip [message]="helpText.CRInfo"></tooltip>
 </div>
 
 <!-- Logout -->

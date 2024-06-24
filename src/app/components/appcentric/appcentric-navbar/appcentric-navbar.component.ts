@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { UserDto } from 'client/model/userDto';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { ChangeRequestNavbarHelpText } from 'src/app/helptext/help-text-networking';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { AuthService } from 'src/app/services/auth.service';
 import { IncidentService } from 'src/app/services/incident.service';
@@ -30,6 +31,7 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private incidentService: IncidentService,
     private router: Router,
+    public helpText: ChangeRequestNavbarHelpText,
   ) {}
 
   ngOnInit(): void {
@@ -103,11 +105,7 @@ export class AppcentricNavbarComponent implements OnInit, OnDestroy {
       this.changeRequest = this.incidentService.getIncidentLocalStorage();
     };
 
-    const onClose = () => {
-      console.log('idk');
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   // url check to lock change request modal except for on the dashboard component

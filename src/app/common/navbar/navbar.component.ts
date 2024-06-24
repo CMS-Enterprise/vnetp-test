@@ -135,11 +135,7 @@ export class NavbarComponent implements OnInit, OnDestroy, DoCheck {
       this.changeRequest = this.incidentService.getIncidentLocalStorage();
     };
 
-    const onClose = () => {
-      console.log('idk');
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   // url check to lock change request modal except for on the dashboard component
