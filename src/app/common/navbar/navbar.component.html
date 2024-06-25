@@ -170,7 +170,7 @@
 </nav>
 <div
   class="notification-bar"
-  style="width: 100%; background-color: #d1ecf1; color: black; text-align: center; padding: 5px 100px 5px 5px"
+  style="width: 100%; background-color: #d1ecf1; color: black; text-align: center; padding: 5px 0"
   [ngStyle]="{ 'background-color': changeRequest === null ? '#f8d7da' : '#d1ecf1' }"
 >
   <span *ngIf="changeRequest && !lockChangeRequest" (click)="openChangeRequestModal()" style="cursor: pointer">{{ changeRequest }}</span>
