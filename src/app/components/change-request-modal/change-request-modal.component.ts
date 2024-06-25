@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { IncidentService } from 'src/app/services/incident.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 // import { ChangeRequestValidator } from 'src/app/validators/change-request-validator';
@@ -15,6 +16,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
 export class ChangeRequestModalComponent implements OnInit {
   public form: UntypedFormGroup;
   // public changeRequest;
+  changeRequestNumber: string;
   private changeRequestSubscription: Subscription;
   submitted: boolean;
 
@@ -47,6 +49,7 @@ export class ChangeRequestModalComponent implements OnInit {
   public getData(): void {
     this.changeRequestSubscription = this.incidentService.currentIncident.subscribe(inc => {
       this.f.changeRequest.setValue(inc);
+      this.changeRequestNumber = inc;
     });
   }
 
@@ -61,6 +64,15 @@ export class ChangeRequestModalComponent implements OnInit {
     this.form.reset();
     this.ngx.close('changeRequestModal');
     this.submitted = false;
+  }
+
+  removeChangeRequest(event): void {
+    const modalDto = new YesNoModalDto('Remove Change Request', `Are you sure you would like to remove Change Request : "${event}"`);
+    const onConfirm = () => {
+      this.removeCRFromLocalStorage();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   public unsub(): void {

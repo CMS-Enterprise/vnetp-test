@@ -170,7 +170,7 @@
 </nav>
 <div
   class="notification-bar"
-  style="width: 100%; background-color: #d1ecf1; color: black; text-align: center; padding: 5px 0"
+  style="width: 100%; background-color: #d1ecf1; color: black; text-align: center; padding: 5px 100px 5px 5px"
   [ngStyle]="{ 'background-color': changeRequest === null ? '#f8d7da' : '#d1ecf1' }"
 >
   <span *ngIf="changeRequest && !lockChangeRequest" (click)="openChangeRequestModal()" style="cursor: pointer">{{ changeRequest }}</span>
@@ -185,13 +185,13 @@
     [icon]="['fas', 'plus']"
   ></fa-icon> -->
 
-  <fa-icon
+  <!-- <fa-icon
     *ngIf="!lockChangeRequest && changeRequest"
     (click)="removeChangeRequest(changeRequest)"
     style="cursor: pointer"
     class="icon"
     [icon]="['fas', 'trash']"
-  ></fa-icon>
+  ></fa-icon> -->
   <tooltip [message]="helpText.CRInfo"></tooltip>
 </div>
 
@@ -215,6 +215,6 @@
   </footer>
 </ngx-smart-modal>
 
-<app-yes-no-modal></app-yes-no-modal>
-
 <app-change-request-modal></app-change-request-modal>
+
+<app-yes-no-modal></app-yes-no-modal>

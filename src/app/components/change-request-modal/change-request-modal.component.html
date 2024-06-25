@@ -12,6 +12,13 @@
         (keyup.enter)="save()"
         placeholder="CHGXXXXXXX"
       />
+      <fa-icon
+        *ngIf="changeRequestNumber"
+        (click)="removeChangeRequest(changeRequestNumber)"
+        style="cursor: pointer"
+        class="icon"
+        [icon]="['fas', 'trash']"
+      ></fa-icon>
       <div class="invalid-feedback" *ngIf="submitted && form.invalid">
         <div>Invalid Change Request Number</div>
       </div>
@@ -24,3 +31,5 @@
     <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="save()">Save</button>
   </footer>
 </ngx-smart-modal>
+
+<app-yes-no-modal></app-yes-no-modal>

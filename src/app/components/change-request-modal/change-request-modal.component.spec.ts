@@ -7,6 +7,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
+import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
 
 describe('ChangeRequestModalComponent', () => {
   let component: ChangeRequestModalComponent;
@@ -18,7 +19,7 @@ describe('ChangeRequestModalComponent', () => {
     };
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
-      declarations: [ChangeRequestModalComponent, MockNgxSmartModalComponent],
+      declarations: [ChangeRequestModalComponent, MockNgxSmartModalComponent, YesNoModalComponent],
       providers: [{ provide: IncidentService, useValue: incidentService }, MockProvider(NgxSmartModalService)],
     });
     fixture = TestBed.createComponent(ChangeRequestModalComponent);
