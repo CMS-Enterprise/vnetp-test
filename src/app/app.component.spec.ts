@@ -57,7 +57,7 @@ describe('AppComponent', () => {
     expect(spy).toHaveBeenCalledWith('New Title');
   });
 
-  it('should default the title to "Automation"', () => {
+  it('should default the title to "vNETP"', () => {
     const title = TestBed.inject(Title);
     const spy = jest.spyOn(title, 'setTitle');
 
@@ -67,7 +67,7 @@ describe('AppComponent', () => {
     const navigationEnd = new NavigationEnd(1, '', '');
     routerEvents.next(navigationEnd);
 
-    expect(spy).toHaveBeenCalledWith('Automation');
+    expect(spy).toHaveBeenCalledWith('vNETP');
   });
 
   it('should get the most child route to set the title', () => {

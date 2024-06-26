@@ -48,6 +48,7 @@ export class TierModalComponent implements OnInit {
       this.TierId = dto.Tier.id;
     } else {
       this.form.controls.name.enable();
+      this.form.controls.tierClass.enable();
     }
 
     const tier = dto.Tier;
@@ -58,6 +59,7 @@ export class TierModalComponent implements OnInit {
       this.form.controls.tierGroup.setValue(tier.tierGroupId);
       this.form.controls.tierType.setValue(tier.tierType);
       this.form.controls.tierClass.setValue(tier.tierClass);
+      this.form.controls.tierClass.disable();
     }
     this.ngx.resetModalData('tierModal');
   }
@@ -104,7 +106,7 @@ export class TierModalComponent implements OnInit {
       name: ['', DatacenterTierNameValidator()],
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       tierGroup: [null],
-      tierClass: [null],
+      tierClass: [null, Validators.required],
       tierType: [null],
     });
   }
@@ -120,6 +122,7 @@ export class TierModalComponent implements OnInit {
 
   private editTier(tier: Tier): void {
     delete tier.name;
+    delete tier.tierClass;
     delete tier.datacenterId;
     this.tierService
       .updateOneTier({

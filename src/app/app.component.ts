@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
         mergeMap(route => route.data),
       )
       .subscribe(event => {
-        this.title.setTitle(event.title || 'Automation');
+        this.title.setTitle(event.title || 'vNETP');
       });
   }
 }
