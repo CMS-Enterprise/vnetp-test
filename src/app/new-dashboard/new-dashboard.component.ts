@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';
-import { MatTableModule } from '@angular/material/table';
 
 export interface PeriodicElement {
   name: string;

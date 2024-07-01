@@ -47,7 +47,6 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavbarModule } from './common/navbar/navbar.module';
 import { BreadcrumbsModule } from './common/breadcrumbs/breadcrumbs.module';
-import { NewDashboardComponent } from './new-dashboard/new-dashboard.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
