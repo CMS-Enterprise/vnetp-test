@@ -30,6 +30,12 @@ const routes: Routes = [
         loadChildren: () => import('../dashboard/dashboard.module').then(m => m.DashboardModule),
       },
       {
+        path: 'new-dashboard',
+        canActivate: [AuthGuard],
+        data: { title: 'vNETP - Dashboard' },
+        loadChildren: () => import('../../new-dashboard/new-dashboard.module').then(m => m.NewDashboardModule),
+      },
+      {
         path: 'subnets-vlans',
         canActivate: [AuthGuard],
         data: { breadcrumb: 'Subnets & VLANs', title: 'vNETP - Subnets & VLANs' },
