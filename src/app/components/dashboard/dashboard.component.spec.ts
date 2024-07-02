@@ -19,6 +19,14 @@ import { of } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { MockProvider } from 'src/test/mock-providers';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -42,6 +50,16 @@ describe('DashboardComponent', () => {
     };
 
     TestBed.configureTestingModule({
+      imports: [
+        MatButtonModule,
+        MatCardModule,
+        MatGridListModule,
+        MatIconModule,
+        MatMenuModule,
+        MatTabsModule,
+        MatTableModule,
+        MatProgressBarModule,
+      ],
       declarations: [
         DashboardComponent,
         MockTooltipComponent,

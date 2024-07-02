@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import {
   V1DatacentersService,
   V1TiersService,
@@ -21,6 +21,8 @@ import { Subscription } from 'rxjs';
 import SubscriptionUtil from '../../utils/SubscriptionUtil';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,6 +30,7 @@ import { TableConfig } from 'src/app/common/table/table.component';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  private breakpointObserver = inject(BreakpointObserver);
   public user: UserDto;
   public userRoles: string[];
 
@@ -92,6 +95,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
   runningJobs = 0;
 
   dashboardPoller: any;
+  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+    map(({ matches }) => {
+      console.log('matches', matches);
+      if (matches) {
+        return [
+          { title: 'Card 1', cols: 1, rows: 1, data: 'CARD DATA HERE' },
+          // { title: 'Card 2', cols: 1, rows: 1 },
+          // { title: 'Card 3', cols: 1, rows: 1 },
+          // { title: 'Card 4', cols: 1, rows: 1 },
+        ];
+      }
+      console.log('matches', matches);
+      return [
+        { title: 'System Status', cols: 2, rows: 1, data: 'CARD DATA HERE' },
+        // { title: 'Card 2', cols: 1, rows: 1 },
+        // { title: 'Card 3', cols: 1, rows: 2 },
+        // { title: 'Card 4', cols: 1, rows: 1 },
+      ];
+    }),
+  );
 
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
