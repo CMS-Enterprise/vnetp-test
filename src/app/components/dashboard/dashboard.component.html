@@ -1,9 +1,11 @@
-<h1>System Status</h1>
-
 <main class="dashboard">
   <!-- Service Status -->
 
   <aside class="dashboard__parentcard">
+    <span>
+      <h1>System Status</h1>
+    </span>
+
     <aside class="dashboard__card" aria-label="Service Status">
       <h2 class="dashboard__heading">Service Status</h2>
       <div *ngFor="let service of status" class="status-item">
@@ -288,11 +290,11 @@
   
 </main> -->
 <!-- <div class="grid-container"> -->
-<mat-grid-list cols="2" rowHeight="500px">
+<mat-grid-list cols="2" rowHeight="350px">
   @for (card of cards | async; track card) {
   <mat-grid-tile [colspan]="card.cols" [rowspan]="card.rows">
     <mat-card class="dashboard-card">
-      <mat-card-header>
+      <mat-card-header style="text-decoration: underline">
         <mat-card-title>
           {{ card.title }}
           <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
@@ -305,8 +307,14 @@
         </mat-card-title>
       </mat-card-header>
       <mat-card-content class="dashboard-card-content">
-        {{ card.data }}
-        <div>
+        <div *ngIf="card.data[0]">
+          <div *ngFor="let line of card.data">
+            <ul>
+              <li style="width: 15%; text-wrap: nowrap">{{ line }}</li>
+            </ul>
+          </div>
+        </div>
+        <!-- <div>
           <main class="dashboard">
             <aside class="dashboard__card" aria-label="Service Status">
               <h2 class="dashboard__heading">Service Status</h2>
@@ -445,7 +453,7 @@
               </ul>
             </aside>
           </main>
-        </div>
+        </div> -->
       </mat-card-content>
     </mat-card>
   </mat-grid-tile>

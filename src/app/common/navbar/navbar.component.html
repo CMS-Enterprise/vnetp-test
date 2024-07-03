@@ -1,3 +1,13 @@
+<!-- <mat-tab-group>
+    <mat-tab label="Dashboard"> Dashboard </mat-tab>
+    <mat-tab label="Networking"> Networking </mat-tab>
+    <mat-tab label="DraaS"> DraaS </mat-tab>
+    <mat-tab label="Jobs"> Jobs </mat-tab>
+    <mat-tab label="User"> User </mat-tab>
+    <mat-tab label="System"> System </mat-tab>
+    <mat-tab label="Deploy"> Deploy </mat-tab>
+  </mat-tab-group> -->
+
 <nav class="navbar navbar-expand-lg" *ngIf="user && tenant">
   <a id="dashboard-link" class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
     <fa-icon class="icon" [icon]="['fas', 'bolt']"></fa-icon>
@@ -28,6 +38,7 @@
           aria-expanded="false"
           >Networking
         </a>
+
         <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
           <a id="tiers-link" class="dropdown-item" routerLink="tiers" queryParamsHandling="merge">Tiers</a>
           <a
@@ -103,18 +114,19 @@
           > -->
         </div>
       </li>
-    </ul>
+      <li class="nav-item dropdown">
+        <a tabindex="1" class="nav-link" aria-haspopup="true" aria-expanded="false">DraaS </a>
+      </li>
 
-    <ul class="navbar-nav m-auto">
+      <!-- <ul class="navbar-nav m-auto">
       <li id="accountNumber" class="nav-item">
         <a>
           <span *ngIf="tenant">{{ tenant }}</span>
         </a>
       </li>
-    </ul>
+    </ul> -->
 
-    <ul class="navbar-nav ml-auto align-items-lg-center">
-      <li class="nav-item">
+      <li class="nav-item dropdown">
         <a id="jobs-link" class="nav-link" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
           <span>Jobs</span>
         </a>
@@ -160,6 +172,11 @@
           <div class="dropdown-divider" *ngIf="dcsVersion"></div>
           <a name="version" class="dropdown-item" target="_blank" rel="noopener noreferrer" *ngIf="dcsVersion">v{{ dcsVersion }}</a>
         </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link">
+          <span>System Information</span>
+        </a>
       </li>
 
       <li class="nav-item align-self-end align-self-lg-center">

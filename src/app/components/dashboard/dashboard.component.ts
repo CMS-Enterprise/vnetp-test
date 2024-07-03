@@ -101,17 +101,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (matches) {
         return [
           { title: 'Card 1', cols: 1, rows: 1, data: 'CARD DATA HERE' },
-          // { title: 'Card 2', cols: 1, rows: 1 },
-          // { title: 'Card 3', cols: 1, rows: 1 },
-          // { title: 'Card 4', cols: 1, rows: 1 },
+          { title: 'Training Resources', cols: 1, rows: 1, data: ['TRAINING STUFF', 'SOME MORE TRAINING STUFF'] },
+          { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
+          { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
         ];
       }
       console.log('matches', matches);
       return [
-        { title: 'System Status', cols: 2, rows: 1, data: 'CARD DATA HERE' },
-        // { title: 'Card 2', cols: 1, rows: 1 },
-        // { title: 'Card 3', cols: 1, rows: 2 },
-        // { title: 'Card 4', cols: 1, rows: 1 },
+        { title: 'Upcoming in VNETP', cols: 1, rows: 1, data: ['NEW FEATURE A', 'NEW FEATURE B'] },
+        { title: 'Training Resources', cols: 1, rows: 1, data: ['TRAINING STUFF', 'SOME MORE TRAINING STUFF'] },
+        { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
+        { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
       ];
     }),
   );
