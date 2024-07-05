@@ -7,7 +7,13 @@
     <mat-tab label="System"> System </mat-tab>
     <mat-tab label="Deploy"> Deploy </mat-tab>
   </mat-tab-group> -->
+<nav class="navbar navbar-expand-lg" style="background-color: cornflowerblue; padding: 1rem; margin-bottom: 25px">
+  <span style="width: 100%; color: white"> Welcome Back User </span>
 
+  <span style="font-size: larger; width: 100%; color: white">VnetP</span>
+
+  <span style="color: white">CDS</span>
+</nav>
 <nav class="navbar navbar-expand-lg" *ngIf="user && tenant">
   <a id="dashboard-link" class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
     <fa-icon class="icon" [icon]="['fas', 'bolt']"></fa-icon>
