@@ -16,6 +16,12 @@ const routes: Routes = [
       },
       {
         outlet,
+        path: 'endpoint-group',
+        data: { breadcrumb: 'Endpoint Group', title: 'Tenant Portal - Endpoint Group' },
+        loadChildren: () => import('./endpoint-group/endpoint-group.module').then(m => m.EndpointGroupModule),
+      },
+      {
+        outlet,
         path: 'bridge-domain',
         data: { breadcrumb: 'Bridge Domain', title: 'Tenant Portal - Bridge Domain' },
         loadChildren: () => import('./bridge-domain/bridge-domain.module').then(m => m.BridgeDomainModule),

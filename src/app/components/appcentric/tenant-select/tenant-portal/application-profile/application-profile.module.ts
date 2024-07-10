@@ -12,9 +12,6 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { EndpointGroupModalComponent } from './application-profile-modal/endpoint-group-modal/endpoint-group-modal.component';
-import { ProvidedContractComponent } from './application-profile-modal/endpoint-group-modal/provided-contract/provided-contract.component';
-import { ConsumedContractComponent } from './application-profile-modal/endpoint-group-modal/consumed-contract/consumed-contract.component';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 
 const routes: Routes = [
@@ -25,13 +22,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    ApplicationProfileComponent,
-    ApplicationProfileModalComponent,
-    EndpointGroupModalComponent,
-    ConsumedContractComponent,
-    ProvidedContractComponent,
-  ],
+  declarations: [ApplicationProfileComponent, ApplicationProfileModalComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

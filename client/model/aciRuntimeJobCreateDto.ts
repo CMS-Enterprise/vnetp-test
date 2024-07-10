@@ -9,15 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HitcountData } from './hitcountData';
 
 
-export interface HitcountJobResultDto { 
-    type: HitcountJobResultDtoTypeEnum;
-    groupId: string;
-    data: Array<HitcountData>;
+export interface AciRuntimeJobCreateDto { 
+    type: AciRuntimeJobCreateDtoTypeEnum;
+    datacenterId?: string;
+    vlanId?: string;
+    endpointGroupId?: string;
 }
-export enum HitcountJobResultDtoTypeEnum {
+export enum AciRuntimeJobCreateDtoTypeEnum {
     FirewallRule = 'FirewallRule',
     NatRule = 'NatRule',
     F5Config = 'F5Config',

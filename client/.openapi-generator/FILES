@@ -31,6 +31,7 @@ api/v1NetworkSecurityZones.service.ts
 api/v1NetworkStaticRoutes.service.ts
 api/v1NetworkSubnets.service.ts
 api/v1NetworkVlans.service.ts
+api/v1RuntimeDataAciRuntime.service.ts
 api/v1RuntimeDataF5Config.service.ts
 api/v1RuntimeDataHitcount.service.ts
 api/v1SelfService.service.ts
@@ -53,6 +54,8 @@ configuration.ts
 encoder.ts
 git_push.sh
 index.ts
+model/aciRuntime.ts
+model/aciRuntimeJobCreateDto.ts
 model/appCentricSubnet.ts
 model/applicationProfile.ts
 model/auditLog.ts
