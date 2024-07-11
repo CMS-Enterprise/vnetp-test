@@ -44,16 +44,13 @@ export class AciRuntimeComponent {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.datacenterId = cd.id;
+        this.getAciRuntimeData();
       }
-
-      this.getAciRuntimeData();
     });
 
     this.route.paramMap.subscribe(params => {
       this.tenantId = params.get('tenantId');
     });
-
-    this.getAciRuntimeData();
   }
 
   getAciRuntimeData(): void {
