@@ -28,6 +28,8 @@ import {
   FirewallRuleDirectionEnum,
   FirewallRuleProtocolEnum,
   V1NetworkSecurityZonesService,
+  V1RuntimeDataHitcountService,
+  HitcountJobCreateDtoTypeEnum,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
@@ -41,10 +43,12 @@ import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-s
 import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-rule-packet-tracer-dto';
 import UndeployedChangesUtil from '../../../utils/UndeployedChangesUtil';
 import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
+import { RuntimeDataService } from '../../../services/runtime-data.service';
 
 @Component({
   selector: 'app-firewall-rules-detail',
   templateUrl: './firewall-rules-detail.component.html',
+  styleUrls: ['./firewall-rules-detail.component.scss'],
 })
 export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   public searchColumns: SearchColumnConfig[] = [
@@ -92,6 +96,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   public firewallRuleOperationModalSubscription: Subscription;
   public firewallRuleGroupName: string;
 
+  isRefreshingRuntimeData = false;
+  jobStatus: string;
+
   // Templates
   @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
   @ViewChild('sourceAddress') sourceAddressTemplate: TemplateRef<any>;
@@ -99,6 +106,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   @ViewChild('serviceType') serviceTemplate: TemplateRef<any>;
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('updatedAt') updatedAtTemplate: TemplateRef<any>;
+  @ViewChild('expandableRowsTemplate') expandableRowsTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
     description: 'Firewall Rules for the currently selected Tier',
@@ -115,6 +123,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       { name: 'Rule Index', property: 'ruleIndex' },
       { name: '', template: () => this.actionsTemplate },
     ],
+    expandableRows: () => this.expandableRowsTemplate,
   };
 
   get scopeString() {
@@ -135,6 +144,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private datacenterService: DatacenterContextService,
     private zoneService: V1NetworkSecurityZonesService,
     private tableContextService: TableContextService,
+    private hitcountService: V1RuntimeDataHitcountService,
+    private runtimeDataService: RuntimeDataService,
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<FirewallRule>();
     advancedSearchAdapterObject.setService(this.firewallRuleService);
@@ -668,5 +679,51 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   checkUndeployedChangesGroup(group: FirewallRuleGroup): boolean {
     return UndeployedChangesUtil.hasUndeployedChanges(group);
+  }
+
+  refreshHitcount(): void {
+    this.isRefreshingRuntimeData = true;
+    this.hitcountService
+      .createRuntimeDataJobHitcount({
+        hitcountJobCreateDto: {
+          type: HitcountJobCreateDtoTypeEnum.FirewallRule,
+          groupId: this.FirewallRuleGroup.id,
+          datacenterId: this.datacenterService.currentDatacenterValue.id,
+        },
+      })
+      .subscribe(
+        job => {
+          let status = '';
+          this.runtimeDataService.pollJobStatus(job.id).subscribe({
+            next: towerJobDto => {
+              status = towerJobDto.status;
+            },
+            error: () => {
+              status = 'error';
+              this.isRefreshingRuntimeData = false;
+              this.jobStatus = status;
+            },
+            complete: () => {
+              this.isRefreshingRuntimeData = false;
+              if (status === 'successful') {
+                this.getFirewallRuleGroup();
+                this.getFirewallRules();
+              }
+              this.jobStatus = status;
+            },
+          });
+        },
+        () => {
+          this.isRefreshingRuntimeData = false;
+        },
+      );
+  }
+
+  isRecentlyRefreshed(): boolean {
+    return this.runtimeDataService.isRecentlyRefreshed(this.FirewallRuleGroup.runtimeDataLastRefreshed);
+  }
+
+  calculateTimeDifference(timestamp: string): string {
+    return this.runtimeDataService.calculateTimeDifference(timestamp);
   }
 }
