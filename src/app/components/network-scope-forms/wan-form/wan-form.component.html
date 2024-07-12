@@ -54,7 +54,12 @@
 
 <ng-template #activeTemplate let-wanForm="datum">
   <span *ngIf="wanForm.active" class="dot-container">
-    <app-icon-button icon="check" label="WAN Form is active" title="WAN Form is active" (handleClick)="deactivateWanForm(wanForm)"></app-icon-button>
+    <app-icon-button
+      icon="check"
+      label="WAN Form is active"
+      title="WAN Form is active"
+      (handleClick)="deactivateWanForm(wanForm)"
+    ></app-icon-button>
   </span>
   <span *ngIf="!wanForm.active" class="dot-container">
     <app-icon-button

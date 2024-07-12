@@ -157,3 +157,9 @@
 <ng-template #warningMessage>
   <p>Select a Tier to display Subnets & VLANs details</p>
 </ng-template>
+
+<ng-template #expandedRows let-vlan="datum">
+  <section class="table__expanded-row">
+    <app-aci-runtime [vlan]="vlan"></app-aci-runtime>
+  </section>
+</ng-template>

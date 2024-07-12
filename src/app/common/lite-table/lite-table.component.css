@@ -1,0 +1,67 @@
+:host {
+  display: block;
+}
+
+:host .table-container {
+  width: 100%;
+  overflow-y: auto;
+  max-height: 200px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  position: relative;
+}
+
+:host table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+:host th,
+:host td {
+  padding: 8px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+:host th {
+  background-color: #f5f5f5;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+:host th,
+:host td {
+  font-size: 14px;
+  color: #333;
+}
+
+:host th {
+  font-weight: bold;
+}
+
+:host .table-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+:host .table-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+:host .no-data-row .no-data-cell {
+  text-align: center;
+  padding: 20px; /* Adjust as needed */
+  font-size: 1.2em; /* Adjust as needed */
+  color: #666; /* Adjust as needed */
+}
+
+:host .no-data-row {
+  display: table-row;
+  vertical-align: middle;
+}
+
+:host .no-data-cell {
+  display: table-cell;
+  vertical-align: middle;
+}
