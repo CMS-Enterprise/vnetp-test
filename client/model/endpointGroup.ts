@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { AciRuntime } from './aciRuntime';
 import { Tenant } from './tenant';
 import { BridgeDomain } from './bridgeDomain';
 import { ApplicationProfile } from './applicationProfile';
@@ -38,5 +39,6 @@ export interface EndpointGroup {
     applicationProfileId: string;
     readonly consumedContracts?: Array<Contract>;
     readonly providedContracts?: Array<Contract>;
+    readonly aciRuntimes?: AciRuntime;
 }
 

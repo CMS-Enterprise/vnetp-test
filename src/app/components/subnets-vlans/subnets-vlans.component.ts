@@ -79,6 +79,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   @ViewChild('subnetStateTemplate') subnetStateTemplate: TemplateRef<any>;
   @ViewChild('vlanStateTemplate') vlanStateTemplate: TemplateRef<any>;
   @ViewChild('vlanIdTemplate') vlanIdTemplate: TemplateRef<any>;
+  @ViewChild('expandedRows') expandedRows: TemplateRef<any>;
 
   public subnetConfig: TableConfig<any> = {
     description: 'Subnets in the currently selected Tier',
@@ -104,6 +105,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       { name: 'State', template: () => this.vlanStateTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
+    expandableRows: () => this.expandedRows,
   };
 
   constructor(

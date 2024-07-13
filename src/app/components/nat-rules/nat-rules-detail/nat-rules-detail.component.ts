@@ -23,6 +23,8 @@ import {
   GetManyNatRuleResponseDto,
   NatRuleDirectionEnum,
   V1NetworkSecurityZonesService,
+  V1RuntimeDataHitcountService,
+  HitcountJobCreateDtoTypeEnum,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
@@ -36,10 +38,12 @@ import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';
 import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
+import { RuntimeDataService } from '../../../services/runtime-data.service';
 
 @Component({
   selector: 'app-nat-rules-detail',
   templateUrl: './nat-rules-detail.component.html',
+  styleUrls: ['./nat-rules-detail.component.scss'],
 })
 export class NatRulesDetailComponent implements OnInit, OnDestroy {
   public searchColumns: SearchColumnConfig[] = [
@@ -83,6 +87,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   public natRuleOperationModalSubscription: Subscription;
   public natRuleGroupName: string;
 
+  isRefreshingRuntimeData = false;
+  jobStatus: string;
+
   // Templates
   @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
   @ViewChild('originalServiceType') originalServiceTemplate: TemplateRef<any>;
@@ -92,6 +99,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   @ViewChild('translatedSourceAddress') translatedSourceAddressTemplate: TemplateRef<any>;
   @ViewChild('translatedDestinationAddress') translatedDestinationAddressTemplate: TemplateRef<any>;
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+  @ViewChild('expandableRowsTemplate') expandableRowsTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
     description: 'NAT Rules for the currently selected Tier',
@@ -109,6 +117,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       { name: 'Rule Index', property: 'ruleIndex' },
       { name: '', template: () => this.actionsTemplate },
     ],
+    expandableRows: () => this.expandableRowsTemplate,
   };
 
   constructor(
@@ -124,6 +133,8 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     private datacenterService: DatacenterContextService,
     private zoneService: V1NetworkSecurityZonesService,
     private tableContextService: TableContextService,
+    private hitcountService: V1RuntimeDataHitcountService,
+    private runtimeDataService: RuntimeDataService,
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<NatRule>();
     advancedSearchAdapterObject.setService(this.natRuleService);
@@ -608,5 +619,51 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     }
 
     return rule.updatedAt > this.NatRuleGroup.provisionedAt;
+  }
+
+  refreshHitcount(): void {
+    this.isRefreshingRuntimeData = true;
+    this.hitcountService
+      .createRuntimeDataJobHitcount({
+        hitcountJobCreateDto: {
+          type: HitcountJobCreateDtoTypeEnum.NatRule,
+          groupId: this.NatRuleGroup.id,
+          datacenterId: this.datacenterService.currentDatacenterValue.id,
+        },
+      })
+      .subscribe(
+        job => {
+          let status = '';
+          this.runtimeDataService.pollJobStatus(job.id).subscribe({
+            next: towerJobDto => {
+              status = towerJobDto.status;
+            },
+            error: () => {
+              status = 'error';
+              this.isRefreshingRuntimeData = false;
+              this.jobStatus = status;
+            },
+            complete: () => {
+              this.isRefreshingRuntimeData = false;
+              if (status === 'successful') {
+                this.getNatRuleGroup();
+                this.getNatRules();
+              }
+              this.jobStatus = status;
+            },
+          });
+        },
+        () => {
+          this.isRefreshingRuntimeData = false;
+        },
+      );
+  }
+
+  isRecentlyRefreshed(): boolean {
+    return this.runtimeDataService.isRecentlyRefreshed(this.NatRuleGroup.runtimeDataLastRefreshed);
+  }
+
+  calculateTimeDifference(timestamp: string): string {
+    return this.runtimeDataService.calculateTimeDifference(timestamp);
   }
 }

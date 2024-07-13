@@ -31,6 +31,7 @@ import { V1NetworkSecurityZonesService } from './api/v1NetworkSecurityZones.serv
 import { V1NetworkStaticRoutesService } from './api/v1NetworkStaticRoutes.service';
 import { V1NetworkSubnetsService } from './api/v1NetworkSubnets.service';
 import { V1NetworkVlansService } from './api/v1NetworkVlans.service';
+import { V1RuntimeDataAciRuntimeService } from './api/v1RuntimeDataAciRuntime.service';
 import { V1RuntimeDataF5ConfigService } from './api/v1RuntimeDataF5Config.service';
 import { V1RuntimeDataHitcountService } from './api/v1RuntimeDataHitcount.service';
 import { V1SelfServiceService } from './api/v1SelfService.service';

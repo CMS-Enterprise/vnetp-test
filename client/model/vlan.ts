@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { AciRuntime } from './aciRuntime';
 
 
 export interface Vlan { 
@@ -24,6 +25,7 @@ export interface Vlan {
     vlanNumber: number;
     vcdVlanType?: VlanVcdVlanTypeEnum;
     tierId: string;
+    readonly aciRuntimes?: AciRuntime;
 }
 export enum VlanVcdVlanTypeEnum {
     Dev = 'Dev',
