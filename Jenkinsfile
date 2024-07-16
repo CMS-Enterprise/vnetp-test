@@ -23,7 +23,7 @@ def getEnvName(branchName) {
 
 //workd fine with int*
 def getCommitTag2() {
-return sh(returnStdout: true, script: 'git describe --match "int*" --abbrev=0 --tags $(git rev-list --tags --max-count=1)')
+return sh(returnStdout: true, script: 'git describe --match "INT*" --abbrev=0 --tags $(git rev-list --tags --max-count=1)')
  }
 
 
