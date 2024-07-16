@@ -88,7 +88,11 @@ pipeline {
               tar cvf dist.tar dist/automation-ui/*
               rm -f dist.tar.gz
               gzip dist.tar
-              mv dist.tar.gz builds/$GIT_COMMIT/dist-$TagName.tar.gz   
+              mv dist.tar.gz builds/$GIT_COMMIT/dist-$TagName.tar.gz
+              if (findmnt -T /mnt/buildartifacts)
+             then mkdir -p /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && cp builds/$GIT_COMMIT/dist-$TagName.tar.gz  /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && chmod -R 755 /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT
+             else echo 'NFS Mount not available'; exit 1
+             fi
         
           '''
                 }
