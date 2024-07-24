@@ -19,7 +19,7 @@
   }
 
   .nav-item + .nav-item {
-    margin-left: 225px;
+    margin-left: 10px;
   }
 }
 
@@ -53,4 +53,10 @@
 
 #accountNumber {
   font-size: 1.1rem;
+}
+
+span {
+  color: white;
+  display: flex;
+  width: 100%;
 }

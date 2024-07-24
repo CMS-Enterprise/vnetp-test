@@ -124,18 +124,13 @@
     </aside>
 
     <aside class="dashboard__card" aria-label="Overall Environment">
-      <h2 class="dashboard__heading">Miscellaneous</h2>
+      <h2 class="dashboard__heading">Recent Deployments</h2>
       <ul class="dash-card">
         <li class="dash-card__item">
           <a routerLink="/netcentric/load-balancers" queryParamsHandling="merge">
-            <span>
-              LB Virtual Servers
-              <tooltip [message]="helpText.LbVirtualServers"></tooltip>
-            </span>
-            <span class="inline-block ml-auto">
-              {{ loadBalancerVirtualServers || 0 }}
-            </span>
-            <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
+            <ul>
+              <li style="display: list-item" *ngFor="let job of jobs">{{ job.jobType }} - {{ job.createdAt }}</li>
+            </ul>
           </a>
         </li>
       </ul>
@@ -147,7 +142,7 @@
   <!-- Overall Environment -->
 </main>
 
-<h1>Dashboard</h1>
+<!-- <h1>Dashboard</h1> -->
 
 <!-- <main class="dashboard">
   <aside class="dashboard__card" aria-label="Service Status">

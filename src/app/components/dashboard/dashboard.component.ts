@@ -14,6 +14,7 @@ import {
   V1NetworkSecurityNatRulesService,
   V1AuditLogService,
   Datacenter,
+  V1JobsService,
 } from 'client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { AuthService } from '../../services/auth.service';
@@ -55,6 +56,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private natRuleService: V1NetworkSecurityNatRulesService,
     private auditLogService: V1AuditLogService,
     private datacenterContextService: DatacenterContextService,
+    private jobService: V1JobsService,
   ) {}
 
   datacenters: number;
@@ -151,6 +153,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.getServiceObjectGroups();
       this.getSubnets();
       this.getVlans();
+      this.getJobs();
     }
   }
 
@@ -236,6 +239,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
       })
       .subscribe(data => {
         this.serviceObjectGroupCount = data.total;
+      });
+  }
+
+  private getJobs(): void {
+    this.jobService
+      .getManyJob({
+        page: 1,
+        perPage: 3,
+      })
+      .subscribe(data => {
+        this.jobs = data.data;
       });
   }
 }

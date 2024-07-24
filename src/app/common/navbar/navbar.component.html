@@ -7,12 +7,12 @@
     <mat-tab label="System"> System </mat-tab>
     <mat-tab label="Deploy"> Deploy </mat-tab>
   </mat-tab-group> -->
-<nav class="navbar navbar-expand-lg" style="background-color: cornflowerblue; padding: 1rem; margin-bottom: 25px">
-  <span style="width: 100%; color: white"> Welcome Back User </span>
+<nav class="navbar navbar-expand-lg" style="background-color: cornflowerblue; padding: 1rem; margin-bottom: 25px; display: flex">
+  <span> Welcome Back User </span>
 
-  <span style="font-size: larger; width: 100%; color: white">VnetP</span>
+  <span style="font-size: larger; justify-content: center">VnetP - {{ tenant }}</span>
 
-  <span style="color: white">CDS</span>
+  <span style="justify-content: flex-end">CDS</span>
 </nav>
 <nav class="navbar navbar-expand-lg" *ngIf="user && tenant">
   <a id="dashboard-link" class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
@@ -120,11 +120,9 @@
           > -->
         </div>
       </li>
-      <li class="nav-item dropdown">
-        <a tabindex="1" class="nav-link" aria-haspopup="true" aria-expanded="false">DraaS </a>
-      </li>
+    </ul>
 
-      <!-- <ul class="navbar-nav m-auto">
+    <!-- <ul class="navbar-nav m-auto">
       <li id="accountNumber" class="nav-item">
         <a>
           <span *ngIf="tenant">{{ tenant }}</span>
@@ -132,14 +130,10 @@
       </li>
     </ul> -->
 
-      <li class="nav-item dropdown">
+    <ul class="navbar-nav ml-auto align-items-lg-center">
+      <li class="nav-item">
         <a id="jobs-link" class="nav-link" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
-          <span>Jobs</span>
-        </a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link">
-          <span>System Information</span>
+          <span>Deployments</span>
         </a>
       </li>
       <li class="nav-item dropdown">
