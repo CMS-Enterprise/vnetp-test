@@ -8,11 +8,11 @@
     <mat-tab label="Deploy"> Deploy </mat-tab>
   </mat-tab-group> -->
 <nav class="navbar navbar-expand-lg" style="background-color: cornflowerblue; padding: 1rem; margin-bottom: 25px; display: flex">
-  <span> Welcome Back User </span>
+  <span style="display: flex; color: white; width: 100%"> Welcome Back User </span>
 
-  <span style="font-size: larger; justify-content: center">VnetP - {{ tenant }}</span>
+  <span style="display: flex; color: white; font-size: larger; justify-content: center; width: 100%">VnetP - {{ tenant }}</span>
 
-  <span style="justify-content: flex-end">CDS</span>
+  <span style="display: flex; color: white; justify-content: flex-end; width: 100%">CDS</span>
 </nav>
 <nav class="navbar navbar-expand-lg" *ngIf="user && tenant">
   <a id="dashboard-link" class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
