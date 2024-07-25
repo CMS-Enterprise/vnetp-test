@@ -13,7 +13,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-import { JobsModule } from '../jobs/jobs.module';
 
 const routes: Routes = [
   {
