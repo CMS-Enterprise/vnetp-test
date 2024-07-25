@@ -140,6 +140,15 @@
   <!-- Overall Environment -->
 </main>
 
+<aside style="background-color: rgb(251, 216, 171)" class="dashboard__card">
+  <h4 class="dashboard__heading">News of Upcoming Changes</h4>
+  <ul style="display: list-item" class="dash-card">
+    <li>Deploy It!</li>
+    <li>Upgrade It!</li>
+    <li>Technologic!</li>
+  </ul>
+</aside>
+
 <!-- <h1>Dashboard</h1> -->
 
 <!-- <main class="dashboard">
@@ -283,7 +292,7 @@
   
 </main> -->
 <!-- <div class="grid-container"> -->
-<mat-grid-list style="background-color: aliceblue" cols="2" rowHeight="350px">
+<mat-grid-list cols="2" rowHeight="350px">
   @for (card of cards | async; track card) {
   <mat-grid-tile [colspan]="card.cols" [rowspan]="card.rows">
     <mat-card class="dashboard-card">
