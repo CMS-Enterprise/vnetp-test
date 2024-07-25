@@ -74,13 +74,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   auditLogs;
 
   public config: TableConfig<any> = {
-    description: 'Audit Log',
+    description: 'Dashboard-Deployments',
     columns: [
-      { name: 'Action', property: 'actionType' },
-      { name: 'Object Type', property: 'entityType' },
-      { name: 'Tier Name', property: 'tierName' },
-      { name: 'User', property: 'changedBy' },
-      { name: 'Timestamp', property: 'timestamp' },
+      { name: 'Type', property: 'jobType' },
+      { name: 'Timestamp', property: 'createdAt' },
     ],
   };
 
@@ -249,7 +246,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         perPage: 3,
       })
       .subscribe(data => {
-        this.jobs = data.data;
+        this.jobs = data;
       });
   }
 }

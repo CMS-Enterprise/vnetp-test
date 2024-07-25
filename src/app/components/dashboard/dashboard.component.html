@@ -128,9 +128,7 @@
       <ul class="dash-card">
         <li class="dash-card__item">
           <a routerLink="/netcentric/load-balancers" queryParamsHandling="merge">
-            <ul>
-              <li style="display: list-item" *ngFor="let job of jobs">{{ job.jobType }} - {{ job.createdAt }}</li>
-            </ul>
+            <app-table [config]="config" [data]="jobs"></app-table>
           </a>
         </li>
       </ul>
@@ -285,7 +283,7 @@
   
 </main> -->
 <!-- <div class="grid-container"> -->
-<mat-grid-list cols="2" rowHeight="350px">
+<mat-grid-list style="background-color: aliceblue" cols="2" rowHeight="350px">
   @for (card of cards | async; track card) {
   <mat-grid-tile [colspan]="card.cols" [rowspan]="card.rows">
     <mat-card class="dashboard-card">

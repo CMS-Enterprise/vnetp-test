@@ -36,7 +36,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     TableModule,
     TooltipModule,
-    JobsModule,
   ],
   declarations: [DashboardComponent],
 })
