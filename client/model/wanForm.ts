@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { RouteTable } from './routeTable';
 import { Tenant } from './tenant';
 import { ExternalRoute } from './externalRoute';
 import { Datacenter } from './datacenter';
@@ -32,5 +33,6 @@ export interface WanForm {
     readonly wanFormSubnets?: Array<WanFormSubnet>;
     readonly tenant?: Tenant;
     tenantId?: string;
+    readonly routeTables?: Array<RouteTable>;
 }
 

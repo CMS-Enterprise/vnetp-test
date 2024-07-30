@@ -34,10 +34,12 @@ api/v1NetworkVlans.service.ts
 api/v1RuntimeDataAciRuntime.service.ts
 api/v1RuntimeDataF5Config.service.ts
 api/v1RuntimeDataHitcount.service.ts
+api/v1RuntimeDataRouteTable.service.ts
 api/v1SelfService.service.ts
 api/v1Status.service.ts
 api/v1TierGroups.service.ts
 api/v1Tiers.service.ts
+api/v1Vrfs.service.ts
 api/v2AppCentricAppCentricSubnets.service.ts
 api/v2AppCentricApplicationProfiles.service.ts
 api/v2AppCentricBridgeDomains.service.ts
@@ -100,6 +102,7 @@ model/createManyVlanDto.ts
 model/createManyVrfDto.ts
 model/createManyWanFormDto.ts
 model/createManyWanFormSubnetDto.ts
+model/createManyWanVrfDto.ts
 model/createManyZoneDto.ts
 model/datacenter.ts
 model/dcsPermissions.ts
@@ -154,6 +157,7 @@ model/getManyVlanResponseDto.ts
 model/getManyVrfResponseDto.ts
 model/getManyWanFormResponseDto.ts
 model/getManyWanFormSubnetResponseDto.ts
+model/getManyWanVrfResponseDto.ts
 model/getManyZoneResponseDto.ts
 model/hitcountData.ts
 model/hitcountJobCreateDto.ts
@@ -185,6 +189,8 @@ model/networkObjectGroupRelationBulkImportDto.ts
 model/nodeImportCollectionDto.ts
 model/poolImportCollectionDto.ts
 model/routeProfile.ts
+model/routeTable.ts
+model/routeTableJobCreateDto.ts
 model/ruleOperationDto.ts
 model/selfService.ts
 model/selfServiceConfig.ts
@@ -211,5 +217,6 @@ model/vlan.ts
 model/vrf.ts
 model/wanForm.ts
 model/wanFormSubnet.ts
+model/wanVrf.ts
 model/zone.ts
 variables.ts

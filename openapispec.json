@@ -20003,6 +20003,39 @@
         ]
       }
     },
+    "/v1/runtime-data/route-table/create-runtime-data-job": {
+      "post": {
+        "operationId": "createRuntimeDataJobRouteTable",
+        "summary": "",
+        "description": "Create Runtime Data Route Table Collection Job",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouteTableJobCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/route-table"
+        ]
+      }
+    },
     "/v1/network-scope-forms/external-route": {
       "post": {
         "operationId": "createOneExternalRoute",
@@ -21482,6 +21515,372 @@
         },
         "tags": [
           "v1/network-scope-forms/wan-form-subnet"
+        ]
+      }
+    },
+    "/v1/vrfs": {
+      "post": {
+        "operationId": "createOneWanVrf",
+        "summary": "Create one WanVrf",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WanVrf"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WanVrf"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/vrfs"
+        ]
+      },
+      "get": {
+        "operationId": "getManyWanVrf",
+        "summary": "Get many WanVrf",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyWanVrfResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WanVrf"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/vrfs"
+        ]
+      }
+    },
+    "/v1/vrfs/bulk": {
+      "post": {
+        "operationId": "createManyWanVrf",
+        "summary": "Create many WanVrf",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManyWanVrfDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/WanVrf"
+                    }
+                  }
+                },
+                "required": [
+                  "bulk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WanVrf"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/vrfs"
+        ]
+      }
+    },
+    "/v1/vrfs/{id}": {
+      "get": {
+        "operationId": "getOneWanVrf",
+        "summary": "Get one WanVrf",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WanVrf"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/vrfs"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneWanVrf",
+        "summary": "Update one WanVrf",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WanVrf"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WanVrf"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/vrfs"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneWanVrf",
+        "summary": "Delete one WanVrf",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WanVrf"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/vrfs"
         ]
       }
     }
@@ -23297,6 +23696,77 @@
           "wanFormId"
         ]
       },
+      "RouteTable": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "network": {
+            "type": "string"
+          },
+          "prefixLength": {
+            "type": "number"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "vrf": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "number"
+          },
+          "uptime": {
+            "type": "string"
+          },
+          "wanForm": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WanForm"
+              }
+            ]
+          }
+        },
+        "required": [
+          "network",
+          "prefixLength",
+          "protocol",
+          "vrf",
+          "metric",
+          "uptime"
+        ]
+      },
       "WanForm": {
         "type": "object",
         "properties": {
@@ -23379,6 +23849,13 @@
           },
           "tenantId": {
             "type": "string"
+          },
+          "routeTables": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RouteTable"
+            }
           }
         },
         "required": [
@@ -27046,7 +27523,8 @@
               "FirewallRule",
               "NatRule",
               "F5Config",
-              "AciRuntime"
+              "AciRuntime",
+              "RouteTable"
             ]
           },
           "datacenterId": {
@@ -27085,7 +27563,8 @@
               "FirewallRule",
               "NatRule",
               "F5Config",
-              "AciRuntime"
+              "AciRuntime",
+              "RouteTable"
             ]
           },
           "groupId": {
@@ -27153,7 +27632,8 @@
               "FirewallRule",
               "NatRule",
               "F5Config",
-              "AciRuntime"
+              "AciRuntime",
+              "RouteTable"
             ]
           },
           "datacenterId": {
@@ -27177,7 +27657,8 @@
               "FirewallRule",
               "NatRule",
               "F5Config",
-              "AciRuntime"
+              "AciRuntime",
+              "RouteTable"
             ]
           },
           "datacenterId": {
@@ -27192,6 +27673,64 @@
         },
         "required": [
           "type"
+        ]
+      },
+      "RouteTableJobCreateDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "FirewallRule",
+              "NatRule",
+              "F5Config",
+              "AciRuntime",
+              "RouteTable"
+            ]
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "vrf": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "vrf"
+        ]
+      },
+      "WanVrf": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "runtimeDataLastRefreshed": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
         ]
       }
     }
