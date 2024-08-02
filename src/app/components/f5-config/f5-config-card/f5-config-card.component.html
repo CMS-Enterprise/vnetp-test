@@ -45,5 +45,24 @@
     <p class="card-text mb-0">
       <small style="color: #717579">Version: {{ softwareVersion }}</small>
     </p>
+    <div *ngIf="expiredCertsWarning" class="alert alert-warning alert-sm mt-3" role="alert">
+      <small> Warning: One or more certificates have expired or will expire within 30 days. </small>
+    </div>
+  </div>
+  <div class="card-footer d-flex justify-content-end">
+    <button
+      type="button"
+      class="btn btn-sm btn-primary me-2"
+      (click)="!isRefreshingRuntimeData && navigateToCertificates(); $event.stopPropagation()"
+    >
+      Show Certificates
+    </button>
+    <button
+      type="button"
+      class="btn btn-sm btn-secondary"
+      (click)="!isRefreshingRuntimeData && navigateToDetails(); $event.stopPropagation()"
+    >
+      Show Partitions
+    </button>
   </div>
 </div>

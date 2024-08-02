@@ -20,6 +20,7 @@ export class F5ConfigCardComponent implements OnInit {
   isRefreshingRuntimeData = false;
   jobStatus: string;
   displayName: string;
+  expiredCertsWarning = false;
 
   @ViewChildren('bootstrapTooltip') tooltips: QueryList<ElementRef>;
 
@@ -33,6 +34,7 @@ export class F5ConfigCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.initilizeValues();
+    this.checkCertificateExpiry();
   }
 
   initilizeValues(): void {
@@ -44,10 +46,33 @@ export class F5ConfigCardComponent implements OnInit {
     this.displayName = this.f5Config.displayName;
   }
 
+  checkCertificateExpiry(): void {
+    const f5Data = this.f5Config.data as any;
+    const currentDate = Math.floor(Date.now() / 1000); // Current date in seconds
+    const thirtyDaysInSeconds = 30 * 24 * 60 * 60; // 30 days in seconds
+
+    if (f5Data.certInfo) {
+      this.expiredCertsWarning = f5Data.certInfo.some(cert => {
+        const expirationDate = cert.expirationDate;
+        return expirationDate <= currentDate || expirationDate <= currentDate + thirtyDaysInSeconds;
+      });
+    }
+    console.log(this.expiredCertsWarning);
+  }
+
   navigateToDetails(): void {
     const currentQueryParams = this.route.snapshot.queryParams;
 
     this.router.navigate(['/netcentric/f5-config/partitions', this.f5Config.id], {
+      relativeTo: this.route,
+      queryParams: currentQueryParams,
+    });
+  }
+
+  navigateToCertificates(): void {
+    const currentQueryParams = this.route.snapshot.queryParams;
+
+    this.router.navigate(['/netcentric/f5-config/certificates', this.f5Config.id], {
       relativeTo: this.route,
       queryParams: currentQueryParams,
     });
@@ -93,6 +118,7 @@ export class F5ConfigCardComponent implements OnInit {
                   this.f5StateManagementService.f5Configs[i] = data[0];
                 }
                 this.initilizeValues();
+                this.checkCertificateExpiry(); // Re-check after refreshing the config
               });
             }
             this.jobStatus = status;

@@ -1,10 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-type ConversionResult = {
-  value: number;
-  unit: 'bits' | 'bytes' | 'KB' | 'MB' | 'GB' | 'TB' | 'PB';
-};
-
 @Component({
   selector: 'app-virtual-server-card',
   templateUrl: './virtual-server-card.component.html',
@@ -25,6 +20,7 @@ export class VirtualServerCardComponent implements OnInit {
   virtualServerTableData;
   poolStatus: any;
   poolTableData;
+  expiredCertsWarning = false;
 
   showScrollFade = true;
 
@@ -51,6 +47,20 @@ export class VirtualServerCardComponent implements OnInit {
     this.virtualServerTableData = this.getVirtualServerTableData(this.virtualServer);
     this.poolStatus = this.getStatusClass(this.poolStats?.['status.availabilityState'], this.poolStats?.['status.enabledState']);
     this.poolTableData = this.getPoolTableData(this.poolStats);
+    this.checkCertificateExpiry();
+  }
+
+  checkCertificateExpiry(): void {
+    const certs = this.virtualServer?.certsReference;
+    const currentDate = Math.floor(Date.now() / 1000); // Current date in seconds
+    const thirtyDaysInSeconds = 30 * 24 * 60 * 60; // 30 days in seconds
+
+    if (certs) {
+      this.expiredCertsWarning = certs.some(cert => {
+        const expirationDate = cert.expirationDate;
+        return expirationDate <= currentDate || expirationDate <= currentDate + thirtyDaysInSeconds;
+      });
+    }
   }
 
   checkScroll(event: any): void {
@@ -173,7 +183,7 @@ export class VirtualServerCardComponent implements OnInit {
       bits = 0;
     }
 
-    const units: ConversionResult['unit'][] = ['bits', 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+    const units: string[] = ['bits', 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
     let currentValue = bits; // Start with bits
     let currentIndex = 0; // Index of the current unit in units array
 
