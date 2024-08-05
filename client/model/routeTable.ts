@@ -25,7 +25,7 @@ export interface RouteTable {
     protocol: string;
     vrf: string;
     metric: number;
-    uptime: string;
+    uptime?: string;
     readonly wanForm?: WanForm;
 }
 

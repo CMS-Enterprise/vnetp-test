@@ -1,0 +1,70 @@
+<button aria-label="navigate-to-wan-form" class="btn float-left mr-3" (click)="navigateToWanForm()">
+  <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+</button>
+<button matTooltip="test">test</button>
+<h1>Manage Allowed External Routes for: {{ wanForm?.name }}</h1>
+<div>
+  <section class="btn-toolbar" role="toolbar" aria-label="create-external-route">
+    <button class="btn btn-primary" (click)="openModal()">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create External Route</span>
+    </button>
+  </section>
+  <input
+    type="text"
+    class="search-input ml-1 mb-1"
+    placeholder="Search..."
+    aria-label="Search"
+    [(ngModel)]="searchQuery"
+    (input)="onSearch()"
+  />
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Network</th>
+          <th>Prefix Length</th>
+          <th>Protocol</th>
+          <th>Metric</th>
+          <th>VRF</th>
+          <th>Uptime</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let route of sortedRoutes">
+          <tr [class.associated]="route.isAssociated">
+            <td>{{ route.network }}</td>
+            <td>{{ route.prefixLength }}</td>
+            <td>{{ route.protocol }}</td>
+            <td>{{ route.metric }}</td>
+            <td>{{ route.vrf }}</td>
+            <td>{{ route.uptime || '-' }}</td>
+            <td>
+              <app-icon-button
+                *ngIf="!route?.wanForm"
+                icon="add"
+                label="Add Route to Wan Form"
+                (handleClick)="addRouteToWanForm(route)"
+              ></app-icon-button>
+              <app-icon-button
+                *ngIf="route?.wanForm"
+                icon="times"
+                label="Remove Route from Wan Form"
+                (handleClick)="removeRouteFromWanForm(route)"
+              ></app-icon-button>
+              <app-icon-button
+                *ngIf="route?.protocol === 'manual' && !route?.wanForm"
+                icon="delete"
+                label="Delete Route"
+                (handleClick)="deleteRoute(route)"
+              ></app-icon-button>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<app-route-table-modal></app-route-table-modal>

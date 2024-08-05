@@ -15,8 +15,6 @@ import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { WanFormModalComponent } from './wan-form-modal/wan-form-modal.component';
 import { YesNoModalModule } from '../../../common/yes-no-modal/yes-no-modal.module';
 import { WanFormDetailComponent } from './wan-form-detail/wan-form-detail.component';
-import { ExternalRouteComponent } from './external-route/external-route.component';
-import { ExternalRouteModalComponent } from './external-route/external-route-modal/external-route-modal.component';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,6 +25,8 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { MatTooltip } from '@angular/material/tooltip';
 import { WanFormSubnetsComponent } from './wan-form-subnets/wan-form-subnets.component';
 import { WanFormSubnetsModalComponent } from './wan-form-subnets/wan-form-subnets-modal/wan-form-subnets-modal.component';
+import { RouteTableComponent } from './route-table/route-table.component';
+import { RouteTableModalComponent } from './route-table/route-table-modal/route-table-modal.component';
 
 const routes: Routes = [
   {
@@ -34,23 +34,23 @@ const routes: Routes = [
     component: WanFormComponent,
   },
   {
-    path: ':id/external-routes',
-    component: ExternalRouteComponent,
-  },
-  {
     path: ':id/wan-form-subnets',
     component: WanFormSubnetsComponent,
+  },
+  {
+    path: ':id/route-table',
+    component: RouteTableComponent,
   },
 ];
 @NgModule({
   declarations: [
     WanFormComponent,
     WanFormModalComponent,
-    ExternalRouteModalComponent,
     WanFormDetailComponent,
-    ExternalRouteComponent,
     WanFormSubnetsComponent,
     WanFormSubnetsModalComponent,
+    RouteTableComponent,
+    RouteTableModalComponent,
   ],
   imports: [
     CommonModule,

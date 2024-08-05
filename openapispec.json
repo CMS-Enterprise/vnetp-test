@@ -20003,6 +20003,202 @@
         ]
       }
     },
+    "/v1/runtime-data/route-table": {
+      "get": {
+        "operationId": "getManyRouteTable",
+        "summary": "Get many Aci Runtime",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RouteTable"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/route-table"
+        ]
+      },
+      "post": {
+        "operationId": "createOneRouteTable",
+        "summary": "Create one Route",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouteTable"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteTable"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/route-table"
+        ]
+      }
+    },
+    "/v1/runtime-data/route-table/{id}": {
+      "delete": {
+        "operationId": "deleteOneRouteTable",
+        "summary": "Delete one Route",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteTable"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/route-table"
+        ]
+      }
+    },
     "/v1/runtime-data/route-table/create-runtime-data-job": {
       "post": {
         "operationId": "createRuntimeDataJobRouteTable",
@@ -20579,6 +20775,74 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form"
+        ]
+      }
+    },
+    "/v1/network-scope-forms/wan-form/{wanId}/route-table/{routeId}": {
+      "post": {
+        "operationId": "addRouteToWanFormWanForm",
+        "summary": "",
+        "description": "Add Route to Wan Form",
+        "parameters": [
+          {
+            "name": "wanId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the WAN form to add the route to",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "routeId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the route to add to the WAN form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form"
+        ]
+      },
+      "delete": {
+        "operationId": "removeRouteFromWanFormWanForm",
+        "summary": "",
+        "description": "Remove Route from Wan Form",
+        "parameters": [
+          {
+            "name": "wanId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the WAN form to remove the route from",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "routeId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the route to remove from the WAN form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
           }
         },
         "tags": [
@@ -23763,8 +24027,7 @@
           "prefixLength",
           "protocol",
           "vrf",
-          "metric",
-          "uptime"
+          "metric"
         ]
       },
       "WanForm": {
