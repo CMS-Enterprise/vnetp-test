@@ -58,6 +58,8 @@ export class F5ConfigCardComponent implements OnInit {
 
         return inUse && (expirationDate <= currentDate || expirationDate <= currentDate + thirtyDaysInSeconds);
       });
+    } else {
+      this.expiredCertsWarning = false;
     }
   }
 

@@ -18,7 +18,7 @@
       <p class="card-text pool-vs-title mb-0">{{ poolName }}</p>
     </div>
     <div *ngIf="expiredCertsWarning" class="alert alert-warning alert-sm mt-3" role="alert">
-      <small> Warning: One or more certificates are expired or will expire within 30 days. </small>
+      <small> Warning: One or more in-use certificates are expired or will expire within 30 days. </small>
     </div>
     <!-- Scrollable member list -->
     <div class="member-list" [class.scroll-indicator]="showScrollFade">

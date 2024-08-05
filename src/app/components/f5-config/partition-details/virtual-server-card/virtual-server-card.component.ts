@@ -63,6 +63,8 @@ export class VirtualServerCardComponent implements OnInit {
 
         return inUse && (expirationDate <= currentDate || expirationDate <= currentDate + thirtyDaysInSeconds);
       });
+    } else {
+      this.expiredCertsWarning = false;
     }
   }
 

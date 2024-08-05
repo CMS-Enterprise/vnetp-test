@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { VirtualServerCardComponent } from './virtual-server-card.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { MockFontAwesomeComponent } from '../../../../../test/mock-components';
@@ -36,6 +35,12 @@ describe('VirtualServerCardComponent', () => {
           },
         },
       },
+      certsReference: [
+        { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24, inUse: true }, // expires in 1 day, in use
+        { expirationDate: Math.floor(Date.now() / 1000) - 60 * 60 * 24, inUse: true }, // expired, in use
+        { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 60, inUse: true }, // expires in 60 days, in use
+        { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24, inUse: false }, // expires in 1 day, not in use
+      ],
     };
 
     jest.spyOn(component, 'getStatusClass');
@@ -57,6 +62,28 @@ describe('VirtualServerCardComponent', () => {
     expect(component.getStatusClass).toHaveBeenCalled();
     expect(component.getVirtualServerTableData).toHaveBeenCalledWith(component.virtualServer);
     expect(component.getPoolTableData).toHaveBeenCalledWith(component.virtualServer.poolReference.stats.nestedStats.entries);
+  });
+
+  describe('checkCertificateExpiry', () => {
+    it('should set expiredCertsWarning to true if any in-use certificate is expired or expiring within 30 days', () => {
+      component.checkCertificateExpiry();
+      expect(component.expiredCertsWarning).toBe(true);
+    });
+
+    it('should set expiredCertsWarning to false if no in-use certificate is expired or expiring within 30 days', () => {
+      (component.virtualServer.certsReference as any) = [
+        { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 60, inUse: true }, // expires in 60 days, in use
+        { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 60, inUse: false }, // expires in 60 days, not in use
+      ];
+      component.checkCertificateExpiry();
+      expect(component.expiredCertsWarning).toBe(false);
+    });
+
+    it('should handle cases where certsReference is not defined', () => {
+      (component.virtualServer as any).certsReference = undefined;
+      component.checkCertificateExpiry();
+      expect(component.expiredCertsWarning).toBe(false);
+    });
   });
 
   it('should toggle expanded', () => {
