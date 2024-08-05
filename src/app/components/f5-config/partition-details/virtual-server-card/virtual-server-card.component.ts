@@ -58,7 +58,10 @@ export class VirtualServerCardComponent implements OnInit {
     if (certs) {
       this.expiredCertsWarning = certs.some(cert => {
         const expirationDate = cert.expirationDate;
-        return expirationDate <= currentDate || expirationDate <= currentDate + thirtyDaysInSeconds;
+        const inUse = cert.inUse;
+        console.log(cert.inUse);
+
+        return inUse && (expirationDate <= currentDate || expirationDate <= currentDate + thirtyDaysInSeconds);
       });
     }
   }

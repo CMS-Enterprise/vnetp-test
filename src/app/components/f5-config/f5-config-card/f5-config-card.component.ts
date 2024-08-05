@@ -54,10 +54,11 @@ export class F5ConfigCardComponent implements OnInit {
     if (f5Data.certInfo) {
       this.expiredCertsWarning = f5Data.certInfo.some(cert => {
         const expirationDate = cert.expirationDate;
-        return expirationDate <= currentDate || expirationDate <= currentDate + thirtyDaysInSeconds;
+        const inUse = cert.inUse;
+
+        return inUse && (expirationDate <= currentDate || expirationDate <= currentDate + thirtyDaysInSeconds);
       });
     }
-    console.log(this.expiredCertsWarning);
   }
 
   navigateToDetails(): void {
