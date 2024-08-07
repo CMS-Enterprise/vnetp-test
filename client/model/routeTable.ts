@@ -14,18 +14,13 @@ import { WanForm } from './wanForm';
 
 export interface RouteTable { 
     readonly id?: string;
-    readonly createdAt?: string;
-    readonly updatedAt?: string;
-    readonly version?: number;
-    readonly deletedAt?: string;
-    readonly provisionedAt?: string;
-    readonly provisionedVersion?: number;
     network: string;
     prefixLength: number;
-    protocol: string;
+    protocol?: string;
     vrf: string;
     metric: number;
     uptime?: string;
     readonly wanForm?: WanForm;
+    runtimeDataLastRefreshed?: string;
 }
 

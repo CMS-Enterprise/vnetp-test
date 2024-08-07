@@ -1,9 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RouteTable, V1NetworkScopeFormsWanFormService, V1RuntimeDataRouteTableService, WanForm } from '../../../../../../client';
+import {
+  RouteTable,
+  RouteTableJobCreateDtoTypeEnum,
+  V1NetworkScopeFormsWanFormService,
+  V1RuntimeDataRouteTableService,
+  WanForm,
+} from '../../../../../../client';
 import { Subscription } from 'rxjs';
 import { ModalMode } from '../../../../models/other/modal-mode';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { RuntimeDataService } from '../../../../services/runtime-data.service';
 
 @Component({
   selector: 'app-route-table',
@@ -19,6 +26,9 @@ export class RouteTableComponent implements OnInit {
   private modalSubscription: Subscription;
   public ModalMode = ModalMode;
   searchQuery = '';
+  isRefreshingRuntimeData = false;
+  jobStatus: string;
+  showComponent = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -26,6 +36,7 @@ export class RouteTableComponent implements OnInit {
     private routeTableService: V1RuntimeDataRouteTableService,
     private ngx: NgxSmartModalService,
     private router: Router,
+    private runtimeDataService: RuntimeDataService,
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +84,7 @@ export class RouteTableComponent implements OnInit {
     this.routeTableService.getManyRouteTable({ relations: ['wanForm'], limit: 50000 }).subscribe(data => {
       this.routes = data;
       this.filteredRoutes = data;
+      this.showComponent = this.runtimeDataService.isRecentlyRefreshed(this.routes?.[0]?.runtimeDataLastRefreshed, 600);
     });
   }
 
@@ -119,5 +131,56 @@ export class RouteTableComponent implements OnInit {
     this.router.navigate([`/${this.dcsMode}/wan-form`], { queryParams: currentQueryParams });
   }
 
-  refreshRuntimeData(): void;
+  refreshRuntimeData(): void {
+    if (this.isRecentlyRefreshed() || this.isRefreshingRuntimeData) {
+      return;
+    }
+
+    this.isRefreshingRuntimeData = true;
+
+    this.routeTableService
+      .createRuntimeDataJobRouteTable({
+        routeTableJobCreateDto: {
+          type: RouteTableJobCreateDtoTypeEnum.RouteTable,
+          vrf: '',
+        },
+      })
+      .subscribe(job => {
+        let status = '';
+        this.runtimeDataService.pollJobStatus(job.id).subscribe({
+          next: towerJobDto => {
+            status = towerJobDto.status;
+          },
+          error: () => {
+            status = 'error';
+            this.isRefreshingRuntimeData = false;
+            this.jobStatus = status;
+          },
+          complete: () => {
+            this.isRefreshingRuntimeData = false;
+            if (status === 'successful') {
+              this.getAllRoutes();
+            }
+            this.jobStatus = status;
+          },
+        });
+      });
+  }
+
+  isRecentlyRefreshed(): boolean {
+    return this.runtimeDataService.isRecentlyRefreshed(this.routes?.[0]?.runtimeDataLastRefreshed);
+  }
+
+  getTooltipMessage(status: string): string {
+    switch (status) {
+      case 'failed':
+        return 'Job Status: Failed';
+      case 'running':
+        return 'Job Status: Timeout';
+      case 'error':
+        return 'An error occurred during polling';
+      default:
+        return status;
+    }
+  }
 }

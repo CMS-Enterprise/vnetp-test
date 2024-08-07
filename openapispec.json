@@ -23967,34 +23967,6 @@
             "type": "string",
             "readOnly": true
           },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "network": {
             "type": "string"
           },
@@ -24020,12 +23992,15 @@
                 "$ref": "#/components/schemas/WanForm"
               }
             ]
+          },
+          "runtimeDataLastRefreshed": {
+            "format": "date-time",
+            "type": "string"
           }
         },
         "required": [
           "network",
           "prefixLength",
-          "protocol",
           "vrf",
           "metric"
         ]
