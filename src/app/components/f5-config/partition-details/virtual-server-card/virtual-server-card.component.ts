@@ -20,7 +20,7 @@ export class VirtualServerCardComponent implements OnInit {
   virtualServerTableData;
   poolStatus: any;
   poolTableData;
-  expiredCertsWarning = false;
+  certStatusList = [];
 
   showScrollFade = true;
 
@@ -52,19 +52,59 @@ export class VirtualServerCardComponent implements OnInit {
 
   checkCertificateExpiry(): void {
     const certs = this.virtualServer?.certsReference;
-    const currentDate = Math.floor(Date.now() / 1000); // Current date in seconds
+    const currentDate = new Date();
     const thirtyDaysInSeconds = 30 * 24 * 60 * 60; // 30 days in seconds
 
     if (certs) {
-      this.expiredCertsWarning = certs.some(cert => {
-        const expirationDate = cert.expirationDate;
-        const inUse = cert.inUse;
-        console.log(cert.inUse);
+      this.certStatusList = certs.map(cert => {
+        const expirationDate = new Date(cert.expirationDate * 1000);
+        const isExpired = expirationDate <= currentDate;
 
-        return inUse && (expirationDate <= currentDate || expirationDate <= currentDate + thirtyDaysInSeconds);
+        // Calculate difference in time
+        let delta = expirationDate.getTime() - currentDate.getTime();
+
+        // Calculate difference in years, months, days, and hours
+        const years = Math.floor(delta / (1000 * 60 * 60 * 24 * 365));
+        delta -= years * (1000 * 60 * 60 * 24 * 365);
+
+        const months = Math.floor(delta / (1000 * 60 * 60 * 24 * 30));
+        delta -= months * (1000 * 60 * 60 * 24 * 30);
+
+        const days = Math.floor(delta / (1000 * 60 * 60 * 24));
+        delta -= days * (1000 * 60 * 60 * 24);
+
+        const hours = Math.floor(delta / (1000 * 60 * 60));
+
+        let timeString = '';
+        if (years > 0) {
+          timeString += `${years} year${years > 1 ? 's' : ''}`;
+        }
+        if (months > 0) {
+          timeString += `${timeString ? ', ' : ''}${months} month${months > 1 ? 's' : ''}`;
+        }
+        if (days > 0) {
+          timeString += `${timeString ? ', ' : ''}${days} day${days > 1 ? 's' : ''}`;
+        }
+        if (days === 0 && hours > 0) {
+          timeString = `${hours} hour${hours > 1 ? 's' : ''}`;
+        }
+
+        if (!timeString) {
+          timeString = '0 days';
+        }
+
+        // Determine if the certificate expires within 30 days
+        const isExpiringSoon = !isExpired && expirationDate.getTime() - currentDate.getTime() <= thirtyDaysInSeconds * 1000;
+
+        return {
+          name: cert.name,
+          isExpired,
+          isExpiringSoon,
+          timeString,
+        };
       });
     } else {
-      this.expiredCertsWarning = false;
+      this.certStatusList = [];
     }
   }
 

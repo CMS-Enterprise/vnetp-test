@@ -36,10 +36,10 @@ describe('VirtualServerCardComponent', () => {
         },
       },
       certsReference: [
-        { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24, inUse: true }, // expires in 1 day, in use
-        { expirationDate: Math.floor(Date.now() / 1000) - 60 * 60 * 24, inUse: true }, // expired, in use
-        { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 60, inUse: true }, // expires in 60 days, in use
-        { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24, inUse: false }, // expires in 1 day, not in use
+        { name: 'Cert1', expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24, inUse: true }, // expires in 1 day, in use
+        { name: 'Cert2', expirationDate: Math.floor(Date.now() / 1000) - 60 * 60 * 24, inUse: true }, // expired, in use
+        { name: 'Cert3', expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 60, inUse: true }, // expires in 60 days, in use
+        { name: 'Cert4', expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 * 2, inUse: false },
       ],
     };
 
@@ -65,24 +65,40 @@ describe('VirtualServerCardComponent', () => {
   });
 
   describe('checkCertificateExpiry', () => {
-    it('should set expiredCertsWarning to true if any in-use certificate is expired or expiring within 30 days', () => {
+    it('should correctly identify expired and soon-to-expire certificates', () => {
       component.checkCertificateExpiry();
-      expect(component.expiredCertsWarning).toBe(true);
+      expect(component.certStatusList.length).toBe(4); // 4 certificates should be processed
+
+      const cert1 = component.certStatusList.find(cert => cert.name === 'Cert1');
+      expect(cert1.isExpired).toBe(false);
+      expect(cert1.isExpiringSoon).toBe(true);
+      expect(cert1.timeString).toContain('23 hours');
+
+      const cert2 = component.certStatusList.find(cert => cert.name === 'Cert2');
+      expect(cert2.isExpired).toBe(true);
+      expect(cert2.isExpiringSoon).toBe(false);
+      expect(cert2.timeString).toContain('12 months, 3 days');
+
+      const cert3 = component.certStatusList.find(cert => cert.name === 'Cert3');
+      expect(cert3.isExpired).toBe(false);
+      expect(cert3.isExpiringSoon).toBe(false);
+      expect(cert3.timeString).toContain('1 month, 29 days');
+
+      const cert4 = component.certStatusList.find(cert => cert.name === 'Cert4');
+      expect(cert4.isExpired).toBe(false);
+      expect(cert4.isExpiringSoon).toBe(false);
+      expect(cert4.timeString).toContain('1 year, 12 months, 4 days');
     });
 
-    it('should set expiredCertsWarning to false if no in-use certificate is expired or expiring within 30 days', () => {
-      (component.virtualServer.certsReference as any) = [
-        { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 60, inUse: true }, // expires in 60 days, in use
-        { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 60, inUse: false }, // expires in 60 days, not in use
-      ];
+    it('should include all certificates', () => {
       component.checkCertificateExpiry();
-      expect(component.expiredCertsWarning).toBe(false);
+      expect(component.certStatusList.length).toBe(4);
     });
 
     it('should handle cases where certsReference is not defined', () => {
       (component.virtualServer as any).certsReference = undefined;
       component.checkCertificateExpiry();
-      expect(component.expiredCertsWarning).toBe(false);
+      expect(component.certStatusList.length).toBe(0);
     });
   });
 

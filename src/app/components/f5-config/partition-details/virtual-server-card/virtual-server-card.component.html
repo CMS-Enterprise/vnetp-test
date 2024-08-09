@@ -6,27 +6,41 @@
   (keydown)="handleKeyDown($event)"
 >
   <div class="card-body non-expanded-card-body" (scroll)="checkScroll($event)">
-    <div class="d-flex align-items-center">
-      <!-- <fa-icon [ngClass]="['icon', virtualServerStatus]" [icon]="['fas', 'circle']"></fa-icon> -->
-      <h5 class="card-title pool-vs-title mb-0">{{ virtualServerName }}</h5>
+    <!-- Virtual Server Name -->
+    <div class="ml-3">
+      <h6 class="card-title mb-0 text-black">{{ virtualServerName }}</h6>
+      <p class="card-text mt-1 tight-spacing text-muted ml-3">
+        <small>{{ virtualServerAddress }}</small>
+      </p>
     </div>
-    <p class="card-text ml-4 mt-1 tight-spacing">
-      <small class="grey-text tight-spacing">{{ virtualServerAddress }}</small>
-    </p>
-    <div class="d-flex align-items-center ml-3 mt-3">
-      <!-- <fa-icon [ngClass]="['icon', virtualServerStatus, 'fa-sm']" [icon]="['fas', 'circle']"></fa-icon> -->
-      <p class="card-text pool-vs-title mb-0">{{ poolName }}</p>
+
+    <!-- Certificates Section -->
+    <div *ngIf="certStatusList.length > 0" class="ml-3 mt-2">
+      <h6 class="text-black mb-1">Certificates:</h6>
+      <ul class="list-unstyled mb-2 ml-3">
+        <li
+          *ngFor="let cert of certStatusList"
+          class="d-flex align-items-center nowrap"
+          style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
+        >
+          <small class="text-muted">{{ cert.name }}</small>
+          <small *ngIf="cert.isExpired" class="text-danger ml-2"> (Expired {{ cert.timeString }} ago) </small>
+          <small *ngIf="!cert.isExpired && cert.isExpiringSoon" class="text-warning ml-2"> (Expires in {{ cert.timeString }}) </small>
+          <small *ngIf="!cert.isExpired && !cert.isExpiringSoon" class="text-success ml-2"> (Expires in {{ cert.timeString }}) </small>
+        </li>
+      </ul>
     </div>
-    <div *ngIf="expiredCertsWarning" class="alert alert-warning alert-sm mt-3" role="alert">
-      <small> Warning: One or more in-use certificates are expired or will expire within 30 days. </small>
-    </div>
-    <!-- Scrollable member list -->
-    <div class="member-list" [class.scroll-indicator]="showScrollFade">
-      <div *ngFor="let member of members" class="ml-5 mb-3">
-        <p class="card-text mb-0">{{ member?.name }}</p>
-        <p class="card-text mb-0 mt-0 tight-spacing">
-          <small class="grey-text tight-spacing">{{ member?.address }}</small>
-        </p>
+
+    <!-- Pool Information Section -->
+    <div class="ml-3 mt-2">
+      <h6 class="card-text mb-1 text-black">{{ poolName }}</h6>
+      <div class="ml-3">
+        <div *ngFor="let member of members" class="mb-3">
+          <p class="card-text mb-0 text-muted">{{ member?.name }}</p>
+          <p class="card-text mb-0 mt-0 tight-spacing">
+            <small class="text-muted tight-spacing">{{ member?.address }}</small>
+          </p>
+        </div>
       </div>
     </div>
   </div>
