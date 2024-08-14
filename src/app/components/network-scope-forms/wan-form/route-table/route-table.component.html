@@ -58,8 +58,8 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let route of sortedRoutes">
-          <tr [class.associated]="route.isAssociated">
+        <ng-container *ngIf="sortedRoutes.length > 0; else noData">
+          <tr *ngFor="let route of sortedRoutes" [class.associated]="route.isAssociated">
             <td>{{ route.network }}</td>
             <td>{{ route.prefixLength }}</td>
             <td>{{ route.protocol }}</td>
@@ -88,6 +88,11 @@
             </td>
           </tr>
         </ng-container>
+        <ng-template #noData>
+          <tr>
+            <td colspan="7" class="text-center">No routes available</td>
+          </tr>
+        </ng-template>
       </tbody>
     </table>
   </div>
