@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { F5ConfigService } from '../f5-config.service';
 import { RuntimeDataService } from '../../../services/runtime-data.service';
 import { Subscription } from 'rxjs';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-f5-config-card',
@@ -21,6 +22,8 @@ export class F5ConfigCardComponent implements OnInit {
   jobStatus: string;
   displayName: string;
   expiredCertsWarning = false;
+
+  faCircle = faCircle;
 
   @ViewChildren('bootstrapTooltip') tooltips: QueryList<ElementRef>;
 

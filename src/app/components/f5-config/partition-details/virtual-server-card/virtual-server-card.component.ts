@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-virtual-server-card',
@@ -21,6 +22,8 @@ export class VirtualServerCardComponent implements OnInit {
   poolStatus: any;
   poolTableData;
   certStatusList = [];
+
+  faCircle = faCircle;
 
   showScrollFade = true;
 

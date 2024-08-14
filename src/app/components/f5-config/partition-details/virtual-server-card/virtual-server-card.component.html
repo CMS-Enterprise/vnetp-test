@@ -9,6 +9,7 @@
     <!-- Virtual Server Name -->
     <div class="ml-3">
       <h6 class="card-title mb-0 text-black">{{ virtualServerName }}</h6>
+      <fa-icon [ngClass]="['icon', virtualServerStatus, 'fa-sm']" [icon]="faCircle"></fa-icon>
       <p class="card-text mt-1 tight-spacing text-muted ml-3">
         <small>{{ virtualServerAddress }}</small>
       </p>
