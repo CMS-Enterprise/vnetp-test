@@ -29,7 +29,7 @@ export class RouteTableComponent implements OnInit {
   isRefreshingRuntimeData = false;
   jobStatus: string;
   showComponent = false;
-  refreshed = false;
+  refreshedNoData = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -85,8 +85,11 @@ export class RouteTableComponent implements OnInit {
     this.routeTableService.getManyRouteTable({ relations: ['wanForm'], limit: 50000 }).subscribe(data => {
       this.routes = data;
       this.filteredRoutes = data;
-      this.refreshed = true;
-      this.showComponent = this.runtimeDataService.isRecentlyRefreshed(this.routes?.[0]?.runtimeDataLastRefreshed, 600) || this.refreshed;
+      if (data.length === 0) {
+        this.refreshedNoData = true;
+      }
+      this.showComponent =
+        this.runtimeDataService.isRecentlyRefreshed(this.routes?.[0]?.runtimeDataLastRefreshed, 600) || this.refreshedNoData;
     });
   }
 
