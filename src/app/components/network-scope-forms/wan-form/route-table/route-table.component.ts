@@ -87,9 +87,12 @@ export class RouteTableComponent implements OnInit {
       this.filteredRoutes = data;
       if (data.length === 0) {
         this.refreshedNoData = true;
+        return;
       }
+      const routeWithRuntimeData = this.routes.find(route => route.runtimeDataLastRefreshed !== null) || null;
+
       this.showComponent =
-        this.runtimeDataService.isRecentlyRefreshed(this.routes?.[0]?.runtimeDataLastRefreshed, 600) || this.refreshedNoData;
+        this.runtimeDataService.isRecentlyRefreshed(routeWithRuntimeData?.runtimeDataLastRefreshed, 600) || this.refreshedNoData;
     });
   }
 
