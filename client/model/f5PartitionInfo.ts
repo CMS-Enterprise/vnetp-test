@@ -9,16 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { F5Data } from './f5Data';
+import { VirtualServer } from './virtualServer';
 
 
-export interface F5Runtime { 
-    readonly id?: string;
-    displayName: string;
-    hostname: string;
-    data: F5Data;
-    readonly createdAt?: string | null;
-    partitions: Array<string>;
-    runtimeDataLastRefreshed?: string;
+export interface F5PartitionInfo { 
+    readonly name: string;
+    readonly virtualServers: Array<VirtualServer>;
 }
 

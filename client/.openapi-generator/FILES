@@ -60,6 +60,7 @@ model/appCentricSubnet.ts
 model/applicationProfile.ts
 model/auditLog.ts
 model/bridgeDomain.ts
+model/certsReference.ts
 model/contract.ts
 model/createManyAppCentricSubnetDto.ts
 model/createManyApplicationProfileDto.ts
@@ -106,6 +107,9 @@ model/dcsPermissions.ts
 model/endpointGroup.ts
 model/externalRoute.ts
 model/f5ConfigJobCreateDto.ts
+model/f5Data.ts
+model/f5HostInfo.ts
+model/f5PartitionInfo.ts
 model/f5Runtime.ts
 model/filter.ts
 model/filterEntry.ts
@@ -172,6 +176,8 @@ model/loadBalancerRoute.ts
 model/loadBalancerSelfIp.ts
 model/loadBalancerVirtualServer.ts
 model/loadBalancerVlan.ts
+model/member.ts
+model/membersReference.ts
 model/models.ts
 model/natRule.ts
 model/natRuleGroup.ts
@@ -183,7 +189,12 @@ model/networkObjectGroup.ts
 model/networkObjectGroupRelationBulkImportCollectionDto.ts
 model/networkObjectGroupRelationBulkImportDto.ts
 model/nodeImportCollectionDto.ts
+model/policiesReference.ts
 model/poolImportCollectionDto.ts
+model/poolReference.ts
+model/poolReferenceItem.ts
+model/poolStatEntries.ts
+model/profilesReference.ts
 model/routeProfile.ts
 model/ruleOperationDto.ts
 model/selfService.ts
@@ -194,6 +205,7 @@ model/serviceObject.ts
 model/serviceObjectGroup.ts
 model/serviceObjectGroupRelationBulkImportCollectionDto.ts
 model/serviceObjectGroupRelationBulkImportDto.ts
+model/statEntry.ts
 model/staticRoute.ts
 model/subject.ts
 model/subnet.ts
@@ -205,8 +217,10 @@ model/tierGroup.ts
 model/towerJobDto.ts
 model/userDto.ts
 model/userPass.ts
+model/virtualServer.ts
 model/virtualServerImportCollectionDto.ts
 model/virtualServerImportDto.ts
+model/virtualServerStatEntries.ts
 model/vlan.ts
 model/vrf.ts
 model/wanForm.ts

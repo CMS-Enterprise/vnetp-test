@@ -9,16 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { F5Data } from './f5Data';
+import { PoolStatEntries } from './poolStatEntries';
+import { PoolReferenceItem } from './poolReferenceItem';
 
 
-export interface F5Runtime { 
-    readonly id?: string;
-    displayName: string;
-    hostname: string;
-    data: F5Data;
-    readonly createdAt?: string | null;
-    partitions: Array<string>;
-    runtimeDataLastRefreshed?: string;
+export interface PoolReference { 
+    readonly items: PoolReferenceItem;
+    readonly stats: PoolStatEntries;
 }
 

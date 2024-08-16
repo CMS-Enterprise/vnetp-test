@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { F5Runtime, V1RuntimeDataF5ConfigService } from '../../../../client';
+import { F5PartitionInfo, F5Runtime, V1RuntimeDataF5ConfigService, VirtualServer } from '../../../../client';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class F5ConfigService {
     });
   }
 
-  public getF5Configs(): Observable<any> {
+  public getF5Configs(): Observable<F5Runtime[]> {
     if (this.f5Configs) {
       return of(this.f5Configs);
     } else {
@@ -31,25 +31,21 @@ export class F5ConfigService {
     }
   }
 
-  filterVirtualServers(partitionInfo: any, query: string): any {
-    const filteredPartitionInfo = {};
-    Object.entries(partitionInfo)?.forEach(([partitionName, virtualServers]) => {
-      if ((virtualServers as any)?.length > 0) {
-        const filteredServers = (virtualServers as any)?.filter(
+  filterVirtualServers(partitionInfo: F5PartitionInfo[], query: string): F5PartitionInfo[] {
+    return partitionInfo
+      .map(partition => {
+        const filteredServers = partition.virtualServers?.filter(
           virtualServer => query === '' || this.fullSearchMatch(virtualServer, query),
         );
 
-        if (filteredServers?.length > 0) {
-          filteredPartitionInfo[partitionName] = filteredServers;
-        } else {
-          filteredPartitionInfo[partitionName] = [];
+        if (filteredServers && filteredServers.length > 0) {
+          return {
+            ...partition,
+            virtualServers: filteredServers,
+          };
         }
-      } else {
-        filteredPartitionInfo[partitionName] = [];
-      }
-    });
-
-    return filteredPartitionInfo;
+      })
+      .filter(partition => partition !== undefined) as F5PartitionInfo[];
   }
 
   fullSearchMatch(virtualServer: any, searchQuery: string): boolean {
@@ -64,21 +60,21 @@ export class F5ConfigService {
 
   virtualServerMatchesSearch(virtualServer: any, searchQuery: string): boolean {
     const virtualServerName = virtualServer?.name;
-    const virtualSeverDestination = virtualServer?.destination?.split('/')?.at(-1);
-    const virtualServerDestinationIp = virtualSeverDestination?.split(':')?.at(0);
-    const virtualServerDestinationPort = virtualSeverDestination?.split(':')?.at(1);
+    const virtualServerDestination = virtualServer?.destination?.split('/')?.at(-1);
+    const virtualServerDestinationIp = virtualServerDestination?.split(':')?.at(0);
+    const virtualServerDestinationPort = virtualServerDestination?.split(':')?.at(1);
     const virtualServerIpProtocol = virtualServer?.ipProtocol;
     const virtualServerStatus = this.getVirtualServerStatus(virtualServer);
+    const virtualServerCertSearch = this.getVirtualServerCertSearch(virtualServer);
 
-    if (
+    return (
       virtualServerName?.toLowerCase()?.includes(searchQuery) ||
       virtualServerDestinationIp?.toLowerCase()?.includes(searchQuery) ||
       virtualServerDestinationPort?.toLowerCase()?.includes(searchQuery) ||
       virtualServerIpProtocol?.toLowerCase()?.includes(searchQuery) ||
-      virtualServerStatus?.toLowerCase()?.includes(searchQuery)
-    ) {
-      return true;
-    }
+      virtualServerStatus?.toLowerCase()?.includes(searchQuery) ||
+      virtualServerCertSearch?.toLowerCase()?.includes(searchQuery)
+    );
   }
 
   poolMatchesSearch(pool: any, searchQuery: string): boolean {
@@ -118,5 +114,24 @@ export class F5ConfigService {
     } else {
       return 'unknown';
     }
+  }
+
+  getVirtualServerCertSearch(virtualServer: VirtualServer): string {
+    if (!virtualServer.certsReference || virtualServer.certsReference.length === 0) {
+      return '';
+    }
+
+    return virtualServer.certsReference
+      .map(cert => {
+        const name = cert.name || '';
+        const subject = cert.subject || '';
+        const expirationDate = cert.expirationDate ? cert.expirationDate.toString() : '';
+        const expirationString = cert.expirationString || '';
+
+        // Combine the values with a space between them
+        return `${name} ${subject} ${expirationDate} ${expirationString}`.trim();
+      })
+      .join(' ')
+      .trim();
   }
 }

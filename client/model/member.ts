@@ -9,16 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { F5Data } from './f5Data';
 
 
-export interface F5Runtime { 
-    readonly id?: string;
-    displayName: string;
-    hostname: string;
-    data: F5Data;
-    readonly createdAt?: string | null;
-    partitions: Array<string>;
-    runtimeDataLastRefreshed?: string;
+export interface Member { 
+    readonly name: string;
+    readonly address: string;
+    readonly ephemeral: string;
+    readonly fqdn: object;
+    readonly priorityGroup: number;
+    readonly ratio: number;
+    readonly state: string;
 }
 

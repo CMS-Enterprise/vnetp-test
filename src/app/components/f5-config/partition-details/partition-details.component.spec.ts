@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PartitionDetailsComponent } from './partition-details.component';
 import { F5ConfigService } from '../f5-config.service';
 import { MockComponent, MockFontAwesomeComponent } from '../../../../test/mock-components';
 import { of } from 'rxjs';
 import { ApplicationPipesModule } from '../../../pipes/application-pipes.module';
 import { ActivatedRoute } from '@angular/router';
+import { F5PartitionInfo, F5Runtime } from '../../../../../client';
 
 describe('PartitionDetailsComponent', () => {
   let component: PartitionDetailsComponent;
   let fixture: ComponentFixture<PartitionDetailsComponent>;
   let f5ConfigStateManagementService: any;
-  let data: any;
+  let data: Partial<F5Runtime>;
   let mockActivatedRoute: any;
 
   beforeEach(() => {
@@ -19,13 +19,15 @@ describe('PartitionDetailsComponent', () => {
       params: of({ id: 'id' }),
     };
     f5ConfigStateManagementService = {
-      filterVirtualServers: jest.fn().mockReturnValue({ partition1: [{ name: 'virtualServer1' }] }),
+      filterVirtualServers: jest
+        .fn()
+        .mockReturnValue([{ name: 'partition1', virtualServers: [{ name: 'virtualServer1' }] } as F5PartitionInfo]),
       getF5Configs: jest.fn().mockReturnValue(
         of([
           {
             id: 'id',
             data,
-          },
+          } as F5Runtime,
         ]),
       ),
     };
@@ -53,25 +55,26 @@ describe('PartitionDetailsComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should set partitionInfoExists to false and partitionInfo to an empty object if partition info doesnt exist', () => {
+    it('should set partitionInfoExists to false and partitionInfo to an empty array if partition info doesn’t exist', () => {
       expect(component.partitionInfoExists).toBeFalsy();
-      expect(component.partitionInfo).toEqual({});
+      expect(component.partitionInfo).toEqual([]);
     });
   });
 
   describe('ngOnInit', () => {
     beforeEach(() => {
       data = {
-        partitionInfo: {
-          partition1: [{ name: 'virtualServer1' }],
-        },
-      };
+        partitions: [{ name: 'partition1', virtualServers: [{ name: 'virtualServer1' }] } as F5PartitionInfo] as unknown as string[], // Temporarily casting to bypass type checks
+      } as Partial<F5Runtime>;
       fixture.detectChanges();
     });
 
     it('should set filteredPartitionInfo', () => {
-      expect(component.filteredPartitionInfo).toEqual({ partition1: [{ name: 'virtualServer1' }] });
+      expect(component.filteredPartitionInfo).toEqual([
+        { name: 'partition1', virtualServers: [{ name: 'virtualServer1' }] } as F5PartitionInfo,
+      ]);
     });
+
     it('should set selected partition', () => {
       component.onPartitionSelected('partition1');
       expect(component.selectedPartition).toEqual('partition1');
@@ -80,10 +83,7 @@ describe('PartitionDetailsComponent', () => {
     it('should set search query and call filterVirtualServers', () => {
       component.onSearch('searchQuery');
       expect(component.searchQuery).toEqual('searchquery');
-      expect(f5ConfigStateManagementService.filterVirtualServers).toHaveBeenCalledWith(
-        { partition1: [{ name: 'virtualServer1' }] },
-        'searchquery',
-      );
+      expect(f5ConfigStateManagementService.filterVirtualServers).toHaveBeenCalledWith(component.partitionInfo, 'searchquery');
     });
 
     it('should handle expanded change', () => {
