@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { F5ConfigService } from '../f5-config.service';
-import { F5PartitionInfo, F5Runtime } from '../../../../../client';
+import { F5PartitionInfo, F5Runtime, F5RuntimeVirtualServer } from '../../../../../client';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -57,7 +57,8 @@ export class PartitionDetailsComponent implements OnInit, OnDestroy {
     this.filteredPartitionInfo = this.f5ConfigStateManagementService.filterVirtualServers(this.partitionInfo, this.searchQuery);
   }
 
-  handleExpandedChange(virtualServer: any, expanded: boolean): void {
-    virtualServer.expanded = expanded;
+  handleExpandedChange(virtualServer: F5RuntimeVirtualServer, expanded: boolean): void {
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    virtualServer['expanded'] = expanded;
   }
 }

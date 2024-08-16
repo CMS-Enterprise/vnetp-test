@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { F5ConfigService } from './f5-config.service';
-import { V1RuntimeDataF5ConfigService, VirtualServer } from '../../../../client';
+import { V1RuntimeDataF5ConfigService, F5RuntimeVirtualServer } from '../../../../client';
 import { of } from 'rxjs';
 import { F5PartitionInfo } from '../../../../client';
 
@@ -25,8 +25,8 @@ describe('F5ConfigService', () => {
         {
           name: 'partition1',
           virtualServers: [
-            { name: 'server1', poolReference: { items: { membersReference: { items: [{ name: 'member1' }] } } } } as VirtualServer,
-            { name: 'server2' } as VirtualServer,
+            { name: 'server1', poolReference: { items: { membersReference: { items: [{ name: 'member1' }] } } } } as F5RuntimeVirtualServer,
+            { name: 'server2' } as F5RuntimeVirtualServer,
           ],
         },
       ];
@@ -44,8 +44,8 @@ describe('F5ConfigService', () => {
         {
           name: 'partition1',
           virtualServers: [
-            { name: 'server1', poolReference: { items: { membersReference: { items: [{ name: 'member1' }] } } } } as VirtualServer,
-            { name: 'server2' } as VirtualServer,
+            { name: 'server1', poolReference: { items: { membersReference: { items: [{ name: 'member1' }] } } } } as F5RuntimeVirtualServer,
+            { name: 'server2' } as F5RuntimeVirtualServer,
           ],
         },
       ];
@@ -140,7 +140,7 @@ describe('F5ConfigService', () => {
 
   describe('getVirtualServerCertSearch', () => {
     it('should return a concatenated string of cert properties when all properties are present', () => {
-      const virtualServer: VirtualServer = {
+      const virtualServer: F5RuntimeVirtualServer = {
         certsReference: [
           {
             name: 'default.crt',
@@ -149,14 +149,14 @@ describe('F5ConfigService', () => {
             expirationString: 'Jan 16 21:00:04 2032 GMT',
           },
         ],
-      } as VirtualServer;
+      } as F5RuntimeVirtualServer;
 
       const result = service.getVirtualServerCertSearch(virtualServer);
       expect(result).toBe('default.crt CN=localhost.localdomain 1957899604 Jan 16 21:00:04 2032 GMT');
     });
 
     it('should handle missing properties and return only existing values', () => {
-      const virtualServer: VirtualServer = {
+      const virtualServer: F5RuntimeVirtualServer = {
         certsReference: [
           {
             name: 'default.crt',
@@ -164,23 +164,23 @@ describe('F5ConfigService', () => {
             expirationDate: 1957899604,
           },
         ],
-      } as VirtualServer;
+      } as F5RuntimeVirtualServer;
 
       const result = service.getVirtualServerCertSearch(virtualServer);
       expect(result).toBe('default.crt CN=localhost.localdomain 1957899604');
     });
 
     it('should return an empty string if certsReference is empty', () => {
-      const virtualServer: VirtualServer = {
+      const virtualServer: F5RuntimeVirtualServer = {
         certsReference: [],
-      } as VirtualServer;
+      } as F5RuntimeVirtualServer;
 
       const result = service.getVirtualServerCertSearch(virtualServer);
       expect(result).toBe('');
     });
 
     it('should return an empty string if certsReference is undefined', () => {
-      const virtualServer: VirtualServer = {} as VirtualServer;
+      const virtualServer: F5RuntimeVirtualServer = {} as F5RuntimeVirtualServer;
 
       const result = service.getVirtualServerCertSearch(virtualServer);
       expect(result).toBe('');

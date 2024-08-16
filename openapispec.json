@@ -27104,43 +27104,92 @@
           "data"
         ]
       },
-      "Fqdn": {
+      "F5HostInfo": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "hostname": {
+            "type": "string",
+            "description": "Hostname of the F5 device",
+            "readOnly": true
+          },
+          "softwareVersion": {
+            "type": "string",
+            "description": "Software version of the F5 device",
+            "readOnly": true
+          },
+          "availability": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "hostname",
+          "softwareVersion",
+          "availability"
+        ]
       },
-      "Member": {
+      "F5RuntimeFqdnFqdn": {
+        "type": "object",
+        "properties": {
+          "autopopulate": {
+            "type": "string",
+            "description": "Autopopulate state",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "autopopulate"
+        ]
+      },
+      "F5RuntimePoolMember": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
+            "description": "Member name",
             "readOnly": true
           },
           "address": {
             "type": "string",
+            "description": "Member address",
             "readOnly": true
           },
           "ephemeral": {
             "type": "string",
+            "description": "Ephemeral state",
             "readOnly": true
           },
           "fqdn": {
+            "description": "FQDN configuration",
             "readOnly": true,
             "allOf": [
               {
-                "$ref": "#/components/schemas/Fqdn"
+                "$ref": "#/components/schemas/F5RuntimeFqdnFqdn"
               }
             ]
           },
           "priorityGroup": {
             "type": "number",
+            "description": "Priority group",
             "readOnly": true
           },
           "ratio": {
             "type": "number",
+            "description": "Ratio",
             "readOnly": true
           },
           "state": {
             "type": "string",
+            "description": "State",
+            "readOnly": true
+          },
+          "fullPath": {
+            "type": "string",
+            "description": "Full path",
             "readOnly": true
           }
         },
@@ -27151,16 +27200,19 @@
           "fqdn",
           "priorityGroup",
           "ratio",
-          "state"
+          "state",
+          "fullPath"
         ]
       },
-      "MembersReference": {
+      "F5RuntimeMembersReference": {
         "type": "object",
         "properties": {
           "items": {
+            "description": "Array of members",
+            "readOnly": true,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Member"
+              "$ref": "#/components/schemas/F5RuntimePoolMember"
             }
           }
         },
@@ -27173,17 +27225,20 @@
         "properties": {
           "name": {
             "type": "string",
+            "description": "Pool name",
             "readOnly": true
           },
           "monitor": {
             "type": "string",
+            "description": "Monitor",
             "readOnly": true
           },
           "membersReference": {
+            "description": "Reference to pool members",
             "readOnly": true,
             "allOf": [
               {
-                "$ref": "#/components/schemas/MembersReference"
+                "$ref": "#/components/schemas/F5RuntimeMembersReference"
               }
             ]
           }
@@ -27194,190 +27249,33 @@
           "membersReference"
         ]
       },
-      "StatEntry": {
+      "F5RuntimeNestedStats": {
         "type": "object",
         "properties": {
-          "description": {
+          "kind": {
             "type": "string",
-            "readOnly": true
+            "description": "The type of the nested stats"
           },
-          "value": {
-            "type": "number",
-            "readOnly": true
+          "selfLink": {
+            "type": "string",
+            "description": "A URI reference to the resource"
+          },
+          "entries": {
+            "type": "object",
+            "description": "The entries of the nested stats"
           }
         },
         "required": [
-          "description",
-          "value"
+          "kind",
+          "selfLink",
+          "entries"
         ]
       },
-      "PoolStatEntries": {
-        "type": "object",
-        "properties": {
-          "activeMemberCnt": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "availableMemberCnt": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "connqAllAgeEdm": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "connqAllAgeEma": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "connqAllAgeHead": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "connqAllAgeMax": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "connqAllDepth": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "connqAllServiced": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "connqAgeEdm": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "connqAgeEma": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "connqAgeHead": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "connqAgeMax": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "connqDepth": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "connqServiced": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "curPriogrp": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "curSessions": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "highestPriogrp": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "lowestPriogrp": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "memberCnt": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "minActiveMembers": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "monitorRule": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "mrMsgIn": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "mrMsgOut": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "mrReqIn": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "mrReqOut": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "mrRespIn": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "mrRespOut": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "tmName": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "serversideBitsIn": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "serversideBitsOut": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "serversideCurConns": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "serversideMaxConns": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "serversidePktsIn": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "serversidePktsOut": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "serversideTotConns": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "statusAvailabilityState": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "statusEnabledState": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "statusStatusReason": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "totRequests": {
-            "$ref": "#/components/schemas/StatEntry"
-          }
-        },
-        "required": [
-          "activeMemberCnt",
-          "availableMemberCnt",
-          "connqAllAgeEdm",
-          "connqAllAgeEma",
-          "connqAllAgeHead",
-          "connqAllAgeMax",
-          "connqAllDepth",
-          "connqAllServiced",
-          "connqAgeEdm",
-          "connqAgeEma",
-          "connqAgeHead",
-          "connqAgeMax",
-          "connqDepth",
-          "connqServiced",
-          "curPriogrp",
-          "curSessions",
-          "highestPriogrp",
-          "lowestPriogrp",
-          "memberCnt",
-          "minActiveMembers",
-          "monitorRule",
-          "mrMsgIn",
-          "mrMsgOut",
-          "mrReqIn",
-          "mrReqOut",
-          "mrRespIn",
-          "mrRespOut",
-          "tmName",
-          "serversideBitsIn",
-          "serversideBitsOut",
-          "serversideCurConns",
-          "serversideMaxConns",
-          "serversidePktsIn",
-          "serversidePktsOut",
-          "serversideTotConns",
-          "statusAvailabilityState",
-          "statusEnabledState",
-          "statusStatusReason",
-          "totRequests"
-        ]
-      },
-      "PoolReference": {
+      "F5RuntimePoolReference": {
         "type": "object",
         "properties": {
           "items": {
+            "description": "Reference to pool items",
             "readOnly": true,
             "allOf": [
               {
@@ -27386,10 +27284,11 @@
             ]
           },
           "stats": {
+            "description": "Statistics related to the pool",
             "readOnly": true,
             "allOf": [
               {
-                "$ref": "#/components/schemas/PoolStatEntries"
+                "$ref": "#/components/schemas/F5RuntimeNestedStats"
               }
             ]
           }
@@ -27399,14 +27298,40 @@
           "stats"
         ]
       },
-      "ProfilesReference": {
+      "F5RuntimeProfile": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Profile name",
+            "readOnly": true
+          },
+          "partition": {
+            "type": "string",
+            "description": "Partition name",
+            "readOnly": true
+          },
+          "context": {
+            "type": "string",
+            "description": "Context of the profile",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "name",
+          "partition",
+          "context"
+        ]
+      },
+      "F5RuntimeProfilesReference": {
         "type": "object",
         "properties": {
           "items": {
+            "description": "Array of profiles",
             "readOnly": true,
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/F5RuntimeProfile"
             }
           }
         },
@@ -27414,15 +27339,17 @@
           "items"
         ]
       },
-      "PoliciesReference": {
+      "F5RuntimePoliciesReference": {
         "type": "object",
         "properties": {
           "link": {
             "type": "string",
+            "description": "Link to the policy",
             "readOnly": true
           },
           "isSubcollection": {
             "type": "boolean",
+            "description": "Whether it is a subcollection",
             "readOnly": true
           }
         },
@@ -27431,27 +27358,32 @@
           "isSubcollection"
         ]
       },
-      "CertsReference": {
+      "F5RuntimeCertsReference": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
+            "description": "Certificate name",
             "readOnly": true
           },
           "partition": {
             "type": "string",
+            "description": "Partition name",
             "readOnly": true
           },
           "expirationDate": {
             "type": "number",
+            "description": "Expiration date as a timestamp",
             "readOnly": true
           },
           "expirationString": {
             "type": "string",
+            "description": "Expiration date as a string",
             "readOnly": true
           },
           "subject": {
             "type": "string",
+            "description": "Subject of the certificate",
             "readOnly": true
           }
         },
@@ -27463,284 +27395,95 @@
           "subject"
         ]
       },
-      "VirtualServerStatEntries": {
-        "type": "object",
-        "properties": {
-          "actualPvaAccel": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "clientsideBitsIn": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "clientsideBitsOut": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "clientsideCurConns": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "clientsideEvictedConns": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "clientsideMaxConns": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "clientsidePktsIn": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "clientsidePktsOut": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "clientsideSlowKilled": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "clientsideTotConns": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "cmpEnableMode": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "cmpEnabled": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "csMaxConnDur": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "csMeanConnDur": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "csMinConnDur": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "destination": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "ephemeralBitsIn": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "ephemeralBitsOut": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "ephemeralCurConns": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "ephemeralEvictedConns": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "ephemeralMaxConns": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "ephemeralPktsIn": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "ephemeralPktsOut": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "ephemeralSlowKilled": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "ephemeralTotConns": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "fiveMinAvgUsageRatio": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "fiveSecAvgUsageRatio": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "mrMsgIn": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "mrMsgOut": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "mrReqIn": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "mrReqOut": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "mrRespIn": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "mrRespOut": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "tmName": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "oneMinAvgUsageRatio": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "statusAvailabilityState": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "statusEnabledState": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "statusStatusReason": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "syncookieStatus": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "syncookieAccepts": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "syncookieHwAccepts": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "syncookieHwSyncookies": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "syncookieHwsyncookieInstance": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "syncookieRejects": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "syncookieSwsyncookieInstance": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "syncookieSyncacheCurr": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "syncookieSyncacheOver": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "syncookieSyncookies": {
-            "$ref": "#/components/schemas/StatEntry"
-          },
-          "totRequests": {
-            "$ref": "#/components/schemas/StatEntry"
-          }
-        },
-        "required": [
-          "actualPvaAccel",
-          "clientsideBitsIn",
-          "clientsideBitsOut",
-          "clientsideCurConns",
-          "clientsideEvictedConns",
-          "clientsideMaxConns",
-          "clientsidePktsIn",
-          "clientsidePktsOut",
-          "clientsideSlowKilled",
-          "clientsideTotConns",
-          "cmpEnableMode",
-          "cmpEnabled",
-          "csMaxConnDur",
-          "csMeanConnDur",
-          "csMinConnDur",
-          "destination",
-          "ephemeralBitsIn",
-          "ephemeralBitsOut",
-          "ephemeralCurConns",
-          "ephemeralEvictedConns",
-          "ephemeralMaxConns",
-          "ephemeralPktsIn",
-          "ephemeralPktsOut",
-          "ephemeralSlowKilled",
-          "ephemeralTotConns",
-          "fiveMinAvgUsageRatio",
-          "fiveSecAvgUsageRatio",
-          "mrMsgIn",
-          "mrMsgOut",
-          "mrReqIn",
-          "mrReqOut",
-          "mrRespIn",
-          "mrRespOut",
-          "tmName",
-          "oneMinAvgUsageRatio",
-          "statusAvailabilityState",
-          "statusEnabledState",
-          "statusStatusReason",
-          "syncookieStatus",
-          "syncookieAccepts",
-          "syncookieHwAccepts",
-          "syncookieHwSyncookies",
-          "syncookieHwsyncookieInstance",
-          "syncookieRejects",
-          "syncookieSwsyncookieInstance",
-          "syncookieSyncacheCurr",
-          "syncookieSyncacheOver",
-          "syncookieSyncookies",
-          "totRequests"
-        ]
-      },
-      "VirtualServer": {
+      "F5RuntimeVirtualServer": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
+            "description": "Virtual server name",
             "readOnly": true
           },
           "description": {
             "type": "string",
+            "description": "Description of the virtual server",
             "readOnly": true
           },
           "partition": {
             "type": "string",
+            "description": "Partition name",
             "readOnly": true
           },
           "enabled": {
             "type": "boolean",
+            "description": "Whether the virtual server is enabled",
             "readOnly": true
           },
           "addressStatus": {
             "type": "string",
+            "description": "Address status",
             "readOnly": true
           },
           "connectionLimit": {
             "type": "number",
+            "description": "Connection limit",
             "readOnly": true
           },
           "ipProtocol": {
             "type": "string",
+            "description": "IP protocol",
             "readOnly": true
           },
           "destination": {
             "type": "string",
+            "description": "Destination address",
             "readOnly": true
           },
           "mask": {
             "type": "string",
+            "description": "Subnet mask",
             "readOnly": true
           },
           "poolReference": {
+            "description": "Reference to the pool associated with the virtual server",
             "readOnly": true,
             "allOf": [
               {
-                "$ref": "#/components/schemas/PoolReference"
+                "$ref": "#/components/schemas/F5RuntimePoolReference"
               }
             ]
           },
           "profilesReference": {
+            "description": "Reference to profiles associated with the virtual server",
             "readOnly": true,
             "allOf": [
               {
-                "$ref": "#/components/schemas/ProfilesReference"
+                "$ref": "#/components/schemas/F5RuntimeProfilesReference"
               }
             ]
           },
           "policiesReference": {
+            "description": "Reference to policies associated with the virtual server",
             "readOnly": true,
             "allOf": [
               {
-                "$ref": "#/components/schemas/PoliciesReference"
+                "$ref": "#/components/schemas/F5RuntimePoliciesReference"
               }
             ]
           },
           "certsReference": {
+            "description": "Reference to certificates associated with the virtual server",
             "readOnly": true,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CertsReference"
+              "$ref": "#/components/schemas/F5RuntimeCertsReference"
             }
           },
           "stats": {
+            "description": "Statistics for the virtual server",
             "readOnly": true,
             "allOf": [
               {
-                "$ref": "#/components/schemas/VirtualServerStatEntries"
+                "$ref": "#/components/schemas/F5RuntimeNestedStats"
               }
             ]
           }
@@ -27767,13 +27510,13 @@
         "properties": {
           "name": {
             "type": "string",
-            "readOnly": true
+            "description": "Partition name"
           },
           "virtualServers": {
-            "readOnly": true,
+            "description": "Array of virtual servers in the partition",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/VirtualServer"
+              "$ref": "#/components/schemas/F5RuntimeVirtualServer"
             }
           }
         },
@@ -27782,37 +27525,11 @@
           "virtualServers"
         ]
       },
-      "F5HostInfo": {
+      "F5RuntimeData": {
         "type": "object",
         "properties": {
-          "hostname": {
-            "type": "string",
-            "readOnly": true
-          },
-          "softwareVersion": {
-            "type": "string",
-            "readOnly": true
-          }
-        },
-        "required": [
-          "hostname",
-          "softwareVersion"
-        ]
-      },
-      "F5Data": {
-        "type": "object",
-        "properties": {
-          "hostname": {
-            "type": "string",
-            "readOnly": true
-          },
-          "partitionInfo": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/F5PartitionInfo"
-            }
-          },
           "hostInfo": {
+            "description": "Host information",
             "readOnly": true,
             "allOf": [
               {
@@ -27820,18 +27537,26 @@
               }
             ]
           },
-          "certInfo": {
+          "partitionInfo": {
+            "description": "Partition information",
             "readOnly": true,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CertsReference"
+              "$ref": "#/components/schemas/F5PartitionInfo"
+            }
+          },
+          "certInfo": {
+            "description": "Certificate information",
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/F5RuntimeCertsReference"
             }
           }
         },
         "required": [
-          "hostname",
-          "partitionInfo",
           "hostInfo",
+          "partitionInfo",
           "certInfo"
         ]
       },
@@ -27849,7 +27574,7 @@
             "type": "string"
           },
           "data": {
-            "$ref": "#/components/schemas/F5Data"
+            "$ref": "#/components/schemas/F5RuntimeData"
           },
           "createdAt": {
             "format": "date-time",

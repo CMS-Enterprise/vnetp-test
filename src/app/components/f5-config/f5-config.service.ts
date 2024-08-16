@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { F5PartitionInfo, F5Runtime, V1RuntimeDataF5ConfigService, VirtualServer } from '../../../../client';
+import { F5PartitionInfo, F5Runtime, F5RuntimePoolMember, V1RuntimeDataF5ConfigService, F5RuntimeVirtualServer } from '../../../../client';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -86,11 +86,11 @@ export class F5ConfigService {
     return members?.some(member => this.poolMemberMatchesSearch(member, searchQuery));
   }
 
-  poolMemberMatchesSearch(member: any, searchQuery: string): boolean {
+  poolMemberMatchesSearch(member: F5RuntimePoolMember, searchQuery: string): boolean {
     const memberName = member?.name;
-    const memberFullPath = member?.fullPath?.split('/')?.at(-1);
-    const memberIp = memberFullPath?.split(':')?.at(0);
-    const memberPort = memberFullPath?.split(':')?.at(1);
+    const memberFullPath = member?.fullPath?.split('/')?.[member?.fullPath?.split('/')?.length - 1];
+    const memberIp = memberFullPath?.split(':')?.[0];
+    const memberPort = memberFullPath?.split(':')?.[1];
     const address = member?.address;
 
     return (
@@ -116,7 +116,7 @@ export class F5ConfigService {
     }
   }
 
-  getVirtualServerCertSearch(virtualServer: VirtualServer): string {
+  getVirtualServerCertSearch(virtualServer: F5RuntimeVirtualServer): string {
     if (!virtualServer.certsReference || virtualServer.certsReference.length === 0) {
       return '';
     }

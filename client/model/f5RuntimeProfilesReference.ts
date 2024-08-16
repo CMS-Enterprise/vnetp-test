@@ -9,12 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { PoolStatEntries } from './poolStatEntries';
-import { PoolReferenceItem } from './poolReferenceItem';
+import { F5RuntimeProfile } from './f5RuntimeProfile';
 
 
-export interface PoolReference { 
-    readonly items: PoolReferenceItem;
-    readonly stats: PoolStatEntries;
+export interface F5RuntimeProfilesReference { 
+    /**
+     * Array of profiles
+     */
+    readonly items: Array<F5RuntimeProfile>;
 }
 

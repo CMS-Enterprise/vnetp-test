@@ -5,7 +5,7 @@ import { MockComponent, MockFontAwesomeComponent } from '../../../../test/mock-c
 import { of } from 'rxjs';
 import { ApplicationPipesModule } from '../../../pipes/application-pipes.module';
 import { ActivatedRoute } from '@angular/router';
-import { F5PartitionInfo, F5Runtime } from '../../../../../client';
+import { F5PartitionInfo, F5Runtime, F5RuntimeVirtualServer } from '../../../../../client';
 
 describe('PartitionDetailsComponent', () => {
   let component: PartitionDetailsComponent;
@@ -87,9 +87,10 @@ describe('PartitionDetailsComponent', () => {
     });
 
     it('should handle expanded change', () => {
-      const virtualServer = { name: 'virtualServer1', expanded: false };
+      const virtualServer = { name: 'virtualServer1' } as F5RuntimeVirtualServer;
       component.handleExpandedChange(virtualServer, true);
-      expect(virtualServer.expanded).toBeTruthy();
+      // eslint-disable-next-line @typescript-eslint/dot-notation
+      expect(virtualServer['expanded']).toBeTruthy();
     });
   });
 });

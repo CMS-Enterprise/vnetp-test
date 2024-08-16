@@ -11,13 +11,18 @@
  */
 
 
-export interface Member { 
+export interface F5RuntimeProfile { 
+    /**
+     * Profile name
+     */
     readonly name: string;
-    readonly address: string;
-    readonly ephemeral: string;
-    readonly fqdn: object;
-    readonly priorityGroup: number;
-    readonly ratio: number;
-    readonly state: string;
+    /**
+     * Partition name
+     */
+    readonly partition: string;
+    /**
+     * Context of the profile
+     */
+    readonly context: string;
 }
 

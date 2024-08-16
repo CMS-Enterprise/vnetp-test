@@ -9,11 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { VirtualServer } from './virtualServer';
+import { F5RuntimeVirtualServer } from './f5RuntimeVirtualServer';
 
 
 export interface F5PartitionInfo { 
-    readonly name: string;
-    readonly virtualServers: Array<VirtualServer>;
+    /**
+     * Partition name
+     */
+    name: string;
+    /**
+     * Array of virtual servers in the partition
+     */
+    virtualServers: Array<F5RuntimeVirtualServer>;
 }
 

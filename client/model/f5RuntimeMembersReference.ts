@@ -9,9 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { F5RuntimePoolMember } from './f5RuntimePoolMember';
 
 
-export interface ProfilesReference { 
-    readonly items: Array<string>;
+export interface F5RuntimeMembersReference { 
+    /**
+     * Array of members
+     */
+    readonly items: Array<F5RuntimePoolMember>;
 }
 

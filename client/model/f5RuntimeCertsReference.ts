@@ -11,11 +11,26 @@
  */
 
 
-export interface CertsReference { 
+export interface F5RuntimeCertsReference { 
+    /**
+     * Certificate name
+     */
     readonly name: string;
+    /**
+     * Partition name
+     */
     readonly partition: string;
+    /**
+     * Expiration date as a timestamp
+     */
     readonly expirationDate: number;
+    /**
+     * Expiration date as a string
+     */
     readonly expirationString: string;
+    /**
+     * Subject of the certificate
+     */
     readonly subject: string;
 }
 

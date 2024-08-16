@@ -9,10 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Member } from './member';
 
 
-export interface MembersReference { 
-    items: Array<Member>;
+export interface F5RuntimePoliciesReference { 
+    /**
+     * Link to the policy
+     */
+    readonly link: string;
+    /**
+     * Whether it is a subcollection
+     */
+    readonly isSubcollection: boolean;
 }
 

@@ -11,8 +11,10 @@
  */
 
 
-export interface StatEntry { 
-    readonly description: string;
-    readonly value: number;
+export interface F5RuntimeFqdnFqdn { 
+    /**
+     * Autopopulate state
+     */
+    readonly autopopulate: string;
 }
 

@@ -10,14 +10,22 @@
  * Do not edit the class manually.
  */
 import { F5PartitionInfo } from './f5PartitionInfo';
-import { CertsReference } from './certsReference';
+import { F5RuntimeCertsReference } from './f5RuntimeCertsReference';
 import { F5HostInfo } from './f5HostInfo';
 
 
-export interface F5Data { 
-    readonly hostname: string;
-    partitionInfo: Array<F5PartitionInfo>;
+export interface F5RuntimeData { 
+    /**
+     * Host information
+     */
     readonly hostInfo: F5HostInfo;
-    readonly certInfo: Array<CertsReference>;
+    /**
+     * Partition information
+     */
+    readonly partitionInfo: Array<F5PartitionInfo>;
+    /**
+     * Certificate information
+     */
+    readonly certInfo: Array<F5RuntimeCertsReference>;
 }
 

@@ -9,12 +9,21 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { MembersReference } from './membersReference';
+import { F5RuntimeMembersReference } from './f5RuntimeMembersReference';
 
 
 export interface PoolReferenceItem { 
+    /**
+     * Pool name
+     */
     readonly name: string;
+    /**
+     * Monitor
+     */
     readonly monitor: string;
-    readonly membersReference: MembersReference;
+    /**
+     * Reference to pool members
+     */
+    readonly membersReference: F5RuntimeMembersReference;
 }
 
