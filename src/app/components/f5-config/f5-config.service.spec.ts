@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { F5ConfigService } from './f5-config.service';
 import { V1RuntimeDataF5ConfigService, F5RuntimeVirtualServer } from '../../../../client';
 import { of } from 'rxjs';
-import { F5PartitionInfo } from '../../../../client';
+import { F5RuntimePartitionInfo } from '../../../../client';
 
 describe('F5ConfigService', () => {
   let service: F5ConfigService;
@@ -21,7 +21,7 @@ describe('F5ConfigService', () => {
 
   describe('filterVirtualServers', () => {
     it('should filter virtual servers correctly based on query', () => {
-      const partitionInfo: F5PartitionInfo[] = [
+      const partitionInfo: F5RuntimePartitionInfo[] = [
         {
           name: 'partition1',
           virtualServers: [
@@ -40,7 +40,7 @@ describe('F5ConfigService', () => {
     });
 
     it('should return empty array if no match found', () => {
-      const partitionInfo: F5PartitionInfo[] = [
+      const partitionInfo: F5RuntimePartitionInfo[] = [
         {
           name: 'partition1',
           virtualServers: [
@@ -56,7 +56,7 @@ describe('F5ConfigService', () => {
     });
 
     it('should return empty array if virtualServers is empty', () => {
-      const partitionInfo: F5PartitionInfo[] = [
+      const partitionInfo: F5RuntimePartitionInfo[] = [
         {
           name: 'partition1',
           virtualServers: [],

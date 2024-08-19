@@ -10,14 +10,14 @@
  * Do not edit the class manually.
  */
 import { F5RuntimeNestedStats } from './f5RuntimeNestedStats';
-import { PoolReferenceItem } from './poolReferenceItem';
+import { F5RuntimePoolReferenceItem } from './f5RuntimePoolReferenceItem';
 
 
 export interface F5RuntimePoolReference { 
     /**
      * Reference to pool items
      */
-    readonly items: PoolReferenceItem;
+    readonly items: F5RuntimePoolReferenceItem;
     /**
      * Statistics related to the pool
      */

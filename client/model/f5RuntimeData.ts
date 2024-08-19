@@ -9,20 +9,20 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { F5PartitionInfo } from './f5PartitionInfo';
+import { F5RuntimePartitionInfo } from './f5RuntimePartitionInfo';
 import { F5RuntimeCertsReference } from './f5RuntimeCertsReference';
-import { F5HostInfo } from './f5HostInfo';
+import { F5RuntimeHostInfo } from './f5RuntimeHostInfo';
 
 
 export interface F5RuntimeData { 
     /**
      * Host information
      */
-    readonly hostInfo: F5HostInfo;
+    readonly hostInfo: F5RuntimeHostInfo;
     /**
      * Partition information
      */
-    readonly partitionInfo: Array<F5PartitionInfo>;
+    readonly partitionInfo: Array<F5RuntimePartitionInfo>;
     /**
      * Certificate information
      */

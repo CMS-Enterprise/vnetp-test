@@ -12,7 +12,7 @@
 import { F5RuntimeVirtualServer } from './f5RuntimeVirtualServer';
 
 
-export interface F5PartitionInfo { 
+export interface F5RuntimePartitionInfo { 
     /**
      * Partition name
      */

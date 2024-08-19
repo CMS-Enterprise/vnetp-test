@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 README.md
 api.module.ts
 api/api.ts
@@ -107,18 +106,19 @@ model/dcsPermissions.ts
 model/endpointGroup.ts
 model/externalRoute.ts
 model/f5ConfigJobCreateDto.ts
-model/f5HostInfo.ts
-model/f5HostInfoAvailability.ts
-model/f5PartitionInfo.ts
 model/f5Runtime.ts
 model/f5RuntimeCertsReference.ts
 model/f5RuntimeData.ts
 model/f5RuntimeFqdnFqdn.ts
+model/f5RuntimeHostInfo.ts
+model/f5RuntimeHostInfoAvailability.ts
 model/f5RuntimeMembersReference.ts
 model/f5RuntimeNestedStats.ts
+model/f5RuntimePartitionInfo.ts
 model/f5RuntimePoliciesReference.ts
 model/f5RuntimePoolMember.ts
 model/f5RuntimePoolReference.ts
+model/f5RuntimePoolReferenceItem.ts
 model/f5RuntimeProfile.ts
 model/f5RuntimeProfilesReference.ts
 model/f5RuntimeVirtualServer.ts
@@ -199,7 +199,6 @@ model/networkObjectGroupRelationBulkImportCollectionDto.ts
 model/networkObjectGroupRelationBulkImportDto.ts
 model/nodeImportCollectionDto.ts
 model/poolImportCollectionDto.ts
-model/poolReferenceItem.ts
 model/routeProfile.ts
 model/ruleOperationDto.ts
 model/selfService.ts

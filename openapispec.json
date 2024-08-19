@@ -27104,7 +27104,7 @@
           "data"
         ]
       },
-      "F5HostInfo": {
+      "F5RuntimeHostInfo": {
         "type": "object",
         "properties": {
           "hostname": {
@@ -27220,7 +27220,7 @@
           "items"
         ]
       },
-      "PoolReferenceItem": {
+      "F5RuntimePoolReferenceItem": {
         "type": "object",
         "properties": {
           "name": {
@@ -27279,7 +27279,7 @@
             "readOnly": true,
             "allOf": [
               {
-                "$ref": "#/components/schemas/PoolReferenceItem"
+                "$ref": "#/components/schemas/F5RuntimePoolReferenceItem"
               }
             ]
           },
@@ -27385,6 +27385,11 @@
             "type": "string",
             "description": "Subject of the certificate",
             "readOnly": true
+          },
+          "inUse": {
+            "type": "boolean",
+            "description": "If the certificate is in use",
+            "readOnly": true
           }
         },
         "required": [
@@ -27392,7 +27397,8 @@
           "partition",
           "expirationDate",
           "expirationString",
-          "subject"
+          "subject",
+          "inUse"
         ]
       },
       "F5RuntimeVirtualServer": {
@@ -27505,7 +27511,7 @@
           "stats"
         ]
       },
-      "F5PartitionInfo": {
+      "F5RuntimePartitionInfo": {
         "type": "object",
         "properties": {
           "name": {
@@ -27533,7 +27539,7 @@
             "readOnly": true,
             "allOf": [
               {
-                "$ref": "#/components/schemas/F5HostInfo"
+                "$ref": "#/components/schemas/F5RuntimeHostInfo"
               }
             ]
           },
@@ -27542,7 +27548,7 @@
             "readOnly": true,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/F5PartitionInfo"
+              "$ref": "#/components/schemas/F5RuntimePartitionInfo"
             }
           },
           "certInfo": {

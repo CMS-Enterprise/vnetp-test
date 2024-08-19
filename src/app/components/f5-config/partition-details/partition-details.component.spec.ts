@@ -5,7 +5,7 @@ import { MockComponent, MockFontAwesomeComponent } from '../../../../test/mock-c
 import { of } from 'rxjs';
 import { ApplicationPipesModule } from '../../../pipes/application-pipes.module';
 import { ActivatedRoute } from '@angular/router';
-import { F5PartitionInfo, F5Runtime, F5RuntimeVirtualServer } from '../../../../../client';
+import { F5RuntimePartitionInfo, F5Runtime, F5RuntimeVirtualServer } from '../../../../../client';
 
 describe('PartitionDetailsComponent', () => {
   let component: PartitionDetailsComponent;
@@ -21,7 +21,7 @@ describe('PartitionDetailsComponent', () => {
     f5ConfigStateManagementService = {
       filterVirtualServers: jest
         .fn()
-        .mockReturnValue([{ name: 'partition1', virtualServers: [{ name: 'virtualServer1' }] } as F5PartitionInfo]),
+        .mockReturnValue([{ name: 'partition1', virtualServers: [{ name: 'virtualServer1' }] } as F5RuntimePartitionInfo]),
       getF5Configs: jest.fn().mockReturnValue(
         of([
           {
@@ -64,14 +64,14 @@ describe('PartitionDetailsComponent', () => {
   describe('ngOnInit', () => {
     beforeEach(() => {
       data = {
-        partitions: [{ name: 'partition1', virtualServers: [{ name: 'virtualServer1' }] } as F5PartitionInfo] as unknown as string[], // Temporarily casting to bypass type checks
+        partitions: [{ name: 'partition1', virtualServers: [{ name: 'virtualServer1' }] } as F5RuntimePartitionInfo] as unknown as string[], // Temporarily casting to bypass type checks
       } as Partial<F5Runtime>;
       fixture.detectChanges();
     });
 
     it('should set filteredPartitionInfo', () => {
       expect(component.filteredPartitionInfo).toEqual([
-        { name: 'partition1', virtualServers: [{ name: 'virtualServer1' }] } as F5PartitionInfo,
+        { name: 'partition1', virtualServers: [{ name: 'virtualServer1' }] } as F5RuntimePartitionInfo,
       ]);
     });
 

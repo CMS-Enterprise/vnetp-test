@@ -11,7 +11,7 @@
  */
 
 
-export interface F5HostInfoAvailability { 
+export interface F5RuntimeHostInfoAvailability { 
     status?: string;
 }
 

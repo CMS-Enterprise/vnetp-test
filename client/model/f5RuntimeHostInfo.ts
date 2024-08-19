@@ -9,10 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { F5HostInfoAvailability } from './f5HostInfoAvailability';
+import { F5RuntimeHostInfoAvailability } from './f5RuntimeHostInfoAvailability';
 
 
-export interface F5HostInfo { 
+export interface F5RuntimeHostInfo { 
     /**
      * Hostname of the F5 device
      */
@@ -21,6 +21,6 @@ export interface F5HostInfo {
      * Software version of the F5 device
      */
     readonly softwareVersion: string;
-    availability: F5HostInfoAvailability;
+    availability: F5RuntimeHostInfoAvailability;
 }
 

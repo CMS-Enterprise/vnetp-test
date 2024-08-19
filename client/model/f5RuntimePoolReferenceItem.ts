@@ -12,7 +12,7 @@
 import { F5RuntimeMembersReference } from './f5RuntimeMembersReference';
 
 
-export interface PoolReferenceItem { 
+export interface F5RuntimePoolReferenceItem { 
     /**
      * Pool name
      */

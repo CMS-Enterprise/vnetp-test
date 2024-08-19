@@ -32,7 +32,7 @@ export class CertificateDetailsComponent implements OnInit, OnDestroy {
       this.f5ConfigStateManagementService.getF5Configs().subscribe(data => {
         this.f5Config = data.find(f5 => f5?.id === this.urlF5Id);
         if (this.f5Config) {
-          const f5 = this.f5Config as any;
+          const f5 = this.f5Config;
 
           // Sort the certs by expiration date
           f5?.data?.certInfo?.sort((a, b) => a.expirationDate - b.expirationDate);

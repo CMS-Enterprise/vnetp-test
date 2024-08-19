@@ -32,5 +32,9 @@ export interface F5RuntimeCertsReference {
      * Subject of the certificate
      */
     readonly subject: string;
+    /**
+     * If the certificate is in use
+     */
+    readonly inUse: boolean;
 }
 

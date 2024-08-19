@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { F5ConfigService } from '../f5-config.service';
-import { F5PartitionInfo, F5Runtime, F5RuntimeVirtualServer } from '../../../../../client';
+import { F5RuntimePartitionInfo, F5Runtime, F5RuntimeVirtualServer } from '../../../../../client';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -11,14 +11,14 @@ import { ActivatedRoute } from '@angular/router';
 export class PartitionDetailsComponent implements OnInit, OnDestroy {
   urlF5Id: string;
   f5Config: F5Runtime;
-  partitionInfo: F5PartitionInfo[] = [];
+  partitionInfo: F5RuntimePartitionInfo[] = [];
   partitionNames: string[] = [];
   filteredPartitionNames: string[] = [];
   filteredVirtualServerNames: any[] = [];
   selectedPartition = '[ALL]';
   searchQuery = '';
   @Input() f5ParentSearchQuery: string;
-  filteredPartitionInfo: F5PartitionInfo[] = [];
+  filteredPartitionInfo: F5RuntimePartitionInfo[] = [];
   partitionInfoExists = false;
 
   constructor(private f5ConfigStateManagementService: F5ConfigService, private route: ActivatedRoute) {}

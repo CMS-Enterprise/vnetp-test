@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { F5PartitionInfo, F5Runtime, F5RuntimePoolMember, V1RuntimeDataF5ConfigService, F5RuntimeVirtualServer } from '../../../../client';
+import { F5RuntimePartitionInfo, F5Runtime, F5RuntimePoolMember } from '../../../../client';
+import { V1RuntimeDataF5ConfigService, F5RuntimeVirtualServer } from '../../../../client';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -31,7 +32,7 @@ export class F5ConfigService {
     }
   }
 
-  filterVirtualServers(partitionInfo: F5PartitionInfo[], query: string): F5PartitionInfo[] {
+  filterVirtualServers(partitionInfo: F5RuntimePartitionInfo[], query: string): F5RuntimePartitionInfo[] {
     return partitionInfo
       .map(partition => {
         const filteredServers = partition.virtualServers?.filter(
@@ -45,7 +46,7 @@ export class F5ConfigService {
           };
         }
       })
-      .filter(partition => partition !== undefined) as F5PartitionInfo[];
+      .filter(partition => partition !== undefined) as F5RuntimePartitionInfo[];
   }
 
   fullSearchMatch(virtualServer: any, searchQuery: string): boolean {
