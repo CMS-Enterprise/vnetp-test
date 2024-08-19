@@ -41,7 +41,7 @@ export class F5ConfigCardComponent implements OnInit {
   }
 
   initilizeValues(): void {
-    const f5Data = this.f5Config.data as any;
+    const f5Data = this.f5Config.data;
     this.softwareVersion = f5Data?.hostInfo?.softwareVersion;
     this.highAvailabilityStatus = f5Data?.hostInfo?.availability?.status;
     this.hostName = this.f5Config.hostname;
@@ -50,7 +50,7 @@ export class F5ConfigCardComponent implements OnInit {
   }
 
   checkCertificateExpiry(): void {
-    const f5Data = this.f5Config.data as any;
+    const f5Data = this.f5Config.data;
     const currentDate = Math.floor(Date.now() / 1000); // Current date in seconds
     const thirtyDaysInSeconds = 30 * 24 * 60 * 60; // 30 days in seconds
 

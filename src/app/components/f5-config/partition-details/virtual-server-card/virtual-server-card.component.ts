@@ -41,6 +41,7 @@ export class VirtualServerCardComponent implements OnInit {
 
     this.poolName = this.virtualServer?.poolReference?.items?.name;
     this.members = this.virtualServer?.poolReference?.items?.membersReference?.items;
+    console.log(this.virtualServer);
     this.virtualServerStatus = this.getStatusClass(
       this.virtualServer?.stats?.nestedStats?.entries?.['status.availabilityState'],
       this.virtualServer?.stats?.nestedStats?.entries?.['status.enabledState'],
