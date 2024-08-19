@@ -64,7 +64,8 @@ describe('PartitionDetailsComponent', () => {
   describe('ngOnInit', () => {
     beforeEach(() => {
       data = {
-        partitions: [{ name: 'partition1', virtualServers: [{ name: 'virtualServer1' }] } as F5RuntimePartitionInfo] as unknown as string[], // Temporarily casting to bypass type checks
+        partitions: [{ name: 'partition1', virtualServers: [{ name: 'virtualServer1' }]
+      } as F5RuntimePartitionInfo] as unknown as string[], // Temporarily casting to bypass type checks
       } as Partial<F5Runtime>;
       fixture.detectChanges();
     });
