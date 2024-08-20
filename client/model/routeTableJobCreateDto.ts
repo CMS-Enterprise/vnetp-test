@@ -14,7 +14,6 @@
 export interface RouteTableJobCreateDto { 
     type: RouteTableJobCreateDtoTypeEnum;
     datacenterId?: string;
-    vrf: string;
 }
 export enum RouteTableJobCreateDtoTypeEnum {
     FirewallRule = 'FirewallRule',

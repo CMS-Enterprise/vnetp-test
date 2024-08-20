@@ -82,71 +82,73 @@ describe('RouteTableComponent', () => {
   describe('sortedRoutes', () => {
     it('should sort routes with wanForm before routes without wanForm', () => {
       component.filteredRoutes = [
-        { wanForm: null, protocol: 'manual' },
-        { wanForm: { id: 'wan1' }, protocol: 'auto' },
+        { wanForms: null, protocol: 'manual' },
+        { wanForms: [{ id: 'wan1' }], protocol: 'auto' },
       ] as any;
+      component.wanFormId = 'wan1';
 
       const sorted = component.sortedRoutes;
 
       expect(sorted).toEqual([
-        { wanForm: { id: 'wan1' }, protocol: 'auto' },
-        { wanForm: null, protocol: 'manual' },
+        { wanForms: [{ id: 'wan1' }], protocol: 'auto' },
+        { wanForms: null, protocol: 'manual' },
       ]);
     });
 
     it('should sort routes without wanForm after routes with wanForm', () => {
       component.filteredRoutes = [
-        { wanForm: { id: 'wan1' }, protocol: 'auto' },
-        { wanForm: null, protocol: 'manual' },
+        { wanForms: [{ id: 'wan1' }], protocol: 'auto' },
+        { wanForms: null, protocol: 'manual' },
       ] as any;
+      component.wanFormId = 'wan1';
 
       const sorted = component.sortedRoutes;
 
       expect(sorted).toEqual([
-        { wanForm: { id: 'wan1' }, protocol: 'auto' },
-        { wanForm: null, protocol: 'manual' },
+        { wanForms: [{ id: 'wan1' }], protocol: 'auto' },
+        { wanForms: null, protocol: 'manual' },
       ]);
     });
 
     it('should sort routes with protocol "manual" before other protocols', () => {
       component.filteredRoutes = [
-        { wanForm: null, protocol: 'auto' },
-        { wanForm: null, protocol: 'manual' },
+        { wanForms: null, protocol: 'auto' },
+        { wanForms: null, protocol: 'manual' },
       ] as any;
 
       const sorted = component.sortedRoutes;
 
       expect(sorted).toEqual([
-        { wanForm: null, protocol: 'manual' },
-        { wanForm: null, protocol: 'auto' },
+        { wanForms: null, protocol: 'manual' },
+        { wanForms: null, protocol: 'auto' },
       ]);
     });
 
     it('should sort routes with non-manual protocol after manual protocol', () => {
       component.filteredRoutes = [
-        { wanForm: null, protocol: 'manual' },
-        { wanForm: null, protocol: 'auto' },
+        { wanForms: null, protocol: 'manual' },
+        { wanForms: null, protocol: 'auto' },
       ] as any;
 
       const sorted = component.sortedRoutes;
 
       expect(sorted).toEqual([
-        { wanForm: null, protocol: 'manual' },
-        { wanForm: null, protocol: 'auto' },
+        { wanForms: null, protocol: 'manual' },
+        { wanForms: null, protocol: 'auto' },
       ]);
     });
 
     it('should keep routes in order if they have the same wanForm and protocol', () => {
       component.filteredRoutes = [
-        { wanForm: null, protocol: 'auto' },
-        { wanForm: null, protocol: 'auto' },
+        { wanForms: null, protocol: 'auto' },
+        { wanForms: null, protocol: 'auto' },
       ] as any;
 
       const sorted = component.sortedRoutes;
 
       expect(sorted).toEqual([
-        { wanForm: null, protocol: 'auto' },
-        { wanForm: null, protocol: 'auto' },
+        { wanForms: null, protocol: 'auto' },
+        { wanForms: null, protocol: 'auto' },
       ]);
     });
 

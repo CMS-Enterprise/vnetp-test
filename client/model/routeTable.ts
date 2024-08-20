@@ -20,7 +20,7 @@ export interface RouteTable {
     vrf: string;
     metric: number;
     uptime?: string;
-    readonly wanForm?: WanForm;
+    readonly wanForms?: Array<WanForm>;
     runtimeDataLastRefreshed?: string;
 }
 

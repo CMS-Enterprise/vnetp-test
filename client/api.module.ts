@@ -16,7 +16,6 @@ import { V1LoadBalancerRoutesService } from './api/v1LoadBalancerRoutes.service'
 import { V1LoadBalancerSelfIpsService } from './api/v1LoadBalancerSelfIps.service';
 import { V1LoadBalancerVirtualServersService } from './api/v1LoadBalancerVirtualServers.service';
 import { V1LoadBalancerVlansService } from './api/v1LoadBalancerVlans.service';
-import { V1NetworkScopeFormsExternalRouteService } from './api/v1NetworkScopeFormsExternalRoute.service';
 import { V1NetworkScopeFormsWanFormService } from './api/v1NetworkScopeFormsWanForm.service';
 import { V1NetworkScopeFormsWanFormSubnetService } from './api/v1NetworkScopeFormsWanFormSubnet.service';
 import { V1NetworkSecurityFirewallRuleGroupsService } from './api/v1NetworkSecurityFirewallRuleGroups.service';
@@ -39,7 +38,6 @@ import { V1SelfServiceService } from './api/v1SelfService.service';
 import { V1StatusService } from './api/v1Status.service';
 import { V1TierGroupsService } from './api/v1TierGroups.service';
 import { V1TiersService } from './api/v1Tiers.service';
-import { V1VrfsService } from './api/v1Vrfs.service';
 import { V2AppCentricAppCentricSubnetsService } from './api/v2AppCentricAppCentricSubnets.service';
 import { V2AppCentricApplicationProfilesService } from './api/v2AppCentricApplicationProfiles.service';
 import { V2AppCentricBridgeDomainsService } from './api/v2AppCentricBridgeDomains.service';

@@ -11,7 +11,6 @@
  */
 import { RouteTable } from './routeTable';
 import { Tenant } from './tenant';
-import { ExternalRoute } from './externalRoute';
 import { Datacenter } from './datacenter';
 import { WanFormSubnet } from './wanFormSubnet';
 
@@ -29,7 +28,6 @@ export interface WanForm {
     datacenterId?: string;
     readonly datacenter?: Datacenter;
     active?: boolean;
-    readonly externalRoutes?: Array<ExternalRoute>;
     readonly wanFormSubnets?: Array<WanFormSubnet>;
     readonly tenant?: Tenant;
     tenantId?: string;

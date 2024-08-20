@@ -68,19 +68,19 @@
             <td>{{ route.uptime || '-' }}</td>
             <td>
               <app-icon-button
-                *ngIf="!route?.wanForm"
+                *ngIf="!checkIfWanFormExists(route)"
                 icon="add"
                 label="Add Route to Wan Form"
                 (handleClick)="addRouteToWanForm(route)"
               ></app-icon-button>
               <app-icon-button
-                *ngIf="route?.wanForm"
+                *ngIf="checkIfWanFormExists(route)"
                 icon="times"
                 label="Remove Route from Wan Form"
                 (handleClick)="removeRouteFromWanForm(route)"
               ></app-icon-button>
               <app-icon-button
-                *ngIf="route?.protocol === 'manual' && !route?.wanForm"
+                *ngIf="route?.protocol === 'manual' && !checkIfWanFormExists(route)"
                 icon="delete"
                 label="Delete Route"
                 (handleClick)="deleteRoute(route)"

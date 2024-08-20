@@ -53,18 +53,23 @@ export class RouteTableComponent implements OnInit {
 
   get sortedRoutes() {
     return this.filteredRoutes?.sort((a, b) => {
-      if (a.wanForm && !b.wanForm) {
+      const aHasWanForm = this.checkIfWanFormExists(a);
+      const bHasWanForm = this.checkIfWanFormExists(b);
+
+      if (aHasWanForm && !bHasWanForm) {
         return -1;
       }
-      if (!a.wanForm && b.wanForm) {
+      if (!aHasWanForm && bHasWanForm) {
         return 1;
       }
+
       if (a.protocol === 'manual' && b.protocol !== 'manual') {
         return -1;
       }
       if (a.protocol !== 'manual' && b.protocol === 'manual') {
         return 1;
       }
+
       return 0;
     });
   }
@@ -82,7 +87,7 @@ export class RouteTableComponent implements OnInit {
   }
 
   getAllRoutes(): void {
-    this.routeTableService.getManyRouteTable({ relations: ['wanForm'], limit: 50000 }).subscribe(data => {
+    this.routeTableService.getManyRouteTable({ relations: ['wanForms'], limit: 50000 }).subscribe(data => {
       this.routes = data;
       this.filteredRoutes = data;
       if (data.length === 0) {
@@ -150,7 +155,6 @@ export class RouteTableComponent implements OnInit {
       .createRuntimeDataJobRouteTable({
         routeTableJobCreateDto: {
           type: RouteTableJobCreateDtoTypeEnum.RouteTable,
-          vrf: '',
         },
       })
       .subscribe(job => {
@@ -190,5 +194,9 @@ export class RouteTableComponent implements OnInit {
       default:
         return status;
     }
+  }
+
+  checkIfWanFormExists(route: RouteTable): boolean {
+    return route.wanForms?.some(wanForm => wanForm?.id === this.wanFormId);
   }
 }
