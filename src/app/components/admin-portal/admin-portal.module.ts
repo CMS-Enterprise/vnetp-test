@@ -1,0 +1,53 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
+import { NavbarModule } from 'src/app/common/navbar/navbar.module';
+import { AdminPortalComponent } from './admin-portal.component';
+import { AdminPortalDashboardComponent } from './admin-portal-dashboard/admin-portal-dashboard.component';
+import { AdminAuthGuard } from 'src/app/guards/admin-auth.guard';
+import { TableModule } from 'src/app/common/table/table.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
+import { AdminPortalNavbarComponent } from './admin-portal-navbar/admin-portal-navbar.component';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module';
+import { GlobalMessagesComponent } from './global-messages/global-messages.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: AdminPortalComponent,
+    children: [
+      {
+        path: 'dashboard',
+        component: AdminPortalDashboardComponent,
+        canActivate: [AdminAuthGuard],
+        loadChildren: () => import('./admin-portal-dashboard/admin-portal-dashboard.module').then(m => m.AdminPortalDashboardModule),
+      },
+      {
+        path: 'global-messages',
+        component: GlobalMessagesComponent,
+        canActivate: [AdminAuthGuard],
+        data: { breadcrumb: 'Global Messages', title: 'Global Messages' },
+        loadChildren: () => import('./global-messages/global-messages.module').then(m => m.GlobalMessagesModule),
+      },
+    ],
+  },
+];
+
+@NgModule({
+  declarations: [AdminPortalNavbarComponent, AdminPortalComponent, AdminPortalDashboardComponent],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    NavbarModule,
+    TableModule,
+    FontAwesomeModule,
+    IconButtonModule,
+    YesNoModalModule,
+    NgxSmartModalModule,
+    BreadcrumbsModule,
+  ],
+})
+export class AdminPortalModule {}

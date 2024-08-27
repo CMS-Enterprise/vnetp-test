@@ -20003,6 +20003,103 @@
         ]
       }
     },
+    "/v3/global/messages": {
+      "get": {
+        "operationId": "getMessagesMessage",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationDTO"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/messages"
+        ]
+      },
+      "post": {
+        "operationId": "createMessageMessage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Message"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/messages"
+        ]
+      }
+    },
+    "/v3/global/messages/{messageId}": {
+      "delete": {
+        "operationId": "deleteMessageMessage",
+        "parameters": [
+          {
+            "name": "messageId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResult"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/messages"
+        ]
+      }
+    },
     "/v1/network-scope-forms/external-route": {
       "post": {
         "operationId": "createOneExternalRoute",
@@ -27193,6 +27290,62 @@
         "required": [
           "type"
         ]
+      },
+      "PaginationDTO": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "count": {
+            "type": "number"
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "pageCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "data",
+          "count",
+          "total",
+          "page",
+          "pageCount"
+        ]
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "timestamp": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "description",
+          "timestamp"
+        ]
+      },
+      "DeleteResult": {
+        "type": "object",
+        "properties": {}
       }
     }
   }

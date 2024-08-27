@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
@@ -28,6 +29,8 @@ export class LoginComponent implements OnInit {
   showLogin = false;
   disableUserPass = true;
   showTenantButton = false;
+  showAdminPortalButton = false;
+  globalOnlyUser = false;
 
   selectedMode = 'netcentric';
 
@@ -106,12 +109,23 @@ export class LoginComponent implements OnInit {
               tenantData => {
                 const currentTenants = tenantData;
                 if (userTenants.some(t => t === '*')) {
-                  // If the user is a global admin, they have access to all available tenants.
+                  // If the user has an "*"" that means they have access to all available tenants.
                   this.availableTenants = currentTenants;
+                  const roles = data.dcsPermissions[0].roles;
+
+                  roles.some(role => {
+                    // if user is a global admin user we show the admin portal navigation button
+                    if (role === 'global-admin') {
+                      this.showAdminPortalButton = true;
+                      this.globalOnlyUser = true;
+                    }
+                  });
                 } else {
                   // If the user is not a global admin, filter current tenats based on their tenants.
                   this.availableTenants = currentTenants.filter(ct => userTenants.find(ut => ct.tenant === ut));
                 }
+                const roles = data.dcsPermissions[0].roles;
+
                 this.showTenantButton = true;
               },
               () => {
@@ -157,5 +171,17 @@ export class LoginComponent implements OnInit {
       // in the returnURL
       this.router.navigateByUrl(this.returnUrl);
     }
+  }
+
+  navToAdminPortal(tenant) {
+    if (!this.selectedTenant) {
+      return false;
+    }
+    const { tenantQueryParameter } = tenant;
+
+    this.authService.currentTenantValue = tenantQueryParameter;
+    localStorage.setItem('tenantQueryParam', JSON.stringify(tenantQueryParameter));
+
+    this.router.navigate(['adminportal/dashboard'], { queryParams: { tenant: tenantQueryParameter } });
   }
 }

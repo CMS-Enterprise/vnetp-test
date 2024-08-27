@@ -50,6 +50,7 @@ api/v2AppCentricRouteProfiles.service.ts
 api/v2AppCentricSubjects.service.ts
 api/v2AppCentricTenants.service.ts
 api/v2AppCentricVrfs.service.ts
+api/v3GlobalMessages.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -172,6 +173,7 @@ model/loadBalancerRoute.ts
 model/loadBalancerSelfIp.ts
 model/loadBalancerVirtualServer.ts
 model/loadBalancerVlan.ts
+model/message.ts
 model/models.ts
 model/natRule.ts
 model/natRuleGroup.ts
@@ -183,6 +185,7 @@ model/networkObjectGroup.ts
 model/networkObjectGroupRelationBulkImportCollectionDto.ts
 model/networkObjectGroupRelationBulkImportDto.ts
 model/nodeImportCollectionDto.ts
+model/paginationDTO.ts
 model/poolImportCollectionDto.ts
 model/routeProfile.ts
 model/ruleOperationDto.ts
