@@ -126,7 +126,7 @@
   <aside class="dashboard__card" aria-label="Overall Environment">
     <h2 class="dashboard__heading">Messages</h2>
     <ul class="dash-card">
-      <li *ngFor="let message of messages.data" class="dash-card__item">
+      <li *ngFor="let message of messages?.data" class="dash-card__item">
         <a style="display: list-item; overflow-wrap: anywhere">
           <span>
             {{ message.description }}
