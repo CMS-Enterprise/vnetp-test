@@ -24,8 +24,8 @@
           class="d-flex align-items-center nowrap"
           style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
         >
-          <small class="text-muted">{{ cert.name }}</small>
-          <small *ngIf="cert?.isExpired" class="text-danger ml-2"> (Expired {{ cert.timeString }} ago) </small>
+          <small class="text-muted">{{ cert?.name }}</small>
+          <small *ngIf="cert?.isExpired" class="text-danger ml-2"> (Expired {{ cert?.timeString }} ago) </small>
           <small *ngIf="!cert?.isExpired && cert?.isExpiringSoon" class="text-warning ml-2"> (Expires in {{ cert?.timeString }}) </small>
           <small *ngIf="!cert?.isExpired && !cert?.isExpiringSoon" class="text-success ml-2"> (Expires in {{ cert?.timeString }}) </small>
         </li>
