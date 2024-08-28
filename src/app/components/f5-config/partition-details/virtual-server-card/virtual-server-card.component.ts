@@ -1,9 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-
-type ConversionResult = {
-  value: number;
-  unit: 'bits' | 'bytes' | 'KB' | 'MB' | 'GB' | 'TB' | 'PB';
-};
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-virtual-server-card',
@@ -25,6 +21,9 @@ export class VirtualServerCardComponent implements OnInit {
   virtualServerTableData;
   poolStatus: any;
   poolTableData;
+  certStatusList = [];
+
+  faCircle = faCircle;
 
   showScrollFade = true;
 
@@ -42,6 +41,7 @@ export class VirtualServerCardComponent implements OnInit {
 
     this.poolName = this.virtualServer?.poolReference?.items?.name;
     this.members = this.virtualServer?.poolReference?.items?.membersReference?.items;
+    console.log(this.virtualServer);
     this.virtualServerStatus = this.getStatusClass(
       this.virtualServer?.stats?.nestedStats?.entries?.['status.availabilityState'],
       this.virtualServer?.stats?.nestedStats?.entries?.['status.enabledState'],
@@ -51,6 +51,65 @@ export class VirtualServerCardComponent implements OnInit {
     this.virtualServerTableData = this.getVirtualServerTableData(this.virtualServer);
     this.poolStatus = this.getStatusClass(this.poolStats?.['status.availabilityState'], this.poolStats?.['status.enabledState']);
     this.poolTableData = this.getPoolTableData(this.poolStats);
+    this.checkCertificateExpiry();
+  }
+
+  checkCertificateExpiry(): void {
+    const certs = this.virtualServer?.certsReference;
+    const currentDate = new Date();
+    const thirtyDaysInSeconds = 30 * 24 * 60 * 60; // 30 days in seconds
+
+    if (certs) {
+      this.certStatusList = certs.map(cert => {
+        const expirationDate = new Date(cert.expirationDate * 1000);
+        const isExpired = expirationDate <= currentDate;
+
+        // Calculate difference in time
+        let delta = expirationDate.getTime() - currentDate.getTime();
+
+        // Calculate difference in years, months, days, and hours
+        const years = Math.floor(delta / (1000 * 60 * 60 * 24 * 365));
+        delta -= years * (1000 * 60 * 60 * 24 * 365);
+
+        const months = Math.floor(delta / (1000 * 60 * 60 * 24 * 30));
+        delta -= months * (1000 * 60 * 60 * 24 * 30);
+
+        const days = Math.floor(delta / (1000 * 60 * 60 * 24));
+        delta -= days * (1000 * 60 * 60 * 24);
+
+        const hours = Math.floor(delta / (1000 * 60 * 60));
+
+        let timeString = '';
+        if (years > 0) {
+          timeString += `${years} year${years > 1 ? 's' : ''}`;
+        }
+        if (months > 0) {
+          timeString += `${timeString ? ', ' : ''}${months} month${months > 1 ? 's' : ''}`;
+        }
+        if (days > 0) {
+          timeString += `${timeString ? ', ' : ''}${days} day${days > 1 ? 's' : ''}`;
+        }
+        if (days === 0 && hours > 0) {
+          timeString = `${hours} hour${hours > 1 ? 's' : ''}`;
+        }
+
+        if (!timeString) {
+          timeString = '0 days';
+        }
+
+        // Determine if the certificate expires within 30 days
+        const isExpiringSoon = !isExpired && expirationDate.getTime() - currentDate.getTime() <= thirtyDaysInSeconds * 1000;
+
+        return {
+          name: cert.name,
+          isExpired,
+          isExpiringSoon,
+          timeString,
+        };
+      });
+    } else {
+      this.certStatusList = [];
+    }
   }
 
   checkScroll(event: any): void {
@@ -173,7 +232,7 @@ export class VirtualServerCardComponent implements OnInit {
       bits = 0;
     }
 
-    const units: ConversionResult['unit'][] = ['bits', 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+    const units: string[] = ['bits', 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
     let currentValue = bits; // Start with bits
     let currentIndex = 0; // Index of the current unit in units array
 

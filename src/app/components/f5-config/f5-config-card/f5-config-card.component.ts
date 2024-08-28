@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { F5ConfigService } from '../f5-config.service';
 import { RuntimeDataService } from '../../../services/runtime-data.service';
 import { Subscription } from 'rxjs';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-f5-config-card',
@@ -20,6 +21,9 @@ export class F5ConfigCardComponent implements OnInit {
   isRefreshingRuntimeData = false;
   jobStatus: string;
   displayName: string;
+  expiredCertsWarning = false;
+
+  faCircle = faCircle;
 
   @ViewChildren('bootstrapTooltip') tooltips: QueryList<ElementRef>;
 
@@ -33,10 +37,11 @@ export class F5ConfigCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.initilizeValues();
+    this.checkCertificateExpiry();
   }
 
   initilizeValues(): void {
-    const f5Data = this.f5Config.data as any;
+    const f5Data = this.f5Config.data;
     this.softwareVersion = f5Data?.hostInfo?.softwareVersion;
     this.highAvailabilityStatus = f5Data?.hostInfo?.availability?.status;
     this.hostName = this.f5Config.hostname;
@@ -44,10 +49,36 @@ export class F5ConfigCardComponent implements OnInit {
     this.displayName = this.f5Config.displayName;
   }
 
+  checkCertificateExpiry(): void {
+    const f5Data = this.f5Config.data;
+    const currentDate = Math.floor(Date.now() / 1000); // Current date in seconds
+    const thirtyDaysInSeconds = 30 * 24 * 60 * 60; // 30 days in seconds
+
+    if (f5Data.certInfo) {
+      this.expiredCertsWarning = f5Data.certInfo.some(cert => {
+        const expirationDate = cert.expirationDate;
+        const inUse = cert.inUse;
+
+        return inUse && (expirationDate <= currentDate || expirationDate <= currentDate + thirtyDaysInSeconds);
+      });
+    } else {
+      this.expiredCertsWarning = false;
+    }
+  }
+
   navigateToDetails(): void {
     const currentQueryParams = this.route.snapshot.queryParams;
 
     this.router.navigate(['/netcentric/f5-config/partitions', this.f5Config.id], {
+      relativeTo: this.route,
+      queryParams: currentQueryParams,
+    });
+  }
+
+  navigateToCertificates(): void {
+    const currentQueryParams = this.route.snapshot.queryParams;
+
+    this.router.navigate(['/netcentric/f5-config/certificates', this.f5Config.id], {
       relativeTo: this.route,
       queryParams: currentQueryParams,
     });
@@ -93,6 +124,7 @@ export class F5ConfigCardComponent implements OnInit {
                   this.f5StateManagementService.f5Configs[i] = data[0];
                 }
                 this.initilizeValues();
+                this.checkCertificateExpiry(); // Re-check after refreshing the config
               });
             }
             this.jobStatus = status;

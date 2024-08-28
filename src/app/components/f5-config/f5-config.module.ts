@@ -12,6 +12,8 @@ import { ApplicationPipesModule } from '../../pipes/application-pipes.module';
 import { F5ConfigFilterComponent } from './f5-config-filter/f5-config-filter.component';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CertificateDetailsComponent } from './certificate-details/certificate-details.component';
+import { LiteTableModule } from '../../common/lite-table/lite-table.module';
 
 const routes = [
   {
@@ -24,10 +26,23 @@ const routes = [
     data: { breadcrumb: 'Partition Details' },
     component: PartitionDetailsComponent,
   },
+  {
+    path: 'certificates/:id',
+    canActivate: [AuthGuard],
+    data: { breadcrumb: 'Certificates' },
+    component: CertificateDetailsComponent,
+  },
 ];
 
 @NgModule({
-  declarations: [F5ConfigComponent, PartitionDetailsComponent, F5ConfigCardComponent, VirtualServerCardComponent, F5ConfigFilterComponent],
+  declarations: [
+    F5ConfigComponent,
+    PartitionDetailsComponent,
+    CertificateDetailsComponent,
+    F5ConfigCardComponent,
+    VirtualServerCardComponent,
+    F5ConfigFilterComponent,
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -36,6 +51,7 @@ const routes = [
     ApplicationPipesModule,
     FormsModule,
     NgSelectModule,
+    LiteTableModule,
   ],
   exports: [],
 })

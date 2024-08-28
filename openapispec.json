@@ -27201,6 +27201,468 @@
           "data"
         ]
       },
+      "F5RuntimeHostInfo": {
+        "type": "object",
+        "properties": {
+          "hostname": {
+            "type": "string",
+            "description": "Hostname of the F5 device",
+            "readOnly": true
+          },
+          "softwareVersion": {
+            "type": "string",
+            "description": "Software version of the F5 device",
+            "readOnly": true
+          },
+          "availability": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "hostname",
+          "softwareVersion",
+          "availability"
+        ]
+      },
+      "F5RuntimeFqdnFqdn": {
+        "type": "object",
+        "properties": {
+          "autopopulate": {
+            "type": "string",
+            "description": "Autopopulate state",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "autopopulate"
+        ]
+      },
+      "F5RuntimePoolMember": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Member name",
+            "readOnly": true
+          },
+          "address": {
+            "type": "string",
+            "description": "Member address",
+            "readOnly": true
+          },
+          "ephemeral": {
+            "type": "string",
+            "description": "Ephemeral state",
+            "readOnly": true
+          },
+          "fqdn": {
+            "description": "FQDN configuration",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimeFqdnFqdn"
+              }
+            ]
+          },
+          "priorityGroup": {
+            "type": "number",
+            "description": "Priority group",
+            "readOnly": true
+          },
+          "ratio": {
+            "type": "number",
+            "description": "Ratio",
+            "readOnly": true
+          },
+          "state": {
+            "type": "string",
+            "description": "State",
+            "readOnly": true
+          },
+          "fullPath": {
+            "type": "string",
+            "description": "Full path",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "name",
+          "address",
+          "ephemeral",
+          "fqdn",
+          "priorityGroup",
+          "ratio",
+          "state",
+          "fullPath"
+        ]
+      },
+      "F5RuntimeMembersReference": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "Array of members",
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/F5RuntimePoolMember"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "F5RuntimePoolReferenceItem": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Pool name",
+            "readOnly": true
+          },
+          "monitor": {
+            "type": "string",
+            "description": "Monitor",
+            "readOnly": true
+          },
+          "membersReference": {
+            "description": "Reference to pool members",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimeMembersReference"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "monitor",
+          "membersReference"
+        ]
+      },
+      "F5RuntimeNestedStats": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "The type of the nested stats"
+          },
+          "selfLink": {
+            "type": "string",
+            "description": "A URI reference to the resource"
+          },
+          "entries": {
+            "type": "object",
+            "description": "The entries of the nested stats"
+          }
+        },
+        "required": [
+          "kind",
+          "selfLink",
+          "entries"
+        ]
+      },
+      "F5RuntimePoolReference": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "Reference to pool items",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimePoolReferenceItem"
+              }
+            ]
+          },
+          "stats": {
+            "description": "Statistics related to the pool",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimeNestedStats"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "stats"
+        ]
+      },
+      "F5RuntimeProfile": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Profile name",
+            "readOnly": true
+          },
+          "partition": {
+            "type": "string",
+            "description": "Partition name",
+            "readOnly": true
+          },
+          "context": {
+            "type": "string",
+            "description": "Context of the profile",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "name",
+          "partition",
+          "context"
+        ]
+      },
+      "F5RuntimeProfilesReference": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "Array of profiles",
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/F5RuntimeProfile"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "F5RuntimePoliciesReference": {
+        "type": "object",
+        "properties": {
+          "link": {
+            "type": "string",
+            "description": "Link to the policy",
+            "readOnly": true
+          },
+          "isSubcollection": {
+            "type": "boolean",
+            "description": "Whether it is a subcollection",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "link",
+          "isSubcollection"
+        ]
+      },
+      "F5RuntimeCertsReference": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Certificate name",
+            "readOnly": true
+          },
+          "partition": {
+            "type": "string",
+            "description": "Partition name",
+            "readOnly": true
+          },
+          "expirationDate": {
+            "type": "number",
+            "description": "Expiration date as a timestamp",
+            "readOnly": true
+          },
+          "expirationString": {
+            "type": "string",
+            "description": "Expiration date as a string",
+            "readOnly": true
+          },
+          "subject": {
+            "type": "string",
+            "description": "Subject of the certificate",
+            "readOnly": true
+          },
+          "inUse": {
+            "type": "boolean",
+            "description": "If the certificate is in use",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "name",
+          "partition",
+          "expirationDate",
+          "expirationString",
+          "subject",
+          "inUse"
+        ]
+      },
+      "F5RuntimeVirtualServer": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Virtual server name",
+            "readOnly": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the virtual server",
+            "readOnly": true
+          },
+          "partition": {
+            "type": "string",
+            "description": "Partition name",
+            "readOnly": true
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the virtual server is enabled",
+            "readOnly": true
+          },
+          "addressStatus": {
+            "type": "string",
+            "description": "Address status",
+            "readOnly": true
+          },
+          "connectionLimit": {
+            "type": "number",
+            "description": "Connection limit",
+            "readOnly": true
+          },
+          "ipProtocol": {
+            "type": "string",
+            "description": "IP protocol",
+            "readOnly": true
+          },
+          "destination": {
+            "type": "string",
+            "description": "Destination address",
+            "readOnly": true
+          },
+          "mask": {
+            "type": "string",
+            "description": "Subnet mask",
+            "readOnly": true
+          },
+          "poolReference": {
+            "description": "Reference to the pool associated with the virtual server",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimePoolReference"
+              }
+            ]
+          },
+          "profilesReference": {
+            "description": "Reference to profiles associated with the virtual server",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimeProfilesReference"
+              }
+            ]
+          },
+          "policiesReference": {
+            "description": "Reference to policies associated with the virtual server",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimePoliciesReference"
+              }
+            ]
+          },
+          "certsReference": {
+            "description": "Reference to certificates associated with the virtual server",
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/F5RuntimeCertsReference"
+            }
+          },
+          "stats": {
+            "description": "Statistics for the virtual server",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimeNestedStats"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "partition",
+          "enabled",
+          "addressStatus",
+          "connectionLimit",
+          "ipProtocol",
+          "destination",
+          "mask",
+          "poolReference",
+          "profilesReference",
+          "policiesReference",
+          "certsReference",
+          "stats"
+        ]
+      },
+      "F5RuntimePartitionInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Partition name"
+          },
+          "virtualServers": {
+            "description": "Array of virtual servers in the partition",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/F5RuntimeVirtualServer"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "virtualServers"
+        ]
+      },
+      "F5RuntimeData": {
+        "type": "object",
+        "properties": {
+          "hostInfo": {
+            "description": "Host information",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimeHostInfo"
+              }
+            ]
+          },
+          "partitionInfo": {
+            "description": "Partition information",
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/F5RuntimePartitionInfo"
+            }
+          },
+          "certInfo": {
+            "description": "Certificate information",
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/F5RuntimeCertsReference"
+            }
+          }
+        },
+        "required": [
+          "hostInfo",
+          "partitionInfo",
+          "certInfo"
+        ]
+      },
       "F5Runtime": {
         "type": "object",
         "properties": {
@@ -27215,7 +27677,7 @@
             "type": "string"
           },
           "data": {
-            "type": "object"
+            "$ref": "#/components/schemas/F5RuntimeData"
           },
           "createdAt": {
             "format": "date-time",

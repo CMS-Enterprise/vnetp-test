@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { F5Runtime, V1RuntimeDataF5ConfigService } from '../../../../client';
+import { F5RuntimePartitionInfo, F5Runtime, F5RuntimePoolMember } from '../../../../client';
+import { V1RuntimeDataF5ConfigService, F5RuntimeVirtualServer } from '../../../../client';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -15,7 +16,7 @@ export class F5ConfigService {
     });
   }
 
-  public getF5Configs(): Observable<any> {
+  public getF5Configs(): Observable<F5Runtime[]> {
     if (this.f5Configs) {
       return of(this.f5Configs);
     } else {
@@ -31,25 +32,21 @@ export class F5ConfigService {
     }
   }
 
-  filterVirtualServers(partitionInfo: any, query: string): any {
-    const filteredPartitionInfo = {};
-    Object.entries(partitionInfo)?.forEach(([partitionName, virtualServers]) => {
-      if ((virtualServers as any)?.length > 0) {
-        const filteredServers = (virtualServers as any)?.filter(
+  filterVirtualServers(partitionInfo: F5RuntimePartitionInfo[], query: string): F5RuntimePartitionInfo[] {
+    return partitionInfo
+      .map(partition => {
+        const filteredServers = partition.virtualServers?.filter(
           virtualServer => query === '' || this.fullSearchMatch(virtualServer, query),
         );
 
-        if (filteredServers?.length > 0) {
-          filteredPartitionInfo[partitionName] = filteredServers;
-        } else {
-          filteredPartitionInfo[partitionName] = [];
+        if (filteredServers && filteredServers.length > 0) {
+          return {
+            ...partition,
+            virtualServers: filteredServers,
+          };
         }
-      } else {
-        filteredPartitionInfo[partitionName] = [];
-      }
-    });
-
-    return filteredPartitionInfo;
+      })
+      .filter(partition => partition !== undefined) as F5RuntimePartitionInfo[];
   }
 
   fullSearchMatch(virtualServer: any, searchQuery: string): boolean {
@@ -64,21 +61,21 @@ export class F5ConfigService {
 
   virtualServerMatchesSearch(virtualServer: any, searchQuery: string): boolean {
     const virtualServerName = virtualServer?.name;
-    const virtualSeverDestination = virtualServer?.destination?.split('/')?.at(-1);
-    const virtualServerDestinationIp = virtualSeverDestination?.split(':')?.at(0);
-    const virtualServerDestinationPort = virtualSeverDestination?.split(':')?.at(1);
+    const virtualServerDestination = virtualServer?.destination?.split('/')?.at(-1);
+    const virtualServerDestinationIp = virtualServerDestination?.split(':')?.at(0);
+    const virtualServerDestinationPort = virtualServerDestination?.split(':')?.at(1);
     const virtualServerIpProtocol = virtualServer?.ipProtocol;
     const virtualServerStatus = this.getVirtualServerStatus(virtualServer);
+    const virtualServerCertSearch = this.getVirtualServerCertSearch(virtualServer);
 
-    if (
+    return (
       virtualServerName?.toLowerCase()?.includes(searchQuery) ||
       virtualServerDestinationIp?.toLowerCase()?.includes(searchQuery) ||
       virtualServerDestinationPort?.toLowerCase()?.includes(searchQuery) ||
       virtualServerIpProtocol?.toLowerCase()?.includes(searchQuery) ||
-      virtualServerStatus?.toLowerCase()?.includes(searchQuery)
-    ) {
-      return true;
-    }
+      virtualServerStatus?.toLowerCase()?.includes(searchQuery) ||
+      virtualServerCertSearch?.toLowerCase()?.includes(searchQuery)
+    );
   }
 
   poolMatchesSearch(pool: any, searchQuery: string): boolean {
@@ -90,11 +87,11 @@ export class F5ConfigService {
     return members?.some(member => this.poolMemberMatchesSearch(member, searchQuery));
   }
 
-  poolMemberMatchesSearch(member: any, searchQuery: string): boolean {
+  poolMemberMatchesSearch(member: F5RuntimePoolMember, searchQuery: string): boolean {
     const memberName = member?.name;
-    const memberFullPath = member?.fullPath?.split('/')?.at(-1);
-    const memberIp = memberFullPath?.split(':')?.at(0);
-    const memberPort = memberFullPath?.split(':')?.at(1);
+    const memberFullPath = member?.fullPath?.split('/')?.[member?.fullPath?.split('/')?.length - 1];
+    const memberIp = memberFullPath?.split(':')?.[0];
+    const memberPort = memberFullPath?.split(':')?.[1];
     const address = member?.address;
 
     return (
@@ -118,5 +115,24 @@ export class F5ConfigService {
     } else {
       return 'unknown';
     }
+  }
+
+  getVirtualServerCertSearch(virtualServer: F5RuntimeVirtualServer): string {
+    if (!virtualServer.certsReference || virtualServer.certsReference.length === 0) {
+      return '';
+    }
+
+    return virtualServer.certsReference
+      .map(cert => {
+        const name = cert.name || '';
+        const subject = cert.subject || '';
+        const expirationDate = cert.expirationDate ? cert.expirationDate.toString() : '';
+        const expirationString = cert.expirationString || '';
+
+        // Combine the values with a space between them
+        return `${name} ${subject} ${expirationDate} ${expirationString}`.trim();
+      })
+      .join(' ')
+      .trim();
   }
 }
