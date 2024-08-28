@@ -46,7 +46,8 @@ pipeline {
                                 sh '''
 	                                pwd
   	                              cp -R /var/cbjenkins/sonar-scanner  "${PWD}/node_modules"   
-                                  "${PWD}/node_modules"/sonar-scanner/bin/sonar-scanner -Dproject.settings="${PWD}"/sonar-project.properties    
+                                  export PATH=/var/cbjenkins/workspace/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/NodeJS/bin:$PATH
+                                  "${PWD}/node_modules"/sonar-scanner/bin/sonar-scanner -Dproject.settings="${PWD}"/sonar-project.properties   
                                   if [ -d ${PWD}/.scannerwork ]; then rm -Rf ${PWD}/.scannerwork; fi  
                                 '''  
                         } catch (Exception e) {

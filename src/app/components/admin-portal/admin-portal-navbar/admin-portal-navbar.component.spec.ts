@@ -1,29 +1,29 @@
 /* eslint-disable */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NavbarComponent } from './navbar.component';
-import { AuthService } from 'src/app/services/auth.service';
-import { NgxSmartModalService } from 'ngx-smart-modal';
-import { of } from 'rxjs';
-import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { RouterTestingModule } from '@angular/router/testing';
-import { MockProvider } from 'src/test/mock-providers';
-import { HttpClientModule } from '@angular/common/http';
-import { V3GlobalMessagesService } from 'client';
+import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 
-describe('NavbarComponent', () => {
-  let component: NavbarComponent;
-  let fixture: ComponentFixture<NavbarComponent>;
+import { MockProvider } from 'src/test/mock-providers';
+import { AuthService } from 'src/app/services/auth.service';
+import { AdminPortalNavbarComponent } from './admin-portal-navbar.component';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { HttpClientModule } from '@angular/common/http';
+
+describe('AdminPortalNavbarComponent', () => {
+  let component: AdminPortalNavbarComponent;
+  let fixture: ComponentFixture<AdminPortalNavbarComponent>;
   let mockAuthService: Partial<AuthService>;
   let mockNgxSmartModalService: Partial<NgxSmartModalService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [NavbarComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
-      imports: [RouterTestingModule, HttpClientModule],
+      declarations: [AdminPortalNavbarComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent, MockComponent('app-breadcrumb')],
       providers: [MockProvider(NgxSmartModalService)],
+      imports: [HttpClientModule],
     }).compileComponents();
+  });
 
-    fixture = TestBed.createComponent(NavbarComponent);
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AdminPortalNavbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -64,23 +64,6 @@ describe('NavbarComponent', () => {
       component.logout();
       expect(component['ngx'].close).toHaveBeenCalledWith('logoutModal');
       expect(component['auth'].logout).toHaveBeenCalled();
-    });
-  });
-
-  describe('ngOnInit', () => {
-    beforeEach(() => {
-      mockAuthService = {
-        currentUser: of({
-          dcsPermissions: [{ tenant: 'testTenant', roles: ['network_ro'] }],
-        } as any),
-        currentTenant: of('testTenant'),
-      };
-      component['auth'] = mockAuthService as any;
-    });
-
-    it('should set userRoles to ["admin"] for read-only users', () => {
-      component.ngOnInit();
-      expect(component.userRoles).toEqual(['admin']);
     });
   });
 });
