@@ -9,11 +9,11 @@
 </div>
 
 <div *ngFor="let partition of filteredPartitionInfo">
-  <ng-container *ngIf="selectedPartition === '[ALL]' || selectedPartition === partition.name">
+  <ng-container *ngIf="selectedPartition === '[ALL]' || selectedPartition === partition?.name">
     <h2>{{ partition.name }}</h2>
     <div class="row">
       <div
-        *ngFor="let virtualServer of partition.virtualServers | sortVirtualServersByStatus"
+        *ngFor="let virtualServer of partition?.virtualServers | sortVirtualServersByStatus"
         [ngClass]="virtualServer.expanded ? 'col-12' : 'col-md-2'"
       >
         <app-virtual-server-card

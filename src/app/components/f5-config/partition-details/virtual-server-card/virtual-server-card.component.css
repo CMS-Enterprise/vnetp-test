@@ -60,12 +60,12 @@
   border-top: 0;
 }
 
-#myCustomTable2 th.column-border {
+#virtualServerDataTable th.column-border {
   position: relative;
   padding-bottom: 0.625rem; /* 10px / 16px */
 }
 
-#myCustomTable2 th.column-border::after {
+#virtualServerDataTable th.column-border::after {
   content: '';
   position: absolute;
   left: 10%;
@@ -75,7 +75,7 @@
   display: block;
 }
 
-#myCustomTable2 thead th {
+#virtualServerDataTable thead th {
   border-bottom: 0;
   border-top: 0;
 }
