@@ -25,16 +25,16 @@
           style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
         >
           <small class="text-muted">{{ cert?.name }}</small>
-          <small *ngIf="cert?.isExpired" class="text-danger ml-2"> (Expired {{ cert?.timeString }} ago) </small>
-          <small *ngIf="!cert?.isExpired && cert?.isExpiringSoon" class="text-warning ml-2"> (Expires in {{ cert?.timeString }}) </small>
-          <small *ngIf="!cert?.isExpired && !cert?.isExpiringSoon" class="text-success ml-2"> (Expires in {{ cert?.timeString }}) </small>
+          <small *ngIf="cert?.isExpired" class="ml-2"> (Expired {{ cert?.timeString }} ago) </small>
+          <small *ngIf="!cert?.isExpired && cert?.isExpiringSoon" class="ml-2"> (Expires in {{ cert?.timeString }}) </small>
+          <small *ngIf="!cert?.isExpired && !cert?.isExpiringSoon" class="ml-2"> (Expires in {{ cert?.timeString }}) </small>
         </li>
       </ul>
     </div>
 
     <!-- Pool Information Section -->
     <div class="ml-3 mt-2">
-      <h6 class="card-text mb-1 text-black">{{ poolName }}</h6>
+      <p class="card-text mb-1 text-black">{{ poolName }}</p>
       <div class="ml-3">
         <div *ngFor="let member of members" class="mb-3">
           <p class="card-text mb-0 text-muted">{{ member?.name }}</p>
