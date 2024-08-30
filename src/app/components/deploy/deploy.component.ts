@@ -338,8 +338,6 @@ export class DeployComponent implements OnInit {
     object: { id: string; updatedAt: string; provisionedAt: string; createdAt: string },
     type: AuditLogEntityTypeEnum,
   ) {
-    console.log(object, type, 'audit log data');
-
     let afterTimestamp;
 
     if (!object.provisionedAt) {
