@@ -8,6 +8,7 @@ import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/m
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockProvider } from 'src/test/mock-providers';
 import { HttpClientModule } from '@angular/common/http';
+import { V3GlobalMessagesService } from 'client';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
