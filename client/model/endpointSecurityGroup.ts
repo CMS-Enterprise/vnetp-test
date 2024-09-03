@@ -9,15 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AciRuntime } from './aciRuntime';
 import { Tenant } from './tenant';
-import { BridgeDomain } from './bridgeDomain';
+import { Vrf } from './vrf';
 import { ApplicationProfile } from './applicationProfile';
 import { Contract } from './contract';
 import { Selector } from './selector';
 
 
-export interface EndpointGroup { 
+export interface EndpointSecurityGroup { 
     readonly id?: string;
     readonly createdAt?: string;
     readonly updatedAt?: string;
@@ -26,21 +25,27 @@ export interface EndpointGroup {
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
     name?: string;
-    alias?: string;
     description?: string;
+    adminState: EndpointSecurityGroupAdminStateEnum;
     /**
-     * Intra-EPG endpoint isolation policies provide full isolation for virtual or physical endpoints;no communication is allowed between endpoints in an EPG that is operating with isolation enforced.
+     * Intra-ESG isolation policies provide full isolation for virtual or physical endpoints;no communication is allowed between endpoints in an ESG that is operating with isolation enforced.
      */
-    intraEpgIsolation: boolean;
+    intraEsgIsolation: boolean;
+    preferredGroupMember: boolean;
     readonly tenant?: Tenant;
     tenantId: string;
-    readonly bridgeDomain?: BridgeDomain;
-    bridgeDomainId: string;
-    readonly applicationProfile?: ApplicationProfile;
-    applicationProfileId: string;
     readonly consumedContracts?: Array<Contract>;
     readonly providedContracts?: Array<Contract>;
-    readonly aciRuntimes?: AciRuntime;
     readonly selectors?: Array<Selector>;
+    readonly vrf?: Vrf;
+    vrfId: string;
+    readonly applicationProfile?: ApplicationProfile;
+    applicationProfileId: string;
 }
+export enum EndpointSecurityGroupAdminStateEnum {
+    AdminUp = 'AdminUp',
+    AdminDown = 'AdminDown'
+};
+
+
 

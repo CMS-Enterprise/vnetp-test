@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { EndpointSecurityGroup } from './endpointSecurityGroup';
 import { Tenant } from './tenant';
 import { BridgeDomain } from './bridgeDomain';
 
@@ -35,5 +36,6 @@ export interface Vrf {
     readonly tenant?: Tenant;
     tenantId: string;
     readonly bridgeDomains?: Array<BridgeDomain>;
+    readonly endpointSecurityGroups?: Array<EndpointSecurityGroup>;
 }
 

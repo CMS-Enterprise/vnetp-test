@@ -10,12 +10,10 @@
  * Do not edit the class manually.
  */
 import { EndpointSecurityGroup } from './endpointSecurityGroup';
-import { Tenant } from './tenant';
 import { EndpointGroup } from './endpointGroup';
-import { Subject } from './subject';
 
 
-export interface Contract { 
+export interface Selector { 
     readonly id?: string;
     readonly createdAt?: string;
     readonly updatedAt?: string;
@@ -23,15 +21,19 @@ export interface Contract {
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
-    name?: string;
-    alias?: string;
     description?: string;
-    readonly tenant?: Tenant;
-    tenantId: string;
-    readonly consumingEndpointGroups?: Array<EndpointGroup>;
-    readonly providingEndpointGroups?: Array<EndpointGroup>;
-    readonly subjects?: Array<Subject>;
-    readonly consumingEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
-    readonly providingEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
+    selectorType?: SelectorSelectorTypeEnum;
+    tagKey?: string;
+    valueOperator?: string;
+    readonly endpointGroups?: Array<EndpointGroup>;
+    readonly endpointSecurityGroup?: EndpointSecurityGroup;
+    endpointSecurityGroupId: string;
 }
+export enum SelectorSelectorTypeEnum {
+    Tag = 'Tag',
+    Epg = 'EPG',
+    IpSubnet = 'IpSubnet'
+};
+
+
 
