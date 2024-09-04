@@ -1,0 +1,79 @@
+<ng-container>
+  <section class="btn-toolbar" role="toolbar">
+    <button type="button" class="btn btn-success" (click)="openEndpointSecurityGroupModal(ModalMode.Create)">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create EndpointSecurity Group</span>
+    </button>
+  </section>
+  <ng-container *ngIf="!isLoading; else loading">
+    <app-table
+      [config]="config"
+      [data]="endpointSecurityGroups"
+      (clearResults)="getEndpointSecurityGroups($event)"
+      (searchParams)="getEndpointSecurityGroups($event)"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
+    <section class="btn-toolbar" role="toolbar">
+      <app-import-export
+        [exportObject]="endpointSecurityGroups"
+        exportFileName="endpointSecurityGroups"
+        [disableJson]="false"
+        (import)="importEndpointSecurityGroups($event)"
+      ></app-import-export>
+    </section>
+  </ng-container>
+</ng-container>
+
+<app-endpoint-security-group-modal [tenantId]="tenantId"></app-endpoint-security-group-modal>
+
+<ng-template #actionsTemplate let-endpointSecurityGroup="datum">
+  <section>
+    <app-icon-button
+      *ngIf="!endpointSecurityGroup?.deletedAt"
+      icon="edit"
+      label="Edit EndpointSecurity Group"
+      (handleClick)="openEndpointSecurityGroupModal(ModalMode.Edit, endpointSecurityGroup)"
+    ></app-icon-button>
+
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete EndpointSecurity Group"
+      [type]="endpointSecurityGroup?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteEndpointSecurityGroup(endpointSecurityGroup)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="endpointSecurityGroup?.deletedAt"
+      icon="undo"
+      label="Restore EndpointSecurity Group"
+      type="success"
+      (handleClick)="restoreEndpointSecurityGroup(endpointSecurityGroup)"
+    ></app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+
+<ng-template #expandedRows let-endpointSecurityGroup="datum">
+  <section class="table__expanded-row">
+    <!-- <app-aci-runtime [endpointSecurityGroup]="endpointSecurityGroup"></app-aci-runtime> -->
+  </section>
+</ng-template>
+
+<ng-template #applicationProfileTemplate let-endpointSecurityGroup="datum">
+  <section>
+    <span>{{ endpointSecurityGroup?.applicationProfile?.name }}</span>
+  </section>
+</ng-template>
+
+<ng-template #vrfTemplate let-endpointSecurityGroup="datum">
+  <section>
+    <span>{{ endpointSecurityGroup?.vrf?.name }}</span>
+  </section>
+</ng-template>
+
+<app-yes-no-modal></app-yes-no-modal>

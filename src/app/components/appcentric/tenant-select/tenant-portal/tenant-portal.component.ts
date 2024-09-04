@@ -6,6 +6,7 @@ import { Tab } from 'src/app/common/tabs/tabs.component';
 const tabs = [
   { name: 'Application Profile', route: ['application-profile'] },
   { name: 'Endpoint Group', route: ['endpoint-group'] },
+  { name: 'Endpoint Security Group', route: ['endpoint-security-group'] },
   { name: 'Bridge Domain', route: ['bridge-domain'] },
   { name: 'Contract', route: ['contract'] },
   { name: 'Filter', route: ['filter'] },

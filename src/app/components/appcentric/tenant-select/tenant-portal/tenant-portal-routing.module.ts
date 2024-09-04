@@ -56,6 +56,12 @@ const routes: Routes = [
         data: { breadcrumb: 'Route Profile', title: 'Tenant Portal - Route Profile' },
         loadChildren: () => import('./route-profile/route-profile.module').then(m => m.RouteProfileModule),
       },
+      {
+        outlet,
+        path: 'endpoint-security-group',
+        data: { breadcrumb: 'Endpoint Security Group', title: 'Tenant Portal - Endpoint Security Group' },
+        loadChildren: () => import('./endpoint-security-group/endpoint-security-group.module').then(m => m.EndpointSecurityGroupModule),
+      },
     ],
   },
 ];
