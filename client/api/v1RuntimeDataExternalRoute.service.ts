@@ -17,28 +17,28 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { ExternalRoute } from '../model/models';
+import { ExternalRouteJobCreateDto } from '../model/models';
 import { Job } from '../model/models';
-import { RouteTable } from '../model/models';
-import { RouteTableJobCreateDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateOneRouteTableRequestParams {
-    routeTable: RouteTable;
+export interface CreateOneExternalRouteRequestParams {
+    externalRoute: ExternalRoute;
 }
 
-export interface CreateRuntimeDataJobRouteTableRequestParams {
-    routeTableJobCreateDto: RouteTableJobCreateDto;
+export interface CreateRuntimeDataJobExternalRouteRequestParams {
+    externalRouteJobCreateDto: ExternalRouteJobCreateDto;
 }
 
-export interface DeleteOneRouteTableRequestParams {
+export interface DeleteOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
 }
 
-export interface GetManyRouteTableRequestParams {
+export interface GetManyExternalRouteRequestParams {
     /** Comma-seperated array of relations to join. */
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
@@ -65,7 +65,7 @@ export interface GetManyRouteTableRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V1RuntimeDataRouteTableService {
+export class V1RuntimeDataExternalRouteService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -128,13 +128,13 @@ export class V1RuntimeDataRouteTableService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneRouteTable(requestParameters: CreateOneRouteTableRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteTable>;
-    public createOneRouteTable(requestParameters: CreateOneRouteTableRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteTable>>;
-    public createOneRouteTable(requestParameters: CreateOneRouteTableRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteTable>>;
-    public createOneRouteTable(requestParameters: CreateOneRouteTableRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const routeTable = requestParameters.routeTable;
-        if (routeTable === null || routeTable === undefined) {
-            throw new Error('Required parameter routeTable was null or undefined when calling createOneRouteTable.');
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const externalRoute = requestParameters.externalRoute;
+        if (externalRoute === null || externalRoute === undefined) {
+            throw new Error('Required parameter externalRoute was null or undefined when calling createOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -166,8 +166,8 @@ export class V1RuntimeDataRouteTableService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<RouteTable>(`${this.configuration.basePath}/v1/runtime-data/route-table`,
-            routeTable,
+        return this.httpClient.post<ExternalRoute>(`${this.configuration.basePath}/v1/runtime-data/external-route`,
+            externalRoute,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -184,13 +184,13 @@ export class V1RuntimeDataRouteTableService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createRuntimeDataJobRouteTable(requestParameters: CreateRuntimeDataJobRouteTableRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Job>;
-    public createRuntimeDataJobRouteTable(requestParameters: CreateRuntimeDataJobRouteTableRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Job>>;
-    public createRuntimeDataJobRouteTable(requestParameters: CreateRuntimeDataJobRouteTableRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Job>>;
-    public createRuntimeDataJobRouteTable(requestParameters: CreateRuntimeDataJobRouteTableRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const routeTableJobCreateDto = requestParameters.routeTableJobCreateDto;
-        if (routeTableJobCreateDto === null || routeTableJobCreateDto === undefined) {
-            throw new Error('Required parameter routeTableJobCreateDto was null or undefined when calling createRuntimeDataJobRouteTable.');
+    public createRuntimeDataJobExternalRoute(requestParameters: CreateRuntimeDataJobExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Job>;
+    public createRuntimeDataJobExternalRoute(requestParameters: CreateRuntimeDataJobExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Job>>;
+    public createRuntimeDataJobExternalRoute(requestParameters: CreateRuntimeDataJobExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Job>>;
+    public createRuntimeDataJobExternalRoute(requestParameters: CreateRuntimeDataJobExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const externalRouteJobCreateDto = requestParameters.externalRouteJobCreateDto;
+        if (externalRouteJobCreateDto === null || externalRouteJobCreateDto === undefined) {
+            throw new Error('Required parameter externalRouteJobCreateDto was null or undefined when calling createRuntimeDataJobExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -222,8 +222,8 @@ export class V1RuntimeDataRouteTableService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Job>(`${this.configuration.basePath}/v1/runtime-data/route-table/create-runtime-data-job`,
-            routeTableJobCreateDto,
+        return this.httpClient.post<Job>(`${this.configuration.basePath}/v1/runtime-data/external-route/create-runtime-data-job`,
+            externalRouteJobCreateDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -240,13 +240,13 @@ export class V1RuntimeDataRouteTableService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteOneRouteTable(requestParameters: DeleteOneRouteTableRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<RouteTable>;
-    public deleteOneRouteTable(requestParameters: DeleteOneRouteTableRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<RouteTable>>;
-    public deleteOneRouteTable(requestParameters: DeleteOneRouteTableRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<RouteTable>>;
-    public deleteOneRouteTable(requestParameters: DeleteOneRouteTableRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public deleteOneExternalRoute(requestParameters: DeleteOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
+    public deleteOneExternalRoute(requestParameters: DeleteOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
+    public deleteOneExternalRoute(requestParameters: DeleteOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
+    public deleteOneExternalRoute(requestParameters: DeleteOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteOneRouteTable.');
+            throw new Error('Required parameter id was null or undefined when calling deleteOneExternalRoute.');
         }
 
         let headers = this.defaultHeaders;
@@ -269,7 +269,7 @@ export class V1RuntimeDataRouteTableService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<RouteTable>(`${this.configuration.basePath}/v1/runtime-data/route-table/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<ExternalRoute>(`${this.configuration.basePath}/v1/runtime-data/external-route/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -286,10 +286,10 @@ export class V1RuntimeDataRouteTableService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getManyRouteTable(requestParameters: GetManyRouteTableRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<RouteTable>>;
-    public getManyRouteTable(requestParameters: GetManyRouteTableRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<RouteTable>>>;
-    public getManyRouteTable(requestParameters: GetManyRouteTableRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<RouteTable>>>;
-    public getManyRouteTable(requestParameters: GetManyRouteTableRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getManyExternalRoute(requestParameters: GetManyExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<ExternalRoute>>;
+    public getManyExternalRoute(requestParameters: GetManyExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<ExternalRoute>>>;
+    public getManyExternalRoute(requestParameters: GetManyExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<ExternalRoute>>>;
+    public getManyExternalRoute(requestParameters: GetManyExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const relations = requestParameters.relations;
         const join = requestParameters.join;
         const perPage = requestParameters.perPage;
@@ -375,7 +375,7 @@ export class V1RuntimeDataRouteTableService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<RouteTable>>(`${this.configuration.basePath}/v1/runtime-data/route-table`,
+        return this.httpClient.get<Array<ExternalRoute>>(`${this.configuration.basePath}/v1/runtime-data/external-route`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

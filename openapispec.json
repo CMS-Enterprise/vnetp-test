@@ -20003,9 +20003,9 @@
         ]
       }
     },
-    "/v1/runtime-data/route-table": {
+    "/v1/runtime-data/external-route": {
       "get": {
-        "operationId": "getManyRouteTable",
+        "operationId": "getManyExternalRoute",
         "summary": "Get many Aci Runtime",
         "parameters": [
           {
@@ -20125,7 +20125,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RouteTable"
+                    "$ref": "#/components/schemas/ExternalRoute"
                   }
                 }
               }
@@ -20133,11 +20133,11 @@
           }
         },
         "tags": [
-          "v1/runtime-data/route-table"
+          "v1/runtime-data/external-route"
         ]
       },
       "post": {
-        "operationId": "createOneRouteTable",
+        "operationId": "createOneExternalRoute",
         "summary": "Create one Route",
         "parameters": [],
         "requestBody": {
@@ -20145,7 +20145,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RouteTable"
+                "$ref": "#/components/schemas/ExternalRoute"
               }
             }
           }
@@ -20156,20 +20156,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RouteTable"
+                  "$ref": "#/components/schemas/ExternalRoute"
                 }
               }
             }
           }
         },
         "tags": [
-          "v1/runtime-data/route-table"
+          "v1/runtime-data/external-route"
         ]
       }
     },
-    "/v1/runtime-data/route-table/{id}": {
+    "/v1/runtime-data/external-route/{id}": {
       "delete": {
-        "operationId": "deleteOneRouteTable",
+        "operationId": "deleteOneExternalRoute",
         "summary": "Delete one Route",
         "parameters": [
           {
@@ -20188,20 +20188,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RouteTable"
+                  "$ref": "#/components/schemas/ExternalRoute"
                 }
               }
             }
           }
         },
         "tags": [
-          "v1/runtime-data/route-table"
+          "v1/runtime-data/external-route"
         ]
       }
     },
-    "/v1/runtime-data/route-table/create-runtime-data-job": {
+    "/v1/runtime-data/external-route/create-runtime-data-job": {
       "post": {
-        "operationId": "createRuntimeDataJobRouteTable",
+        "operationId": "createRuntimeDataJobExternalRoute",
         "summary": "",
         "description": "Create Runtime Data Route Table Collection Job",
         "parameters": [],
@@ -20210,7 +20210,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RouteTableJobCreateDto"
+                "$ref": "#/components/schemas/ExternalRouteJobCreateDto"
               }
             }
           }
@@ -20228,7 +20228,7 @@
           }
         },
         "tags": [
-          "v1/runtime-data/route-table"
+          "v1/runtime-data/external-route"
         ]
       }
     },
@@ -23131,7 +23131,7 @@
           "wanFormId"
         ]
       },
-      "RouteTable": {
+      "ExternalRoute": {
         "type": "object",
         "properties": {
           "id": {
@@ -23255,7 +23255,7 @@
             "readOnly": true,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/RouteTable"
+              "$ref": "#/components/schemas/ExternalRoute"
             }
           }
         },
@@ -26917,7 +26917,7 @@
               "NatRule",
               "F5Config",
               "AciRuntime",
-              "RouteTable"
+              "ExternalRoute"
             ]
           },
           "datacenterId": {
@@ -26957,7 +26957,7 @@
               "NatRule",
               "F5Config",
               "AciRuntime",
-              "RouteTable"
+              "ExternalRoute"
             ]
           },
           "groupId": {
@@ -27488,7 +27488,7 @@
               "NatRule",
               "F5Config",
               "AciRuntime",
-              "RouteTable"
+              "ExternalRoute"
             ]
           },
           "datacenterId": {
@@ -27513,7 +27513,7 @@
               "NatRule",
               "F5Config",
               "AciRuntime",
-              "RouteTable"
+              "ExternalRoute"
             ]
           },
           "datacenterId": {
@@ -27530,7 +27530,7 @@
           "type"
         ]
       },
-      "RouteTableJobCreateDto": {
+      "ExternalRouteJobCreateDto": {
         "type": "object",
         "properties": {
           "type": {
@@ -27540,7 +27540,7 @@
               "NatRule",
               "F5Config",
               "AciRuntime",
-              "RouteTable"
+              "ExternalRoute"
             ]
           },
           "datacenterId": {

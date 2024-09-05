@@ -12,7 +12,7 @@
 import { WanForm } from './wanForm';
 
 
-export interface RouteTable { 
+export interface ExternalRoute { 
     readonly id?: string;
     network: string;
     prefixLength: number;
