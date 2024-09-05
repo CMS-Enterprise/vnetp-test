@@ -46,7 +46,8 @@ pipeline {
                                 sh '''
 	                                pwd
   	                              cp -R /var/cbjenkins/sonar-scanner  "${PWD}/node_modules"   
-                                  "${PWD}/node_modules"/sonar-scanner/bin/sonar-scanner -Dproject.settings="${PWD}"/sonar-project.properties    
+                                  export PATH=/var/cbjenkins/workspace/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/NodeJS/bin:$PATH
+                                  "${PWD}/node_modules"/sonar-scanner/bin/sonar-scanner -Dproject.settings="${PWD}"/sonar-project.properties   
                                   if [ -d ${PWD}/.scannerwork ]; then rm -Rf ${PWD}/.scannerwork; fi  
                                 '''  
                         } catch (Exception e) {
@@ -68,7 +69,7 @@ pipeline {
               gzip dist.tar
               mv dist.tar.gz builds/$GIT_COMMIT/dist.tar.gz
              if (findmnt -T /mnt/buildartifacts)
-             then mkdir -p /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && cp builds/$GIT_COMMIT/dist.tar.gz  /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && chmod -R 755 /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT
+             then mkdir -p /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && cp -u builds/$GIT_COMMIT/dist.tar.gz  /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT && chmod -R 755 /mnt/buildartifacts/dcs-ui/builds/$GIT_COMMIT
              else echo 'NFS Mount not available'; exit 1
              fi
           '''

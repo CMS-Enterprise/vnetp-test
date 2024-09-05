@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-
 import { F5ConfigCardComponent } from './f5-config-card.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { F5ConfigService } from '../f5-config.service';
@@ -58,9 +57,16 @@ describe('F5ConfigCardComponent', () => {
           softwareVersion: 1,
           availability: { status: 'available' },
         },
+        certInfo: [
+          { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24, inUse: true }, // expires in 1 day, in use
+          { expirationDate: Math.floor(Date.now() / 1000) - 60 * 60 * 24, inUse: true }, // expired, in use
+          { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 60, inUse: true }, // expires in 60 days, in use
+          { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24, inUse: false }, // expires in 1 day, not in use
+        ],
       },
       hostname: 'hostname',
       runtimeDataLastRefreshed: new Date(),
+      displayName: 'Test F5 Config',
     } as any;
     fixture.detectChanges();
   });
@@ -71,6 +77,28 @@ describe('F5ConfigCardComponent', () => {
     expect(component.hostName).toEqual('hostname');
     expect(component.lastRefreshed).toBeDefined();
     expect(component.lastRefreshed).toEqual('1');
+  });
+
+  describe('checkCertificateExpiry', () => {
+    it('should set expiredCertsWarning to true if any in-use certificate is expired or expiring within 30 days', () => {
+      component.checkCertificateExpiry();
+      expect(component.expiredCertsWarning).toBe(true);
+    });
+
+    it('should set expiredCertsWarning to false if no in-use certificate is expired or expiring within 30 days', () => {
+      (component.f5Config.data as any).certInfo = [
+        { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 60, inUse: true }, // expires in 60 days, in use
+        { expirationDate: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 60, inUse: false }, // expires in 60 days, not in use
+      ];
+      component.checkCertificateExpiry();
+      expect(component.expiredCertsWarning).toBe(false);
+    });
+
+    it('should handle cases where certInfo is not defined', () => {
+      (component.f5Config.data as any).certInfo = undefined;
+      component.checkCertificateExpiry();
+      expect(component.expiredCertsWarning).toBe(false);
+    });
   });
 
   describe('navigateToDetails', () => {
@@ -172,7 +200,7 @@ describe('F5ConfigCardComponent', () => {
       expect(message).toEqual('An error occurred during polling');
     });
 
-    it('should return an status string for any other status', () => {
+    it('should return a status string for any other status', () => {
       const message = component.getTooltipMessage('success');
       expect(message).toEqual('success');
     });

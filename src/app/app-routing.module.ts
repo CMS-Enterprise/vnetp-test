@@ -1,10 +1,16 @@
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AuthGuard } from './guards/auth.guard';
+import { AdminAuthGuard } from './guards/admin-auth.guard';
 const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule),
+  },
+  {
+    path: 'adminportal',
+    canActivate: [AdminAuthGuard],
+    loadChildren: () => import('./components/admin-portal/admin-portal.module').then(m => m.AdminPortalModule),
   },
   {
     path: 'appcentric',

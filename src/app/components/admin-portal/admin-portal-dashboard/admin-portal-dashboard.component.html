@@ -1,0 +1,28 @@
+<h1>Dashboard</h1>
+<main class="dashboard">
+  <!-- Service Status -->
+  <aside class="dashboard__card" aria-label="Service Status">
+    <h4 class="dashboard__heading">Service Status</h4>
+    <div *ngFor="let service of status" class="status-item">
+      <span>
+        {{ service.name }}
+      </span>
+      <div class="status-light" [ngClass]="service.status"></div>
+    </div>
+  </aside>
+
+  <!-- Overall Environment -->
+  <aside class="dashboard__card" aria-label="Overall Environment">
+    <h4 class="dashboard__heading">Overall Environment</h4>
+    <ul class="dash-card">
+      <li>
+        <a routerLink="/adminportal/global-messages" queryParamsHandling="merge">
+          <span> Global Messages </span>
+          <span class="inline-block ml-auto">
+            {{ globalMessages || 0 }}
+          </span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+</main>
