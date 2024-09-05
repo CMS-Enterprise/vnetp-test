@@ -25,8 +25,8 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { MatTooltip } from '@angular/material/tooltip';
 import { WanFormSubnetsComponent } from './wan-form-subnets/wan-form-subnets.component';
 import { WanFormSubnetsModalComponent } from './wan-form-subnets/wan-form-subnets-modal/wan-form-subnets-modal.component';
-import { RouteTableComponent } from './route-table/route-table.component';
-import { RouteTableModalComponent } from './route-table/route-table-modal/route-table-modal.component';
+import { ExternalRouteComponent } from './route-table/route-table.component';
+import { ExternalRouteModalComponent } from './route-table/route-table-modal/route-table-modal.component';
 
 const routes: Routes = [
   {
@@ -39,7 +39,7 @@ const routes: Routes = [
   },
   {
     path: ':id/route-table',
-    component: RouteTableComponent,
+    component: ExternalRouteComponent,
   },
 ];
 @NgModule({
@@ -49,8 +49,8 @@ const routes: Routes = [
     WanFormDetailComponent,
     WanFormSubnetsComponent,
     WanFormSubnetsModalComponent,
-    RouteTableComponent,
-    RouteTableModalComponent,
+    ExternalRouteComponent,
+    ExternalRouteModalComponent,
   ],
   imports: [
     CommonModule,

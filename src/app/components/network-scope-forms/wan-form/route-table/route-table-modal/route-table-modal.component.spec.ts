@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RouteTableModalComponent } from './route-table-modal.component';
+import { ExternalRouteModalComponent } from './route-table-modal.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { V1RuntimeDataRouteTableService } from '../../../../../../../client';
+import { V1RuntimeDataExternalRouteService } from '../../../../../../../client';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from '../../../../../../test/mock-components';
 import { of } from 'rxjs';
 
-describe('RouteTableModalComponent', () => {
-  let component: RouteTableModalComponent;
-  let fixture: ComponentFixture<RouteTableModalComponent>;
+describe('ExternalRouteModalComponent', () => {
+  let component: ExternalRouteModalComponent;
+  let fixture: ComponentFixture<ExternalRouteModalComponent>;
   let mockNgx: any;
   let formBuilder: FormBuilder;
-  let mockRouteTableService: any;
+  let mockExternalRouteService: any;
 
   beforeEach(async () => {
     mockNgx = {
@@ -21,20 +21,20 @@ describe('RouteTableModalComponent', () => {
       resetModalData: jest.fn(),
     };
     formBuilder = new FormBuilder();
-    mockRouteTableService = {
-      createOneRouteTable: jest.fn().mockReturnValue(of({})),
+    mockExternalRouteService = {
+      createOneExternalRoute: jest.fn().mockReturnValue(of({})),
     };
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
-      declarations: [RouteTableModalComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
+      declarations: [ExternalRouteModalComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: mockNgx },
         { provide: FormBuilder, useValue: formBuilder },
-        { provide: V1RuntimeDataRouteTableService, useValue: mockRouteTableService },
+        { provide: V1RuntimeDataExternalRouteService, useValue: mockExternalRouteService },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RouteTableModalComponent);
+    fixture = TestBed.createComponent(ExternalRouteModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -71,7 +71,7 @@ describe('RouteTableModalComponent', () => {
 
   describe('save', () => {
     it('should not save if form is invalid', () => {
-      const createOneSpy = jest.spyOn(mockRouteTableService, 'createOneRouteTable');
+      const createOneSpy = jest.spyOn(mockExternalRouteService, 'createOneExternalRoute');
       component.form.controls.network.setErrors({ incorrect: true });
       component.save();
       expect(createOneSpy).not.toHaveBeenCalled();
@@ -79,7 +79,7 @@ describe('RouteTableModalComponent', () => {
 
     it('should save', () => {
       component.form.setValue({ network: '192.168.0.1', prefixLength: 20, metric: 1, vrf: 'vrf' });
-      const createOneSpy = jest.spyOn(mockRouteTableService, 'createOneRouteTable');
+      const createOneSpy = jest.spyOn(mockExternalRouteService, 'createOneExternalRoute');
       component.save();
       expect(createOneSpy).toHaveBeenCalled();
     });

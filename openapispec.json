@@ -23251,7 +23251,7 @@
           "tenantId": {
             "type": "string"
           },
-          "routeTables": {
+          "externalRoutes": {
             "readOnly": true,
             "type": "array",
             "items": {

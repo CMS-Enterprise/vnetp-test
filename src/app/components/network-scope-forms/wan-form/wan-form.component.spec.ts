@@ -131,7 +131,7 @@ describe('WanFormComponent', () => {
       const filterParam = 'datacenterId||eq||testDatacenterId';
       expect(mockWanFormService.getManyWanForm).toHaveBeenCalledWith({
         filter: [filterParam, undefined],
-        join: ['wanFormSubnets', 'routeTables'],
+        join: ['wanFormSubnets', 'externalRoutes'],
         page: 1,
         perPage: 20,
       });

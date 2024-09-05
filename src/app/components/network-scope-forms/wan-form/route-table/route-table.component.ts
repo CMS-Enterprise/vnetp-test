@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  RouteTable,
-  RouteTableJobCreateDtoTypeEnum,
+  ExternalRoute,
+  ExternalRouteJobCreateDtoTypeEnum,
   V1NetworkScopeFormsWanFormService,
-  V1RuntimeDataRouteTableService,
+  V1RuntimeDataExternalRouteService,
   WanForm,
 } from '../../../../../../client';
 import { Subscription } from 'rxjs';
@@ -17,12 +17,12 @@ import { RuntimeDataService } from '../../../../services/runtime-data.service';
   templateUrl: './route-table.component.html',
   styleUrl: './route-table.component.css',
 })
-export class RouteTableComponent implements OnInit {
+export class ExternalRouteComponent implements OnInit {
   wanFormId: string;
   dcsMode: string;
   wanForm: WanForm;
-  routes: RouteTable[];
-  filteredRoutes: RouteTable[];
+  routes: ExternalRoute[];
+  filteredRoutes: ExternalRoute[];
   private modalSubscription: Subscription;
   public ModalMode = ModalMode;
   searchQuery = '';
@@ -34,7 +34,7 @@ export class RouteTableComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private wanFormService: V1NetworkScopeFormsWanFormService,
-    private routeTableService: V1RuntimeDataRouteTableService,
+    private externalRouteService: V1RuntimeDataExternalRouteService,
     private ngx: NgxSmartModalService,
     private router: Router,
     private runtimeDataService: RuntimeDataService,
@@ -74,20 +74,20 @@ export class RouteTableComponent implements OnInit {
     });
   }
 
-  addRouteToWanForm(route: RouteTable): void {
+  addRouteToWanForm(route: ExternalRoute): void {
     this.wanFormService.addRouteToWanFormWanForm({ wanId: this.wanForm.id, routeId: route.id }).subscribe(() => {
       this.getAllRoutes();
     });
   }
 
-  removeRouteFromWanForm(route: RouteTable): void {
+  removeRouteFromWanForm(route: ExternalRoute): void {
     this.wanFormService.removeRouteFromWanFormWanForm({ wanId: this.wanForm.id, routeId: route.id }).subscribe(() => {
       this.getAllRoutes();
     });
   }
 
   getAllRoutes(): void {
-    this.routeTableService.getManyRouteTable({ relations: ['wanForms'], limit: 50000 }).subscribe(data => {
+    this.externalRouteService.getManyExternalRoute({ relations: ['wanForms'], limit: 50000 }).subscribe(data => {
       this.routes = data;
       this.filteredRoutes = data;
       if (data.length === 0) {
@@ -101,21 +101,21 @@ export class RouteTableComponent implements OnInit {
     });
   }
 
-  deleteRoute(route: RouteTable): void {
-    this.routeTableService.deleteOneRouteTable({ id: route.id }).subscribe(() => {
+  deleteRoute(route: ExternalRoute): void {
+    this.externalRouteService.deleteOneExternalRoute({ id: route.id }).subscribe(() => {
       this.getAllRoutes();
     });
   }
 
   public openModal(): void {
     this.subscribeToModal();
-    this.ngx.setModalData({ wanFormId: this.wanFormId }, 'routeTableModal');
-    this.ngx.getModal('routeTableModal').open();
+    this.ngx.setModalData({ wanFormId: this.wanFormId }, 'externalRouteModal');
+    this.ngx.getModal('externalRouteModal').open();
   }
 
   private subscribeToModal(): void {
-    this.modalSubscription = this.ngx.getModal('routeTableModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('routeTableModal');
+    this.modalSubscription = this.ngx.getModal('externalRouteModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('externalRouteModal');
       this.modalSubscription.unsubscribe();
 
       this.getAllRoutes();
@@ -151,10 +151,10 @@ export class RouteTableComponent implements OnInit {
 
     this.isRefreshingRuntimeData = true;
 
-    this.routeTableService
-      .createRuntimeDataJobRouteTable({
-        routeTableJobCreateDto: {
-          type: RouteTableJobCreateDtoTypeEnum.RouteTable,
+    this.externalRouteService
+      .createRuntimeDataJobExternalRoute({
+        externalRouteJobCreateDto: {
+          type: ExternalRouteJobCreateDtoTypeEnum.ExternalRoute,
         },
       })
       .subscribe(job => {
@@ -196,7 +196,7 @@ export class RouteTableComponent implements OnInit {
     }
   }
 
-  checkIfWanFormExists(route: RouteTable): boolean {
+  checkIfWanFormExists(route: ExternalRoute): boolean {
     return route.wanForms?.some(wanForm => wanForm?.id === this.wanFormId);
   }
 }

@@ -31,6 +31,6 @@ export interface WanForm {
     readonly wanFormSubnets?: Array<WanFormSubnet>;
     readonly tenant?: Tenant;
     tenantId?: string;
-    readonly routeTables?: Array<ExternalRoute>;
+    readonly externalRoutes?: Array<ExternalRoute>;
 }
 
