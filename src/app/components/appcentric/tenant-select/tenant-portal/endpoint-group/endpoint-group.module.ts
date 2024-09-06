@@ -7,8 +7,6 @@ import { IconButtonModule } from '../../../../../common/icon-button/icon-button.
 import { ImportExportModule } from '../../../../../common/import-export/import-export.module';
 import { TableModule } from '../../../../../common/table/table.module';
 import { EndpointGroupModalComponent } from './endpoint-group-modal/endpoint-group-modal.component';
-import { ProvidedContractComponent } from '../provided-contract/provided-contract.component';
-import { ConsumedContractComponent } from '../consumed-contract/consumed-contract.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TabsModule } from '../../../../../common/tabs/tabs.module';

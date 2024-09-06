@@ -11,8 +11,6 @@ import { TableModule } from 'src/app/common/table/table.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { AciRuntimeModule } from 'src/app/components/aci-runtime/aci-runtime.module';
-import { ConsumedContractComponent } from '../consumed-contract/consumed-contract.component';
-import { ProvidedContractComponent } from '../provided-contract/provided-contract.component';
 import { EndpointSecurityGroupModalComponent } from './endpoint-security-group-modal/endpoint-security-group-modal.component';
 import { EndpointSecurityGroupComponent } from './endpoint-security-group.component';
 import { ConsumedContractModule } from '../consumed-contract/consumed-contract.module';

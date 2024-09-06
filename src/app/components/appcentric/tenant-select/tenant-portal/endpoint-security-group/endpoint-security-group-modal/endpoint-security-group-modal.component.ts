@@ -3,7 +3,6 @@ import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms
 import {
   ApplicationProfile,
   V2AppCentricEndpointSecurityGroupsService,
-  V2AppCentricBridgeDomainsService,
   V2AppCentricApplicationProfilesService,
   EndpointSecurityGroup,
   V2AppCentricVrfsService,

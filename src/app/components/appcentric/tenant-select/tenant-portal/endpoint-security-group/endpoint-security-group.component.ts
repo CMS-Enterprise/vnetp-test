@@ -4,7 +4,6 @@ import {
   GetManyEndpointSecurityGroupResponseDto,
   V2AppCentricEndpointSecurityGroupsService,
   V2AppCentricApplicationProfilesService,
-  V2AppCentricBridgeDomainsService,
   EndpointSecurityGroup,
   V2AppCentricVrfsService,
   GetManyVrfResponseDto,
