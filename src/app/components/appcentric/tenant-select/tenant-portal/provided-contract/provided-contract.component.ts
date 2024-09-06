@@ -15,6 +15,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 })
 export class ProvidedContractComponent implements OnInit, OnChanges {
   @Input() public endpointGroupId: string;
+  @Input() public endpointSecurityGroupId: string;
   public contractTableData: GetManyContractResponseDto;
   public contracts: Contract[];
   public selectedContract: Contract;

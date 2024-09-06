@@ -1,5 +1,11 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { Contract, GetManyContractResponseDto, V2AppCentricContractsService, V2AppCentricEndpointGroupsService } from 'client';
+import {
+  Contract,
+  GetManyContractResponseDto,
+  V2AppCentricContractsService,
+  V2AppCentricEndpointGroupsService,
+  V2AppCentricEndpointSecurityGroupsService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -14,9 +20,11 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 })
 export class ConsumedContractComponent implements OnInit, OnChanges {
   @Input() public endpointGroupId: string;
+  @Input() public endpointSecurityGroupId: string;
   public contractTableData: GetManyContractResponseDto;
   public contracts: Contract[];
   public selectedContract: Contract;
+  public mode;
 
   public perPage = 20;
   public tableComponentDto = new TableComponentDto();
@@ -39,13 +47,15 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
 
   constructor(
     private endpointGroupsService: V2AppCentricEndpointGroupsService,
+    private endpointSecurityGroupsService: V2AppCentricEndpointSecurityGroupsService,
     private contractsService: V2AppCentricContractsService,
     private ngx: NgxSmartModalService,
   ) {}
 
   ngOnInit(): void {
+    this.mode = 'epg';
     this.getContracts();
-    this.getConsumedContracts();
+    this.getEpgConsumedContracts();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -55,26 +65,26 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
       changes.endpointGroupId.currentValue !== changes.endpointGroupId.previousValue
     ) {
       this.getContracts();
-      this.getConsumedContracts();
+      this.getEpgConsumedContracts();
       this.clearSelectedContract();
     }
   }
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getConsumedContracts();
+    this.getEpgConsumedContracts();
   }
 
-  public addContract(): void {
+  public addEpgContract(): void {
     this.endpointGroupsService
       .addConsumedContractToEndpointGroupEndpointGroup({
         endpointGroupId: this.endpointGroupId,
         contractId: this.selectedContract.id,
       })
-      .subscribe(() => this.getConsumedContracts());
+      .subscribe(() => this.getEpgConsumedContracts());
   }
 
-  public removeContract(contract: Contract): void {
+  public removeEpgContract(contract: Contract): void {
     const modalDto = new YesNoModalDto('Remove Contract', `Are you sure you want to remove consumed contract ${contract.name}?`);
     const onConfirm = () => {
       this.endpointGroupsService
@@ -82,12 +92,12 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
           endpointGroupId: this.endpointGroupId,
           contractId: contract.id,
         })
-        .subscribe(() => this.getConsumedContracts());
+        .subscribe(() => this.getEpgConsumedContracts());
     };
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  public getConsumedContracts(): void {
+  public getEpgConsumedContracts(): void {
     this.endpointGroupsService
       .getOneEndpointGroup({
         id: this.endpointGroupId,
@@ -161,6 +171,38 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
     return obj;
   };
 
+  public importConsumedContractRelation(event) {
+    if (this.mode === 'esg') {
+      this.importConsumedContractEpgRelation(event);
+    }
+  }
+
+  public importConsumedContractEsgRelation(event): void {
+    const modalDto = new YesNoModalDto(
+      'Import Consumed Contracts',
+      `Are you sure you would like to import ${event.length} Consumed Contract${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      dto.map(relation => {
+        this.endpointGroupsService.addConsumedContractToEndpointGroupEndpointGroup(relation).subscribe(
+          () => {},
+          () => {},
+          () => {
+            this.getEpgConsumedContracts();
+          },
+        );
+      });
+    };
+
+    const onClose = () => {
+      this.getEpgConsumedContracts();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
+
   public importConsumedContractEpgRelation(event): void {
     const modalDto = new YesNoModalDto(
       'Import Consumed Contracts',
@@ -174,16 +216,34 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
           () => {},
           () => {},
           () => {
-            this.getConsumedContracts();
+            this.getEpgConsumedContracts();
           },
         );
       });
     };
 
     const onClose = () => {
-      this.getConsumedContracts();
+      this.getEpgConsumedContracts();
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
+
+  public addContract() {
+    if (this.mode === 'epg') {
+      this.addEpgContract();
+    }
+  }
+
+  public removeContract(contract) {
+    if (this.mode === 'epg') {
+      this.removeEpgContract(contract);
+    }
+  }
+
+  public getConsumedContracts() {
+    if (this.mode === 'epg') {
+      this.getEpgConsumedContracts();
+    }
   }
 }

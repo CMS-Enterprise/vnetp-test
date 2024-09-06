@@ -13,8 +13,8 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
-import { ConsumedContractComponent } from '../../endpoint-group/endpoint-group-modal/consumed-contract/consumed-contract.component';
-import { ProvidedContractComponent } from '../../endpoint-group/endpoint-group-modal/provided-contract/provided-contract.component';
+import { ConsumedContractComponent } from '../../consumed-contract/consumed-contract.component';
+import { ProvidedContractComponent } from '../../provided-contract/provided-contract.component';
 import { EndpointSecurityGroupModalDto } from 'src/app/models/appcentric/endpoint-security-group-dto';
 
 const tabs = [{ name: 'Endpoint Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }];

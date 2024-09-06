@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Routes, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
@@ -11,25 +10,20 @@ import { TableModule } from 'src/app/common/table/table.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { AciRuntimeModule } from 'src/app/components/aci-runtime/aci-runtime.module';
-import { ConsumedContractComponent } from '../consumed-contract/consumed-contract.component';
-import { ProvidedContractComponent } from '../provided-contract/provided-contract.component';
-import { EndpointSecurityGroupModalComponent } from './endpoint-security-group-modal/endpoint-security-group-modal.component';
-import { EndpointSecurityGroupComponent } from './endpoint-security-group.component';
-import { ConsumedContractModule } from '../consumed-contract/consumed-contract.module';
-import { ProvidedContractModule } from '../provided-contract/provided-contract.module';
+import { ConsumedContractComponent } from './consumed-contract.component';
 
-const routes: Routes = [
-  {
-    path: '',
-    component: EndpointSecurityGroupComponent,
-  },
-];
+// const routes: Routes = [
+//   {
+//     path: '',
+//     component: ProvidedContractComponent,
+//   },
+// ];
 
 @NgModule({
-  declarations: [EndpointSecurityGroupComponent, EndpointSecurityGroupModalComponent],
+  declarations: [ConsumedContractComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes),
+    // RouterModule.forChild(routes),
     FontAwesomeModule,
     IconButtonModule,
     ImportExportModule,
@@ -43,9 +37,7 @@ const routes: Routes = [
     NgxSmartModalModule,
     AciRuntimeModule,
     YesNoModalModule,
-    ConsumedContractModule,
-    ProvidedContractModule,
   ],
-  exports: [EndpointSecurityGroupComponent],
+  exports: [ConsumedContractComponent],
 })
-export class EndpointSecurityGroupModule {}
+export class ConsumedContractModule {}
