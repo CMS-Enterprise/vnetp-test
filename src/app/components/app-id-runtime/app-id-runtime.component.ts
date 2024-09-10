@@ -7,8 +7,6 @@ import { AppIdModalDto } from '../../models/other/app-id-modal.dto';
 
 @Component({
   selector: 'app-app-id-runtime',
-  standalone: true,
-  imports: [],
   templateUrl: './app-id-runtime.component.html',
   styleUrl: './app-id-runtime.component.css',
 })

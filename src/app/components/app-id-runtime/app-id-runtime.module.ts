@@ -8,6 +8,6 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
   declarations: [AppIdRuntimeComponent],
   imports: [CommonModule, NgxSmartModalModule],
   providers: [AppIdRuntimeService],
-  exports: [AppIdRuntimeService, AppIdRuntimeComponent],
+  exports: [AppIdRuntimeComponent],
 })
 export class AppIdRuntimeModule {}
