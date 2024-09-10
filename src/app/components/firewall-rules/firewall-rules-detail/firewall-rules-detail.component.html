@@ -4,6 +4,7 @@
 </a>
 
 <h1>{{ TierName }} - {{ FirewallRuleGroup?.name }} FW Rules</h1>
+<button (click)="openAppIdModal()">test</button>
 
 <section class="btn-toolbar" role="toolbar">
   <!-- Add Firewall Rule -->
@@ -222,3 +223,5 @@
     </button>
   </div>
 </ng-template>
+
+<app-app-id-runtime></app-app-id-runtime>

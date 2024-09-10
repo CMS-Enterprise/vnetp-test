@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 README.md
 api.module.ts
 api/api.ts
@@ -32,6 +33,7 @@ api/v1NetworkStaticRoutes.service.ts
 api/v1NetworkSubnets.service.ts
 api/v1NetworkVlans.service.ts
 api/v1RuntimeDataAciRuntime.service.ts
+api/v1RuntimeDataAppIdRuntime.service.ts
 api/v1RuntimeDataF5Config.service.ts
 api/v1RuntimeDataHitcount.service.ts
 api/v1SelfService.service.ts
@@ -50,7 +52,6 @@ api/v2AppCentricRouteProfiles.service.ts
 api/v2AppCentricSubjects.service.ts
 api/v2AppCentricTenants.service.ts
 api/v2AppCentricVrfs.service.ts
-api/v3GlobalMessages.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -58,6 +59,7 @@ index.ts
 model/aciRuntime.ts
 model/aciRuntimeJobCreateDto.ts
 model/appCentricSubnet.ts
+model/appIdRuntimeJobCreateDto.ts
 model/applicationProfile.ts
 model/auditLog.ts
 model/bridgeDomain.ts
@@ -108,21 +110,6 @@ model/endpointGroup.ts
 model/externalRoute.ts
 model/f5ConfigJobCreateDto.ts
 model/f5Runtime.ts
-model/f5RuntimeCertsReference.ts
-model/f5RuntimeData.ts
-model/f5RuntimeFqdnFqdn.ts
-model/f5RuntimeHostInfo.ts
-model/f5RuntimeHostInfoAvailability.ts
-model/f5RuntimeMembersReference.ts
-model/f5RuntimeNestedStats.ts
-model/f5RuntimePartitionInfo.ts
-model/f5RuntimePoliciesReference.ts
-model/f5RuntimePoolMember.ts
-model/f5RuntimePoolReference.ts
-model/f5RuntimePoolReferenceItem.ts
-model/f5RuntimeProfile.ts
-model/f5RuntimeProfilesReference.ts
-model/f5RuntimeVirtualServer.ts
 model/filter.ts
 model/filterEntry.ts
 model/firewallRule.ts
@@ -188,7 +175,6 @@ model/loadBalancerRoute.ts
 model/loadBalancerSelfIp.ts
 model/loadBalancerVirtualServer.ts
 model/loadBalancerVlan.ts
-model/message.ts
 model/models.ts
 model/natRule.ts
 model/natRuleGroup.ts
@@ -200,7 +186,8 @@ model/networkObjectGroup.ts
 model/networkObjectGroupRelationBulkImportCollectionDto.ts
 model/networkObjectGroupRelationBulkImportDto.ts
 model/nodeImportCollectionDto.ts
-model/paginationDTO.ts
+model/panosApplication.ts
+model/panosApplicationReferences.ts
 model/poolImportCollectionDto.ts
 model/routeProfile.ts
 model/ruleOperationDto.ts

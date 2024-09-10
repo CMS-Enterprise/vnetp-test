@@ -14,6 +14,7 @@ import { NetworkObject } from './networkObject';
 import { Zone } from './zone';
 import { ServiceObject } from './serviceObject';
 import { NetworkObjectGroup } from './networkObjectGroup';
+import { PanosApplication } from './panosApplication';
 
 
 export interface FirewallRule { 
@@ -53,6 +54,7 @@ export interface FirewallRule {
     toZone?: Array<Zone>;
     fromZone?: Array<Zone>;
     hitCount?: number;
+    panosApplications?: Array<PanosApplication>;
 }
 export enum FirewallRuleDirectionEnum {
     In = 'In',

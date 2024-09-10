@@ -17,31 +17,46 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { Message } from '../model/models';
-import { PaginationDTO } from '../model/models';
+import { AppIdRuntimeJobCreateDto } from '../model/models';
+import { Job } from '../model/models';
+import { PanosApplication } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
-export interface CreateMessageMessageRequestParams {
-    message: Message;
+export interface CreateRuntimeDataJobAppIdRuntimeRequestParams {
+    appIdRuntimeJobCreateDto: AppIdRuntimeJobCreateDto;
 }
 
-export interface DeleteMessageMessageRequestParams {
-    messageId: string;
-}
-
-export interface GetMessagesMessageRequestParams {
-    page: number;
-    perPage: number;
+export interface GetManyAppIdRuntimeRequestParams {
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
+    /** Number of entities to return per page.      If page is not passed, a number of entities up to this parameter will be returned. Default 20. */
+    perPage?: number;
+    /** Alias for perPage. If perPage is also passed this parameter will be ignored. */
+    limit?: number;
+    /** Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination. */
+    page?: number;
+    /** Filter condition to apply to the query. */
+    filter?: Array<string>;
+    /** Properties to sort the response by. */
+    sort?: Array<string>;
+    /** Properties to group the response by. */
+    group?: Array<string>;
+    /** Properties to select. */
+    fields?: Array<string>;
+    /** Where object for advanced AND/OR queries. */
+    s?: string;
 }
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class V3GlobalMessagesService {
+export class V1RuntimeDataAppIdRuntimeService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -99,17 +114,18 @@ export class V3GlobalMessagesService {
     }
 
     /**
+     * Create App Id Runtime Collection Job
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createMessageMessage(requestParameters: CreateMessageMessageRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Message>;
-    public createMessageMessage(requestParameters: CreateMessageMessageRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Message>>;
-    public createMessageMessage(requestParameters: CreateMessageMessageRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Message>>;
-    public createMessageMessage(requestParameters: CreateMessageMessageRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const message = requestParameters.message;
-        if (message === null || message === undefined) {
-            throw new Error('Required parameter message was null or undefined when calling createMessageMessage.');
+    public createRuntimeDataJobAppIdRuntime(requestParameters: CreateRuntimeDataJobAppIdRuntimeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Job>;
+    public createRuntimeDataJobAppIdRuntime(requestParameters: CreateRuntimeDataJobAppIdRuntimeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Job>>;
+    public createRuntimeDataJobAppIdRuntime(requestParameters: CreateRuntimeDataJobAppIdRuntimeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Job>>;
+    public createRuntimeDataJobAppIdRuntime(requestParameters: CreateRuntimeDataJobAppIdRuntimeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const appIdRuntimeJobCreateDto = requestParameters.appIdRuntimeJobCreateDto;
+        if (appIdRuntimeJobCreateDto === null || appIdRuntimeJobCreateDto === undefined) {
+            throw new Error('Required parameter appIdRuntimeJobCreateDto was null or undefined when calling createRuntimeDataJobAppIdRuntime.');
         }
 
         let headers = this.defaultHeaders;
@@ -141,8 +157,8 @@ export class V3GlobalMessagesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Message>(`${this.configuration.basePath}/v3/global/messages`,
-            message,
+        return this.httpClient.post<Job>(`${this.configuration.basePath}/v1/runtime-data/app-id-runtime/create-runtime-data-job`,
+            appIdRuntimeJobCreateDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -154,77 +170,79 @@ export class V3GlobalMessagesService {
     }
 
     /**
+     * Get many Panos Application
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteMessageMessage(requestParameters: DeleteMessageMessageRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
-    public deleteMessageMessage(requestParameters: DeleteMessageMessageRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
-    public deleteMessageMessage(requestParameters: DeleteMessageMessageRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
-    public deleteMessageMessage(requestParameters: DeleteMessageMessageRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const messageId = requestParameters.messageId;
-        if (messageId === null || messageId === undefined) {
-            throw new Error('Required parameter messageId was null or undefined when calling deleteMessageMessage.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<object>(`${this.configuration.basePath}/v3/global/messages/${encodeURIComponent(String(messageId))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getMessagesMessage(requestParameters: GetMessagesMessageRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<PaginationDTO>;
-    public getMessagesMessage(requestParameters: GetMessagesMessageRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<PaginationDTO>>;
-    public getMessagesMessage(requestParameters: GetMessagesMessageRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<PaginationDTO>>;
-    public getMessagesMessage(requestParameters: GetMessagesMessageRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const page = requestParameters.page;
-        if (page === null || page === undefined) {
-            throw new Error('Required parameter page was null or undefined when calling getMessagesMessage.');
-        }
+    public getManyAppIdRuntime(requestParameters: GetManyAppIdRuntimeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<PanosApplication>>;
+    public getManyAppIdRuntime(requestParameters: GetManyAppIdRuntimeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<PanosApplication>>>;
+    public getManyAppIdRuntime(requestParameters: GetManyAppIdRuntimeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<PanosApplication>>>;
+    public getManyAppIdRuntime(requestParameters: GetManyAppIdRuntimeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const relations = requestParameters.relations;
+        const join = requestParameters.join;
         const perPage = requestParameters.perPage;
-        if (perPage === null || perPage === undefined) {
-            throw new Error('Required parameter perPage was null or undefined when calling getMessagesMessage.');
-        }
+        const limit = requestParameters.limit;
+        const page = requestParameters.page;
+        const filter = requestParameters.filter;
+        const sort = requestParameters.sort;
+        const group = requestParameters.group;
+        const fields = requestParameters.fields;
+        const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (page !== undefined && page !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>page, 'page');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
         if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>perPage, 'perPage');
         }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
+        }
+        if (page !== undefined && page !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
+        }
+        if (filter) {
+            filter.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'filter');
+            })
+        }
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
+        }
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
+        }
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (s !== undefined && s !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>s, 's');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -246,7 +264,7 @@ export class V3GlobalMessagesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<PaginationDTO>(`${this.configuration.basePath}/v3/global/messages`,
+        return this.httpClient.get<Array<PanosApplication>>(`${this.configuration.basePath}/v1/runtime-data/app-id-runtime`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

@@ -28,6 +28,11 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface AddPanosApplicationToFirewallRuleFirewallRuleRequestParams {
+    firewallRuleId: string;
+    panosApplicationId: string;
+}
+
 export interface BulkImportFirewallRulesFirewallRuleRequestParams {
     firewallRuleImportCollectionDto: FirewallRuleImportCollectionDto;
 }
@@ -84,6 +89,11 @@ export interface GetOneFirewallRuleRequestParams {
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
     join?: Array<string>;
+}
+
+export interface RemovePanosApplicationFromFirewallRuleFirewallRuleRequestParams {
+    firewallRuleId: string;
+    panosApplicationId: string;
 }
 
 export interface RestoreOneFirewallRuleRequestParams {
@@ -161,6 +171,57 @@ export class V1NetworkSecurityFirewallRulesService {
             throw Error("key may not be null if value is not object or array");
         }
         return httpParams;
+    }
+
+    /**
+     * Add Panos Application to Firewall Rule
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public addPanosApplicationToFirewallRuleFirewallRule(requestParameters: AddPanosApplicationToFirewallRuleFirewallRuleRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FirewallRule>;
+    public addPanosApplicationToFirewallRuleFirewallRule(requestParameters: AddPanosApplicationToFirewallRuleFirewallRuleRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FirewallRule>>;
+    public addPanosApplicationToFirewallRuleFirewallRule(requestParameters: AddPanosApplicationToFirewallRuleFirewallRuleRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FirewallRule>>;
+    public addPanosApplicationToFirewallRuleFirewallRule(requestParameters: AddPanosApplicationToFirewallRuleFirewallRuleRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const firewallRuleId = requestParameters.firewallRuleId;
+        if (firewallRuleId === null || firewallRuleId === undefined) {
+            throw new Error('Required parameter firewallRuleId was null or undefined when calling addPanosApplicationToFirewallRuleFirewallRule.');
+        }
+        const panosApplicationId = requestParameters.panosApplicationId;
+        if (panosApplicationId === null || panosApplicationId === undefined) {
+            throw new Error('Required parameter panosApplicationId was null or undefined when calling addPanosApplicationToFirewallRuleFirewallRule.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<FirewallRule>(`${this.configuration.basePath}/v1/network-security/firewall-rules/${encodeURIComponent(String(firewallRuleId))}/panos-applications/${encodeURIComponent(String(panosApplicationId))}`,
+            null,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
     /**
@@ -640,6 +701,56 @@ export class V1NetworkSecurityFirewallRulesService {
         return this.httpClient.get<FirewallRule>(`${this.configuration.basePath}/v1/network-security/firewall-rules/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Remove Panos Application from Firewall Rule
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public removePanosApplicationFromFirewallRuleFirewallRule(requestParameters: RemovePanosApplicationFromFirewallRuleFirewallRuleRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FirewallRule>;
+    public removePanosApplicationFromFirewallRuleFirewallRule(requestParameters: RemovePanosApplicationFromFirewallRuleFirewallRuleRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FirewallRule>>;
+    public removePanosApplicationFromFirewallRuleFirewallRule(requestParameters: RemovePanosApplicationFromFirewallRuleFirewallRuleRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FirewallRule>>;
+    public removePanosApplicationFromFirewallRuleFirewallRule(requestParameters: RemovePanosApplicationFromFirewallRuleFirewallRuleRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const firewallRuleId = requestParameters.firewallRuleId;
+        if (firewallRuleId === null || firewallRuleId === undefined) {
+            throw new Error('Required parameter firewallRuleId was null or undefined when calling removePanosApplicationFromFirewallRuleFirewallRule.');
+        }
+        const panosApplicationId = requestParameters.panosApplicationId;
+        if (panosApplicationId === null || panosApplicationId === undefined) {
+            throw new Error('Required parameter panosApplicationId was null or undefined when calling removePanosApplicationFromFirewallRuleFirewallRule.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<FirewallRule>(`${this.configuration.basePath}/v1/network-security/firewall-rules/${encodeURIComponent(String(firewallRuleId))}/panos-applications/${encodeURIComponent(String(panosApplicationId))}`,
+            {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

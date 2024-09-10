@@ -1954,6 +1954,84 @@
         ]
       }
     },
+    "/v1/network-security/firewall-rules/{firewallRuleId}/panos-applications/{panosApplicationId}": {
+      "post": {
+        "operationId": "addPanosApplicationToFirewallRuleFirewallRule",
+        "summary": "",
+        "description": "Add Panos Application to Firewall Rule",
+        "parameters": [
+          {
+            "name": "firewallRuleId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "panosApplicationId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FirewallRule"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/firewall-rules"
+        ]
+      },
+      "delete": {
+        "operationId": "removePanosApplicationFromFirewallRuleFirewallRule",
+        "summary": "",
+        "description": "Remove Panos Application from Firewall Rule",
+        "parameters": [
+          {
+            "name": "firewallRuleId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "panosApplicationId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FirewallRule"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-security/firewall-rules"
+        ]
+      }
+    },
     "/v1/network-security/firewall-rules": {
       "post": {
         "operationId": "createOneFirewallRule",
@@ -20003,81 +20081,115 @@
         ]
       }
     },
-    "/v3/global/messages": {
+    "/v1/runtime-data/app-id-runtime": {
       "get": {
-        "operationId": "getMessagesMessage",
+        "operationId": "getManyAppIdRuntime",
+        "summary": "Get many Panos Application",
         "parameters": [
           {
-            "name": "page",
-            "required": true,
+            "name": "relations",
+            "required": false,
             "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
             "schema": {
               "type": "number"
             }
           },
           {
-            "name": "perPage",
-            "required": true,
+            "name": "limit",
+            "required": false,
             "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
             "schema": {
               "type": "number"
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginationDTO"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/messages"
-        ]
-      },
-      "post": {
-        "operationId": "createMessageMessage",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Message"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Message"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/messages"
-        ]
-      }
-    },
-    "/v3/global/messages/{messageId}": {
-      "delete": {
-        "operationId": "deleteMessageMessage",
-        "parameters": [
+          },
           {
-            "name": "messageId",
-            "required": true,
-            "in": "path",
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
             "schema": {
               "type": "string"
             }
@@ -20089,14 +20201,50 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeleteResult"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PanosApplication"
+                  }
                 }
               }
             }
           }
         },
         "tags": [
-          "v3/global/messages"
+          "v1/runtime-data/app-id-runtime"
+        ]
+      }
+    },
+    "/v1/runtime-data/app-id-runtime/create-runtime-data-job": {
+      "post": {
+        "operationId": "createRuntimeDataJobAppIdRuntime",
+        "summary": "",
+        "description": "Create App Id Runtime Collection Job",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppIdRuntimeJobCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/app-id-runtime"
         ]
       }
     },
@@ -24592,6 +24740,110 @@
           "tierId"
         ]
       },
+      "PanosApplication": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "panosId": {
+            "type": "string",
+            "readOnly": true
+          },
+          "panosVersion": {
+            "type": "string"
+          },
+          "minver": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "oriCountry": {
+            "type": "string"
+          },
+          "oriLanguage": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "subCategory": {
+            "type": "string"
+          },
+          "technology": {
+            "type": "string"
+          },
+          "virusIdent": {
+            "type": "boolean"
+          },
+          "evasiveBehavior": {
+            "type": "boolean"
+          },
+          "consumeBigBandwidth": {
+            "type": "boolean"
+          },
+          "usedByMalware": {
+            "type": "boolean"
+          },
+          "ableToTransferFile": {
+            "type": "boolean"
+          },
+          "hasKnownVulnerability": {
+            "type": "boolean"
+          },
+          "tunnelOtherApplication": {
+            "type": "boolean"
+          },
+          "proneToMisuse": {
+            "type": "boolean"
+          },
+          "pervasiveUse": {
+            "type": "boolean"
+          },
+          "references": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "link": {
+                "type": "string"
+              }
+            }
+          },
+          "useApplicationsMembers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "defaultPortMember": {
+            "type": "string"
+          },
+          "identByIpProtocol": {
+            "type": "string"
+          },
+          "risk": {
+            "type": "string"
+          },
+          "firewallRules": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          },
+          "runtimeDataLastRefreshed": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "references"
+        ]
+      },
       "FirewallRule": {
         "type": "object",
         "properties": {
@@ -24781,6 +25033,13 @@
           },
           "hitCount": {
             "type": "number"
+          },
+          "panosApplications": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PanosApplication"
+            }
           }
         },
         "required": [
@@ -25908,6 +26167,10 @@
             "items": {
               "$ref": "#/components/schemas/LoadBalancerRoute"
             }
+          },
+          "panosVersion": {
+            "type": "string",
+            "readOnly": true
           }
         },
         "required": [
@@ -26104,6 +26367,13 @@
           },
           "hitCount": {
             "type": "number"
+          },
+          "panosApplications": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PanosApplication"
+            }
           },
           "tierName": {
             "type": "string"
@@ -27143,7 +27413,8 @@
               "FirewallRule",
               "NatRule",
               "F5Config",
-              "AciRuntime"
+              "AciRuntime",
+              "AppIdRuntime"
             ]
           },
           "datacenterId": {
@@ -27182,7 +27453,8 @@
               "FirewallRule",
               "NatRule",
               "F5Config",
-              "AciRuntime"
+              "AciRuntime",
+              "AppIdRuntime"
             ]
           },
           "groupId": {
@@ -27201,468 +27473,6 @@
           "data"
         ]
       },
-      "F5RuntimeHostInfo": {
-        "type": "object",
-        "properties": {
-          "hostname": {
-            "type": "string",
-            "description": "Hostname of the F5 device",
-            "readOnly": true
-          },
-          "softwareVersion": {
-            "type": "string",
-            "description": "Software version of the F5 device",
-            "readOnly": true
-          },
-          "availability": {
-            "type": "object",
-            "properties": {
-              "status": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "required": [
-          "hostname",
-          "softwareVersion",
-          "availability"
-        ]
-      },
-      "F5RuntimeFqdnFqdn": {
-        "type": "object",
-        "properties": {
-          "autopopulate": {
-            "type": "string",
-            "description": "Autopopulate state",
-            "readOnly": true
-          }
-        },
-        "required": [
-          "autopopulate"
-        ]
-      },
-      "F5RuntimePoolMember": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Member name",
-            "readOnly": true
-          },
-          "address": {
-            "type": "string",
-            "description": "Member address",
-            "readOnly": true
-          },
-          "ephemeral": {
-            "type": "string",
-            "description": "Ephemeral state",
-            "readOnly": true
-          },
-          "fqdn": {
-            "description": "FQDN configuration",
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/F5RuntimeFqdnFqdn"
-              }
-            ]
-          },
-          "priorityGroup": {
-            "type": "number",
-            "description": "Priority group",
-            "readOnly": true
-          },
-          "ratio": {
-            "type": "number",
-            "description": "Ratio",
-            "readOnly": true
-          },
-          "state": {
-            "type": "string",
-            "description": "State",
-            "readOnly": true
-          },
-          "fullPath": {
-            "type": "string",
-            "description": "Full path",
-            "readOnly": true
-          }
-        },
-        "required": [
-          "name",
-          "address",
-          "ephemeral",
-          "fqdn",
-          "priorityGroup",
-          "ratio",
-          "state",
-          "fullPath"
-        ]
-      },
-      "F5RuntimeMembersReference": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "description": "Array of members",
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/F5RuntimePoolMember"
-            }
-          }
-        },
-        "required": [
-          "items"
-        ]
-      },
-      "F5RuntimePoolReferenceItem": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Pool name",
-            "readOnly": true
-          },
-          "monitor": {
-            "type": "string",
-            "description": "Monitor",
-            "readOnly": true
-          },
-          "membersReference": {
-            "description": "Reference to pool members",
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/F5RuntimeMembersReference"
-              }
-            ]
-          }
-        },
-        "required": [
-          "name",
-          "monitor",
-          "membersReference"
-        ]
-      },
-      "F5RuntimeNestedStats": {
-        "type": "object",
-        "properties": {
-          "kind": {
-            "type": "string",
-            "description": "The type of the nested stats"
-          },
-          "selfLink": {
-            "type": "string",
-            "description": "A URI reference to the resource"
-          },
-          "entries": {
-            "type": "object",
-            "description": "The entries of the nested stats"
-          }
-        },
-        "required": [
-          "kind",
-          "selfLink",
-          "entries"
-        ]
-      },
-      "F5RuntimePoolReference": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "description": "Reference to pool items",
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/F5RuntimePoolReferenceItem"
-              }
-            ]
-          },
-          "stats": {
-            "description": "Statistics related to the pool",
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/F5RuntimeNestedStats"
-              }
-            ]
-          }
-        },
-        "required": [
-          "items",
-          "stats"
-        ]
-      },
-      "F5RuntimeProfile": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Profile name",
-            "readOnly": true
-          },
-          "partition": {
-            "type": "string",
-            "description": "Partition name",
-            "readOnly": true
-          },
-          "context": {
-            "type": "string",
-            "description": "Context of the profile",
-            "readOnly": true
-          }
-        },
-        "required": [
-          "name",
-          "partition",
-          "context"
-        ]
-      },
-      "F5RuntimeProfilesReference": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "description": "Array of profiles",
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/F5RuntimeProfile"
-            }
-          }
-        },
-        "required": [
-          "items"
-        ]
-      },
-      "F5RuntimePoliciesReference": {
-        "type": "object",
-        "properties": {
-          "link": {
-            "type": "string",
-            "description": "Link to the policy",
-            "readOnly": true
-          },
-          "isSubcollection": {
-            "type": "boolean",
-            "description": "Whether it is a subcollection",
-            "readOnly": true
-          }
-        },
-        "required": [
-          "link",
-          "isSubcollection"
-        ]
-      },
-      "F5RuntimeCertsReference": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Certificate name",
-            "readOnly": true
-          },
-          "partition": {
-            "type": "string",
-            "description": "Partition name",
-            "readOnly": true
-          },
-          "expirationDate": {
-            "type": "number",
-            "description": "Expiration date as a timestamp",
-            "readOnly": true
-          },
-          "expirationString": {
-            "type": "string",
-            "description": "Expiration date as a string",
-            "readOnly": true
-          },
-          "subject": {
-            "type": "string",
-            "description": "Subject of the certificate",
-            "readOnly": true
-          },
-          "inUse": {
-            "type": "boolean",
-            "description": "If the certificate is in use",
-            "readOnly": true
-          }
-        },
-        "required": [
-          "name",
-          "partition",
-          "expirationDate",
-          "expirationString",
-          "subject",
-          "inUse"
-        ]
-      },
-      "F5RuntimeVirtualServer": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Virtual server name",
-            "readOnly": true
-          },
-          "description": {
-            "type": "string",
-            "description": "Description of the virtual server",
-            "readOnly": true
-          },
-          "partition": {
-            "type": "string",
-            "description": "Partition name",
-            "readOnly": true
-          },
-          "enabled": {
-            "type": "boolean",
-            "description": "Whether the virtual server is enabled",
-            "readOnly": true
-          },
-          "addressStatus": {
-            "type": "string",
-            "description": "Address status",
-            "readOnly": true
-          },
-          "connectionLimit": {
-            "type": "number",
-            "description": "Connection limit",
-            "readOnly": true
-          },
-          "ipProtocol": {
-            "type": "string",
-            "description": "IP protocol",
-            "readOnly": true
-          },
-          "destination": {
-            "type": "string",
-            "description": "Destination address",
-            "readOnly": true
-          },
-          "mask": {
-            "type": "string",
-            "description": "Subnet mask",
-            "readOnly": true
-          },
-          "poolReference": {
-            "description": "Reference to the pool associated with the virtual server",
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/F5RuntimePoolReference"
-              }
-            ]
-          },
-          "profilesReference": {
-            "description": "Reference to profiles associated with the virtual server",
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/F5RuntimeProfilesReference"
-              }
-            ]
-          },
-          "policiesReference": {
-            "description": "Reference to policies associated with the virtual server",
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/F5RuntimePoliciesReference"
-              }
-            ]
-          },
-          "certsReference": {
-            "description": "Reference to certificates associated with the virtual server",
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/F5RuntimeCertsReference"
-            }
-          },
-          "stats": {
-            "description": "Statistics for the virtual server",
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/F5RuntimeNestedStats"
-              }
-            ]
-          }
-        },
-        "required": [
-          "name",
-          "description",
-          "partition",
-          "enabled",
-          "addressStatus",
-          "connectionLimit",
-          "ipProtocol",
-          "destination",
-          "mask",
-          "poolReference",
-          "profilesReference",
-          "policiesReference",
-          "certsReference",
-          "stats"
-        ]
-      },
-      "F5RuntimePartitionInfo": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Partition name"
-          },
-          "virtualServers": {
-            "description": "Array of virtual servers in the partition",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/F5RuntimeVirtualServer"
-            }
-          }
-        },
-        "required": [
-          "name",
-          "virtualServers"
-        ]
-      },
-      "F5RuntimeData": {
-        "type": "object",
-        "properties": {
-          "hostInfo": {
-            "description": "Host information",
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/F5RuntimeHostInfo"
-              }
-            ]
-          },
-          "partitionInfo": {
-            "description": "Partition information",
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/F5RuntimePartitionInfo"
-            }
-          },
-          "certInfo": {
-            "description": "Certificate information",
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/F5RuntimeCertsReference"
-            }
-          }
-        },
-        "required": [
-          "hostInfo",
-          "partitionInfo",
-          "certInfo"
-        ]
-      },
       "F5Runtime": {
         "type": "object",
         "properties": {
@@ -27677,7 +27487,7 @@
             "type": "string"
           },
           "data": {
-            "$ref": "#/components/schemas/F5RuntimeData"
+            "type": "object"
           },
           "createdAt": {
             "format": "date-time",
@@ -27712,7 +27522,8 @@
               "FirewallRule",
               "NatRule",
               "F5Config",
-              "AciRuntime"
+              "AciRuntime",
+              "AppIdRuntime"
             ]
           },
           "datacenterId": {
@@ -27736,7 +27547,8 @@
               "FirewallRule",
               "NatRule",
               "F5Config",
-              "AciRuntime"
+              "AciRuntime",
+              "AppIdRuntime"
             ]
           },
           "datacenterId": {
@@ -27753,61 +27565,30 @@
           "type"
         ]
       },
-      "PaginationDTO": {
+      "AppIdRuntimeJobCreateDto": {
         "type": "object",
         "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "type": {
+            "type": "string",
+            "enum": [
+              "FirewallRule",
+              "NatRule",
+              "F5Config",
+              "AciRuntime",
+              "AppIdRuntime"
+            ]
           },
-          "count": {
-            "type": "number"
-          },
-          "total": {
-            "type": "number"
-          },
-          "page": {
-            "type": "number"
-          },
-          "pageCount": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "data",
-          "count",
-          "total",
-          "page",
-          "pageCount"
-        ]
-      },
-      "Message": {
-        "type": "object",
-        "properties": {
-          "id": {
+          "datacenterId": {
             "type": "string"
           },
-          "description": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "timestamp": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
+          "tierId": {
+            "type": "string"
           }
         },
         "required": [
-          "id",
-          "description",
-          "timestamp"
+          "type",
+          "tierId"
         ]
-      },
-      "DeleteResult": {
-        "type": "object",
-        "properties": {}
       }
     }
   }

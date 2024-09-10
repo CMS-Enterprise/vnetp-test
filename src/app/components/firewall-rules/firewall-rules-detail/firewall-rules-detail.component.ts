@@ -44,6 +44,7 @@ import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-r
 import UndeployedChangesUtil from '../../../utils/UndeployedChangesUtil';
 import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
 import { RuntimeDataService } from '../../../services/runtime-data.service';
+import { AppIdModalDto } from '../../../models/other/app-id-modal.dto';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -98,6 +99,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   isRefreshingRuntimeData = false;
   jobStatus: string;
+
+  appIdModalSubscription: Subscription;
 
   // Templates
   @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
@@ -196,6 +199,24 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       this.getFirewallRuleGroup();
       this.ngx.resetModalData('firewallRuleOperationModal');
       this.firewallRuleOperationModalSubscription.unsubscribe();
+    });
+  }
+
+  public openAppIdModal(firewallRule: FirewallRule): void {
+    const dto: AppIdModalDto = {
+      tierId: this.TierId,
+      firewallRuleId: firewallRule.id,
+    };
+    this.subscribeToAppIdModal();
+    this.ngx.setModalData(dto, 'appIdModal');
+    this.ngx.open('appIdModal');
+  }
+
+  private subscribeToAppIdModal(): void {
+    this.appIdModalSubscription = this.ngx.getModal('appIdModal').onCloseFinished.subscribe(() => {
+      this.getFirewallRuleGroup();
+      this.ngx.resetModalData('appIdModal');
+      this.appIdModalSubscription.unsubscribe();
     });
   }
 

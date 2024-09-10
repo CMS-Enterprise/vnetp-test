@@ -20,7 +20,8 @@ export enum F5ConfigJobCreateDtoTypeEnum {
     FirewallRule = 'FirewallRule',
     NatRule = 'NatRule',
     F5Config = 'F5Config',
-    AciRuntime = 'AciRuntime'
+    AciRuntime = 'AciRuntime',
+    AppIdRuntime = 'AppIdRuntime'
 };
 
 

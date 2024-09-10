@@ -11,13 +11,12 @@
  */
 
 
-export interface AciRuntimeJobCreateDto { 
-    type: AciRuntimeJobCreateDtoTypeEnum;
+export interface AppIdRuntimeJobCreateDto { 
+    type: AppIdRuntimeJobCreateDtoTypeEnum;
     datacenterId?: string;
-    vlanId?: string;
-    endpointGroupId?: string;
+    tierId: string;
 }
-export enum AciRuntimeJobCreateDtoTypeEnum {
+export enum AppIdRuntimeJobCreateDtoTypeEnum {
     FirewallRule = 'FirewallRule',
     NatRule = 'NatRule',
     F5Config = 'F5Config',

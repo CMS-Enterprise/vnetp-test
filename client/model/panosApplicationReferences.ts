@@ -9,13 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { F5RuntimeProfile } from './f5RuntimeProfile';
 
 
-export interface F5RuntimeProfilesReference { 
-    /**
-     * Array of profiles
-     */
-    readonly items: Array<F5RuntimeProfile>;
+export interface PanosApplicationReferences { 
+    name?: string;
+    link?: string;
 }
 
