@@ -3,6 +3,7 @@ import { TableColumn } from '../table/table.component';
 
 export interface LiteTableConfig<T> {
   columns: TableColumn<T>[];
+  rowStyle?: (row: T) => any;
 }
 
 @Component({

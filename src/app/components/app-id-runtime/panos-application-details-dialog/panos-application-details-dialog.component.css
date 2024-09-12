@@ -1,0 +1,40 @@
+.details-container {
+  padding: 1.25rem;
+}
+
+.details-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.details-section {
+  margin-bottom: 1.25rem;
+}
+
+.details-section h3 {
+  font-size: 1.125rem;
+  margin-bottom: 0.625rem;
+}
+
+.details-section ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.details-section li {
+  margin-bottom: 0.5rem;
+}
+
+.details-section a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.details-section a:hover {
+  text-decoration: underline;
+}
+
+.scrollable-card {
+  max-height: 12.5rem;
+  overflow-y: auto;
+}

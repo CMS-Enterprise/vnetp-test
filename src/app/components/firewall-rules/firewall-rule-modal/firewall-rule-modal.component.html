@@ -10,6 +10,10 @@
     <h4 class="modal-title">Firewall Rule</h4>
   </header>
 
+  <div *ngIf="ModalMode === modalMode.Edit" class="button-container text-right">
+    <button class="inline-button" (click)="openAppIdModal()">Manage App ID</button>
+  </div>
+
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
       <div class="form-group">
@@ -504,6 +508,12 @@
       </div>
     </div>
 
+    <div *ngIf="!isAppIdEmpty()">
+      <hr />
+      <h3 class="mb-2">Panos Applications</h3>
+      <app-lite-table [config]="config" [data]="liteTableData"></app-lite-table>
+    </div>
+
     <footer class="modal-footer">
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="cancel()">Cancel</button>
 
@@ -516,3 +526,8 @@
 </ngx-smart-modal>
 
 <app-firewall-rule-object-info-modal></app-firewall-rule-object-info-modal>
+
+<ng-template #appIdColumnTemplate let-appId="datum">
+  <fa-icon *ngIf="appId.remove === false" class="icon" [icon]="['fas', 'plus']"></fa-icon>
+  <fa-icon *ngIf="appId.remove === true" class="icon" [icon]="['fas', 'minus']"></fa-icon>
+</ng-template>

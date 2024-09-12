@@ -1954,67 +1954,22 @@
         ]
       }
     },
-    "/v1/network-security/firewall-rules/{firewallRuleId}/panos-applications/{panosApplicationId}": {
+    "/v1/network-security/firewall-rules/panos-applications": {
       "post": {
-        "operationId": "addPanosApplicationToFirewallRuleFirewallRule",
+        "operationId": "modifyPanosApplicationsFirewallRule",
         "summary": "",
-        "description": "Add Panos Application to Firewall Rule",
-        "parameters": [
-          {
-            "name": "firewallRuleId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "panosApplicationId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FirewallRule"
-                }
+        "description": "Modify Panos Applications on Firewall Rule",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PanosApplicationFirewallRuleDto"
               }
             }
           }
         },
-        "tags": [
-          "v1/network-security/firewall-rules"
-        ]
-      },
-      "delete": {
-        "operationId": "removePanosApplicationFromFirewallRuleFirewallRule",
-        "summary": "",
-        "description": "Remove Panos Application from Firewall Rule",
-        "parameters": [
-          {
-            "name": "firewallRuleId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "panosApplicationId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "201": {
             "description": "",
@@ -26563,6 +26518,31 @@
           "destinationGroupId",
           "ruleIndex",
           "name"
+        ]
+      },
+      "PanosApplicationFirewallRuleDto": {
+        "type": "object",
+        "properties": {
+          "firewallRuleId": {
+            "type": "string"
+          },
+          "panosApplicationsToAdd": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PanosApplication"
+            }
+          },
+          "panosApplicationsToRemove": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PanosApplication"
+            }
+          }
+        },
+        "required": [
+          "firewallRuleId",
+          "panosApplicationsToAdd",
+          "panosApplicationsToRemove"
         ]
       },
       "ServiceObjectGroupRelationBulkImportDto": {

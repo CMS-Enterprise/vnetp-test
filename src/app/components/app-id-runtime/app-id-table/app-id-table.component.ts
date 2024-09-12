@@ -1,0 +1,57 @@
+import { Component, Input } from '@angular/core';
+import { FirewallRule, PanosApplication } from '../../../../../client';
+import { AppIdRuntimeService } from '../app-id-runtime.service';
+import { MatDialog } from '@angular/material/dialog';
+import { PanosApplicationDetailsDialogComponent } from '../panos-application-details-dialog/panos-application-details-dialog.component';
+
+@Component({
+  selector: 'app-app-id-table',
+  templateUrl: './app-id-table.component.html',
+  styleUrls: ['./app-id-table.component.css'],
+})
+export class AppIdTableComponent {
+  @Input() type = '';
+  @Input() applications: PanosApplication[] = [];
+  @Input() firewallRule: FirewallRule;
+
+  filteredApplications: PanosApplication[];
+
+  searchQuery = '';
+
+  constructor(private appIdService: AppIdRuntimeService, public dialog: MatDialog) {}
+
+  public addPanosAppToFirewallRule(panosApplication: PanosApplication): void {
+    this.appIdService.addPanosAppToFirewallRule(panosApplication, this.firewallRule);
+  }
+
+  public removePanosAppFromFirewallRule(panosApplication: PanosApplication): void {
+    this.appIdService.removePanosAppFromFirewallRule(panosApplication, this.firewallRule);
+  }
+
+  onSearch(): void {
+    const query = this.searchQuery.toLowerCase().trim();
+
+    this.filteredApplications = this.applications.filter(
+      app =>
+        this.includesQuery(app.panosId, query) ||
+        this.includesQuery(app.minver, query) ||
+        this.includesQuery(app.name, query) ||
+        this.includesQuery(app.oriCountry, query) ||
+        this.includesQuery(app.oriLanguage, query) ||
+        this.includesQuery(app.category, query) ||
+        this.includesQuery(app.subCategory, query) ||
+        this.includesQuery(app.technology, query) ||
+        this.includesQuery(app.risk?.toString(), query),
+    );
+  }
+
+  private includesQuery(field: string | undefined, query: string): boolean {
+    return field ? field.toLowerCase().includes(query) : false;
+  }
+
+  openDetailsDialog(app: PanosApplication): void {
+    this.dialog.open(PanosApplicationDetailsDialogComponent, {
+      data: app,
+    });
+  }
+}

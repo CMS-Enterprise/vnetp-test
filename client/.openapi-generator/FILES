@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 README.md
 api.module.ts
 api/api.ts
@@ -205,6 +204,7 @@ model/networkObjectGroupRelationBulkImportDto.ts
 model/nodeImportCollectionDto.ts
 model/paginationDTO.ts
 model/panosApplication.ts
+model/panosApplicationFirewallRuleDto.ts
 model/panosApplicationReferences.ts
 model/poolImportCollectionDto.ts
 model/routeProfile.ts

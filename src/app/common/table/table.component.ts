@@ -21,7 +21,7 @@ export interface TableConfig<T> {
   advancedSearchAdapter?: AdvancedSearchAdapter<T>;
   hideAdvancedSearch?: boolean;
   hideSearchBar?: boolean;
-  expandableRows?: () => TemplateRef<any>;
+  expandableRows?: (() => TemplateRef<any>[]) | (() => TemplateRef<any>);
 }
 
 /**

@@ -1,4 +1,6 @@
+import { FirewallRule, Tier } from '../../../../client';
+
 export class AppIdModalDto {
-  tierId: string;
-  firewallRuleId: string;
+  tier: Tier;
+  firewallRule: FirewallRule;
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -21,11 +21,16 @@ import {
   V1NetworkSecurityServiceObjectGroupsService,
   V1NetworkSecurityServiceObjectsService,
   FirewallRuleGroupTypeEnum,
+  PanosApplication,
+  Tier,
 } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import FormUtils from '../../../utils/FormUtils';
+import { AppIdRuntimeService } from '../../app-id-runtime/app-id-runtime.service';
+import { AppIdModalDto } from '../../../models/other/app-id-modal.dto';
+import { TierContextService } from '../../../services/tier-context.service';
+import { LiteTableConfig } from '../../../common/lite-table/lite-table.component';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -57,6 +62,26 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   selectedFromZones: Zone[];
   firewallRuleGroupType = FirewallRuleGroupTypeEnum.Intervrf;
 
+  appIdModalSubscription: Subscription;
+
+  firewallRule: FirewallRule;
+  liteTableData: PanosApplication[];
+
+  modalMode = ModalMode;
+
+  @ViewChild('appIdColumnTemplate') iconTemplate: TemplateRef<any>;
+
+  config: LiteTableConfig<PanosApplication> = {
+    columns: [
+      { name: '', template: () => this.iconTemplate },
+      { name: 'Name', property: 'name' },
+      { name: 'Category', property: 'category' },
+      { name: 'Sub Category', property: 'subCategory' },
+      { name: 'Risk', property: 'risk' },
+    ],
+    rowStyle: (row: PanosApplication) => ((row as any).remove ? 'row-red' : 'row-green'),
+  };
+
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: UntypedFormBuilder,
@@ -66,13 +91,42 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
+    private appIdService: AppIdRuntimeService,
+    private tierContextService: TierContextService,
   ) {}
+
+  public openAppIdModal(): void {
+    const tier = this.tierContextService.currentTierValue;
+
+    const dto: AppIdModalDto = {
+      tier,
+      firewallRule: this.firewallRule,
+    };
+    this.subscribeToAppIdModal();
+    this.ngx.setModalData(dto, 'appIdModal');
+    this.ngx.open('appIdModal');
+  }
+
+  private subscribeToAppIdModal(): void {
+    this.appIdModalSubscription = this.ngx.getModal('appIdModal').onCloseFinished.subscribe(() => {
+      const appsToAdd = this.appIdService.dto.panosApplicationsToAdd.map(app => ({ ...app, remove: false }));
+      const appsToRemove = this.appIdService.dto.panosApplicationsToRemove.map(app => ({ ...app, remove: true }));
+      this.liteTableData = [...appsToAdd, ...appsToRemove];
+      this.ngx.resetModalData('appIdModal');
+      this.appIdModalSubscription.unsubscribe();
+    });
+  }
+
+  saveAppId(): void {
+    this.appIdService.saveDto(this.firewallRule.id).subscribe(() => {
+      this.appIdService.resetDto();
+      this.appIdService.loadPanosApplications(true);
+    });
+  }
 
   save() {
     this.submitted = true;
     if (this.form.invalid) {
-      console.log('form invalid');
-      console.log(new FormUtils().findInvalidControlsRecursive(this.form));
       return;
     }
 
@@ -152,6 +206,11 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           () => {},
         );
     } else {
+      this.appIdService.saveDto(this.FirewallRuleId).subscribe(() => {
+        this.appIdService.resetDto();
+        this.appIdService.loadPanosApplications(true);
+      });
+
       this.firewallRuleService
         .updateOneFirewallRule({
           id: this.FirewallRuleId,
@@ -167,10 +226,13 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   }
 
   closeModal() {
+    this.appIdService.resetDto();
     this.ngx.close('firewallRuleModal');
   }
 
   cancel() {
+    this.appIdService.resetDto();
+
     this.ngx.close('firewallRuleModal');
   }
 
@@ -208,6 +270,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     this.serviceObjectGroups = dto.ServiceObjectGroups;
 
     const firewallRule = dto.FirewallRule;
+    this.firewallRule = firewallRule;
 
     if (firewallRule !== undefined) {
       this.form.controls.name.setValue(firewallRule.name);
@@ -596,11 +659,17 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     this.submitted = false;
     this.buildForm();
     this.setFormValidators();
+    this.appIdService.resetDto();
+  }
+
+  public isAppIdEmpty(): boolean {
+    return this.appIdService.isDtoEmpty();
   }
 
   ngOnInit() {
     this.buildForm();
     this.setFormValidators();
+    this.appIdService.loadPanosApplications();
   }
 
   ngOnDestroy() {

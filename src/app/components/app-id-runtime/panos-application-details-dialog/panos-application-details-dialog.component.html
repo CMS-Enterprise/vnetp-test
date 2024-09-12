@@ -1,0 +1,119 @@
+<div class="details-container">
+  <h2 class="details-title">{{ data.name }}</h2>
+
+  <div class="row">
+    <!-- General Information -->
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <div class="card-header">General Information</div>
+        <div class="card-body">
+          <ul>
+            <li><strong>Panos ID:</strong> {{ data.panosId || 'N/A' }}</li>
+            <li><strong>Panos Version:</strong> {{ data.panosVersion }}</li>
+            <li><strong>Minimum Version:</strong> {{ data.minver || 'N/A' }}</li>
+            <li><strong>Country of Origin:</strong> {{ data.oriCountry || 'N/A' }}</li>
+            <li><strong>Language of Origin:</strong> {{ data.oriLanguage || 'N/A' }}</li>
+            <li><strong>Category:</strong> {{ data.category }}</li>
+            <li><strong>Subcategory:</strong> {{ data.subCategory || 'N/A' }}</li>
+            <li><strong>Technology:</strong> {{ data.technology || 'N/A' }}</li>
+            <li><strong>Risk:</strong> {{ data.risk }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Information -->
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <div class="card-header">Security Information</div>
+        <div class="card-body">
+          <ul>
+            <li><strong>Identified by Virus:</strong> {{ data.virusIdent === null ? 'N/A' : data.virusIdent ? 'Yes' : 'No' }}</li>
+            <li><strong>Evasive Behavior:</strong> {{ data.evasiveBehavior === null ? 'N/A' : data.evasiveBehavior ? 'Yes' : 'No' }}</li>
+            <li>
+              <strong>Consumes Big Bandwidth:</strong>
+              {{ data.consumeBigBandwidth === null ? 'N/A' : data.consumeBigBandwidth ? 'Yes' : 'No' }}
+            </li>
+            <li><strong>Used by Malware:</strong> {{ data.usedByMalware === null ? 'N/A' : data.usedByMalware ? 'Yes' : 'No' }}</li>
+            <li>
+              <strong>Able to Transfer Files:</strong>
+              {{ data.ableToTransferFile === null ? 'N/A' : data.ableToTransferFile ? 'Yes' : 'No' }}
+            </li>
+            <li>
+              <strong>Has Known Vulnerability:</strong>
+              {{ data.hasKnownVulnerability === null ? 'N/A' : data.hasKnownVulnerability ? 'Yes' : 'No' }}
+            </li>
+            <li>
+              <strong>Tunnels Other Applications:</strong>
+              {{ data.tunnelOtherApplication === null ? 'N/A' : data.tunnelOtherApplication ? 'Yes' : 'No' }}
+            </li>
+            <li><strong>Prone to Misuse:</strong> {{ data.proneToMisuse === null ? 'N/A' : data.proneToMisuse ? 'Yes' : 'No' }}</li>
+            <li><strong>Pervasive Use:</strong> {{ data.pervasiveUse === null ? 'N/A' : data.pervasiveUse ? 'Yes' : 'No' }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- References (Scrollable) -->
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <div class="card-header">References</div>
+        <div class="card-body scrollable-card">
+          <ul>
+            <li *ngFor="let ref of data.references; else: noReferences">
+              <strong>{{ ref?.name }}:</strong> {{ ref?.link || 'N/A' }}
+            </li>
+            <ng-template #noReferences>
+              <li>No References</li>
+            </ng-template>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Applications Used (Scrollable) -->
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <div class="card-header">Applications Used</div>
+        <div class="card-body scrollable-card">
+          <ul *ngIf="data.useApplicationsMembers?.length; else noApplications">
+            <li *ngFor="let app of data.useApplicationsMembers">{{ app }}</li>
+          </ul>
+          <ng-template #noApplications>
+            <li>No Applications Used</li>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Network Information -->
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <div class="card-header">Network Information</div>
+        <div class="card-body">
+          <ul>
+            <li><strong>Default Port:</strong> {{ data.defaultPortMember || 'N/A' }}</li>
+            <li><strong>Identified by IP Protocol:</strong> {{ data.identByIpProtocol || 'N/A' }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firewall Rules (Scrollable) -->
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <div class="card-header">Firewall Rules</div>
+        <div class="card-body scrollable-card">
+          <ul *ngIf="data.firewallRules?.length; else noFirewallRules">
+            <li *ngFor="let rule of data.firewallRules">{{ rule.name }}</li>
+          </ul>
+          <ng-template #noFirewallRules>
+            <li>No Firewall Rules</li>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-secondary float-right" mat-dialog-close>Close</button>
+</div>
