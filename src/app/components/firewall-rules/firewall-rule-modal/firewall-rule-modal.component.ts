@@ -22,7 +22,6 @@ import {
   V1NetworkSecurityServiceObjectsService,
   FirewallRuleGroupTypeEnum,
   PanosApplication,
-  Tier,
 } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
