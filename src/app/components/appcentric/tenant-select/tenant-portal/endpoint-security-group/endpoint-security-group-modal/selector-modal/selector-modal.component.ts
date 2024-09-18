@@ -66,7 +66,6 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
   public save() {
     const modalSelector = {} as any;
 
-    let selectorType;
     modalSelector.endpointSecurityGroupId = this.endpointSecurityGroupId;
     if (this.navIndex === 0) {
       modalSelector.selectorType = 'Tag';
