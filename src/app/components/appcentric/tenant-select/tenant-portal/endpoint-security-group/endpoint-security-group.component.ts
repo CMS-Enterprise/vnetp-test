@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
-import { EndpointSecurityGroupModalDto } from 'src/app/models/appcentric/endpoint-security-group-dto';
+import { EndpointSecurityGroupModalDto } from 'src/app/models/appcentric/endpoint-security-group-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
@@ -108,7 +108,7 @@ export class EndpointSecurityGroupComponent implements OnInit {
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        relations: ['applicationProfile', 'vrf'],
+        relations: ['applicationProfile', 'vrf', 'selectors'],
       })
       .subscribe(
         data => {
@@ -182,11 +182,14 @@ export class EndpointSecurityGroupComponent implements OnInit {
   }
 
   public openEndpointSecurityGroupModal(modalMode: ModalMode, endpointSecurityGroup?: EndpointSecurityGroup): void {
-    const dto = new EndpointSecurityGroupModalDto();
+    const dto = {} as any;
 
     dto.modalMode = modalMode;
 
     dto.endpointSecurityGroup = endpointSecurityGroup;
+    if (dto.modalMode === 'Edit') {
+      dto.selectors = endpointSecurityGroup.selectors;
+    }
 
     this.subscribeToApEndpointSecurityGroupModal();
     this.ngx.setModalData(dto, 'endpointSecurityGroupModal');

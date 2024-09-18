@@ -14,7 +14,13 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { ConsumedContractComponent } from '../../consumed-contract/consumed-contract.component';
 import { ProvidedContractComponent } from '../../provided-contract/provided-contract.component';
-import { EndpointSecurityGroupModalDto } from 'src/app/models/appcentric/endpoint-security-group-dto';
+import { EndpointSecurityGroupModalDto } from 'src/app/models/appcentric/endpoint-security-group-modal-dto';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
+import { TableConfig } from 'src/app/common/table/table.component';
+import { Subscription } from 'rxjs';
+import { TableContextService } from 'src/app/services/table-context.service';
+import { SelectorModalDto } from 'src/app/models/appcentric/appcentric-selector-modal-dto';
 
 const tabs = [{ name: 'Endpoint Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }];
 
@@ -37,6 +43,12 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   public currentTab = 'Endpoint Group';
   public selectedBridgeDomain = undefined;
   public applicationProfiles: ApplicationProfile[];
+  public tableComponentDto = new TableComponentDto();
+  tagSelectors = { data: [] };
+  IpSubnetSelectors = { data: [] };
+  epgSelectors = { data: [] };
+  selectors;
+  selectorModalSubscription: Subscription;
 
   @ViewChild('consumedContract', { static: false })
   consumedContractRef: ConsumedContractComponent;
@@ -46,9 +58,29 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
 
   public tabs: Tab[] = tabs.map(t => ({ name: t.name }));
 
+  public searchColumns: SearchColumnConfig[] = [];
+
+  public tagSelectorConfig: TableConfig<any> = {
+    description: 'FilterEntries',
+    columns: [
+      { name: 'Tag Key', property: 'tagKey' },
+      { name: 'Value Operator', property: 'valueOperator' },
+      { name: 'Tag Value', property: 'tagValue' },
+    ],
+  };
+  public epgSelectorConfig: TableConfig<any> = {
+    description: 'FilterEntries',
+    columns: [{ name: 'EPG', property: 'epgId' }],
+  };
+  public IpSubnetSelectorConfig: TableConfig<any> = {
+    description: 'FilterEntries',
+    columns: [{ name: 'ipSubnet', property: 'IpSubnet' }],
+  };
+
   constructor(
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
+    private tableContextService: TableContextService,
     private endpointSecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
     private vrfService: V2AppCentricVrfsService,
     private applicationProfileService: V2AppCentricApplicationProfilesService,
@@ -56,6 +88,64 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+  }
+
+  getEndpointSecurityGroup(id) {
+    console.log('here', id);
+    this.endpointSecurityGroupService
+      .getOneEndpointSecurityGroup({
+        id,
+        join: ['selectors'],
+      })
+      .subscribe(data => {
+        console.log('data', data);
+        data.selectors.map(selector => {
+          if (selector.selectorType === 'Tag') {
+            this.tagSelectors.data.push(selector);
+          } else if (selector.selectorType === 'EPG') {
+            this.epgSelectors.data.push(selector);
+          } else {
+            this.IpSubnetSelectors.data.push(selector);
+          }
+        });
+        return data;
+      });
+  }
+
+  public openSelectorModal(modalMode, selector?) {
+    console.log('here?');
+    this.IpSubnetSelectors.data = [];
+    this.epgSelectors.data = [];
+    this.tagSelectors.data = [];
+    const dto = new SelectorModalDto();
+
+    dto.modalMode = modalMode;
+    dto.selctor = selector;
+
+    this.subscribeToSelectorModal();
+    this.ngx.setModalData(dto, 'selectorModal');
+    this.ngx.getModal('selectorModal').open();
+  }
+
+  private subscribeToSelectorModal() {
+    this.selectorModalSubscription = this.ngx.getModal('selectorModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('selectorModal');
+      this.selectorModalSubscription.unsubscribe();
+
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults } = params;
+
+      if (filteredResults) {
+        this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
+      } else {
+        this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
+      }
+    });
+  }
+
+  public onTableEvent(event: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.getApplicationProfiles();
   }
 
   public handleTabChange(tab: Tab): void {
@@ -77,10 +167,21 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   public getData(): void {
     this.getVrfs();
     this.getApplicationProfiles();
-    const dto = Object.assign({}, this.ngx.getModalData('endpointSecurityGroupModal') as EndpointSecurityGroupModalDto);
+    const dto = Object.assign({}, this.ngx.getModalData('endpointSecurityGroupModal') as any);
     this.ModalMode = dto.modalMode;
+
     if (this.ModalMode === ModalMode.Edit) {
       this.endpointSecurityGroupId = dto.endpointSecurityGroup.id;
+      dto.selectors.map(selector => {
+        if (selector.selectorType === 'Tag') {
+          this.tagSelectors.data.push(selector);
+        } else if (selector.selectorType === 'EPG') {
+          this.epgSelectors.data.push(selector);
+        } else {
+          this.IpSubnetSelectors.data.push(selector);
+        }
+      });
+      console.log('dto', dto);
     } else {
       this.form.controls.name.enable();
       this.form.controls.intraEsgIsolation.setValue(true);
@@ -94,17 +195,24 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       this.form.controls.name.setValue(endpointSecurityGroup.name);
       this.form.controls.name.disable();
       this.form.controls.description.setValue(endpointSecurityGroup.description);
+      this.form.controls.preferredGroupMember.setValue(endpointSecurityGroup.preferredGroupMember);
+      this.form.controls.adminState.setValue(endpointSecurityGroup.adminState);
+      this.form.controls.preferredGroupMember.setValue(endpointSecurityGroup.preferredGroupMember);
       this.form.controls.intraEsgIsolation.setValue(endpointSecurityGroup.intraEsgIsolation);
       this.form.controls.applicationProfileId.setValue(endpointSecurityGroup.applicationProfileId);
       this.form.controls.applicationProfileId.disable();
       this.form.controls.vrfId.setValue(endpointSecurityGroup.vrfId);
       this.form.controls.vrfId.disable();
     }
-    this.ngx.resetModalData('endpointSecurityGroupModal');
+    console.log('this.tagSelectors', this.tagSelectors);
+    // this.ngx.resetModalData('endpointSecurityGroupModal');
   }
 
   public reset(): void {
     this.submitted = false;
+    this.IpSubnetSelectors.data = [];
+    this.epgSelectors.data = [];
+    this.tagSelectors.data = [];
     this.ngx.resetModalData('endpointSecurityGroupModal');
     this.buildForm();
 

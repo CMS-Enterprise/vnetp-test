@@ -15,6 +15,8 @@ import { EndpointSecurityGroupModalComponent } from './endpoint-security-group-m
 import { EndpointSecurityGroupComponent } from './endpoint-security-group.component';
 import { ConsumedContractModule } from '../consumed-contract/consumed-contract.module';
 import { ProvidedContractModule } from '../provided-contract/provided-contract.module';
+import { SelectorModalComponent } from './endpoint-security-group-modal/selector-modal/selector-modal.component';
+import { TableContextService } from 'src/app/services/table-context.service';
 
 const routes: Routes = [
   {
@@ -24,7 +26,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [EndpointSecurityGroupComponent, EndpointSecurityGroupModalComponent],
+  declarations: [SelectorModalComponent, EndpointSecurityGroupComponent, EndpointSecurityGroupModalComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

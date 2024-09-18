@@ -7,9 +7,15 @@ import {
   V2AppCentricBridgeDomainsService,
   V2AppCentricEndpointGroupsService,
 } from '../../../../../../../../client';
-import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from '../../../../../../../test/mock-components';
+import {
+  MockComponent,
+  MockFontAwesomeComponent,
+  MockImportExportComponent,
+  MockNgxSmartModalComponent,
+} from '../../../../../../../test/mock-components';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 describe('EndpointSecurityGroupModalComponent', () => {
   let component: EndpointSecurityGroupModalComponent;
@@ -17,7 +23,14 @@ describe('EndpointSecurityGroupModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EndpointSecurityGroupModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent],
+      declarations: [
+        EndpointSecurityGroupModalComponent,
+        MockNgxSmartModalComponent,
+        MockFontAwesomeComponent,
+        MockImportExportComponent,
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockComponent({ selector: 'app-selector-modal', inputs: ['tenantId', 'endpointSecurityGroupId'] }),
+      ],
       providers: [
         { provide: FormBuilder, useValue: jest.fn() },
         { provide: NgxSmartModalService, useValue: jest.fn() },
@@ -25,7 +38,7 @@ describe('EndpointSecurityGroupModalComponent', () => {
         { provide: V2AppCentricBridgeDomainsService, useValue: jest.fn() },
         { provide: V2AppCentricApplicationProfilesService, useValue: jest.fn() },
       ],
-      imports: [FormsModule, ReactiveFormsModule, NgSelectModule, HttpClientModule],
+      imports: [FormsModule, ReactiveFormsModule, NgSelectModule, HttpClientModule, RouterModule.forRoot([])],
     }).compileComponents();
   });
 
