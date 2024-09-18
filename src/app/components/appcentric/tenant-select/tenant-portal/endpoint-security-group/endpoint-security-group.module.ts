@@ -16,7 +16,6 @@ import { EndpointSecurityGroupComponent } from './endpoint-security-group.compon
 import { ConsumedContractModule } from '../consumed-contract/consumed-contract.module';
 import { ProvidedContractModule } from '../provided-contract/provided-contract.module';
 import { SelectorModalComponent } from './endpoint-security-group-modal/selector-modal/selector-modal.component';
-import { TableContextService } from 'src/app/services/table-context.service';
 
 const routes: Routes = [
   {

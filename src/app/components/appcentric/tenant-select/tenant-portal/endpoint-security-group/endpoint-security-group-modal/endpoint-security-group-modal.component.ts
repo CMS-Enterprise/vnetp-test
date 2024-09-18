@@ -14,7 +14,6 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { ConsumedContractComponent } from '../../consumed-contract/consumed-contract.component';
 import { ProvidedContractComponent } from '../../provided-contract/provided-contract.component';
-import { EndpointSecurityGroupModalDto } from 'src/app/models/appcentric/endpoint-security-group-modal-dto';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -120,7 +119,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     const dto = new SelectorModalDto();
 
     dto.modalMode = modalMode;
-    dto.selctor = selector;
+    dto.selector = selector;
 
     this.subscribeToSelectorModal();
     this.ngx.setModalData(dto, 'selectorModal');

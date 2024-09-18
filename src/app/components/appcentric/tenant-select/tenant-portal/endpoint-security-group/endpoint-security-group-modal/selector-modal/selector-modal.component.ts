@@ -5,7 +5,6 @@ import { EndpointGroup, V2AppCentricEndpointGroupsService, V2AppCentricSelectors
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { Tab } from 'src/app/common/tabs/tabs.component';
-import { SelectorModalDto } from 'src/app/models/appcentric/appcentric-selector-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 
 @Component({
@@ -65,7 +64,7 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
   }
 
   public save() {
-    let modalSelector = {} as any;
+    const modalSelector = {} as any;
 
     let selectorType;
     modalSelector.endpointSecurityGroupId = this.endpointSecurityGroupId;
