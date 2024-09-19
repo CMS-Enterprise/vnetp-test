@@ -60,7 +60,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   public searchColumns: SearchColumnConfig[] = [];
 
   public tagSelectorConfig: TableConfig<any> = {
-    description: 'FilterEntries',
+    description: 'Tag Selectors',
     columns: [
       { name: 'Tag Key', property: 'tagKey' },
       { name: 'Value Operator', property: 'valueOperator' },
@@ -68,11 +68,11 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     ],
   };
   public epgSelectorConfig: TableConfig<any> = {
-    description: 'FilterEntries',
-    columns: [{ name: 'EPG', property: 'epgId' }],
+    description: 'EPG Selectors',
+    columns: [{ name: 'EPG', property: 'endpointSecurityGroupId' }],
   };
   public IpSubnetSelectorConfig: TableConfig<any> = {
-    description: 'FilterEntries',
+    description: 'IpSubnet Selectors',
     columns: [{ name: 'ipSubnet', property: 'IpSubnet' }],
   };
 

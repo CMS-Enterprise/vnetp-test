@@ -25,7 +25,7 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
   endpointGroups: EndpointGroup[];
   selector;
 
-  public tabs: Tab[] = [{ name: 'Tag Selectors' }, { name: 'EPG Selectors' }, { name: 'IP Subnet Selectors' }];
+  public tabs: Tab[] = [{ name: 'Tag Selector' }, { name: 'EPG Selector' }, { name: 'IP Subnet Selector' }];
 
   constructor(
     private formBuilder: UntypedFormBuilder,

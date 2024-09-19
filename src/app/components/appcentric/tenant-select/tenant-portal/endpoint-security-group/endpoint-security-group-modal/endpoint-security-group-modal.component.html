@@ -61,8 +61,8 @@
             [class.is-invalid]="submitted && f.preferredGroupMember.errors"
             aria-label="preferredGroupMember"
           >
-            <option [ngValue]="false">Exclude</option>
             <option [ngValue]="true">Include</option>
+            <option [ngValue]="false">Exclude</option>
           </select>
           <div *ngIf="submitted && f.preferredGroupMember.errors" class="invalid-feedback">
             <div *ngIf="f.preferredGroupMember.errors.maxlength">Alias must be 100 characters or less.</div>
@@ -87,6 +87,21 @@
         </div>
 
         <div class="form-group">
+          <label for="intraEsgIsolation">Intra Epg Isolation</label>
+          <select
+            id="intraEsgIsolation"
+            formControlName="intraEsgIsolation"
+            class="form-control"
+            [class.is-invalid]="submitted && f.intraEsgIsolation.errors"
+            aria-label="Intra Epg Isolation"
+          >
+            <option></option>
+            <option [ngValue]="true">Enforced</option>
+            <option [ngValue]="false">Unenforced</option>
+          </select>
+        </div>
+
+        <div class="form-group">
           <label for="description">Description</label>
           <input
             type="text"
@@ -99,21 +114,6 @@
           <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
             <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label for="intraEsgIsolation">Intra Epg Isolation</label>
-          <select
-            id="intraEsgIsolation"
-            formControlName="intraEsgIsolation"
-            class="form-control"
-            [class.is-invalid]="submitted && f.intraEsgIsolation.errors"
-            aria-label="Intra Epg Isolation"
-          >
-            <option></option>
-            <option [ngValue]="false">Unenforced</option>
-            <option [ngValue]="true">Enforced</option>
-          </select>
         </div>
 
         <div class="form-group">

@@ -16,21 +16,6 @@
     <div class="modal-body">
       <div *ngIf="navIndex === 0">
         <div class="form-group">
-          <label for="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            formControlName="name"
-            class="form-control"
-            [class.is-invalid]="submitted && f.name.errors"
-            aria-label="Name"
-          />
-          <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-            <div *ngIf="f.name.errors.required">Name is required</div>
-          </div>
-        </div>
-
-        <div class="form-group">
           <label for="tagKey">Tag key</label>
           <input
             type="text"
