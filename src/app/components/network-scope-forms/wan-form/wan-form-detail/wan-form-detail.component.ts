@@ -29,7 +29,7 @@ export class WanFormDetailComponent implements OnInit {
 
   navigateToExternalRoute(): void {
     const currentQueryParams = this.route.snapshot.queryParams;
-    this.router.navigate([`/${this.dcsMode}/wan-form`, this.wanForm.id, 'route-table'], {
+    this.router.navigate([`/${this.dcsMode}/wan-form`, this.wanForm.id, 'external-route'], {
       relativeTo: this.route,
       queryParams: currentQueryParams,
       state: { data: this.wanForm },

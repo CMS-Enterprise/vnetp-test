@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExternalRouteModalComponent } from './route-table-modal.component';
+import { ExternalRouteModalComponent } from './external-route-modal.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { V1RuntimeDataExternalRouteService } from '../../../../../../../client';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';

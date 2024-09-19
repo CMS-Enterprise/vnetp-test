@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExternalRouteComponent } from './route-table.component';
+import { ExternalRouteComponent } from './external-route.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { V1NetworkScopeFormsWanFormService, V1RuntimeDataExternalRouteService } from '../../../../../../client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -58,7 +58,7 @@ describe('ExternalRouteComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [],
-      declarations: [ExternalRouteComponent, MockFontAwesomeComponent, MockComponent({ selector: 'app-route-table-modal' })],
+      declarations: [ExternalRouteComponent, MockFontAwesomeComponent, MockComponent({ selector: 'app-external-route-modal' })],
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: V1NetworkScopeFormsWanFormService, useValue: mockWanFormService },

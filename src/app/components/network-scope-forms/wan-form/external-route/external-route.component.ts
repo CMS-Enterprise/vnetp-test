@@ -13,9 +13,9 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RuntimeDataService } from '../../../../services/runtime-data.service';
 
 @Component({
-  selector: 'app-route-table',
-  templateUrl: './route-table.component.html',
-  styleUrl: './route-table.component.css',
+  selector: 'app-external-route',
+  templateUrl: './external-route.component.html',
+  styleUrl: './external-route.component.css',
 })
 export class ExternalRouteComponent implements OnInit {
   wanFormId: string;

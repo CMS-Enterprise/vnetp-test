@@ -5,9 +5,9 @@ import { IpAddressAnyValidator } from '../../../../../validators/network-form-va
 import { ExternalRoute, V1RuntimeDataExternalRouteService } from '../../../../../../../client';
 
 @Component({
-  selector: 'app-route-table-modal',
-  templateUrl: './route-table-modal.component.html',
-  styleUrl: './route-table-modal.component.css',
+  selector: 'app-external-route-modal',
+  templateUrl: './external-route-modal.component.html',
+  styleUrl: './external-route-modal.component.css',
 })
 export class ExternalRouteModalComponent {
   public form: FormGroup;
