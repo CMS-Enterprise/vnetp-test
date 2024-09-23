@@ -58,8 +58,8 @@ describe('WanFormDetailComponent', () => {
   });
 
   it('should navigate to route table with current query params', () => {
-    component.navigateToRouteTable();
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/netcentric/wan-form', 'testWanFormId', 'route-table'], {
+    component.navigateToExternalRoute();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/netcentric/wan-form', 'testWanFormId', 'external-route'], {
       relativeTo: mockRoute,
       queryParams: mockRoute.snapshot.queryParams,
       state: { data: component.wanForm },

@@ -31,9 +31,9 @@ api/v1NetworkStaticRoutes.service.ts
 api/v1NetworkSubnets.service.ts
 api/v1NetworkVlans.service.ts
 api/v1RuntimeDataAciRuntime.service.ts
+api/v1RuntimeDataExternalRoute.service.ts
 api/v1RuntimeDataF5Config.service.ts
 api/v1RuntimeDataHitcount.service.ts
-api/v1RuntimeDataRouteTable.service.ts
 api/v1SelfService.service.ts
 api/v1Status.service.ts
 api/v1TierGroups.service.ts
@@ -104,6 +104,8 @@ model/createManyZoneDto.ts
 model/datacenter.ts
 model/dcsPermissions.ts
 model/endpointGroup.ts
+model/externalRoute.ts
+model/externalRouteJobCreateDto.ts
 model/f5ConfigJobCreateDto.ts
 model/f5Runtime.ts
 model/f5RuntimeCertsReference.ts
@@ -200,8 +202,6 @@ model/nodeImportCollectionDto.ts
 model/paginationDTO.ts
 model/poolImportCollectionDto.ts
 model/routeProfile.ts
-model/routeTable.ts
-model/routeTableJobCreateDto.ts
 model/ruleOperationDto.ts
 model/selfService.ts
 model/selfServiceConfig.ts

@@ -1,8 +1,8 @@
 <ngx-smart-modal
-  #routeTableModal
+  #externalRouteModal
   [dismissable]="false"
   customClass="medium-modal"
-  identifier="routeTableModal"
+  identifier="externalRouteModal"
   (onOpen)="getData()"
   (onClose)="reset()"
 >
@@ -24,7 +24,7 @@
         <div *ngIf="submitted && f.network.errors" class="invalid-feedback">
           <div *ngIf="f.network.errors.required">Network is required</div>
           <div *ngIf="f.network.errors.invalidIpCidr">Invalid Network address, must be a valid CIDR.</div>
-          <div *ngIf="f.network.errors.invalidRouteTableIp">
+          <div *ngIf="f.network.errors.invalidExternalRouteIp">
             Invalid Network address, mus begin with 10.x.x.x, 158.73.x.x, or 192.168.x.x
           </div>
           <div *ngIf="f.network.errors.invalidHost">Invalid network id for subnet mask</div>

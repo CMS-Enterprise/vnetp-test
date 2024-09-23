@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RouteTableComponent } from './route-table.component';
+import { ExternalRouteComponent } from './external-route.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { V1NetworkScopeFormsWanFormService, V1RuntimeDataRouteTableService } from '../../../../../../client';
+import { V1NetworkScopeFormsWanFormService, V1RuntimeDataExternalRouteService } from '../../../../../../client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RuntimeDataService } from '../../../../services/runtime-data.service';
 import { MockComponent, MockFontAwesomeComponent } from '../../../../../test/mock-components';
 import { of, throwError } from 'rxjs';
 
-describe('RouteTableComponent', () => {
-  let component: RouteTableComponent;
-  let fixture: ComponentFixture<RouteTableComponent>;
+describe('ExternalRouteComponent', () => {
+  let component: ExternalRouteComponent;
+  let fixture: ComponentFixture<ExternalRouteComponent>;
   let mockActivatedRoute: any;
-  let mockRouteTableService: any;
+  let mockExternalRouteService: any;
   let mockWanFormService: any;
   let mockRuntimeDataService: any;
   let mockRouter: any;
@@ -30,10 +30,10 @@ describe('RouteTableComponent', () => {
         queryParams: { id: 'id' },
       },
     };
-    mockRouteTableService = {
-      getManyRouteTable: jest.fn(),
-      createRuntimeDataJobRouteTable: jest.fn(),
-      deleteOneRouteTable: jest.fn(),
+    mockExternalRouteService = {
+      getManyExternalRoute: jest.fn(),
+      createRuntimeDataJobExternalRoute: jest.fn(),
+      deleteOneExternalRoute: jest.fn(),
     };
     mockWanFormService = {
       getOneWanForm: jest.fn().mockReturnValue(of({})),
@@ -58,18 +58,18 @@ describe('RouteTableComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [],
-      declarations: [RouteTableComponent, MockFontAwesomeComponent, MockComponent({ selector: 'app-route-table-modal' })],
+      declarations: [ExternalRouteComponent, MockFontAwesomeComponent, MockComponent({ selector: 'app-external-route-modal' })],
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: V1NetworkScopeFormsWanFormService, useValue: mockWanFormService },
-        { provide: V1RuntimeDataRouteTableService, useValue: mockRouteTableService },
+        { provide: V1RuntimeDataExternalRouteService, useValue: mockExternalRouteService },
         { provide: NgxSmartModalService, useValue: mockNgx },
         { provide: Router, useValue: mockRouter },
         { provide: RuntimeDataService, useValue: mockRuntimeDataService },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RouteTableComponent);
+    fixture = TestBed.createComponent(ExternalRouteComponent);
     component = fixture.componentInstance;
     component.getAllRoutes = jest.fn().mockImplementation(() => {});
     fixture.detectChanges();
@@ -192,14 +192,14 @@ describe('RouteTableComponent', () => {
   describe('refreshRuntimeData', () => {
     it('should return if isRecentlyRefreshed is true', () => {
       jest.spyOn(component, 'isRecentlyRefreshed').mockReturnValue(true);
-      const serviceSpy = jest.spyOn(mockRouteTableService, 'createRuntimeDataJobRouteTable');
+      const serviceSpy = jest.spyOn(mockExternalRouteService, 'createRuntimeDataJobExternalRoute');
       component.refreshRuntimeData();
       expect(serviceSpy).not.toHaveBeenCalled();
     });
 
     it('should return if isRefreshingRuntimeData is true', () => {
       jest.spyOn(component, 'isRecentlyRefreshed').mockReturnValue(false);
-      const serviceSpy = jest.spyOn(mockRouteTableService, 'createRuntimeDataJobRouteTable');
+      const serviceSpy = jest.spyOn(mockExternalRouteService, 'createRuntimeDataJobExternalRoute');
       component.isRefreshingRuntimeData = true;
       component.refreshRuntimeData();
       expect(serviceSpy).not.toHaveBeenCalled();
@@ -208,7 +208,7 @@ describe('RouteTableComponent', () => {
     it('should call getAciRuntimeData when polling is complete', () => {
       jest.spyOn(component, 'isRecentlyRefreshed').mockReturnValue(false);
       component.isRefreshingRuntimeData = false;
-      jest.spyOn(mockRouteTableService, 'createRuntimeDataJobRouteTable').mockReturnValue(of({ id: '1' }));
+      jest.spyOn(mockExternalRouteService, 'createRuntimeDataJobExternalRoute').mockReturnValue(of({ id: '1' }));
       jest.spyOn(mockRuntimeDataService, 'pollJobStatus').mockReturnValue(of({ status: 'successful' }));
       const getAciRuntimeDataSpy = jest.spyOn(component, 'getAllRoutes');
       component.refreshRuntimeData();
@@ -219,7 +219,7 @@ describe('RouteTableComponent', () => {
     it('should set jobStatus to error when polling errors', () => {
       jest.spyOn(component, 'isRecentlyRefreshed').mockReturnValue(false);
       component.isRefreshingRuntimeData = false;
-      jest.spyOn(mockRouteTableService, 'createRuntimeDataJobRouteTable').mockReturnValue(of({ id: '1' }));
+      jest.spyOn(mockExternalRouteService, 'createRuntimeDataJobExternalRoute').mockReturnValue(of({ id: '1' }));
       jest.spyOn(mockRuntimeDataService, 'pollJobStatus').mockReturnValue(throwError('Polling error'));
       component.refreshRuntimeData();
       expect(component.jobStatus).toEqual('error');
@@ -256,7 +256,7 @@ describe('RouteTableComponent', () => {
 
   it('should delete route', () => {
     const route = { id: 'route1' } as any;
-    const deleteSpy = jest.spyOn(mockRouteTableService, 'deleteOneRouteTable').mockReturnValue(of({}));
+    const deleteSpy = jest.spyOn(mockExternalRouteService, 'deleteOneExternalRoute').mockReturnValue(of({}));
     const getAllRoutesSpy = jest.spyOn(component, 'getAllRoutes');
     component.deleteRoute(route);
     expect(deleteSpy).toHaveBeenCalledWith({ id: 'route1' });
@@ -268,7 +268,7 @@ describe('RouteTableComponent', () => {
     (component as any).modalSubscription = of({}).subscribe();
     const setModalDataSpy = jest.spyOn(mockNgx, 'setModalData');
     component.openModal();
-    expect(setModalDataSpy).toHaveBeenCalledWith({ wanFormId: 'wan1' }, 'routeTableModal');
+    expect(setModalDataSpy).toHaveBeenCalledWith({ wanFormId: 'wan1' }, 'externalRouteModal');
   });
 
   describe('onSearch', () => {

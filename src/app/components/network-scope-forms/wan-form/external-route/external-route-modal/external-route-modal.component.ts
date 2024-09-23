@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { IpAddressAnyValidator } from '../../../../../validators/network-form-validators';
-import { RouteTable, V1RuntimeDataRouteTableService } from '../../../../../../../client';
+import { ExternalRoute, V1RuntimeDataExternalRouteService } from '../../../../../../../client';
 
 @Component({
-  selector: 'app-route-table-modal',
-  templateUrl: './route-table-modal.component.html',
-  styleUrl: './route-table-modal.component.css',
+  selector: 'app-external-route-modal',
+  templateUrl: './external-route-modal.component.html',
+  styleUrl: './external-route-modal.component.css',
 })
-export class RouteTableModalComponent {
+export class ExternalRouteModalComponent {
   public form: FormGroup;
   public submitted: boolean;
   public wanFormId: string;
@@ -17,7 +17,7 @@ export class RouteTableModalComponent {
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
-    private routeTableService: V1RuntimeDataRouteTableService,
+    private externalRouteService: V1RuntimeDataExternalRouteService,
   ) {}
 
   public ngOnInit(): void {
@@ -29,19 +29,19 @@ export class RouteTableModalComponent {
   }
 
   public closeModal(): void {
-    this.ngx.close('routeTableModal');
+    this.ngx.close('externalRouteModal');
     this.reset();
   }
 
   public getData(): void {
-    const dto = Object.assign({}, this.ngx.getModalData('routeTableModal')) as { wanFormId: string };
+    const dto = Object.assign({}, this.ngx.getModalData('externalRouteModal')) as { wanFormId: string };
     this.wanFormId = dto.wanFormId;
-    this.ngx.resetModalData('routeTableModal');
+    this.ngx.resetModalData('externalRouteModal');
   }
 
   public reset(): void {
     this.submitted = false;
-    this.ngx.resetModalData('routeTableModal');
+    this.ngx.resetModalData('externalRouteModal');
     this.buildForm();
   }
 
@@ -61,14 +61,14 @@ export class RouteTableModalComponent {
     }
 
     const { network, prefixLength, vrf, metric } = this.form.value;
-    const routeTable = {
+    const externalRoute = {
       network,
       prefixLength,
       vrf,
       metric,
-    } as RouteTable;
+    } as ExternalRoute;
 
-    this.routeTableService.createOneRouteTable({ routeTable }).subscribe(() => {
+    this.externalRouteService.createOneExternalRoute({ externalRoute }).subscribe(() => {
       this.closeModal();
     });
   }
