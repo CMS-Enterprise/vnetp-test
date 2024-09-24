@@ -123,7 +123,7 @@ export class V1RuntimeDataExternalRouteService {
     }
 
     /**
-     * Create one Route
+     * Create one External Route
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -179,7 +179,7 @@ export class V1RuntimeDataExternalRouteService {
     }
 
     /**
-     * Create Runtime Data Route Table Collection Job
+     * Create Runtime Data External Route Collection Job
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -235,7 +235,7 @@ export class V1RuntimeDataExternalRouteService {
     }
 
     /**
-     * Delete one Route
+     * Delete one External Route
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -281,7 +281,7 @@ export class V1RuntimeDataExternalRouteService {
     }
 
     /**
-     * Get many Aci Runtime
+     * Get many External Routes
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

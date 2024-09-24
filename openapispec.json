@@ -20006,7 +20006,7 @@
     "/v1/runtime-data/external-route": {
       "get": {
         "operationId": "getManyExternalRoute",
-        "summary": "Get many Aci Runtime",
+        "summary": "Get many External Routes",
         "parameters": [
           {
             "name": "relations",
@@ -20138,7 +20138,7 @@
       },
       "post": {
         "operationId": "createOneExternalRoute",
-        "summary": "Create one Route",
+        "summary": "Create one External Route",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -20170,7 +20170,7 @@
     "/v1/runtime-data/external-route/{id}": {
       "delete": {
         "operationId": "deleteOneExternalRoute",
-        "summary": "Delete one Route",
+        "summary": "Delete one External Route",
         "parameters": [
           {
             "name": "id",
@@ -20203,7 +20203,7 @@
       "post": {
         "operationId": "createRuntimeDataJobExternalRoute",
         "summary": "",
-        "description": "Create Runtime Data Route Table Collection Job",
+        "description": "Create Runtime Data External Route Collection Job",
         "parameters": [],
         "requestBody": {
           "required": true,
