@@ -50,6 +50,7 @@ import { V2AppCentricRouteProfilesService } from './api/v2AppCentricRouteProfile
 import { V2AppCentricSubjectsService } from './api/v2AppCentricSubjects.service';
 import { V2AppCentricTenantsService } from './api/v2AppCentricTenants.service';
 import { V2AppCentricVrfsService } from './api/v2AppCentricVrfs.service';
+import { V3GlobalMessagesService } from './api/v3GlobalMessages.service';
 
 @NgModule({
   imports:      [],

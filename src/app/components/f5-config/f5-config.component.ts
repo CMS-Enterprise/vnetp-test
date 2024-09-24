@@ -37,21 +37,21 @@ export class F5ConfigComponent implements OnInit {
   }
 
   matchF5Config(f5Config: F5Runtime): boolean {
-    const partitionInfo = (f5Config as any).data.partitionInfo;
+    const partitionInfo = (f5Config as F5Runtime).data.partitionInfo;
+
     if (this.searchQuery === '' || f5Config.hostname.toLowerCase().includes(this.searchQuery)) {
       return true;
     }
-    const filteredParitions = this.f5ConfigStateManagementService.filterVirtualServers(partitionInfo, this.searchQuery);
 
-    for (const partition in filteredParitions) {
-      if (filteredParitions.hasOwnProperty(partition)) {
-        if (partition.toLowerCase().includes(this.searchQuery.toLowerCase())) {
-          return true;
-        }
+    const filteredPartitions = this.f5ConfigStateManagementService.filterVirtualServers(partitionInfo, this.searchQuery);
 
-        if (filteredParitions[partition].length > 0) {
-          return true;
-        }
+    for (const partition of filteredPartitions) {
+      if (partition.name.toLowerCase().includes(this.searchQuery.toLowerCase())) {
+        return true;
+      }
+
+      if (partition.virtualServers.length > 0) {
+        return true;
       }
     }
 

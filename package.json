@@ -13,7 +13,7 @@
     "test:ci": "jest --ci --no-cache --runInBand --coverage --verbose --silent",
     "lint": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "sonar": "sonar-scanner",
-    "generate-client": "TS_POST_PROCESS_FILE=./node_modules/.bin/prettier openapi-generator-cli generate"
+    "generate-client": "rimraf client/* && TS_POST_PROCESS_FILE=./node_modules/.bin/prettier openapi-generator-cli generate"
   },
   "private": true,
   "dependencies": {
@@ -64,6 +64,7 @@
     "jest-preset-angular": "^13.1.6",
     "lint-staged": "^10.5.4",
     "prettier": "^2.8.8",
+    "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
     "ts-node": "^8.10.2",
     "typescript": "~5.4.5"

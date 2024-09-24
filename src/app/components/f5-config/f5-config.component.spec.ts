@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { F5ConfigComponent } from './f5-config.component';
 import { V1RuntimeDataF5ConfigService } from '../../../../client';
 import { F5ConfigService } from './f5-config.service';
@@ -17,7 +16,7 @@ describe('F5ConfigComponent', () => {
       getManyF5Config: jest.fn().mockReturnValue(of('mock data')),
     };
     mockF5ConfigStateManagementService = {
-      filterVirtualServers: jest.fn(),
+      filterVirtualServers: jest.fn().mockReturnValue([]), // Ensuring an array is returned
       getF5Configs: jest.fn().mockReturnValue(of('mock data')),
     };
     TestBed.configureTestingModule({
@@ -42,47 +41,50 @@ describe('F5ConfigComponent', () => {
   describe('filterF5Configs', () => {
     it('should filter f5Configs', () => {
       jest.spyOn(component, 'matchF5Config').mockReturnValue(true);
-      component.f5Configs = [{ hostname: 'hostname' } as any];
+      component.f5Configs = [{ hostname: 'hostname' }] as any;
       component.filterF5Configs();
       expect(component.filteredF5Configs).toEqual(component.f5Configs);
     });
   });
 
   describe('matchF5Config', () => {
-    it('should match f5Config when search matches hostname ', () => {
-      const f5Config = { hostname: 'hostname', data: { partitionInfo: { partition: [] } } } as any;
+    it('should match f5Config when search matches hostname', () => {
+      const f5Config = { hostname: 'hostname', data: { partitionInfo: [{ name: 'partition', virtualServers: [] }] } } as any;
       component.searchQuery = 'hostname';
       expect(component.matchF5Config(f5Config)).toBeTruthy();
     });
 
     it('should match f5Config when search matches partition name', () => {
-      mockF5ConfigStateManagementService = {
-        filterVirtualServers: jest.fn().mockReturnValue({ partition: [] }),
-      } as any;
+      mockF5ConfigStateManagementService.filterVirtualServers = jest.fn().mockReturnValue([{ name: 'partition', virtualServers: [] }]);
       (component as any).f5ConfigStateManagementService = mockF5ConfigStateManagementService;
-      const f5Config = { hostname: 'hostname', data: { partitionInfo: { partition: [] } } } as any;
+      const f5Config = { hostname: 'hostname', data: { partitionInfo: [{ name: 'partition', virtualServers: [] }] } } as any;
       component.searchQuery = 'partition';
       expect(component.matchF5Config(f5Config)).toBeTruthy();
     });
 
     it('should not match f5Config', () => {
-      const f5Config = { hostname: 'hostname', data: { partitionInfo: { partition: [] } } } as any;
+      mockF5ConfigStateManagementService.filterVirtualServers = jest.fn().mockReturnValue([]);
+      (component as any).f5ConfigStateManagementService = mockF5ConfigStateManagementService;
+      const f5Config = { hostname: 'hostname', data: { partitionInfo: [{ name: 'partition', virtualServers: [] }] } } as any;
       component.searchQuery = 'not found';
       expect(component.matchF5Config(f5Config)).toBeFalsy();
     });
 
     it('should match f5Config when there is no search', () => {
-      const f5Config = { hostname: 'hostname', data: { partitionInfo: { partition: ['partition'] } } } as any;
+      const f5Config = { hostname: 'hostname', data: { partitionInfo: [{ name: 'partition', virtualServers: [] }] } } as any;
       component.searchQuery = '';
       expect(component.matchF5Config(f5Config)).toBeTruthy();
     });
 
     it('should match f5Config when search matches virtual server values', () => {
-      mockF5ConfigStateManagementService = {
-        filterVirtualServers: jest.fn().mockReturnValue({ partition: ['virtual server'] }),
-      } as any;
+      mockF5ConfigStateManagementService.filterVirtualServers = jest
+        .fn()
+        .mockReturnValue([{ name: 'partition', virtualServers: [{ name: 'virtual server' }] }]);
       (component as any).f5ConfigStateManagementService = mockF5ConfigStateManagementService;
-      const f5Config = { hostname: 'hostname', data: { partitionInfo: { partition: ['partition'] } } } as any;
+      const f5Config = {
+        hostname: 'hostname',
+        data: { partitionInfo: [{ name: 'partition', virtualServers: [{ name: 'virtual server' }] }] },
+      } as any;
       component.searchQuery = 'virtual server';
       expect(component.matchF5Config(f5Config)).toBeTruthy();
     });

@@ -14,6 +14,8 @@ import {
   V1NetworkSecurityNatRulesService,
   V1AuditLogService,
   Datacenter,
+  V3GlobalMessagesService,
+  PaginationDTO,
 } from 'client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { AuthService } from '../../services/auth.service';
@@ -52,6 +54,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private natRuleService: V1NetworkSecurityNatRulesService,
     private auditLogService: V1AuditLogService,
     private datacenterContextService: DatacenterContextService,
+    private globalMessagesService: V3GlobalMessagesService,
   ) {}
 
   datacenters: number;
@@ -67,7 +70,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   firewallRuleCount: number;
   natRuleCount: number;
   auditLogs;
-
+  messages: PaginationDTO;
   public config: TableConfig<any> = {
     description: 'Audit Log',
     columns: [
@@ -107,7 +110,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
     }
     this.loadDashboard(this.userRoles);
+    this.getGlobalMessages();
     this.dashboardPoller = setInterval(() => this.loadDashboard(this.userRoles), 1000 * 300);
+  }
+
+  private getGlobalMessages() {
+    this.globalMessagesService.getMessagesMessage({ page: 1, perPage: 3 }).subscribe(data => {
+      this.messages = data;
+    });
   }
 
   ngOnDestroy() {
