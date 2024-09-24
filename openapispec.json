@@ -20003,137 +20003,10 @@
         ]
       }
     },
-    "/v3/global/messages": {
-      "get": {
-        "operationId": "getMessagesMessage",
-        "parameters": [
-          {
-            "name": "page",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "perPage",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginationDTO"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/messages"
-        ]
-      },
-      "post": {
-        "operationId": "createMessageMessage",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Message"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Message"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/messages"
-        ]
-      }
-    },
-    "/v3/global/messages/{messageId}": {
-      "delete": {
-        "operationId": "deleteMessageMessage",
-        "parameters": [
-          {
-            "name": "messageId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteResult"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v3/global/messages"
-        ]
-      }
-    },
-    "/v1/network-scope-forms/external-route": {
-      "post": {
-        "operationId": "createOneExternalRoute",
-        "summary": "Create one ExternalRoute",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ExternalRoute"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExternalRoute"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v1/network-scope-forms/external-route"
-        ]
-      },
+    "/v1/runtime-data/external-route": {
       "get": {
         "operationId": "getManyExternalRoute",
-        "summary": "Get many ExternalRoute",
+        "summary": "Get many External Routes",
         "parameters": [
           {
             "name": "relations",
@@ -20250,82 +20123,6 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "GetManyExternalRouteResponseDto",
-                  "type": "object",
-                  "properties": {
-                    "totalPages": {
-                      "type": "number"
-                    },
-                    "count": {
-                      "type": "number"
-                    },
-                    "total": {
-                      "type": "number"
-                    },
-                    "page": {
-                      "type": "number"
-                    },
-                    "pageCount": {
-                      "type": "number"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/ExternalRoute"
-                      }
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "count",
-                    "total",
-                    "page",
-                    "pageCount",
-                    "totalPages"
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v1/network-scope-forms/external-route"
-        ]
-      }
-    },
-    "/v1/network-scope-forms/external-route/bulk": {
-      "post": {
-        "operationId": "createManyExternalRoute",
-        "summary": "Create many ExternalRoute",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "title": "CreateManyExternalRouteDto",
-                "type": "object",
-                "properties": {
-                  "bulk": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ExternalRoute"
-                    }
-                  }
-                },
-                "required": [
-                  "bulk"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ExternalRoute"
@@ -20336,79 +20133,13 @@
           }
         },
         "tags": [
-          "v1/network-scope-forms/external-route"
-        ]
-      }
-    },
-    "/v1/network-scope-forms/external-route/{id}": {
-      "get": {
-        "operationId": "getOneExternalRoute",
-        "summary": "Get one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExternalRoute"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v1/network-scope-forms/external-route"
+          "v1/runtime-data/external-route"
         ]
       },
-      "put": {
-        "operationId": "updateOneExternalRoute",
-        "summary": "Update one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+      "post": {
+        "operationId": "createOneExternalRoute",
+        "summary": "Create one External Route",
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -20420,7 +20151,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "content": {
               "application/json": {
@@ -20432,12 +20163,14 @@
           }
         },
         "tags": [
-          "v1/network-scope-forms/external-route"
+          "v1/runtime-data/external-route"
         ]
-      },
+      }
+    },
+    "/v1/runtime-data/external-route/{id}": {
       "delete": {
         "operationId": "deleteOneExternalRoute",
-        "summary": "Delete one ExternalRoute",
+        "summary": "Delete one External Route",
         "parameters": [
           {
             "name": "id",
@@ -20462,20 +20195,118 @@
           }
         },
         "tags": [
-          "v1/network-scope-forms/external-route"
+          "v1/runtime-data/external-route"
         ]
       }
     },
-    "/v1/network-scope-forms/external-route/{id}/soft": {
+    "/v1/runtime-data/external-route/create-runtime-data-job": {
+      "post": {
+        "operationId": "createRuntimeDataJobExternalRoute",
+        "summary": "",
+        "description": "Create Runtime Data External Route Collection Job",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExternalRouteJobCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/external-route"
+        ]
+      }
+    },
+    "/v3/global/messages": {
+      "get": {
+        "operationId": "getMessagesMessage",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationDTO"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/messages"
+        ]
+      },
+      "post": {
+        "operationId": "createMessageMessage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Message"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/messages"
+        ]
+      }
+    },
+    "/v3/global/messages/{messageId}": {
       "delete": {
-        "operationId": "softDeleteOneExternalRoute",
-        "summary": "Soft delete one ExternalRoute",
+        "operationId": "deleteMessageMessage",
         "parameters": [
           {
-            "name": "id",
+            "name": "messageId",
             "required": true,
             "in": "path",
-            "description": "UUID.",
             "schema": {
               "type": "string"
             }
@@ -20483,86 +20314,18 @@
         ],
         "responses": {
           "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v1/network-scope-forms/external-route"
-        ]
-      }
-    },
-    "/v1/network-scope-forms/external-route/{id}/restore": {
-      "patch": {
-        "operationId": "restoreOneExternalRoute",
-        "summary": "Restore one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResult"
+                }
+              }
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
         },
         "tags": [
-          "v1/network-scope-forms/external-route"
-        ]
-      }
-    },
-    "/v1/network-scope-forms/external-route/{id}/provision": {
-      "put": {
-        "operationId": "provisionOneExternalRoute",
-        "summary": "Provision one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v1/network-scope-forms/external-route"
-        ]
-      }
-    },
-    "/v1/network-scope-forms/external-route/{id}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionOneExternalRoute",
-        "summary": "Deprovision one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v1/network-scope-forms/external-route"
+          "v3/global/messages"
         ]
       }
     },
@@ -20643,6 +20406,74 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form"
+        ]
+      }
+    },
+    "/v1/network-scope-forms/wan-form/{wanId}/route-table/{routeId}": {
+      "post": {
+        "operationId": "addRouteToWanFormWanForm",
+        "summary": "",
+        "description": "Add Route to Wan Form",
+        "parameters": [
+          {
+            "name": "wanId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the WAN form to add the route to",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "routeId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the route to add to the WAN form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form"
+        ]
+      },
+      "delete": {
+        "operationId": "removeRouteFromWanFormWanForm",
+        "summary": "",
+        "description": "Remove Route from Wan Form",
+        "parameters": [
+          {
+            "name": "wanId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the WAN form to remove the route from",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "routeId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the route to remove from the WAN form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
           }
         },
         "tags": [
@@ -23036,93 +22867,6 @@
           "datacenterId"
         ]
       },
-      "ExternalRoute": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "externalRouteIp": {
-            "type": "string"
-          },
-          "vrf": {
-            "type": "string",
-            "enum": [
-              "appprod",
-              "appdev",
-              "dataprod",
-              "datadev",
-              "edcmgmt",
-              "transport"
-            ]
-          },
-          "environment": {
-            "type": "string",
-            "enum": [
-              "prod",
-              "dev",
-              "val",
-              "imp"
-            ]
-          },
-          "wanFormId": {
-            "type": "string"
-          },
-          "wanForm": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/WanForm"
-              }
-            ]
-          },
-          "datacenterId": {
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "externalRouteIp",
-          "vrf",
-          "environment",
-          "wanFormId"
-        ]
-      },
       "Datacenter": {
         "type": "object",
         "properties": {
@@ -23199,13 +22943,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/WanForm"
-            }
-          },
-          "externalRoutes": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExternalRoute"
             }
           }
         },
@@ -23394,6 +23131,50 @@
           "wanFormId"
         ]
       },
+      "ExternalRoute": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "network": {
+            "type": "string"
+          },
+          "prefixLength": {
+            "type": "number"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "vrf": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "number"
+          },
+          "uptime": {
+            "type": "string"
+          },
+          "wanForms": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WanForm"
+            }
+          },
+          "runtimeDataLastRefreshed": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "network",
+          "prefixLength",
+          "vrf",
+          "metric"
+        ]
+      },
       "WanForm": {
         "type": "object",
         "properties": {
@@ -23452,13 +23233,6 @@
           "active": {
             "type": "boolean"
           },
-          "externalRoutes": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExternalRoute"
-            }
-          },
           "wanFormSubnets": {
             "readOnly": true,
             "type": "array",
@@ -23476,6 +23250,13 @@
           },
           "tenantId": {
             "type": "string"
+          },
+          "externalRoutes": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalRoute"
+            }
           }
         },
         "required": [
@@ -23605,14 +23386,6 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/WanForm"
-              }
-            ]
-          },
-          "externalRoutes": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExternalRoute"
               }
             ]
           }
@@ -27143,7 +26916,8 @@
               "FirewallRule",
               "NatRule",
               "F5Config",
-              "AciRuntime"
+              "AciRuntime",
+              "ExternalRoute"
             ]
           },
           "datacenterId": {
@@ -27182,7 +26956,8 @@
               "FirewallRule",
               "NatRule",
               "F5Config",
-              "AciRuntime"
+              "AciRuntime",
+              "ExternalRoute"
             ]
           },
           "groupId": {
@@ -27712,7 +27487,8 @@
               "FirewallRule",
               "NatRule",
               "F5Config",
-              "AciRuntime"
+              "AciRuntime",
+              "ExternalRoute"
             ]
           },
           "datacenterId": {
@@ -27736,7 +27512,8 @@
               "FirewallRule",
               "NatRule",
               "F5Config",
-              "AciRuntime"
+              "AciRuntime",
+              "ExternalRoute"
             ]
           },
           "datacenterId": {
@@ -27746,6 +27523,27 @@
             "type": "string"
           },
           "endpointGroupId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "ExternalRouteJobCreateDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "FirewallRule",
+              "NatRule",
+              "F5Config",
+              "AciRuntime",
+              "ExternalRoute"
+            ]
+          },
+          "datacenterId": {
             "type": "string"
           }
         },
