@@ -11,12 +11,11 @@
  */
 
 
-export interface F5ConfigJobCreateDto { 
-    type: F5ConfigJobCreateDtoTypeEnum;
+export interface ExternalRouteJobCreateDto { 
+    type: ExternalRouteJobCreateDtoTypeEnum;
     datacenterId?: string;
-    id: string;
 }
-export enum F5ConfigJobCreateDtoTypeEnum {
+export enum ExternalRouteJobCreateDtoTypeEnum {
     FirewallRule = 'FirewallRule',
     NatRule = 'NatRule',
     F5Config = 'F5Config',

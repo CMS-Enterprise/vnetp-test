@@ -18,18 +18,18 @@ export class WanFormDetailComponent implements OnInit {
     this.dcsMode = this.route.snapshot.data.mode;
   }
 
-  navigateToExternalRoutes(): void {
+  navigateToWanFormSubnets(): void {
     const currentQueryParams = this.route.snapshot.queryParams;
-    this.router.navigate([`/${this.dcsMode}/wan-form`, this.wanForm.id, 'external-routes'], {
+    this.router.navigate([`/${this.dcsMode}/wan-form`, this.wanForm.id, 'wan-form-subnets'], {
       relativeTo: this.route,
       queryParams: currentQueryParams,
       state: { data: this.wanForm },
     });
   }
 
-  navigateToWanFormSubnets(): void {
+  navigateToExternalRoute(): void {
     const currentQueryParams = this.route.snapshot.queryParams;
-    this.router.navigate([`/${this.dcsMode}/wan-form`, this.wanForm.id, 'wan-form-subnets'], {
+    this.router.navigate([`/${this.dcsMode}/wan-form`, this.wanForm.id, 'external-route'], {
       relativeTo: this.route,
       queryParams: currentQueryParams,
       state: { data: this.wanForm },
