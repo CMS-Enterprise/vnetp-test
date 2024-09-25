@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 import { CertificateDetailsComponent } from './certificate-details.component';
 import { F5ConfigService } from '../f5-config.service';
 import { V1RuntimeDataF5ConfigService } from '../../../../../client';
+import { MockComponent } from 'src/test/mock-components';
 
 describe('CertificateDetailsComponent', () => {
   let component: CertificateDetailsComponent;
@@ -33,7 +34,7 @@ describe('CertificateDetailsComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [CertificateDetailsComponent],
+      declarations: [CertificateDetailsComponent, MockComponent({ selector: 'app-lite-table', inputs: ['config', 'data'] })],
       providers: [
         { provide: F5ConfigService, useValue: mockF5ConfigService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
