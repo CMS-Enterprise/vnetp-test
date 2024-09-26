@@ -23,8 +23,10 @@ export interface Selector {
     readonly provisionedVersion?: number;
     description?: string;
     selectorType?: SelectorSelectorTypeEnum;
+    IpSubnet?: string;
     tagKey?: string;
     valueOperator?: string;
+    tagValue?: string;
     readonly endpointGroups?: Array<EndpointGroup>;
     readonly endpointSecurityGroup?: EndpointSecurityGroup;
     endpointSecurityGroupId: string;

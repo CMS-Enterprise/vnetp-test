@@ -44,7 +44,7 @@ export interface EndpointSecurityGroup {
 }
 export enum EndpointSecurityGroupAdminStateEnum {
     AdminUp = 'AdminUp',
-    AdminDown = 'AdminDown'
+    AdminShut = 'AdminShut'
 };
 
 

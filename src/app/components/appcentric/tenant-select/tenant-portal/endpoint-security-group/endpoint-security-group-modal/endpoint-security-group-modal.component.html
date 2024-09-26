@@ -9,7 +9,7 @@
   <header class="modal-header">
     <h4 class="modal-title">Endpoint Security Group</h4>
   </header>
-  <!-- <app-tabs
+  <app-tabs
     *ngIf="ModalMode === 'Edit'"
     #tabsRef
     [tabs]="tabs"
@@ -30,7 +30,7 @@
       [endpointSecurityGroupId]="endpointSecurityGroupId"
       [tenantId]="tenantId"
     ></app-provided-contract>
-  </div> -->
+  </div>
   <div>
     <form [formGroup]="form" (ngSubmit)="save()">
       <div class="modal-body">

@@ -11,6 +11,18 @@
   <span>Add Provided Contract</span>
 </button>
 <app-table
+  *ngIf="mode === 'epg'"
+  [config]="config"
+  [data]="contractTableData"
+  (clearResults)="getProvidedContracts()"
+  (searchParams)="getProvidedContracts()"
+  [searchColumns]="searchColumns"
+  [(itemsPerPage)]="perPage"
+  (tableEvent)="onTableEvent($event)"
+></app-table>
+
+<app-table
+  *ngIf="mode === 'esg'"
   [config]="config"
   [data]="contractTableData"
   (clearResults)="getProvidedContracts()"

@@ -45,7 +45,7 @@ describe('ConsumedContractsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('importAppProfilesConfig', () => {
+  describe('importConsumedContractsEpgRelationonfig', () => {
     const mockNgxSmartModalComponent = {
       getData: jest.fn().mockReturnValue({ modalYes: true }),
       removeData: jest.fn(),

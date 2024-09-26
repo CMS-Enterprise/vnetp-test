@@ -1,5 +1,12 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { Contract, V2AppCentricEndpointGroupsService, V2AppCentricContractsService, GetManyContractResponseDto } from 'client';
+import { Router } from '@angular/router';
+import {
+  Contract,
+  V2AppCentricEndpointGroupsService,
+  V2AppCentricContractsService,
+  GetManyContractResponseDto,
+  V2AppCentricEndpointSecurityGroupsService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -19,6 +26,7 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
   public contractTableData: GetManyContractResponseDto;
   public contracts: Contract[];
   public selectedContract: Contract;
+  public mode;
 
   public perPage = 20;
   public tableComponentDto = new TableComponentDto();
@@ -41,13 +49,22 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
 
   constructor(
     private endpointGroupsService: V2AppCentricEndpointGroupsService,
+    private endpointSecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
     private contractsService: V2AppCentricContractsService,
     private ngx: NgxSmartModalService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.getContracts();
-    this.getProvidedContracts();
+    if (this.router.routerState.snapshot.url.includes('endpoint-security-group')) {
+      this.mode = 'esg';
+      this.getContracts();
+      this.getEsgProvidedContracts();
+    } else {
+      this.mode = 'epg';
+      this.getContracts();
+      this.getEpgProvidedContracts();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -57,31 +74,70 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
       changes.endpointGroupId.currentValue !== changes.endpointGroupId.previousValue
     ) {
       this.getContracts();
-      this.getProvidedContracts();
+      this.getEpgProvidedContracts();
       this.clearSelectedContract();
     }
   }
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getProvidedContracts();
+    this.getEpgProvidedContracts();
   }
 
-  public addContract(): void {
+  public addEpgContract(): void {
     this.endpointGroupsService
       .addProvidedContractToEndpointGroupEndpointGroup({
         endpointGroupId: this.endpointGroupId,
         contractId: this.selectedContract.id,
       })
-      .subscribe(() => this.getProvidedContracts());
+      .subscribe(() => this.getEpgProvidedContracts());
   }
 
-  public removeContract(contract: Contract): void {
+  public removeEpgContract(contract: Contract): void {
     const modalDto = new YesNoModalDto('Remove Contract', `Are you sure you want to remove provided contract ${contract.name}?`);
     const onConfirm = () => {
       this.endpointGroupsService
         .removeProvidedContractToEndpointGroupEndpointGroup({
-          endpointGroupId: this.endpointGroupId,
+          endpointGroupId: this.endpointSecurityGroupId,
+          contractId: contract.id,
+        })
+        .subscribe(() => this.getEpgProvidedContracts());
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  }
+
+  public getEpgProvidedContracts(): void {
+    this.endpointGroupsService
+      .getOneEndpointGroup({
+        id: this.endpointGroupId,
+        relations: ['providedContracts'],
+      })
+      .subscribe(data => {
+        const contractPagResponse = {} as GetManyContractResponseDto;
+        contractPagResponse.count = data.providedContracts.length;
+        contractPagResponse.page = 1;
+        contractPagResponse.pageCount = 1;
+        contractPagResponse.total = data.providedContracts.length;
+        contractPagResponse.data = data.providedContracts;
+        this.contractTableData = contractPagResponse;
+      });
+  }
+
+  public addEsgContract(): void {
+    this.endpointSecurityGroupService
+      .addProvidedContractToEndpointSecurityGroupEndpointSecurityGroup({
+        endpointSecurityGroupId: this.endpointSecurityGroupId,
+        contractId: this.selectedContract.id,
+      })
+      .subscribe(() => this.getProvidedContracts());
+  }
+
+  public removeEsgContract(contract: Contract): void {
+    const modalDto = new YesNoModalDto('Remove Contract', `Are you sure you want to remove provided contract ${contract.name}?`);
+    const onConfirm = () => {
+      this.endpointSecurityGroupService
+        .removeProvidedContractToEndpointSecurityGroupEndpointSecurityGroup({
+          endpointSecurityGroupId: this.endpointSecurityGroupId,
           contractId: contract.id,
         })
         .subscribe(() => this.getProvidedContracts());
@@ -89,10 +145,10 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  public getProvidedContracts(): void {
-    this.endpointGroupsService
-      .getOneEndpointGroup({
-        id: this.endpointGroupId,
+  public getEsgProvidedContracts(): void {
+    this.endpointSecurityGroupService
+      .getOneEndpointSecurityGroup({
+        id: this.endpointSecurityGroupId,
         relations: ['providedContracts'],
       })
       .subscribe(data => {
@@ -176,15 +232,39 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
           () => {},
           () => {},
           () => {
-            this.getProvidedContracts();
+            this.getEpgProvidedContracts();
           },
         );
       });
     };
     const onClose = () => {
-      this.getProvidedContracts();
+      this.getEpgProvidedContracts();
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
+
+  public getProvidedContracts() {
+    if (this.mode === 'epg') {
+      this.getEpgProvidedContracts();
+    } else {
+      this.getEsgProvidedContracts();
+    }
+  }
+
+  public addContract() {
+    if (this.mode === 'epg') {
+      this.addEpgContract();
+    } else {
+      this.addEsgContract();
+    }
+  }
+
+  public removeContract(contract) {
+    if (this.mode === 'epg') {
+      this.removeEpgContract(contract);
+    } else {
+      this.removeEsgContract(contract);
+    }
   }
 }

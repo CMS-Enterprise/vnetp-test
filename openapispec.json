@@ -19206,6 +19206,163 @@
         ]
       }
     },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/consumed-contracts/{contractId}": {
+      "post": {
+        "operationId": "addConsumedContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Consumed Contract to Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "removeConsumedContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Remove Consumed Contract from Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/provided-contracts/{contractId}": {
+      "post": {
+        "operationId": "addProvidedContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Provided Contract to Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "removeProvidedContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Remove Provided Contract from Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
     "/v2/app-centric/endpoint-security-groups": {
       "post": {
         "operationId": "createOneEndpointSecurityGroup",
@@ -23197,10 +23354,16 @@
               "IpSubnet"
             ]
           },
+          "IpSubnet": {
+            "type": "string"
+          },
           "tagKey": {
             "type": "string"
           },
           "valueOperator": {
+            "type": "string"
+          },
+          "tagValue": {
             "type": "string"
           },
           "endpointGroups": {
@@ -23274,7 +23437,7 @@
             "type": "string",
             "enum": [
               "AdminUp",
-              "AdminDown"
+              "AdminShut"
             ]
           },
           "intraEsgIsolation": {
