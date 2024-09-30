@@ -186,7 +186,7 @@ export class V2AppCentricEndpointSecurityGroupsService {
     }
 
     /**
-     * Add Consumed Contract to Endpoint Group
+     * Add Consumed Contract to Endpoint Security Group
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -236,7 +236,7 @@ export class V2AppCentricEndpointSecurityGroupsService {
     }
 
     /**
-     * Add Provided Contract to Endpoint Group
+     * Add Provided Contract to Endpoint Security Group
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -707,7 +707,7 @@ export class V2AppCentricEndpointSecurityGroupsService {
     }
 
     /**
-     * Remove Consumed Contract from Endpoint Group
+     * Remove Consumed Contract from Endpoint Security Group
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -757,7 +757,7 @@ export class V2AppCentricEndpointSecurityGroupsService {
     }
 
     /**
-     * Remove Provided Contract from Endpoint Group
+     * Remove Provided Contract from Endpoint Security Group
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

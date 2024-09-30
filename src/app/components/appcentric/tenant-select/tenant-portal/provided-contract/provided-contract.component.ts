@@ -68,14 +68,26 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes.endpointGroupId &&
-      !changes.endpointGroupId.firstChange &&
-      changes.endpointGroupId.currentValue !== changes.endpointGroupId.previousValue
-    ) {
-      this.getContracts();
-      this.getEpgProvidedContracts();
-      this.clearSelectedContract();
+    if (this.mode === 'epg') {
+      if (
+        changes.endpointGroupId &&
+        !changes.endpointGroupId.firstChange &&
+        changes.endpointGroupId.currentValue !== changes.endpointGroupId.previousValue
+      ) {
+        this.getContracts();
+        this.getEpgProvidedContracts();
+        this.clearSelectedContract();
+      }
+    } else if (this.mode === 'esg') {
+      if (
+        changes.endpointSecurityGroupId &&
+        !changes.endpointSecurityGroupId.firstChange &&
+        changes.endpointSecurityGroupId.currentValue !== changes.endpointSecurityGroupId.previousValue
+      ) {
+        this.getContracts();
+        this.getEsgProvidedContracts();
+        this.clearSelectedContract();
+      }
     }
   }
 
@@ -211,6 +223,10 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
         obj.endpointGroupId = this.endpointGroupId;
         delete obj[key];
       }
+      if (key === 'endpointSecurityGroupName') {
+        obj.endpointSecurityGroupId = this.endpointSecurityGroupId;
+        delete obj[key];
+      }
       if (key === 'tenantName') {
         obj.tenantId = this.tenantId;
         delete obj[key];
@@ -218,6 +234,14 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
     });
     return obj;
   };
+
+  public importProvidedContractRelation(event) {
+    if (this.mode === 'epg') {
+      this.importProvidedContractEpgRelation(event);
+    } else {
+      this.importProvidedContractEsgRelation(event);
+    }
+  }
 
   public importProvidedContractEpgRelation(event): void {
     const modalDto = new YesNoModalDto(
@@ -239,6 +263,31 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
     };
     const onClose = () => {
       this.getEpgProvidedContracts();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
+
+  public importProvidedContractEsgRelation(event): void {
+    const modalDto = new YesNoModalDto(
+      'Import Provided Contracts',
+      `Are you sure you would like to import ${event.length} Provided Contract${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      dto.map(relation => {
+        this.endpointSecurityGroupService.addProvidedContractToEndpointSecurityGroupEndpointSecurityGroup(relation).subscribe(
+          () => {},
+          () => {},
+          () => {
+            this.getEsgProvidedContracts();
+          },
+        );
+      });
+    };
+    const onClose = () => {
+      this.getEsgProvidedContracts();
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);

@@ -19210,7 +19210,7 @@
       "post": {
         "operationId": "addConsumedContractToEndpointSecurityGroupEndpointSecurityGroup",
         "summary": "",
-        "description": "Add Consumed Contract to Endpoint Group",
+        "description": "Add Consumed Contract to Endpoint Security Group",
         "parameters": [
           {
             "name": "endpointSecurityGroupId",
@@ -19243,7 +19243,7 @@
       "delete": {
         "operationId": "removeConsumedContractToEndpointSecurityGroupEndpointSecurityGroup",
         "summary": "",
-        "description": "Remove Consumed Contract from Endpoint Group",
+        "description": "Remove Consumed Contract from Endpoint Security Group",
         "parameters": [
           {
             "name": "endpointSecurityGroupId",
@@ -19285,7 +19285,7 @@
       "post": {
         "operationId": "addProvidedContractToEndpointSecurityGroupEndpointSecurityGroup",
         "summary": "",
-        "description": "Add Provided Contract to Endpoint Group",
+        "description": "Add Provided Contract to Endpoint Security Group",
         "parameters": [
           {
             "name": "endpointSecurityGroupId",
@@ -19325,7 +19325,7 @@
       "delete": {
         "operationId": "removeProvidedContractToEndpointSecurityGroupEndpointSecurityGroup",
         "summary": "",
-        "description": "Remove Provided Contract from Endpoint Group",
+        "description": "Remove Provided Contract from Endpoint Security Group",
         "parameters": [
           {
             "name": "endpointSecurityGroupId",
