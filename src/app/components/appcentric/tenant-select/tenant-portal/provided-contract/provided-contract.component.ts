@@ -96,7 +96,7 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
     this.getEpgProvidedContracts();
   }
 
-  public addEpgContract(): void {
+  public addEpgProvidedContract(): void {
     this.endpointGroupsService
       .addProvidedContractToEndpointGroupEndpointGroup({
         endpointGroupId: this.endpointGroupId,
@@ -105,12 +105,12 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
       .subscribe(() => this.getEpgProvidedContracts());
   }
 
-  public removeEpgContract(contract: Contract): void {
+  public removeEpgProvidedContract(contract: Contract): void {
     const modalDto = new YesNoModalDto('Remove Contract', `Are you sure you want to remove provided contract ${contract.name}?`);
     const onConfirm = () => {
       this.endpointGroupsService
         .removeProvidedContractToEndpointGroupEndpointGroup({
-          endpointGroupId: this.endpointSecurityGroupId,
+          endpointGroupId: this.endpointGroupId,
           contractId: contract.id,
         })
         .subscribe(() => this.getEpgProvidedContracts());
@@ -303,7 +303,7 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
 
   public addContract() {
     if (this.mode === 'epg') {
-      this.addEpgContract();
+      this.addEpgProvidedContract();
     } else {
       this.addEsgContract();
     }
@@ -311,7 +311,7 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
 
   public removeContract(contract) {
     if (this.mode === 'epg') {
-      this.removeEpgContract(contract);
+      this.removeEpgProvidedContract(contract);
     } else {
       this.removeEsgContract(contract);
     }

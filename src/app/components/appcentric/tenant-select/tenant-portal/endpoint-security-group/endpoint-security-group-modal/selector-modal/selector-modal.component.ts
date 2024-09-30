@@ -42,7 +42,6 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
   private addTagSelectorFormValidators() {}
 
   ngOnInit(): void {
-    console.log('ngoninit for selector modal');
     this.buildForm();
     this.getEndpointGroups();
   }
