@@ -12,35 +12,54 @@
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
       <div class="form-group">
-        <label for="ip">IP</label>
+        <label for="network">Network</label>
         <input
           type="text"
-          id="ip"
-          formControlName="ip"
+          id="network"
+          formControlName="network"
           class="form-control"
-          [class.is-invalid]="submitted && f.ip.errors"
-          aria-label="IP"
+          [class.is-invalid]="submitted && f.network.errors"
+          aria-label="Network"
         />
-        <div *ngIf="submitted && f.ip.errors" class="invalid-feedback">
-          <div *ngIf="f.ip.errors.required">IP is required</div>
-          <div *ngIf="f.ip.errors.invalidIpCidr">Invalid IP address, must be a valid CIDR.</div>
-          <div *ngIf="f.ip.errors.invalidExternalRouteIp">Invalid IP address, mus begin with 10.x.x.x, 158.73.x.x, or 192.168.x.x</div>
-          <div *ngIf="f.ip.errors.invalidHost">Invalid network id for subnet mask</div>
+        <div *ngIf="submitted && f.network.errors" class="invalid-feedback">
+          <div *ngIf="f.network.errors.required">Network is required</div>
+          <div *ngIf="f.network.errors.invalidIpCidr">Invalid Network address, must be a valid CIDR.</div>
+          <div *ngIf="f.network.errors.invalidExternalRouteIp">
+            Invalid Network address, mus begin with 10.x.x.x, 158.73.x.x, or 192.168.x.x
+          </div>
+          <div *ngIf="f.network.errors.invalidHost">Invalid network id for subnet mask</div>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="description">Description</label>
+        <label for="prefixLength">Prefix Length</label>
         <input
-          type="text"
-          id="description"
-          formControlName="description"
+          type="number"
+          id="prefixLength"
+          formControlName="prefixLength"
           class="form-control"
-          [class.is-invalid]="submitted && f.description.errors"
-          aria-label="Description"
+          [class.is-invalid]="submitted && f.prefixLength.errors"
+          aria-label="Prefix Length"
         />
-        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+        <div *ngIf="submitted && f.prefixLength.errors" class="invalid-feedback">
+          <div *ngIf="f.prefixLength.errors.required">Prefix Length is required.</div>
+          <div *ngIf="f.prefixLength.errors.min">Prefix Length must be greater than 0.</div>
+          <div *ngIf="f.prefixLength.errors.max">Prefix Length must be less than 32.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="metric">Metric</label>
+        <input
+          type="number"
+          id="metric"
+          formControlName="metric"
+          class="form-control"
+          [class.is-invalid]="submitted && f.metric.errors"
+          aria-label="Metric"
+        />
+        <div *ngIf="submitted && f.metric.errors" class="invalid-feedback">
+          <div *ngIf="f.metric.errors.required">Metric is required.</div>
         </div>
       </div>
 
@@ -63,26 +82,6 @@
         </select>
         <div *ngIf="submitted && f.vrf.errors" class="invalid-feedback">
           <div *ngIf="f.vrf.errors.required">VRF/Zone is required</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="environment">Environment</label>
-        <select
-          id="environment"
-          formControlName="environment"
-          class="form-control"
-          [class.is-invalid]="submitted && f.environment.errors"
-          aria-label="Environment"
-        >
-          <option></option>
-          <option value="prod">Prod</option>
-          <option value="val">Val</option>
-          <option value="imp">Imp</option>
-          <option value="dev">Dev</option>
-        </select>
-        <div *ngIf="submitted && f.environment.errors" class="invalid-feedback">
-          <div *ngIf="f.environment.errors.required">Environment is required</div>
         </div>
       </div>
     </div>

@@ -32,6 +32,7 @@ import {
   faUpload,
   faAsterisk,
   faCog,
+  faInfoCircle,
   faMinus,
   faArrowRight,
   faArrowLeft,
@@ -132,6 +133,7 @@ export class AppModule {
       faTimes,
       faCog,
       faChevronLeft,
+      faInfoCircle,
       faArrowRight,
       faArrowLeft,
     );

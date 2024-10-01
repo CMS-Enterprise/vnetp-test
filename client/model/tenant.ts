@@ -9,7 +9,6 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ExternalRoute } from './externalRoute';
 import { Filter } from './filter';
 import { FilterEntry } from './filterEntry';
 import { EndpointGroup } from './endpointGroup';
@@ -45,6 +44,5 @@ export interface Tenant {
     readonly filterEntries?: Array<FilterEntry>;
     readonly auditLogs?: Array<AuditLog>;
     readonly wanForms?: WanForm;
-    readonly externalRoutes?: ExternalRoute;
 }
 

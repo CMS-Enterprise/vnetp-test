@@ -11,23 +11,25 @@
 <ng-template #mainContent>
   <h1>Wan Forms</h1>
 
-  <section class="btn-toolbar" role="toolbar">
-    <button type="button" class="btn btn-success" (click)="openModal(ModalMode.Create)">
-      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-      <span>Create Wan Form</span>
-    </button>
-  </section>
+  <ng-container *ngIf="currentDatacenter; else warningMessage">
+    <section class="btn-toolbar" role="toolbar">
+      <button type="button" class="btn btn-success" (click)="openModal(ModalMode.Create)">
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Wan Form</span>
+      </button>
+    </section>
 
-  <ng-container *ngIf="!isLoading; else loading">
-    <app-table
-      [config]="config"
-      [data]="wanForms"
-      (clearResults)="getWanForms($event)"
-      (searchParams)="getWanForms($event)"
-      [searchColumns]="searchColumns"
-      [(itemsPerPage)]="perPage"
-      (tableEvent)="onTableEvent($event)"
-    ></app-table>
+    <ng-container *ngIf="!isLoading; else loading">
+      <app-table
+        [config]="config"
+        [data]="wanForms"
+        (clearResults)="getWanForms($event)"
+        (searchParams)="getWanForms($event)"
+        [searchColumns]="searchColumns"
+        [(itemsPerPage)]="perPage"
+        (tableEvent)="onTableEvent($event)"
+      ></app-table>
+    </ng-container>
   </ng-container>
 </ng-template>
 
@@ -83,3 +85,7 @@
 
 <app-wan-form-modal></app-wan-form-modal>
 <app-yes-no-modal></app-yes-no-modal>
+
+<ng-template #warningMessage>
+  <p>Select a Datacenter to display Wan-Form details</p>
+</ng-template>
