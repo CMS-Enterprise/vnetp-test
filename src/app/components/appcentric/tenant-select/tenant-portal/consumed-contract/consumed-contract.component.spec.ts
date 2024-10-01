@@ -47,6 +47,14 @@ describe('ConsumedContractsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // describe('ngOnInit should load the correct contracts', () => {
+  //   it('should load correct contract relations on ngonint', () => {
+  //     jest.spyOn(component, 'getEpgConsumedContracts');
+  //     component.ngOnInit()
+  //     expect(component.getEpgConsumedContracts).toHaveBeenCalled();
+  //   })
+  // })
+
   describe('importConsumedContractsEpgRelationConfig', () => {
     const mockNgxSmartModalComponent = {
       getData: jest.fn().mockReturnValue({ modalYes: true }),

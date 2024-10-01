@@ -47,6 +47,14 @@ describe('ProvidedContractsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // describe('ngOnInit should load the correct contracts', () => {
+  //   it('should load correct contract relations on ngonint', () => {
+  //     jest.spyOn(component, 'getEpgProvidedContracts');
+  //     component.ngOnInit()
+  //     expect(component.getEpgProvidedContracts).toHaveBeenCalled();
+  //   })
+  // })
+
   describe('importProvidedContractsEpgRelationonfig', () => {
     const mockNgxSmartModalComponent = {
       getData: jest.fn().mockReturnValue({ modalYes: true }),
