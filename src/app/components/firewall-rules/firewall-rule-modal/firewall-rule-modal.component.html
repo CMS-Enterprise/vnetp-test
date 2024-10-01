@@ -11,7 +11,7 @@
   </header>
 
   <div *ngIf="ModalMode === modalMode.Edit" class="button-container text-right">
-    <button class="inline-button" (click)="openAppIdModal()">Manage App ID</button>
+    <button class="inline-button mr-3" (click)="openAppIdModal()">Manage App ID</button>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="save()">

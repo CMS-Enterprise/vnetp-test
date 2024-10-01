@@ -19,12 +19,18 @@ import {
 } from 'client';
 import { FirewallRuleObjectInfoModalComponent } from './firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
 import { of } from 'rxjs';
+import { AppIdRuntimeService } from '../../app-id-runtime/app-id-runtime.service';
+import { TierContextService } from '../../../services/tier-context.service';
 
 describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
   let fixture: ComponentFixture<FirewallRuleModalComponent>;
+  let mockTierContextService: jest.Mocked<TierContextService>;
 
   beforeEach(() => {
+    mockTierContextService = {
+      currentTierValue: {},
+    } as any;
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -42,6 +48,8 @@ describe('FirewallRuleModalComponent', () => {
         MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
         MockProvider(V1NetworkSecurityServiceObjectsService),
         MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+        { provide: AppIdRuntimeService, useValue: jest.fn() },
+        { provide: TierContextService, useValue: mockTierContextService },
       ],
     })
       .compileComponents()
@@ -389,6 +397,20 @@ describe('FirewallRuleModalComponent', () => {
       expect(component['serviceObjectGroupService'].getOneServiceObjectGroup).toHaveBeenCalled();
       expect(setModalDataSpy).toHaveBeenCalled();
       expect(getSpy).toHaveBeenCalled();
+    });
+  });
+
+  it('should open app id modal', () => {
+    component.firewallRule = { id: '1' } as any;
+    (mockTierContextService as any).currentTierValue = { id: '1' } as any;
+    TestBed.inject(NgxSmartModalService).getModal = jest.fn().mockReturnValue({
+      open: jest.fn(),
+      setModalData: jest.fn(),
+      resetModalData: jest.fn(),
+      getModal: jest.fn().mockReturnValue({
+        open: jest.fn(),
+        onCloseFinished: of({ getData: jest.fn(), removeData: jest.fn() }),
+      }),
     });
   });
 });

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FirewallRule, PanosApplication, Tier } from '../../../../client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { AppIdModalDto } from '../../models/other/app-id-modal.dto';
@@ -11,7 +11,7 @@ import SubscriptionUtil from '../../utils/SubscriptionUtil';
   templateUrl: './app-id-runtime.component.html',
   styleUrl: './app-id-runtime.component.css',
 })
-export class AppIdRuntimeComponent implements OnInit {
+export class AppIdRuntimeComponent {
   tier: Tier;
   firewallRule: FirewallRule;
   panosApplications: PanosApplication[] = [];
@@ -21,20 +21,6 @@ export class AppIdRuntimeComponent implements OnInit {
 
   constructor(private ngx: NgxSmartModalService, private appIdService: AppIdRuntimeService) {}
 
-  ngOnInit(): void {
-    this.appIdService.getPanosApplications().subscribe(applications => {
-      if (applications.length === 0) {
-        this.appIdService.loadPanosApplications();
-      }
-
-      this.panosApplications = applications;
-      if (this.tier) {
-        this.getAssociatedApplications();
-        this.getAvailableApplications();
-      }
-    });
-  }
-
   getAssociatedApplications(): void {
     this.associatedApplications = this.panosApplications.filter(application =>
       application.firewallRules?.some(rule => rule.id === this.firewallRule.id),
@@ -42,13 +28,12 @@ export class AppIdRuntimeComponent implements OnInit {
   }
 
   getAvailableApplications(): void {
-    this.filterAvailableApplications(this.tier.panosVersion);
+    this.filterAvailableApplications();
   }
 
-  filterAvailableApplications(panosVersion: string): void {
-    this.availableApplications = this.panosApplications.filter(
-      application =>
-        application.firewallRules?.every(rule => rule.id !== this.firewallRule.id) && application.panosVersion === panosVersion,
+  filterAvailableApplications(): void {
+    this.availableApplications = this.panosApplications.filter(application =>
+      application.firewallRules?.every(rule => rule.id !== this.firewallRule.id),
     );
   }
 
@@ -72,7 +57,7 @@ export class AppIdRuntimeComponent implements OnInit {
 
     const onConfirm = () => {
       this.appIdService.dto.panosApplicationsToAdd.forEach(app => this.appIdService.removePanosApplicationFromDto(app));
-      this.appIdService.dto.panosApplicationsToRemove.forEach(app => this.appIdService.addPanosApplicaionToDto(app));
+      this.appIdService.dto.panosApplicationsToRemove.forEach(app => this.appIdService.addPanosApplicationToDto(app));
       this.appIdService.resetDto();
       this.ngx.close('appIdModal');
     };
@@ -84,7 +69,10 @@ export class AppIdRuntimeComponent implements OnInit {
     const dto = this.ngx.getModalData('appIdModal') as AppIdModalDto;
     this.tier = dto.tier;
     this.firewallRule = dto.firewallRule;
-    this.getAssociatedApplications();
-    this.getAvailableApplications();
+    this.appIdService.getPanosApplications(this.tier.appVersion).subscribe(applications => {
+      this.panosApplications = applications;
+      this.getAssociatedApplications();
+      this.getAvailableApplications();
+    });
   }
 }

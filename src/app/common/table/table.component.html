@@ -52,9 +52,37 @@
             </ng-container>
           </td>
         </tr>
+
+        <!-- Expanded Row -->
         <tr *ngIf="datum.expanded && expandableRows" [class.expanded]="datum.expanded" class="expandableContent">
           <td [attr.colspan]="config.columns.length">
-            <ng-container *ngTemplateOutlet="config.expandableRows(); context: { datum: datum }"></ng-container>
+            <!-- Wrapper for expandable rows and navigation -->
+            <div class="expandable-row-container">
+              <!-- Navigation controls -->
+              <div *ngIf="isTemplateArray()" class="navigation-controls d-flex justify-content-center align-items-center">
+                <app-icon-button icon="arrowLeft" (handleClick)="previousTemplate(datum)"></app-icon-button>
+                <div class="dots">
+                  <span
+                    *ngFor="let template of config.expandableRows(); let i = index"
+                    [class.active]="datum.currentTemplateIndex === i"
+                    class="dot"
+                  ></span>
+                </div>
+                <app-icon-button icon="arrowRight" (handleClick)="nextTemplate(datum)"></app-icon-button>
+              </div>
+
+              <!-- Template rendering based on currentTemplateIndex -->
+              <ng-container *ngIf="isTemplateArray()">
+                <ng-container
+                  *ngTemplateOutlet="config.expandableRows()[datum.currentTemplateIndex]; context: { datum: datum }"
+                ></ng-container>
+              </ng-container>
+
+              <!-- If only a single template is provided -->
+              <ng-container *ngIf="!isTemplateArray()">
+                <ng-container *ngTemplateOutlet="config.expandableRows(); context: { datum: datum }"></ng-container>
+              </ng-container>
+            </div>
           </td>
         </tr>
       </ng-template>

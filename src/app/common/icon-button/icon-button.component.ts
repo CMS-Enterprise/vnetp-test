@@ -26,6 +26,8 @@ export class IconButtonComponent {
     clone: ['far', 'clone'],
     check: ['fas', 'check'],
     times: ['fas', 'times'],
+    arrowRight: ['fas', 'arrow-right'],
+    arrowLeft: ['fas', 'arrow-left'],
   };
 
   public typeLookup: Record<IconType, string> = {
@@ -49,5 +51,7 @@ export type Icon =
   | 'asterisk'
   | 'clone'
   | 'check'
-  | 'times';
+  | 'times'
+  | 'arrowRight'
+  | 'arrowLeft';
 export type IconType = 'default' | 'danger' | 'success' | 'info';

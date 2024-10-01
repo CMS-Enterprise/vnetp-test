@@ -30,6 +30,9 @@ import {
   V1NetworkSecurityZonesService,
   V1RuntimeDataHitcountService,
   HitcountJobCreateDtoTypeEnum,
+  PanosApplication,
+  V1RuntimeDataAppIdRuntimeService,
+  AppIdRuntimeJobCreateDtoTypeEnum,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
@@ -44,6 +47,9 @@ import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-r
 import UndeployedChangesUtil from '../../../utils/UndeployedChangesUtil';
 import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
 import { RuntimeDataService } from '../../../services/runtime-data.service';
+import { LiteTableConfig } from '../../../common/lite-table/lite-table.component';
+import { MatDrawer } from '@angular/material/sidenav';
+import { AppIdRuntimeService } from '../../app-id-runtime/app-id-runtime.service';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -100,6 +106,15 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   jobStatus: string;
 
   appIdModalSubscription: Subscription;
+  panosApplications: PanosApplication[] = [];
+
+  infoBoxVisible = false;
+  selectedPanosApplication: PanosApplication;
+
+  isRefreshingAppIdRuntimeData = false;
+  tier: Tier;
+  datacenterId: string;
+  appIdJobStatus: string;
 
   // Templates
   @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
@@ -108,7 +123,10 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   @ViewChild('serviceType') serviceTemplate: TemplateRef<any>;
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('updatedAt') updatedAtTemplate: TemplateRef<any>;
-  @ViewChild('expandableRowsTemplate') expandableRowsTemplate: TemplateRef<any>;
+  @ViewChild('hitcountTemplate') hitcountTemplate: TemplateRef<any>;
+  @ViewChild('appIdTemplate') appIdTemplate: TemplateRef<any>;
+  @ViewChild('appIdNameTemplate') appIdNameTemplate: TemplateRef<any>;
+  @ViewChild('drawer') drawer: MatDrawer;
 
   public config: TableConfig<any> = {
     description: 'Firewall Rules for the currently selected Tier',
@@ -125,7 +143,16 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       { name: 'Rule Index', property: 'ruleIndex' },
       { name: '', template: () => this.actionsTemplate },
     ],
-    expandableRows: () => this.expandableRowsTemplate,
+    expandableRows: () => [this.hitcountTemplate, this.appIdTemplate],
+  };
+
+  public liteConfig: LiteTableConfig<PanosApplication> = {
+    columns: [
+      { name: 'Name', template: () => this.appIdNameTemplate },
+      { name: 'Category', property: 'category' },
+      { name: 'Sub Category', property: 'subCategory' },
+      { name: 'Risk', property: 'risk' },
+    ],
   };
 
   get scopeString() {
@@ -148,6 +175,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private tableContextService: TableContextService,
     private hitcountService: V1RuntimeDataHitcountService,
     private runtimeDataService: RuntimeDataService,
+    private appIdService: AppIdRuntimeService,
+    private appIdApiService: V1RuntimeDataAppIdRuntimeService,
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<FirewallRule>();
     advancedSearchAdapterObject.setService(this.firewallRuleService);
@@ -158,6 +187,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
       if (cd) {
+        this.datacenterId = cd.id;
         this.tiers = cd.tiers;
         this.datacenterService.lockDatacenter();
         this.Id += this.route.snapshot.paramMap.get('id');
@@ -165,6 +195,60 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         this.getFirewallRuleGroup();
       }
     });
+  }
+
+  toggleDrawer(panosApp: PanosApplication): void {
+    if (this.selectedPanosApplication) {
+      if (panosApp.id === this.selectedPanosApplication?.id) {
+        this.selectedPanosApplication = null;
+        this.drawer.close();
+        return;
+      }
+      if (panosApp.id !== this.selectedPanosApplication?.id) {
+        this.selectedPanosApplication = panosApp;
+        return;
+      }
+    }
+
+    this.selectedPanosApplication = panosApp;
+    this.drawer.toggle();
+  }
+
+  refreshAppId(): void {
+    if (this.runtimeDataService.isRecentlyRefreshed(this.tier.runtimeDataLastRefreshed) || this.isRefreshingAppIdRuntimeData) {
+      return;
+    }
+
+    this.isRefreshingAppIdRuntimeData = true;
+
+    this.appIdApiService
+      .createRuntimeDataJobAppIdRuntime({
+        appIdRuntimeJobCreateDto: {
+          type: AppIdRuntimeJobCreateDtoTypeEnum.AppIdRuntime,
+          tierId: this.TierId,
+          datacenterId: this.datacenterId,
+        },
+      })
+      .subscribe(job => {
+        let status = '';
+        this.runtimeDataService.pollJobStatus(job.id).subscribe({
+          next: towerJobDto => {
+            status = towerJobDto.status;
+          },
+          error: () => {
+            status = 'error';
+            this.isRefreshingRuntimeData = false;
+            this.appIdJobStatus = status;
+          },
+          complete: () => {
+            this.isRefreshingRuntimeData = false;
+            if (status === 'successful') {
+              this.appIdService.loadPanosApplications(this.tier.appVersion, true);
+            }
+            this.appIdJobStatus = status;
+          },
+        });
+      });
   }
 
   ngOnDestroy(): void {
@@ -235,7 +319,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     this.firewallRuleService
       .getManyFirewallRule({
         filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`, eventParams],
-        join: ['fromZone', 'toZone'],
+        join: ['fromZone', 'toZone', 'panosApplications'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
         sort: ['ruleIndex,ASC'],
@@ -314,14 +398,20 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       serviceObjectGroupRequest,
       zoneRequest,
     ]).subscribe(result => {
-      this.TierName = result[0].name;
+      this.tier = result[0];
+      this.TierName = this.tier.name;
       this.networkObjects = result[1].data;
       this.networkObjectGroups = result[2].data;
       this.serviceObjects = result[3].data;
       this.serviceObjectGroups = result[4].data;
       this.zones = result[5].data;
-
       this.getFirewallRules();
+
+      if (this.runtimeDataService.isRecentlyRefreshed(this.tier.runtimeDataLastRefreshed)) {
+        this.appIdService.loadPanosApplications(this.tier.appVersion, true);
+      } else {
+        this.refreshAppId();
+      }
     });
   }
 

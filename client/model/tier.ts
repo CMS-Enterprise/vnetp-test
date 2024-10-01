@@ -67,7 +67,8 @@ export interface Tier {
     readonly loadBalancerVlans?: Array<LoadBalancerVlan>;
     readonly loadBalancerSelfIps?: Array<LoadBalancerSelfIp>;
     readonly loadBalancerRoutes?: Array<LoadBalancerRoute>;
-    readonly panosVersion?: string;
+    readonly appVersion?: string;
+    runtimeDataLastRefreshed?: string;
 }
 export enum TierTierTypeEnum {
     Presentation = 'Presentation',

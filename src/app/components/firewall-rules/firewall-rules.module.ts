@@ -24,6 +24,10 @@ import { FirewallRuleObjectInfoModalComponent } from './firewall-rule-modal/fire
 import { FirewallRulesOperationModalComponent } from './firewall-rules-operation-modal/firewall-rules-operation-modal.component';
 import { AppIdRuntimeModule } from '../app-id-runtime/app-id-runtime.module';
 import { LiteTableModule } from '../../common/lite-table/lite-table.module';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 
 const routes: Routes = [
   {
@@ -59,6 +63,10 @@ const routes: Routes = [
     PreviewModalModule,
     AppIdRuntimeModule,
     LiteTableModule,
+    MatSidenavModule,
+    MatDialogModule,
+    MatTooltipModule,
+    MatIconModule,
   ],
   declarations: [
     FirewallRulesComponent,

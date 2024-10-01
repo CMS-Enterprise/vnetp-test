@@ -14,23 +14,29 @@ export class AppIdTableComponent {
   @Input() applications: PanosApplication[] = [];
   @Input() firewallRule: FirewallRule;
 
+  displayedColumns: string[] = ['name', 'category', 'subCategory', 'risk', 'actions'];
   filteredApplications: PanosApplication[];
-
   searchQuery = '';
 
   constructor(private appIdService: AppIdRuntimeService, public dialog: MatDialog) {}
 
   public addPanosAppToFirewallRule(panosApplication: PanosApplication): void {
-    this.appIdService.addPanosAppToFirewallRule(panosApplication, this.firewallRule);
+    this.appIdService.addPanosAppToFirewallRule(panosApplication, this.firewallRule, panosApplication.appVersion);
+    this.refreshData();
   }
 
   public removePanosAppFromFirewallRule(panosApplication: PanosApplication): void {
-    this.appIdService.removePanosAppFromFirewallRule(panosApplication, this.firewallRule);
+    this.appIdService.removePanosAppFromFirewallRule(panosApplication, this.firewallRule, panosApplication.appVersion);
+    this.refreshData();
+  }
+
+  // Re-filter applications after adding or removing an application
+  private refreshData(): void {
+    this.onSearch(); // Reapply search filter
   }
 
   onSearch(): void {
     const query = this.searchQuery.toLowerCase().trim();
-
     this.filteredApplications = this.applications.filter(
       app =>
         this.includesQuery(app.panosId, query) ||
@@ -43,6 +49,15 @@ export class AppIdTableComponent {
         this.includesQuery(app.technology, query) ||
         this.includesQuery(app.risk?.toString(), query),
     );
+
+    // Ensure the application reflects its updated firewall rule status
+    if (this.type === 'available') {
+      this.filteredApplications = this.filteredApplications.filter(
+        app => !app.firewallRules.some(rule => rule.id === this.firewallRule.id),
+      );
+    } else if (this.type === 'assocaited') {
+      this.filteredApplications = this.filteredApplications.filter(app => app.firewallRules.some(rule => rule.id === this.firewallRule.id));
+    }
   }
 
   private includesQuery(field: string | undefined, query: string): boolean {

@@ -9,7 +9,7 @@ export interface LiteTableConfig<T> {
 @Component({
   selector: 'app-lite-table',
   templateUrl: './lite-table.component.html',
-  styleUrl: './lite-table.component.css',
+  styleUrl: './lite-table.component.scss',
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class LiteTableComponent {

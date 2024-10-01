@@ -16,7 +16,7 @@ import { FirewallRule } from './firewallRule';
 export interface PanosApplication { 
     readonly id?: string;
     readonly panosId?: string;
-    panosVersion?: string;
+    appVersion?: string;
     minver?: string;
     name?: string;
     oriCountry?: string;
@@ -39,6 +39,5 @@ export interface PanosApplication {
     identByIpProtocol?: string;
     risk?: string;
     readonly firewallRules?: Array<FirewallRule>;
-    runtimeDataLastRefreshed?: string;
 }
 

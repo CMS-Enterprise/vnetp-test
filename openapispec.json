@@ -24803,7 +24803,7 @@
             "type": "string",
             "readOnly": true
           },
-          "panosVersion": {
+          "appVersion": {
             "type": "string"
           },
           "minver": {
@@ -24886,10 +24886,6 @@
             "items": {
               "$ref": "#/components/schemas/FirewallRule"
             }
-          },
-          "runtimeDataLastRefreshed": {
-            "format": "date-time",
-            "type": "string"
           }
         },
         "required": [
@@ -26220,9 +26216,13 @@
               "$ref": "#/components/schemas/LoadBalancerRoute"
             }
           },
-          "panosVersion": {
+          "appVersion": {
             "type": "string",
             "readOnly": true
+          },
+          "runtimeDataLastRefreshed": {
+            "format": "date-time",
+            "type": "string"
           }
         },
         "required": [

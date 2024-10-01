@@ -48,6 +48,7 @@ describe('FirewallRulesDetailComponent', () => {
           selector: 'app-firewall-rules-operation-modal',
           inputs: ['serviceObjects', 'serviceObjectGroups', 'networkObjects', 'networkObjectGroups'],
         }),
+        MockComponent('app-app-id-runtime'),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,
@@ -492,6 +493,32 @@ describe('FirewallRulesDetailComponent', () => {
       expect(component['serviceObjectGroupService'].getOneServiceObjectGroup).toHaveBeenCalled();
       expect(setModalDataSpy).toHaveBeenCalled();
       expect(getSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('toggleDrawer', () => {
+    it('should close drawer if selected app id equal to app id', () => {
+      component.selectedPanosApplication = { id: 'test' } as any;
+      component.drawer = { close: jest.fn() } as any;
+      component.toggleDrawer({ id: 'test' } as any);
+      expect(component.drawer.close).toHaveBeenCalled();
+      expect(component.selectedPanosApplication).toBeNull();
+    });
+
+    it('should set selected app to app and return if selected app id is not equal to app id', () => {
+      component.selectedPanosApplication = { id: 'test' } as any;
+      component.drawer = { close: jest.fn() } as any;
+      component.toggleDrawer({ id: 'test2' } as any);
+      expect(component.selectedPanosApplication).toEqual({ id: 'test2' });
+      expect(component.drawer.close).not.toHaveBeenCalled();
+    });
+
+    it('should set selected app to app and toggle drawer if there is no selected app', () => {
+      component.selectedPanosApplication = null;
+      component.drawer = { toggle: jest.fn() } as any;
+      component.toggleDrawer({ id: 'test' } as any);
+      expect(component.selectedPanosApplication).toEqual({ id: 'test' });
+      expect(component.drawer.toggle).toHaveBeenCalled();
     });
   });
 

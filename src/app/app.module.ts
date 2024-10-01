@@ -33,6 +33,8 @@ import {
   faAsterisk,
   faCog,
   faMinus,
+  faArrowRight,
+  faArrowLeft,
 } from '@fortawesome/free-solid-svg-icons';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
@@ -130,6 +132,8 @@ export class AppModule {
       faTimes,
       faCog,
       faChevronLeft,
+      faArrowRight,
+      faArrowLeft,
     );
   }
 }

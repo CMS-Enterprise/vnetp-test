@@ -119,7 +119,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   saveAppId(): void {
     this.appIdService.saveDto(this.firewallRule.id).subscribe(() => {
       this.appIdService.resetDto();
-      this.appIdService.loadPanosApplications(true);
     });
   }
 
@@ -207,7 +206,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     } else {
       this.appIdService.saveDto(this.FirewallRuleId).subscribe(() => {
         this.appIdService.resetDto();
-        this.appIdService.loadPanosApplications(true);
       });
 
       this.firewallRuleService
@@ -668,7 +666,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.buildForm();
     this.setFormValidators();
-    this.appIdService.loadPanosApplications();
   }
 
   ngOnDestroy() {

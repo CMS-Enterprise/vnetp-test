@@ -9,11 +9,12 @@ import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import { PanosApplicationDetailsDialogComponent } from './panos-application-details-dialog/panos-application-details-dialog.component';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [AppIdRuntimeComponent, AppIdTableComponent, PanosApplicationDetailsDialogComponent],
-  imports: [CommonModule, NgxSmartModalModule, YesNoModalModule, FormsModule, MatTooltipModule, MatDialogModule],
+  imports: [CommonModule, NgxSmartModalModule, YesNoModalModule, FormsModule, MatTooltipModule, MatDialogModule, MatTableModule],
   providers: [AppIdRuntimeService],
-  exports: [AppIdRuntimeComponent, AppIdTableComponent],
+  exports: [AppIdRuntimeComponent, AppIdTableComponent, PanosApplicationDetailsDialogComponent],
 })
 export class AppIdRuntimeModule {}

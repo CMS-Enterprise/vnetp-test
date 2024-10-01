@@ -193,7 +193,7 @@
   [serviceObjectGroups]="serviceObjectGroups"
 ></app-firewall-rules-operation-modal>
 
-<ng-template #expandableRowsTemplate let-firewallRule="datum">
+<ng-template #hitcountTemplate let-firewallRule="datum">
   <div class="hitcount-container">
     <div class="hitcount-display">
       <strong>Hit Count:&nbsp;</strong>
@@ -221,6 +221,27 @@
       <ng-container *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData">Refreshed</ng-container>
     </button>
   </div>
+</ng-template>
+
+<ng-template #appIdTemplate let-firewallRule="datum">
+  <mat-drawer-container>
+    <mat-drawer-content>
+      <app-lite-table [config]="liteConfig" [data]="firewallRule.panosApplications"></app-lite-table>
+    </mat-drawer-content>
+    <mat-drawer #drawer mode="side" position="end">
+      <app-panos-application-details-dialog
+        *ngIf="selectedPanosApplication"
+        [data]="selectedPanosApplication"
+        [compactMode]="true"
+      ></app-panos-application-details-dialog>
+    </mat-drawer>
+  </mat-drawer-container>
+</ng-template>
+
+<ng-template #appIdNameTemplate let-panosApp="datum">
+  <span matTooltip="show details" [matTooltipPosition]="'right'" (click)="toggleDrawer(panosApp)" class="hover-effect">{{
+    panosApp.name
+  }}</span>
 </ng-template>
 
 <app-app-id-runtime></app-app-id-runtime>
