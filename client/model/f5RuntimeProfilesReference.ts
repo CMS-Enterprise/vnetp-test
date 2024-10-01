@@ -9,10 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ExternalRoute } from './externalRoute';
+import { F5RuntimeProfile } from './f5RuntimeProfile';
 
 
-export interface CreateManyExternalRouteDto { 
-    bulk: Array<ExternalRoute>;
+export interface F5RuntimeProfilesReference { 
+    /**
+     * Array of profiles
+     */
+    readonly items: Array<F5RuntimeProfile>;
 }
 

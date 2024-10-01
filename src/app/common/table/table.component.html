@@ -43,7 +43,7 @@
           (click)="handleRowClick($event, datum)"
           [class.expandableRow]="expandableRows"
           [attr.aria-expanded]="datum.expanded ? 'true' : 'false'"
-          [ngClass]="{'expanded': datum.expanded}"
+          [ngClass]="{ expanded: datum.expanded }"
         >
           <td *ngFor="let column of config.columns">
             <ng-container *ngIf="column.property">{{ datum[column.property] }}</ng-container>
@@ -102,6 +102,7 @@
 </ng-container>
 
 <app-advanced-search-modal
+  *ngIf="!config.hideAdvancedSearch"
   [advancedSearchAdapterSubject]="advancedSearchAdapterSubject"
   (advancedSearchResults)="setAdvancedSearchData($event)"
   [formInputs]="searchColumns"

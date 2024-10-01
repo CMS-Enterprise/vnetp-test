@@ -13,13 +13,15 @@
 
 export interface HitcountJobCreateDto { 
     type: HitcountJobCreateDtoTypeEnum;
+    datacenterId?: string;
     groupId: string;
-    datacenterId: string;
 }
 export enum HitcountJobCreateDtoTypeEnum {
     FirewallRule = 'FirewallRule',
     NatRule = 'NatRule',
-    F5Config = 'F5Config'
+    F5Config = 'F5Config',
+    AciRuntime = 'AciRuntime',
+    ExternalRoute = 'ExternalRoute'
 };
 
 

@@ -1,17 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 import { F5ConfigService } from './f5-config.service';
-import { V1RuntimeDataF5ConfigService } from '../../../../client';
+import { V1RuntimeDataF5ConfigService, F5RuntimeVirtualServer } from '../../../../client';
 import { of } from 'rxjs';
+import { F5RuntimePartitionInfo } from '../../../../client';
 
 describe('F5ConfigService', () => {
   let service: F5ConfigService;
   let mockV1F5ConfigService: any;
+
   beforeEach(() => {
     mockV1F5ConfigService = {
       getManyF5Config: jest.fn().mockReturnValue(of()),
     };
     TestBed.configureTestingModule({
-      imports: [],
       providers: [F5ConfigService, { provide: V1RuntimeDataF5ConfigService, useValue: mockV1F5ConfigService }],
     });
 
@@ -20,37 +21,51 @@ describe('F5ConfigService', () => {
 
   describe('filterVirtualServers', () => {
     it('should filter virtual servers correctly based on query', () => {
-      const partitionInfo = {
-        partition1: [
-          { name: 'server1', poolReference: { items: { membersReference: { items: [{ name: 'member1' }] } } } },
-          { name: 'server2' },
-        ],
-      };
+      const partitionInfo: F5RuntimePartitionInfo[] = [
+        {
+          name: 'partition1',
+          virtualServers: [
+            { name: 'server1', poolReference: { items: { membersReference: { items: [{ name: 'member1' }] } } } } as F5RuntimeVirtualServer,
+            { name: 'server2' } as F5RuntimeVirtualServer,
+          ],
+        },
+      ];
       const query = 'server1';
       const filtered = service.filterVirtualServers(partitionInfo, query);
-      expect(Object.keys(filtered)).toContain('partition1');
-      expect(filtered.partition1.length).toBe(1);
-      expect(filtered.partition1[0].name).toBe('server1');
+
+      expect(filtered.length).toBe(1);
+      expect(filtered[0].name).toBe('partition1');
+      expect(filtered[0].virtualServers?.length).toBe(1);
+      expect(filtered[0].virtualServers?.[0].name).toBe('server1');
     });
 
-    it('should return empty object if no match found', () => {
-      const partitionInfo = {
-        partition1: [
-          { name: 'server1', poolReference: { items: { membersReference: { items: [{ name: 'member1' }] } } } },
-          { name: 'server2' },
-        ],
-      };
+    it('should return empty array if no match found', () => {
+      const partitionInfo: F5RuntimePartitionInfo[] = [
+        {
+          name: 'partition1',
+          virtualServers: [
+            { name: 'server1', poolReference: { items: { membersReference: { items: [{ name: 'member1' }] } } } } as F5RuntimeVirtualServer,
+            { name: 'server2' } as F5RuntimeVirtualServer,
+          ],
+        },
+      ];
       const query = 'server3';
       const filtered = service.filterVirtualServers(partitionInfo, query);
-      expect(Object.keys(filtered)).toContain('partition1');
-      expect(filtered.partition1.length).toBe(0);
+
+      expect(filtered.length).toBe(0);
     });
 
-    it('should return empty object if virtualServers is empty', () => {
-      const partitionInfo = { partition1: [] };
+    it('should return empty array if virtualServers is empty', () => {
+      const partitionInfo: F5RuntimePartitionInfo[] = [
+        {
+          name: 'partition1',
+          virtualServers: [],
+        },
+      ];
       const query = 'server1';
       const filtered = service.filterVirtualServers(partitionInfo, query);
-      expect(filtered.partition1.length).toBe(0);
+
+      expect(filtered.length).toBe(0);
     });
   });
 
@@ -89,7 +104,6 @@ describe('F5ConfigService', () => {
           nestedStats: {
             entries: {
               'status.availabilityState': { description: 'offline' },
-              // Note: enabledState could be anything here, but offline dominates
               'status.enabledState': { description: 'anyState' },
             },
           },
@@ -121,6 +135,55 @@ describe('F5ConfigService', () => {
         },
       };
       expect(service.getVirtualServerStatus(virtualServerUnexpectedStates)).toEqual('unknown');
+    });
+  });
+
+  describe('getVirtualServerCertSearch', () => {
+    it('should return a concatenated string of cert properties when all properties are present', () => {
+      const virtualServer: F5RuntimeVirtualServer = {
+        certsReference: [
+          {
+            name: 'default.crt',
+            subject: 'CN=localhost.localdomain',
+            expirationDate: 1957899604,
+            expirationString: 'Jan 16 21:00:04 2032 GMT',
+          },
+        ],
+      } as F5RuntimeVirtualServer;
+
+      const result = service.getVirtualServerCertSearch(virtualServer);
+      expect(result).toBe('default.crt CN=localhost.localdomain 1957899604 Jan 16 21:00:04 2032 GMT');
+    });
+
+    it('should handle missing properties and return only existing values', () => {
+      const virtualServer: F5RuntimeVirtualServer = {
+        certsReference: [
+          {
+            name: 'default.crt',
+            subject: 'CN=localhost.localdomain',
+            expirationDate: 1957899604,
+          },
+        ],
+      } as F5RuntimeVirtualServer;
+
+      const result = service.getVirtualServerCertSearch(virtualServer);
+      expect(result).toBe('default.crt CN=localhost.localdomain 1957899604');
+    });
+
+    it('should return an empty string if certsReference is empty', () => {
+      const virtualServer: F5RuntimeVirtualServer = {
+        certsReference: [],
+      } as F5RuntimeVirtualServer;
+
+      const result = service.getVirtualServerCertSearch(virtualServer);
+      expect(result).toBe('');
+    });
+
+    it('should return an empty string if certsReference is undefined', () => {
+      const virtualServer: F5RuntimeVirtualServer = {} as F5RuntimeVirtualServer;
+
+      const result = service.getVirtualServerCertSearch(virtualServer);
+      expect(result).toBe('');
     });
   });
 });

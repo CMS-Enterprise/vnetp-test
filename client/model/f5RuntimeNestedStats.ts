@@ -9,15 +9,20 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ExternalRoute } from './externalRoute';
 
 
-export interface GetManyExternalRouteResponseDto { 
-    totalPages: number;
-    count: number;
-    total: number;
-    page: number;
-    pageCount: number;
-    data: Array<ExternalRoute>;
+export interface F5RuntimeNestedStats { 
+    /**
+     * The type of the nested stats
+     */
+    kind: string;
+    /**
+     * A URI reference to the resource
+     */
+    selfLink: string;
+    /**
+     * The entries of the nested stats
+     */
+    entries: object;
 }
 

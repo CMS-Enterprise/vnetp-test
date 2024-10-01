@@ -79,12 +79,7 @@
       </div>
     </form>
 
-    <form
-      name="tenantForm"
-      (ngSubmit)="secondform.form.valid && setTenantAndNavigate(selectedTenant, selectedMode)"
-      #secondform="ngForm"
-      novalidate
-    >
+    <form name="tenantForm" (ngSubmit)="(secondform.form.valid)" #secondform="ngForm" novalidate>
       <div class="form-group">
         <label for="tenant">Account</label>
         <select
@@ -126,7 +121,10 @@
         </select>
       </div>
 
-      <button *ngIf="showTenantButton" class="btn btn-primary btn-lg" type="submit">Select Account</button>
+      <button *ngIf="!globalOnlyUser" class="btn btn-primary btn-lg" (click)="setTenantAndNavigate(selectedTenant, selectedMode)">
+        Select Account
+      </button>
+      <button *ngIf="showAdminPortalButton" class="btn btn-primary btn-lg" (click)="navToAdminPortal(selectedTenant)">Admin Portal</button>
     </form>
   </div>
 </div>

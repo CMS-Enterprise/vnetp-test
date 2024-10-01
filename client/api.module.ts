@@ -16,7 +16,6 @@ import { V1LoadBalancerRoutesService } from './api/v1LoadBalancerRoutes.service'
 import { V1LoadBalancerSelfIpsService } from './api/v1LoadBalancerSelfIps.service';
 import { V1LoadBalancerVirtualServersService } from './api/v1LoadBalancerVirtualServers.service';
 import { V1LoadBalancerVlansService } from './api/v1LoadBalancerVlans.service';
-import { V1NetworkScopeFormsExternalRouteService } from './api/v1NetworkScopeFormsExternalRoute.service';
 import { V1NetworkScopeFormsWanFormService } from './api/v1NetworkScopeFormsWanForm.service';
 import { V1NetworkScopeFormsWanFormSubnetService } from './api/v1NetworkScopeFormsWanFormSubnet.service';
 import { V1NetworkSecurityFirewallRuleGroupsService } from './api/v1NetworkSecurityFirewallRuleGroups.service';
@@ -31,6 +30,8 @@ import { V1NetworkSecurityZonesService } from './api/v1NetworkSecurityZones.serv
 import { V1NetworkStaticRoutesService } from './api/v1NetworkStaticRoutes.service';
 import { V1NetworkSubnetsService } from './api/v1NetworkSubnets.service';
 import { V1NetworkVlansService } from './api/v1NetworkVlans.service';
+import { V1RuntimeDataAciRuntimeService } from './api/v1RuntimeDataAciRuntime.service';
+import { V1RuntimeDataExternalRouteService } from './api/v1RuntimeDataExternalRoute.service';
 import { V1RuntimeDataF5ConfigService } from './api/v1RuntimeDataF5Config.service';
 import { V1RuntimeDataHitcountService } from './api/v1RuntimeDataHitcount.service';
 import { V1SelfServiceService } from './api/v1SelfService.service';
@@ -49,6 +50,7 @@ import { V2AppCentricRouteProfilesService } from './api/v2AppCentricRouteProfile
 import { V2AppCentricSubjectsService } from './api/v2AppCentricSubjects.service';
 import { V2AppCentricTenantsService } from './api/v2AppCentricTenants.service';
 import { V2AppCentricVrfsService } from './api/v2AppCentricVrfs.service';
+import { V3GlobalMessagesService } from './api/v3GlobalMessages.service';
 
 @NgModule({
   imports:      [],

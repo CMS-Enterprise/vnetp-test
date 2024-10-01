@@ -192,3 +192,33 @@
   [serviceObjects]="serviceObjects"
   [serviceObjectGroups]="serviceObjectGroups"
 ></app-firewall-rules-operation-modal>
+
+<ng-template #expandableRowsTemplate let-firewallRule="datum">
+  <div class="hitcount-container">
+    <div class="hitcount-display">
+      <strong>Hit Count:&nbsp;</strong>
+      <span>{{ firewallRule.hitCount === null ? '-' : firewallRule.hitCount }}</span>
+    </div>
+
+    <div class="last-refreshed">
+      <strong>Last Refreshed:&nbsp;</strong>
+      <span>
+        {{ FirewallRuleGroup.runtimeDataLastRefreshed ? calculateTimeDifference(FirewallRuleGroup.runtimeDataLastRefreshed) : '-' }}
+      </span>
+    </div>
+
+    <button
+      (click)="refreshHitcount()"
+      class="refresh-button"
+      [ngClass]="{ 'green-button': isRecentlyRefreshed() }"
+      [disabled]="isRefreshingRuntimeData || isRecentlyRefreshed()"
+    >
+      <ng-container *ngIf="!isRefreshingRuntimeData && !isRecentlyRefreshed()">Refresh Hitcount</ng-container>
+      <ng-container *ngIf="isRefreshingRuntimeData">
+        <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+        Refreshing...
+      </ng-container>
+      <ng-container *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData">Refreshed</ng-container>
+    </button>
+  </div>
+</ng-template>

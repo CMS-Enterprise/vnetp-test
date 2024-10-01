@@ -1,78 +1,49 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { TableConfig } from '../../../../common/table/table.component';
-import { ExternalRoute } from '../../../../../../client/model/externalRoute';
-import { GetManyExternalRouteResponseDto } from '../../../../../../client/model/getManyExternalRouteResponseDto';
-import { TableComponentDto } from '../../../../models/other/table-component-dto';
-// eslint-disable-next-line max-len
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModalMode } from '../../../../models/other/modal-mode';
-import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
-import { WanForm } from '../../../../../../client/model/wanForm';
-import { NgxSmartModalService } from 'ngx-smart-modal';
-import { TableContextService } from '../../../../services/table-context.service';
+import {
+  ExternalRoute,
+  ExternalRouteJobCreateDtoTypeEnum,
+  V1NetworkScopeFormsWanFormService,
+  V1RuntimeDataExternalRouteService,
+  WanForm,
+} from '../../../../../../client';
 import { Subscription } from 'rxjs';
-import { ExternalRouteModalDto } from '../../../../models/network-scope-forms/external-route-modal.dto';
-import { V1NetworkScopeFormsWanFormService } from '../../../../../../client/api/v1NetworkScopeFormsWanForm.service';
-import { V1NetworkScopeFormsExternalRouteService } from '../../../../../../client';
+import { ModalMode } from '../../../../models/other/modal-mode';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { RuntimeDataService } from '../../../../services/runtime-data.service';
 
 @Component({
   selector: 'app-external-route',
   templateUrl: './external-route.component.html',
-  styleUrls: ['./external-route.component.css'],
+  styleUrl: './external-route.component.css',
 })
 export class ExternalRouteComponent implements OnInit {
-  public wanForm: WanForm;
-  public externalRoutes: GetManyExternalRouteResponseDto;
-  public isLoading = false;
-  public tableComponentDto = new TableComponentDto();
-  public wanFormId: string;
-  public ModalMode = ModalMode;
-  public perPage = 20;
-
+  wanFormId: string;
+  dcsMode: string;
+  wanForm: WanForm;
+  routes: ExternalRoute[];
+  filteredRoutes: ExternalRoute[];
   private modalSubscription: Subscription;
-
-  public dcsMode: string;
-
-  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
-  @ViewChild('vrfNameTemplate') vrfNameTemplate: TemplateRef<any>;
-
-  public config: TableConfig<any> = {
-    description: 'External Routes',
-    columns: [
-      { name: 'IP', property: 'externalRouteIp' },
-      { name: 'Description', property: 'description' },
-      { name: 'VRF/Zone', template: () => this.vrfNameTemplate },
-      { name: 'Environment', property: 'environment' },
-      { name: '', template: () => this.actionsTemplate },
-    ],
-    hideAdvancedSearch: true,
-  };
-
-  public searchColumns: SearchColumnConfig[] = [
-    { propertyName: 'externalRouteIp', displayName: 'IP' },
-    { displayName: 'Description', propertyName: 'description' },
-    { displayName: 'VRF/Zone', propertyName: 'vrfName' },
-    { displayName: 'Environment', propertyName: 'environment' },
-  ];
+  public ModalMode = ModalMode;
+  searchQuery = '';
+  isRefreshingRuntimeData = false;
+  jobStatus: string;
+  showComponent = false;
+  refreshedNoData = false;
 
   constructor(
-    private externalRouteService: V1NetworkScopeFormsExternalRouteService,
     private route: ActivatedRoute,
-    private router: Router,
-    private ngx: NgxSmartModalService,
-    private tableContextService: TableContextService,
     private wanFormService: V1NetworkScopeFormsWanFormService,
-  ) {
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state) {
-      this.wanForm = navigation.extras.state.data;
-    }
-  }
+    private externalRouteService: V1RuntimeDataExternalRouteService,
+    private ngx: NgxSmartModalService,
+    private router: Router,
+    private runtimeDataService: RuntimeDataService,
+  ) {}
 
   ngOnInit(): void {
     this.wanFormId = this.route.snapshot.params.id;
     this.dcsMode = this.route.snapshot.data.mode;
-    this.getExternalRoutes();
+    this.getAllRoutes();
     if (!this.wanForm) {
       this.wanFormService.getOneWanForm({ id: this.wanFormId }).subscribe(data => {
         this.wanForm = data;
@@ -80,20 +51,65 @@ export class ExternalRouteComponent implements OnInit {
     }
   }
 
-  public onTableEvent(event): void {
-    this.tableComponentDto = event;
-    this.getExternalRoutes(event);
+  get sortedRoutes() {
+    return this.filteredRoutes?.sort((a, b) => {
+      const aHasWanForm = this.checkIfWanFormExists(a);
+      const bHasWanForm = this.checkIfWanFormExists(b);
+
+      if (aHasWanForm && !bHasWanForm) {
+        return -1;
+      }
+      if (!aHasWanForm && bHasWanForm) {
+        return 1;
+      }
+
+      if (a.protocol === 'manual' && b.protocol !== 'manual') {
+        return -1;
+      }
+      if (a.protocol !== 'manual' && b.protocol === 'manual') {
+        return 1;
+      }
+
+      return 0;
+    });
   }
 
-  public openModal(modalMode: ModalMode, externalRoute?: ExternalRoute): void {
-    const dto = new ExternalRouteModalDto();
+  addRouteToWanForm(route: ExternalRoute): void {
+    this.wanFormService.addRouteToWanFormWanForm({ wanId: this.wanForm.id, routeId: route.id }).subscribe(() => {
+      this.getAllRoutes();
+    });
+  }
 
-    dto.modalMode = modalMode;
-    dto.wanFormId = this.wanFormId;
-    dto.externalRoute = externalRoute;
+  removeRouteFromWanForm(route: ExternalRoute): void {
+    this.wanFormService.removeRouteFromWanFormWanForm({ wanId: this.wanForm.id, routeId: route.id }).subscribe(() => {
+      this.getAllRoutes();
+    });
+  }
 
+  getAllRoutes(): void {
+    this.externalRouteService.getManyExternalRoute({ relations: ['wanForms'], limit: 50000 }).subscribe(data => {
+      this.routes = data;
+      this.filteredRoutes = data;
+      if (data.length === 0) {
+        this.refreshedNoData = true;
+        return;
+      }
+      const routeWithRuntimeData = this.routes.find(route => route.runtimeDataLastRefreshed !== null) || null;
+
+      this.showComponent =
+        this.runtimeDataService.isRecentlyRefreshed(routeWithRuntimeData?.runtimeDataLastRefreshed, 600) || this.refreshedNoData;
+    });
+  }
+
+  deleteRoute(route: ExternalRoute): void {
+    this.externalRouteService.deleteOneExternalRoute({ id: route.id }).subscribe(() => {
+      this.getAllRoutes();
+    });
+  }
+
+  public openModal(): void {
     this.subscribeToModal();
-    this.ngx.setModalData(dto, 'externalRouteModal');
+    this.ngx.setModalData({ wanFormId: this.wanFormId }, 'externalRouteModal');
     this.ngx.getModal('externalRouteModal').open();
   }
 
@@ -101,93 +117,24 @@ export class ExternalRouteComponent implements OnInit {
     this.modalSubscription = this.ngx.getModal('externalRouteModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('externalRouteModal');
       this.modalSubscription.unsubscribe();
-      const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
 
-      if (filteredResults) {
-        this.getExternalRoutes(params);
-      } else {
-        this.getExternalRoutes();
-      }
+      this.getAllRoutes();
     });
   }
 
-  public getExternalRoutes(event?) {
-    this.isLoading = true;
-    let eventParams;
-    if (event) {
-      this.tableComponentDto.page = event.page ? event.page : 1;
-      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
-      const { searchText } = event;
-      const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
-      }
+  public onSearch(): void {
+    if (!this.searchQuery) {
+      this.filteredRoutes = this.routes;
+      return;
     }
-    this.externalRouteService
-      .getManyExternalRoute({
-        filter: [`wanFormId||eq||${this.wanFormId}`, eventParams],
-        page: this.tableComponentDto.page,
-        perPage: this.tableComponentDto.perPage,
-      })
-      .subscribe(
-        data => {
-          this.externalRoutes = data;
-        },
-        () => {
-          this.externalRoutes = null;
-        },
-        () => {
-          this.isLoading = false;
-        },
-      );
-  }
-
-  public deleteExternalRoute(externalRoute: ExternalRoute): void {
-    this.isLoading = true;
-    if (externalRoute.deletedAt) {
-      this.externalRouteService
-        .deleteOneExternalRoute({
-          id: externalRoute.id,
-        })
-        .subscribe(
-          () => {
-            this.getExternalRoutes();
-          },
-          () => {
-            this.isLoading = false;
-          },
-          () => {
-            this.isLoading = false;
-          },
-        );
-    } else {
-      this.externalRouteService.softDeleteOneExternalRoute({ id: externalRoute.id }).subscribe(
-        () => {
-          this.getExternalRoutes();
-        },
-        () => {
-          this.isLoading = false;
-        },
-        () => {
-          this.isLoading = false;
-        },
-      );
-    }
-  }
-
-  public restoreExternalRoute(externalRoute: ExternalRoute): void {
-    this.isLoading = true;
-    this.externalRouteService.restoreOneExternalRoute({ id: externalRoute.id }).subscribe(
-      () => {
-        this.getExternalRoutes();
-      },
-      () => {
-        this.isLoading = false;
-      },
-      () => {
-        this.isLoading = false;
-      },
+    this.filteredRoutes = this.routes.filter(
+      route =>
+        route.network.includes(this.searchQuery) ||
+        route.vrf.includes(this.searchQuery) ||
+        route.metric === Number(this.searchQuery) ||
+        route.prefixLength === Number(this.searchQuery) ||
+        route.protocol.includes(this.searchQuery) ||
+        `${route.network}/${route.prefixLength}`.includes(this.searchQuery),
     );
   }
 
@@ -195,5 +142,61 @@ export class ExternalRouteComponent implements OnInit {
     const currentQueryParams = this.route.snapshot.queryParams;
 
     this.router.navigate([`/${this.dcsMode}/wan-form`], { queryParams: currentQueryParams });
+  }
+
+  refreshRuntimeData(): void {
+    if (this.isRecentlyRefreshed() || this.isRefreshingRuntimeData) {
+      return;
+    }
+
+    this.isRefreshingRuntimeData = true;
+
+    this.externalRouteService
+      .createRuntimeDataJobExternalRoute({
+        externalRouteJobCreateDto: {
+          type: ExternalRouteJobCreateDtoTypeEnum.ExternalRoute,
+        },
+      })
+      .subscribe(job => {
+        let status = '';
+        this.runtimeDataService.pollJobStatus(job.id).subscribe({
+          next: towerJobDto => {
+            status = towerJobDto.status;
+          },
+          error: () => {
+            status = 'error';
+            this.isRefreshingRuntimeData = false;
+            this.jobStatus = status;
+          },
+          complete: () => {
+            this.isRefreshingRuntimeData = false;
+            if (status === 'successful') {
+              this.getAllRoutes();
+            }
+            this.jobStatus = status;
+          },
+        });
+      });
+  }
+
+  isRecentlyRefreshed(): boolean {
+    return this.runtimeDataService.isRecentlyRefreshed(this.routes?.[0]?.runtimeDataLastRefreshed);
+  }
+
+  getTooltipMessage(status: string): string {
+    switch (status) {
+      case 'failed':
+        return 'Job Status: Failed';
+      case 'running':
+        return 'Job Status: Timeout';
+      case 'error':
+        return 'An error occurred during polling';
+      default:
+        return status;
+    }
+  }
+
+  checkIfWanFormExists(route: ExternalRoute): boolean {
+    return route.wanForms?.some(wanForm => wanForm?.id === this.wanFormId);
   }
 }

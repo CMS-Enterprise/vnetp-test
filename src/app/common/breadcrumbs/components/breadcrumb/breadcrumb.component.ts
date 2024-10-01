@@ -25,14 +25,26 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
     if (path.split('/').some(c => c === 'appcentric')) {
       this.currentMode = 'appcentric';
-    } else {
+    } else if (path.split('/').some(c => c === 'netcentric')) {
       this.currentMode = 'netcentric';
+    } else if (path.split('/').some(c => c === 'adminportal')) {
+      this.currentMode = 'adminportal';
     }
 
-    const dashboardBreadcrumb: Breadcrumb = {
-      label: 'Dashboard',
-      url: `/${this.currentMode}/dashboard`,
-    };
+    let dashboardBreadcrumb: Breadcrumb;
+
+    // adjust breadcrumb label if we are in the admin portal section of DCS
+    if (this.currentMode === 'adminportal') {
+      dashboardBreadcrumb = {
+        label: 'Admin Portal Dashboard',
+        url: `/${this.currentMode}/dashboard`,
+      };
+    } else {
+      dashboardBreadcrumb = {
+        label: 'Dashboard',
+        url: `/${this.currentMode}/dashboard`,
+      };
+    }
 
     this.breadcrumbs.push(dashboardBreadcrumb);
     const originalRoot = this.route.root;

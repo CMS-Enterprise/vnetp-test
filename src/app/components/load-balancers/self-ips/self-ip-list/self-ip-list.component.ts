@@ -47,10 +47,7 @@ export class SelfIpListComponent implements OnInit, OnDestroy {
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'IP Address', property: 'ipAddress' },
-      {
-        name: 'VLAN',
-        value: (datum: any) => datum?.loadBalancerVlan?.name,
-      },
+      { name: 'VLAN', property: 'vlanName' },
       { name: 'State', property: 'state' },
       { name: '', template: () => this.actionsTemplate },
     ],

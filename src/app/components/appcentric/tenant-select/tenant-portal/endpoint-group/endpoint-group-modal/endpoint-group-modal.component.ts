@@ -1,11 +1,18 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { V2AppCentricEndpointGroupsService, EndpointGroup, V2AppCentricBridgeDomainsService, BridgeDomain } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Tab } from 'src/app/common/tabs/tabs.component';
-import { EndpointGroupModalDto } from 'src/app/models/appcentric/endpoint-group-modal-dto';
-import { ModalMode } from 'src/app/models/other/modal-mode';
-import { NameValidator } from 'src/app/validators/name-validator';
+import {
+  BridgeDomain,
+  V2AppCentricEndpointGroupsService,
+  V2AppCentricBridgeDomainsService,
+  EndpointGroup,
+  ApplicationProfile,
+  V2AppCentricApplicationProfilesService,
+} from '../../../../../../../../client';
+import { Tab } from '../../../../../../common/tabs/tabs.component';
+import { EndpointGroupModalDto } from '../../../../../../models/appcentric/endpoint-group-modal-dto';
+import { ModalMode } from '../../../../../../models/other/modal-mode';
+import { NameValidator } from '../../../../../../validators/name-validator';
 import { ConsumedContractComponent } from './consumed-contract/consumed-contract.component';
 import { ProvidedContractComponent } from './provided-contract/provided-contract.component';
 
@@ -26,10 +33,10 @@ export class EndpointGroupModalComponent implements OnInit {
   @Input() tenantId;
   public perPage = 5;
   public isLoading = false;
-  @Input() public applicationProfileId;
   public bridgeDomains: BridgeDomain[];
   public currentTab = 'Endpoint Group';
   public selectedBridgeDomain = undefined;
+  public applicationProfiles: ApplicationProfile[];
 
   @ViewChild('consumedContract', { static: false })
   consumedContractRef: ConsumedContractComponent;
@@ -44,6 +51,7 @@ export class EndpointGroupModalComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
     private bridgeDomainService: V2AppCentricBridgeDomainsService,
+    private applicationProfileService: V2AppCentricApplicationProfilesService,
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +76,7 @@ export class EndpointGroupModalComponent implements OnInit {
 
   public getData(): void {
     this.getBridgeDomains();
+    this.getApplicationProfiles();
     const dto = Object.assign({}, this.ngx.getModalData('endpointGroupModal') as EndpointGroupModalDto);
     this.ModalMode = dto.modalMode;
     if (this.ModalMode === ModalMode.Edit) {
@@ -86,6 +95,9 @@ export class EndpointGroupModalComponent implements OnInit {
       this.form.controls.alias.setValue(endpointGroup.alias);
       this.form.controls.intraEpgIsolation.setValue(endpointGroup.intraEpgIsolation);
       this.form.controls.bridgeDomain.setValue(endpointGroup.bridgeDomainId);
+      this.form.controls.applicationProfileId.setValue(endpointGroup.applicationProfileId);
+      this.form.controls.applicationProfileId.disable();
+      this.form.controls.bridgeDomain.disable();
     }
     this.ngx.resetModalData('endpointGroupModal');
   }
@@ -111,6 +123,7 @@ export class EndpointGroupModalComponent implements OnInit {
       description: ['', Validators.compose([Validators.maxLength(500)])],
       intraEpgIsolation: [null],
       bridgeDomain: ['', Validators.required],
+      applicationProfileId: ['', [Validators.required]],
     });
   }
 
@@ -146,9 +159,8 @@ export class EndpointGroupModalComponent implements OnInit {
       return;
     }
 
-    const { name, description, alias, intraEpgIsolation, bridgeDomain } = this.form.value;
+    const { name, description, alias, intraEpgIsolation, bridgeDomain, applicationProfileId } = this.form.value;
     const tenantId = this.tenantId;
-    const applicationProfileId = this.applicationProfileId;
     const endpointGroup = {
       name,
       description,
@@ -189,5 +201,24 @@ export class EndpointGroupModalComponent implements OnInit {
 
   private getInitialTabIndex(): number {
     return this.tabs.findIndex(t => t.name === this.currentTab);
+  }
+
+  public getApplicationProfiles(): void {
+    this.isLoading = true;
+    this.applicationProfileService
+      .getManyApplicationProfile({
+        filter: [`tenantId||eq||${this.tenantId}`],
+      })
+      .subscribe(
+        data => {
+          this.applicationProfiles = data as any;
+        },
+        () => {
+          this.applicationProfiles = null;
+        },
+        () => {
+          this.isLoading = false;
+        },
+      );
   }
 }

@@ -20,7 +20,9 @@ export interface HitcountJobResultDto {
 export enum HitcountJobResultDtoTypeEnum {
     FirewallRule = 'FirewallRule',
     NatRule = 'NatRule',
-    F5Config = 'F5Config'
+    F5Config = 'F5Config',
+    AciRuntime = 'AciRuntime',
+    ExternalRoute = 'ExternalRoute'
 };
 
 

@@ -1,0 +1,28 @@
+<div class="header-with-button mb-2 mt-2">
+  <h3>ACI Endpoints</h3>
+  <div class="d-flex align-items-center">
+    <fa-icon
+      *ngIf="jobStatus && jobStatus !== 'successful'"
+      class="icon"
+      [icon]="['fas', 'exclamation-triangle']"
+      data-bs-toggle="tooltip"
+      [attr.title]="getTooltipMessage(jobStatus)"
+    ></fa-icon>
+    <p class="mb-0">
+      <small *ngIf="!isRecentlyRefreshed() && !isRefreshingRuntimeData">{{ lastRefreshed }}</small>
+      <small *ngIf="isRefreshingRuntimeData" style="color: #717579">Refreshing</small>
+      <small *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" style="color: #717579">Refreshed</small>
+    </p>
+    <button
+      type="button"
+      title="Refresh F5 Config"
+      class="btn btn-icon"
+      (click)="refreshRuntimeData(); $event.stopPropagation()"
+      [disabled]="isRecentlyRefreshed() || isRefreshingRuntimeData"
+    >
+      <fa-icon *ngIf="!isRecentlyRefreshed()" class="icon" [icon]="['fas', 'sync-alt']" [spin]="isRefreshingRuntimeData"></fa-icon>
+      <fa-icon *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" class="icon" [icon]="['fas', 'check']"></fa-icon>
+    </button>
+  </div>
+</div>
+<app-lite-table [config]="config" [data]="aciRuntimeData"></app-lite-table>

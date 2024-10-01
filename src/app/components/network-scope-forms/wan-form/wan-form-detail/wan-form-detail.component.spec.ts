@@ -46,17 +46,6 @@ describe('WanFormDetailComponent', () => {
     });
   });
 
-  describe('navigateToExternalRoutes', () => {
-    it('should navigate to external routes with current query params', () => {
-      component.navigateToExternalRoutes();
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/netcentric/wan-form', 'testWanFormId', 'external-routes'], {
-        relativeTo: mockRoute,
-        queryParams: mockRoute.snapshot.queryParams,
-        state: { data: component.wanForm },
-      });
-    });
-  });
-
   describe('navigateToWanFormSubnets', () => {
     it('should navigate to WAN form subnets with current query params', () => {
       component.navigateToWanFormSubnets();
@@ -65,6 +54,15 @@ describe('WanFormDetailComponent', () => {
         queryParams: mockRoute.snapshot.queryParams,
         state: { data: component.wanForm },
       });
+    });
+  });
+
+  it('should navigate to route table with current query params', () => {
+    component.navigateToExternalRoute();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/netcentric/wan-form', 'testWanFormId', 'external-route'], {
+      relativeTo: mockRoute,
+      queryParams: mockRoute.snapshot.queryParams,
+      state: { data: component.wanForm },
     });
   });
 });

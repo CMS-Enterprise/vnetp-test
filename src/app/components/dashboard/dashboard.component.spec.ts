@@ -15,6 +15,7 @@ import {
   V1NetworkSubnetsService,
   V1NetworkVlansService,
   V1JobsService,
+  V3GlobalMessagesService,
 } from 'client';
 import { of } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -83,6 +84,7 @@ describe('DashboardComponent', () => {
         MockProvider(V1NetworkVlansService),
         MockProvider(DatacenterContextService),
         MockProvider(V1JobsService),
+        MockProvider(V3GlobalMessagesService),
       ],
     })
       .compileComponents()

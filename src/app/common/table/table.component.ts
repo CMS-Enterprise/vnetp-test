@@ -112,7 +112,6 @@ export class TableComponent<T> implements AfterViewInit {
       'static-routes-for-the-currently-selected-tier',
       'audit-log',
       'detailed-audit-log-entry',
-      'endpoint-groups',
       'consumed-contracts',
       'provided-contracts',
       'subnets',

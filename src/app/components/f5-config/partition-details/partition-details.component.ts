@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { F5ConfigService } from '../f5-config.service';
-import { F5Runtime } from '../../../../../client';
+import { F5RuntimePartitionInfo, F5Runtime, F5RuntimeVirtualServer } from '../../../../../client';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -11,14 +11,14 @@ import { ActivatedRoute } from '@angular/router';
 export class PartitionDetailsComponent implements OnInit, OnDestroy {
   urlF5Id: string;
   f5Config: F5Runtime;
-  partitionInfo: any;
-  partitionNames: string[];
-  filteredPartitionNames: string[];
-  filteredVirtualServerNames: any[];
+  partitionInfo: F5RuntimePartitionInfo[] = [];
+  partitionNames: string[] = [];
+  filteredPartitionNames: string[] = [];
+  filteredVirtualServerNames: any[] = [];
   selectedPartition = '[ALL]';
   searchQuery = '';
-  @Input() f5ParentSearchQuery;
-  filteredPartitionInfo: any;
+  @Input() f5ParentSearchQuery: string;
+  filteredPartitionInfo: F5RuntimePartitionInfo[] = [];
   partitionInfoExists = false;
 
   constructor(private f5ConfigStateManagementService: F5ConfigService, private route: ActivatedRoute) {}
@@ -29,11 +29,9 @@ export class PartitionDetailsComponent implements OnInit, OnDestroy {
       this.f5ConfigStateManagementService.getF5Configs().subscribe(data => {
         this.f5Config = data.find(f5 => f5?.id === this.urlF5Id);
         if (this.f5Config) {
-          const f5 = this.f5Config as any;
-          this.partitionInfo = f5?.data?.partitionInfo;
-          this.partitionInfo = this.partitionInfo === undefined ? {} : this.partitionInfo;
-          this.partitionInfoExists = Object.keys(this.partitionInfo).length > 0;
-          this.partitionNames = Object.keys(this.partitionInfo);
+          this.partitionInfo = this.f5Config?.data?.partitionInfo || [];
+          this.partitionInfoExists = this.partitionInfo.length > 0;
+          this.partitionNames = this.partitionInfo.map(partition => partition.name || '');
           this.filteredPartitionNames = this.partitionNames;
           this.filteredPartitionInfo = this.f5ConfigStateManagementService.filterVirtualServers(this.partitionInfo, this.searchQuery);
         }
@@ -46,13 +44,12 @@ export class PartitionDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    for (const partition in this.filteredPartitionInfo) {
-      if (this.filteredPartitionInfo.hasOwnProperty(partition)) {
-        this.filteredPartitionInfo[partition].forEach(vs => {
-          vs.expanded = false;
-        });
-      }
-    }
+    this.filteredPartitionInfo.forEach(partition => {
+      partition.virtualServers?.forEach(vs => {
+        // eslint-disable-next-line @typescript-eslint/dot-notation
+        delete vs['expanded'];
+      });
+    });
   }
 
   onSearch(searchQuery: string): void {
@@ -60,11 +57,8 @@ export class PartitionDetailsComponent implements OnInit, OnDestroy {
     this.filteredPartitionInfo = this.f5ConfigStateManagementService.filterVirtualServers(this.partitionInfo, this.searchQuery);
   }
 
-  handleExpandedChange(virtualServer: any, expanded: boolean): void {
-    // If needed, find the virtualServer in your data structure and update its expanded state
-    // This is necessary if you want to adjust the layout or maintain the state
-    virtualServer.expanded = expanded;
-
-    // Additional logic if needed, e.g., ensuring only one card is expanded at a time
+  handleExpandedChange(virtualServer: F5RuntimeVirtualServer, expanded: boolean): void {
+    // eslint-disable-next-line @typescript-eslint/dot-notation
+    virtualServer['expanded'] = expanded;
   }
 }

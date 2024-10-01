@@ -13,12 +13,15 @@
 
 export interface F5ConfigJobCreateDto { 
     type: F5ConfigJobCreateDtoTypeEnum;
+    datacenterId?: string;
     id: string;
 }
 export enum F5ConfigJobCreateDtoTypeEnum {
     FirewallRule = 'FirewallRule',
     NatRule = 'NatRule',
-    F5Config = 'F5Config'
+    F5Config = 'F5Config',
+    AciRuntime = 'AciRuntime',
+    ExternalRoute = 'ExternalRoute'
 };
 
 

@@ -19836,40 +19836,10 @@
         ]
       }
     },
-    "/v1/network-scope-forms/external-route": {
-      "post": {
-        "operationId": "createOneExternalRoute",
-        "summary": "Create one ExternalRoute",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ExternalRoute"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExternalRoute"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v1/network-scope-forms/external-route"
-        ]
-      },
+    "/v1/runtime-data/aci-runtime": {
       "get": {
-        "operationId": "getManyExternalRoute",
-        "summary": "Get many ExternalRoute",
+        "operationId": "getManyAciRuntime",
+        "summary": "Get many Aci Runtime",
         "parameters": [
           {
             "name": "relations",
@@ -19986,72 +19956,32 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "GetManyExternalRouteResponseDto",
-                  "type": "object",
-                  "properties": {
-                    "totalPages": {
-                      "type": "number"
-                    },
-                    "count": {
-                      "type": "number"
-                    },
-                    "total": {
-                      "type": "number"
-                    },
-                    "page": {
-                      "type": "number"
-                    },
-                    "pageCount": {
-                      "type": "number"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/ExternalRoute"
-                      }
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "count",
-                    "total",
-                    "page",
-                    "pageCount",
-                    "totalPages"
-                  ]
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AciRuntime"
+                  }
                 }
               }
             }
           }
         },
         "tags": [
-          "v1/network-scope-forms/external-route"
+          "v1/runtime-data/aci-runtime"
         ]
       }
     },
-    "/v1/network-scope-forms/external-route/bulk": {
+    "/v1/runtime-data/aci-runtime/create-runtime-data-job": {
       "post": {
-        "operationId": "createManyExternalRoute",
-        "summary": "Create many ExternalRoute",
+        "operationId": "createRuntimeDataJobAciRuntime",
+        "summary": "",
+        "description": "Create ACI Runtime Collection Job",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "title": "CreateManyExternalRouteDto",
-                "type": "object",
-                "properties": {
-                  "bulk": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ExternalRoute"
-                    }
-                  }
-                },
-                "required": [
-                  "bulk"
-                ]
+                "$ref": "#/components/schemas/AciRuntimeJobCreateDto"
               }
             }
           }
@@ -20062,34 +19992,22 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ExternalRoute"
-                  }
+                  "$ref": "#/components/schemas/Job"
                 }
               }
             }
           }
         },
         "tags": [
-          "v1/network-scope-forms/external-route"
+          "v1/runtime-data/aci-runtime"
         ]
       }
     },
-    "/v1/network-scope-forms/external-route/{id}": {
+    "/v1/runtime-data/external-route": {
       "get": {
-        "operationId": "getOneExternalRoute",
-        "summary": "Get one ExternalRoute",
+        "operationId": "getManyExternalRoute",
+        "summary": "Get many External Routes",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "relations",
             "required": false,
@@ -20113,6 +20031,90 @@
                 "type": "string"
               }
             }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -20121,30 +20123,23 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExternalRoute"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExternalRoute"
+                  }
                 }
               }
             }
           }
         },
         "tags": [
-          "v1/network-scope-forms/external-route"
+          "v1/runtime-data/external-route"
         ]
       },
-      "put": {
-        "operationId": "updateOneExternalRoute",
-        "summary": "Update one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+      "post": {
+        "operationId": "createOneExternalRoute",
+        "summary": "Create one External Route",
+        "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -20156,7 +20151,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "content": {
               "application/json": {
@@ -20168,12 +20163,14 @@
           }
         },
         "tags": [
-          "v1/network-scope-forms/external-route"
+          "v1/runtime-data/external-route"
         ]
-      },
+      }
+    },
+    "/v1/runtime-data/external-route/{id}": {
       "delete": {
         "operationId": "deleteOneExternalRoute",
-        "summary": "Delete one ExternalRoute",
+        "summary": "Delete one External Route",
         "parameters": [
           {
             "name": "id",
@@ -20198,20 +20195,118 @@
           }
         },
         "tags": [
-          "v1/network-scope-forms/external-route"
+          "v1/runtime-data/external-route"
         ]
       }
     },
-    "/v1/network-scope-forms/external-route/{id}/soft": {
+    "/v1/runtime-data/external-route/create-runtime-data-job": {
+      "post": {
+        "operationId": "createRuntimeDataJobExternalRoute",
+        "summary": "",
+        "description": "Create Runtime Data External Route Collection Job",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExternalRouteJobCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/external-route"
+        ]
+      }
+    },
+    "/v3/global/messages": {
+      "get": {
+        "operationId": "getMessagesMessage",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationDTO"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/messages"
+        ]
+      },
+      "post": {
+        "operationId": "createMessageMessage",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Message"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/messages"
+        ]
+      }
+    },
+    "/v3/global/messages/{messageId}": {
       "delete": {
-        "operationId": "softDeleteOneExternalRoute",
-        "summary": "Soft delete one ExternalRoute",
+        "operationId": "deleteMessageMessage",
         "parameters": [
           {
-            "name": "id",
+            "name": "messageId",
             "required": true,
             "in": "path",
-            "description": "UUID.",
             "schema": {
               "type": "string"
             }
@@ -20219,86 +20314,18 @@
         ],
         "responses": {
           "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v1/network-scope-forms/external-route"
-        ]
-      }
-    },
-    "/v1/network-scope-forms/external-route/{id}/restore": {
-      "patch": {
-        "operationId": "restoreOneExternalRoute",
-        "summary": "Restore one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResult"
+                }
+              }
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
         },
         "tags": [
-          "v1/network-scope-forms/external-route"
-        ]
-      }
-    },
-    "/v1/network-scope-forms/external-route/{id}/provision": {
-      "put": {
-        "operationId": "provisionOneExternalRoute",
-        "summary": "Provision one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v1/network-scope-forms/external-route"
-        ]
-      }
-    },
-    "/v1/network-scope-forms/external-route/{id}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionOneExternalRoute",
-        "summary": "Deprovision one ExternalRoute",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v1/network-scope-forms/external-route"
+          "v3/global/messages"
         ]
       }
     },
@@ -20379,6 +20406,74 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form"
+        ]
+      }
+    },
+    "/v1/network-scope-forms/wan-form/{wanId}/route-table/{routeId}": {
+      "post": {
+        "operationId": "addRouteToWanFormWanForm",
+        "summary": "",
+        "description": "Add Route to Wan Form",
+        "parameters": [
+          {
+            "name": "wanId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the WAN form to add the route to",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "routeId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the route to add to the WAN form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/wan-form"
+        ]
+      },
+      "delete": {
+        "operationId": "removeRouteFromWanFormWanForm",
+        "summary": "",
+        "description": "Remove Route from Wan Form",
+        "parameters": [
+          {
+            "name": "wanId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the WAN form to remove the route from",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "routeId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the route to remove from the WAN form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
           }
         },
         "tags": [
@@ -21473,7 +21568,7 @@
           "datacenterId"
         ]
       },
-      "Vlan": {
+      "ApplicationProfile": {
         "type": "object",
         "properties": {
           "id": {
@@ -21513,31 +21608,1346 @@
             "minLength": 3,
             "maxLength": 100
           },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
           "description": {
             "type": "string",
             "maxLength": 500
           },
-          "vlanNumber": {
-            "type": "number",
-            "minimum": 1,
-            "maximum": 4094
-          },
-          "vcdVlanType": {
-            "type": "string",
-            "enum": [
-              "Dev",
-              "Prod",
-              "Both"
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
             ]
           },
-          "tierId": {
+          "tenantId": {
+            "type": "string"
+          },
+          "endpointGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointGroup"
+            }
+          }
+        },
+        "required": [
+          "tenantId"
+        ]
+      },
+      "Vrf": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "policyControlEnforced": {
+            "type": "boolean",
+            "description": "Default True, Security rules (contracts) will be enforced."
+          },
+          "policyControlEnforcementIngress": {
+            "type": "boolean",
+            "description": "Default True, If this is set to False, policy is enforced on egress traffic. If this is set to True, policy is enforced on ingress traffic."
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "bridgeDomains": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BridgeDomain"
+            }
+          }
+        },
+        "required": [
+          "policyControlEnforced",
+          "policyControlEnforcementIngress",
+          "tenantId"
+        ]
+      },
+      "AppCentricSubnet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "gatewayIp": {
+            "type": "string",
+            "description": "The IP address and mask of the default gateway."
+          },
+          "treatAsVirtualIpAddress": {
+            "type": "boolean",
+            "description": "Indicates whether the subnet is a virtual IP address configured for the associated bridge domain."
+          },
+          "primaryIpAddress": {
+            "type": "boolean",
+            "description": "Indicates if the subnet is preferred (primary) over the available alternatives. Only one preferred subnet is allowed.\n      Affects DHCP Relay only."
+          },
+          "advertisedExternally": {
+            "type": "boolean",
+            "description": "The subnet can be exported to a routed connection."
+          },
+          "preferred": {
+            "type": "boolean",
+            "description": "The subnet is preferred over other subnets associated to its parent BD."
+          },
+          "sharedBetweenVrfs": {
+            "type": "boolean",
+            "description": "The subnet can be shared with and exported to multiple contexts (VRFs) in the same tenant or across tenants as part of a shared service."
+          },
+          "ipDataPlaneLearning": {
+            "type": "boolean",
+            "description": "Choose whether to enable or disable IP address learning for this subnet."
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "bridgeDomain": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BridgeDomain"
+              }
+            ]
+          },
+          "bridgeDomainId": {
             "type": "string"
           }
         },
         "required": [
-          "name",
-          "vlanNumber",
-          "tierId"
+          "gatewayIp",
+          "treatAsVirtualIpAddress",
+          "primaryIpAddress",
+          "advertisedExternally",
+          "preferred",
+          "sharedBetweenVrfs",
+          "ipDataPlaneLearning",
+          "tenantId",
+          "bridgeDomainId"
+        ]
+      },
+      "L3Out": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "bridgeDomains": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BridgeDomain"
+            }
+          },
+          "bridgeDomainsForRouteProfile": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BridgeDomain"
+            }
+          },
+          "vrf": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Vrf"
+              }
+            ]
+          },
+          "vrfId": {
+            "type": "string"
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "vrfId",
+          "tenantId"
+        ]
+      },
+      "RouteProfile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "bridgeDomains": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BridgeDomain"
+            }
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tenantId"
+        ]
+      },
+      "BridgeDomain": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "unicastRouting": {
+            "type": "boolean",
+            "description": "Unicast routing enabled, default: true."
+          },
+          "arpFlooding": {
+            "type": "boolean",
+            "description": "ARP Flooding enabled, default: true."
+          },
+          "bdMacAddress": {
+            "type": "string",
+            "description": "Bridge Domain MAC address, default: null."
+          },
+          "limitLocalIpLearning": {
+            "type": "boolean",
+            "description": "Limit Local IP Learning to BD/EPG Subnets, default: true."
+          },
+          "epMoveDetectionModeGarp": {
+            "type": "boolean",
+            "description": "GARP-based endpoint move detection, default: false."
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "vrf": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Vrf"
+              }
+            ]
+          },
+          "vrfId": {
+            "type": "string"
+          },
+          "subnets": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppCentricSubnet"
+            }
+          },
+          "endpointGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointGroup"
+            }
+          },
+          "l3outs": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/L3Out"
+            }
+          },
+          "l3OutForRouteProfileId": {
+            "type": "string"
+          },
+          "l3OutForRouteProfile": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/L3Out"
+              }
+            ]
+          },
+          "routeProfileId": {
+            "type": "string"
+          },
+          "routeProfile": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RouteProfile"
+              }
+            ]
+          }
+        },
+        "required": [
+          "unicastRouting",
+          "arpFlooding",
+          "bdMacAddress",
+          "limitLocalIpLearning",
+          "epMoveDetectionModeGarp",
+          "tenantId",
+          "vrfId"
+        ]
+      },
+      "FilterEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "etherType": {
+            "type": "string",
+            "description": "The EtherType of the filter entry.",
+            "enum": [
+              "ip",
+              "ipv6",
+              "ipv4",
+              "mplsunicast",
+              "trill",
+              "arp",
+              "fcoe",
+              "macsecurity"
+            ]
+          },
+          "arpFlag": {
+            "type": "string",
+            "description": "The Address Resolution Protocol flag for a filter entry. The filter entry is a combination of network traffic classification properties.",
+            "enum": [
+              "arpreply",
+              "arprequest"
+            ]
+          },
+          "ipProtocol": {
+            "type": "string",
+            "description": "The IP protocol for a filter entry. The filter entry is a combination of network traffic classification properties.",
+            "enum": [
+              "eigrp",
+              "egp",
+              "icmp",
+              "icmpv6",
+              "igmp",
+              "igp",
+              "l2tp",
+              "ospfigp",
+              "pim",
+              "tcp",
+              "udp"
+            ]
+          },
+          "matchOnlyFragments": {
+            "type": "boolean",
+            "description": "Match only packet fragments. When enabled, the rule applies to any IP fragment with an offset that is greater than 0 (all IP fragments except the first). When disabled, the rule will not apply to IP fragments with an offset greater than 0 because TCP/UDP port information can only be checked in initial fragments."
+          },
+          "sourceFromPort": {
+            "type": "number"
+          },
+          "sourceToPort": {
+            "type": "number"
+          },
+          "destinationFromPort": {
+            "type": "number"
+          },
+          "destinationToPort": {
+            "type": "number"
+          },
+          "stateful": {
+            "type": "boolean"
+          },
+          "filter": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Filter"
+              }
+            ]
+          },
+          "filterId": {
+            "type": "string"
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "etherType",
+          "filterId",
+          "tenantId"
+        ]
+      },
+      "Filter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "filterEntries": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterEntry"
+            }
+          },
+          "subjects": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Subject"
+            }
+          }
+        },
+        "required": [
+          "tenantId"
+        ]
+      },
+      "Subject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "applyBothDirections": {
+            "type": "boolean",
+            "description": "Sets the contract filter to apply on both ingress and egress traffic directions."
+          },
+          "reverseFilterPorts": {
+            "type": "boolean",
+            "description": "Enables the filter to apply on both ingress and egress traffic."
+          },
+          "globalAlias": {
+            "type": "string",
+            "description": "The scope of a contract between two or more EPGs."
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "contract": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Contract"
+              }
+            ]
+          },
+          "contractId": {
+            "type": "string"
+          },
+          "filters": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
+          }
+        },
+        "required": [
+          "applyBothDirections",
+          "reverseFilterPorts",
+          "globalAlias",
+          "tenantId",
+          "contractId"
+        ]
+      },
+      "Contract": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "consumingEndpointGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointGroup"
+            }
+          },
+          "providingEndpointGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointGroup"
+            }
+          },
+          "subjects": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Subject"
+            }
+          }
+        },
+        "required": [
+          "tenantId"
+        ]
+      },
+      "AuditLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "actionType": {
+            "type": "string",
+            "enum": [
+              "BulkUpload",
+              "Create",
+              "Update",
+              "SoftDelete",
+              "Restore",
+              "Delete",
+              "Deploy",
+              "RuleMove",
+              "RuleClone"
+            ]
+          },
+          "entityType": {
+            "type": "string",
+            "enum": [
+              "Appliance",
+              "Datacenter",
+              "Job",
+              "provision-tier",
+              "provision-tier-network-security",
+              "LoadBalancerHealthMonitor",
+              "LoadBalancerIrule",
+              "LoadBalancerNode",
+              "LoadBalancerProfile",
+              "LoadBalancerPolicy",
+              "LoadBalancerRoute",
+              "LoadBalancerPool",
+              "LoadBalancerSelfIp",
+              "LoadBalancerVirtualServer",
+              "LoadBalancerVlan",
+              "PhysicalServer",
+              "NetworkObject",
+              "NetworkObjectGroup",
+              "ServiceObject",
+              "ServiceObjectGroup",
+              "StaticRoute",
+              "FirewallRule",
+              "NatRule",
+              "Subnet",
+              "Vlan",
+              "Tier",
+              "FirewallRuleGroup",
+              "NatRuleGroup",
+              "L3Out",
+              "Tenant",
+              "AppCentricSubnet",
+              "ApplicationProfile",
+              "BridgeDomain",
+              "Contract",
+              "EndpointGroup",
+              "Filter",
+              "FilterEntry",
+              "Subject",
+              "Vrf",
+              "RouteProfile",
+              "WanForm",
+              "ExternalRoute",
+              "WanFormSubnet"
+            ]
+          },
+          "entityBefore": {
+            "type": "object"
+          },
+          "entityAfter": {
+            "type": "object"
+          },
+          "changedProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "timestamp": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "changedBy": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "groupName": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "tierId": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "actionType",
+          "entityType",
+          "timestamp",
+          "changedBy",
+          "datacenterId",
+          "tenantId"
+        ]
+      },
+      "Job": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "towerId": {
+            "type": "number",
+            "readOnly": true
+          },
+          "jobType": {
+            "type": "string"
+          },
+          "definition": {
+            "type": "object"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "completedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "datacenterId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "jobType",
+          "definition",
+          "datacenterId"
+        ]
+      },
+      "SelfServiceConvertedArtifactObjects": {
+        "type": "object",
+        "properties": {
+          "logs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "subnets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "vlans": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "networkObjects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "networkObjectGroups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "serviceObjects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "serviceObjectGroups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "intervrfFWRules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "intervrfNatRules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "externalFWRules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "externalNatRules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "logs"
+        ]
+      },
+      "SelfServiceConfig": {
+        "type": "object",
+        "properties": {
+          "artifact": {
+            "$ref": "#/components/schemas/SelfServiceConvertedArtifactObjects"
+          }
+        },
+        "required": [
+          "artifact"
+        ]
+      },
+      "SelfService": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "rawConfigFileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "dcsTier": {
+            "type": "string",
+            "nullable": true
+          },
+          "dcsTierUUID": {
+            "type": "string",
+            "nullable": true
+          },
+          "fwRuleGroupInfo": {
+            "type": "object",
+            "nullable": true
+          },
+          "natRuleGroupInfo": {
+            "type": "object",
+            "nullable": true
+          },
+          "rawConfigType": {
+            "type": "string",
+            "nullable": true
+          },
+          "rawXMLConfig": {
+            "type": "object",
+            "nullable": true
+          },
+          "rawTextConfig": {
+            "type": "string",
+            "nullable": true
+          },
+          "rawJsonConfig": {
+            "type": "object",
+            "nullable": true
+          },
+          "mappedObjects": {
+            "type": "object",
+            "nullable": true
+          },
+          "intervrfSubnets": {
+            "type": "string",
+            "nullable": true
+          },
+          "convertedConfig": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SelfServiceConfig"
+              }
+            ]
+          },
+          "conversionStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "bulkUploadStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "datacenterId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "rawConfigFileName",
+          "dcsTier",
+          "dcsTierUUID",
+          "fwRuleGroupInfo",
+          "natRuleGroupInfo",
+          "rawConfigType",
+          "rawXMLConfig",
+          "rawTextConfig",
+          "rawJsonConfig",
+          "mappedObjects",
+          "intervrfSubnets",
+          "convertedConfig",
+          "conversionStatus",
+          "deviceType",
+          "bulkUploadStatus",
+          "datacenterId"
+        ]
+      },
+      "Datacenter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "tiers": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tier"
+            }
+          },
+          "tierGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TierGroup"
+            }
+          },
+          "jobs": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Job"
+            }
+          },
+          "auditLogs": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditLog"
+            }
+          },
+          "selfServices": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SelfService"
+              }
+            ]
+          },
+          "wanForms": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WanForm"
+            }
+          }
+        },
+        "required": [
+          "name"
         ]
       },
       "Subnet": {
@@ -21613,6 +23023,618 @@
           "network",
           "gateway",
           "vlanId",
+          "tierId"
+        ]
+      },
+      "WanFormSubnet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 28
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "vrf": {
+            "type": "string",
+            "enum": [
+              "appprod",
+              "appdev",
+              "dataprod",
+              "datadev",
+              "edcmgmt",
+              "transport"
+            ]
+          },
+          "environment": {
+            "type": "string",
+            "enum": [
+              "prod",
+              "dev",
+              "val",
+              "imp"
+            ]
+          },
+          "wanFormId": {
+            "type": "string"
+          },
+          "wanForm": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WanForm"
+              }
+            ]
+          },
+          "netcentricSubnet": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Subnet"
+              }
+            ]
+          },
+          "netcentricSubnetId": {
+            "type": "string"
+          },
+          "appcentricSubnet": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AppCentricSubnet"
+              }
+            ]
+          },
+          "appcentricSubnetId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "vrf",
+          "environment",
+          "wanFormId"
+        ]
+      },
+      "ExternalRoute": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "network": {
+            "type": "string"
+          },
+          "prefixLength": {
+            "type": "number"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "vrf": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "number"
+          },
+          "uptime": {
+            "type": "string"
+          },
+          "wanForms": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WanForm"
+            }
+          },
+          "runtimeDataLastRefreshed": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "network",
+          "prefixLength",
+          "vrf",
+          "metric"
+        ]
+      },
+      "WanForm": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 28
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "datacenter": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Datacenter"
+              }
+            ]
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "wanFormSubnets": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WanFormSubnet"
+            }
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "externalRoutes": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalRoute"
+            }
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "Tenant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "applicationProfiles": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationProfile"
+            }
+          },
+          "bridgeDomains": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BridgeDomain"
+            }
+          },
+          "contracts": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          },
+          "vrfs": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Vrf"
+            }
+          },
+          "filters": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
+          },
+          "endpointGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointGroup"
+            }
+          },
+          "appCentricSubnets": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppCentricSubnet"
+            }
+          },
+          "subjects": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Subject"
+            }
+          },
+          "filterEntries": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterEntry"
+            }
+          },
+          "auditLogs": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditLog"
+            }
+          },
+          "wanForms": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WanForm"
+              }
+            ]
+          }
+        }
+      },
+      "EndpointGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "intraEpgIsolation": {
+            "type": "boolean",
+            "description": "Intra-EPG endpoint isolation policies provide full isolation for virtual or physical endpoints;no communication is allowed between endpoints in an EPG that is operating with isolation enforced."
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "bridgeDomain": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BridgeDomain"
+              }
+            ]
+          },
+          "bridgeDomainId": {
+            "type": "string"
+          },
+          "applicationProfile": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ApplicationProfile"
+              }
+            ]
+          },
+          "applicationProfileId": {
+            "type": "string"
+          },
+          "consumedContracts": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          },
+          "providedContracts": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          },
+          "aciRuntimes": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AciRuntime"
+              }
+            ]
+          }
+        },
+        "required": [
+          "intraEpgIsolation",
+          "tenantId",
+          "bridgeDomainId",
+          "applicationProfileId"
+        ]
+      },
+      "AciRuntime": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "macAddress": {
+            "type": "string"
+          },
+          "addr": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "contName": {
+            "type": "string"
+          },
+          "lcC": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "vlan": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Vlan"
+              }
+            ]
+          },
+          "vlanId": {
+            "type": "string"
+          },
+          "endpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
+          "endpointGroupId": {
+            "type": "string"
+          },
+          "runtimeDataLastRefreshed": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "macAddress",
+          "name"
+        ]
+      },
+      "Vlan": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "vlanNumber": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 4094
+          },
+          "vcdVlanType": {
+            "type": "string",
+            "enum": [
+              "Dev",
+              "Prod",
+              "Both"
+            ]
+          },
+          "tierId": {
+            "type": "string"
+          },
+          "aciRuntimes": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AciRuntime"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "vlanNumber",
           "tierId"
         ]
       },
@@ -23666,1910 +25688,6 @@
           "datacenterId"
         ]
       },
-      "Job": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "towerId": {
-            "type": "number",
-            "readOnly": true
-          },
-          "jobType": {
-            "type": "string"
-          },
-          "definition": {
-            "type": "object"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "completedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "datacenterId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "jobType",
-          "definition",
-          "datacenterId"
-        ]
-      },
-      "AuditLog": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "actionType": {
-            "type": "string",
-            "enum": [
-              "BulkUpload",
-              "Create",
-              "Update",
-              "SoftDelete",
-              "Restore",
-              "Delete",
-              "Deploy",
-              "RuleMove",
-              "RuleClone"
-            ]
-          },
-          "entityType": {
-            "type": "string",
-            "enum": [
-              "Appliance",
-              "Datacenter",
-              "Job",
-              "provision-tier",
-              "provision-tier-network-security",
-              "LoadBalancerHealthMonitor",
-              "LoadBalancerIrule",
-              "LoadBalancerNode",
-              "LoadBalancerProfile",
-              "LoadBalancerPolicy",
-              "LoadBalancerRoute",
-              "LoadBalancerPool",
-              "LoadBalancerSelfIp",
-              "LoadBalancerVirtualServer",
-              "LoadBalancerVlan",
-              "PhysicalServer",
-              "NetworkObject",
-              "NetworkObjectGroup",
-              "ServiceObject",
-              "ServiceObjectGroup",
-              "StaticRoute",
-              "FirewallRule",
-              "NatRule",
-              "Subnet",
-              "Vlan",
-              "Tier",
-              "FirewallRuleGroup",
-              "NatRuleGroup",
-              "L3Out",
-              "Tenant",
-              "AppCentricSubnet",
-              "ApplicationProfile",
-              "BridgeDomain",
-              "Contract",
-              "EndpointGroup",
-              "Filter",
-              "FilterEntry",
-              "Subject",
-              "Vrf",
-              "RouteProfile",
-              "WanForm",
-              "ExternalRoute",
-              "WanFormSubnet"
-            ]
-          },
-          "entityBefore": {
-            "type": "object"
-          },
-          "entityAfter": {
-            "type": "object"
-          },
-          "changedProperties": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "timestamp": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "changedBy": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "groupName": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "datacenterId": {
-            "type": "string"
-          },
-          "tierId": {
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "actionType",
-          "entityType",
-          "timestamp",
-          "changedBy",
-          "datacenterId",
-          "tenantId"
-        ]
-      },
-      "SelfServiceConvertedArtifactObjects": {
-        "type": "object",
-        "properties": {
-          "logs": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "subnets": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "vlans": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "networkObjects": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "networkObjectGroups": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "serviceObjects": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "serviceObjectGroups": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "intervrfFWRules": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "intervrfNatRules": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "externalFWRules": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "externalNatRules": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "required": [
-          "logs"
-        ]
-      },
-      "SelfServiceConfig": {
-        "type": "object",
-        "properties": {
-          "artifact": {
-            "$ref": "#/components/schemas/SelfServiceConvertedArtifactObjects"
-          }
-        },
-        "required": [
-          "artifact"
-        ]
-      },
-      "SelfService": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "rawConfigFileName": {
-            "type": "string",
-            "nullable": true
-          },
-          "dcsTier": {
-            "type": "string",
-            "nullable": true
-          },
-          "dcsTierUUID": {
-            "type": "string",
-            "nullable": true
-          },
-          "fwRuleGroupInfo": {
-            "type": "object",
-            "nullable": true
-          },
-          "natRuleGroupInfo": {
-            "type": "object",
-            "nullable": true
-          },
-          "rawConfigType": {
-            "type": "string",
-            "nullable": true
-          },
-          "rawXMLConfig": {
-            "type": "object",
-            "nullable": true
-          },
-          "rawTextConfig": {
-            "type": "string",
-            "nullable": true
-          },
-          "rawJsonConfig": {
-            "type": "object",
-            "nullable": true
-          },
-          "mappedObjects": {
-            "type": "object",
-            "nullable": true
-          },
-          "intervrfSubnets": {
-            "type": "string",
-            "nullable": true
-          },
-          "convertedConfig": {
-            "nullable": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SelfServiceConfig"
-              }
-            ]
-          },
-          "conversionStatus": {
-            "type": "string",
-            "nullable": true
-          },
-          "deviceType": {
-            "type": "string",
-            "nullable": true
-          },
-          "bulkUploadStatus": {
-            "type": "string",
-            "nullable": true
-          },
-          "datacenterId": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "id",
-          "rawConfigFileName",
-          "dcsTier",
-          "dcsTierUUID",
-          "fwRuleGroupInfo",
-          "natRuleGroupInfo",
-          "rawConfigType",
-          "rawXMLConfig",
-          "rawTextConfig",
-          "rawJsonConfig",
-          "mappedObjects",
-          "intervrfSubnets",
-          "convertedConfig",
-          "conversionStatus",
-          "deviceType",
-          "bulkUploadStatus",
-          "datacenterId"
-        ]
-      },
-      "ExternalRoute": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "externalRouteIp": {
-            "type": "string"
-          },
-          "vrf": {
-            "type": "string",
-            "enum": [
-              "appprod",
-              "appdev",
-              "dataprod",
-              "datadev",
-              "edcmgmt",
-              "transport"
-            ]
-          },
-          "environment": {
-            "type": "string",
-            "enum": [
-              "prod",
-              "dev",
-              "val",
-              "imp"
-            ]
-          },
-          "wanFormId": {
-            "type": "string"
-          },
-          "wanForm": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/WanForm"
-              }
-            ]
-          },
-          "datacenterId": {
-            "type": "string"
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "externalRouteIp",
-          "vrf",
-          "environment",
-          "wanFormId"
-        ]
-      },
-      "Datacenter": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "tiers": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Tier"
-            }
-          },
-          "tierGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TierGroup"
-            }
-          },
-          "jobs": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Job"
-            }
-          },
-          "auditLogs": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AuditLog"
-            }
-          },
-          "selfServices": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SelfService"
-              }
-            ]
-          },
-          "wanForms": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WanForm"
-            }
-          },
-          "externalRoutes": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExternalRoute"
-            }
-          }
-        },
-        "required": [
-          "name"
-        ]
-      },
-      "Vrf": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "policyControlEnforced": {
-            "type": "boolean",
-            "description": "Default True, Security rules (contracts) will be enforced."
-          },
-          "policyControlEnforcementIngress": {
-            "type": "boolean",
-            "description": "Default True, If this is set to False, policy is enforced on egress traffic. If this is set to True, policy is enforced on ingress traffic."
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "bridgeDomains": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
-          }
-        },
-        "required": [
-          "policyControlEnforced",
-          "policyControlEnforcementIngress",
-          "tenantId"
-        ]
-      },
-      "L3Out": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "bridgeDomains": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
-          },
-          "bridgeDomainsForRouteProfile": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
-          },
-          "vrf": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Vrf"
-              }
-            ]
-          },
-          "vrfId": {
-            "type": "string"
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "vrfId",
-          "tenantId"
-        ]
-      },
-      "RouteProfile": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "bridgeDomains": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "tenantId"
-        ]
-      },
-      "BridgeDomain": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "unicastRouting": {
-            "type": "boolean",
-            "description": "Unicast routing enabled, default: true."
-          },
-          "arpFlooding": {
-            "type": "boolean",
-            "description": "ARP Flooding enabled, default: true."
-          },
-          "bdMacAddress": {
-            "type": "string",
-            "description": "Bridge Domain MAC address, default: null."
-          },
-          "limitLocalIpLearning": {
-            "type": "boolean",
-            "description": "Limit Local IP Learning to BD/EPG Subnets, default: true."
-          },
-          "epMoveDetectionModeGarp": {
-            "type": "boolean",
-            "description": "GARP-based endpoint move detection, default: false."
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "vrf": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Vrf"
-              }
-            ]
-          },
-          "vrfId": {
-            "type": "string"
-          },
-          "subnets": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AppCentricSubnet"
-            }
-          },
-          "endpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "l3outs": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/L3Out"
-            }
-          },
-          "l3OutForRouteProfileId": {
-            "type": "string"
-          },
-          "l3OutForRouteProfile": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/L3Out"
-              }
-            ]
-          },
-          "routeProfileId": {
-            "type": "string"
-          },
-          "routeProfile": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/RouteProfile"
-              }
-            ]
-          }
-        },
-        "required": [
-          "unicastRouting",
-          "arpFlooding",
-          "bdMacAddress",
-          "limitLocalIpLearning",
-          "epMoveDetectionModeGarp",
-          "tenantId",
-          "vrfId"
-        ]
-      },
-      "FilterEntry": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "etherType": {
-            "type": "string",
-            "description": "The EtherType of the filter entry.",
-            "enum": [
-              "ip",
-              "ipv6",
-              "ipv4",
-              "mplsunicast",
-              "trill",
-              "arp",
-              "fcoe",
-              "macsecurity"
-            ]
-          },
-          "arpFlag": {
-            "type": "string",
-            "description": "The Address Resolution Protocol flag for a filter entry. The filter entry is a combination of network traffic classification properties.",
-            "enum": [
-              "arpreply",
-              "arprequest"
-            ]
-          },
-          "ipProtocol": {
-            "type": "string",
-            "description": "The IP protocol for a filter entry. The filter entry is a combination of network traffic classification properties.",
-            "enum": [
-              "eigrp",
-              "egp",
-              "icmp",
-              "icmpv6",
-              "igmp",
-              "igp",
-              "l2tp",
-              "ospfigp",
-              "pim",
-              "tcp",
-              "udp"
-            ]
-          },
-          "matchOnlyFragments": {
-            "type": "boolean",
-            "description": "Match only packet fragments. When enabled, the rule applies to any IP fragment with an offset that is greater than 0 (all IP fragments except the first). When disabled, the rule will not apply to IP fragments with an offset greater than 0 because TCP/UDP port information can only be checked in initial fragments."
-          },
-          "sourceFromPort": {
-            "type": "number"
-          },
-          "sourceToPort": {
-            "type": "number"
-          },
-          "destinationFromPort": {
-            "type": "number"
-          },
-          "destinationToPort": {
-            "type": "number"
-          },
-          "stateful": {
-            "type": "boolean"
-          },
-          "filter": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Filter"
-              }
-            ]
-          },
-          "filterId": {
-            "type": "string"
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "etherType",
-          "filterId",
-          "tenantId"
-        ]
-      },
-      "Filter": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "filterEntries": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FilterEntry"
-            }
-          },
-          "subjects": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Subject"
-            }
-          }
-        },
-        "required": [
-          "tenantId"
-        ]
-      },
-      "Subject": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "applyBothDirections": {
-            "type": "boolean",
-            "description": "Sets the contract filter to apply on both ingress and egress traffic directions."
-          },
-          "reverseFilterPorts": {
-            "type": "boolean",
-            "description": "Enables the filter to apply on both ingress and egress traffic."
-          },
-          "globalAlias": {
-            "type": "string",
-            "description": "The scope of a contract between two or more EPGs."
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "contract": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Contract"
-              }
-            ]
-          },
-          "contractId": {
-            "type": "string"
-          },
-          "filters": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          }
-        },
-        "required": [
-          "applyBothDirections",
-          "reverseFilterPorts",
-          "globalAlias",
-          "tenantId",
-          "contractId"
-        ]
-      },
-      "Contract": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "consumingEndpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "providingEndpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "subjects": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Subject"
-            }
-          }
-        },
-        "required": [
-          "tenantId"
-        ]
-      },
-      "EndpointGroup": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "intraEpgIsolation": {
-            "type": "boolean",
-            "description": "Intra-EPG endpoint isolation policies provide full isolation for virtual or physical endpoints;no communication is allowed between endpoints in an EPG that is operating with isolation enforced."
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "bridgeDomain": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BridgeDomain"
-              }
-            ]
-          },
-          "bridgeDomainId": {
-            "type": "string"
-          },
-          "applicationProfile": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ApplicationProfile"
-              }
-            ]
-          },
-          "applicationProfileId": {
-            "type": "string"
-          },
-          "consumedContracts": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Contract"
-            }
-          },
-          "providedContracts": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Contract"
-            }
-          }
-        },
-        "required": [
-          "intraEpgIsolation",
-          "tenantId",
-          "bridgeDomainId",
-          "applicationProfileId"
-        ]
-      },
-      "ApplicationProfile": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "endpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          }
-        },
-        "required": [
-          "tenantId"
-        ]
-      },
-      "Tenant": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "applicationProfiles": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApplicationProfile"
-            }
-          },
-          "bridgeDomains": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
-          },
-          "contracts": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Contract"
-            }
-          },
-          "vrfs": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Vrf"
-            }
-          },
-          "filters": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          },
-          "endpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "appCentricSubnets": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AppCentricSubnet"
-            }
-          },
-          "subjects": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Subject"
-            }
-          },
-          "filterEntries": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FilterEntry"
-            }
-          },
-          "auditLogs": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AuditLog"
-            }
-          },
-          "wanForms": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/WanForm"
-              }
-            ]
-          }
-        }
-      },
-      "AppCentricSubnet": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "gatewayIp": {
-            "type": "string",
-            "description": "The IP address and mask of the default gateway."
-          },
-          "treatAsVirtualIpAddress": {
-            "type": "boolean",
-            "description": "Indicates whether the subnet is a virtual IP address configured for the associated bridge domain."
-          },
-          "primaryIpAddress": {
-            "type": "boolean",
-            "description": "Indicates if the subnet is preferred (primary) over the available alternatives. Only one preferred subnet is allowed.\n      Affects DHCP Relay only."
-          },
-          "advertisedExternally": {
-            "type": "boolean",
-            "description": "The subnet can be exported to a routed connection."
-          },
-          "preferred": {
-            "type": "boolean",
-            "description": "The subnet is preferred over other subnets associated to its parent BD."
-          },
-          "sharedBetweenVrfs": {
-            "type": "boolean",
-            "description": "The subnet can be shared with and exported to multiple contexts (VRFs) in the same tenant or across tenants as part of a shared service."
-          },
-          "ipDataPlaneLearning": {
-            "type": "boolean",
-            "description": "Choose whether to enable or disable IP address learning for this subnet."
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "bridgeDomain": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BridgeDomain"
-              }
-            ]
-          },
-          "bridgeDomainId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "gatewayIp",
-          "treatAsVirtualIpAddress",
-          "primaryIpAddress",
-          "advertisedExternally",
-          "preferred",
-          "sharedBetweenVrfs",
-          "ipDataPlaneLearning",
-          "tenantId",
-          "bridgeDomainId"
-        ]
-      },
-      "WanFormSubnet": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 28
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "vrf": {
-            "type": "string",
-            "enum": [
-              "appprod",
-              "appdev",
-              "dataprod",
-              "datadev",
-              "edcmgmt",
-              "transport"
-            ]
-          },
-          "environment": {
-            "type": "string",
-            "enum": [
-              "prod",
-              "dev",
-              "val",
-              "imp"
-            ]
-          },
-          "wanFormId": {
-            "type": "string"
-          },
-          "wanForm": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/WanForm"
-              }
-            ]
-          },
-          "netcentricSubnet": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Subnet"
-              }
-            ]
-          },
-          "netcentricSubnetId": {
-            "type": "string"
-          },
-          "appcentricSubnet": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/AppCentricSubnet"
-              }
-            ]
-          },
-          "appcentricSubnetId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "vrf",
-          "environment",
-          "wanFormId"
-        ]
-      },
-      "WanForm": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 28
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "datacenterId": {
-            "type": "string"
-          },
-          "datacenter": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Datacenter"
-              }
-            ]
-          },
-          "active": {
-            "type": "boolean"
-          },
-          "externalRoutes": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExternalRoute"
-            }
-          },
-          "wanFormSubnets": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WanFormSubnet"
-            }
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name"
-        ]
-      },
       "FirewallRuleImport": {
         "type": "object",
         "properties": {
@@ -26797,20 +26915,21 @@
             "enum": [
               "FirewallRule",
               "NatRule",
-              "F5Config"
+              "F5Config",
+              "AciRuntime",
+              "ExternalRoute"
             ]
           },
-          "groupId": {
+          "datacenterId": {
             "type": "string"
           },
-          "datacenterId": {
+          "groupId": {
             "type": "string"
           }
         },
         "required": [
           "type",
-          "groupId",
-          "datacenterId"
+          "groupId"
         ]
       },
       "HitcountData": {
@@ -26836,7 +26955,9 @@
             "enum": [
               "FirewallRule",
               "NatRule",
-              "F5Config"
+              "F5Config",
+              "AciRuntime",
+              "ExternalRoute"
             ]
           },
           "groupId": {
@@ -26855,6 +26976,468 @@
           "data"
         ]
       },
+      "F5RuntimeHostInfo": {
+        "type": "object",
+        "properties": {
+          "hostname": {
+            "type": "string",
+            "description": "Hostname of the F5 device",
+            "readOnly": true
+          },
+          "softwareVersion": {
+            "type": "string",
+            "description": "Software version of the F5 device",
+            "readOnly": true
+          },
+          "availability": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "hostname",
+          "softwareVersion",
+          "availability"
+        ]
+      },
+      "F5RuntimeFqdnFqdn": {
+        "type": "object",
+        "properties": {
+          "autopopulate": {
+            "type": "string",
+            "description": "Autopopulate state",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "autopopulate"
+        ]
+      },
+      "F5RuntimePoolMember": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Member name",
+            "readOnly": true
+          },
+          "address": {
+            "type": "string",
+            "description": "Member address",
+            "readOnly": true
+          },
+          "ephemeral": {
+            "type": "string",
+            "description": "Ephemeral state",
+            "readOnly": true
+          },
+          "fqdn": {
+            "description": "FQDN configuration",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimeFqdnFqdn"
+              }
+            ]
+          },
+          "priorityGroup": {
+            "type": "number",
+            "description": "Priority group",
+            "readOnly": true
+          },
+          "ratio": {
+            "type": "number",
+            "description": "Ratio",
+            "readOnly": true
+          },
+          "state": {
+            "type": "string",
+            "description": "State",
+            "readOnly": true
+          },
+          "fullPath": {
+            "type": "string",
+            "description": "Full path",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "name",
+          "address",
+          "ephemeral",
+          "fqdn",
+          "priorityGroup",
+          "ratio",
+          "state",
+          "fullPath"
+        ]
+      },
+      "F5RuntimeMembersReference": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "Array of members",
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/F5RuntimePoolMember"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "F5RuntimePoolReferenceItem": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Pool name",
+            "readOnly": true
+          },
+          "monitor": {
+            "type": "string",
+            "description": "Monitor",
+            "readOnly": true
+          },
+          "membersReference": {
+            "description": "Reference to pool members",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimeMembersReference"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "monitor",
+          "membersReference"
+        ]
+      },
+      "F5RuntimeNestedStats": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "The type of the nested stats"
+          },
+          "selfLink": {
+            "type": "string",
+            "description": "A URI reference to the resource"
+          },
+          "entries": {
+            "type": "object",
+            "description": "The entries of the nested stats"
+          }
+        },
+        "required": [
+          "kind",
+          "selfLink",
+          "entries"
+        ]
+      },
+      "F5RuntimePoolReference": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "Reference to pool items",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimePoolReferenceItem"
+              }
+            ]
+          },
+          "stats": {
+            "description": "Statistics related to the pool",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimeNestedStats"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "stats"
+        ]
+      },
+      "F5RuntimeProfile": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Profile name",
+            "readOnly": true
+          },
+          "partition": {
+            "type": "string",
+            "description": "Partition name",
+            "readOnly": true
+          },
+          "context": {
+            "type": "string",
+            "description": "Context of the profile",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "name",
+          "partition",
+          "context"
+        ]
+      },
+      "F5RuntimeProfilesReference": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "Array of profiles",
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/F5RuntimeProfile"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "F5RuntimePoliciesReference": {
+        "type": "object",
+        "properties": {
+          "link": {
+            "type": "string",
+            "description": "Link to the policy",
+            "readOnly": true
+          },
+          "isSubcollection": {
+            "type": "boolean",
+            "description": "Whether it is a subcollection",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "link",
+          "isSubcollection"
+        ]
+      },
+      "F5RuntimeCertsReference": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Certificate name",
+            "readOnly": true
+          },
+          "partition": {
+            "type": "string",
+            "description": "Partition name",
+            "readOnly": true
+          },
+          "expirationDate": {
+            "type": "number",
+            "description": "Expiration date as a timestamp",
+            "readOnly": true
+          },
+          "expirationString": {
+            "type": "string",
+            "description": "Expiration date as a string",
+            "readOnly": true
+          },
+          "subject": {
+            "type": "string",
+            "description": "Subject of the certificate",
+            "readOnly": true
+          },
+          "inUse": {
+            "type": "boolean",
+            "description": "If the certificate is in use",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "name",
+          "partition",
+          "expirationDate",
+          "expirationString",
+          "subject",
+          "inUse"
+        ]
+      },
+      "F5RuntimeVirtualServer": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Virtual server name",
+            "readOnly": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the virtual server",
+            "readOnly": true
+          },
+          "partition": {
+            "type": "string",
+            "description": "Partition name",
+            "readOnly": true
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the virtual server is enabled",
+            "readOnly": true
+          },
+          "addressStatus": {
+            "type": "string",
+            "description": "Address status",
+            "readOnly": true
+          },
+          "connectionLimit": {
+            "type": "number",
+            "description": "Connection limit",
+            "readOnly": true
+          },
+          "ipProtocol": {
+            "type": "string",
+            "description": "IP protocol",
+            "readOnly": true
+          },
+          "destination": {
+            "type": "string",
+            "description": "Destination address",
+            "readOnly": true
+          },
+          "mask": {
+            "type": "string",
+            "description": "Subnet mask",
+            "readOnly": true
+          },
+          "poolReference": {
+            "description": "Reference to the pool associated with the virtual server",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimePoolReference"
+              }
+            ]
+          },
+          "profilesReference": {
+            "description": "Reference to profiles associated with the virtual server",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimeProfilesReference"
+              }
+            ]
+          },
+          "policiesReference": {
+            "description": "Reference to policies associated with the virtual server",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimePoliciesReference"
+              }
+            ]
+          },
+          "certsReference": {
+            "description": "Reference to certificates associated with the virtual server",
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/F5RuntimeCertsReference"
+            }
+          },
+          "stats": {
+            "description": "Statistics for the virtual server",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimeNestedStats"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "partition",
+          "enabled",
+          "addressStatus",
+          "connectionLimit",
+          "ipProtocol",
+          "destination",
+          "mask",
+          "poolReference",
+          "profilesReference",
+          "policiesReference",
+          "certsReference",
+          "stats"
+        ]
+      },
+      "F5RuntimePartitionInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Partition name"
+          },
+          "virtualServers": {
+            "description": "Array of virtual servers in the partition",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/F5RuntimeVirtualServer"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "virtualServers"
+        ]
+      },
+      "F5RuntimeData": {
+        "type": "object",
+        "properties": {
+          "hostInfo": {
+            "description": "Host information",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/F5RuntimeHostInfo"
+              }
+            ]
+          },
+          "partitionInfo": {
+            "description": "Partition information",
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/F5RuntimePartitionInfo"
+            }
+          },
+          "certInfo": {
+            "description": "Certificate information",
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/F5RuntimeCertsReference"
+            }
+          }
+        },
+        "required": [
+          "hostInfo",
+          "partitionInfo",
+          "certInfo"
+        ]
+      },
       "F5Runtime": {
         "type": "object",
         "properties": {
@@ -26869,7 +27452,7 @@
             "type": "string"
           },
           "data": {
-            "type": "object"
+            "$ref": "#/components/schemas/F5RuntimeData"
           },
           "createdAt": {
             "format": "date-time",
@@ -26903,8 +27486,13 @@
             "enum": [
               "FirewallRule",
               "NatRule",
-              "F5Config"
+              "F5Config",
+              "AciRuntime",
+              "ExternalRoute"
             ]
+          },
+          "datacenterId": {
+            "type": "string"
           },
           "id": {
             "type": "string"
@@ -26914,6 +27502,110 @@
           "type",
           "id"
         ]
+      },
+      "AciRuntimeJobCreateDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "FirewallRule",
+              "NatRule",
+              "F5Config",
+              "AciRuntime",
+              "ExternalRoute"
+            ]
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "vlanId": {
+            "type": "string"
+          },
+          "endpointGroupId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "ExternalRouteJobCreateDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "FirewallRule",
+              "NatRule",
+              "F5Config",
+              "AciRuntime",
+              "ExternalRoute"
+            ]
+          },
+          "datacenterId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "PaginationDTO": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "count": {
+            "type": "number"
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "pageCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "data",
+          "count",
+          "total",
+          "page",
+          "pageCount"
+        ]
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "timestamp": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "id",
+          "description",
+          "timestamp"
+        ]
+      },
+      "DeleteResult": {
+        "type": "object",
+        "properties": {}
       }
     }
   }

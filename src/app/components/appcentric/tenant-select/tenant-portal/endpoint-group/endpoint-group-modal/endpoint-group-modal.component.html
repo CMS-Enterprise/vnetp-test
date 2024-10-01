@@ -73,6 +73,7 @@
             <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
           </div>
         </div>
+
         <div class="form-group">
           <label for="intraEpgIsolation">Intra Epg Isolation</label>
           <select
@@ -87,11 +88,26 @@
             <option [ngValue]="false">Not Isolated</option>
           </select>
         </div>
+
         <div class="form-group">
           <label for="bridgeDomain">Bridge Domain</label>
           <ng-select formControlName="bridgeDomain" [items]="bridgeDomains" id="bridgeDomain" bindLabel="name" bindValue="id"></ng-select>
           <div *ngIf="submitted && f.bridgeDomain.errors" class="custom-invalid-feedback">
             <div *ngIf="f.bridgeDomain.errors.required">Bridge Domain is required</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="applicationProfile">Application Profile</label>
+          <ng-select
+            formControlName="applicationProfileId"
+            [items]="applicationProfiles"
+            id="applicationProfileId"
+            bindLabel="name"
+            bindValue="id"
+          ></ng-select>
+          <div *ngIf="submitted && f.applicationProfileId.errors" class="custom-invalid-feedback">
+            <div *ngIf="f.applicationProfileId.errors.required">Application Profile is required</div>
           </div>
         </div>
       </div>
