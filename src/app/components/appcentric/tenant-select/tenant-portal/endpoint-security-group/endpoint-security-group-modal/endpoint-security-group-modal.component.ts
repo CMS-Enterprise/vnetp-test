@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, TemplateRef } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import {
   ApplicationProfile,
@@ -7,6 +7,10 @@ import {
   EndpointSecurityGroup,
   V2AppCentricVrfsService,
   Vrf,
+  V2AppCentricSelectorsService,
+  Selector,
+  V2AppCentricEndpointGroupsService,
+  EndpointGroup,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Tab } from 'src/app/common/tabs/tabs.component';
@@ -20,6 +24,8 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { Subscription } from 'rxjs';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { SelectorModalDto } from 'src/app/models/appcentric/appcentric-selector-modal-dto';
+import { EntityService } from 'src/app/services/entity.service';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 const tabs = [{ name: 'Endpoint Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }];
 
@@ -43,11 +49,14 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   public selectedBridgeDomain = undefined;
   public applicationProfiles: ApplicationProfile[];
   public tableComponentDto = new TableComponentDto();
+  endpointGroups: EndpointGroup[];
   tagSelectors = { data: [] };
   IpSubnetSelectors = { data: [] };
   epgSelectors = { data: [] };
   selectors;
   selectorModalSubscription: Subscription;
+
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   @ViewChild('consumedContract', { static: false })
   consumedContractRef: ConsumedContractComponent;
@@ -65,15 +74,22 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       { name: 'Tag Key', property: 'tagKey' },
       { name: 'Value Operator', property: 'valueOperator' },
       { name: 'Tag Value', property: 'tagValue' },
+      { name: '', template: () => this.actionsTemplate },
     ],
   };
   public epgSelectorConfig: TableConfig<any> = {
     description: 'EPG Selectors',
-    columns: [{ name: 'EPG', property: 'endpointSecurityGroupId' }],
+    columns: [
+      { name: 'EPG', property: 'endpointSecurityGroupId' },
+      { name: '', template: () => this.actionsTemplate },
+    ],
   };
   public IpSubnetSelectorConfig: TableConfig<any> = {
     description: 'IpSubnet Selectors',
-    columns: [{ name: 'ipSubnet', property: 'IpSubnet' }],
+    columns: [
+      { name: 'ipSubnet', property: 'IpSubnet' },
+      { name: '', template: () => this.actionsTemplate },
+    ],
   };
 
   constructor(
@@ -83,21 +99,25 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     private endpointSecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
     private vrfService: V2AppCentricVrfsService,
     private applicationProfileService: V2AppCentricApplicationProfilesService,
+    private entityService: EntityService,
+    private selectorService: V2AppCentricSelectorsService,
+    private endpointGroupService: V2AppCentricEndpointGroupsService,
   ) {}
 
   ngOnInit(): void {
     this.buildForm();
   }
 
-  getEndpointSecurityGroup(id) {
-    console.log('here', id);
+  getEndpointSecurityGroup(id: string): void {
+    this.tagSelectors.data = [];
+    this.IpSubnetSelectors.data = [];
+    this.epgSelectors.data = [];
     this.endpointSecurityGroupService
       .getOneEndpointSecurityGroup({
         id,
         join: ['selectors'],
       })
       .subscribe(data => {
-        console.log('data', data);
         data.selectors.map(selector => {
           if (selector.selectorType === 'Tag') {
             this.tagSelectors.data.push(selector);
@@ -111,8 +131,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       });
   }
 
-  public openSelectorModal(modalMode, selector?) {
-    console.log('here?');
+  public openSelectorModal(modalMode, selector?: Selector): void {
     this.IpSubnetSelectors.data = [];
     this.epgSelectors.data = [];
     this.tagSelectors.data = [];
@@ -126,7 +145,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     this.ngx.getModal('selectorModal').open();
   }
 
-  private subscribeToSelectorModal() {
+  private subscribeToSelectorModal(): void {
     this.selectorModalSubscription = this.ngx.getModal('selectorModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('selectorModal');
       this.selectorModalSubscription.unsubscribe();
@@ -180,13 +199,11 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
           this.IpSubnetSelectors.data.push(selector);
         }
       });
-      console.log('dto', dto);
     } else {
       this.form.controls.name.enable();
       this.form.controls.intraEsgIsolation.setValue(true);
       this.form.controls.adminState.setValue('AdminUp');
       this.form.controls.preferredGroupMember.setValue(true);
-      this.currentTab = 'Endpoint Security Group';
     }
 
     const endpointSecurityGroup = dto.endpointSecurityGroup;
@@ -203,8 +220,6 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       this.form.controls.vrfId.setValue(endpointSecurityGroup.vrfId);
       this.form.controls.vrfId.disable();
     }
-    console.log('this.tagSelectors', this.tagSelectors);
-    // this.ngx.resetModalData('endpointSecurityGroupModal');
   }
 
   public reset(): void {
@@ -330,5 +345,24 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
           this.isLoading = false;
         },
       );
+  }
+
+  public getEndpointGroups() {
+    this.endpointGroupService
+      .getManyEndpointGroup({ filter: [`tenantId||eq||${this.tenantId}`], page: 1, perPage: 100 })
+      .subscribe(data => {
+        // this.endpointGroups = data.data;
+      });
+  }
+
+  public deleteSelector(selector) {
+    this.entityService.deleteEntity(selector, {
+      entityName: 'Selector',
+      delete$: this.selectorService.deleteOneSelector({ id: selector.id }),
+      softDelete$: this.selectorService.softDeleteOneSelector({ id: selector.id }),
+      onSuccess: () => {
+        this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
+      },
+    });
   }
 }

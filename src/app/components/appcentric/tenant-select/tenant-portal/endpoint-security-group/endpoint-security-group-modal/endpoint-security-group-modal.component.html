@@ -180,4 +180,15 @@
   </div>
 </ngx-smart-modal>
 
+<ng-template #actionsTemplate let-selector="datum">
+  <section class="table__actions">
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete Selector"
+      [type]="selector?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteSelector(selector)"
+    ></app-icon-button>
+  </section>
+</ng-template>
+
 <app-selector-modal [endpointSecurityGroupId]="endpointSecurityGroupId" [tenantId]="tenantId"></app-selector-modal>
