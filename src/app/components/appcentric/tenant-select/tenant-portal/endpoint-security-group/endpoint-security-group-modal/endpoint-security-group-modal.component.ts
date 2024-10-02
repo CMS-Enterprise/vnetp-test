@@ -25,7 +25,6 @@ import { Subscription } from 'rxjs';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { SelectorModalDto } from 'src/app/models/appcentric/appcentric-selector-modal-dto';
 import { EntityService } from 'src/app/services/entity.service';
-import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 const tabs = [{ name: 'Endpoint Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }];
 
@@ -347,15 +346,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       );
   }
 
-  public getEndpointGroups() {
-    this.endpointGroupService
-      .getManyEndpointGroup({ filter: [`tenantId||eq||${this.tenantId}`], page: 1, perPage: 100 })
-      .subscribe(data => {
-        // this.endpointGroups = data.data;
-      });
-  }
-
-  public deleteSelector(selector) {
+  public deleteSelector(selector): void {
     this.entityService.deleteEntity(selector, {
       entityName: 'Selector',
       delete$: this.selectorService.deleteOneSelector({ id: selector.id }),
