@@ -110,7 +110,7 @@ export class TierContextService {
         // set currentTier to that tier.
         if (currentTierId) {
           if (this._tiers.some(t => t.id === currentTierId)) {
-            console.log('switchTier', currentTierId);
+            console.log('switchTier 1: ', currentTierId);
             this.switchTier(currentTierId);
           } else {
             this.clearTier();
@@ -121,13 +121,14 @@ export class TierContextService {
   }
 
   public switchTier(tierId: string): boolean {
-    console.log('switchTier', tierId);
+    console.log('switchTier 2');
     if (this.lockCurrentTierSubject.value) {
       console.log('locked true');
       return false;
     }
 
     const tier = this._tiers.find(t => t.id === tierId);
+    console.log('tier subject 1', tier);
     if (!tier) {
       console.log('tier not found');
       this.clearTier();
