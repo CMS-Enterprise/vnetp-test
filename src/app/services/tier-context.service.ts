@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Tier, V1DatacentersService } from 'client';
 import { DatacenterContextService } from './datacenter-context.service';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 /** Service to store and expose the Current Tier Context. */
 @Injectable({

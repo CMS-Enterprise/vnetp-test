@@ -54,6 +54,7 @@
     "@compodoc/compodoc": "^1.1.16",
     "@openapitools/openapi-generator-cli": "^2.13.4",
     "@types/jest": "^29.5.12",
+    "@types/lodash": "^4.17.10",
     "@types/node": "^12.20.55",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "@typescript-eslint/parser": "^7.8.0",
