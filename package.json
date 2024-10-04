@@ -35,6 +35,7 @@
     "@ng-select/ng-select": "^12.0.7",
     "bootstrap": "^4.6.2",
     "jquery": "^3.7.1",
+    "lodash": "^4.17.21",
     "netmask": "^2.0.2",
     "ngx-pagination": "^6.0.3",
     "ngx-papaparse": "^5.1.0",
