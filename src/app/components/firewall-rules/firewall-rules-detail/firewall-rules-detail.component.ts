@@ -246,6 +246,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           complete: () => {
             console.log('complete');
             this.isRefreshingRuntimeData = false;
+            console.log('status', status);
             if (status === 'successful') {
               console.log('successful');
               this.appIdService.loadPanosApplications(this.tier.appVersion);

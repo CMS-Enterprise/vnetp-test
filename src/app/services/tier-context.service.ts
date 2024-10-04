@@ -123,17 +123,20 @@ export class TierContextService {
   public switchTier(tierId: string): boolean {
     console.log('switchTier', tierId);
     if (this.lockCurrentTierSubject.value) {
+      console.log('locked true');
       return false;
     }
 
     const tier = this._tiers.find(t => t.id === tierId);
     if (!tier) {
+      console.log('tier not found');
       this.clearTier();
       return false;
     }
 
     const isSameTier = this.currentTierValue && tier.id === this.currentTierValue.id;
     if (isSameTier) {
+      console.log('isSameTier');
       return false;
     }
     console.log('tierSubject', tier);
