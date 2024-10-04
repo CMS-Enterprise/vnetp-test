@@ -70,6 +70,7 @@ export class AppIdRuntimeComponent {
     this.tier = dto.tier;
     this.firewallRule = dto.firewallRule;
     this.appIdService.getPanosApplications(this.tier.appVersion).subscribe(applications => {
+      console.log('applications', applications);
       this.panosApplications = applications;
       this.getAssociatedApplications();
       this.getAvailableApplications();

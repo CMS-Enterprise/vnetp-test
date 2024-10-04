@@ -48,6 +48,7 @@ export class AppIdRuntimeService {
 
   // Get the PanosApplications for a specific appVersion
   getPanosApplications(appVersion: string): Observable<PanosApplication[]> {
+    console.log('appVersion', appVersion);
     return this.panosApplications$.pipe(map(panosApplicationsMap => panosApplicationsMap.get(appVersion) || []));
   }
 
