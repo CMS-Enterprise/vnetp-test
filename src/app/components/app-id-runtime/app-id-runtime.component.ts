@@ -68,6 +68,7 @@ export class AppIdRuntimeComponent {
   getData() {
     const dto = this.ngx.getModalData('appIdModal') as AppIdModalDto;
     this.tier = dto.tier;
+    console.log('tier', this.tier);
     this.firewallRule = dto.firewallRule;
     this.appIdService.getPanosApplications(this.tier.appVersion).subscribe(applications => {
       console.log('applications', applications);
