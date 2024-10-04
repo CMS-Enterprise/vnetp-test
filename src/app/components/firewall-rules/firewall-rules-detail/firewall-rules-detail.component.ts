@@ -220,6 +220,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     if (this.runtimeDataService.isRecentlyRefreshed(this.tier.runtimeDataLastRefreshed) || this.isRefreshingAppIdRuntimeData) {
       return;
     }
+    console.log('start refresh');
 
     this.isRefreshingAppIdRuntimeData = true;
 
@@ -243,8 +244,10 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
             this.appIdJobStatus = status;
           },
           complete: () => {
+            console.log('complete');
             this.isRefreshingRuntimeData = false;
             if (status === 'successful') {
+              console.log('successful');
               this.appIdService.loadPanosApplications(this.tier.appVersion);
               this.tierService.getOneTier({ id: this.TierId }).subscribe(tier => {
                 this.tier = tier;
