@@ -85,6 +85,7 @@ export class TierContextService {
   }
 
   public refreshTiers(currentTierId?: string): void {
+    console.log('refreshTiers', currentTierId);
     this.getTiers(currentTierId);
   }
 
@@ -100,6 +101,7 @@ export class TierContextService {
         id: this.currentDatacenterId,
         join: ['tiers'],
       }).subscribe(data => {
+        console.log('getTiers');
         this._tiers = data.tiers;
         this.tiersSubject.next(data.tiers);
 
@@ -107,6 +109,7 @@ export class TierContextService {
         // set currentTier to that tier.
         if (currentTierId) {
           if (this._tiers.some(t => t.id === currentTierId)) {
+            console.log('switchTier', currentTierId);
             this.switchTier(currentTierId);
           } else {
             this.clearTier();
@@ -117,6 +120,7 @@ export class TierContextService {
   }
 
   public switchTier(tierId: string): boolean {
+    console.log('switchTier', tierId);
     if (this.lockCurrentTierSubject.value) {
       return false;
     }
@@ -133,6 +137,7 @@ export class TierContextService {
     }
 
     this.currentTierSubject.next(tier);
+    console.log(this.currentTierValue);
     this.ignoreNextQueryParamEvent = true;
     this.router.navigate([], {
       queryParams: { tier: tier.id },
