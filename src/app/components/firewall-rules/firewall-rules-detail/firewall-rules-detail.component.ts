@@ -243,7 +243,10 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           complete: () => {
             this.isRefreshingRuntimeData = false;
             if (status === 'successful') {
-              this.appIdService.loadPanosApplications(this.tier.appVersion, true);
+              this.appIdService.loadPanosApplications(this.tier.appVersion);
+              this.tierService.getOneTier({ id: this.TierId }).subscribe(tier => {
+                this.tier = tier;
+              });
             }
             this.appIdJobStatus = status;
           },
@@ -406,10 +409,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       this.serviceObjectGroups = result[4].data;
       this.zones = result[5].data;
       this.getFirewallRules();
+      this.appIdService.loadPanosApplications(this.tier.appVersion);
 
-      if (this.runtimeDataService.isRecentlyRefreshed(this.tier.runtimeDataLastRefreshed)) {
-        this.appIdService.loadPanosApplications(this.tier.appVersion, true);
-      } else {
+      if (!this.runtimeDataService.isRecentlyRefreshed(this.tier.runtimeDataLastRefreshed)) {
         this.refreshAppId();
       }
     });
