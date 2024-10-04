@@ -103,6 +103,7 @@ export class TierContextService {
       }).subscribe(data => {
         console.log('getTiers');
         this._tiers = data.tiers;
+        console.log('_tiers', this._tiers);
         this.tiersSubject.next(data.tiers);
 
         // If a tier matching currentTierId is present
@@ -135,7 +136,7 @@ export class TierContextService {
     if (isSameTier) {
       return false;
     }
-
+    console.log('tierSubject', tier);
     this.currentTierSubject.next(tier);
     console.log(this.currentTierValue);
     this.ignoreNextQueryParamEvent = true;
