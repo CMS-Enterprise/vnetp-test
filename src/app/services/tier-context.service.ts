@@ -84,6 +84,10 @@ export class TierContextService {
     this.lockCurrentTierSubject.next(false);
   }
 
+  public refreshTiers(currentTierId?: string): void {
+    this.getTiers(currentTierId);
+  }
+
   private getTiers(currentTierId?: string): void {
     this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (!cd) {

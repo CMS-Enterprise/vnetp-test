@@ -50,6 +50,7 @@ import { RuntimeDataService } from '../../../services/runtime-data.service';
 import { LiteTableConfig } from '../../../common/lite-table/lite-table.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { AppIdRuntimeService } from '../../app-id-runtime/app-id-runtime.service';
+import { TierContextService } from '../../../services/tier-context.service';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -177,6 +178,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private runtimeDataService: RuntimeDataService,
     private appIdService: AppIdRuntimeService,
     private appIdApiService: V1RuntimeDataAppIdRuntimeService,
+    private tierContextService: TierContextService,
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<FirewallRule>();
     advancedSearchAdapterObject.setService(this.firewallRuleService);
@@ -247,6 +249,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
               this.tierService.getOneTier({ id: this.TierId }).subscribe(tier => {
                 this.tier = tier;
               });
+              this.tierContextService.refreshTiers(this.TierId);
             }
             this.appIdJobStatus = status;
           },

@@ -24,6 +24,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 import { FirewallRuleObjectInfoModalComponent } from '../firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
+import { TierContextService } from '../../../services/tier-context.service';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -59,7 +60,7 @@ describe('FirewallRulesDetailComponent', () => {
         FirewallRuleObjectInfoModalComponent,
         FirewallRulePacketTracerComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1TiersService)],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1TiersService), { provide: TierContextService, useValue: jest.fn() }],
     });
   });
 
