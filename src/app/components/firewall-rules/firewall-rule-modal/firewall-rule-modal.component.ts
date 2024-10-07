@@ -68,6 +68,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   modalMode = ModalMode;
 
+  isRefreshingAppId = false;
+
   @ViewChild('appIdColumnTemplate') iconTemplate: TemplateRef<any>;
 
   config: LiteTableConfig<PanosApplication> = {
@@ -637,6 +639,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       this.ngx.resetModalData('firewallRuleObjectInfoModal');
       this.objectInfoSubscription.unsubscribe();
     });
+  }
+
+  handleAppIdRefresh(isRefreshing: boolean): void {
+    this.isRefreshingAppId = isRefreshing;
   }
 
   private unsubAll() {

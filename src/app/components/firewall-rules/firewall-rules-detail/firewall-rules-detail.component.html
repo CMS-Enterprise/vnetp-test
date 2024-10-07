@@ -93,7 +93,7 @@
   ></app-import-export>
 </section>
 
-<app-firewall-rule-modal></app-firewall-rule-modal>
+<app-firewall-rule-modal (refreshingAppId)="handleAppIdRefresh($event)"></app-firewall-rule-modal>
 <app-yes-no-modal></app-yes-no-modal>
 <app-preview-modal></app-preview-modal>
 

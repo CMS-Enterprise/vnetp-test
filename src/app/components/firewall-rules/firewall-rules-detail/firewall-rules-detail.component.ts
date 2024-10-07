@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -117,6 +117,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   datacenterId: string;
   appIdJobStatus: string;
 
+  @Output() refreshingAppId: EventEmitter<boolean> = new EventEmitter();
+
   // Templates
   @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
   @ViewChild('sourceAddress') sourceAddressTemplate: TemplateRef<any>;
@@ -220,9 +222,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     if (this.runtimeDataService.isRecentlyRefreshed(this.tier.runtimeDataLastRefreshed) || this.isRefreshingAppIdRuntimeData) {
       return;
     }
-    console.log('start refresh');
 
     this.isRefreshingAppIdRuntimeData = true;
+    this.refreshingAppId.emit(true);
 
     this.appIdApiService
       .createRuntimeDataJobAppIdRuntime({
@@ -241,14 +243,13 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           error: () => {
             status = 'error';
             this.isRefreshingRuntimeData = false;
+            this.refreshingAppId.emit(false);
             this.appIdJobStatus = status;
           },
           complete: () => {
-            console.log('complete');
             this.isRefreshingRuntimeData = false;
-            console.log('status', status);
+            this.refreshingAppId.emit(false);
             if (status === 'successful') {
-              console.log('successful');
               this.appIdService.loadPanosApplications(this.tier.appVersion);
               this.tierService.getOneTier({ id: this.TierId }).subscribe(tier => {
                 this.tier = tier;
