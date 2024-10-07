@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { EndpointGroup, Selector, V2AppCentricEndpointGroupsService, V2AppCentricSelectorsService } from 'client';
+import { EndpointGroup, Selector, SelectorSelectorTypeEnum, V2AppCentricEndpointGroupsService, V2AppCentricSelectorsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { Tab } from 'src/app/common/tabs/tabs.component';
@@ -31,14 +31,12 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: UntypedFormBuilder,
     public selectorService: V2AppCentricSelectorsService,
-    private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
-    private router: Router,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
   ) {}
   ngOnDestroy(): void {}
 
-  private setFormValidators() {
+  public setFormValidators() {
     this.submitted = false;
 
     const tagKey = this.form.get('tagKey');
@@ -96,7 +94,7 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
       tagValue: ['', Validators.required],
       epgId: [null, Validators.required],
       IpSubnet: ['', [Validators.required, IpAddressAnyValidator]],
-      description: [''],
+      description: ['', Validators.maxLength(500)],
     });
   }
 
@@ -111,17 +109,17 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
     }
     const modalSelector = {} as any;
 
-    modalSelector.endpointSecurityGroupId = this.endpointSecurityGroupId;
+    this.selector.endpointSecurityGroupId = this.endpointSecurityGroupId;
     if (this.navIndex === 0) {
-      modalSelector.selectorType = 'Tag';
+      this.selector.selectorType = SelectorSelectorTypeEnum.Tag;
       modalSelector.tagKey = this.form.value.tagKey;
       modalSelector.valueOperator = this.form.value.valueOperator;
       modalSelector.tagValue = this.form.value.tagValue;
     } else if (this.navIndex === 1) {
-      modalSelector.selectorType = 'EPG';
+      this.selector.selectorType = SelectorSelectorTypeEnum.Epg;
       modalSelector.epgId = this.form.value.epgId;
     } else {
-      modalSelector.selectorType = 'IpSubnet';
+      this.selector.selectorType = SelectorSelectorTypeEnum.IpSubnet;
       modalSelector.IpSubnet = this.form.value.IpSubnet;
     }
 
