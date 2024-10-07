@@ -8,7 +8,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MockProvider } from 'src/test/mock-providers';
-import { of } from 'rxjs';
 
 describe('SelectorModalComponent', () => {
   let component: SelectorModalComponent;
@@ -95,20 +94,17 @@ describe('SelectorModalComponent', () => {
   it('should save the form and set correct values', () => {
     component.endpointSecurityGroupId = '123';
 
-    const { tagKey, valueOperator, tagValue, epgId, IpSubnet } = component.form.controls;
+    const { tagKey, valueOperator, tagValue } = component.form.controls;
 
-    // component.tabs = [{ name: 'Tag Selector' }, { name: 'EPG Selector' }, { name: 'IP Subnet Selector' }];
-    const createSelectorSpy = jest.spyOn(component['selectorService'], 'createOneSelector');
+    const createSelectorSpy = jest.spyOn(component.selectorService, 'createOneSelector');
     component.navIndex = 0;
 
     component.setFormValidators();
     tagKey.setValue('someTagKey');
     valueOperator.setValue('Contains');
     tagValue.setValue('someTagValue');
-    // component.handleTabChange(component.tabs[0]);
 
     component.save();
-    console.log('this.selecor', component.selector);
     expect(component.selector.selectorType).toBe('Tag');
     expect(component.selector.valueOperator).toBe('Contains');
     expect(component.selector.tagValue).toBe('someTagValue');

@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { EndpointGroup, Selector, SelectorSelectorTypeEnum, V2AppCentricEndpointGroupsService, V2AppCentricSelectorsService } from 'client';
+import { EndpointGroup, V2AppCentricEndpointGroupsService, V2AppCentricSelectorsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { Tab } from 'src/app/common/tabs/tabs.component';
