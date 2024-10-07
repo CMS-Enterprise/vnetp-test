@@ -1,11 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { EndpointGroup, Selector, SelectorSelectorTypeEnum, V2AppCentricEndpointGroupsService, V2AppCentricSelectorsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { Tab } from 'src/app/common/tabs/tabs.component';
-import { TableContextService } from 'src/app/services/table-context.service';
 import { IpAddressAnyValidator } from 'src/app/validators/network-form-validators';
 
 @Component({
