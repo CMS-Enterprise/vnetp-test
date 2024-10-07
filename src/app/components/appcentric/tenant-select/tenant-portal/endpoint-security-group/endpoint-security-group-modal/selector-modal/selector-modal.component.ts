@@ -22,7 +22,7 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
   @Input() endpointSecurityGroupId;
 
   endpointGroups: EndpointGroup[];
-  selector: Selector;
+  public selector = {} as any;
 
   public tabs: Tab[] = [{ name: 'Tag Selector' }, { name: 'EPG Selector' }, { name: 'IP Subnet Selector' }];
 
@@ -105,23 +105,22 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
     if (this.form.invalid) {
       return;
     }
-    const modalSelector = {} as any;
 
     this.selector.endpointSecurityGroupId = this.endpointSecurityGroupId;
     if (this.navIndex === 0) {
-      this.selector.selectorType = SelectorSelectorTypeEnum.Tag;
-      modalSelector.tagKey = this.form.value.tagKey;
-      modalSelector.valueOperator = this.form.value.valueOperator;
-      modalSelector.tagValue = this.form.value.tagValue;
+      this.selector.selectorType = 'Tag';
+      this.selector.tagKey = this.form.value.tagKey;
+      this.selector.valueOperator = this.form.value.valueOperator;
+      this.selector.tagValue = this.form.value.tagValue;
     } else if (this.navIndex === 1) {
-      this.selector.selectorType = SelectorSelectorTypeEnum.Epg;
-      modalSelector.epgId = this.form.value.epgId;
+      this.selector.selectorType = 'EPG';
+      this.selector.epgId = this.form.value.epgId;
     } else {
-      this.selector.selectorType = SelectorSelectorTypeEnum.IpSubnet;
-      modalSelector.IpSubnet = this.form.value.IpSubnet;
+      this.selector.selectorType = 'IpSubnet';
+      this.selector.IpSubnet = this.form.value.IpSubnet;
     }
 
-    this.selectorService.createOneSelector({ selector: modalSelector }).subscribe(data => {
+    this.selectorService.createOneSelector({ selector: this.selector }).subscribe(data => {
       this.reset();
       return data;
     });

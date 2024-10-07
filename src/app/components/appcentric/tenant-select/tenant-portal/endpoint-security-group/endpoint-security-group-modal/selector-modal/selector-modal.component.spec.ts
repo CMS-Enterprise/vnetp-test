@@ -7,6 +7,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { MockProvider } from 'src/test/mock-providers';
+import { of } from 'rxjs';
 
 describe('SelectorModalComponent', () => {
   let component: SelectorModalComponent;
@@ -26,8 +28,9 @@ describe('SelectorModalComponent', () => {
       providers: [
         { provide: FormBuilder, useValue: jest.fn() },
         { provide: NgxSmartModalService, useValue: jest.fn() },
-        { provide: V2AppCentricSelectorsService, useValue: jest.fn() },
+        // { provide: V2AppCentricSelectorsService, useValue: jest.fn() },
         { provide: V2AppCentricEndpointSecurityGroupsService, useValue: jest.fn() },
+        MockProvider(V2AppCentricSelectorsService),
       ],
       imports: [FormsModule, ReactiveFormsModule, NgSelectModule, HttpClientModule, RouterModule.forRoot([])],
     }).compileComponents();
@@ -89,23 +92,27 @@ describe('SelectorModalComponent', () => {
     expect(isRequired('description')).toBe(false);
   });
 
-  //   it('should save the form and set correct values', () => {
-  //     component.endpointSecurityGroupId = '123';
+  it('should save the form and set correct values', () => {
+    component.endpointSecurityGroupId = '123';
 
-  //     const { tagKey, valueOperator, tagValue, epgId, IpSubnet } = component.form.controls;
+    const { tagKey, valueOperator, tagValue, epgId, IpSubnet } = component.form.controls;
 
-  //     component.navIndex = 0;
-  //     const modalSelector = {} as any;
-  //     tagKey.setValue('someTagKey');
-  //     valueOperator.setValue('Contains');
-  //     tagValue.setValue('someTagValue');
+    // component.tabs = [{ name: 'Tag Selector' }, { name: 'EPG Selector' }, { name: 'IP Subnet Selector' }];
+    const createSelectorSpy = jest.spyOn(component['selectorService'], 'createOneSelector');
+    component.navIndex = 0;
 
-  //     component.save()
-  //     expect(modalSelector.selectorType).toBe('Tag');
-  //     expect(modalSelector.valueOperator).toBe('Contains');
-  //     expect(modalSelector.tagValue).toBe('someTagValue');
+    component.setFormValidators();
+    tagKey.setValue('someTagKey');
+    valueOperator.setValue('Contains');
+    tagValue.setValue('someTagValue');
+    // component.handleTabChange(component.tabs[0]);
 
-  //     expect(component['selectorService'].createOneSelector({selector: modalSelector})).toHaveBeenCalled();
+    component.save();
+    console.log('this.selecor', component.selector);
+    expect(component.selector.selectorType).toBe('Tag');
+    expect(component.selector.valueOperator).toBe('Contains');
+    expect(component.selector.tagValue).toBe('someTagValue');
 
-  //   })
+    expect(createSelectorSpy).toHaveBeenCalledWith({ selector: component.selector });
+  });
 });
