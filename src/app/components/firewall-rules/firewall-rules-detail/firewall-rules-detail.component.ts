@@ -116,6 +116,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   tier: Tier;
   datacenterId: string;
   appIdJobStatus: string;
+  handleAppIdRefresh;
 
   @Output() refreshingAppId: EventEmitter<boolean> = new EventEmitter();
 
