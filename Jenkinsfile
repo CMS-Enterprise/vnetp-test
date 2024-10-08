@@ -2,7 +2,7 @@ def nodeImage = 'node:18.18'
 def sonarImage = 'sonarsource/sonar-scanner-cli'
 
 pipeline {
-    agent { label 'rehl8-prod' }
+    agent { label 'rehl8-prod2' }
     environment { npm_config_cache = 'npm-cache' }
     stages {
         stage('Build') {
