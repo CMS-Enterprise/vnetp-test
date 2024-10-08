@@ -10,7 +10,7 @@ pipeline {
                 docker {
                     image "${nodeImage}"
                     args '--userns=keep-id -e HOME=/tmp/home --security-opt label=disable'
-                    label 'rehl8-prod'
+                    label 'rehl8-prod2'
                 }
             }
 
@@ -39,7 +39,7 @@ pipeline {
             when {
                 expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'int'}
             }
-            agent { label 'rehl8-prod' }
+            agent { label 'rehl8-prod2' }
             steps {
                     script {
                            try {
@@ -58,7 +58,7 @@ pipeline {
      }
 
     stage('Publish') {
-            agent { label 'rehl8-prod' }
+            agent { label 'rehl8-prod2' }
             steps {
                 script {
                     sh '''
@@ -95,7 +95,7 @@ pipeline {
             echo 'send to cds-draas-jenkins channel in Slack'
         }
         success {
-            node('rehl8-prod') {
+            node('rehl8-prod2') {
                 script {
                     if (env.GIT_BRANCH == 'int' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'master') {
                         sh 'cp coverage/cobertura-coverage.xml cobertura-coverage.xml'
