@@ -39,32 +39,26 @@ export class AppIdRuntimeComponent {
 
   save(): void {
     this.saveClose = true;
-    this.ngx.close('appIdModal');
+    this.closeModal();
     this.saveClose = false;
   }
 
   closeModal(): void {
-    if (this.saveClose) {
-      console.log('saveClose is true');
-      return;
-    }
+    if (!this.saveClose && !this.appIdService.isDtoEmpty()) {
+      const modalDto = new YesNoModalDto(
+        'Panos Application Changes',
+        'You have unsaved changes. Are you sure you want to close this modal?',
+      );
 
-    if (this.appIdService.isDtoEmpty() && !this.saveClose) {
-      console.log('dto is empty');
+      const onConfirm = () => {
+        this.appIdService.resetDto();
+        this.ngx.close('appIdModal');
+      };
+
+      SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+    } else {
       this.ngx.close('appIdModal');
-      return;
     }
-
-    const modalDto = new YesNoModalDto('Panos Application Changes', 'You have unsaved changes. Are you sure you want to close this modal?');
-
-    const onConfirm = () => {
-      this.appIdService.dto.panosApplicationsToAdd.forEach(app => this.appIdService.removePanosApplicationFromDto(app));
-      this.appIdService.dto.panosApplicationsToRemove.forEach(app => this.appIdService.addPanosApplicationToDto(app));
-      this.appIdService.resetDto();
-      this.ngx.close('appIdModal');
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
   getData() {
