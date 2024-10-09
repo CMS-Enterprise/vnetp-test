@@ -53,7 +53,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { NewTableComponent } from './new-table/new-table.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -70,7 +69,7 @@ export function init_app(appLoadService: AppInitService) {
 }
 
 @NgModule({
-  declarations: [AppComponent, NewTableComponent],
+  declarations: [AppComponent],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
     AppRoutingModule,

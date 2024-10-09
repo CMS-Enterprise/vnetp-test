@@ -98,21 +98,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   dashboardPoller: any;
   cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(({ matches }) => {
-      if (matches) {
-        return [
-          { title: 'Card 1', cols: 1, rows: 1, data: 'CARD DATA HERE' },
-          { title: 'Training Resources', cols: 1, rows: 1, data: ['TRAINING STUFF', 'SOME MORE TRAINING STUFF'] },
-          // { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
-          // { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
-        ];
-      }
-      console.log('matches', matches);
+    map(() => {
       return [
         { title: 'Upcoming in VNETP', cols: 1, rows: 1, data: ['PANOS App-Id', 'Admin Portal - Provider Admin'] },
         { title: 'Training Resources', cols: 1, rows: 1, data: ['TRAINING STUFF', 'SOME MORE TRAINING STUFF'] },
-        // { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
-        // { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
+        { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
+        { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
       ];
     }),
   );
@@ -138,6 +129,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private getGlobalMessages() {
     this.globalMessagesService.getMessagesMessage({ page: 1, perPage: 3 }).subscribe(data => {
       this.messages = data;
+      // this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+      //   map(() => {
+      //     return [
+      //       { title: this.messages.data[0]['description'], cols: 1, rows: 1, data: [this.messages.data[0]['description']] },
+      //       { title: this.messages.data[1]['description'], cols: 1, rows: 1, data: [this.messages.data[1]['description']] },
+      //       { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
+      //       { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
+      //     ];
+      //   }),
+      // )
     });
   }
 

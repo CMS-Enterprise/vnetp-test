@@ -24,7 +24,6 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
-              "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/assets/styles/main.scss"
             ],
             "scripts": ["node_modules/jquery/dist/jquery.min.js", "node_modules/bootstrap/dist/js/bootstrap.min.js"],
