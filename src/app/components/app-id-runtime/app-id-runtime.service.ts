@@ -25,6 +25,8 @@ export class AppIdRuntimeService {
     firewallRuleId: '',
   };
 
+  private removedFirewallRules: FirewallRule[] = [];
+
   constructor(private appIdService: V1RuntimeDataAppIdRuntimeService, private firewallRuleService: V1NetworkSecurityFirewallRulesService) {}
 
   // Load PanosApplications for a specific version and store in the Map
@@ -95,11 +97,29 @@ export class AppIdRuntimeService {
   // Reset the DTO
   resetDto(): void {
     console.log('reset dto');
+
+    this.dto.panosApplicationsToAdd.forEach(panosApplication => {
+      (panosApplication as any).firewallRules = panosApplication.firewallRules.filter(rule => rule.id !== this.dto.firewallRuleId);
+      this.modifyApplicationData(panosApplication, panosApplication.appVersion);
+    });
+
+    this.removedFirewallRules.forEach(firewallRule => {
+      this.dto.panosApplicationsToRemove.forEach(panosApplication => {
+        if (!panosApplication.firewallRules.includes(firewallRule)) {
+          panosApplication.firewallRules.push(firewallRule);
+        }
+        this.modifyApplicationData(panosApplication, panosApplication.appVersion);
+      });
+    });
+
+    this.removedFirewallRules = [];
+
     this.dto = {
       panosApplicationsToAdd: [],
       panosApplicationsToRemove: [],
       firewallRuleId: '',
     };
+
     console.log('dto after reset', this.dto);
   }
 
@@ -120,6 +140,7 @@ export class AppIdRuntimeService {
 
   // Remove PanosApplication from FirewallRule
   public removePanosAppFromFirewallRule(panosApplication: PanosApplication, firewallRule: FirewallRule, appVersion: string): void {
+    this.removedFirewallRules.push(firewallRule);
     (panosApplication as any).firewallRules = panosApplication.firewallRules.filter(rule => rule.id !== firewallRule.id);
     this.modifyApplicationData(panosApplication, appVersion);
     this.removePanosApplicationFromDto(panosApplication);
