@@ -52,6 +52,8 @@ export class AppIdRuntimeComponent {
 
       const onConfirm = () => {
         this.appIdService.resetDto();
+        this.getAssociatedApplications();
+        this.getAvailableApplications();
         this.ngx.close('appIdModal');
       };
 
