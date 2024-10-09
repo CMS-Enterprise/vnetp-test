@@ -30,6 +30,7 @@ export class AppIdRuntimeService {
   // Load PanosApplications for a specific version and store in the Map
   loadPanosApplications(appVersion: string, forceReload: boolean = false): void {
     const currentData = this.panosApplicationsSubject.getValue();
+    console.log('app version during load apps ', appVersion);
 
     // Check if data for this version already exists and is not forced to reload
     if (!forceReload && currentData.has(appVersion) && currentData.get(appVersion)?.length > 0) {
@@ -42,7 +43,7 @@ export class AppIdRuntimeService {
       .subscribe(data => {
         console.log('data during load apps ', data.length);
         const updatedMap = new Map(currentData);
-        updatedMap.set(appVersion, data); // Store data for this version in the map
+        updatedMap.set(appVersion, data);
         this.panosApplicationsSubject.next(updatedMap);
       });
   }
