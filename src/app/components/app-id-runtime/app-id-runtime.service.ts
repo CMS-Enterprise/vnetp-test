@@ -40,6 +40,7 @@ export class AppIdRuntimeService {
     this.appIdService
       .getManyAppIdRuntime({ filter: [`appVersion||eq||${appVersion}`], relations: ['firewallRules'], perPage: 10000 })
       .subscribe(data => {
+        console.log('data during load apps ', data.length);
         const updatedMap = new Map(currentData);
         updatedMap.set(appVersion, data); // Store data for this version in the map
         this.panosApplicationsSubject.next(updatedMap);
@@ -48,7 +49,7 @@ export class AppIdRuntimeService {
 
   // Get the PanosApplications for a specific appVersion
   getPanosApplications(appVersion: string): Observable<PanosApplication[]> {
-    console.log('appVersion', appVersion);
+    console.log('appVersion during get apps ', appVersion);
     return this.panosApplications$.pipe(map(panosApplicationsMap => panosApplicationsMap.get(appVersion) || []));
   }
 

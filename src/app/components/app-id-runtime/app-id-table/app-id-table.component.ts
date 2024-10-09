@@ -30,9 +30,8 @@ export class AppIdTableComponent {
     this.refreshData();
   }
 
-  // Re-filter applications after adding or removing an application
   private refreshData(): void {
-    this.onSearch(); // Reapply search filter
+    this.onSearch();
   }
 
   onSearch(): void {
