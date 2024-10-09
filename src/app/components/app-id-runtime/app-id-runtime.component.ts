@@ -45,10 +45,12 @@ export class AppIdRuntimeComponent {
 
   closeModal(): void {
     if (this.saveClose) {
+      console.log('saveClose is true');
       return;
     }
 
     if (this.appIdService.isDtoEmpty() && !this.saveClose) {
+      console.log('dto is empty');
       this.ngx.close('appIdModal');
       return;
     }

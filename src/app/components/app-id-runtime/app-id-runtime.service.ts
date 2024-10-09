@@ -94,11 +94,13 @@ export class AppIdRuntimeService {
 
   // Reset the DTO
   resetDto(): void {
+    console.log('reset dto');
     this.dto = {
       panosApplicationsToAdd: [],
       panosApplicationsToRemove: [],
       firewallRuleId: '',
     };
+    console.log('dto after reset', this.dto);
   }
 
   // Save the DTO for a specific firewallRuleId
