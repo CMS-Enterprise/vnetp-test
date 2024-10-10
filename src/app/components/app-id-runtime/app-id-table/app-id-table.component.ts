@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FirewallRule, PanosApplication } from '../../../../../client';
 import { AppIdRuntimeService } from '../app-id-runtime.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,7 +9,7 @@ import { PanosApplicationDetailsDialogComponent } from '../panos-application-det
   templateUrl: './app-id-table.component.html',
   styleUrls: ['./app-id-table.component.css'],
 })
-export class AppIdTableComponent {
+export class AppIdTableComponent implements OnChanges {
   @Input() type = '';
   @Input() applications: PanosApplication[] = [];
   @Input() firewallRule: FirewallRule;
@@ -19,6 +19,12 @@ export class AppIdTableComponent {
   searchQuery = '';
 
   constructor(private appIdService: AppIdRuntimeService, public dialog: MatDialog) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.applications) {
+      this.onSearch();
+    }
+  }
 
   public addPanosAppToFirewallRule(panosApplication: PanosApplication): void {
     this.appIdService.addPanosAppToFirewallRule(panosApplication, this.firewallRule, panosApplication.appVersion);
@@ -30,24 +36,13 @@ export class AppIdTableComponent {
     this.refreshData();
   }
 
-  private refreshData(): void {
+  refreshData(): void {
     this.onSearch();
   }
 
   onSearch(): void {
     const query = this.searchQuery.toLowerCase().trim();
-    this.filteredApplications = this.applications.filter(
-      app =>
-        this.includesQuery(app.panosId, query) ||
-        this.includesQuery(app.minver, query) ||
-        this.includesQuery(app.name, query) ||
-        this.includesQuery(app.oriCountry, query) ||
-        this.includesQuery(app.oriLanguage, query) ||
-        this.includesQuery(app.category, query) ||
-        this.includesQuery(app.subCategory, query) ||
-        this.includesQuery(app.technology, query) ||
-        this.includesQuery(app.risk?.toString(), query),
-    );
+    this.filteredApplications = this.applications.filter(app => this.filterApplications(query, app));
 
     // Ensure the application reflects its updated firewall rule status
     if (this.type === 'available') {
@@ -56,6 +51,23 @@ export class AppIdTableComponent {
       );
     } else if (this.type === 'assocaited') {
       this.filteredApplications = this.filteredApplications.filter(app => app.firewallRules.some(rule => rule.id === this.firewallRule.id));
+    }
+  }
+
+  private filterApplications(query: string, app: PanosApplication): boolean {
+    if (query.length === 1 && (parseInt(query, 10) >= 0 || parseInt(query, 10) <= 5)) {
+      return app.risk === query;
+    } else {
+      return (
+        this.includesQuery(app.panosId, query) ||
+        this.includesQuery(app.minver, query) ||
+        this.includesQuery(app.name, query) ||
+        this.includesQuery(app.oriCountry, query) ||
+        this.includesQuery(app.oriLanguage, query) ||
+        this.includesQuery(app.category, query) ||
+        this.includesQuery(app.subCategory, query) ||
+        this.includesQuery(app.technology, query)
+      );
     }
   }
 

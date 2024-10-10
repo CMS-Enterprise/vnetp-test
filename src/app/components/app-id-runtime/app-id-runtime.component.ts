@@ -32,9 +32,12 @@ export class AppIdRuntimeComponent {
   }
 
   filterAvailableApplications(): void {
+    console.log('called');
+    console.log('filter pa', this.panosApplications);
     this.availableApplications = this.panosApplications.filter(application =>
       application.firewallRules?.every(rule => rule.id !== this.firewallRule.id),
     );
+    console.log('aa', this.availableApplications);
   }
 
   save(): void {
@@ -51,16 +54,15 @@ export class AppIdRuntimeComponent {
       );
 
       const onConfirm = () => {
-        this.appIdService.resetDto();
         this.getAssociatedApplications();
         this.getAvailableApplications();
-        this.ngx.close('appIdModal');
+        this.appIdService.resetDto();
       };
 
       SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
-    } else {
-      this.ngx.close('appIdModal');
     }
+
+    this.ngx.close('appIdModal');
   }
 
   getData() {
@@ -68,6 +70,7 @@ export class AppIdRuntimeComponent {
     this.tier = dto.tier;
     console.log('tier', this.tier);
     this.firewallRule = dto.firewallRule;
+    this.appIdService.dto.firewallRuleId = this.firewallRule.id;
     this.appIdService.getPanosApplications(this.tier.appVersion).subscribe(applications => {
       console.log('applications', applications);
       this.panosApplications = applications;

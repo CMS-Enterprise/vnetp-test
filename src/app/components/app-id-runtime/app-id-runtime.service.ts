@@ -99,7 +99,9 @@ export class AppIdRuntimeService {
     console.log('reset dto');
 
     this.dto.panosApplicationsToAdd.forEach(panosApplication => {
+      console.log('fwr id', this.dto.firewallRuleId);
       (panosApplication as any).firewallRules = panosApplication.firewallRules.filter(rule => rule.id !== this.dto.firewallRuleId);
+      console.log('panos app after remove', panosApplication);
       this.modifyApplicationData(panosApplication, panosApplication.appVersion);
     });
 
@@ -119,7 +121,7 @@ export class AppIdRuntimeService {
       panosApplicationsToRemove: [],
       firewallRuleId: '',
     };
-
+    this.getPanosApplications('1').subscribe(data => console.log('panos apps after reset', data));
     console.log('dto after reset', this.dto);
   }
 
