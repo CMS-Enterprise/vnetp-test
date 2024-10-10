@@ -86,7 +86,6 @@ export class TierContextService {
   }
 
   public refreshTiers(currentTierId?: string): void {
-    console.log('refreshTiers', currentTierId);
     this.getTiers(currentTierId);
   }
 
@@ -102,16 +101,13 @@ export class TierContextService {
         id: this.currentDatacenterId,
         join: ['tiers'],
       }).subscribe(data => {
-        console.log('getTiers');
         this._tiers = data.tiers;
-        console.log('_tiers', this._tiers);
         this.tiersSubject.next(data.tiers);
 
         // If a tier matching currentTierId is present
         // set currentTier to that tier.
         if (currentTierId) {
           if (this._tiers.some(t => t.id === currentTierId)) {
-            console.log('switchTier 1: ', currentTierId);
             this.switchTier(currentTierId);
           } else {
             this.clearTier();
@@ -122,16 +118,13 @@ export class TierContextService {
   }
 
   public switchTier(tierId: string): boolean {
-    console.log('switchTier 2');
     if (this.lockCurrentTierSubject.value) {
-      console.log('locked true');
       return false;
     }
 
     const tier = this._tiers.find(t => t.id === tierId);
-    console.log('tier subject 1', tier);
+
     if (!tier) {
-      console.log('tier not found');
       this.clearTier();
       return false;
     }
@@ -139,12 +132,9 @@ export class TierContextService {
     const isSameTier = this.currentTierValue && tier.id === this.currentTierValue.id;
     const isSameValue = _.isEqual(tier, this.currentTierValue);
     if (isSameTier && isSameValue) {
-      console.log('isSameTier');
       return false;
     }
-    console.log('tierSubject', tier);
     this.currentTierSubject.next(tier);
-    console.log(this.currentTierValue);
     this.ignoreNextQueryParamEvent = true;
     this.router.navigate([], {
       queryParams: { tier: tier.id },

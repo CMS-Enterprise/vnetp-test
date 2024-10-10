@@ -252,7 +252,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
             if (status === 'successful') {
               this.tierService.getOneTier({ id: this.TierId }).subscribe(tier => {
                 this.tier = tier;
-                console.log('calling load apps with: ', this.tier.appVersion);
                 this.appIdService.loadPanosApplications(this.tier.appVersion);
               });
               this.tierContextService.refreshTiers(this.TierId);

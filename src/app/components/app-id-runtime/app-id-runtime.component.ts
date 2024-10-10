@@ -42,12 +42,9 @@ export class AppIdRuntimeComponent implements AfterViewChecked {
   }
 
   filterAvailableApplications(): void {
-    console.log('called');
-    console.log('filter pa', this.panosApplications);
     this.availableApplications = this.panosApplications.filter(application =>
       application.firewallRules?.every(rule => rule.id !== this.firewallRule.id),
     );
-    console.log('aa', this.availableApplications);
   }
 
   save(): void {
@@ -78,11 +75,9 @@ export class AppIdRuntimeComponent implements AfterViewChecked {
   getData() {
     const dto = this.ngx.getModalData('appIdModal') as AppIdModalDto;
     this.tier = dto.tier;
-    console.log('tier', this.tier);
     this.firewallRule = dto.firewallRule;
     this.appIdService.dto.firewallRuleId = this.firewallRule.id;
     this.appIdService.getPanosApplications(this.tier.appVersion).subscribe(applications => {
-      console.log('applications', applications);
       this.panosApplications = applications;
       this.getAssociatedApplications();
       this.getAvailableApplications();
