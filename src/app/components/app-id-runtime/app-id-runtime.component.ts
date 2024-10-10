@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component } from '@angular/core';
+import { AfterViewChecked, Component } from '@angular/core';
 import { FirewallRule, PanosApplication, Tier } from '../../../../client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { AppIdModalDto } from '../../models/other/app-id-modal.dto';
