@@ -102,8 +102,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       return [
         { title: 'Upcoming in VNETP', cols: 1, rows: 1, data: ['PANOS App-Id', 'Admin Portal - Provider Admin'] },
         { title: 'Training Resources', cols: 1, rows: 1, data: ['TRAINING STUFF', 'SOME MORE TRAINING STUFF'] },
-        { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
-        { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
+        // { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
+        // { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
       ];
     }),
   );
@@ -129,6 +129,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private getGlobalMessages() {
     this.globalMessagesService.getMessagesMessage({ page: 1, perPage: 3 }).subscribe(data => {
       this.messages = data;
+
+      // use this to dynamically change the title / messages in the bottom cards
+
       // this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
       //   map(() => {
       //     return [

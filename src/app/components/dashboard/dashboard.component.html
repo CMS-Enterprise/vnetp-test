@@ -2,10 +2,6 @@
   <!-- Service Status -->
 
   <aside class="dashboard__parentcard">
-    <span>
-      <h1>System Status</h1>
-    </span>
-
     <aside class="dashboard__card" aria-label="Service Status">
       <h2 class="dashboard__heading">Service Status</h2>
       <div *ngFor="let service of status" class="status-item">
@@ -152,7 +148,7 @@
   <!-- Overall Environment -->
 </main>
 
-<aside class="dashboard__card">
+<aside class="dashboard__card" style="margin-right: 0">
   <h4 class="dashboard__heading">Recent Deployments</h4>
   <ul class="dash-card">
     <li class="dash-card__item">
@@ -163,25 +159,27 @@
   </ul>
 </aside>
 
-<mat-grid-list cols="2" rowHeight="300px">
-  @for (card of cards | async; track card) {
-  <mat-grid-tile [colspan]="card.cols" [rowspan]="card.rows">
-    <mat-card class="dashboard-card">
-      <mat-card-header style="text-decoration: underline">
-        <mat-card-title>
-          {{ card.title }}
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="dashboard-card-content">
-        <div *ngIf="card.data[0]">
-          <div *ngFor="let line of card.data">
-            <ul>
-              <li style="width: 10%; text-wrap: nowrap">{{ line }}</li>
-            </ul>
+<aside class="dashboard__card">
+  <mat-grid-list style="left: 5%" cols="2" rowHeight="300px">
+    @for (card of cards | async; track card) {
+    <mat-grid-tile [colspan]="card.cols" [rowspan]="card.rows">
+      <mat-card class="dashboard-card">
+        <mat-card-header style="text-decoration: underline">
+          <mat-card-title>
+            {{ card.title }}
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="dashboard-card-content">
+          <div *ngIf="card.data[0]">
+            <div *ngFor="let line of card.data">
+              <ul>
+                <li style="width: 10%; text-wrap: nowrap">{{ line }}</li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </mat-grid-tile>
-  }
-</mat-grid-list>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+    }
+  </mat-grid-list>
+</aside>
