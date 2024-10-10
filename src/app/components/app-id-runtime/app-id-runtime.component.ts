@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component } from '@angular/core';
 import { FirewallRule, PanosApplication, Tier } from '../../../../client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { AppIdModalDto } from '../../models/other/app-id-modal.dto';
@@ -11,7 +11,7 @@ import SubscriptionUtil from '../../utils/SubscriptionUtil';
   templateUrl: './app-id-runtime.component.html',
   styleUrl: './app-id-runtime.component.css',
 })
-export class AppIdRuntimeComponent {
+export class AppIdRuntimeComponent implements AfterViewChecked {
   tier: Tier;
   firewallRule: FirewallRule;
   panosApplications: PanosApplication[] = [];
@@ -20,6 +20,16 @@ export class AppIdRuntimeComponent {
   saveClose = false;
 
   constructor(private ngx: NgxSmartModalService, private appIdService: AppIdRuntimeService) {}
+
+  ngAfterViewChecked(): void {
+    const childModal = document.querySelector('ngx-smart-modal[identifier="appIdModal"]');
+    if (childModal) {
+      const closeButton = childModal.querySelector('.nsm-dialog-btn-close');
+      if (closeButton) {
+        closeButton.remove();
+      }
+    }
+  }
 
   getAssociatedApplications(): void {
     this.associatedApplications = this.panosApplications.filter(application =>
