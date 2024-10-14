@@ -48,6 +48,7 @@ export class GlobalMessagesModalComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
+      messageType: ['', Validators.required],
       description: ['', Validators.compose([Validators.maxLength(100), Validators.required])],
     });
   }
