@@ -66,32 +66,34 @@ describe('GlobalMessagesModalComponent', () => {
 
   it('should call to create a message when the form is valid', () => {
     const service = TestBed.inject(V3GlobalMessagesService);
-    const createSubnetSpy = jest.spyOn(service, 'createMessageMessage');
+    const createMessageSpy = jest.spyOn(service, 'createMessageMessage');
 
     component.modalMode = ModalMode.Create;
     component.form.setValue({
+      messageType: 'General',
       description: 'Description',
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
     saveButton.nativeElement.click();
 
-    expect(createSubnetSpy).toHaveBeenCalled();
+    expect(createMessageSpy).toHaveBeenCalled();
   });
 
   it('should not call to create a message when the form is invalid', () => {
     const service = TestBed.inject(V3GlobalMessagesService);
-    const createSubnetSpy = jest.spyOn(service, 'createMessageMessage');
+    const createMessageSpy = jest.spyOn(service, 'createMessageMessage');
 
     component.modalMode = ModalMode.Create;
     component.form.setValue({
+      messageType: '',
       description: '',
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
     saveButton.nativeElement.click();
 
-    expect(createSubnetSpy).not.toHaveBeenCalled();
+    expect(createMessageSpy).not.toHaveBeenCalled();
   });
 
   describe('getData', () => {
