@@ -290,6 +290,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   private subscribeToFirewallRuleOperationModal(): void {
     this.firewallRuleOperationModalSubscription = this.ngx.getModal('firewallRuleOperationModal').onCloseFinished.subscribe(() => {
+      this.appIdService.resetDto();
       this.getFirewallRuleGroup();
       this.ngx.resetModalData('firewallRuleOperationModal');
       this.firewallRuleOperationModalSubscription.unsubscribe();

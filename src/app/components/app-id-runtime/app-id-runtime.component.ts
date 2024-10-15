@@ -64,12 +64,19 @@ export class AppIdRuntimeComponent implements AfterViewChecked {
         this.getAssociatedApplications();
         this.getAvailableApplications();
         this.appIdService.resetDto();
+        this.ngx.close('appIdModal');
       };
 
       SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
     }
 
-    this.ngx.close('appIdModal');
+    if (!this.saveClose && this.appIdService.isDtoEmpty()) {
+      this.ngx.close('appIdModal');
+    }
+
+    if (this.saveClose) {
+      this.ngx.close('appIdModal');
+    }
   }
 
   getData() {
