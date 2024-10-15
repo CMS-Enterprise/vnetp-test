@@ -65,8 +65,9 @@ export class GlobalMessagesModalComponent implements OnInit {
       return;
     }
 
-    const { description } = this.form.value;
+    const { description, messageType } = this.form.value;
     const message = {
+      messageType,
       description,
     } as Message;
     if (this.modalMode === ModalMode.Create) {

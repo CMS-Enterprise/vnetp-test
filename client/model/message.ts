@@ -14,6 +14,7 @@
 export interface Message { 
     id: string;
     description: string;
+    messageType: string;
     readonly timestamp: string;
 }
 

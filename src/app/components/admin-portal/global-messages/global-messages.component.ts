@@ -22,6 +22,7 @@ export class GlobalMessagesComponent implements OnInit {
   public config: TableConfig<any> = {
     description: 'messages',
     columns: [
+      { name: 'Message Type', property: 'messageType' },
       { name: 'Message', property: 'description' },
       { name: '', template: () => this.actionsTemplate },
     ],
