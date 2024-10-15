@@ -75,7 +75,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   firewallRuleCount: number;
   natRuleCount: number;
   auditLogs;
-  messages: PaginationDTO;
+  messages: any;
   public config: TableConfig<any> = {
     description: 'Dashboard-Deployments',
     columns: [
@@ -125,21 +125,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getGlobalMessages() {
-    this.globalMessagesService.getMessagesMessage({ page: 1, perPage: 3 }).subscribe(data => {
+    this.globalMessagesService.getMessagesMessage({ page: 1, perPage: 100 }).subscribe(data => {
       this.messages = data;
 
       // use this to dynamically change the title / messages in the bottom cards
-
-      // this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-      //   map(() => {
-      //     return [
-      //       { title: this.messages.data[0]['description'], cols: 1, rows: 1, data: [this.messages.data[0]['description']] },
-      //       { title: this.messages.data[1]['description'], cols: 1, rows: 1, data: [this.messages.data[1]['description']] },
-      //       { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
-      //       { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
-      //     ];
-      //   }),
-      // )
+      console.log('this.messages', this.messages);
+      const trainingMessages = [];
+      const newFeatureMessages = [];
+      this.messages.data.map(message => {
+        if (message.messageType === 'Training') {
+          trainingMessages.push(message.description);
+        } else if (message.messageType === 'NewFeature') {
+          newFeatureMessages.push(message.description);
+        }
+      });
+      console.log('trainingMessages', trainingMessages);
+      this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+        map(() => {
+          return [
+            { title: 'Training', cols: 1, rows: 1, data: trainingMessages },
+            { title: 'New Features', cols: 1, rows: 1, data: newFeatureMessages },
+            // { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
+            // { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
+          ];
+        }),
+      );
     });
   }
 

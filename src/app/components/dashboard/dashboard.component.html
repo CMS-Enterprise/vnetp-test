@@ -173,7 +173,7 @@
           <div *ngIf="card.data[0]">
             <div *ngFor="let line of card.data">
               <ul>
-                <li style="width: 10%; text-wrap: nowrap">{{ line }}</li>
+                <li style="width: 10%; text-wrap: nowrap">{{ line | json }}</li>
               </ul>
             </div>
           </div>
