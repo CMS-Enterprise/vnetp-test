@@ -129,17 +129,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.messages = data;
 
       // use this to dynamically change the title / messages in the bottom cards
-      console.log('this.messages', this.messages);
       const trainingMessages = [];
       const newFeatureMessages = [];
-      this.messages.data.map(message => {
+      this.messages.data = this.messages.data.filter(message => {
         if (message.messageType === 'Training') {
           trainingMessages.push(message.description);
         } else if (message.messageType === 'NewFeature') {
           newFeatureMessages.push(message.description);
         }
+        return message.messageType !== 'Training' && message.messageType !== 'NewFeature';
       });
+
       console.log('trainingMessages', trainingMessages);
+      console.log('newFeatureMessages', newFeatureMessages);
+
+      // use this to dynamically change the title / messages in the bottom cards
       this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
         map(() => {
           return [
