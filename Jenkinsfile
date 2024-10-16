@@ -21,19 +21,19 @@ pipeline {
             }
     }
 
-    // stage('Test') {
-    //    agent {
-    //       docker {
-    //             image "${nodeImage}"
-    //             args '--userns=keep-id -e HOME=/tmp/home --security-opt label=disable'
-    //             label 'rehl8-prod2'
-    //             }
-    //         }
-    //         steps {
-    //             sh 'npm --version'
-    //             sh 'npm run test:ci'
-    //         }
-    // }
+    stage('Test') {
+       agent {
+          docker {
+                image "${nodeImage}"
+                args '--userns=keep-id -e HOME=/tmp/home --security-opt label=disable'
+                label 'rehl8-prod2'
+                }
+            }
+            steps {
+                sh 'npm --version'
+                sh 'npm run test:ci'
+            }
+    }
 
     stage('SonarQube - Static Analysis') {
             when {
