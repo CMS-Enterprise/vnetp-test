@@ -108,8 +108,9 @@ describe('AppIdRuntimeComponent', () => {
   });
 
   it('should getData', () => {
-    const mockDto = { tier: { appVersion: 'panos' }, firewallRule: {} };
+    const mockDto = { tier: { appVersion: 'panos' }, firewallRule: { id: 1 } };
     const mockApplications = [{ firewallRules: [] }] as any;
+    mockAppIdRuntimeService.dto = { firewallRuleId: undefined } as any;
     mockNgxSmartModalService.getModalData.mockReturnValue(mockDto);
     mockAppIdRuntimeService.getPanosApplications.mockReturnValue(of(mockApplications));
     component.getData();

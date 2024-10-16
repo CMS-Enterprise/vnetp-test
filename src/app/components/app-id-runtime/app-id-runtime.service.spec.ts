@@ -101,9 +101,11 @@ describe('AppIdRuntimeService', () => {
   });
 
   it('should reset dto', () => {
-    (service as any).dto = { panosApplicationsToAdd: [{ id: 1 }], panosApplicationsToRemove: [] };
+    (service as any).dto = { panosApplicationsToAdd: [{ id: 1, appVersion: 1 }], panosApplicationsToRemove: [] };
+    const gerManyAppIdSpy = jest.spyOn(mockAppIdService, 'getManyAppIdRuntime').mockReturnValue(of({} as any));
     service.resetDto();
     expect((service as any).dto).toEqual({ panosApplicationsToAdd: [], panosApplicationsToRemove: [], firewallRuleId: '' });
+    expect(gerManyAppIdSpy).toHaveBeenCalledWith({ filter: ['appVersion||eq||1'], relations: ['firewallRules'], perPage: 10000 });
   });
 
   it('should save dto with firewall rule id', () => {
