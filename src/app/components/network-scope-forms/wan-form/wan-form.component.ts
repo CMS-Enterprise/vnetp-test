@@ -15,7 +15,7 @@ import { GetManyWanFormResponseDto } from '../../../../../client/model/getManyWa
 import { SearchColumnConfig } from '../../../common/search-bar/search-bar.component';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Tenant, V2AppCentricTenantsService } from '../../../../../client';
+import { Datacenter, Tenant, V2AppCentricTenantsService } from '../../../../../client';
 
 @Component({
   selector: 'app-wan-form',
@@ -31,6 +31,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
   public ModalMode = ModalMode;
   public datacenterId: string;
   public currentDatacenterSubscription: Subscription;
+  public currentDatacenter: Datacenter;
   public dcsMode: string;
   public selectedTenant: string;
   public tenants: Tenant[];
@@ -76,6 +77,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
     if (this.dcsMode === 'netcentric') {
       this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
         if (cd) {
+          this.currentDatacenter = cd;
           this.datacenterId = cd.id;
           this.getWanForms();
         }
@@ -143,7 +145,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
     this.wanFormService
       .getManyWanForm({
         filter: [filerParam, eventParams],
-        join: ['externalRoutes', 'wanFormSubnets'],
+        join: ['wanFormSubnets', 'externalRoutes'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })
