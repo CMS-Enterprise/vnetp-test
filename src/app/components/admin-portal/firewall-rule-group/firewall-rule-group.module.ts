@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FirewallRuleGroupComponent } from './firewall-rule-group.component';
-import { AuthGuard } from 'src/app/guards/auth.guard';
 import { CommonModule } from '@angular/common';
 import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
