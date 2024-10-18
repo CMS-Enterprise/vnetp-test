@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import {
-  Message,
-  V1NetworkSecurityFirewallRuleGroupsService,
-  V1NetworkSecurityZonesService,
-  V1TiersService,
-  V3GlobalMessagesService,
-} from 'client';
+import { V1NetworkSecurityFirewallRuleGroupsService, V1TiersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 

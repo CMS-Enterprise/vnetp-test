@@ -15,7 +15,8 @@
 //   beforeEach(() => {
 //     TestBed.configureTestingModule({
 //       imports: [FormsModule, ReactiveFormsModule],
-//       declarations: [FirewallRuleGroupZonesModalComponent, MockNgxSmartModalComponent, MockIconButtonComponent, MockFontAwesomeComponent],
+//       declarations: [FirewallRuleGroupZonesModalComponent, MockNgxSmartModalComponent,
+// MockIconButtonComponent, MockFontAwesomeComponent],
 //       providers: [MockProvider(NgxSmartModalService), MockProvider(V3FirewallRuleGroupZonesService)],
 //     });
 //     fixture = TestBed.createComponent(FirewallRuleGroupZonesModalComponent);

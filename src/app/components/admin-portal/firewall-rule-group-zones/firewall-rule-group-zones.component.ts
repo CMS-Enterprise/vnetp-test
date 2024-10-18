@@ -1,12 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import {
-  Message,
-  PaginationDTO,
-  V1DatacentersService,
-  V1NetworkSecurityZonesService,
-  V1TiersService,
-  V3GlobalMessagesService,
-} from 'client';
+import { PaginationDTO, V1DatacentersService, V1NetworkSecurityZonesService, V1TiersService, V3GlobalMessagesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { TableConfig } from 'src/app/common/table/table.component';

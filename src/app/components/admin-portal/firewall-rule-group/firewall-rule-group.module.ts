@@ -24,12 +24,6 @@ const routes: Routes = [
     path: '',
     component: FirewallRuleGroupComponent,
   },
-  // {
-  //   path: 'edit/:id',
-  //   canActivate: [AuthGuard],
-  //   data: { breadcrumb: 'Firewall Rule Group' },
-  //   component: FirewallRulesDetailComponent,
-  // },
 ];
 
 @NgModule({
