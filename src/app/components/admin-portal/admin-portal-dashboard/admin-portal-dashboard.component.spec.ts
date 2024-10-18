@@ -3,6 +3,7 @@ import { AdminPortalDashboardComponent } from './admin-portal-dashboard.componen
 import { MockProvider } from 'src/test/mock-providers';
 import { AuthService } from 'src/app/services/auth.service';
 import { V3GlobalMessagesService } from 'client';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('AdminPortalDashboardComponent', () => {
   let component: AdminPortalDashboardComponent;
@@ -13,6 +14,7 @@ describe('AdminPortalDashboardComponent', () => {
       completeAuthentication: jest.fn(),
     };
     TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [AdminPortalDashboardComponent],
       providers: [{ provide: AuthService, useValue: authService }, MockProvider(V3GlobalMessagesService)],
     });

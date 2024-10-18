@@ -19,10 +19,37 @@
         <a routerLink="/adminportal/global-messages" queryParamsHandling="merge">
           <span> Global Messages </span>
           <span class="inline-block ml-auto">
-            {{ globalMessages || 0 }}
+            {{ globalMessageTotal || 0 }}
           </span>
         </a>
       </li>
+
+      <li>
+        <a routerLink="/adminportal/firewall-rule-group" queryParamsHandling="merge">
+          <span> FirewallRule Group </span>
+          <span class="inline-block ml-auto"> </span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/adminportal/firewall-rule-group-zones" queryParamsHandling="merge">
+          <span> FirewallRule Group Zones </span>
+          <span class="inline-block ml-auto"> </span>
+        </a>
+      </li>
     </ul>
+  </aside>
+
+  <aside class="dashboard__card" aria-label="Overall Environment">
+    <div class="form-group">
+      <label for="tenant">Account</label>
+      <select id="tenant" name="tenant" class="form-control" aria-label="Tenant" #tenant="ngModel" [(ngModel)]="selectedTenant" required>
+        <option></option>
+        <option *ngFor="let availableTenant of availableTenants" [ngValue]="availableTenant">
+          {{ availableTenant.tenantFullName }}
+        </option>
+      </select>
+    </div>
+    <button class="btn btn-primary btn-lg" (click)="setTenant(selectedTenant)">Select Account</button>
   </aside>
 </main>

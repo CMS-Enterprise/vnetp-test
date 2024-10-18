@@ -1,0 +1,25 @@
+<ng-container>
+  <ng-container>
+    <section class="btn-toolbar" role="toolbar">
+      <button type="button" class="btn btn-success" (click)="openFWRuleGroupZonesModal(ModalMode.Create)">
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create Zone</span>
+      </button>
+    </section>
+    <app-table [config]="config" [data]="zones" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+  </ng-container>
+</ng-container>
+
+<ng-template #actionsTemplate let-zone="datum">
+  <section class="table__actions">
+    <app-icon-button
+      icon="delete"
+      label="Soft-Delete/Delete"
+      [type]="zone?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteEntry(zone)"
+    ></app-icon-button>
+  </section>
+</ng-template>
+
+<app-yes-no-modal></app-yes-no-modal>
+<app-firewall-rule-group-zones-modal></app-firewall-rule-group-zones-modal>

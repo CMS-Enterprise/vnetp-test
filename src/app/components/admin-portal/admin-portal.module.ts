@@ -13,6 +13,9 @@ import { AdminPortalNavbarComponent } from './admin-portal-navbar/admin-portal-n
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module';
 import { GlobalMessagesComponent } from './global-messages/global-messages.component';
+import { FormsModule } from '@angular/forms';
+import { FirewallRuleGroupZonesComponent } from './firewall-rule-group-zones/firewall-rule-group-zones.component';
+import { FirewallRuleGroupComponent } from './firewall-rule-group/firewall-rule-group.component';
 
 const routes: Routes = [
   {
@@ -32,6 +35,21 @@ const routes: Routes = [
         data: { breadcrumb: 'Global Messages', title: 'Global Messages' },
         loadChildren: () => import('./global-messages/global-messages.module').then(m => m.GlobalMessagesModule),
       },
+      {
+        path: 'firewall-rule-group-zones',
+        component: FirewallRuleGroupZonesComponent,
+        canActivate: [AdminAuthGuard],
+        data: { breadcrumb: 'FW Rule Group Zones', title: 'FW Rule Group Zones' },
+        loadChildren: () =>
+          import('./firewall-rule-group-zones/firewall-rule-group-zones.module').then(m => m.FirewallRuleGroupZonesModule),
+      },
+      {
+        path: 'firewall-rule-group',
+        component: FirewallRuleGroupComponent,
+        canActivate: [AdminAuthGuard],
+        data: { breadcrumb: 'FW Rule Group', title: 'FW Rule Group' },
+        loadChildren: () => import('./firewall-rule-group/firewall-rule-group.module').then(m => m.FirewallRuleGroupModule),
+      },
     ],
   },
 ];
@@ -48,6 +66,7 @@ const routes: Routes = [
     YesNoModalModule,
     NgxSmartModalModule,
     BreadcrumbsModule,
+    FormsModule,
   ],
 })
 export class AdminPortalModule {}

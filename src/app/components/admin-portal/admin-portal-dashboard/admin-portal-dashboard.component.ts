@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserDto, V3GlobalMessagesService } from 'client';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -13,7 +14,9 @@ export class AdminPortalDashboardComponent implements OnInit {
   private currentUserSubscription: Subscription;
   public user: UserDto;
   public userRoles: string[];
-  globalMessages;
+  globalMessageTotal: number;
+  availableTenants;
+  selectedTenant;
 
   dashboardPoller;
 
@@ -23,11 +26,14 @@ export class AdminPortalDashboardComponent implements OnInit {
     { name: 'Infrastructure', status: 'green' },
   ];
 
-  constructor(private auth: AuthService, private globalMessagesService: V3GlobalMessagesService) {}
+  constructor(private router: Router, private auth: AuthService, private globalMessagesService: V3GlobalMessagesService) {}
   ngOnInit() {
     if (this.auth.currentUser) {
       this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
         this.user = user;
+        this.auth.getTenants(this.user.token).subscribe(data => {
+          this.availableTenants = data;
+        });
         this.userRoles = this.user.dcsPermissions.map(p => p.roles).flat();
         this.loadDashboard();
         this.dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
@@ -46,8 +52,20 @@ export class AdminPortalDashboardComponent implements OnInit {
 
   public getGlobalMessages() {
     this.globalMessagesService.getMessagesMessage({ page: 1, perPage: 10000 }).subscribe(data => {
-      this.globalMessages = data.total;
+      this.globalMessageTotal = data.total;
       this.status[1].status = 'green';
     });
+  }
+
+  public setTenant(tenant) {
+    console.log('tenant', tenant);
+
+    const { tenantQueryParameter } = tenant;
+    console.log('tenantQueryParameter', tenantQueryParameter);
+    this.selectedTenant = this.auth.currentTenantValue;
+    this.auth.currentTenantValue = tenantQueryParameter;
+    localStorage.setItem('tenantQueryParam', JSON.stringify(tenantQueryParameter));
+    this.router.navigate(['adminportal/dashboard'], { queryParams: { tenant: tenantQueryParameter } });
+    setTimeout(location.reload.bind(window.location), 250);
   }
 }
