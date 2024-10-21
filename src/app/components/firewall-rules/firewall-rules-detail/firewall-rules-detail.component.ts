@@ -420,10 +420,36 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       this.getFirewallRules();
       this.appIdService.loadPanosApplications(this.tier.appVersion);
 
-      if (!this.runtimeDataService.isRecentlyRefreshed(this.tier.runtimeDataLastRefreshed)) {
+      if (!this.hasBeenRefreshedSinceDayTime(1, 7)) {
         this.refreshAppId();
       }
     });
+  }
+
+  private getLastDayAtTime(targetDay: number, targetHour: number, targetMinute: number = 0): Date {
+    const now = new Date();
+    const currentDay = now.getUTCDay();
+
+    // Calculate the most recent target day at the specified time (UTC)
+    const targetDate = new Date(now);
+
+    // Find the most recent occurrence of the target day
+    const daysToTargetDay = currentDay >= targetDay ? currentDay - targetDay : 7 - (targetDay - currentDay);
+    targetDate.setUTCDate(now.getUTCDate() - daysToTargetDay);
+    targetDate.setUTCHours(targetHour, targetMinute, 0, 0); // Set to target time (UTC)
+
+    return targetDate;
+  }
+
+  // Function to check if the data has been refreshed since the specified day and time
+  private hasBeenRefreshedSinceDayTime(targetDay: number, targetHour: number, targetMinute: number = 0): boolean {
+    const lastDayAtTime = this.getLastDayAtTime(targetDay, targetHour, targetMinute);
+    if (!this.tier.runtimeDataLastRefreshed) {
+      return false;
+    }
+
+    // Compare the last refresh time to the specified day and time
+    return new Date(this.tier.runtimeDataLastRefreshed) > lastDayAtTime;
   }
 
   createFirewallRule(): void {
