@@ -226,7 +226,7 @@
 <ng-template #appIdTemplate let-firewallRule="datum">
   <mat-drawer-container>
     <mat-drawer-content>
-      <app-lite-table [config]="liteConfig" [data]="firewallRule.panosApplications"></app-lite-table>
+      <app-lite-table [config]="liteConfig" [data]="addEmptyApplications(firewallRule.panosApplications)"></app-lite-table>
     </mat-drawer-content>
     <mat-drawer #drawer mode="side" position="end">
       <app-panos-application-details-dialog

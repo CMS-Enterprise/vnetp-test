@@ -349,6 +349,23 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       );
   }
 
+  addEmptyApplications(panosApplications: PanosApplication[]): any[] {
+    const emptyApplication = {
+      name: '',
+      category: '',
+      subCategory: '',
+      risk: '\u200B',
+    } as any;
+
+    if (panosApplications.length > 0 && panosApplications.length < 5) {
+      while (panosApplications.length < 4) {
+        panosApplications.push({ ...emptyApplication });
+      }
+    }
+
+    return panosApplications;
+  }
+
   getFirewallRuleLastIndex(): void {
     this.firewallRuleService
       .getManyFirewallRule({
