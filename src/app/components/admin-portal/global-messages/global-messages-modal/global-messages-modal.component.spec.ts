@@ -1,5 +1,5 @@
+/* eslint-disable */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GlobalMessagesModalComponent } from './global-messages-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -44,12 +44,10 @@ describe('GlobalMessagesModalComponent', () => {
   });
 
   it('should call ngx.close with the correct argument when cancelled', () => {
-    // eslint-disable-next-line @typescript-eslint/dot-notation
     const ngx = component['ngx'];
 
     const ngxSpy = jest.spyOn(ngx, 'close');
 
-    // eslint-disable-next-line @typescript-eslint/dot-notation
     component['closeModal']();
 
     expect(ngxSpy).toHaveBeenCalledWith('globalMessagesModal');
