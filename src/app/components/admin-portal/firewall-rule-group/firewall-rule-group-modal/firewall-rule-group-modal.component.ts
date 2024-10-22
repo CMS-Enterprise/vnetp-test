@@ -35,7 +35,6 @@ export class FirewallRuleGroupModalComponent implements OnInit {
   getData(): void {
     const dto = Object.assign({}, this.ngx.getModalData('firewallRuleGroupModal') as any);
     this.modalMode = dto.ModalMode;
-    this.form.controls.name.enable();
     this.ngx.resetModalData('firewallRuleGroupModal');
   }
 
@@ -63,14 +62,12 @@ export class FirewallRuleGroupModalComponent implements OnInit {
   }
 
   private createFirewallRuleGroup(firewallRuleGroup): void {
-    console.log('group', firewallRuleGroup);
     this.firewallRuleGroupService.createOneFirewallRuleGroup({ firewallRuleGroup }).subscribe(() => {
       this.closeModal();
     });
   }
 
   public save(): void {
-    console.log('this.form', this.form);
     this.submitted = true;
     if (this.form.invalid) {
       return;
@@ -83,7 +80,6 @@ export class FirewallRuleGroupModalComponent implements OnInit {
       tierId: tier,
       type: groupType,
     };
-    console.log('group', firewallRuleGroup);
 
     this.createFirewallRuleGroup(firewallRuleGroup);
   }

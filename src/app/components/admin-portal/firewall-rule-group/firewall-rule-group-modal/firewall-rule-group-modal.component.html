@@ -24,8 +24,8 @@
       <div class="form-group">
         <label for="tier">Tier</label>
         <ng-select
-          formControlName="tier"
           id="tier"
+          formControlName="tier"
           [ngClass]="{
             'is-invalid': submitted && f.tier.errors
           }"
@@ -46,7 +46,7 @@
           formControlName="groupType"
           class="form-control"
           [class.is-invalid]="submitted && f.groupType.errors"
-          aria-label="Message Type"
+          aria-label="Group Type"
         >
           <option value="ZoneBased">ZoneBased</option>
           <option value="External">External</option>
