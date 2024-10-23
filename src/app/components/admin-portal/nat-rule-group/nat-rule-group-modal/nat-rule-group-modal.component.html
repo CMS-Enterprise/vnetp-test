@@ -1,12 +1,6 @@
-<ngx-smart-modal
-  #firewallRuleGroupZonesModal
-  identifier="firewallRuleGroupZonesModal"
-  [dismissable]="false"
-  (onOpen)="getData()"
-  (onClose)="reset()"
->
+<ngx-smart-modal #natRuleGroupModal identifier="natRuleGroupModal" [dismissable]="false" (onOpen)="getData()" (onClose)="reset()">
   <header class="modal-header">
-    <h4 class="modal-title">Firewall Rule Group Zone</h4>
+    <h4 class="modal-title">Nat Rule Group</h4>
   </header>
 
   <form [formGroup]="form" (ngSubmit)="save()">
@@ -30,12 +24,12 @@
       <div class="form-group">
         <label for="tier">Tier</label>
         <ng-select
-          formControlName="tier"
           id="tier"
+          formControlName="tier"
           [ngClass]="{
             'is-invalid': submitted && f.tier.errors
           }"
-          aria-label="TIER"
+          aria-label="tier"
           [items]="tiers"
           bindLabel="name"
           bindValue="id"
@@ -43,6 +37,23 @@
         </ng-select>
         <div *ngIf="submitted && f.tier.errors" class="invalid-feedback">
           <div *ngIf="f.tier.errors.required">Tier is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="groupType">Group Type</label>
+        <select
+          id="groupType"
+          formControlName="groupType"
+          class="form-control"
+          [class.is-invalid]="submitted && f.groupType.errors"
+          aria-label="Group Type"
+        >
+          <option value="ZoneBased">ZoneBased</option>
+          <option value="External">External</option>
+          <option value="Intervrf">Intervrf</option>
+        </select>
+        <div *ngIf="submitted && f.groupType.errors" class="invalid-feedback">
+          <div *ngIf="f.groupType.errors.required">Group Type is required</div>
         </div>
       </div>
     </div>

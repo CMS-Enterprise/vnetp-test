@@ -10,12 +10,12 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
-  selector: 'app-firewall-rule-group-zones',
-  templateUrl: './firewall-rule-group-zones.component.html',
-  styleUrls: ['./firewall-rule-group-zones.component.scss'],
+  selector: 'app-rule-group-zones',
+  templateUrl: './rule-group-zones.component.html',
+  styleUrls: ['./rule-group-zones.component.scss'],
 })
-export class FirewallRuleGroupZonesComponent implements OnInit {
-  public fwRuleGroupZoneModalSubscription: Subscription;
+export class RuleGroupZonesComponent implements OnInit {
+  public ruleGroupZoneModalSubscription: Subscription;
 
   ModalMode = ModalMode;
 
@@ -85,10 +85,10 @@ export class FirewallRuleGroupZonesComponent implements OnInit {
     this.getZones();
   }
 
-  public subscribeToFirewallRuleGroupZonesModal(): void {
-    this.fwRuleGroupZoneModalSubscription = this.ngx.getModal('firewallRuleGroupZonesModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('firewallRuleGroupZonesModal');
-      this.fwRuleGroupZoneModalSubscription.unsubscribe();
+  public subscribeToRuleGroupZonesModal(): void {
+    this.ruleGroupZoneModalSubscription = this.ngx.getModal('ruleGroupZonesModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('ruleGroupZonesModal');
+      this.ruleGroupZoneModalSubscription.unsubscribe();
       this.getZones();
     });
   }
@@ -96,9 +96,9 @@ export class FirewallRuleGroupZonesComponent implements OnInit {
   public openFWRuleGroupZonesModal(modalMode?): void {
     const dto: any = {};
     dto.ModalMode = modalMode;
-    this.subscribeToFirewallRuleGroupZonesModal();
-    this.ngx.setModalData(dto, 'firewallRuleGroupZonesModal');
-    this.ngx.getModal('firewallRuleGroupZonesModal').open();
+    this.subscribeToRuleGroupZonesModal();
+    this.ngx.setModalData(dto, 'ruleGroupZonesModal');
+    this.ngx.getModal('ruleGroupZonesModal').open();
   }
 
   public onTableEvent(event: TableComponentDto): void {

@@ -14,8 +14,9 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module';
 import { GlobalMessagesComponent } from './global-messages/global-messages.component';
 import { FormsModule } from '@angular/forms';
-import { FirewallRuleGroupZonesComponent } from './firewall-rule-group-zones/firewall-rule-group-zones.component';
+import { RuleGroupZonesComponent } from './rule-group-zones/rule-group-zones.component';
 import { FirewallRuleGroupComponent } from './firewall-rule-group/firewall-rule-group.component';
+import { NatRuleGroupComponent } from './nat-rule-group/nat-rule-group.component';
 
 const routes: Routes = [
   {
@@ -36,12 +37,11 @@ const routes: Routes = [
         loadChildren: () => import('./global-messages/global-messages.module').then(m => m.GlobalMessagesModule),
       },
       {
-        path: 'firewall-rule-group-zones',
-        component: FirewallRuleGroupZonesComponent,
+        path: 'rule-group-zones',
+        component: RuleGroupZonesComponent,
         canActivate: [AdminAuthGuard],
-        data: { breadcrumb: 'FW Rule Group Zones', title: 'FW Rule Group Zones' },
-        loadChildren: () =>
-          import('./firewall-rule-group-zones/firewall-rule-group-zones.module').then(m => m.FirewallRuleGroupZonesModule),
+        data: { breadcrumb: 'Rule Group Zones', title: 'Rule Group Zones' },
+        loadChildren: () => import('./rule-group-zones/rule-group-zones.module').then(m => m.RuleGroupZonesModule),
       },
       {
         path: 'firewall-rule-group',
@@ -49,6 +49,14 @@ const routes: Routes = [
         canActivate: [AdminAuthGuard],
         data: { breadcrumb: 'FW Rule Group', title: 'FW Rule Group' },
         loadChildren: () => import('./firewall-rule-group/firewall-rule-group.module').then(m => m.FirewallRuleGroupModule),
+      },
+
+      {
+        path: 'nat-rule-group',
+        component: NatRuleGroupComponent,
+        canActivate: [AdminAuthGuard],
+        data: { breadcrumb: 'Nat Rule Group', title: 'Nat Rule Group' },
+        loadChildren: () => import('./nat-rule-group/nat-rule-group.module').then(m => m.NatRuleGroupModule),
       },
     ],
   },

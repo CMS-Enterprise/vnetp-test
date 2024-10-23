@@ -1,22 +1,22 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Tier, V1TiersService, FirewallRuleGroup } from 'client';
+import { Tier, V1TiersService, NatRuleGroup } from 'client';
 import { Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
-  selector: 'app-firewall-rule-group',
-  templateUrl: './firewall-rule-group.component.html',
-  styleUrls: ['./firewall-rule-group.component.scss'],
+  selector: 'app-nat-rule-group',
+  templateUrl: './nat-rule-group.component.html',
+  styleUrls: ['./nat-rule-group.component.scss'],
 })
-export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
-  public currentFirewallRulePage = 1;
+export class NatRuleGroupComponent implements OnInit, OnDestroy {
+  public currentNatRulePage = 1;
   public perPage = 50;
   public currentTier: Tier;
   tiers;
-  firewallRuleGroups = [];
-  public fwRuleGroupModalSubscription: Subscription;
+  natRuleGroups = [];
+  public natRuleGroupModalSubscription: Subscription;
   dropdownOpen: boolean = false;
   filteredTier = false;
   filteredTierObject;
@@ -49,38 +49,38 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   }
 
   public getTierByName(tierName?): void {
-    this.firewallRuleGroups = [];
+    this.natRuleGroups = [];
     this.filteredTier = true;
     this.tierService
       .getOneTier({
         id: tierName.id,
-        join: ['firewallRuleGroups'],
+        join: ['natRuleGroups'],
       })
       .subscribe(data => {
-        this.firewallRuleGroups = data.firewallRuleGroups;
+        this.natRuleGroups = data.natRuleGroups;
       });
   }
 
   public getTiers(): void {
-    this.firewallRuleGroups = [];
+    this.natRuleGroups = [];
     this.tierService
       .getManyTier({
-        join: ['firewallRuleGroups'],
+        join: ['natRuleGroups'],
       })
       .subscribe(data => {
         this.tiers = data;
         this.tiers.map(tier => {
-          tier.firewallRuleGroups.map(group => {
-            this.firewallRuleGroups.push(group);
+          tier.natRuleGroups.map(group => {
+            this.natRuleGroups.push(group);
           });
         });
       });
   }
 
-  public subscribeToFirewallRuleGroupModal(): void {
-    this.fwRuleGroupModalSubscription = this.ngx.getModal('firewallRuleGroupModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('firewallRuleGroupModal');
-      this.fwRuleGroupModalSubscription.unsubscribe();
+  public subscribeToNatRuleGroupModal(): void {
+    this.natRuleGroupModalSubscription = this.ngx.getModal('natRuleGroupModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('natRuleGroupModal');
+      this.natRuleGroupModalSubscription.unsubscribe();
       console.log('this.filteredTier', this.filteredTier);
       console.log('this.filteredTierObject', this.filteredTierObject);
       if (this.filteredTier) {
@@ -93,12 +93,12 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   public openFWRuleGroupModal(modalMode?): void {
     const dto: any = {};
     dto.ModalMode = modalMode;
-    this.subscribeToFirewallRuleGroupModal();
-    this.ngx.setModalData(dto, 'firewallRuleGroupModal');
-    this.ngx.getModal('firewallRuleGroupModal').open();
+    this.subscribeToNatRuleGroupModal();
+    this.ngx.setModalData(dto, 'natRuleGroupModal');
+    this.ngx.getModal('natRuleGroupModal').open();
   }
 
-  public filterFirewallRuleGroup = (firewallRuleGroup: FirewallRuleGroup): boolean => firewallRuleGroup.name !== 'Intravrf';
+  public filterNatRuleGroup = (natRuleGroup: NatRuleGroup): boolean => natRuleGroup.name !== 'Intravrf';
 
   public getTierName(tierId: string): string {
     return ObjectUtil.getObjectName(tierId, this.tiers, 'Error Resolving Name');
@@ -112,17 +112,17 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
     SubscriptionUtil.unsubscribe([this.currentTierSubscription]);
   }
 
-  // public importFirewallRuleGroupsConfig(event): void {
+  // public importNatRuleGroupsConfig(event): void {
   //   const modalDto = new YesNoModalDto(
-  //     'Import Firewall Rule Groups',
-  //     `Are you sure you would like to import ${event.length} firewall rule group${event.length > 1 ? 's' : ''}?`,
+  //     'Import Nat Rule Groups',
+  //     `Are you sure you would like to import ${event.length} nat rule group${event.length > 1 ? 's' : ''}?`,
   //   );
 
   //   const onConfirm = () => {
   //     const dto = this.sanitizeData(event);
-  //     this.firewallRuleGroupService
-  //       .createManyFirewallRuleGroup({
-  //         createManyFirewallRuleGroupDto: { bulk: dto },
+  //     this.natRuleGroupService
+  //       .createManyNatRuleGroup({
+  //         createManyNatRuleGroupDto: { bulk: dto },
   //       })
   //       .subscribe(() => {
   //         this.getTiers();

@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { V1NetworkSecurityZonesService, V1TiersService } from 'client';
+import { V1NetworkSecurityNatRuleGroupsService, V1TiersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
 @Component({
-  selector: 'app-firewall-rule-group-zones-modal',
-  templateUrl: './firewall-rule-group-zones-modal.component.html',
-  styleUrls: ['./firewall-rule-group-zones-modal.component.scss'],
+  selector: 'app-nat-rule-group-modal',
+  templateUrl: './nat-rule-group-modal.component.html',
 })
-export class FirewallRuleGroupZonesModalComponent implements OnInit {
+export class NatRuleGroupModalComponent implements OnInit {
   form: UntypedFormGroup;
   submitted: boolean;
   modalMode: ModalMode;
@@ -18,7 +17,7 @@ export class FirewallRuleGroupZonesModalComponent implements OnInit {
 
   constructor(
     private tierService: V1TiersService,
-    private zoneService: V1NetworkSecurityZonesService,
+    private natRuleGroupService: V1NetworkSecurityNatRuleGroupsService,
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
   ) {}
@@ -34,10 +33,9 @@ export class FirewallRuleGroupZonesModalComponent implements OnInit {
   }
 
   getData(): void {
-    const dto = Object.assign({}, this.ngx.getModalData('firewallRuleGroupZonesModal') as any);
+    const dto = Object.assign({}, this.ngx.getModalData('natRuleGroupModal') as any);
     this.modalMode = dto.ModalMode;
-    this.form.controls.name.enable();
-    this.ngx.resetModalData('firewallRuleGroupZonesModal');
+    this.ngx.resetModalData('natRuleGroupModal');
   }
 
   get f() {
@@ -45,13 +43,13 @@ export class FirewallRuleGroupZonesModalComponent implements OnInit {
   }
 
   public closeModal(): void {
-    this.ngx.close('firewallRuleGroupZonesModal');
+    this.ngx.close('natRuleGroupModal');
     this.reset();
   }
 
   public reset(): void {
     this.submitted = false;
-    this.ngx.resetModalData('firewallRuleGroupZonesModal');
+    this.ngx.resetModalData('natRuleGroupModal');
     this.buildForm();
   }
 
@@ -59,11 +57,12 @@ export class FirewallRuleGroupZonesModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.maxLength(100), Validators.required])],
       tier: ['', Validators.required],
+      groupType: ['ZoneBased', Validators.required],
     });
   }
 
-  private createZone(zone): void {
-    this.zoneService.createOneZone({ zone }).subscribe(() => {
+  private createNatRuleGroup(natRuleGroup): void {
+    this.natRuleGroupService.createOneNatRuleGroup({ natRuleGroup }).subscribe(() => {
       this.closeModal();
     });
   }
@@ -74,13 +73,14 @@ export class FirewallRuleGroupZonesModalComponent implements OnInit {
       return;
     }
 
-    const { name, tier } = this.form.value;
-    const zone = {
+    const { name, tier, groupType } = this.form.value;
+
+    const natRuleGroup = {
       name,
       tierId: tier,
+      type: groupType,
     };
-    if (this.modalMode === ModalMode.Create) {
-      this.createZone(zone);
-    }
+
+    this.createNatRuleGroup(natRuleGroup);
   }
 }

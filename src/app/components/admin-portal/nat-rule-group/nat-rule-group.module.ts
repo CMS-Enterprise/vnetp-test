@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { FirewallRuleGroupComponent } from './firewall-rule-group.component';
+import { NatRuleGroupComponent } from './nat-rule-group.component';
 import { CommonModule } from '@angular/common';
 import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -16,13 +16,13 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.module';
 // eslint-disable-next-line max-len
 import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
-import { FirewallRuleGroupModalComponent } from './firewall-rule-group-modal/firewall-rule-group-modal.component';
+import { NatRuleGroupModalComponent } from './nat-rule-group-modal/nat-rule-group-modal.component';
 import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: FirewallRuleGroupComponent,
+    component: NatRuleGroupComponent,
   },
 ];
 
@@ -46,6 +46,6 @@ const routes: Routes = [
     PreviewModalModule,
   ],
   providers: [TierSelectModule],
-  declarations: [FirewallRuleGroupComponent, FirewallRuleGroupModalComponent],
+  declarations: [NatRuleGroupComponent, NatRuleGroupModalComponent],
 })
-export class FirewallRuleGroupModule {}
+export class NatRuleGroupModule {}
