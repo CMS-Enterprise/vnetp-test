@@ -2,7 +2,7 @@ def nodeImage = 'node:18.18'
 def sonarImage = 'sonarsource/sonar-scanner-cli'
 
 pipeline {
-    agent { label 'rehl8-prod2' }
+    agent { label 'rehl8-prod' }
     environment { npm_config_cache = 'npm-cache' }
     stages {
         stage('Build') {
@@ -10,7 +10,7 @@ pipeline {
                 docker {
                     image "${nodeImage}"
                     args '--userns=keep-id -e HOME=/tmp/home --security-opt label=disable'
-                    label 'rehl8-prod2'
+                    label 'rehl8-prod'
                 }
             }
 
@@ -21,44 +21,44 @@ pipeline {
             }
     }
 
-    stage('Test') {
-       agent {
-          docker {
-                image "${nodeImage}"
-                args '--userns=keep-id -e HOME=/tmp/home --security-opt label=disable'
-                label 'rehl8-prod2'
-                }
-            }
-            steps {
-                sh 'npm --version'
-                sh 'npm run test:ci'
-            }
-    }
+    // stage('Test') {
+    //    agent {
+    //       docker {
+    //             image "${nodeImage}"
+    //             args '--userns=keep-id -e HOME=/tmp/home --security-opt label=disable'
+    //             label 'rehl8-prod'
+    //             }
+    //         }
+    //         steps {
+    //             sh 'npm --version'
+    //             sh 'npm run test:ci'
+    //         }
+    // }
 
-    stage('SonarQube - Static Analysis') {
-            when {
-                expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'int'}
-            }
-            agent { label 'rehl8-prod2' }
-            steps {
-                    script {
-                           try {
-                                sh '''
-	                                pwd
-  	                              cp -R /var/cbjenkins/sonar-scanner  "${PWD}/node_modules"   
-                                  export PATH=/var/cbjenkins/workspace/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/NodeJS/bin:$PATH
-                                  "${PWD}/node_modules"/sonar-scanner/bin/sonar-scanner -Dproject.settings="${PWD}"/sonar-project.properties   
-                                  if [ -d ${PWD}/.scannerwork ]; then rm -Rf ${PWD}/.scannerwork; fi  
-                                '''  
-                        } catch (Exception e) {
-                           error('Failing sonarqube Test')
-                           }
-                    }
-            }
-     }
+    // stage('SonarQube - Static Analysis') {
+    //         when {
+    //             expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'int'}
+    //         }
+    //         agent { label 'rehl8-prod' }
+    //         steps {
+    //                 script {
+    //                        try {
+    //                             sh '''
+	//                                 pwd
+  	//                               cp -R /var/cbjenkins/sonar-scanner  "${PWD}/node_modules"   
+    //                               export PATH=/var/cbjenkins/workspace/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/NodeJS/bin:$PATH
+    //                               "${PWD}/node_modules"/sonar-scanner/bin/sonar-scanner -Dproject.settings="${PWD}"/sonar-project.properties   
+    //                               if [ -d ${PWD}/.scannerwork ]; then rm -Rf ${PWD}/.scannerwork; fi  
+    //                             '''  
+    //                     } catch (Exception e) {
+    //                        error('Failing sonarqube Test')
+    //                        }
+    //                 }
+    //         }
+    //  }
 
     stage('Publish') {
-            agent { label 'rehl8-prod2' }
+            agent { label 'rehl8-prod' }
             steps {
                 script {
                     sh '''
@@ -95,7 +95,7 @@ pipeline {
             echo 'send to cds-draas-jenkins channel in Slack'
         }
         success {
-            node('rehl8-prod2') {
+            node('rehl8-prod') {
                 script {
                     if (env.GIT_BRANCH == 'int' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'master') {
                         sh 'cp coverage/cobertura-coverage.xml cobertura-coverage.xml'

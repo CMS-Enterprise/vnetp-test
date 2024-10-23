@@ -70,11 +70,7 @@ export class AppIdRuntimeComponent implements AfterViewChecked {
       SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
     }
 
-    if (!this.saveClose && this.appIdService.isDtoEmpty()) {
-      this.ngx.close('appIdModal');
-    }
-
-    if (this.saveClose) {
+    if ((!this.saveClose && this.appIdService.isDtoEmpty()) || this.saveClose) {
       this.ngx.close('appIdModal');
     }
   }
