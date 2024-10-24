@@ -292,9 +292,6 @@ export class EndpointSecurityGroupComponent implements OnInit {
         () => {
           this.vrfs = null;
         },
-        // () => {
-        //   this.isLoading = false;
-        // },
       );
   }
   private getApplicationProfiles(): void {
@@ -312,9 +309,6 @@ export class EndpointSecurityGroupComponent implements OnInit {
         () => {
           this.applicationProfiles = null;
         },
-        // () => {
-        //   this.isLoading = false;
-        // },
       );
   }
 }

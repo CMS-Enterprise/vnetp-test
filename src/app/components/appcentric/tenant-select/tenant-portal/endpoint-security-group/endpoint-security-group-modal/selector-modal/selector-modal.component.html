@@ -94,6 +94,7 @@
         />
         <div *ngIf="submitted && f.IpSubnet.errors" class="invalid-feedback">
           <div *ngIf="f.IpSubnet.errors.required">IP Subnet is required</div>
+          <div *ngIf="f.IpSubnet.errors.invalidIpAny">IP Subnet is invalid, must be a valid IPv4 address or CIDR</div>
         </div>
       </div>
 

@@ -25,6 +25,7 @@ import { Subscription } from 'rxjs';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { SelectorModalDto } from 'src/app/models/appcentric/appcentric-selector-modal-dto';
 import { EntityService } from 'src/app/services/entity.service';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 const tabs = [{ name: 'Endpoint Security Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }];
 
@@ -48,7 +49,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   public selectedBridgeDomain = undefined;
   public applicationProfiles: ApplicationProfile[];
   public tableComponentDto = new TableComponentDto();
-  endpointGroups: EndpointGroup[];
+  endpointGroups;
   tagSelectors = { data: [] };
   IpSubnetSelectors = { data: [] };
   epgSelectors = { data: [] };
@@ -79,7 +80,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   public epgSelectorConfig: TableConfig<any> = {
     description: 'EPG Selectors',
     columns: [
-      { name: 'EPG', property: 'endpointSecurityGroupId' },
+      { name: 'EPG', property: 'endpointGroupName' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -104,6 +105,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getEndpointGroups();
     this.buildForm();
   }
 
@@ -184,11 +186,13 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   public getData(): void {
     this.getVrfs();
     this.getApplicationProfiles();
+
     const dto = Object.assign({}, this.ngx.getModalData('endpointSecurityGroupModal') as any);
     this.ModalMode = dto.modalMode;
 
     if (this.ModalMode === ModalMode.Edit) {
       this.endpointSecurityGroupId = dto.endpointSecurityGroup.id;
+
       dto.selectors.map(selector => {
         if (selector.selectorType === 'Tag') {
           this.tagSelectors.data.push(selector);
@@ -357,5 +361,17 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
         this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
       },
     });
+  }
+
+  public getEndpointGroups() {
+    this.endpointGroupService
+      .getManyEndpointGroup({
+        filter: [`tenantId||eq||${this.tenantId}`],
+        page: this.tableComponentDto.page,
+        perPage: this.tableComponentDto.perPage,
+      })
+      .subscribe(data => {
+        this.endpointGroups = data.data;
+      });
   }
 }

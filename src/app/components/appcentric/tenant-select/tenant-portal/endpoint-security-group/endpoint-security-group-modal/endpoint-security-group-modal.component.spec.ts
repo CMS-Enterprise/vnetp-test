@@ -16,6 +16,7 @@ import {
 import { NgSelectModule } from '@ng-select/ng-select';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('EndpointSecurityGroupModalComponent', () => {
   let component: EndpointSecurityGroupModalComponent;
@@ -34,9 +35,9 @@ describe('EndpointSecurityGroupModalComponent', () => {
       providers: [
         { provide: FormBuilder, useValue: jest.fn() },
         { provide: NgxSmartModalService, useValue: jest.fn() },
-        { provide: V2AppCentricEndpointGroupsService, useValue: jest.fn() },
         { provide: V2AppCentricBridgeDomainsService, useValue: jest.fn() },
         { provide: V2AppCentricApplicationProfilesService, useValue: jest.fn() },
+        MockProvider(V2AppCentricEndpointGroupsService),
       ],
       imports: [FormsModule, ReactiveFormsModule, NgSelectModule, HttpClientModule, RouterModule.forRoot([])],
     }).compileComponents();

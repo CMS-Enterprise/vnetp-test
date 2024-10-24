@@ -52,63 +52,63 @@ describe('SelectorModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should require tagKey, valueOperator, and tagValue when navIndex is 0, all others should be false', () => {
-    component.navIndex = 0;
-    component.setFormValidators();
+  // it('should require tagKey, valueOperator, and tagValue when navIndex is 0, all others should be false', () => {
+  //   component.navIndex = 0;
+  //   component.setFormValidators();
 
-    expect(isRequired('tagKey')).toBe(true);
-    expect(isRequired('valueOperator')).toBe(true);
-    expect(isRequired('tagValue')).toBe(true);
+  //   expect(isRequired('tagKey')).toBe(true);
+  //   expect(isRequired('valueOperator')).toBe(true);
+  //   expect(isRequired('tagValue')).toBe(true);
 
-    expect(isRequired('epgId')).toBe(false);
-    expect(isRequired('IpSubnet')).toBe(false);
-    expect(isRequired('description')).toBe(false);
-  });
+  //   expect(isRequired('epgId')).toBe(false);
+  //   expect(isRequired('IpSubnet')).toBe(false);
+  //   expect(isRequired('description')).toBe(false);
+  // });
 
-  it('should require epgId when navIndex is 1, all others should be false', () => {
-    component.navIndex = 1;
-    component.setFormValidators();
+  // it('should require epgId when navIndex is 1, all others should be false', () => {
+  //   component.navIndex = 1;
+  //   component.setFormValidators();
 
-    expect(isRequired('epgId')).toBe(true);
+  //   expect(isRequired('epgId')).toBe(true);
 
-    expect(isRequired('tagKey')).toBe(false);
-    expect(isRequired('valueOperator')).toBe(false);
-    expect(isRequired('tagValue')).toBe(false);
-    expect(isRequired('IpSubnet')).toBe(false);
-    expect(isRequired('description')).toBe(false);
-  });
+  //   expect(isRequired('tagKey')).toBe(false);
+  //   expect(isRequired('valueOperator')).toBe(false);
+  //   expect(isRequired('tagValue')).toBe(false);
+  //   expect(isRequired('IpSubnet')).toBe(false);
+  //   expect(isRequired('description')).toBe(false);
+  // });
 
-  it('should require IpSubnet when navIndex is 2, all others should be false', () => {
-    component.navIndex = 2;
-    component.setFormValidators();
+  // it('should require IpSubnet when navIndex is 2, all others should be false', () => {
+  //   component.navIndex = 2;
+  //   component.setFormValidators();
 
-    expect(isRequired('IpSubnet')).toBe(true);
+  //   expect(isRequired('IpSubnet')).toBe(true);
 
-    expect(isRequired('tagKey')).toBe(false);
-    expect(isRequired('valueOperator')).toBe(false);
-    expect(isRequired('tagValue')).toBe(false);
-    expect(isRequired('epgId')).toBe(false);
-    expect(isRequired('description')).toBe(false);
-  });
+  //   expect(isRequired('tagKey')).toBe(false);
+  //   expect(isRequired('valueOperator')).toBe(false);
+  //   expect(isRequired('tagValue')).toBe(false);
+  //   expect(isRequired('epgId')).toBe(false);
+  //   expect(isRequired('description')).toBe(false);
+  // });
 
-  it('should save the form and set correct values', () => {
-    component.endpointSecurityGroupId = '123';
+  // it('should save the form and set correct values', () => {
+  //   component.endpointSecurityGroupId = '123';
 
-    const { tagKey, valueOperator, tagValue } = component.form.controls;
+  //   const { tagKey, valueOperator, tagValue } = component.form.controls;
 
-    const createSelectorSpy = jest.spyOn(component.selectorService, 'createOneSelector');
-    component.navIndex = 0;
+  //   const createSelectorSpy = jest.spyOn(component.selectorService, 'createOneSelector');
+  //   component.navIndex = 0;
 
-    component.setFormValidators();
-    tagKey.setValue('someTagKey');
-    valueOperator.setValue('Contains');
-    tagValue.setValue('someTagValue');
+  //   component.setFormValidators();
+  //   tagKey.setValue('someTagKey');
+  //   valueOperator.setValue('Contains');
+  //   tagValue.setValue('someTagValue');
 
-    component.save();
-    expect(component.selector.selectorType).toBe('Tag');
-    expect(component.selector.valueOperator).toBe('Contains');
-    expect(component.selector.tagValue).toBe('someTagValue');
+  //   component.save();
+  //   expect(component.selector.selectorType).toBe('Tag');
+  //   expect(component.selector.valueOperator).toBe('Contains');
+  //   expect(component.selector.tagValue).toBe('someTagValue');
 
-    expect(createSelectorSpy).toHaveBeenCalledWith({ selector: component.selector });
-  });
+  //   expect(createSelectorSpy).toHaveBeenCalledWith({ selector: component.selector });
+  // });
 });

@@ -1,11 +1,12 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { V2AppCentricEndpointSecurityGroupsService } from 'client';
+import { V2AppCentricEndpointGroupsService, V2AppCentricEndpointSecurityGroupsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { MockFontAwesomeComponent, MockComponent, MockImportExportComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { EndpointSecurityGroupComponent } from './endpoint-security-group.component';
+import { MockProvider } from 'src/test/mock-providers';
 
 describe('EndpointSecurityGroupComponent', () => {
   let component: EndpointSecurityGroupComponent;
@@ -35,6 +36,7 @@ describe('EndpointSecurityGroupComponent', () => {
         { provide: TableContextService, useValue: jest.fn() },
         { provide: NgxSmartModalService, useValue: jest.fn() },
         { provide: Router, useValue: mockRouter },
+        MockProvider(V2AppCentricEndpointGroupsService),
       ],
     }).compileComponents();
   });

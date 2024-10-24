@@ -4,6 +4,7 @@ import { EndpointGroup, V2AppCentricEndpointGroupsService, V2AppCentricSelectors
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { Tab } from 'src/app/common/tabs/tabs.component';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { IpAddressAnyValidator } from 'src/app/validators/network-form-validators';
 
 @Component({
@@ -22,7 +23,7 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
   @Input() endpointSecurityGroupId;
 
   endpointGroups: EndpointGroup[];
-  public selector = {} as any;
+  public selector = { endpointGroups: [] } as any;
 
   public tabs: Tab[] = [{ name: 'Tag Selector' }, { name: 'EPG Selector' }, { name: 'IP Subnet Selector' }];
 
@@ -51,7 +52,7 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
 
       // remove validators for EPG and IpSubnet form groups
       epgSelector.removeValidators(Validators.required);
-      ipSubnet.removeValidators(Validators.required);
+      ipSubnet.removeValidators(Validators.compose([Validators.required, IpAddressAnyValidator]));
     } else if (this.navIndex === 1) {
       // set validator for EPGSelector form group
       epgSelector.addValidators(Validators.required);
@@ -60,10 +61,10 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
       tagKey.removeValidators(Validators.required);
       valueOperator.removeValidators(Validators.required);
       tagValue.removeValidators(Validators.required);
-      ipSubnet.removeValidators(Validators.required);
+      ipSubnet.removeValidators(Validators.compose([Validators.required, IpAddressAnyValidator]));
     } else if (this.navIndex === 2) {
       // set validator for ipSubnet form group
-      ipSubnet.setValidators(Validators.required);
+      ipSubnet.setValidators(Validators.compose([Validators.required, IpAddressAnyValidator]));
 
       // remove validators for tag selector and EPG selector form groups
       tagKey.removeValidators(Validators.required);
@@ -91,7 +92,7 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
       valueOperator: ['', Validators.required],
       tagValue: ['', Validators.required],
       epgId: [null, Validators.required],
-      IpSubnet: ['', [Validators.required, IpAddressAnyValidator]],
+      IpSubnet: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
       description: ['', Validators.maxLength(500)],
     });
   }
@@ -115,11 +116,11 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
     } else if (this.navIndex === 1) {
       this.selector.selectorType = 'EPG';
       this.selector.epgId = this.form.value.epgId;
+      this.selector.endpointGroupName = ObjectUtil.getObjectName(this.form.value.epgId, this.endpointGroups);
     } else {
       this.selector.selectorType = 'IpSubnet';
       this.selector.IpSubnet = this.form.value.IpSubnet;
     }
-
     this.selectorService.createOneSelector({ selector: this.selector }).subscribe(data => {
       this.reset();
       return data;
