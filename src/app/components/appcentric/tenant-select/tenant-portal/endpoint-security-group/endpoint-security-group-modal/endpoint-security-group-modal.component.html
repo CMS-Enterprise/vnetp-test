@@ -31,7 +31,7 @@
       [tenantId]="tenantId"
     ></app-provided-contract>
   </div>
-  <div>
+  <div *ngIf="currentTab === 'Endpoint Security Group'">
     <form [formGroup]="form" (ngSubmit)="save()">
       <div class="modal-body">
         <div class="form-group">
@@ -95,7 +95,6 @@
             [class.is-invalid]="submitted && f.intraEsgIsolation.errors"
             aria-label="Intra Epg Isolation"
           >
-            <option></option>
             <option [ngValue]="true">Enforced</option>
             <option [ngValue]="false">Unenforced</option>
           </select>

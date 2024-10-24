@@ -141,7 +141,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
         endpointSecurityGroupId: this.endpointSecurityGroupId,
         contractId: this.selectedContract.id,
       })
-      .subscribe(() => this.getEpgConsumedContracts());
+      .subscribe(() => this.getEsgConsumedContracts());
   }
 
   public removeEsgContract(contract: Contract): void {
