@@ -70,6 +70,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   isRefreshingAppId = false;
 
+  disableAppId = false;
+
   @ViewChild('appIdColumnTemplate') iconTemplate: TemplateRef<any>;
 
   config: LiteTableConfig<PanosApplication> = {
@@ -438,6 +440,13 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     const formServiceType = this.form.controls.serviceType;
 
     this.protocolChangeSubscription = this.form.controls.protocol.valueChanges.subscribe(protocol => {
+      if (protocol === 'ICMP') {
+        this.disableAppId = true;
+        this.appIdService.resetDto();
+      } else {
+        this.disableAppId = false;
+      }
+
       if (protocol === 'ICMP' || protocol === 'IP') {
         formServiceType.setValue('Port');
         sourcePorts.setValue('any');
@@ -518,6 +527,18 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     } else if (type === 'to') {
       this.selectedToZones = this.selectedToZones.filter(z => z.id !== id);
     }
+  }
+
+  getToolTipMessage(): string {
+    if (this.isRefreshingAppId) {
+      return 'The App ID is currently refreshing, please wait.';
+    }
+
+    if (this.disableAppId) {
+      return 'App ID unvailable for ICMP.';
+    }
+
+    return '';
   }
 
   getObjectInfo(property, objectType, objectId) {

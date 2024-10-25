@@ -52,6 +52,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { AppIdRuntimeService } from '../../app-id-runtime/app-id-runtime.service';
 import { TierContextService } from '../../../services/tier-context.service';
 import { FirewallRuleModalComponent } from '../firewall-rule-modal/firewall-rule-modal.component';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -111,12 +112,16 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   panosApplications: PanosApplication[] = [];
 
   infoBoxVisible = false;
-  selectedPanosApplication: PanosApplication;
 
   isRefreshingAppIdRuntimeData = false;
   tier: Tier;
   datacenterId: string;
   appIdJobStatus: string;
+
+  tooltipVisible = false;
+  underline = false;
+
+  firewallRuleIdToPanosApp = new Map<string, { panosApplication: PanosApplication; open: boolean }>();
 
   // Templates
   @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
@@ -130,6 +135,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   @ViewChild('appIdNameTemplate') appIdNameTemplate: TemplateRef<any>;
   @ViewChild('drawer') drawer: MatDrawer;
   @ViewChild(FirewallRuleModalComponent) firewallModal: FirewallRuleModalComponent;
+  @ViewChild('paAppsTemplate') paAppsTemplate: TemplateRef<any>;
+  @ViewChild('tooltip') matTooltip: MatTooltip;
 
   public config: TableConfig<any> = {
     description: 'Firewall Rules for the currently selected Tier',
@@ -141,21 +148,41 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       { name: 'Source Address', template: () => this.sourceAddressTemplate },
       { name: 'Destination Address', template: () => this.destinationAddressTemplate },
       { name: 'Service Type', template: () => this.serviceTemplate },
+      { name: 'Applications', template: () => this.paAppsTemplate },
       { name: 'Log', property: 'logging' },
       { name: 'Enabled', property: 'enabled' },
       { name: 'Rule Index', property: 'ruleIndex' },
       { name: '', template: () => this.actionsTemplate },
     ],
-    expandableRows: () => [this.hitcountTemplate, this.appIdTemplate],
+    expandableRows: () => [this.appIdTemplate, this.hitcountTemplate],
   };
 
   public liteConfig: LiteTableConfig<PanosApplication> = {
     columns: [
-      { name: 'Name', template: () => this.appIdNameTemplate },
+      {
+        name: 'Name',
+        template: () => this.appIdNameTemplate,
+      },
       { name: 'Category', property: 'category' },
       { name: 'Sub Category', property: 'subCategory' },
       { name: 'Risk', property: 'risk' },
     ],
+    context: (panosApp: PanosApplication, firewallRule: FirewallRule) => ({
+      panosApp,
+      firewallRule,
+    }),
+    afterView: () => {
+      console.log(this.matTooltip);
+      if (this.matTooltip && !this.tooltipVisible) {
+        this.tooltipVisible = true;
+        this.underline = true;
+        this.matTooltip.show();
+        setTimeout(() => {
+          this.matTooltip.hide();
+          this.underline = false;
+        }, 2000);
+      }
+    },
   };
 
   get scopeString() {
@@ -201,21 +228,33 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  toggleDrawer(panosApp: PanosApplication): void {
-    if (this.selectedPanosApplication) {
-      if (panosApp.id === this.selectedPanosApplication?.id) {
-        this.selectedPanosApplication = null;
-        this.drawer.close();
-        return;
-      }
-      if (panosApp.id !== this.selectedPanosApplication?.id) {
-        this.selectedPanosApplication = panosApp;
-        return;
-      }
-    }
+  toggleDrawer(panosApp: PanosApplication, firewallRule: FirewallRule): void {
+    const firewallRuleId = firewallRule.id;
 
-    this.selectedPanosApplication = panosApp;
-    this.drawer.toggle();
+    if (this.firewallRuleIdToPanosApp.has(firewallRuleId)) {
+      const currentEntry = this.firewallRuleIdToPanosApp.get(firewallRuleId);
+
+      if (currentEntry?.panosApplication.id === panosApp.id) {
+        this.firewallRuleIdToPanosApp.set(firewallRuleId, {
+          panosApplication: panosApp,
+          open: !currentEntry.open,
+        });
+      } else {
+        this.firewallRuleIdToPanosApp.set(firewallRuleId, {
+          panosApplication: panosApp,
+          open: true,
+        });
+      }
+    } else {
+      this.firewallRuleIdToPanosApp.set(firewallRuleId, {
+        panosApplication: panosApp,
+        open: true,
+      });
+    }
+  }
+
+  isDrawerOpened(firewallRuleId: string): boolean {
+    return this.firewallRuleIdToPanosApp.get(firewallRuleId)?.open || false;
   }
 
   refreshAppId(): void {
@@ -350,6 +389,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   addEmptyApplications(panosApplications: PanosApplication[]): any[] {
+    const newApplciationArray = [...panosApplications];
     const emptyApplication = {
       name: '',
       category: '',
@@ -357,13 +397,13 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       risk: '\u200B',
     } as any;
 
-    if (panosApplications.length > 0 && panosApplications.length < 5) {
-      while (panosApplications.length < 4) {
-        panosApplications.push({ ...emptyApplication });
+    if (newApplciationArray.length > 0 && newApplciationArray.length < 5) {
+      while (newApplciationArray.length < 4) {
+        newApplciationArray.push({ ...emptyApplication });
       }
     }
 
-    return panosApplications;
+    return newApplciationArray;
   }
 
   getFirewallRuleLastIndex(): void {

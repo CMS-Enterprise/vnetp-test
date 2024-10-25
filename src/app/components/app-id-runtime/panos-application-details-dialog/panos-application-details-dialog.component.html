@@ -101,7 +101,7 @@
     </div>
 
     <!-- Firewall Rules (Scrollable) -->
-    <div [class.col-md-6]="compactMode" class="col-md-4 mb-4">
+    <div *ngIf="!compactMode" [class.col-md-6]="compactMode" class="col-md-4 mb-4">
       <div class="card">
         <div class="card-header">Firewall Rules</div>
         <div class="card-body scrollable-card">

@@ -57,7 +57,7 @@ export class AppIdRuntimeComponent implements AfterViewChecked {
     if (!this.saveClose && !this.appIdService.isDtoEmpty()) {
       const modalDto = new YesNoModalDto(
         'Panos Application Changes',
-        'You have unsaved changes. Are you sure you want to close this modal?',
+        'You have unsaved changes. Are you sure you want to close this modal? All changes will be lost.',
       );
 
       const onConfirm = () => {

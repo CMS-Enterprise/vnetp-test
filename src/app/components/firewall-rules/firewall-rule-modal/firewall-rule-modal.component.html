@@ -14,8 +14,8 @@
     <button
       class="inline-button mr-3"
       (click)="openAppIdModal()"
-      [disabled]="isRefreshingAppId"
-      [matTooltip]="isRefreshingAppId ? 'The App ID is currently refreshing, please wait.' : ''"
+      [disabled]="isRefreshingAppId || disableAppId"
+      [matTooltip]="getToolTipMessage()"
       aria-label="Manage App ID"
     >
       Manage App ID

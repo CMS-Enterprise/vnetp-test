@@ -226,22 +226,37 @@
 <ng-template #appIdTemplate let-firewallRule="datum">
   <mat-drawer-container>
     <mat-drawer-content>
-      <app-lite-table [config]="liteConfig" [data]="addEmptyApplications(firewallRule.panosApplications)"></app-lite-table>
+      <app-lite-table
+        [config]="liteConfig"
+        [data]="addEmptyApplications(firewallRule.panosApplications)"
+        [parentContext]="firewallRule"
+      ></app-lite-table>
     </mat-drawer-content>
-    <mat-drawer #drawer mode="side" position="end">
+
+    <mat-drawer [opened]="isDrawerOpened(firewallRule.id)" mode="side" position="end">
       <app-panos-application-details-dialog
-        *ngIf="selectedPanosApplication"
-        [data]="selectedPanosApplication"
+        *ngIf="firewallRuleIdToPanosApp.get(firewallRule.id)?.open"
+        [data]="firewallRuleIdToPanosApp.get(firewallRule.id)?.panosApplication"
         [compactMode]="true"
       ></app-panos-application-details-dialog>
     </mat-drawer>
   </mat-drawer-container>
 </ng-template>
 
-<ng-template #appIdNameTemplate let-panosApp="datum">
-  <span matTooltip="show details" [matTooltipPosition]="'right'" (click)="toggleDrawer(panosApp)" class="hover-effect">{{
-    panosApp.name
-  }}</span>
+<ng-template #appIdNameTemplate let-context="$implicit">
+  <span
+    matTooltip="show details"
+    #tooltip="matTooltip"
+    [matTooltipPosition]="'right'"
+    (click)="toggleDrawer(context.panosApp, context.firewallRule)"
+    class="hover-effect"
+    [ngClass]="{ underline: underline }"
+    >{{ context.panosApp.name }}</span
+  >
+</ng-template>
+
+<ng-template #paAppsTemplate let-firewallRule="datum">
+  <span class="hover-effect">{{ firewallRule.panosApplications.length }}</span>
 </ng-template>
 
 <app-app-id-runtime></app-app-id-runtime>

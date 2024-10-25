@@ -12,7 +12,12 @@
       <tr *ngFor="let row of data" [ngClass]="config.rowStyle ? config.rowStyle(row) : ''">
         <td *ngFor="let column of config.columns">
           <ng-container *ngIf="!column.property && column.template; else defaultContent">
-            <ng-container *ngTemplateOutlet="column.template(); context: { datum: row }"></ng-container>
+            <ng-container
+              *ngTemplateOutlet="
+                column.template();
+                context: { $implicit: config.context ? config.context(row, parentContext) : { datum: row } }
+              "
+            ></ng-container>
           </ng-container>
           <ng-template #defaultContent>
             {{ row[column.property] }}
