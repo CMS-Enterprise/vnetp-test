@@ -70,24 +70,18 @@ export class AppIdRuntimeService {
   // Add PanosApplication to DTO
   addPanosApplicationToDto(panosApplication: PanosApplication): void {
     if (this.dto.panosApplicationsToRemove.some(app => app.id === panosApplication.id)) {
-      (panosApplication as any).remove = false;
-
       this.dto.panosApplicationsToRemove = this.dto.panosApplicationsToRemove.filter(app => app.id !== panosApplication.id);
       return;
     }
-    (panosApplication as any).remove = false;
 
     this.dto.panosApplicationsToAdd.push(panosApplication);
   }
   // Remove PanosApplication from DTO
   removePanosApplicationFromDto(panosApplication: PanosApplication): void {
     if (this.dto.panosApplicationsToAdd.some(app => app.id === panosApplication.id)) {
-      (panosApplication as any).remove = true;
-
       this.dto.panosApplicationsToAdd = this.dto.panosApplicationsToAdd.filter(app => app.id !== panosApplication.id);
       return;
     }
-    (panosApplication as any).remove = true;
     this.dto.panosApplicationsToRemove.push(panosApplication);
   }
 
