@@ -536,6 +536,6 @@
 <app-firewall-rule-object-info-modal></app-firewall-rule-object-info-modal>
 
 <ng-template #appIdColumnTemplate let-appId="datum">
-  <fa-icon *ngIf="appId.remove === false" class="icon" [icon]="['fas', 'plus']"></fa-icon>
-  <fa-icon *ngIf="appId.remove === true" class="icon" [icon]="['fas', 'minus']"></fa-icon>
+  <fa-icon *ngIf="appId?.remove === false" class="icon" [icon]="['fas', 'plus']"></fa-icon>
+  <fa-icon *ngIf="appId?.remove === true" class="icon" [icon]="['fas', 'minus']"></fa-icon>
 </ng-template>
