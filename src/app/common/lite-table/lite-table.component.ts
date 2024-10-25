@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, Input, ViewEncapsulation } from '@angular/core';
+import { AfterViewChecked, Component, Input, ViewEncapsulation } from '@angular/core';
 import { TableColumn } from '../table/table.component';
 
 export interface LiteTableConfig<T> {
