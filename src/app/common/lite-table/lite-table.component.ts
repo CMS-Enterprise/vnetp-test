@@ -22,6 +22,8 @@ export class LiteTableComponent implements AfterViewChecked {
   constructor() {}
 
   ngAfterViewChecked(): void {
-    this.config.afterView();
+    if (this.config.afterView) {
+      this.config.afterView();
+    }
   }
 }
