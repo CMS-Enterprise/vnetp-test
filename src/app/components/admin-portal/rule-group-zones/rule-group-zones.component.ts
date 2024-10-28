@@ -37,13 +37,7 @@ export class RuleGroupZonesComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
   public tiers;
   zones;
-  constructor(
-    private zoneService: V1NetworkSecurityZonesService,
-    private datacentersService: V1DatacentersService,
-    private tierService: V1TiersService,
-    private globalMessagesService: V3GlobalMessagesService,
-    public ngx: NgxSmartModalService,
-  ) {}
+  constructor(private zoneService: V1NetworkSecurityZonesService, private tierService: V1TiersService, public ngx: NgxSmartModalService) {}
 
   public getZones(event?) {
     if (event) {
@@ -65,14 +59,6 @@ export class RuleGroupZonesComponent implements OnInit {
           zone.tierName = ObjectUtil.getObjectName(zone.tierId, this.tiers);
         });
       });
-    // this.datacentersService.getManyDatacenter({page: 1, perPage: 100}).subscribe(data => {
-    //   console.log('data',data);
-    //   data.data.map(async dc => {
-    //     await this.getTiers(dc);
-    //     console.log('this.tiers',this.tiers)
-
-    //   })
-    // })
   }
 
   public getTiers() {
@@ -93,7 +79,7 @@ export class RuleGroupZonesComponent implements OnInit {
     });
   }
 
-  public openFWRuleGroupZonesModal(modalMode?): void {
+  public openRuleGroupZonesModal(modalMode?): void {
     const dto: any = {};
     dto.ModalMode = modalMode;
     this.subscribeToRuleGroupZonesModal();

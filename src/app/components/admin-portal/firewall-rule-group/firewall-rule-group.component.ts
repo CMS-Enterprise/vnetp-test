@@ -15,7 +15,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   public perPage = 50;
   public currentTier: Tier;
   tiers;
-  firewallRuleGroups = [];
+  firewallRuleGroups: Array<FirewallRuleGroup>;
   public fwRuleGroupModalSubscription: Subscription;
   dropdownOpen: boolean = false;
   filteredTier = false;
@@ -38,7 +38,8 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
     this.dropdownOpen = !this.dropdownOpen;
   }
 
-  public filterTier(filterTier) {
+  public filterTier(filterTier): void {
+    console.log('filteredTier', filterTier);
     this.filteredTier = !this.filteredTier;
     this.filteredTierObject = filterTier;
     if (this.filteredTier) {
@@ -49,6 +50,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   }
 
   public getTierByName(tierName?): void {
+    console.log('tierName', tierName);
     this.firewallRuleGroups = [];
     this.filteredTier = true;
     this.tierService

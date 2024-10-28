@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserDto, V3GlobalMessagesService } from 'client';
+import { Tenant, UserDto, V3GlobalMessagesService } from 'client';
 import { Subscription } from 'rxjs';
+import { TenantName } from 'src/app/models/other/tenant-name';
 import { AuthService } from 'src/app/services/auth.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
@@ -15,8 +16,8 @@ export class AdminPortalDashboardComponent implements OnInit {
   public user: UserDto;
   public userRoles: string[];
   globalMessageTotal: number;
-  availableTenants;
-  selectedTenant;
+  availableTenants: Array<TenantName>;
+  selectedTenant: string;
 
   dashboardPoller;
 
@@ -27,7 +28,7 @@ export class AdminPortalDashboardComponent implements OnInit {
   ];
 
   constructor(private router: Router, private auth: AuthService, private globalMessagesService: V3GlobalMessagesService) {}
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.auth.currentUser) {
       this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
         this.user = user;
@@ -41,7 +42,7 @@ export class AdminPortalDashboardComponent implements OnInit {
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     clearInterval(this.dashboardPoller);
     SubscriptionUtil.unsubscribe([this.currentUserSubscription]);
   }
@@ -50,18 +51,15 @@ export class AdminPortalDashboardComponent implements OnInit {
     this.getGlobalMessages();
   }
 
-  public getGlobalMessages() {
+  public getGlobalMessages(): void {
     this.globalMessagesService.getMessagesMessage({ page: 1, perPage: 10000 }).subscribe(data => {
       this.globalMessageTotal = data.total;
       this.status[1].status = 'green';
     });
   }
 
-  public setTenant(tenant) {
-    console.log('tenant', tenant);
-
+  public setTenant(tenant): void {
     const { tenantQueryParameter } = tenant;
-    console.log('tenantQueryParameter', tenantQueryParameter);
     this.selectedTenant = this.auth.currentTenantValue;
     this.auth.currentTenantValue = tenantQueryParameter;
     localStorage.setItem('tenantQueryParam', JSON.stringify(tenantQueryParameter));

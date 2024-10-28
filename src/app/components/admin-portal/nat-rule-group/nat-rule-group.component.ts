@@ -15,7 +15,7 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
   public perPage = 50;
   public currentTier: Tier;
   tiers;
-  natRuleGroups = [];
+  natRuleGroups: Array<NatRuleGroup>;
   public natRuleGroupModalSubscription: Subscription;
   dropdownOpen: boolean = false;
   filteredTier = false;
@@ -39,6 +39,7 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
   }
 
   public filterTier(filterTier) {
+    console.log('filteredTier', filterTier);
     this.filteredTier = !this.filteredTier;
     this.filteredTierObject = filterTier;
     if (this.filteredTier) {
@@ -49,6 +50,7 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
   }
 
   public getTierByName(tierName?): void {
+    console.log('tierName', tierName);
     this.natRuleGroups = [];
     this.filteredTier = true;
     this.tierService
