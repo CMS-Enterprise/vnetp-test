@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import {
   V1DatacentersService,
   V1TiersService,
@@ -14,6 +14,7 @@ import {
   V1NetworkSecurityNatRulesService,
   V1AuditLogService,
   Datacenter,
+  V1JobsService,
   V3GlobalMessagesService,
   PaginationDTO,
 } from 'client';
@@ -23,6 +24,8 @@ import { Subscription } from 'rxjs';
 import SubscriptionUtil from '../../utils/SubscriptionUtil';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +33,7 @@ import { TableConfig } from 'src/app/common/table/table.component';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  private breakpointObserver = inject(BreakpointObserver);
   public user: UserDto;
   public userRoles: string[];
 
@@ -54,6 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private natRuleService: V1NetworkSecurityNatRulesService,
     private auditLogService: V1AuditLogService,
     private datacenterContextService: DatacenterContextService,
+    private jobService: V1JobsService,
     private globalMessagesService: V3GlobalMessagesService,
   ) {}
 
@@ -70,15 +75,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   firewallRuleCount: number;
   natRuleCount: number;
   auditLogs;
-  messages: PaginationDTO;
+  messages: any;
   public config: TableConfig<any> = {
-    description: 'Audit Log',
+    description: 'Dashboard-Deployments',
     columns: [
-      { name: 'Action', property: 'actionType' },
-      { name: 'Object Type', property: 'entityType' },
-      { name: 'Tier Name', property: 'tierName' },
-      { name: 'User', property: 'changedBy' },
-      { name: 'Timestamp', property: 'timestamp' },
+      { name: 'Type', property: 'jobType' },
+      { name: 'Timestamp', property: 'createdAt' },
     ],
   };
 
@@ -95,6 +97,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   runningJobs = 0;
 
   dashboardPoller: any;
+  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+    map(() => [
+      { title: 'Upcoming in VNETP', cols: 1, rows: 1, data: ['PANOS App-Id', 'Admin Portal - Provider Admin'] },
+      { title: 'Training Resources', cols: 1, rows: 1, data: ['TRAINING STUFF', 'SOME MORE TRAINING STUFF'] },
+      // { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
+      // { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
+    ]),
+  );
 
   ngOnInit() {
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
@@ -115,8 +125,35 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getGlobalMessages() {
-    this.globalMessagesService.getMessagesMessage({ page: 1, perPage: 3 }).subscribe(data => {
+    this.globalMessagesService.getMessagesMessage({ page: 1, perPage: 100 }).subscribe(data => {
       this.messages = data;
+
+      // use this to dynamically change the title / messages in the bottom cards
+      const trainingMessages = [];
+      const newFeatureMessages = [];
+      this.messages.data = this.messages.data.filter(message => {
+        if (message.messageType === 'Training') {
+          trainingMessages.push(message.description);
+        } else if (message.messageType === 'NewFeature') {
+          newFeatureMessages.push(message.description);
+        }
+        return message.messageType !== 'Training' && message.messageType !== 'NewFeature';
+      });
+
+      console.log('trainingMessages', trainingMessages);
+      console.log('newFeatureMessages', newFeatureMessages);
+
+      // use this to dynamically change the title / messages in the bottom cards
+      this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+        map(() => {
+          return [
+            { title: 'Training', cols: 1, rows: 1, data: trainingMessages },
+            { title: 'New Features', cols: 1, rows: 1, data: newFeatureMessages },
+            // { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
+            // { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
+          ];
+        }),
+      );
     });
   }
 
@@ -138,6 +175,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.getServiceObjectGroups();
       this.getSubnets();
       this.getVlans();
+      this.getJobs();
     }
   }
 
@@ -223,6 +261,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
       })
       .subscribe(data => {
         this.serviceObjectGroupCount = data.total;
+      });
+  }
+
+  private getJobs(): void {
+    this.jobService
+      .getManyJob({
+        page: 1,
+        perPage: 3,
+      })
+      .subscribe(data => {
+        this.jobs = data;
       });
   }
 }

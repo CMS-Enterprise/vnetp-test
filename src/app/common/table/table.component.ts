@@ -125,6 +125,7 @@ export class TableComponent<T> implements AfterViewInit {
       'tenants-and-datacenters',
       'object-usage',
       'tenants',
+      'dashboard-deployments',
     ];
 
     const hidePagination = [
@@ -135,6 +136,7 @@ export class TableComponent<T> implements AfterViewInit {
       'bd-l3outs',
       'tenants-and-datacenters',
       'object-usage',
+      'dashboard-deployments',
     ];
 
     // if tableId is a badList ID, we hide the search bar

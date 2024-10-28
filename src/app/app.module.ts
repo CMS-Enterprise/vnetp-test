@@ -48,6 +48,14 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavbarModule } from './common/navbar/navbar.module';
 import { BreadcrumbsModule } from './common/breadcrumbs/breadcrumbs.module';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -79,6 +87,14 @@ export function init_app(appLoadService: AppInitService) {
     }),
     NavbarModule,
     BreadcrumbsModule,
+    MatGridListModule,
+    MatCardModule,
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   providers: [
     AppInitService,

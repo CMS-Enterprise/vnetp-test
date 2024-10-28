@@ -4,15 +4,24 @@
   display: flex;
   justify-content: flex-start;
   // flex-wrap: wrap;
-
+  &__parentcard {
+    padding: 1.5rem 2rem;
+    border-radius: 4px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    // margin-right: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    flex: auto;
+  }
   &__heading {
     margin-bottom: 20px;
+    text-decoration: underline;
   }
 
   &__card {
     padding: 1.5rem 2rem;
     border-radius: 4px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     margin-right: 2rem;
     margin-bottom: 2rem;
     flex: 0 1 calc(33% - 1rem);
@@ -154,4 +163,30 @@
       }
     }
   }
+}
+
+.grid-container {
+  margin: 20px;
+}
+
+.dashboard-card {
+  width: 75%;
+  border-radius: 4px;
+  box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.16), 0 3px 6px 1px rgba(0, 0, 0, 0.23);
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  bottom: 15px;
+  background-color: aliceblue;
+}
+
+.more-button {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+
+.dashboard-card-content {
+  text-align: center;
 }

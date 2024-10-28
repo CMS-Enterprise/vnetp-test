@@ -23,7 +23,9 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/assets/styles/main.scss"],
+            "styles": [
+              "src/assets/styles/main.scss"
+            ],
             "scripts": ["node_modules/jquery/dist/jquery.min.js", "node_modules/bootstrap/dist/js/bootstrap.min.js"],
             "vendorChunk": true,
             "extractLicenses": false,
