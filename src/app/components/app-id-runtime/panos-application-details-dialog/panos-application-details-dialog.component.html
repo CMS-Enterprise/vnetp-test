@@ -103,10 +103,14 @@
     <!-- Firewall Rules (Scrollable) -->
     <div *ngIf="!compactMode" [class.col-md-6]="compactMode" class="col-md-4 mb-4">
       <div class="card">
-        <div class="card-header">Firewall Rules</div>
+        <div class="card-header">Firewall Rules from Current Group</div>
         <div class="card-body scrollable-card">
           <ul *ngIf="data.firewallRules?.length; else noFirewallRules">
-            <li *ngFor="let rule of data.firewallRules">{{ rule.name }}</li>
+            <ng-container *ngFor="let rule of data.firewallRules">
+              <li *ngIf="rule.firewallRuleGroupId === firewallRuleGroupId">
+                {{ rule.name }}
+              </li>
+            </ng-container>
           </ul>
           <ng-template #noFirewallRules>
             <li>No Firewall Rules</li>

@@ -10,12 +10,14 @@ import { PanosApplication } from '../../../../../client';
 export class PanosApplicationDetailsDialogComponent implements OnInit {
   @Input() data: PanosApplication;
   @Input() compactMode = false;
+  firewallRuleGroupId: string;
 
-  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public dialogData: PanosApplication) {}
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public dialogData: { app: PanosApplication; firewallRuleGroupId: string }) {}
 
   ngOnInit(): void {
     if (!this.data && this.dialogData) {
-      this.data = this.dialogData;
+      this.data = this.dialogData.app;
+      this.firewallRuleGroupId = this.dialogData?.firewallRuleGroupId;
     }
   }
 }

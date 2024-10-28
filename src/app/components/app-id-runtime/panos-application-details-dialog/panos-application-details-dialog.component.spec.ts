@@ -38,10 +38,12 @@ describe('PanosApplicationDetailsDialogComponent', () => {
     firewallRules: [],
   };
 
+  const mockDialogData = { app: mockPanosApplication, firewallRuleGroupId: '1' };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PanosApplicationDetailsDialogComponent],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: mockPanosApplication }],
+      providers: [{ provide: MAT_DIALOG_DATA, useValue: mockDialogData }],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });

@@ -26,8 +26,10 @@ describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
   let fixture: ComponentFixture<FirewallRuleModalComponent>;
   let mockTierContextService: jest.Mocked<TierContextService>;
+  let mockAppIdRuntimeService;
 
   beforeEach(() => {
+    mockAppIdRuntimeService = { resetDto: jest.fn() };
     mockTierContextService = {
       currentTierValue: {},
     } as any;
@@ -48,7 +50,7 @@ describe('FirewallRuleModalComponent', () => {
         MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
         MockProvider(V1NetworkSecurityServiceObjectsService),
         MockProvider(V1NetworkSecurityServiceObjectGroupsService),
-        { provide: AppIdRuntimeService, useValue: jest.fn() },
+        { provide: AppIdRuntimeService, useValue: mockAppIdRuntimeService },
         { provide: TierContextService, useValue: mockTierContextService },
       ],
     })
@@ -209,6 +211,7 @@ describe('FirewallRuleModalComponent', () => {
   });
 
   it('service inputs should be reset if protocol changes to ICMP', () => {
+    jest.spyOn(mockAppIdRuntimeService, 'resetDto').mockImplementation();
     const protocol = getFormControl('protocol');
     protocol.setValue('TCP');
 

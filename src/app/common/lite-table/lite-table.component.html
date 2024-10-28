@@ -15,7 +15,7 @@
             <ng-container
               *ngTemplateOutlet="
                 column.template();
-                context: { $implicit: config.context ? config.context(row, parentContext) : { datum: row } }
+                context: config.context ? { $implicit: config.context(row, parentContext) } : { datum: row }
               "
             ></ng-container>
           </ng-container>

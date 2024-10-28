@@ -77,7 +77,7 @@ export class AppIdTableComponent implements OnChanges {
 
   openDetailsDialog(app: PanosApplication): void {
     this.dialog.open(PanosApplicationDetailsDialogComponent, {
-      data: app,
+      data: { app, firewallRuleGroupId: this.firewallRule.firewallRuleGroupId },
     });
   }
 }

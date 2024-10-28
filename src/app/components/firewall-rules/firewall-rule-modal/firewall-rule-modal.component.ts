@@ -196,6 +196,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     }
 
     if (this.ModalMode === ModalMode.Create) {
+      const appIds = [...this.appIdService.dto.panosApplicationsToAdd];
+      modalFirewallRule.panosApplications = appIds;
       modalFirewallRule.firewallRuleGroupId = this.FirewallRuleGroupId;
       this.firewallRuleService
         .createOneFirewallRule({
@@ -204,6 +206,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         .subscribe(
           () => {
             this.closeModal();
+            this.appIdService.resetDto();
           },
           () => {},
         );
@@ -440,11 +443,11 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     const formServiceType = this.form.controls.serviceType;
 
     this.protocolChangeSubscription = this.form.controls.protocol.valueChanges.subscribe(protocol => {
+      this.disableAppId = false;
+
       if (protocol === 'ICMP') {
         this.disableAppId = true;
         this.appIdService.resetDto();
-      } else {
-        this.disableAppId = false;
       }
 
       if (protocol === 'ICMP' || protocol === 'IP') {
@@ -462,6 +465,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         sourcePorts.enable();
         destinationPorts.enable();
       }
+
       formServiceType.updateValueAndValidity();
       sourcePorts.updateValueAndValidity();
       destinationPorts.updateValueAndValidity();

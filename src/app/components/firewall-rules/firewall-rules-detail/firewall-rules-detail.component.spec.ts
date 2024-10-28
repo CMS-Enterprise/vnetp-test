@@ -498,28 +498,48 @@ describe('FirewallRulesDetailComponent', () => {
   });
 
   describe('toggleDrawer', () => {
-    it('should close drawer if selected app id equal to app id', () => {
-      component.selectedPanosApplication = { id: 'test' } as any;
-      component.drawer = { close: jest.fn() } as any;
-      component.toggleDrawer({ id: 'test' } as any);
-      expect(component.drawer.close).toHaveBeenCalled();
-      expect(component.selectedPanosApplication).toBeNull();
+    it('should add a new entry and open the drawer if firewallRuleId does not exist', () => {
+      const panosApp = { id: 'panos1' } as any;
+      const firewallRule = { id: 'rule1' } as any;
+
+      component.toggleDrawer(panosApp, firewallRule);
+
+      const entry = component.firewallRuleIdToPanosApp.get(firewallRule.id);
+      expect(entry).toEqual({ panosApplication: panosApp, open: true });
     });
 
-    it('should set selected app to app and return if selected app id is not equal to app id', () => {
-      component.selectedPanosApplication = { id: 'test' } as any;
-      component.drawer = { close: jest.fn() } as any;
-      component.toggleDrawer({ id: 'test2' } as any);
-      expect(component.selectedPanosApplication).toEqual({ id: 'test2' });
-      expect(component.drawer.close).not.toHaveBeenCalled();
+    it('should toggle the open state if panosApplication matches existing entry', () => {
+      const panosApp = { id: 'panos1' } as any;
+      const firewallRule = { id: 'rule1' } as any;
+
+      // Set initial state in map
+      component.firewallRuleIdToPanosApp.set(firewallRule.id, { panosApplication: panosApp, open: true });
+
+      // Call toggleDrawer
+      component.toggleDrawer(panosApp, firewallRule);
+
+      let entry = component.firewallRuleIdToPanosApp.get(firewallRule.id);
+      expect(entry?.open).toBe(false);
+
+      // Call again to toggle back
+      component.toggleDrawer(panosApp, firewallRule);
+      entry = component.firewallRuleIdToPanosApp.get(firewallRule.id);
+      expect(entry?.open).toBe(true);
     });
 
-    it('should set selected app to app and toggle drawer if there is no selected app', () => {
-      component.selectedPanosApplication = null;
-      component.drawer = { toggle: jest.fn() } as any;
-      component.toggleDrawer({ id: 'test' } as any);
-      expect(component.selectedPanosApplication).toEqual({ id: 'test' });
-      expect(component.drawer.toggle).toHaveBeenCalled();
+    it('should update panosApplication and set open to true if panosApplication does not match existing entry', () => {
+      const existingPanosApp = { id: 'panos1' } as any;
+      const newPanosApp = { id: 'panos2' } as any;
+      const firewallRule = { id: 'rule1' } as any;
+
+      // Set initial state in map with a different panosApplication
+      component.firewallRuleIdToPanosApp.set(firewallRule.id, { panosApplication: existingPanosApp, open: true });
+
+      // Call toggleDrawer with a different panosApplication
+      component.toggleDrawer(newPanosApp, firewallRule);
+
+      const entry = component.firewallRuleIdToPanosApp.get(firewallRule.id);
+      expect(entry).toEqual({ panosApplication: newPanosApp, open: true });
     });
   });
 

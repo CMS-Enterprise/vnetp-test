@@ -119,7 +119,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   appIdJobStatus: string;
 
   tooltipVisible = false;
-  underline = false;
 
   firewallRuleIdToPanosApp = new Map<string, { panosApplication: PanosApplication; open: boolean }>();
 
@@ -172,14 +171,11 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       firewallRule,
     }),
     afterView: () => {
-      console.log(this.matTooltip);
       if (this.matTooltip && !this.tooltipVisible) {
         this.tooltipVisible = true;
-        this.underline = true;
         this.matTooltip.show();
         setTimeout(() => {
           this.matTooltip.hide();
-          this.underline = false;
         }, 2000);
       }
     },
