@@ -18,6 +18,7 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import { of, Subject, Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { RuleGroupZonesComponent } from './rule-group-zones.component';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 describe('RuleGroupZonesComponent', () => {
   let component: RuleGroupZonesComponent;
@@ -112,6 +113,16 @@ describe('RuleGroupZonesComponent', () => {
       expect(component['ngx'].setModalData).toHaveBeenCalledWith(expectedDto, 'ruleGroupZonesModal');
       expect(component['ngx'].getModal).toHaveBeenCalledWith('ruleGroupZonesModal');
       expect(component['ngx'].getModal('ruleGroupZonesModal').open).toHaveBeenCalled();
+    });
+  });
+
+  describe('Delete Zone', () => {
+    it('should delete zone', () => {
+      const zoneService = TestBed.inject(V1NetworkSecurityZonesService);
+      const zoneToDelete = { id: '1', tierId: '123' } as any;
+      component.deleteEntry(zoneToDelete);
+      const getZonesMock = jest.spyOn(zoneService, 'getManyZone');
+      expect(getZonesMock).toHaveBeenCalled();
     });
   });
 });

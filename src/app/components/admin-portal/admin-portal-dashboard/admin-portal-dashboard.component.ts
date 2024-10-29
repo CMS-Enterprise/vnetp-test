@@ -30,13 +30,17 @@ export class AdminPortalDashboardComponent implements OnInit {
   constructor(private router: Router, private auth: AuthService, private globalMessagesService: V3GlobalMessagesService) {}
   ngOnInit(): void {
     if (this.auth.currentUser) {
+      console.log('here');
       this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
+        console.log('here2');
         this.user = user;
-        this.auth.getTenants(this.user.token).subscribe(data => {
-          this.availableTenants = data;
-        });
+
         this.userRoles = this.user.dcsPermissions.map(p => p.roles).flat();
         this.loadDashboard();
+        this.auth.getTenants(this.user.token).subscribe(data => {
+          console.log('here3');
+          this.availableTenants = data;
+        });
         this.dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
       });
     }

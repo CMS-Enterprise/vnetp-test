@@ -56,12 +56,54 @@ describe('NatRuleGroupComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('toggleDropdown', () => {
+    it('should set dropdownOpen to true initially', () => {
+      component.dropdownOpen = true;
+      component.toggleDropdown();
+      expect(component.dropdownOpen).toBeFalsy();
+    });
+
+    it('should set dropdownOpen to false', () => {
+      component.dropdownOpen = false;
+      component.toggleDropdown();
+      expect(component.dropdownOpen).toBeTruthy();
+    });
+  });
+
+  describe('filterTier', () => {
+    it('should filterTier based on selection', () => {
+      const tierService = TestBed.inject(V1TiersService);
+      component.filteredTier = false;
+      const tiersMock = [
+        { id: '123', name: 'tier1', natRuleGroups: ['tier1FWRuleGroup1', 'tier1FWRuleGroup2'] },
+        { id: '321', name: 'tier2', natRuleGroups: ['tier2FWRuleGroup1', 'tier2FWRuleGroup2'] },
+      ];
+      component.tiers = tiersMock;
+      const getOneTierSpy = jest.spyOn(tierService, 'getOneTier').mockReturnValue(of(tiersMock[0] as any));
+      component.filterTier(tiersMock[0]);
+      expect(getOneTierSpy).toHaveBeenCalledWith({ id: '123', join: ['natRuleGroups'] });
+    });
+
+    it('should get all tiers based on un-selecting the filteredTier', () => {
+      const tierService = TestBed.inject(V1TiersService);
+      component.filteredTier = true;
+      const tiersMock = [
+        { id: '123', name: 'tier1', natRuleGroups: ['tier1FWRuleGroup1', 'tier1FWRuleGroup2'] },
+        { id: '321', name: 'tier2', natRuleGroups: ['tier2FWRuleGroup1', 'tier2FWRuleGroup2'] },
+      ];
+      component.tiers = tiersMock;
+      const getManyTiersSpy = jest.spyOn(tierService, 'getManyTier').mockReturnValue(of({ tiersMock } as any));
+      component.filterTier(tiersMock[0]);
+      expect(getManyTiersSpy).toHaveBeenCalledWith({ join: ['natRuleGroups'] });
+    });
+  });
+
   describe('Get Tiers', () => {
     it('should fetch tiers joined with nat rule group', () => {
       const tierService = TestBed.inject(V1TiersService);
       const tiersMock = [
-        { name: 'tier1', natRuleGroups: ['tier1NatRuleGroup1', 'tier1NatRuleGroup2'] },
-        { name: 'tier2', natRuleGroups: ['tierNatRuleGroup1', 'tier2NatRuleGroup2'] },
+        { name: 'tier1', natRuleGroups: ['tier1FWRuleGroup1', 'tier1FWRuleGroup2'] },
+        { name: 'tier2', natRuleGroups: ['tier2FWRuleGroup1', 'tier2FWRuleGroup2'] },
       ];
       component.tiers = tiersMock;
 
@@ -82,6 +124,7 @@ describe('NatRuleGroupComponent', () => {
   describe('openModal', () => {
     beforeEach(() => {
       jest.spyOn(component, 'getTiers');
+      jest.spyOn(component, 'getTierByName');
       jest.spyOn(component['ngx'], 'resetModalData');
     });
 
@@ -103,6 +146,16 @@ describe('NatRuleGroupComponent', () => {
       expect(component['ngx'].resetModalData).toHaveBeenCalledWith('natRuleGroupModal');
 
       expect(unsubscribeSpy).toHaveBeenCalled();
+
+      // if filteredTier is true, only get a single tier with groups joined
+      component.filteredTier = true;
+      component.subscribeToNatRuleGroupModal();
+      expect(component['ngx'].getModal).toHaveBeenCalledWith('natRuleGroupModal');
+      expect(component.natRuleGroupModalSubscription).toBeDefined();
+
+      onCloseFinished.next();
+
+      expect(component.getTierByName).toHaveBeenCalled();
     });
     it('should open modal with correct modalMode', () => {
       const modalMode = ModalMode.Create;

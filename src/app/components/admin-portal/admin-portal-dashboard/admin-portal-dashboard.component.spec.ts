@@ -4,6 +4,7 @@ import { MockProvider } from 'src/test/mock-providers';
 import { AuthService } from 'src/app/services/auth.service';
 import { V3GlobalMessagesService } from 'client';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 
 describe('AdminPortalDashboardComponent', () => {
   let component: AdminPortalDashboardComponent;
@@ -28,9 +29,15 @@ describe('AdminPortalDashboardComponent', () => {
   });
 
   it('should load data on init', () => {
+    const authService = TestBed.inject(AuthService);
+    authService.currentUser = of({ user: '123', dcsPermissions: [{ roles: 'role1' }] } as any);
+    component['auth'].getTenants = jest.fn().mockReturnValue(of([{ tenant: 'tenant' }]) as any);
     const messageService = TestBed.inject(V3GlobalMessagesService);
+    const loadDashboardSpy = jest.spyOn(component, 'loadDashboard');
 
-    component.getGlobalMessages();
+    component.ngOnInit();
+
+    expect(loadDashboardSpy).toHaveBeenCalled();
 
     expect(messageService.getMessagesMessage).toHaveBeenCalledWith({ page: 1, perPage: 10000 });
   });

@@ -17,7 +17,7 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
   tiers;
   natRuleGroups: Array<NatRuleGroup>;
   public natRuleGroupModalSubscription: Subscription;
-  dropdownOpen: boolean = false;
+  dropdownOpen = false;
   filteredTier = false;
   filteredTierObject;
 

@@ -57,9 +57,9 @@ describe('GlobalMessagesComponent', () => {
 
       const getManyMessagesSpy = jest.spyOn(messageService, 'getMessagesMessage').mockReturnValue(of({ data: messagesMock } as any));
 
-      messageService.getMessagesMessage({ page: 1, perPage: 50 });
+      component.getGlobalMessages();
       expect(getManyMessagesSpy).toHaveBeenCalled();
-      expect(component['messages']).toEqual(messagesMock);
+      expect(component['messages']).toEqual({ data: messagesMock });
     });
   });
 

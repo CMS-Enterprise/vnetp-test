@@ -17,7 +17,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   tiers;
   firewallRuleGroups: Array<FirewallRuleGroup>;
   public fwRuleGroupModalSubscription: Subscription;
-  dropdownOpen: boolean = false;
+  dropdownOpen = false;
   filteredTier = false;
   filteredTierObject;
 
