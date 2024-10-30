@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AdminPortalDashboardComponent } from './admin-portal-dashboard.component';
 import { MockProvider } from 'src/test/mock-providers';

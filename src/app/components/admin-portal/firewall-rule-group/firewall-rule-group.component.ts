@@ -34,12 +34,10 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   }
 
   toggleDropdown(): void {
-    console.log('this.filteredTier', this.filteredTier);
     this.dropdownOpen = !this.dropdownOpen;
   }
 
-  public filterTier(filterTier): void {
-    console.log('filteredTier', filterTier);
+  public filterTier(filterTier: Tier): void {
     this.filteredTier = !this.filteredTier;
     this.filteredTierObject = filterTier;
     if (this.filteredTier) {
@@ -49,13 +47,12 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getTierByName(tierName?): void {
-    console.log('tierName', tierName);
+  public getTierByName(singleTier?: Tier): void {
     this.firewallRuleGroups = [];
     this.filteredTier = true;
     this.tierService
       .getOneTier({
-        id: tierName.id,
+        id: singleTier.id,
         join: ['firewallRuleGroups'],
       })
       .subscribe(data => {
@@ -83,8 +80,6 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
     this.fwRuleGroupModalSubscription = this.ngx.getModal('firewallRuleGroupModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('firewallRuleGroupModal');
       this.fwRuleGroupModalSubscription.unsubscribe();
-      console.log('this.filteredTier', this.filteredTier);
-      console.log('this.filteredTierObject', this.filteredTierObject);
       if (this.filteredTier) {
         return this.getTierByName(this.filteredTierObject);
       }

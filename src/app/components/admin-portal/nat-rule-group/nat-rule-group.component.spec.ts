@@ -77,7 +77,7 @@ describe('NatRuleGroupComponent', () => {
       const tiersMock = [
         { id: '123', name: 'tier1', natRuleGroups: ['tier1FWRuleGroup1', 'tier1FWRuleGroup2'] },
         { id: '321', name: 'tier2', natRuleGroups: ['tier2FWRuleGroup1', 'tier2FWRuleGroup2'] },
-      ];
+      ] as any;
       component.tiers = tiersMock;
       const getOneTierSpy = jest.spyOn(tierService, 'getOneTier').mockReturnValue(of(tiersMock[0] as any));
       component.filterTier(tiersMock[0]);
@@ -90,7 +90,7 @@ describe('NatRuleGroupComponent', () => {
       const tiersMock = [
         { id: '123', name: 'tier1', natRuleGroups: ['tier1FWRuleGroup1', 'tier1FWRuleGroup2'] },
         { id: '321', name: 'tier2', natRuleGroups: ['tier2FWRuleGroup1', 'tier2FWRuleGroup2'] },
-      ];
+      ] as any;
       component.tiers = tiersMock;
       const getManyTiersSpy = jest.spyOn(tierService, 'getManyTier').mockReturnValue(of({ tiersMock } as any));
       component.filterTier(tiersMock[0]);

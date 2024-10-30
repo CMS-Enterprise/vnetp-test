@@ -34,12 +34,10 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
   }
 
   toggleDropdown(): void {
-    console.log('this.filteredTier', this.filteredTier);
     this.dropdownOpen = !this.dropdownOpen;
   }
 
-  public filterTier(filterTier) {
-    console.log('filteredTier', filterTier);
+  public filterTier(filterTier: Tier) {
     this.filteredTier = !this.filteredTier;
     this.filteredTierObject = filterTier;
     if (this.filteredTier) {
@@ -49,13 +47,12 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getTierByName(tierName?): void {
-    console.log('tierName', tierName);
+  public getTierByName(singleTier: Tier): void {
     this.natRuleGroups = [];
     this.filteredTier = true;
     this.tierService
       .getOneTier({
-        id: tierName.id,
+        id: singleTier.id,
         join: ['natRuleGroups'],
       })
       .subscribe(data => {
@@ -83,8 +80,6 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
     this.natRuleGroupModalSubscription = this.ngx.getModal('natRuleGroupModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('natRuleGroupModal');
       this.natRuleGroupModalSubscription.unsubscribe();
-      console.log('this.filteredTier', this.filteredTier);
-      console.log('this.filteredTierObject', this.filteredTierObject);
       if (this.filteredTier) {
         return this.getTierByName(this.filteredTierObject);
       }
