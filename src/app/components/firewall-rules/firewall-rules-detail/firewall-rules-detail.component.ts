@@ -471,7 +471,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       this.serviceObjectGroups = result[4].data;
       this.zones = result[5].data;
       this.getFirewallRules();
-      this.appIdService.loadPanosApplications(this.tier.appVersion);
+      this.appIdService.loadPanosApplications(this.tier.appVersion, true);
 
       if (!this.hasBeenRefreshedSinceDayTime(1, 7)) {
         this.refreshAppId();

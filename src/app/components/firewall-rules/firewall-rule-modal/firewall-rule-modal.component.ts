@@ -220,12 +220,9 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           id: this.FirewallRuleId,
           firewallRule: modalFirewallRule,
         })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+        .subscribe(() => {
+          this.closeModal();
+        });
     }
   }
 
