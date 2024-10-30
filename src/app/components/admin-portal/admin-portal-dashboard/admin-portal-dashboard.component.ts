@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Tenant, UserDto, V3GlobalMessagesService } from 'client';
+import { UserDto, V3GlobalMessagesService } from 'client';
 import { Subscription } from 'rxjs';
-import { TenantName } from 'src/app/models/other/tenant-name';
 import { AuthService } from 'src/app/services/auth.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 

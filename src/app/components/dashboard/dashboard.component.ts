@@ -16,7 +16,6 @@ import {
   Datacenter,
   V1JobsService,
   V3GlobalMessagesService,
-  PaginationDTO,
 } from 'client';
 import { DashboardHelpText } from 'src/app/helptext/help-text-networking';
 import { AuthService } from '../../services/auth.service';

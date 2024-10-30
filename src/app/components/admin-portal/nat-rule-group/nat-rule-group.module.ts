@@ -17,7 +17,6 @@ import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.m
 // eslint-disable-next-line max-len
 import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
 import { NatRuleGroupModalComponent } from './nat-rule-group-modal/nat-rule-group-modal.component';
-import { TierSelectComponent } from 'src/app/common/tier-select/tier-select.component';
 
 const routes: Routes = [
   {
