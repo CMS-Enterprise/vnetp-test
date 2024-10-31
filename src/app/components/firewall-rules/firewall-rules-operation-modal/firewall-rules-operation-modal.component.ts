@@ -156,8 +156,10 @@ export class FirewallRulesOperationModalComponent implements OnInit {
   }
 
   public executeOperation(ruleOperationDto: RuleOperationDto): void {
-    const sourceTierName = this.tiers.find(tier => tier.id === this.currentTierId).name;
-    const destinationTierName = this.tiers.find(tier => tier.id === this.selectedTierId).name;
+    const sourceTier = this.tiers.find(tier => tier.id === this.currentTierId);
+    const sourceTierName = sourceTier.name;
+    const destinationTier = this.tiers.find(tier => tier.id === this.selectedTierId);
+    const destinationTierName = destinationTier.name;
     const destinationFirewallGroupName = this.firewallRuleGroups.find(
       firewallRuleGroup => firewallRuleGroup.id === ruleOperationDto.destinationGroupId,
     ).name;

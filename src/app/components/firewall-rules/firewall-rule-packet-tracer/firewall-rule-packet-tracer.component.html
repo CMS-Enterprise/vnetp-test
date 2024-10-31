@@ -39,6 +39,7 @@
             <th scope="col">Enabled Match</th>
             <th scope="col">Source Port Match</th>
             <th scope="col">Dest Port Match</th>
+            <th scope="col">App Match</th>
           </tr>
         </thead>
         <tbody>
@@ -92,6 +93,11 @@
             <td>
               <span [ngStyle]="{ 'font-weight': rule.checkList.destPortMatch === false ? 'bold' : 'normal' }">
                 {{ rule.checkList.destPortMatch }}
+              </span>
+            </td>
+            <td>
+              <span [ngStyle]="{ 'font-weight': rule.checkList.applicationMatch === false ? 'bold' : 'normal' }">
+                {{ rule.checkList.applicationMatch }}
               </span>
             </td>
           </tr>
@@ -206,6 +212,18 @@
             <div *ngIf="f.destinationIpAddress.errors.required">Destination IP is required</div>
             <div *ngIf="f.destinationIpAddress.errors.invalidIpAny">Invalid IP address, must be a valid IPv4 address</div>
           </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <ng-select
+            [items]="objects.panosApplications"
+            bindLabel="name"
+            bindValue="id"
+            formControlName="application"
+            placeholder="any"
+          ></ng-select>
         </div>
       </div>
 

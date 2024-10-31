@@ -464,6 +464,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       zoneRequest,
     ]).subscribe(result => {
       this.tier = result[0];
+      this.appIdService.getPanosApplications(this.tier.appVersion).subscribe(apps => {
+        this.packetTracerObjects.panosApplications = [...apps];
+      });
       this.TierName = this.tier.name;
       this.networkObjects = result[1].data;
       this.networkObjectGroups = result[2].data;
@@ -697,6 +700,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           'destinationNetworkObjectGroup',
           'serviceObject',
           'serviceObjectGroup',
+          'panosApplications',
         ],
         page: 1,
         perPage: 50000,
