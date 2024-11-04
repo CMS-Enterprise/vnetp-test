@@ -64,6 +64,8 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
     this.firewallRuleGroups = [];
     this.tierService
       .getManyTier({
+        page: 1,
+        perPage: 500,
         join: ['firewallRuleGroups'],
       })
       .subscribe(data => {
