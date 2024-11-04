@@ -69,7 +69,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
         join: ['firewallRuleGroups'],
       })
       .subscribe(data => {
-        this.tiers = data;
+        this.tiers = data.data;
         this.tiers.map(tier => {
           tier.firewallRuleGroups.map(group => {
             this.firewallRuleGroups.push(group);

@@ -69,7 +69,7 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
         join: ['natRuleGroups'],
       })
       .subscribe(data => {
-        this.tiers = data;
+        this.tiers = data.data;
         this.tiers.map(tier => {
           tier.natRuleGroups.map(group => {
             this.natRuleGroups.push(group);

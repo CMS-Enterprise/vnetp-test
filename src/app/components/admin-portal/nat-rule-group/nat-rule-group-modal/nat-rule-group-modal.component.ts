@@ -28,7 +28,7 @@ export class NatRuleGroupModalComponent implements OnInit {
 
   public getTiers() {
     this.tierService.getManyTier({ page: 1, perPage: 500, sort: ['updatedAt,ASC'] }).subscribe(data => {
-      this.tiers = data;
+      this.tiers = data.data;
     });
   }
 
