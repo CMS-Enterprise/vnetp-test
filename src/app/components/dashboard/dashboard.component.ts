@@ -145,10 +145,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       // use this to dynamically change the title / messages in the bottom cards
       this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
         map(() => [
-          { title: 'Training', cols: 1, rows: 1, data: trainingMessages },
-          { title: 'New Features', cols: 1, rows: 1, data: newFeatureMessages },
-          // { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
-          // { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
+          { title: 'Training', cols: 1, rows: 1, data: ['training link 1', 'training link 2'] },
+          { title: 'New Features', cols: 1, rows: 1, data: ['New Feature X!', 'New Feature Y!'] },
+          { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
+          { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - coming next sprint'] },
         ]),
       );
     });

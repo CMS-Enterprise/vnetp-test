@@ -64,6 +64,8 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
     this.natRuleGroups = [];
     this.tierService
       .getManyTier({
+        page: 1,
+        perPage: 500,
         join: ['natRuleGroups'],
       })
       .subscribe(data => {
