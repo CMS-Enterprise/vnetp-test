@@ -132,8 +132,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const newFeatureMessages = [];
       this.messages.data = this.messages.data.filter(message => {
         if (message.messageType === 'Training') {
+          if (trainingMessages.length === 5) {
+            return;
+          }
           trainingMessages.push(message.description);
         } else if (message.messageType === 'NewFeature') {
+          if (newFeatureMessages.length === 5) {
+            return;
+          }
           newFeatureMessages.push(message.description);
         }
         return message.messageType !== 'Training' && message.messageType !== 'NewFeature';
@@ -266,7 +272,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .getManyJob({
         page: 1,
         perPage: 3,
-        sort: ['createdAt,ASC'],
+        sort: ['createdAt,DESC'],
       })
       .subscribe(data => {
         this.jobs = data;

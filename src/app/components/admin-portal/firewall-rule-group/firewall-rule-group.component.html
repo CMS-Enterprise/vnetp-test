@@ -34,9 +34,9 @@
     <tbody>
       <tr
         *ngFor="
-          let firewallRuleGroup of firewallRuleGroups
+          let firewallRuleGroup of firewallRuleGroups.data
             | filter : filterFirewallRuleGroup
-            | paginate : { itemsPerPage: perPage, currentPage: currentFirewallRulePage }
+            | paginate : { itemsPerPage: perPage, currentPage }
         "
       >
         <td>
@@ -54,7 +54,50 @@
         <td colspan="4">No Firewall Rule Groups</td>
       </tr>
     </tbody>
+    <tfoot>
+      <td [attr.colspan]="config.columns.length">
+        <pagination-controls (pageChange)="currentPage = $event; onTableEvent()"></pagination-controls>
+        <span class="badge badge-pill badge-secondary ml-2 py-1 px-2 align-middle" style="font-size: 0.8em; vertical-align: middle">{{
+          firewallRuleGroups?.total
+        }}</span>
+      </td>
+    </tfoot>
   </table>
+  <!-- <section class="btn-toolbar btn-toolbar--start" role="toolbar">
+    <span class="mr-3">Entities per page</span>
+    <div class="btn-group" role="group">
+      <button type="button" value="20" (click)="perPage = $event.target.value; onTableEvent()" class="btn btn-light">20</button>
+      <button
+        *ngIf="firewallRuleGroups?.total >= 50"
+        type="button"
+        value="50"
+        (click)="perPage = $event.target.value; onTableEvent()"
+        class="btn btn-light"
+      >
+        50
+      </button>
+      <button
+        *ngIf="firewallRuleGroups?.total >= 100"
+        type="button"
+        value="100"
+        (click)="perPage = $event.target.value; onTableEvent()"
+        class="btn btn-light"
+      >
+        100
+      </button>
+    </div>
+  </section> -->
+
+  <!-- <ng-container *ngIf="firewallRuleGroups">
+    <app-table 
+      [config]="config"
+      (clearResults)="getTiers($event)"
+      (searchParams)="getTiers($event)"
+      [data]="firewallRuleGroups"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
+  </ng-container> -->
 
   <!-- <section class="btn-toolbar" role="toolbar">
     <app-import-export
@@ -68,17 +111,15 @@
 
 <ng-template #nameTemplate let-firewallRuleGroup="datum">
   <section>
-    {{ getTierName(firewallRuleGroup.tierId) }}
+    {{ firewallRuleGroup.name }}
   </section>
 </ng-template>
 
-<ng-template #fwRuleTemplate let-firewallRuleGroup="datum">
+<!-- <ng-template #tierName let-firewallRuleGroup="datum">
   <section>
-    <a routerLink="/netcentric/firewall-rules/edit/{{ firewallRuleGroup.id }}" queryParamsHandling="merge"
-      >{{ firewallRuleGroup.name | slice : 0 : 20 }}{{ firewallRuleGroup.name.length > 20 ? '...' : '' }}</a
-    >
+    {{firewallRuleGroup.tierName}}
   </section>
-</ng-template>
+</ng-template> -->
 
 <ng-template #stateTemplate let-firewallRuleGroup="datum">
   <section>

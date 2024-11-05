@@ -1,9 +1,11 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, TemplateRef, ViewChild } from '@angular/core';
 import { Tier, V1TiersService, FirewallRuleGroup } from 'client';
 import { Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { TableConfig } from 'src/app/common/table/table.component';
 
 @Component({
   selector: 'app-firewall-rule-group',
@@ -11,17 +13,30 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   styleUrls: ['./firewall-rule-group.component.scss'],
 })
 export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
-  public currentFirewallRulePage = 1;
-  public perPage = 50;
+  public currentPage = 1;
+  public perPage = 500;
   public currentTier: Tier;
   tiers;
-  firewallRuleGroups: Array<FirewallRuleGroup>;
+  firewallRuleGroups: any;
   public fwRuleGroupModalSubscription: Subscription;
   dropdownOpen = false;
   filteredTier = false;
   filteredTierObject;
+  public tableComponentDto = new TableComponentDto();
 
   private currentTierSubscription: Subscription;
+
+  @ViewChild('tierName') tierName: TemplateRef<any>;
+
+  public config: TableConfig<any> = {
+    description: 'Firewall Rule Groups',
+    columns: [
+      { name: 'Name', property: 'name' },
+      { name: 'Rule Group Type', property: 'type' },
+      { name: 'Tier Name', property: 'tierName' },
+      // { name: 'tierName', template: () => this.tierName },
+    ],
+  };
 
   constructor(private ngx: NgxSmartModalService, private tierService: V1TiersService) {}
 
@@ -48,7 +63,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   }
 
   public getTierByName(singleTier?: Tier): void {
-    this.firewallRuleGroups = [];
+    this.firewallRuleGroups.data = [];
     this.filteredTier = true;
     this.tierService
       .getOneTier({
@@ -56,12 +71,33 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
         join: ['firewallRuleGroups'],
       })
       .subscribe(data => {
-        this.firewallRuleGroups = data.firewallRuleGroups;
+        data.firewallRuleGroups.map(group => {
+          let fwGroup = group as any;
+          fwGroup.tierName = singleTier.name;
+          group = fwGroup;
+        });
+        this.firewallRuleGroups.data = data.firewallRuleGroups as any;
       });
   }
 
-  public getTiers(): void {
-    this.firewallRuleGroups = [];
+  public onTableEvent(event?: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.getTiers(event);
+  }
+
+  public getTiers(event?): void {
+    // let eventParams;
+    // if (event) {
+    //   this.tableComponentDto.page = event.page ? event.page : 1;
+    //   this.tableComponentDto.perPage = event.perPage ? event.perPage : 500;
+    //   const { searchText } = event;
+    //   const propertyName = event.searchColumn ? event.searchColumn : null;
+    //   if (propertyName) {
+    //     eventParams = `${propertyName}||cont||${searchText}`;
+    //   }
+    // }
+    console.log('this.tableComponentDto', this.tableComponentDto);
+    this.firewallRuleGroups = { data: [] };
     this.tierService
       .getManyTier({
         page: 1,
@@ -72,9 +108,13 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
         this.tiers = data.data;
         this.tiers.map(tier => {
           tier.firewallRuleGroups.map(group => {
-            this.firewallRuleGroups.push(group);
+            console.log('group', group);
+            group.tierName = tier.name;
+            this.firewallRuleGroups.data.push(group);
           });
         });
+        this.firewallRuleGroups.total = this.firewallRuleGroups.data.length;
+        console.log('this.firewallRuleGroups', this.firewallRuleGroups);
       });
   }
 

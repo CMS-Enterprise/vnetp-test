@@ -151,6 +151,10 @@ export class TableComponent<T> implements AfterViewInit {
     this.expandableRows = Boolean(this.config.expandableRows);
 
     this.changeRef.detectChanges();
+
+    console.log('this.data', this.data);
+    console.log('this.currentPage', this.currentPage);
+    console.log('this.itemsPerPage', this.itemsPerPage);
   }
 
   // user has registered search parameters, we take these parameters and emit them forward

@@ -49,7 +49,7 @@ export class RuleGroupZonesComponent implements OnInit {
     this.zoneService
       .getManyZone({
         filter: ['deletedAt||isnull'],
-        sort: ['updatedAt,ASC'],
+        sort: ['updatedAt,DESC'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })
@@ -62,8 +62,8 @@ export class RuleGroupZonesComponent implements OnInit {
   }
 
   public getTiers() {
-    this.tierService.getManyTier({ sort: ['updatedAt,ASC'] }).subscribe(data => {
-      this.tiers = data;
+    this.tierService.getManyTier({ page: 1, perPage: 500, sort: ['updatedAt,ASC'] }).subscribe(data => {
+      this.tiers = data.data;
     });
   }
   ngOnInit(): void {
