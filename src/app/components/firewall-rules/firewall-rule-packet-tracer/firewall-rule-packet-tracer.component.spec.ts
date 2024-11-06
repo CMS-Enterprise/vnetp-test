@@ -6,7 +6,7 @@ import {
   MockIconButtonComponent,
   MockNgxSmartModalComponent,
 } from 'src/test/mock-components';
-import { AbstractControl, FormControl, FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
@@ -16,7 +16,7 @@ import { FirewallRuleDirectionEnum, FirewallRuleProtocolEnum } from '../../../..
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { MockProvider } from '../../../../test/mock-providers';
 import { ToastrService } from 'ngx-toastr';
-import { forwardRef, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 describe('FirewallRulesPacketTracerComponent', () => {
