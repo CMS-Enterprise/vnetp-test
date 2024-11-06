@@ -80,6 +80,7 @@ pipeline {
         }
 
         stage('Publish') {
+            agent { label 'rehl8-prod' }
             when {
                 expression { shouldEnablePublish() }
             }
