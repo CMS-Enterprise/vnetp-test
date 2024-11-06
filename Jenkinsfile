@@ -6,6 +6,12 @@ def shouldDisableTests() {
         script: 'git log -1 --pretty=%B',
         returnStdout: true
     ).trim()
+
+    // Always run tests on the int, dev, and master branches
+    if (["int", "dev", "master"].contains(env.GIT_BRANCH)) {
+        return false
+    }
+
     // Check if "/disable_tests" is present in the commit message (case-insensitive)
     return commitMessage.toLowerCase().contains("/disable_tests")
 }
