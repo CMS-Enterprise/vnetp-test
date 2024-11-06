@@ -25,6 +25,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 import { FirewallRuleObjectInfoModalComponent } from '../firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
 import { TierContextService } from '../../../services/tier-context.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -39,6 +40,7 @@ describe('FirewallRulesDetailComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         ToastrModule.forRoot(),
+        NgSelectModule,
       ],
       declarations: [
         FirewallRulesDetailComponent,

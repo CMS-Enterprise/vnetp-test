@@ -120,12 +120,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  saveAppId(): void {
-    this.appIdService.saveDto(this.firewallRule.id).subscribe(() => {
-      this.appIdService.resetDto();
-    });
-  }
-
   save() {
     this.submitted = true;
     if (this.form.invalid) {
@@ -211,9 +205,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           () => {},
         );
     } else {
-      this.appIdService.saveDto(this.FirewallRuleId).subscribe(() => {
-        this.appIdService.resetDto();
-      });
+      modalFirewallRule.panosApplications = [...this.firewallRule.panosApplications];
+      this.appIdService.saveDto(modalFirewallRule);
 
       this.firewallRuleService
         .updateOneFirewallRule({

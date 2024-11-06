@@ -103,11 +103,12 @@ export class AppIdRuntimeService {
     }
   }
 
-  // Save the DTO for a specific firewallRuleId
-  saveDto(firewallRuleId: string): Observable<FirewallRule> {
-    this.dto.firewallRuleId = firewallRuleId;
-    return this.firewallRuleService.modifyPanosApplicationsFirewallRule({
-      panosApplicationFirewallRuleDto: this.dto,
+  saveDto(firewallRule: FirewallRule): void {
+    const panosApplicationIdsToRemove = this.dto.panosApplicationsToRemove?.map(pa => pa.id) || [];
+    firewallRule.panosApplications = firewallRule.panosApplications.filter(paApp => !panosApplicationIdsToRemove.includes(paApp.id));
+    firewallRule.panosApplications = [...firewallRule.panosApplications, ...this.dto.panosApplicationsToAdd];
+    firewallRule.panosApplications.forEach(paApp => {
+      delete (paApp as any).firewallRules;
     });
   }
 

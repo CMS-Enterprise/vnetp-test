@@ -6,7 +6,7 @@ import {
   MockIconButtonComponent,
   MockNgxSmartModalComponent,
 } from 'src/test/mock-components';
-import { AbstractControl, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
@@ -16,6 +16,8 @@ import { FirewallRuleDirectionEnum, FirewallRuleProtocolEnum } from '../../../..
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { MockProvider } from '../../../../test/mock-providers';
 import { ToastrService } from 'ngx-toastr';
+import { forwardRef, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 describe('FirewallRulesPacketTracerComponent', () => {
   let component: FirewallRulePacketTracerComponent;
@@ -29,7 +31,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [FormsModule, NgxPaginationModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+      imports: [FormsModule, NgxPaginationModule, NgSelectModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
         FirewallRulePacketTracerComponent,
         ImportExportComponent,
@@ -37,13 +39,14 @@ describe('FirewallRulesPacketTracerComponent', () => {
         MockIconButtonComponent,
         MockNgxSmartModalComponent,
         MockTooltipComponent,
-        FirewallRulePacketTracerComponent,
       ],
       providers: [{ provide: NgxSmartModalService, useValue: mockNgxSmartModalService }, MockProvider(ToastrService)],
+      schemas: [NO_ERRORS_SCHEMA],
     });
 
     fixture = TestBed.createComponent(FirewallRulePacketTracerComponent);
     component = fixture.componentInstance;
+
     fixture.detectChanges();
   });
 
@@ -211,7 +214,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
   describe('handleInRange', () => {
     it('should call ip lookup', () => {
       const ipLookupSpy = jest.spyOn(component, 'ipLookup').mockReturnValue(true);
-      const rule = { sourceIpAddress: '192.168.1.0/24', sourceAddressType: 'IpAddress' } as any;
+      const rule = { sourceIpAddress: '192.168.1.0/24', sourceAddressType: 'IpAddress', panosApplications: [] } as any;
       const control = { value: '192.168.1.100' } as AbstractControl;
       const result = component.handleInRange(rule, 'source', control);
       expect(result).toBeTruthy();
@@ -220,7 +223,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
 
     it('should call network object lookup', () => {
       jest.spyOn(component, 'networkObjectLookup').mockReturnValue(true);
-      const rule = { sourceIpAddress: '10.0.0.0/24', sourceAddressType: 'NetworkObject' } as any;
+      const rule = { sourceIpAddress: '10.0.0.0/24', sourceAddressType: 'NetworkObject', panosApplications: [] } as any;
       const control = { value: '192.168.1.100' } as AbstractControl;
       const result = component.handleInRange(rule, 'source', control);
       expect(result).toBeTruthy();
@@ -228,7 +231,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
 
     it('should call network object group lookup', () => {
       const networkObjectGroupSpy = jest.spyOn(component, 'networkObjectGroupLookup').mockReturnValue(true);
-      const rule = { sourceIpAddress: '10.0.0.0/24', sourceAddressType: 'NetworkObjectGroup' } as any;
+      const rule = { sourceIpAddress: '10.0.0.0/24', sourceAddressType: 'NetworkObjectGroup', panosApplications: [] } as any;
       const control = { value: '192.168.1.100' } as AbstractControl;
       const result = component.handleInRange(rule, 'source', control);
       expect(result).toBeTruthy();
@@ -237,21 +240,21 @@ describe('FirewallRulesPacketTracerComponent', () => {
 
     describe('handlePortMatch', () => {
       it('should return true for an exact port match', () => {
-        const rule = { sourcePorts: '80', serviceType: 'Port' } as any;
+        const rule = { sourcePorts: '80', serviceType: 'Port', panosApplications: [] } as any;
         const control = { value: '80' } as AbstractControl;
         const result = component.handlePortMatch(rule, 'source', control);
         expect(result).toBeTruthy();
       });
 
       it('should return false when ports dont match', () => {
-        const rule = { sourcePorts: '80', serviceType: 'Port' } as any;
+        const rule = { sourcePorts: '80', serviceType: 'Port', panosApplications: [] } as any;
         const control = { value: '8080' } as AbstractControl;
         const result = component.handlePortMatch(rule, 'source', control);
         expect(result).toBeFalsy();
       });
 
       it('should return null when the form control value is falsy', () => {
-        const rule = { sourcePorts: '80', serviceType: 'ServiceObject' } as any;
+        const rule = { sourcePorts: '80', serviceType: 'ServiceObject', panosApplications: [] } as any;
         const control = { value: '' } as AbstractControl;
         const result = component.handlePortMatch(rule, 'source', control);
         expect(result).toBeNull();
@@ -272,7 +275,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     });
 
     it('should call serviceObjectPortMatch if passed a service object', () => {
-      const rule = { destinationPorts: '80', serviceType: 'ServiceObject' } as any;
+      const rule = { destinationPorts: '80', serviceType: 'ServiceObject', panosApplications: [] } as any;
       const control = { value: '80' } as AbstractControl;
       const serviceObjectPortMatchSpy = jest.spyOn(component, 'serviceObjectPortMatch').mockImplementation();
       component.handlePortMatch(rule, 'destination', control);
@@ -280,7 +283,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
     });
 
     it('should call serviceObjectGroupPortMatch if passed a service object group', () => {
-      const rule = { destinationPorts: '80', serviceType: 'ServiceObjectGroup' } as any;
+      const rule = { destinationPorts: '80', serviceType: 'ServiceObjectGroup', panosApplications: [] } as any;
       const control = { value: '80' } as AbstractControl;
       const serviceObjectGroupPortMatchSpy = jest.spyOn(component, 'serviceObjectGroupPortMatch').mockImplementation();
       component.handlePortMatch(rule, 'destination', control);

@@ -109,13 +109,11 @@ describe('AppIdRuntimeService', () => {
   });
 
   it('should save dto with firewall rule id', () => {
-    const fwSpy = jest.spyOn(mockFirewallRuleService, 'modifyPanosApplicationsFirewallRule').mockReturnValue(of({} as any));
+    const mockFwr = { panosApplications: [] } as any;
 
     (service as any).dto = { panosApplicationsToAdd: [{ id: 1 }], panosApplicationsToRemove: [] };
-    service.saveDto('1').subscribe();
-    expect(fwSpy).toHaveBeenCalledWith({
-      panosApplicationFirewallRuleDto: { panosApplicationsToAdd: [{ id: 1 }], panosApplicationsToRemove: [], firewallRuleId: '1' },
-    });
+    service.saveDto(mockFwr);
+    expect(mockFwr.panosApplications).toEqual([{ id: 1 }]);
   });
 
   it('should add application to firewall rule', () => {

@@ -143,7 +143,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       return true;
     }
 
-    return rule.panosApplications.some(app => app.id === this.form.controls.application.value);
+    return rule?.panosApplications?.some(app => app.id === this.form.controls.application.value);
   }
 
   handleInRange(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean {
