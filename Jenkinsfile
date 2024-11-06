@@ -6,7 +6,7 @@ def shouldDisableTests() {
         script: 'git log -1 --pretty=%B',
         returnStdout: true
     ).trim()
-    // Check if "disable_tests" is present in the commit message (case-insensitive)
+    // Check if "/disable_tests" is present in the commit message (case-insensitive)
     return commitMessage.toLowerCase().contains("/disable_tests")
 }
 
