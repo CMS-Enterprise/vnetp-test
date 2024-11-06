@@ -80,6 +80,7 @@ pipeline {
         }
 
         stage('Publish') {
+            agent { label 'rehl8-prod' }
             when {
                 expression { shouldEnablePublish() }
             }
@@ -88,6 +89,7 @@ pipeline {
                     sh '''
                         mkdir -p builds/$GIT_COMMIT
                         rm -f dist.tar
+                        pwd
                         tar cvf dist.tar dist/automation-ui/*
                         rm -f dist.tar.gz
                         gzip dist.tar
