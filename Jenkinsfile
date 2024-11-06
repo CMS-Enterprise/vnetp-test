@@ -16,12 +16,12 @@ def shouldDisableTests() {
     return commitMessage.toLowerCase().contains("/disable_tests")
 }
 
-def shouldEnablePublish() {
-    // Enable publish unless it's a PR branch, or if it's a main branch (int, dev, master)
+def shouldDisablePublish() {
+    // Disable publish if it's a PR branch, or if it's not a main branch (int, dev, master)
     if (env.GIT_BRANCH ==~ /^PR-\d+$/) {
-        return false
+        return true
     }
-    return ["int", "dev", "master"].contains(env.GIT_BRANCH) || true
+    return !["int", "dev", "master"].contains(env.GIT_BRANCH) || true
 }
 
 pipeline {
@@ -89,7 +89,7 @@ pipeline {
         stage('Publish') {
             agent { label 'rehl8-prod' }
             when {
-                expression { shouldEnablePublish() }
+                expression { !shouldDisablePublish() }
             }
             steps {
                 script {
