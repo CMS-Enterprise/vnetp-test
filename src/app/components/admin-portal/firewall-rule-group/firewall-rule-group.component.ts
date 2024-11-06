@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy, HostListener, TemplateRef, ViewChild } from '@angular/core';
-import { Tier, V1TiersService, FirewallRuleGroup } from 'client';
+import { Tier, V1TiersService, FirewallRuleGroup, V1NetworkSecurityFirewallRuleGroupsService } from 'client';
 import { Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-firewall-rule-group',
@@ -14,14 +15,15 @@ import { TableConfig } from 'src/app/common/table/table.component';
 })
 export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   public currentPage = 1;
-  public perPage = 500;
+  public perPage = 20;
   public currentTier: Tier;
   tiers;
-  firewallRuleGroups: any;
+  firewallRuleGroups = { data: [], count: 1, page: 1, pageCount: 1, total: 1 } as any;
   public fwRuleGroupModalSubscription: Subscription;
   dropdownOpen = false;
   filteredTier = false;
   filteredTierObject;
+  selectedTier;
   public tableComponentDto = new TableComponentDto();
 
   private currentTierSubscription: Subscription;
@@ -38,12 +40,18 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
     ],
   };
 
-  constructor(private ngx: NgxSmartModalService, private tierService: V1TiersService) {}
+  constructor(
+    private entityService: EntityService,
+    private ngx: NgxSmartModalService,
+    private tierService: V1TiersService,
+    private fwRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
+  ) {}
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const clickedElement = event.target as HTMLElement; // Cast to HTMLElement
     if (!clickedElement.closest('.dropdown')) {
+      console.log('this.selectedTier', this.selectedTier);
       this.dropdownOpen = false;
     }
   }
@@ -55,6 +63,8 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   public filterTier(filterTier: Tier): void {
     this.filteredTier = !this.filteredTier;
     this.filteredTierObject = filterTier;
+    this.selectedTier = filterTier.name;
+    console.log('this.selectedTier', this.selectedTier);
     if (this.filteredTier) {
       return this.getTierByName(filterTier);
     } else {
@@ -81,40 +91,55 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   }
 
   public onTableEvent(event?: TableComponentDto): void {
-    this.tableComponentDto = event;
+    if (event) {
+      this.tableComponentDto = event;
+    }
     this.getTiers(event);
   }
 
   public getTiers(event?): void {
-    // let eventParams;
-    // if (event) {
-    //   this.tableComponentDto.page = event.page ? event.page : 1;
-    //   this.tableComponentDto.perPage = event.perPage ? event.perPage : 500;
-    //   const { searchText } = event;
-    //   const propertyName = event.searchColumn ? event.searchColumn : null;
-    //   if (propertyName) {
-    //     eventParams = `${propertyName}||cont||${searchText}`;
-    //   }
-    // }
+    let eventParams;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
     console.log('this.tableComponentDto', this.tableComponentDto);
-    this.firewallRuleGroups = { data: [] };
+    // this.firewallRuleGroups.data = []
+    // this.firewallRuleGroups.count = this.tableComponentDto.perPage;
+    // this.firewallRuleGroups.page = this.tableComponentDto.page;
+
+    this.firewallRuleGroups = { data: [], count: this.tableComponentDto.perPage, page: this.tableComponentDto.page };
+    this.firewallRuleGroups;
     this.tierService
       .getManyTier({
-        page: 1,
-        perPage: 500,
+        page: this.tableComponentDto.page,
+        perPage: this.tableComponentDto.perPage,
         join: ['firewallRuleGroups'],
       })
       .subscribe(data => {
         this.tiers = data.data;
         this.tiers.map(tier => {
-          tier.firewallRuleGroups.map(group => {
-            console.log('group', group);
+          tier.firewallRuleGroups = tier.firewallRuleGroups.filter(group => {
+            const intravrfGroup = this.filterFirewallRuleGroup(group);
+            if (!intravrfGroup) {
+              return;
+            }
+            // console.log('group',group)
             group.tierName = tier.name;
             this.firewallRuleGroups.data.push(group);
           });
         });
-        this.firewallRuleGroups.total = this.firewallRuleGroups.data.length;
         console.log('this.firewallRuleGroups', this.firewallRuleGroups);
+
+        this.firewallRuleGroups.total = this.firewallRuleGroups.data.length;
+        const pageCount = Math.ceil(this.firewallRuleGroups.total / this.firewallRuleGroups.count);
+        console.log('pageCount', pageCount);
+        this.firewallRuleGroups.pageCount = pageCount;
       });
   }
 
@@ -141,6 +166,43 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
 
   public getTierName(tierId: string): string {
     return ObjectUtil.getObjectName(tierId, this.tiers, 'Error Resolving Name');
+  }
+
+  restoreFirewallRuleGroup(firewallRuleGroup): void {
+    if (firewallRuleGroup.deletedAt) {
+      this.fwRuleGroupService.restoreOneFirewallRuleGroup({ id: firewallRuleGroup.id }).subscribe(() => {
+        // const params = this.tableContextService.getSearchLocalStorage();
+        // const { filteredResults } = params;
+        // if (filteredResults) {
+        //   this.tableComponentDto.searchColumn = params.searchColumn;
+        //   this.tableComponentDto.searchText = params.searchText;
+        //   this.getFirewallRules(this.tableComponentDto);
+        // } else {
+        //   this.getFirewallRules();
+        // }
+        this.getTiers();
+      });
+    }
+  }
+
+  public deleteFirewallRuleGroup(firewallRuleGroup: FirewallRuleGroup): void {
+    this.entityService.deleteEntity(firewallRuleGroup, {
+      entityName: 'Firewall Rule',
+      delete$: this.fwRuleGroupService.deleteOneFirewallRuleGroup({ id: firewallRuleGroup.id }),
+      softDelete$: this.fwRuleGroupService.softDeleteOneFirewallRuleGroup({ id: firewallRuleGroup.id }),
+      onSuccess: () => {
+        // const params = this.tableContextService.getSearchLocalStorage();
+        // const { filteredResults } = params;
+        // if (filteredResults) {
+        //   this.tableComponentDto.searchColumn = params.searchColumn;
+        //   this.tableComponentDto.searchText = params.searchText;
+        //   this.getFirewallRules(this.tableComponentDto);
+        // } else {
+        //   this.getFirewallRules();
+        // }
+        this.getTiers();
+      },
+    });
   }
 
   ngOnInit(): void {

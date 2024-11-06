@@ -94,7 +94,7 @@ describe('FirewallRuleGroupComponent', () => {
       component.tiers = tiersMock;
       const getManyTiersSpy = jest.spyOn(tierService, 'getManyTier').mockReturnValue(of({ tiersMock } as any));
       component.filterTier(tiersMock[0]);
-      expect(getManyTiersSpy).toHaveBeenCalledWith({ page: 1, perPage: 500, join: ['firewallRuleGroups'] });
+      expect(getManyTiersSpy).toHaveBeenCalledWith({ page: 1, perPage: 20, join: ['firewallRuleGroups'] });
     });
   });
 
@@ -116,7 +116,7 @@ describe('FirewallRuleGroupComponent', () => {
       const getManyTiersSpy = jest.spyOn(tierService, 'getManyTier').mockReturnValue(of({ tiersMock } as any));
 
       tierService.getManyTier({ join: ['firewallRuleGroups'] });
-      expect(getManyTiersSpy).toHaveBeenCalledWith({ page: 1, perPage: 500, join: ['firewallRuleGroups'] });
+      expect(getManyTiersSpy).toHaveBeenCalledWith({ page: 1, perPage: 20, join: ['firewallRuleGroups'] });
 
       // expect(mapSpy).toHaveBeenCalled()
     });

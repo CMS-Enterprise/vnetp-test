@@ -152,9 +152,10 @@ export class TableComponent<T> implements AfterViewInit {
 
     this.changeRef.detectChanges();
 
-    console.log('this.data', this.data);
-    console.log('this.currentPage', this.currentPage);
-    console.log('this.itemsPerPage', this.itemsPerPage);
+    // console.log('this.paginationControlsOn',this.paginationControlsOn);
+    // console.log('this.data', this.data);
+    // console.log('this.currentPage', this.currentPage);
+    // console.log('this.itemsPerPage', this.itemsPerPage);
   }
 
   // user has registered search parameters, we take these parameters and emit them forward
@@ -196,6 +197,10 @@ export class TableComponent<T> implements AfterViewInit {
 
     this.tableContextService.addFilteredResultsLocalStorage();
     const { searchColumn, searchText } = searchParams;
+    // console.log('this.paginationControlsOn',this.paginationControlsOn);
+    // console.log('this.data', this.data);
+    // console.log('this.currentPage', this.currentPage);
+    // console.log('this.itemsPerPage', this.itemsPerPage);
     this.tableEvent.emit(new TableComponentDto(+this.itemsPerPage, this.currentPage, searchColumn, searchText));
     this.itemsPerPageChange.emit(this.itemsPerPage);
   }

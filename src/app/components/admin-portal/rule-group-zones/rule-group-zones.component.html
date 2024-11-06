@@ -14,10 +14,19 @@
 <ng-template #actionsTemplate let-zone="datum">
   <section class="table__actions">
     <app-icon-button
+      *ngIf="zone?.deletedAt"
+      icon="undo"
+      label="Restore Zone"
+      type="success"
+      (handleClick)="restoreZone(zone)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="!zone?.provisionedAt"
       icon="delete"
-      label="Soft-Delete/Delete"
+      label="Soft-Delete/Delete Tier"
       [type]="zone?.deletedAt ? 'danger' : 'default'"
-      (handleClick)="deleteEntry(zone)"
+      (handleClick)="deleteZone(zone)"
     ></app-icon-button>
   </section>
 </ng-template>

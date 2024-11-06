@@ -94,7 +94,7 @@ describe('NatRuleGroupComponent', () => {
       component.tiers = tiersMock;
       const getManyTiersSpy = jest.spyOn(tierService, 'getManyTier').mockReturnValue(of({ tiersMock } as any));
       component.filterTier(tiersMock[0]);
-      expect(getManyTiersSpy).toHaveBeenCalledWith({ page: 1, perPage: 500, join: ['natRuleGroups'] });
+      expect(getManyTiersSpy).toHaveBeenCalledWith({ page: 1, perPage: 20, join: ['natRuleGroups'] });
     });
   });
 
@@ -116,7 +116,7 @@ describe('NatRuleGroupComponent', () => {
       const getManyTiersSpy = jest.spyOn(tierService, 'getManyTier').mockReturnValue(of({ tiersMock } as any));
 
       tierService.getManyTier({ join: ['natRuleGroups'] });
-      expect(getManyTiersSpy).toHaveBeenCalledWith({ page: 1, perPage: 500, join: ['natRuleGroups'] });
+      expect(getManyTiersSpy).toHaveBeenCalledWith({ page: 1, perPage: 20, join: ['natRuleGroups'] });
 
       // expect(mapSpy).toHaveBeenCalled()
     });

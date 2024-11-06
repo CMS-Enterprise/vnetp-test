@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Tier, V1TiersService, NatRuleGroup } from 'client';
+import { Tier, V1TiersService, NatRuleGroup, V1NetworkSecurityNatRuleGroupsService } from 'client';
 import { Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { EntityService } from 'src/app/services/entity.service';
 
 @Component({
   selector: 'app-nat-rule-group',
@@ -11,19 +13,25 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   styleUrls: ['./nat-rule-group.component.scss'],
 })
 export class NatRuleGroupComponent implements OnInit, OnDestroy {
-  public currentNatRulePage = 1;
-  public perPage = 50;
+  public currentPage = 1;
+  public perPage = 20;
   public currentTier: Tier;
   tiers;
-  natRuleGroups: Array<NatRuleGroup>;
+  natRuleGroups = { data: [], count: 1, page: 1, pageCount: 1, total: 1 } as any;
   public natRuleGroupModalSubscription: Subscription;
   dropdownOpen = false;
   filteredTier = false;
   filteredTierObject;
+  public tableComponentDto = new TableComponentDto();
 
   private currentTierSubscription: Subscription;
 
-  constructor(private ngx: NgxSmartModalService, private tierService: V1TiersService) {}
+  constructor(
+    private natRuleGroupService: V1NetworkSecurityNatRuleGroupsService,
+    private entityService: EntityService,
+    private ngx: NgxSmartModalService,
+    private tierService: V1TiersService,
+  ) {}
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -47,8 +55,8 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getTierByName(singleTier: Tier): void {
-    this.natRuleGroups = [];
+  public getTierByName(singleTier?: Tier): void {
+    this.natRuleGroups.data = [];
     this.filteredTier = true;
     this.tierService
       .getOneTier({
@@ -56,25 +64,65 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
         join: ['natRuleGroups'],
       })
       .subscribe(data => {
-        this.natRuleGroups = data.natRuleGroups;
+        data.natRuleGroups.map(group => {
+          let fwGroup = group as any;
+          fwGroup.tierName = singleTier.name;
+          group = fwGroup;
+        });
+        this.natRuleGroups.data = data.natRuleGroups as any;
       });
   }
 
-  public getTiers(): void {
-    this.natRuleGroups = [];
+  public onTableEvent(event?: TableComponentDto): void {
+    if (event) {
+      this.tableComponentDto = event;
+    }
+    this.getTiers(event);
+  }
+
+  public getTiers(event?): void {
+    let eventParams;
+    if (event) {
+      this.tableComponentDto.page = event.page ? event.page : 1;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||cont||${searchText}`;
+      }
+    }
+    console.log('this.tableComponentDto', this.tableComponentDto);
+    // this.natRuleGroups.data = []
+    // this.natRuleGroups.count = this.tableComponentDto.perPage;
+    // this.natRuleGroups.page = this.tableComponentDto.page;
+
+    this.natRuleGroups = { data: [], count: this.tableComponentDto.perPage, page: this.tableComponentDto.page };
+    this.natRuleGroups;
     this.tierService
       .getManyTier({
-        page: 1,
-        perPage: 500,
+        page: this.tableComponentDto.page,
+        perPage: this.tableComponentDto.perPage,
         join: ['natRuleGroups'],
       })
       .subscribe(data => {
         this.tiers = data.data;
         this.tiers.map(tier => {
-          tier.natRuleGroups.map(group => {
-            this.natRuleGroups.push(group);
+          tier.natRuleGroups = tier.natRuleGroups.filter(group => {
+            const intravrfGroup = this.filterNatRuleGroup(group);
+            if (!intravrfGroup) {
+              return;
+            }
+            // console.log('group',group)
+            group.tierName = tier.name;
+            this.natRuleGroups.data.push(group);
           });
         });
+        console.log('this.natRuleGroups', this.natRuleGroups);
+
+        this.natRuleGroups.total = this.natRuleGroups.data.length;
+        const pageCount = Math.ceil(this.natRuleGroups.total / this.natRuleGroups.count);
+        console.log('pageCount', pageCount);
+        this.natRuleGroups.pageCount = pageCount;
       });
   }
 
@@ -101,6 +149,43 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
 
   public getTierName(tierId: string): string {
     return ObjectUtil.getObjectName(tierId, this.tiers, 'Error Resolving Name');
+  }
+
+  restoreNatRuleGroup(natRuleGroup): void {
+    if (natRuleGroup.deletedAt) {
+      this.natRuleGroupService.restoreOneNatRuleGroup({ id: natRuleGroup.id }).subscribe(() => {
+        // const params = this.tableContextService.getSearchLocalStorage();
+        // const { filteredResults } = params;
+        // if (filteredResults) {
+        //   this.tableComponentDto.searchColumn = params.searchColumn;
+        //   this.tableComponentDto.searchText = params.searchText;
+        //   this.getNatRules(this.tableComponentDto);
+        // } else {
+        //   this.getNatRules();
+        // }
+        this.getTiers();
+      });
+    }
+  }
+
+  public deleteNatRuleGroup(natRuleGroup: NatRuleGroup): void {
+    this.entityService.deleteEntity(natRuleGroup, {
+      entityName: 'Nat Rule',
+      delete$: this.natRuleGroupService.deleteOneNatRuleGroup({ id: natRuleGroup.id }),
+      softDelete$: this.natRuleGroupService.softDeleteOneNatRuleGroup({ id: natRuleGroup.id }),
+      onSuccess: () => {
+        // const params = this.tableContextService.getSearchLocalStorage();
+        // const { filteredResults } = params;
+        // if (filteredResults) {
+        //   this.tableComponentDto.searchColumn = params.searchColumn;
+        //   this.tableComponentDto.searchText = params.searchText;
+        //   this.getNatRules(this.tableComponentDto);
+        // } else {
+        //   this.getNatRules();
+        // }
+        this.getTiers();
+      },
+    });
   }
 
   ngOnInit(): void {

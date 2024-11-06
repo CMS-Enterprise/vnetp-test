@@ -6,6 +6,7 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { EntityService } from 'src/app/services/entity.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
@@ -37,7 +38,12 @@ export class RuleGroupZonesComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
   public tiers;
   zones;
-  constructor(private zoneService: V1NetworkSecurityZonesService, private tierService: V1TiersService, public ngx: NgxSmartModalService) {}
+  constructor(
+    private entityService: EntityService,
+    private zoneService: V1NetworkSecurityZonesService,
+    private tierService: V1TiersService,
+    public ngx: NgxSmartModalService,
+  ) {}
 
   public getZones(event?) {
     if (event) {
@@ -48,8 +54,7 @@ export class RuleGroupZonesComponent implements OnInit {
     }
     this.zoneService
       .getManyZone({
-        filter: ['deletedAt||isnull'],
-        sort: ['updatedAt,DESC'],
+        sort: ['updatedAt,ASC'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })
@@ -90,6 +95,45 @@ export class RuleGroupZonesComponent implements OnInit {
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
     this.getZones(event);
+  }
+
+  restoreZone(zone): void {
+    if (zone.deletedAt) {
+      this.zoneService.restoreOneZone({ id: zone.id }).subscribe(() => {
+        // const params = this.tableContextService.getSearchLocalStorage();
+        // const { filteredResults } = params;
+        // if (filteredResults) {
+        //   this.tableComponentDto.searchColumn = params.searchColumn;
+        //   this.tableComponentDto.searchText = params.searchText;
+        //   this.getFirewallRules(this.tableComponentDto);
+        // } else {
+        //   this.getFirewallRules();
+        // }
+        this.getZones();
+        this.getTiers();
+      });
+    }
+  }
+
+  public deleteZone(zone): void {
+    this.entityService.deleteEntity(zone, {
+      entityName: 'Zone',
+      delete$: this.zoneService.deleteOneZone({ id: zone.id }),
+      softDelete$: this.zoneService.softDeleteOneZone({ id: zone.id }),
+      onSuccess: () => {
+        // const params = this.tableContextService.getSearchLocalStorage();
+        // const { filteredResults } = params;
+        // if (filteredResults) {
+        //   this.tableComponentDto.searchColumn = params.searchColumn;
+        //   this.tableComponentDto.searchText = params.searchText;
+        //   this.getFirewallRules(this.tableComponentDto);
+        // } else {
+        //   this.getFirewallRules();
+        // }
+        this.getZones();
+        this.getTiers();
+      },
+    });
   }
 
   public deleteEntry(zone): void {
