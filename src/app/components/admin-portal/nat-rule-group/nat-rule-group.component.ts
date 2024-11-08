@@ -65,7 +65,7 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
       })
       .subscribe(data => {
         data.natRuleGroups.map(group => {
-          let fwGroup = group as any;
+          const fwGroup = group as any;
           fwGroup.tierName = singleTier.name;
           group = fwGroup;
         });

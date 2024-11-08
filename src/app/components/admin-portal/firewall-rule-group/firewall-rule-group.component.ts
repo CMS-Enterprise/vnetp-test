@@ -7,6 +7,8 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { EntityService } from 'src/app/services/entity.service';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
+import { TableContextService } from 'src/app/services/table-context.service';
 
 @Component({
   selector: 'app-firewall-rule-group',
@@ -18,17 +20,23 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   public perPage = 20;
   public currentTier: Tier;
   tiers;
-  firewallRuleGroups = { data: [], count: 1, page: 1, pageCount: 1, total: 1 } as any;
+  firewallRuleGroups;
   public fwRuleGroupModalSubscription: Subscription;
   dropdownOpen = false;
   filteredTier = false;
   filteredTierObject;
   selectedTier;
+  public isLoadingObjects = false;
   public tableComponentDto = new TableComponentDto();
 
   private currentTierSubscription: Subscription;
 
-  @ViewChild('tierName') tierName: TemplateRef<any>;
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Tier Name', propertyName: 'tierId' },
+    { displayName: 'Rule Group Type', propertyName: 'type' },
+  ];
 
   public config: TableConfig<any> = {
     description: 'Firewall Rule Groups',
@@ -36,121 +44,90 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
       { name: 'Name', property: 'name' },
       { name: 'Rule Group Type', property: 'type' },
       { name: 'Tier Name', property: 'tierName' },
-      // { name: 'tierName', template: () => this.tierName },
+      { name: '', template: () => this.actionsTemplate },
     ],
+    hideAdvancedSearch: true,
   };
 
   constructor(
+    private tableContextService: TableContextService,
     private entityService: EntityService,
     private ngx: NgxSmartModalService,
     private tierService: V1TiersService,
     private fwRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
   ) {}
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    const clickedElement = event.target as HTMLElement; // Cast to HTMLElement
-    if (!clickedElement.closest('.dropdown')) {
-      console.log('this.selectedTier', this.selectedTier);
-      this.dropdownOpen = false;
-    }
-  }
-
-  toggleDropdown(): void {
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  public filterTier(filterTier: Tier): void {
-    this.filteredTier = !this.filteredTier;
-    this.filteredTierObject = filterTier;
-    this.selectedTier = filterTier.name;
-    console.log('this.selectedTier', this.selectedTier);
-    if (this.filteredTier) {
-      return this.getTierByName(filterTier);
-    } else {
-      return this.getTiers();
-    }
-  }
-
-  public getTierByName(singleTier?: Tier): void {
-    this.firewallRuleGroups.data = [];
-    this.filteredTier = true;
-    this.tierService
-      .getOneTier({
-        id: singleTier.id,
-        join: ['firewallRuleGroups'],
-      })
-      .subscribe(data => {
-        data.firewallRuleGroups.map(group => {
-          let fwGroup = group as any;
-          fwGroup.tierName = singleTier.name;
-          group = fwGroup;
-        });
-        this.firewallRuleGroups.data = data.firewallRuleGroups as any;
-      });
-  }
-
   public onTableEvent(event?: TableComponentDto): void {
-    if (event) {
-      this.tableComponentDto = event;
-    }
-    this.getTiers(event);
+    this.tableComponentDto = event;
+    this.getFirewallRuleGroups(event);
   }
 
-  public getTiers(event?): void {
-    let eventParams;
+  public getFirewallRuleGroups(event?) {
+    this.isLoadingObjects = true;
+    let eventParams = [];
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
       if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
+        if (propertyName === 'tierId') {
+          const tierId = this.getTierId(searchText);
+          eventParams.push(`{"${`${propertyName}`}": {"eq": "${tierId}"}}`);
+        } else if (propertyName === 'type') {
+        } else {
+          eventParams.push(`{"${`${propertyName}`}": {"cont": "${searchText}"}}`);
+        }
       }
     }
-    console.log('this.tableComponentDto', this.tableComponentDto);
-    // this.firewallRuleGroups.data = []
-    // this.firewallRuleGroups.count = this.tableComponentDto.perPage;
-    // this.firewallRuleGroups.page = this.tableComponentDto.page;
-
-    this.firewallRuleGroups = { data: [], count: this.tableComponentDto.perPage, page: this.tableComponentDto.page };
-    this.firewallRuleGroups;
-    this.tierService
-      .getManyTier({
+    this.fwRuleGroupService
+      .getManyFirewallRuleGroup({
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        join: ['firewallRuleGroups'],
+        s: `{"AND": [${eventParams}], "OR": [{"name": {"eq": "External"}}, {"name": {"eq": "Intervrf"}}, {"type": {"eq": "ZoneBased"}}]}`,
+      })
+      .subscribe(
+        data => {
+          this.firewallRuleGroups = data;
+          this.firewallRuleGroups.data.map(group => {
+            group.tierName = this.getTierName(group.tierId);
+          });
+        },
+        () => {
+          this.isLoadingObjects = false;
+        },
+        () => {
+          this.isLoadingObjects = false;
+        },
+      );
+  }
+
+  public getTiers(): void {
+    this.tierService
+      .getManyTier({
+        page: 1,
+        perPage: 500,
       })
       .subscribe(data => {
         this.tiers = data.data;
-        this.tiers.map(tier => {
-          tier.firewallRuleGroups = tier.firewallRuleGroups.filter(group => {
-            const intravrfGroup = this.filterFirewallRuleGroup(group);
-            if (!intravrfGroup) {
-              return;
-            }
-            // console.log('group',group)
-            group.tierName = tier.name;
-            this.firewallRuleGroups.data.push(group);
-          });
-        });
-        console.log('this.firewallRuleGroups', this.firewallRuleGroups);
-
-        this.firewallRuleGroups.total = this.firewallRuleGroups.data.length;
-        const pageCount = Math.ceil(this.firewallRuleGroups.total / this.firewallRuleGroups.count);
-        console.log('pageCount', pageCount);
-        this.firewallRuleGroups.pageCount = pageCount;
       });
   }
 
   public subscribeToFirewallRuleGroupModal(): void {
     this.fwRuleGroupModalSubscription = this.ngx.getModal('firewallRuleGroupModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('firewallRuleGroupModal');
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults, searchString } = params;
       this.fwRuleGroupModalSubscription.unsubscribe();
-      if (this.filteredTier) {
-        return this.getTierByName(this.filteredTierObject);
+      if (filteredResults && !searchString) {
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.getFirewallRuleGroups(this.tableComponentDto);
+      } else if (filteredResults && searchString) {
+        this.getFirewallRuleGroups(searchString);
+      } else {
+        this.getFirewallRuleGroups();
       }
-      this.getTiers();
     });
   }
 
@@ -168,50 +145,95 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
     return ObjectUtil.getObjectName(tierId, this.tiers, 'Error Resolving Name');
   }
 
+  public getTierId(tierName: string): string {
+    return ObjectUtil.getObjectId(tierName, this.tiers, 'Error Resolving Name');
+  }
+
   restoreFirewallRuleGroup(firewallRuleGroup): void {
     if (firewallRuleGroup.deletedAt) {
       this.fwRuleGroupService.restoreOneFirewallRuleGroup({ id: firewallRuleGroup.id }).subscribe(() => {
-        // const params = this.tableContextService.getSearchLocalStorage();
-        // const { filteredResults } = params;
-        // if (filteredResults) {
-        //   this.tableComponentDto.searchColumn = params.searchColumn;
-        //   this.tableComponentDto.searchText = params.searchText;
-        //   this.getFirewallRules(this.tableComponentDto);
-        // } else {
-        //   this.getFirewallRules();
-        // }
-        this.getTiers();
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults, searchString } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults && !searchString) {
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.getFirewallRuleGroups(this.tableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getFirewallRuleGroups(searchString);
+        } else {
+          this.getFirewallRuleGroups();
+        }
       });
     }
   }
 
   public deleteFirewallRuleGroup(firewallRuleGroup: FirewallRuleGroup): void {
     this.entityService.deleteEntity(firewallRuleGroup, {
-      entityName: 'Firewall Rule',
+      entityName: 'Firewall Rule Group',
       delete$: this.fwRuleGroupService.deleteOneFirewallRuleGroup({ id: firewallRuleGroup.id }),
       softDelete$: this.fwRuleGroupService.softDeleteOneFirewallRuleGroup({ id: firewallRuleGroup.id }),
       onSuccess: () => {
-        // const params = this.tableContextService.getSearchLocalStorage();
-        // const { filteredResults } = params;
-        // if (filteredResults) {
-        //   this.tableComponentDto.searchColumn = params.searchColumn;
-        //   this.tableComponentDto.searchText = params.searchText;
-        //   this.getFirewallRules(this.tableComponentDto);
-        // } else {
-        //   this.getFirewallRules();
-        // }
-        this.getTiers();
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults, searchString } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults && !searchString) {
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.getFirewallRuleGroups(this.tableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getFirewallRuleGroups(searchString);
+        } else {
+          this.getFirewallRuleGroups();
+        }
       },
     });
   }
 
   ngOnInit(): void {
     this.getTiers();
+    this.getFirewallRuleGroups();
   }
 
   ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.currentTierSubscription]);
   }
+
+  // public filterTier(filterTier: Tier): void {
+  //   this.filteredTier = !this.filteredTier;
+  //   this.filteredTierObject = filterTier;
+  //   this.selectedTier = filterTier.name;
+  //   console.log('this.selectedTier', this.selectedTier);
+  //   if (this.filteredTier) {
+  //     return this.getTierByName(filterTier);
+  //   } else {
+  //     return this.getTiers();
+  //   }
+  // }
+
+  // public getTierByName(singleTier?: Tier): void {
+  //   this.firewallRuleGroups.data = [];
+  //   this.filteredTier = true;
+  //   this.tierService
+  //     .getOneTier({
+  //       id: singleTier.id,
+  //       join: ['firewallRuleGroups'],
+  //     })
+  //     .subscribe(data => {
+  //       data.firewallRuleGroups.map(group => {
+  //         const fwGroup = group as any;
+  //         fwGroup.tierName = singleTier.name;
+  //         group = fwGroup;
+  //       });
+  //       this.firewallRuleGroups.data = data.firewallRuleGroups as any;
+  //     });
+  // }
 
   // public importFirewallRuleGroupsConfig(event): void {
   //   const modalDto = new YesNoModalDto(
