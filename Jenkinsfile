@@ -17,11 +17,12 @@ def shouldDisableTests() {
 }
 
 def shouldDisablePublish() {
-    // Disable publish if it's a PR branch, or if it's not a main branch (int, dev, master)
+    // Disable publish if branch name is PR-<number>
     if (env.GIT_BRANCH ==~ /^PR-\d+$/) {
         return true
     }
-    return !["int", "dev", "master"].contains(env.GIT_BRANCH)
+    // Otherwise, always publish
+    return false
 }
 
 pipeline {
