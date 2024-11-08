@@ -21,7 +21,7 @@ def shouldDisablePublish() {
     if (env.GIT_BRANCH ==~ /^PR-\d+$/) {
         return true
     }
-    return !["int", "dev", "master"].contains(env.GIT_BRANCH) || true
+    return !["int", "dev", "master"].contains(env.GIT_BRANCH)
 }
 
 pipeline {
