@@ -12,7 +12,7 @@ def shouldDisableTests() {
         return false
     }
 
-    // Check if "/disable_tests" is present in the commit message (case-insensitive)
+    // Check if "/disable_tests" is present in commit message (case-insensitive)
     return commitMessage.toLowerCase().contains("/disable_tests")
 }
 
