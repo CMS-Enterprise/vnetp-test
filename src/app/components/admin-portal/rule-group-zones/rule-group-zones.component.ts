@@ -2,11 +2,13 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { PaginationDTO, V1NetworkSecurityZonesService, V1TiersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { EntityService } from 'src/app/services/entity.service';
+import { TableContextService } from 'src/app/services/table-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
@@ -20,6 +22,8 @@ export class RuleGroupZonesComponent implements OnInit {
 
   ModalMode = ModalMode;
 
+  public searchColumns: SearchColumnConfig[] = [{ displayName: 'Tier Name', propertyName: 'tierId' }];
+
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   public config: TableConfig<any> = {
     description: 'zones',
@@ -30,40 +34,66 @@ export class RuleGroupZonesComponent implements OnInit {
       { name: '', template: () => this.actionsTemplate },
     ],
     hideAdvancedSearch: true,
-    hideSearchBar: true,
   };
   perPage = 20;
   messages: PaginationDTO;
 
   public tableComponentDto = new TableComponentDto();
+  public isLoadingObjects = false;
   public tiers;
   zones;
   constructor(
+    private tableContextService: TableContextService,
     private entityService: EntityService,
     private zoneService: V1NetworkSecurityZonesService,
     private tierService: V1TiersService,
     public ngx: NgxSmartModalService,
   ) {}
 
+  public getTierId(tierName: string): string {
+    return ObjectUtil.getObjectId(tierName, this.tiers, 'Error Resolving Name');
+  }
+
   public getZones(event?) {
+    this.isLoadingObjects = true;
+    const eventParams = [];
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
-      this.tableComponentDto.perPage = event.perPage ? event.perPage : 10;
-    } else {
-      this.tableComponentDto.perPage = this.perPage;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        if (propertyName === 'tierId') {
+          const tierId = this.getTierId(searchText);
+          eventParams.push(`{"${`${propertyName}`}": {"eq": "${tierId}"}}`);
+        } else if (propertyName === 'type') {
+          eventParams.push(`{"${`${propertyName}`}": {"eq": "${searchText}"}}`);
+        } else {
+          eventParams.push(`{"${`${propertyName}`}": {"cont": "${searchText}"}}`);
+        }
+      }
     }
     this.zoneService
       .getManyZone({
+        s: `{"AND": [${eventParams}], "OR": []}`,
         sort: ['updatedAt,ASC'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })
-      .subscribe(data => {
-        this.zones = data;
-        this.zones.data.map(zone => {
-          zone.tierName = ObjectUtil.getObjectName(zone.tierId, this.tiers);
-        });
-      });
+      .subscribe(
+        data => {
+          this.zones = data;
+          this.zones.data.map(zone => {
+            zone.tierName = ObjectUtil.getObjectName(zone.tierId, this.tiers);
+          });
+        },
+        () => {
+          this.isLoadingObjects = false;
+        },
+        () => {
+          this.isLoadingObjects = false;
+        },
+      );
   }
 
   public getTiers() {
@@ -79,8 +109,18 @@ export class RuleGroupZonesComponent implements OnInit {
   public subscribeToRuleGroupZonesModal(): void {
     this.ruleGroupZoneModalSubscription = this.ngx.getModal('ruleGroupZonesModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('ruleGroupZonesModal');
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults, searchString } = params;
+      if (filteredResults && !searchString) {
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.getZones(this.tableComponentDto);
+      } else if (filteredResults && searchString) {
+        this.getZones(searchString);
+      } else {
+        this.getZones();
+      }
       this.ruleGroupZoneModalSubscription.unsubscribe();
-      this.getZones();
     });
   }
 
@@ -100,17 +140,20 @@ export class RuleGroupZonesComponent implements OnInit {
   restoreZone(zone): void {
     if (zone.deletedAt) {
       this.zoneService.restoreOneZone({ id: zone.id }).subscribe(() => {
-        // const params = this.tableContextService.getSearchLocalStorage();
-        // const { filteredResults } = params;
-        // if (filteredResults) {
-        //   this.tableComponentDto.searchColumn = params.searchColumn;
-        //   this.tableComponentDto.searchText = params.searchText;
-        //   this.getFirewallRules(this.tableComponentDto);
-        // } else {
-        //   this.getFirewallRules();
-        // }
-        this.getZones();
-        this.getTiers();
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults, searchString } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults && !searchString) {
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.getZones(this.tableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getZones(searchString);
+        } else {
+          this.getZones();
+        }
       });
     }
   }
@@ -121,32 +164,21 @@ export class RuleGroupZonesComponent implements OnInit {
       delete$: this.zoneService.deleteOneZone({ id: zone.id }),
       softDelete$: this.zoneService.softDeleteOneZone({ id: zone.id }),
       onSuccess: () => {
-        // const params = this.tableContextService.getSearchLocalStorage();
-        // const { filteredResults } = params;
-        // if (filteredResults) {
-        //   this.tableComponentDto.searchColumn = params.searchColumn;
-        //   this.tableComponentDto.searchText = params.searchText;
-        //   this.getFirewallRules(this.tableComponentDto);
-        // } else {
-        //   this.getFirewallRules();
-        // }
-        this.getZones();
-        this.getTiers();
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults, searchString } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults && !searchString) {
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.getZones(this.tableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getZones(searchString);
+        } else {
+          this.getZones();
+        }
       },
     });
-  }
-
-  public deleteEntry(zone): void {
-    const dto = new YesNoModalDto('Delete Zone?', `"${zone.name}"`);
-    const onConfirm = () => {
-      this.zoneService.deleteOneZone({ id: zone.id }).subscribe(() => {
-        this.getZones();
-      });
-    };
-
-    const onClose = () => {
-      this.getZones();
-    };
-    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm, onClose);
   }
 }
