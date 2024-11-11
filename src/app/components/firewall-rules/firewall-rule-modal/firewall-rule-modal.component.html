@@ -10,11 +10,11 @@
     <h4 class="modal-title">Firewall Rule</h4>
   </header>
 
-  <div class="button-container text-right">
+  <div *ngIf="appIdEnabled" class="button-container text-right">
     <button
       class="inline-button mr-3"
       (click)="openAppIdModal()"
-      [disabled]="isRefreshingAppId || disableAppId"
+      [disabled]="isRefreshingAppId || disableAppIdIcmp"
       [matTooltip]="getToolTipMessage()"
       aria-label="Manage App ID"
     >
@@ -516,7 +516,7 @@
       </div>
     </div>
 
-    <div *ngIf="!isAppIdEmpty()">
+    <div *ngIf="!isAppIdEmpty() && appIdEnabled">
       <hr />
       <h3 class="mb-2">Panos Applications</h3>
       <app-lite-table [config]="config" [data]="liteTableData"></app-lite-table>

@@ -39,7 +39,7 @@
             <th scope="col">Enabled Match</th>
             <th scope="col">Source Port Match</th>
             <th scope="col">Dest Port Match</th>
-            <th scope="col">App Match</th>
+            <th *ngIf="appIdEnabled" scope="col">App Match</th>
           </tr>
         </thead>
         <tbody>
@@ -95,7 +95,7 @@
                 {{ rule.checkList.destPortMatch }}
               </span>
             </td>
-            <td>
+            <td *ngIf="appIdEnabled">
               <span [ngStyle]="{ 'font-weight': rule.checkList.applicationMatch === false ? 'bold' : 'normal' }">
                 {{ rule.checkList.applicationMatch }}
               </span>
@@ -215,7 +215,7 @@
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row" *ngIf="appIdEnabled">
         <div class="form-group col-md-6">
           <label for="application">Application</label>
           <ng-select

@@ -6,6 +6,7 @@
     ],
     "dcsVersion": "3.2",
     "wikiBase": "https://confluenceent.cms.gov/pages/viewpage.action?pageId=297825631",
-    "snowBase": "https://cmsitsm.servicenowservices.com/"
+    "snowBase": "https://cmsitsm.servicenowservices.com/",
+    "appIdEnabled": true
   }
 }

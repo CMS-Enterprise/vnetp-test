@@ -6,6 +6,8 @@ class Environment extends DynamicEnvironment {
   public wikiBase: string;
   public dcsLocations;
   public dcsVersion: string;
+  public appIdEnabled: boolean;
+
   constructor() {
     super();
     this.production = false;

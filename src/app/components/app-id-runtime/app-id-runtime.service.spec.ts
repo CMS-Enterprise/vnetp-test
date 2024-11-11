@@ -31,6 +31,7 @@ describe('AppIdRuntimeService', () => {
       ],
     });
     service = TestBed.inject(AppIdRuntimeService);
+    service.appIdEnabled = true;
   });
 
   it('should be created', () => {

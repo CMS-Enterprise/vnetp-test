@@ -30,6 +30,7 @@ import { AppIdRuntimeService } from '../../app-id-runtime/app-id-runtime.service
 import { AppIdModalDto } from '../../../models/other/app-id-modal.dto';
 import { TierContextService } from '../../../services/tier-context.service';
 import { LiteTableConfig } from '../../../common/lite-table/lite-table.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -70,7 +71,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   isRefreshingAppId = false;
 
-  disableAppId = false;
+  disableAppIdIcmp = false;
+
+  public environment = environment;
+  public appIdEnabled: boolean = this.environment?.dynamic?.appIdEnabled;
 
   @ViewChild('appIdColumnTemplate') iconTemplate: TemplateRef<any>;
 
@@ -190,8 +194,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     }
 
     if (this.ModalMode === ModalMode.Create) {
-      const appIds = [...this.appIdService.dto.panosApplicationsToAdd];
-      modalFirewallRule.panosApplications = appIds;
+      if (this.environment?.dynamic?.appIdEnabled === 'true') {
+        const appIds = [...this.appIdService.dto.panosApplicationsToAdd];
+        modalFirewallRule.panosApplications = appIds;
+      }
       modalFirewallRule.firewallRuleGroupId = this.FirewallRuleGroupId;
       this.firewallRuleService
         .createOneFirewallRule({
@@ -205,8 +211,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           () => {},
         );
     } else {
-      modalFirewallRule.panosApplications = [...this.firewallRule.panosApplications];
-      this.appIdService.saveDto(modalFirewallRule);
+      if (this.environment?.dynamic?.appIdEnabled === 'true') {
+        modalFirewallRule.panosApplications = [...this.firewallRule.panosApplications];
+        this.appIdService.saveDto(modalFirewallRule);
+      }
 
       this.firewallRuleService
         .updateOneFirewallRule({
@@ -433,10 +441,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     const formServiceType = this.form.controls.serviceType;
 
     this.protocolChangeSubscription = this.form.controls.protocol.valueChanges.subscribe(protocol => {
-      this.disableAppId = false;
+      this.disableAppIdIcmp = false;
 
       if (protocol === 'ICMP') {
-        this.disableAppId = true;
+        this.disableAppIdIcmp = true;
         this.appIdService.resetDto();
       }
 
@@ -528,7 +536,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       return 'The App ID is currently refreshing, please wait.';
     }
 
-    if (this.disableAppId) {
+    if (this.disableAppIdIcmp) {
       return 'App ID unvailable for ICMP.';
     }
 

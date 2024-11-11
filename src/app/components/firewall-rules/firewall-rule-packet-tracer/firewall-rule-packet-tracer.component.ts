@@ -10,6 +10,7 @@ import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-r
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 type FirewallRulePacketTracerOutput = {
   checkList: FirewallRulePacketTracerChecklist;
@@ -48,6 +49,9 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   dropdownOpen = false;
   serviceTypeSubscription: Subscription;
+
+  public environment = environment;
+  public appIdEnabled: boolean = this.environment?.dynamic?.appIdEnabled;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private toastrService: ToastrService) {}
 
@@ -139,6 +143,10 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   }
 
   handleApplication(rule: FirewallRule, applicationId: string): boolean {
+    if (!this.appIdEnabled) {
+      return true;
+    }
+
     if (applicationId === 'any') {
       return true;
     }
