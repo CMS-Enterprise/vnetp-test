@@ -141,4 +141,25 @@ describe('RuleGroupZonesComponent', () => {
       expect(getZonesMock).toHaveBeenCalled();
     });
   });
+
+  it('should apply search params when filtered results is true', () => {
+    const zone = { id: '1' } as any;
+    jest.spyOn(component['zoneService'], 'deleteOneZone').mockResolvedValue({} as never);
+    jest.spyOn(component['zoneService'], 'softDeleteOneZone').mockResolvedValue({} as never);
+
+    jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
+      options.onSuccess();
+      return new Subscription();
+    });
+
+    const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
+    jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+    const getNetworkObjectsSpy = jest.spyOn(component, 'getZones');
+
+    component.deleteZone(zone);
+
+    expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
+    expect(component.tableComponentDto.searchText).toBe(params.searchText);
+    expect(getNetworkObjectsSpy).toHaveBeenCalledWith(component.tableComponentDto);
+  });
 });
