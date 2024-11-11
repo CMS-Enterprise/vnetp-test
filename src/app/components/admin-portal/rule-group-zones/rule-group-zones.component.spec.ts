@@ -154,12 +154,12 @@ describe('RuleGroupZonesComponent', () => {
 
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
-    const getNetworkObjectsSpy = jest.spyOn(component, 'getZones');
+    const getZonesSpy = jest.spyOn(component, 'getZones');
 
     component.deleteZone(zone);
 
     expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
     expect(component.tableComponentDto.searchText).toBe(params.searchText);
-    expect(getNetworkObjectsSpy).toHaveBeenCalledWith(component.tableComponentDto);
+    expect(getZonesSpy).toHaveBeenCalledWith(component.tableComponentDto);
   });
 });

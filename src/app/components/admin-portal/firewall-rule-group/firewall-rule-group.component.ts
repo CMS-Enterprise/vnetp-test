@@ -50,7 +50,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
     private entityService: EntityService,
     private ngx: NgxSmartModalService,
     private tierService: V1TiersService,
-    private fwRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
+    private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
   ) {}
 
   public onTableEvent(event?: TableComponentDto): void {
@@ -77,7 +77,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
         }
       }
     }
-    this.fwRuleGroupService
+    this.firewallRuleGroupService
       .getManyFirewallRuleGroup({
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -148,7 +148,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
 
   restoreFirewallRuleGroup(firewallRuleGroup): void {
     if (firewallRuleGroup.deletedAt) {
-      this.fwRuleGroupService.restoreOneFirewallRuleGroup({ id: firewallRuleGroup.id }).subscribe(() => {
+      this.firewallRuleGroupService.restoreOneFirewallRuleGroup({ id: firewallRuleGroup.id }).subscribe(() => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults, searchString } = params;
@@ -171,8 +171,8 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   public deleteFirewallRuleGroup(firewallRuleGroup: FirewallRuleGroup): void {
     this.entityService.deleteEntity(firewallRuleGroup, {
       entityName: 'Firewall Rule Group',
-      delete$: this.fwRuleGroupService.deleteOneFirewallRuleGroup({ id: firewallRuleGroup.id }),
-      softDelete$: this.fwRuleGroupService.softDeleteOneFirewallRuleGroup({ id: firewallRuleGroup.id }),
+      delete$: this.firewallRuleGroupService.deleteOneFirewallRuleGroup({ id: firewallRuleGroup.id }),
+      softDelete$: this.firewallRuleGroupService.softDeleteOneFirewallRuleGroup({ id: firewallRuleGroup.id }),
       onSuccess: () => {
         // get search params from local storage
         const params = this.tableContextService.getSearchLocalStorage();

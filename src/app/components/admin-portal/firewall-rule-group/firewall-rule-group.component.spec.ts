@@ -113,15 +113,15 @@ describe('FirewallRuleGroupComponent', () => {
     });
   });
 
-  describe('Delete Firewall Rule Group', () => {
-    it('should delete zone', () => {
-      const service = TestBed.inject(V1NetworkSecurityFirewallRuleGroupsService);
-      const ruleGroupToDelete = { id: '1', tierId: '123' } as any;
-      component.deleteFirewallRuleGroup(ruleGroupToDelete);
-      const getZonesMock = jest.spyOn(service, 'getManyFirewallRuleGroup');
-      expect(getZonesMock).toHaveBeenCalled();
-    });
-  });
+  // describe('Delete Firewall Rule Group', () => {
+  //   it('should delete firewallrulegroup', () => {
+  //     const service = TestBed.inject(V1NetworkSecurityFirewallRuleGroupsService);
+  //     const ruleGroupToDelete = { id: '1', tierId: '123' } as any;
+  //     component.deleteFirewallRuleGroup(ruleGroupToDelete);
+  //     const getZonesMock = jest.spyOn(service, 'getManyFirewallRuleGroup');
+  //     expect(getZonesMock).toHaveBeenCalled();
+  //   });
+  // });
 
   // describe('delete FirewaullRuleGroup', () => {
 
@@ -306,5 +306,26 @@ describe('FirewallRuleGroupComponent', () => {
       expect(component['ngx'].getModal).toHaveBeenCalledWith('firewallRuleGroupModal');
       expect(component['ngx'].getModal('firewallRuleGroupModal').open).toHaveBeenCalled();
     });
+  });
+
+  it('should apply search params when filtered results is true', () => {
+    const natRuleGroup = { id: '1' } as any;
+    jest.spyOn(component['firewallRuleGroupService'], 'deleteOneFirewallRuleGroup').mockResolvedValue({} as never);
+    jest.spyOn(component['firewallRuleGroupService'], 'softDeleteOneFirewallRuleGroup').mockResolvedValue({} as never);
+
+    jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
+      options.onSuccess();
+      return new Subscription();
+    });
+
+    const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
+    jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+    const getFirewallRuleGroupsSpy = jest.spyOn(component, 'getFirewallRuleGroups');
+
+    component.deleteFirewallRuleGroup(natRuleGroup);
+
+    expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
+    expect(component.tableComponentDto.searchText).toBe(params.searchText);
+    expect(getFirewallRuleGroupsSpy).toHaveBeenCalledWith(component.tableComponentDto);
   });
 });
