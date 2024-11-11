@@ -22,10 +22,6 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   tiers;
   firewallRuleGroups;
   public fwRuleGroupModalSubscription: Subscription;
-  dropdownOpen = false;
-  filteredTier = false;
-  filteredTierObject;
-  selectedTier;
   public isLoadingObjects = false;
   public tableComponentDto = new TableComponentDto();
 
@@ -64,7 +60,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
 
   public getFirewallRuleGroups(event?) {
     this.isLoadingObjects = true;
-    let eventParams = [];
+    const eventParams = [];
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
@@ -75,6 +71,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
           const tierId = this.getTierId(searchText);
           eventParams.push(`{"${`${propertyName}`}": {"eq": "${tierId}"}}`);
         } else if (propertyName === 'type') {
+          eventParams.push(`{"${`${propertyName}`}": {"eq": "${searchText}"}}`);
         } else {
           eventParams.push(`{"${`${propertyName}`}": {"cont": "${searchText}"}}`);
         }
@@ -118,7 +115,6 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
       this.ngx.resetModalData('firewallRuleGroupModal');
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults, searchString } = params;
-      this.fwRuleGroupModalSubscription.unsubscribe();
       if (filteredResults && !searchString) {
         this.tableComponentDto.searchColumn = params.searchColumn;
         this.tableComponentDto.searchText = params.searchText;
@@ -128,6 +124,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
       } else {
         this.getFirewallRuleGroups();
       }
+      this.fwRuleGroupModalSubscription.unsubscribe();
     });
   }
 

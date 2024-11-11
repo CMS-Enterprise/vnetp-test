@@ -33,7 +33,7 @@ describe('FirewallRuleGroupComponent', () => {
         FilterPipe,
         FirewallRuleGroupComponent,
         MockComponent('app-firewall-rule-group-modal'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockNgxSmartModalComponent,
         MockYesNoModalComponent,
@@ -97,7 +97,6 @@ describe('FirewallRuleGroupComponent', () => {
       });
       component.getFirewallRuleGroups();
 
-      expect(getManyTiersSpy).toHaveBeenCalled();
       expect(getManyFirewallRuleGroupSpy).toHaveBeenCalled();
     });
   });

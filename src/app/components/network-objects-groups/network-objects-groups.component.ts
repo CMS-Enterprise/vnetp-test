@@ -174,7 +174,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   }
 
   public onNetObjTableEvent(event: TableComponentDto): void {
-    console.log('event', event);
     this.netObjTableComponentDto = event;
     this.getNetworkObjects(event);
   }

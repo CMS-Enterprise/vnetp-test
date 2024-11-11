@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, TemplateRef, ViewChild } from '@angular/core';
 import { Tier, V1TiersService, NatRuleGroup, V1NetworkSecurityNatRuleGroupsService } from 'client';
 import { Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -6,6 +6,9 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { EntityService } from 'src/app/services/entity.service';
+import { TableContextService } from 'src/app/services/table-context.service';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
+import { TableConfig } from 'src/app/common/table/table.component';
 
 @Component({
   selector: 'app-nat-rule-group',
@@ -17,127 +20,116 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
   public perPage = 20;
   public currentTier: Tier;
   tiers;
-  natRuleGroups = { data: [], count: 1, page: 1, pageCount: 1, total: 1 } as any;
+  natRuleGroups;
   public natRuleGroupModalSubscription: Subscription;
-  dropdownOpen = false;
-  filteredTier = false;
   filteredTierObject;
+  public isLoadingObjects = false;
   public tableComponentDto = new TableComponentDto();
 
   private currentTierSubscription: Subscription;
 
+  @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Tier Name', propertyName: 'tierId' },
+    { displayName: 'Rule Group Type', propertyName: 'type' },
+  ];
+
+  public config: TableConfig<any> = {
+    description: 'Nat Rule Groups',
+    columns: [
+      { name: 'Name', property: 'name' },
+      { name: 'Rule Group Type', property: 'type' },
+      { name: 'Tier Name', property: 'tierName' },
+      { name: '', template: () => this.actionsTemplate },
+    ],
+    hideAdvancedSearch: true,
+  };
+
   constructor(
+    private tableContextService: TableContextService,
     private natRuleGroupService: V1NetworkSecurityNatRuleGroupsService,
     private entityService: EntityService,
     private ngx: NgxSmartModalService,
     private tierService: V1TiersService,
   ) {}
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    const clickedElement = event.target as HTMLElement; // Cast to HTMLElement
-    if (!clickedElement.closest('.dropdown')) {
-      this.dropdownOpen = false;
-    }
-  }
-
-  toggleDropdown(): void {
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  public filterTier(filterTier: Tier) {
-    this.filteredTier = !this.filteredTier;
-    this.filteredTierObject = filterTier;
-    if (this.filteredTier) {
-      return this.getTierByName(filterTier);
-    } else {
-      return this.getTiers();
-    }
-  }
-
-  public getTierByName(singleTier?: Tier): void {
-    this.natRuleGroups.data = [];
-    this.filteredTier = true;
-    this.tierService
-      .getOneTier({
-        id: singleTier.id,
-        join: ['natRuleGroups'],
-      })
-      .subscribe(data => {
-        data.natRuleGroups.map(group => {
-          const fwGroup = group as any;
-          fwGroup.tierName = singleTier.name;
-          group = fwGroup;
-        });
-        this.natRuleGroups.data = data.natRuleGroups as any;
-      });
-  }
-
-  public onTableEvent(event?: TableComponentDto): void {
-    if (event) {
-      this.tableComponentDto = event;
-    }
-    this.getTiers(event);
-  }
-
-  public getTiers(event?): void {
-    let eventParams;
+  public getNatRuleGroups(event?) {
+    this.isLoadingObjects = true;
+    const eventParams = [];
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
       if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
+        if (propertyName === 'tierId') {
+          const tierId = this.getTierId(searchText);
+          eventParams.push(`{"${`${propertyName}`}": {"eq": "${tierId}"}}`);
+        } else if (propertyName === 'type') {
+          eventParams.push(`{"${`${propertyName}`}": {"eq": "${searchText}"}}`);
+        } else {
+          eventParams.push(`{"${`${propertyName}`}": {"cont": "${searchText}"}}`);
+        }
       }
     }
-    console.log('this.tableComponentDto', this.tableComponentDto);
-    // this.natRuleGroups.data = []
-    // this.natRuleGroups.count = this.tableComponentDto.perPage;
-    // this.natRuleGroups.page = this.tableComponentDto.page;
-
-    this.natRuleGroups = { data: [], count: this.tableComponentDto.perPage, page: this.tableComponentDto.page };
-    this.natRuleGroups;
-    this.tierService
-      .getManyTier({
+    this.natRuleGroupService
+      .getManyNatRuleGroup({
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        join: ['natRuleGroups'],
+        s: `{"AND": [${eventParams}], "OR": [{"name": {"eq": "External"}}, {"name": {"eq": "Intervrf"}}, {"type": {"eq": "ZoneBased"}}]}`,
+      })
+      .subscribe(
+        data => {
+          this.natRuleGroups = data;
+          this.natRuleGroups.data.map(group => {
+            group.tierName = this.getTierName(group.tierId);
+          });
+        },
+        () => {
+          this.isLoadingObjects = false;
+        },
+        () => {
+          this.isLoadingObjects = false;
+        },
+      );
+  }
+
+  public getTiers(): void {
+    this.tierService
+      .getManyTier({
+        page: 1,
+        perPage: 500,
       })
       .subscribe(data => {
         this.tiers = data.data;
-        this.tiers.map(tier => {
-          tier.natRuleGroups = tier.natRuleGroups.filter(group => {
-            const intravrfGroup = this.filterNatRuleGroup(group);
-            if (!intravrfGroup) {
-              return;
-            }
-            // console.log('group',group)
-            group.tierName = tier.name;
-            this.natRuleGroups.data.push(group);
-          });
-        });
-        console.log('this.natRuleGroups', this.natRuleGroups);
-
-        this.natRuleGroups.total = this.natRuleGroups.data.length;
-        const pageCount = Math.ceil(this.natRuleGroups.total / this.natRuleGroups.count);
-        console.log('pageCount', pageCount);
-        this.natRuleGroups.pageCount = pageCount;
       });
+  }
+
+  public onTableEvent(event?: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.getNatRuleGroups(event);
   }
 
   public subscribeToNatRuleGroupModal(): void {
     this.natRuleGroupModalSubscription = this.ngx.getModal('natRuleGroupModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('natRuleGroupModal');
-      this.natRuleGroupModalSubscription.unsubscribe();
-      if (this.filteredTier) {
-        return this.getTierByName(this.filteredTierObject);
+      const params = this.tableContextService.getSearchLocalStorage();
+      const { filteredResults, searchString } = params;
+      if (filteredResults && !searchString) {
+        this.tableComponentDto.searchColumn = params.searchColumn;
+        this.tableComponentDto.searchText = params.searchText;
+        this.getNatRuleGroups(this.tableComponentDto);
+      } else if (filteredResults && searchString) {
+        this.getNatRuleGroups(searchString);
+      } else {
+        this.getNatRuleGroups();
       }
-      this.getTiers();
+      this.natRuleGroupModalSubscription.unsubscribe();
     });
   }
 
-  public openFWRuleGroupModal(modalMode?): void {
+  public openNatRuleGroupModal(modalMode?): void {
     const dto: any = {};
     dto.ModalMode = modalMode;
     this.subscribeToNatRuleGroupModal();
@@ -151,50 +143,111 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
     return ObjectUtil.getObjectName(tierId, this.tiers, 'Error Resolving Name');
   }
 
+  public getTierId(tierName: string): string {
+    return ObjectUtil.getObjectId(tierName, this.tiers, 'Error Resolving Name');
+  }
+
   restoreNatRuleGroup(natRuleGroup): void {
     if (natRuleGroup.deletedAt) {
       this.natRuleGroupService.restoreOneNatRuleGroup({ id: natRuleGroup.id }).subscribe(() => {
-        // const params = this.tableContextService.getSearchLocalStorage();
-        // const { filteredResults } = params;
-        // if (filteredResults) {
-        //   this.tableComponentDto.searchColumn = params.searchColumn;
-        //   this.tableComponentDto.searchText = params.searchText;
-        //   this.getNatRules(this.tableComponentDto);
-        // } else {
-        //   this.getNatRules();
-        // }
-        this.getTiers();
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults, searchString } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults && !searchString) {
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.getNatRuleGroups(this.tableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getNatRuleGroups(searchString);
+        } else {
+          this.getNatRuleGroups();
+        }
       });
     }
   }
 
   public deleteNatRuleGroup(natRuleGroup: NatRuleGroup): void {
     this.entityService.deleteEntity(natRuleGroup, {
-      entityName: 'Nat Rule',
+      entityName: 'Nat Rule Group',
       delete$: this.natRuleGroupService.deleteOneNatRuleGroup({ id: natRuleGroup.id }),
       softDelete$: this.natRuleGroupService.softDeleteOneNatRuleGroup({ id: natRuleGroup.id }),
       onSuccess: () => {
-        // const params = this.tableContextService.getSearchLocalStorage();
-        // const { filteredResults } = params;
-        // if (filteredResults) {
-        //   this.tableComponentDto.searchColumn = params.searchColumn;
-        //   this.tableComponentDto.searchText = params.searchText;
-        //   this.getNatRules(this.tableComponentDto);
-        // } else {
-        //   this.getNatRules();
-        // }
-        this.getTiers();
+        // get search params from local storage
+        const params = this.tableContextService.getSearchLocalStorage();
+        const { filteredResults, searchString } = params;
+
+        // if filtered results boolean is true, apply search params in the
+        // subsequent get call
+        if (filteredResults && !searchString) {
+          this.tableComponentDto.searchColumn = params.searchColumn;
+          this.tableComponentDto.searchText = params.searchText;
+          this.getNatRuleGroups(this.tableComponentDto);
+        } else if (filteredResults && searchString) {
+          this.getNatRuleGroups(searchString);
+        } else {
+          this.getNatRuleGroups();
+        }
       },
     });
   }
 
   ngOnInit(): void {
     this.getTiers();
+    this.getNatRuleGroups();
   }
 
   ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.currentTierSubscription]);
   }
+
+  // public getTiers(event?): void {
+  //   let eventParams;
+  //   if (event) {
+  //     this.tableComponentDto.page = event.page ? event.page : 1;
+  //     this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+  //     const { searchText } = event;
+  //     const propertyName = event.searchColumn ? event.searchColumn : null;
+  //     if (propertyName) {
+  //       eventParams = `${propertyName}||cont||${searchText}`;
+  //     }
+  //   }
+  //   console.log('this.tableComponentDto', this.tableComponentDto);
+  //   // this.natRuleGroups.data = []
+  //   // this.natRuleGroups.count = this.tableComponentDto.perPage;
+  //   // this.natRuleGroups.page = this.tableComponentDto.page;
+
+  //   this.natRuleGroups = { data: [], count: this.tableComponentDto.perPage, page: this.tableComponentDto.page };
+  //   this.natRuleGroups;
+  //   this.tierService
+  //     .getManyTier({
+  //       page: this.tableComponentDto.page,
+  //       perPage: this.tableComponentDto.perPage,
+  //       join: ['natRuleGroups'],
+  //     })
+  //     .subscribe(data => {
+  //       this.tiers = data.data;
+  //       this.tiers.map(tier => {
+  //         tier.natRuleGroups = tier.natRuleGroups.filter(group => {
+  //           const intravrfGroup = this.filterNatRuleGroup(group);
+  //           if (!intravrfGroup) {
+  //             return;
+  //           }
+  //           // console.log('group',group)
+  //           group.tierName = tier.name;
+  //           this.natRuleGroups.data.push(group);
+  //         });
+  //       });
+  //       console.log('this.natRuleGroups', this.natRuleGroups);
+
+  //       this.natRuleGroups.total = this.natRuleGroups.data.length;
+  //       const pageCount = Math.ceil(this.natRuleGroups.total / this.natRuleGroups.count);
+  //       console.log('pageCount', pageCount);
+  //       this.natRuleGroups.pageCount = pageCount;
+  //     });
+  // }
 
   // public importNatRuleGroupsConfig(event): void {
   //   const modalDto = new YesNoModalDto(
