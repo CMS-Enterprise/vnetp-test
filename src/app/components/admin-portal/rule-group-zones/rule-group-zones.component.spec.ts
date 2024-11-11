@@ -19,6 +19,7 @@ import { of, Subject, Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { RuleGroupZonesComponent } from './rule-group-zones.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('RuleGroupZonesComponent', () => {
   let component: RuleGroupZonesComponent;
@@ -26,7 +27,7 @@ describe('RuleGroupZonesComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, NgxPaginationModule],
+      imports: [FormsModule, ReactiveFormsModule, NgxPaginationModule, RouterTestingModule.withRoutes([])],
       declarations: [
         FilterPipe,
         RuleGroupZonesComponent,
@@ -45,13 +46,16 @@ describe('RuleGroupZonesComponent', () => {
         MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
         MockProvider(V1NetworkSecurityZonesService),
       ],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(RuleGroupZonesComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
+    });
+  });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(RuleGroupZonesComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {
@@ -68,9 +72,21 @@ describe('RuleGroupZonesComponent', () => {
 
       const getManyZonesSpy = jest.spyOn(zoneService, 'getManyZone').mockReturnValue(of({ zoneMock } as any));
 
-      zoneService.getManyZone({ page: 1, perPage: 50 });
+      zoneService.getManyZone({ page: 1, perPage: 20 });
 
-      expect(getManyZonesSpy).toHaveBeenCalledWith({ page: 1, perPage: 50 });
+      expect(getManyZonesSpy).toHaveBeenCalledWith({ page: 1, perPage: 20 });
+    });
+  });
+
+  describe('restore zone', () => {
+    it('should restore zone', () => {
+      const zoneService = TestBed.inject(V1NetworkSecurityZonesService);
+      const zoneMock = { id: '1', deletedAt: true };
+      const restoreOneSpy = jest.spyOn(zoneService, 'restoreOneZone').mockReturnValue(of({} as any));
+      const getManyZoneSpy = jest.spyOn(zoneService, 'getManyZone');
+      component.restoreZone(zoneMock);
+      expect(restoreOneSpy).toHaveBeenCalledWith({ id: zoneMock.id });
+      expect(getManyZoneSpy).toHaveBeenCalled();
     });
   });
   describe('openModal', () => {
@@ -120,9 +136,30 @@ describe('RuleGroupZonesComponent', () => {
     it('should delete zone', () => {
       const zoneService = TestBed.inject(V1NetworkSecurityZonesService);
       const zoneToDelete = { id: '1', tierId: '123' } as any;
-      component.deleteEntry(zoneToDelete);
+      component.deleteZone(zoneToDelete);
       const getZonesMock = jest.spyOn(zoneService, 'getManyZone');
       expect(getZonesMock).toHaveBeenCalled();
     });
+  });
+
+  it('should apply search params when filtered results is true', () => {
+    const zone = { id: '1' } as any;
+    jest.spyOn(component['zoneService'], 'deleteOneZone').mockResolvedValue({} as never);
+    jest.spyOn(component['zoneService'], 'softDeleteOneZone').mockResolvedValue({} as never);
+
+    jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
+      options.onSuccess();
+      return new Subscription();
+    });
+
+    const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
+    jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+    const getNetworkObjectsSpy = jest.spyOn(component, 'getZones');
+
+    component.deleteZone(zone);
+
+    expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
+    expect(component.tableComponentDto.searchText).toBe(params.searchText);
+    expect(getNetworkObjectsSpy).toHaveBeenCalledWith(component.tableComponentDto);
   });
 });

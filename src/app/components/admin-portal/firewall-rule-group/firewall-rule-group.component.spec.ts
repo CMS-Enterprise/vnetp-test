@@ -113,6 +113,16 @@ describe('FirewallRuleGroupComponent', () => {
     });
   });
 
+  describe('Delete Firewall Rule Group', () => {
+    it('should delete zone', () => {
+      const service = TestBed.inject(V1NetworkSecurityFirewallRuleGroupsService);
+      const ruleGroupToDelete = { id: '1', tierId: '123' } as any;
+      component.deleteFirewallRuleGroup(ruleGroupToDelete);
+      const getZonesMock = jest.spyOn(service, 'getManyFirewallRuleGroup');
+      expect(getZonesMock).toHaveBeenCalled();
+    });
+  });
+
   // describe('delete FirewaullRuleGroup', () => {
 
   // it('should call deleteOneFirewallRuleGroup without event params', () => {
