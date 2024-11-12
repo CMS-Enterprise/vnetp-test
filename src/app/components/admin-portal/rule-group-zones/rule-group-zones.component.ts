@@ -6,11 +6,9 @@ import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.compone
 import { TableConfig } from 'src/app/common/table/table.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { EntityService } from 'src/app/services/entity.service';
 import { TableContextService } from 'src/app/services/table-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
-import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-rule-group-zones',

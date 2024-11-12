@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { Tier, V1TiersService, NatRuleGroup, V1NetworkSecurityNatRuleGroupsService } from 'client';
 import { Subscription } from 'rxjs';
 import { NgxSmartModalService } from 'ngx-smart-modal';
