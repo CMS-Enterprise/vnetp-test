@@ -29,9 +29,10 @@
           >Admin
         </a>
         <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
-          <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="global-messages" queryParamsHandling="merge"
-            >Global Messages</a
-          >
+          <a class="dropdown-item" routerLink="global-messages" queryParamsHandling="merge">Global Messages</a>
+          <a class="dropdown-item" routerLink="firewall-rule-group" queryParamsHandling="merge">Firewall Rule Groups</a>
+          <a class="dropdown-item" routerLink="nat-rule-group" queryParamsHandling="merge">Nat Rule Groups</a>
+          <a class="dropdown-item" routerLink="rule-group-zones" queryParamsHandling="merge">Zones</a>
         </div>
       </li>
     </ul>

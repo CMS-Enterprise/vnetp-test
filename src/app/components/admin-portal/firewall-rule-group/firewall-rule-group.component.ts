@@ -202,36 +202,6 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
     SubscriptionUtil.unsubscribe([this.currentTierSubscription]);
   }
 
-  // public filterTier(filterTier: Tier): void {
-  //   this.filteredTier = !this.filteredTier;
-  //   this.filteredTierObject = filterTier;
-  //   this.selectedTier = filterTier.name;
-  //   console.log('this.selectedTier', this.selectedTier);
-  //   if (this.filteredTier) {
-  //     return this.getTierByName(filterTier);
-  //   } else {
-  //     return this.getTiers();
-  //   }
-  // }
-
-  // public getTierByName(singleTier?: Tier): void {
-  //   this.firewallRuleGroups.data = [];
-  //   this.filteredTier = true;
-  //   this.tierService
-  //     .getOneTier({
-  //       id: singleTier.id,
-  //       join: ['firewallRuleGroups'],
-  //     })
-  //     .subscribe(data => {
-  //       data.firewallRuleGroups.map(group => {
-  //         const fwGroup = group as any;
-  //         fwGroup.tierName = singleTier.name;
-  //         group = fwGroup;
-  //       });
-  //       this.firewallRuleGroups.data = data.firewallRuleGroups as any;
-  //     });
-  // }
-
   // public importFirewallRuleGroupsConfig(event): void {
   //   const modalDto = new YesNoModalDto(
   //     'Import Firewall Rule Groups',

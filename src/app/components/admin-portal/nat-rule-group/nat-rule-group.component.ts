@@ -203,52 +203,6 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
     SubscriptionUtil.unsubscribe([this.currentTierSubscription]);
   }
 
-  // public getTiers(event?): void {
-  //   let eventParams;
-  //   if (event) {
-  //     this.tableComponentDto.page = event.page ? event.page : 1;
-  //     this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
-  //     const { searchText } = event;
-  //     const propertyName = event.searchColumn ? event.searchColumn : null;
-  //     if (propertyName) {
-  //       eventParams = `${propertyName}||cont||${searchText}`;
-  //     }
-  //   }
-  //   console.log('this.tableComponentDto', this.tableComponentDto);
-  //   // this.natRuleGroups.data = []
-  //   // this.natRuleGroups.count = this.tableComponentDto.perPage;
-  //   // this.natRuleGroups.page = this.tableComponentDto.page;
-
-  //   this.natRuleGroups = { data: [], count: this.tableComponentDto.perPage, page: this.tableComponentDto.page };
-  //   this.natRuleGroups;
-  //   this.tierService
-  //     .getManyTier({
-  //       page: this.tableComponentDto.page,
-  //       perPage: this.tableComponentDto.perPage,
-  //       join: ['natRuleGroups'],
-  //     })
-  //     .subscribe(data => {
-  //       this.tiers = data.data;
-  //       this.tiers.map(tier => {
-  //         tier.natRuleGroups = tier.natRuleGroups.filter(group => {
-  //           const intravrfGroup = this.filterNatRuleGroup(group);
-  //           if (!intravrfGroup) {
-  //             return;
-  //           }
-  //           // console.log('group',group)
-  //           group.tierName = tier.name;
-  //           this.natRuleGroups.data.push(group);
-  //         });
-  //       });
-  //       console.log('this.natRuleGroups', this.natRuleGroups);
-
-  //       this.natRuleGroups.total = this.natRuleGroups.data.length;
-  //       const pageCount = Math.ceil(this.natRuleGroups.total / this.natRuleGroups.count);
-  //       console.log('pageCount', pageCount);
-  //       this.natRuleGroups.pageCount = pageCount;
-  //     });
-  // }
-
   // public importNatRuleGroupsConfig(event): void {
   //   const modalDto = new YesNoModalDto(
   //     'Import Nat Rule Groups',
