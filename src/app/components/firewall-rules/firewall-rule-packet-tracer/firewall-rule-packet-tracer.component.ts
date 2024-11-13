@@ -167,6 +167,15 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       return this.serviceObjectGroupPortMatch(rule, location, control);
     }
 
+    // Check if form port value falls within range of rule port value
+    if (rulePortValue.includes('-')) {
+      const firstNumberInPortRange = Number(rulePortValue.split('-')[0]);
+      const lastNumberInPortRange = Number(rulePortValue.split('-')[1]);
+      if (formPortValue >= firstNumberInPortRange || formPortValue <= lastNumberInPortRange) {
+        return true;
+      }
+    }
+
     // Check for an exact match between the form port value and the rule's port value
     return formPortValue === rulePortValue;
   }
