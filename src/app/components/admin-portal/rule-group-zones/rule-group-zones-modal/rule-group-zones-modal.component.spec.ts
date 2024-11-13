@@ -70,6 +70,7 @@ describe('RuleGroupZonesModalComponent', () => {
     component.modalMode = ModalMode.Create;
     component.form.setValue({
       name: 'Zone1',
+      description: '',
       tier: '123',
     });
 
@@ -86,6 +87,7 @@ describe('RuleGroupZonesModalComponent', () => {
     component.modalMode = ModalMode.Create;
     component.form.setValue({
       name: '',
+      description: '',
       tier: '',
     });
 
