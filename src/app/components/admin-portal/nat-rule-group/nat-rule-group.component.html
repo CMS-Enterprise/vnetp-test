@@ -126,14 +126,6 @@
   </section>
 </ng-template>
 
-<ng-template #fwRuleTemplate let-natRuleGroup="datum">
-  <section>
-    <a routerLink="/netcentric/nat-rules/edit/{{ natRuleGroup.id }}" queryParamsHandling="merge"
-      >{{ natRuleGroup.name | slice : 0 : 20 }}{{ natRuleGroup.name.length > 20 ? '...' : '' }}</a
-    >
-  </section>
-</ng-template>
-
 <ng-template #stateTemplate let-natRuleGroup="datum">
   <section>
     <span>{{ natRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>

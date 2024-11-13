@@ -9,9 +9,11 @@ import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module'
 import { RuleGroupZonesModalComponent } from './rule-group-zones-modal/rule-group-zones-modal.component';
 import { RuleGroupZonesComponent } from './rule-group-zones.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
 
 @NgModule({
   imports: [
+    ImportExportModule,
     IconButtonModule,
     FontAwesomeModule,
     FormsModule,

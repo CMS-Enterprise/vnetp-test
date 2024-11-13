@@ -28,7 +28,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
   private currentTierSubscription: Subscription;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
-
+  @ViewChild('stateTemplate') stateTemplate: TemplateRef<any>;
   public searchColumns: SearchColumnConfig[] = [
     { displayName: 'Tier Name', propertyName: 'tierId' },
     { displayName: 'Rule Group Type', propertyName: 'type' },
@@ -40,6 +40,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
       { name: 'Name', property: 'name' },
       { name: 'Rule Group Type', property: 'type' },
       { name: 'Tier Name', property: 'tierName' },
+      { name: 'State', template: () => this.stateTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
     hideAdvancedSearch: true,

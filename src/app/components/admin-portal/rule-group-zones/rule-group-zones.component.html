@@ -43,5 +43,8 @@
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>
 
+<section class="btn-toolbar" role="toolbar">
+  <app-import-export [disableExport]="true" [disableJson]="false" (import)="importZonesConfig($event)"></app-import-export>
+</section>
 <app-yes-no-modal></app-yes-no-modal>
 <app-rule-group-zones-modal></app-rule-group-zones-modal>

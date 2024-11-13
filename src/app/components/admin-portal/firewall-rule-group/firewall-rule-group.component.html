@@ -168,6 +168,12 @@
   </section>
 </ng-template>
 
+<ng-template #groupStateTemplate let-netObjGroup="datum">
+  <section>
+    <span>{{ netObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+  </section>
+</ng-template>
+
 <ng-template #loading>
   <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>

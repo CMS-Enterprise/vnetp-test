@@ -58,6 +58,7 @@ export class RuleGroupZonesModalComponent implements OnInit {
   private buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([Validators.maxLength(100), Validators.required])],
+      description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       tier: ['', Validators.required],
     });
   }
@@ -74,9 +75,10 @@ export class RuleGroupZonesModalComponent implements OnInit {
       return;
     }
 
-    const { name, tier } = this.form.value;
+    const { name, description, tier } = this.form.value;
     const zone = {
       name,
+      description,
       tierId: tier,
     };
     if (this.modalMode === ModalMode.Create) {

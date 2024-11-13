@@ -49,8 +49,6 @@
           aria-label="Group Type"
         >
           <option value="ZoneBased">ZoneBased</option>
-          <option value="External">External</option>
-          <option value="Intervrf">Intervrf</option>
         </select>
         <div *ngIf="submitted && f.groupType.errors" class="invalid-feedback">
           <div *ngIf="f.groupType.errors.required">Group Type is required</div>

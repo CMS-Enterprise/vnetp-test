@@ -6,9 +6,11 @@ import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.compone
 import { TableConfig } from 'src/app/common/table/table.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { EntityService } from 'src/app/services/entity.service';
 import { TableContextService } from 'src/app/services/table-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-rule-group-zones',
@@ -178,5 +180,47 @@ export class RuleGroupZonesComponent implements OnInit {
         }
       },
     });
+  }
+
+  public importZonesConfig(event): void {
+    const modalDto = new YesNoModalDto(
+      'Import Firewall Rule Groups',
+      `Are you sure you would like to import ${event.length} zone${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.zoneService
+        .createManyZone({
+          createManyZoneDto: { bulk: dto },
+        })
+        .subscribe(() => {
+          this.getZones();
+        });
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  }
+
+  private sanitizeData(entities: any[]): any[] {
+    return entities.map(entity => {
+      this.mapToCsv(entity);
+      return entity;
+    });
+  }
+
+  private mapToCsv(obj: any): any {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'tier_name' || key === 'tierName') {
+        const tierId = this.getTierId(obj[key]);
+        obj.tierId = tierId;
+        delete obj[key];
+      }
+    });
+    console.log('object', obj);
+    return obj;
   }
 }
