@@ -260,6 +260,15 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   serviceObjectPortMatch(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean {
     const serviceObjectPortValue = location === 'source' ? rule.serviceObject.sourcePorts : rule.serviceObject.destinationPorts;
+
+    // Check if form port value falls within range of rule port value
+    if (serviceObjectPortValue.includes('-')) {
+      const firstNumberInPortRange = Number(serviceObjectPortValue.split('-')[0]);
+      const lastNumberInPortRange = Number(serviceObjectPortValue.split('-')[1]);
+      if (control.value >= firstNumberInPortRange || control.value <= lastNumberInPortRange) {
+        return true;
+      }
+    }
     return control.value === serviceObjectPortValue;
   }
 
@@ -268,6 +277,14 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
     return serviceObjectGroup.serviceObjects.some(svcObj => {
       const rulePortValue = location === 'source' ? svcObj.sourcePorts : svcObj.destinationPorts;
+
+      if (rulePortValue.includes('-')) {
+        const firstNumberInPortRange = Number(rulePortValue.split('-')[0]);
+        const lastNumberInPortRange = Number(rulePortValue.split('-')[1]);
+        if (control.value >= firstNumberInPortRange || control.value <= lastNumberInPortRange) {
+          return true;
+        }
+      }
       return rulePortValue === control.value;
     });
   }
@@ -313,6 +330,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       sourcePorts: ['', ValidatePortNumber],
       destinationPorts: ['', ValidatePortNumber],
     });
+    this.setFormValidators();
   }
 
   private unsubAll() {
