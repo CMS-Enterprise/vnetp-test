@@ -33,8 +33,26 @@ export interface DeleteMessageMessageRequestParams {
 }
 
 export interface GetMessagesMessageRequestParams {
-    page: number;
-    perPage: number;
+    /** Comma-seperated array of relations to join. */
+    relations?: Array<string>;
+    /** Comma-seperated array of relations to join. */
+    join?: Array<string>;
+    /** Number of entities to return per page.      If page is not passed, a number of entities up to this parameter will be returned. Default 20. */
+    perPage?: number;
+    /** Alias for perPage. If perPage is also passed this parameter will be ignored. */
+    limit?: number;
+    /** Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination. */
+    page?: number;
+    /** Filter condition to apply to the query. */
+    filter?: Array<string>;
+    /** Properties to sort the response by. */
+    sort?: Array<string>;
+    /** Properties to group the response by. */
+    group?: Array<string>;
+    /** Properties to select. */
+    fields?: Array<string>;
+    /** Where object for advanced AND/OR queries. */
+    s?: string;
 }
 
 
@@ -207,23 +225,69 @@ export class V3GlobalMessagesService {
     public getMessagesMessage(requestParameters: GetMessagesMessageRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<PaginationDTO>>;
     public getMessagesMessage(requestParameters: GetMessagesMessageRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<PaginationDTO>>;
     public getMessagesMessage(requestParameters: GetMessagesMessageRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const page = requestParameters.page;
-        if (page === null || page === undefined) {
-            throw new Error('Required parameter page was null or undefined when calling getMessagesMessage.');
-        }
+        const relations = requestParameters.relations;
+        const join = requestParameters.join;
         const perPage = requestParameters.perPage;
-        if (perPage === null || perPage === undefined) {
-            throw new Error('Required parameter perPage was null or undefined when calling getMessagesMessage.');
-        }
+        const limit = requestParameters.limit;
+        const page = requestParameters.page;
+        const filter = requestParameters.filter;
+        const sort = requestParameters.sort;
+        const group = requestParameters.group;
+        const fields = requestParameters.fields;
+        const s = requestParameters.s;
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (page !== undefined && page !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>page, 'page');
+        if (relations) {
+            relations.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'relations');
+            })
+        }
+        if (join) {
+            join.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'join');
+            })
         }
         if (perPage !== undefined && perPage !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>perPage, 'perPage');
+        }
+        if (limit !== undefined && limit !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>limit, 'limit');
+        }
+        if (page !== undefined && page !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
+        }
+        if (filter) {
+            filter.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'filter');
+            })
+        }
+        if (sort) {
+            sort.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'sort');
+            })
+        }
+        if (group) {
+            group.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'group');
+            })
+        }
+        if (fields) {
+            fields.forEach((element) => {
+                queryParameters = this.addToHttpParams(queryParameters,
+                  <any>element, 'fields');
+            })
+        }
+        if (s !== undefined && s !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>s, 's');
         }
 
         let headers = this.defaultHeaders;

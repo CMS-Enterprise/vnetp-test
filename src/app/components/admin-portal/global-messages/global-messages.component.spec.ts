@@ -23,7 +23,7 @@ describe('GlobalMessagesComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage'] }),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'removeDefaultSearch', 'searchColumns'] }),
         MockComponent({ selector: 'app-global-messages-modal' }),
         GlobalMessagesComponent,
         MockFontAwesomeComponent,

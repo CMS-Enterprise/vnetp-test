@@ -14,7 +14,15 @@
 export interface Message { 
     id: string;
     description: string;
-    messageType: string;
+    messageType: MessageMessageTypeEnum;
     readonly timestamp: string;
 }
+export enum MessageMessageTypeEnum {
+    General = 'General',
+    Training = 'Training',
+    NewFeature = 'NewFeature',
+    UpcomingFeature = 'UpcomingFeature'
+};
+
+
 

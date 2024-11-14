@@ -102,6 +102,21 @@ describe('SearchBarComponent', () => {
       expect(testComponent.searchColumn).toBe(testComponent.defaultSearch.propertyName);
     });
 
+    it('should set searchColumn to defaultSearch.propertyName when previousSearchColumn is not present', () => {
+      const testComponent = new SearchBarComponent(tableContextServiceMock as any);
+      testComponent.removeDefaultSearchColumn = true;
+      testComponent.columns = [
+        { propertyName: 'fake', displayName: 'fake' },
+        { propertyName: 'age', displayName: 'Age' },
+      ];
+      testComponent.searchColumn = '';
+      testComponent.searchText = 'John';
+
+      testComponent.ngOnInit();
+
+      expect(testComponent.searchColumn).toBe(testComponent.columns[0].propertyName);
+    });
+
     it('should set filteredResults when previous filteredResults is true', () => {
       tableContextServiceMock.getSearchLocalStorage = jest.fn(() => ({
         searchColumn: 'name',

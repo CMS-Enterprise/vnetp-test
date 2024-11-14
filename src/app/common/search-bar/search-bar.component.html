@@ -2,9 +2,16 @@
   <span [hidden]="!searchError">Please choose correct search criteria</span>
 </div>
 <div id="main">
-  <select aria-label="searchColumn" id="searchColumn" [(ngModel)]="searchColumn" placeholder="Column">
+  <select *ngIf="!removeDefaultSearchColumn" aria-label="searchColumn" id="searchColumn" [(ngModel)]="searchColumn" placeholder="Column">
     <optgroup aria-label="search-properties">
       <option [ngValue]="defaultSearch.propertyName" selected>{{ defaultSearch.displayName }}</option>
+      <option *ngFor="let column of columns" [ngValue]="column.propertyName">
+        {{ column.displayName }}
+      </option>
+    </optgroup>
+  </select>
+  <select *ngIf="removeDefaultSearchColumn" aria-label="searchColumn" id="searchColumn" [(ngModel)]="searchColumn" placeholder="Column">
+    <optgroup aria-label="search-properties">
       <option *ngFor="let column of columns" [ngValue]="column.propertyName">
         {{ column.displayName }}
       </option>

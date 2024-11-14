@@ -6,7 +6,16 @@
         <span>Create Message</span>
       </button>
     </section>
-    <app-table [config]="config" [data]="messages" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"></app-table>
+    <app-table
+      [config]="config"
+      [data]="messages"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+      (clearResults)="getGlobalMessages($event)"
+      (searchParams)="getGlobalMessages($event)"
+      [searchColumns]="searchColumns"
+      [removeDefaultSearch]="true"
+    ></app-table>
   </ng-container>
 </ng-container>
 

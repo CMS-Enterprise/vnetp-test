@@ -2,6 +2,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Message, PaginationDTO, V3GlobalMessagesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
@@ -16,7 +17,10 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 export class GlobalMessagesComponent implements OnInit {
   public globalMessageModalSubscription: Subscription;
 
+  isLoading = false;
   ModalMode = ModalMode;
+
+  public searchColumns: SearchColumnConfig[] = [{ displayName: 'Message Type', propertyName: 'messageType' }];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   public config: TableConfig<any> = {
@@ -27,7 +31,6 @@ export class GlobalMessagesComponent implements OnInit {
       { name: '', template: () => this.actionsTemplate },
     ],
     hideAdvancedSearch: true,
-    hideSearchBar: true,
   };
   perPage = 20;
   messages: PaginationDTO;
@@ -57,18 +60,33 @@ export class GlobalMessagesComponent implements OnInit {
   }
 
   public getGlobalMessages(event?): void {
+    this.isLoading = true;
+    let eventParams;
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
-      this.tableComponentDto.perPage = event.perPage ? event.perPage : 10;
+      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      const { searchText } = event;
+      this.tableComponentDto.searchText = searchText;
+      const propertyName = event.searchColumn ? event.searchColumn : null;
+      if (propertyName) {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      }
     } else {
-      this.tableComponentDto.perPage = this.perPage;
+      this.tableComponentDto.searchText = undefined;
     }
-
     this.globalMessagesService
-      .getMessagesMessage({ page: this.tableComponentDto.page, perPage: this.tableComponentDto.perPage })
-      .subscribe(data => {
-        this.messages = data;
-      });
+      .getMessagesMessage({ filter: [eventParams], page: this.tableComponentDto.page, perPage: this.tableComponentDto.perPage })
+      .subscribe(
+        data => {
+          this.messages = data;
+        },
+        () => {
+          this.isLoading = false;
+        },
+        () => {
+          this.isLoading = false;
+        },
+      );
   }
 
   public onTableEvent(event: TableComponentDto): void {

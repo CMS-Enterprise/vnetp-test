@@ -57,6 +57,8 @@ export class TableComponent<T> implements AfterViewInit {
   @Output() itemsPerPageChange = new EventEmitter<any>();
 
   @Input() searchColumns: SearchColumnConfig[];
+  @Input() removeDefaultSearch: boolean;
+
   @Output() clearResults = new EventEmitter<any>();
   @Output() searchParams = new EventEmitter<any>();
 

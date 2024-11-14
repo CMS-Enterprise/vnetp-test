@@ -3,6 +3,7 @@
     <div *ngIf="!config.hideSearchBar">
       <div class="d-flex">
         <app-search-bar
+          [removeDefaultSearchColumn]="removeDefaultSearch"
           (searchBarClearResults)="clearTableResults()"
           [columns]="searchColumns"
           (searchCriteria)="getObjectsAndFilter($event)"
