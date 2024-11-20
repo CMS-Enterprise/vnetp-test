@@ -31,7 +31,7 @@ describe('NatRuleGroupComponent', () => {
         FilterPipe,
         NatRuleGroupComponent,
         MockComponent('app-nat-rule-group-modal'),
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockNgxSmartModalComponent,
         MockYesNoModalComponent,

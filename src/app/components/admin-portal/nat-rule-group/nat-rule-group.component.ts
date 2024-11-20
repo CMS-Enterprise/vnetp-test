@@ -197,54 +197,10 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getTiers();
-    this.getNatRuleGroups();
+    setTimeout(() => this.getNatRuleGroups(), 250);
   }
 
   ngOnDestroy(): void {
     SubscriptionUtil.unsubscribe([this.currentTierSubscription]);
   }
-
-  // public importNatRuleGroupsConfig(event): void {
-  //   const modalDto = new YesNoModalDto(
-  //     'Import Nat Rule Groups',
-  //     `Are you sure you would like to import ${event.length} nat rule group${event.length > 1 ? 's' : ''}?`,
-  //   );
-
-  //   const onConfirm = () => {
-  //     const dto = this.sanitizeData(event);
-  //     this.natRuleGroupService
-  //       .createManyNatRuleGroup({
-  //         createManyNatRuleGroupDto: { bulk: dto },
-  //       })
-  //       .subscribe(() => {
-  //         this.getTiers();
-  //       });
-  //   };
-
-  //   SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
-  // }
-
-  // private sanitizeData(entities: any[]): any[] {
-  //   return entities.map(entity => {
-  //     this.mapToCsv(entity);
-  //     return entity;
-  //   });
-  // }
-
-  // private mapToCsv(obj: any): any {
-  //   Object.entries(obj).forEach(([key, val]) => {
-  //     if (val === null || val === '') {
-  //       delete obj[key];
-  //     }
-  //     if (key === 'ipAddress') {
-  //       obj[key] = String(val).trim();
-  //     }
-  //     if (key === 'vrf_name' || key === 'vrfName') {
-  //       obj[key] = ObjectUtil.getObjectId(val as string, [this.currentTier]);
-  //       obj.tierId = obj[key];
-  //       delete obj[key];
-  //     }
-  //   });
-  //   return obj;
-  // }
 }

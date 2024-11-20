@@ -196,7 +196,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getTiers();
-    this.getFirewallRuleGroups();
+    setTimeout(() => this.getFirewallRuleGroups(), 250);
   }
 
   ngOnDestroy(): void {

@@ -124,7 +124,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getGlobalMessages() {
-    this.globalMessagesService.getManyMessage({ page: 1, perPage: 100 }).subscribe(data => {
+    this.globalMessagesService.getManyMessage({ page: 1, perPage: 100, sort: ['createdAt,DESC'] }).subscribe(data => {
       this.messages = data;
 
       // use this to dynamically change the title / messages in the bottom cards
@@ -144,6 +144,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
         return message.messageType !== 'Training' && message.messageType !== 'NewFeature';
       });
+
+      this.messages.data = this.messages.data.slice(0, 5);
 
       console.log('trainingMessages', trainingMessages);
       console.log('newFeatureMessages', newFeatureMessages);

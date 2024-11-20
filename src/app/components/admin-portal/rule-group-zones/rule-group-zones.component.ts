@@ -102,7 +102,8 @@ export class RuleGroupZonesComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getTiers();
-    this.getZones();
+    setTimeout(() => this.getZones(), 250);
+    // this.getZones();
   }
 
   public subscribeToRuleGroupZonesModal(): void {
