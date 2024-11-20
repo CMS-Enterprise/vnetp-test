@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { PaginationDTO, V1NetworkSecurityZonesService, V1TiersService } from 'client';
+import { V1NetworkSecurityZonesService, V1TiersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -36,7 +36,6 @@ export class RuleGroupZonesComponent implements OnInit {
     hideAdvancedSearch: true,
   };
   perPage = 20;
-  messages: PaginationDTO;
 
   public tableComponentDto = new TableComponentDto();
   public isLoadingObjects = false;

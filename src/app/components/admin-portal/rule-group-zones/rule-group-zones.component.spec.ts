@@ -13,7 +13,7 @@ import { MockProvider } from 'src/test/mock-providers';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { V1TiersService, V1NetworkSecurityFirewallRuleGroupsService, PaginationDTO, V1NetworkSecurityZonesService } from 'client';
+import { V1TiersService, V1NetworkSecurityFirewallRuleGroupsService, V1NetworkSecurityZonesService } from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { of, Subject, Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';

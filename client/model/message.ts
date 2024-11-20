@@ -12,7 +12,10 @@
 
 
 export interface Message { 
-    id: string;
+    readonly id?: string;
+    readonly createdAt?: string;
+    readonly updatedAt?: string;
+    readonly version?: number;
     description: string;
     messageType: MessageMessageTypeEnum;
     readonly timestamp: string;

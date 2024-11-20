@@ -13,7 +13,7 @@ import { MockProvider } from 'src/test/mock-providers';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { V1TiersService, V1NetworkSecurityNatRuleGroupsService, PaginationDTO } from 'client';
+import { V1TiersService, V1NetworkSecurityNatRuleGroupsService } from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { NatRuleGroupComponent } from './nat-rule-group.component';
 import { of, Subject, Subscription } from 'rxjs';

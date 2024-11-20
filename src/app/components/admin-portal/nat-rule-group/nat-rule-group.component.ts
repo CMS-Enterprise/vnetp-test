@@ -22,7 +22,6 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
   tiers;
   natRuleGroups;
   public natRuleGroupModalSubscription: Subscription;
-  filteredTierObject;
   public isLoadingObjects = false;
   public tableComponentDto = new TableComponentDto();
 

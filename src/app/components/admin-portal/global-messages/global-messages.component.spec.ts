@@ -10,7 +10,7 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Message, PaginationDTO, V3GlobalMessagesService } from 'client';
+import { GetManyMessageResponseDto, Message, V3GlobalMessagesService } from 'client';
 import { GlobalMessagesComponent } from './global-messages.component';
 import { Subject, Subscription, of } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -46,7 +46,7 @@ describe('GlobalMessagesComponent', () => {
   describe('Get Messages', () => {
     it('should fetch messages', () => {
       const messageService = TestBed.inject(V3GlobalMessagesService);
-      const messagesMock: PaginationDTO = {
+      const messagesMock = {
         total: 2,
         count: 2,
         page: 1,
@@ -55,7 +55,7 @@ describe('GlobalMessagesComponent', () => {
       };
       component.messages = messagesMock;
 
-      const getManyMessagesSpy = jest.spyOn(messageService, 'getMessagesMessage').mockReturnValue(of({ data: messagesMock } as any));
+      const getManyMessagesSpy = jest.spyOn(messageService, 'getManyMessage').mockReturnValue(of({ data: messagesMock } as any));
 
       component.getGlobalMessages();
       expect(getManyMessagesSpy).toHaveBeenCalled();
@@ -111,7 +111,7 @@ describe('GlobalMessagesComponent', () => {
       const messageToDelete = { id: '123', description: 'Bye!' } as Message;
       const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
       component.deleteEntry(messageToDelete);
-      const getMessagesMock = jest.spyOn(component['globalMessagesService'], 'getMessagesMessage');
+      const getMessagesMock = jest.spyOn(component['globalMessagesService'], 'getManyMessage');
       expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
       expect(getMessagesMock).toHaveBeenCalled();
     });

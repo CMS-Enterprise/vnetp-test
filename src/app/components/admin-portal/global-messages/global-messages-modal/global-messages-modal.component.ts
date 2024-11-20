@@ -54,7 +54,7 @@ export class GlobalMessagesModalComponent implements OnInit {
   }
 
   private createMessage(message: Message): void {
-    this.messageService.createMessageMessage({ message }).subscribe(() => {
+    this.messageService.createOneMessage({ message }).subscribe(() => {
       this.closeModal();
     });
   }

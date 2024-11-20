@@ -124,7 +124,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getGlobalMessages() {
-    this.globalMessagesService.getMessagesMessage({ page: 1, perPage: 100 }).subscribe(data => {
+    this.globalMessagesService.getManyMessage({ page: 1, perPage: 100 }).subscribe(data => {
       this.messages = data;
 
       // use this to dynamically change the title / messages in the bottom cards
