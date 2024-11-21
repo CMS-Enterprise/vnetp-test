@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ViewChild, TemplateRef } from '@angular/core';
 import {
   V1DatacentersService,
   V1TiersService,
@@ -75,11 +75,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   natRuleCount: number;
   auditLogs;
   messages: any;
+  @ViewChild('jobTimestampTemplate') jobTimestampTemplate: TemplateRef<any>;
+
   public config: TableConfig<any> = {
     description: 'Dashboard-Deployments',
     columns: [
       { name: 'Type', property: 'jobType' },
-      { name: 'Timestamp', property: 'createdAt' },
+      { name: 'Started', template: () => this.jobTimestampTemplate },
     ],
   };
 
@@ -156,7 +158,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           { title: 'Training', cols: 1, rows: 1, data: trainingMessages },
           { title: 'New Features', cols: 1, rows: 1, data: newFeatureMessages },
           // { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
-          // { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - never coming'] },
+          // { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - planned for 11/24'] },
         ]),
       );
     });
@@ -274,7 +276,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .getManyJob({
         page: 1,
         perPage: 3,
-        sort: ['createdAt,DESC'],
+        sort: ['updatedAt,DESC'],
       })
       .subscribe(data => {
         this.jobs = data;
