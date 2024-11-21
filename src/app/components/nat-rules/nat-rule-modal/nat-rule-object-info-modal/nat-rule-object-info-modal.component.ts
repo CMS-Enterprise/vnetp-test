@@ -5,12 +5,10 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
   selector: 'app-nat-rule-object-info-modal',
   templateUrl: './nat-rule-object-info-modal.component.html',
 })
-export class NatRuleObjectInfoModalComponent implements OnInit {
+export class NatRuleObjectInfoModalComponent {
   modalBody;
   modalTitle;
   constructor(private ngx: NgxSmartModalService) {}
-
-  ngOnInit(): void {}
 
   getData() {
     const modalData = this.ngx.getModalData('natRuleObjectInfoModal') as any;

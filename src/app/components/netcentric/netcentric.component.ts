@@ -5,8 +5,6 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './netcentric.component.html',
   styleUrls: ['./netcentric.component.scss'],
 })
-export class NetcentricComponent implements OnInit {
+export class NetcentricComponent {
   constructor() {}
-
-  ngOnInit(): void {}
 }

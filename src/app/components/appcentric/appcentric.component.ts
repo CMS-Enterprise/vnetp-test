@@ -5,8 +5,6 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './appcentric.component.html',
   styleUrls: ['./appcentric.component.scss'],
 })
-export class AppcentricComponent implements OnInit {
+export class AppcentricComponent {
   constructor() {}
-
-  ngOnInit(): void {}
 }

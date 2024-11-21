@@ -5,12 +5,10 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
   selector: 'app-firewall-rule-object-info-modal',
   templateUrl: './firewall-rule-object-info-modal.component.html',
 })
-export class FirewallRuleObjectInfoModalComponent implements OnInit {
+export class FirewallRuleObjectInfoModalComponent {
   modalBody;
   modalTitle;
   constructor(private ngx: NgxSmartModalService) {}
-
-  ngOnInit(): void {}
 
   getData() {
     const modalData = this.ngx.getModalData('firewallRuleObjectInfoModal') as any;
