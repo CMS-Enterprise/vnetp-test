@@ -194,7 +194,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     }
 
     if (this.ModalMode === ModalMode.Create) {
-      if (this.environment?.dynamic?.appIdEnabled === 'true') {
+      if (this.appIdEnabled === true) {
         const appIds = [...this.appIdService.dto.panosApplicationsToAdd];
         modalFirewallRule.panosApplications = appIds;
       }
@@ -211,7 +211,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
           () => {},
         );
     } else {
-      if (this.environment?.dynamic?.appIdEnabled === 'true') {
+      if (this.appIdEnabled === true) {
         modalFirewallRule.panosApplications = [...this.firewallRule.panosApplications];
         this.appIdService.saveDto(modalFirewallRule);
       }

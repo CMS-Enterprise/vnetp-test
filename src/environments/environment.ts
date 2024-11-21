@@ -13,6 +13,7 @@ class Environment extends DynamicEnvironment {
     this.production = false;
     this.apiBase = 'http://localhost:3000/api';
     this.dcsVersion = '3.0';
+    this.appIdEnabled = true;
   }
 }
 
