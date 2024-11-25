@@ -75,7 +75,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   natRuleCount: number;
   auditLogs;
   messages: any;
+  messagesPerPage = 5;
+  currentTenant;
   @ViewChild('jobTimestampTemplate') jobTimestampTemplate: TemplateRef<any>;
+
+  @ViewChild('messageTimestampTemplate') messageTimestampTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
     description: 'Dashboard-Deployments',
@@ -83,6 +87,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
       { name: 'Type', property: 'jobType' },
       { name: 'Started', template: () => this.jobTimestampTemplate },
     ],
+  };
+
+  public messagesConfig: TableConfig<any> = {
+    description: 'Global Messages',
+    columns: [
+      { name: 'Description', property: 'description' },
+      { name: 'Created At', template: () => this.messageTimestampTemplate },
+    ],
+    hideAdvancedSearch: true,
+    hideSearchBar: true,
   };
 
   status = [
@@ -120,48 +134,51 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.userRoles = this.user.dcsPermissions.map(p => p.roles).flat();
       });
     }
+    this.currentTenant = localStorage.getItem('tenantQueryParam').replace(/['"]+/g, '');
     this.loadDashboard(this.userRoles);
     this.getGlobalMessages();
     this.dashboardPoller = setInterval(() => this.loadDashboard(this.userRoles), 1000 * 300);
   }
 
   private getGlobalMessages() {
-    this.globalMessagesService.getManyMessage({ page: 1, perPage: 100, sort: ['createdAt,DESC'] }).subscribe(data => {
-      this.messages = data;
+    this.globalMessagesService
+      .getManyMessage({ page: 1, perPage: 100, sort: ['createdAt,DESC'], filter: ['messageType||eq||General'] })
+      .subscribe(data => {
+        this.messages = data;
 
-      // use this to dynamically change the title / messages in the bottom cards
-      const trainingMessages = [];
-      const newFeatureMessages = [];
-      this.messages.data = this.messages.data.filter(message => {
-        if (message.messageType === 'Training') {
-          if (trainingMessages.length === 5) {
-            return;
+        // use this to dynamically change the title / messages in the bottom cards
+        const trainingMessages = [];
+        const newFeatureMessages = [];
+        this.messages.data = this.messages.data.filter(message => {
+          if (message.messageType === 'Training') {
+            if (trainingMessages.length === 5) {
+              return;
+            }
+            trainingMessages.push(message.description);
+          } else if (message.messageType === 'NewFeature') {
+            if (newFeatureMessages.length === 5) {
+              return;
+            }
+            newFeatureMessages.push(message.description);
           }
-          trainingMessages.push(message.description);
-        } else if (message.messageType === 'NewFeature') {
-          if (newFeatureMessages.length === 5) {
-            return;
-          }
-          newFeatureMessages.push(message.description);
-        }
-        return message.messageType !== 'Training' && message.messageType !== 'NewFeature';
+          return message.messageType !== 'Training' && message.messageType !== 'NewFeature';
+        });
+
+        // this.messages.data = this.messages.data.slice(0, 5);
+
+        console.log('trainingMessages', trainingMessages);
+        console.log('newFeatureMessages', newFeatureMessages);
+
+        // use this to dynamically change the title / messages in the bottom cards
+        this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+          map(() => [
+            { title: 'Training', cols: 1, rows: 1, data: trainingMessages },
+            { title: 'New Features', cols: 1, rows: 1, data: newFeatureMessages },
+            // { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
+            // { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - planned for 11/24'] },
+          ]),
+        );
       });
-
-      this.messages.data = this.messages.data.slice(0, 5);
-
-      console.log('trainingMessages', trainingMessages);
-      console.log('newFeatureMessages', newFeatureMessages);
-
-      // use this to dynamically change the title / messages in the bottom cards
-      this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-        map(() => [
-          { title: 'Training', cols: 1, rows: 1, data: trainingMessages },
-          { title: 'New Features', cols: 1, rows: 1, data: newFeatureMessages },
-          // { title: 'Troubleshooting', cols: 1, rows: 1, data: ['SOME TROUBLE SHOOTING STUFF', 'MORE TROUBLESHOOTING STUFF'] },
-          // { title: 'Latest Features', cols: 1, rows: 1, data: ['FEATURE X - implemented yesterday', 'FEATURE Y - planned for 11/24'] },
-        ]),
-      );
-    });
   }
 
   ngOnDestroy() {
