@@ -8,16 +8,25 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { V3GlobalMessagesService } from 'client';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { AuthService } from 'src/app/services/auth.service';
+import { of } from 'rxjs';
 
 describe('GlobalMessagesModalComponent', () => {
   let component: GlobalMessagesModalComponent;
   let fixture: ComponentFixture<GlobalMessagesModalComponent>;
 
   beforeEach(() => {
+    const authService = {
+      completeAuthentication: jest.fn(),
+    };
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [GlobalMessagesModalComponent, MockNgxSmartModalComponent, MockIconButtonComponent, MockFontAwesomeComponent],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V3GlobalMessagesService)],
+      providers: [
+        { provide: AuthService, useValue: authService },
+        MockProvider(NgxSmartModalService),
+        MockProvider(V3GlobalMessagesService),
+      ],
     });
     fixture = TestBed.createComponent(GlobalMessagesModalComponent);
     component = fixture.componentInstance;
@@ -26,6 +35,16 @@ describe('GlobalMessagesModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should load data on init', () => {
+    const service = TestBed.inject(V3GlobalMessagesService);
+
+    const authService = TestBed.inject(AuthService);
+    authService.currentUser = of({ user: '123', dcsPermissions: [{ roles: 'role1' }] } as any);
+    component['auth'].getTenants = jest.fn().mockReturnValue(of([{ tenant: 'tenant' }]) as any);
+
+    component.ngOnInit();
   });
 
   describe('Description', () => {
@@ -70,6 +89,24 @@ describe('GlobalMessagesModalComponent', () => {
     component.form.setValue({
       messageType: 'General',
       description: 'Description',
+      tenant: '',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createMessageSpy).toHaveBeenCalled();
+  });
+
+  it('should call to create a message with optional tenant param', () => {
+    const service = TestBed.inject(V3GlobalMessagesService);
+    const createMessageSpy = jest.spyOn(service, 'createOneMessage');
+
+    component.modalMode = ModalMode.Create;
+    component.form.setValue({
+      messageType: 'General',
+      description: 'Description',
+      tenant: 'dcs_sandbox1_cms-east_000000000',
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -86,6 +123,7 @@ describe('GlobalMessagesModalComponent', () => {
     component.form.setValue({
       messageType: '',
       description: '',
+      tenant: '',
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));

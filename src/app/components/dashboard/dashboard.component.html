@@ -1,189 +1,151 @@
 <div style="display: flex; justify-content: center">
-  <h2 style="margin-bottom: 0">
-    {{ currentTenant }}
+  <h2>
+    <b>{{ currentTenant }}</b>
   </h2>
 </div>
 <main class="dashboard">
   <!-- Service Status -->
 
-  <aside class="dashboard__parentcard">
-    <aside class="dashboard__card" aria-label="Overall Environment">
-      <h4 class="dashboard__heading">Tenant Network Environment</h4>
-      <ul class="dash-card">
-        <li>
-          <a>
-            <span>
-              Datacenters
-              <tooltip [message]="helpText.Datacenters"></tooltip>
-            </span>
-            <span class="inline-block ml-auto">
-              {{ datacenters || 0 }}
-            </span>
-            <fa-icon class="icon" [icon]="['fas', 'chevron-right']" style="visibility: hidden"></fa-icon>
-          </a>
-        </li>
-        <li class="dash-card__item">
-          <a routerLink="/netcentric/tiers" queryParamsHandling="merge">
-            <span>
-              Tiers
-              <tooltip [message]="helpText.Tiers"></tooltip>
-            </span>
-            <span class="inline-block ml-auto">
-              {{ tiers || 0 }}
-            </span>
-            <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-          </a>
-        </li>
-
-        <li class="dash-card__item">
-          <a routerLink="/netcentric/subnets-vlans" queryParamsHandling="merge">
-            <span> Subnets </span>
-            <span class="inline-block ml-auto">
-              {{ subnetCount || 0 }}
-            </span>
-            <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-          </a>
-        </li>
-        <li class="dash-card__item">
-          <a routerLink="/netcentric/subnets-vlans" queryParamsHandling="merge">
-            <span> Vlans </span>
-            <span class="inline-block ml-auto">
-              {{ vlanCount || 0 }}
-            </span>
-            <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-          </a>
-        </li>
-      </ul>
-    </aside>
-    <aside class="dashboard__card">
-      <h4 class="dashboard__heading">Tenant Network Security</h4>
-      <ul class="dash-card">
-        <li class="dash-card__item">
-          <a routerLink="/netcentric/network-objects-groups" queryParamsHandling="merge">
-            <span> Network Objects </span>
-            <span class="inline-block ml-auto">
-              {{ networkObjectCount || 0 }}
-            </span>
-            <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-          </a>
-        </li>
-        <li class="dash-card__item">
-          <a routerLink="/netcentric/network-objects-groups" queryParamsHandling="merge">
-            <span> Network Object Groups </span>
-            <span class="inline-block ml-auto">
-              {{ networkObjectGroupCount || 0 }}
-            </span>
-            <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-          </a>
-        </li>
-        <li class="dash-card__item">
-          <a routerLink="/netcentric/service-objects-groups" queryParamsHandling="merge">
-            <span> Service Objects </span>
-            <span class="inline-block ml-auto">
-              {{ serviceObjectCount || 0 }}
-            </span>
-            <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-          </a>
-        </li>
-        <li class="dash-card__item">
-          <a routerLink="/netcentric/service-objects-groups" queryParamsHandling="merge">
-            <span> Service Object Groups </span>
-            <span class="inline-block ml-auto">
-              {{ serviceObjectCount || 0 }}
-            </span>
-            <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-          </a>
-        </li>
-        <li class="dash-card__item">
-          <a routerLink="/netcentric/firewall-rules" queryParamsHandling="merge">
-            <span> Firewall Rules </span>
-            <span class="inline-block ml-auto">
-              {{ firewallRuleCount || 0 }}
-            </span>
-            <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-          </a>
-        </li>
-        <li class="dash-card__item">
-          <a routerLink="/netcentric/nat-rules" queryParamsHandling="merge">
-            <span> Nat Rules </span>
-            <span class="inline-block ml-auto">
-              {{ natRuleCount || 0 }}
-            </span>
-            <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-          </a>
-        </li>
-      </ul>
-    </aside>
-
-    <aside class="dashboard__card" style="margin-right: 0">
-      <h4 class="dashboard__heading">Tenant Recent Deployments</h4>
-      <ul class="dash-card">
-        <li class="dash-card__item">
-          <a style="display: block" routerLink="/netcentric/jobs" queryParamsHandling="merge">
-            <app-table [config]="config" [data]="jobs"></app-table>
-          </a>
-        </li>
-      </ul>
-    </aside>
-    <!-- <aside class="dashboard__card" aria-label="Overall Environment">
-    <h2 class="dashboard__heading">Global Messages</h2>
+  <!-- <aside class="dashboard__parentcard"> -->
+  <aside class="dashboard__card" aria-label="Overall Environment">
+    <h4 class="dashboard__heading">Tenant Network Environment</h4>
     <ul class="dash-card">
-      <li *ngFor="let message of messages?.data" class="dash-card__item">
-        <a style="display: list-item; overflow-wrap: anywhere">
+      <li>
+        <a>
           <span>
-            {{ message.description }}
+            Datacenters
+            <tooltip [message]="helpText.Datacenters"></tooltip>
           </span>
+          <span class="inline-block ml-auto">
+            {{ datacenters || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']" style="visibility: hidden"></fa-icon>
+        </a>
+      </li>
+      <li class="dash-card__item">
+        <a routerLink="/netcentric/tiers" queryParamsHandling="merge">
+          <span>
+            Tiers
+            <tooltip [message]="helpText.Tiers"></tooltip>
+          </span>
+          <span class="inline-block ml-auto">
+            {{ tiers || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
+        </a>
+      </li>
+
+      <li class="dash-card__item">
+        <a routerLink="/netcentric/subnets-vlans" queryParamsHandling="merge">
+          <span> Subnets </span>
+          <span class="inline-block ml-auto">
+            {{ subnetCount || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
+        </a>
+      </li>
+      <li class="dash-card__item">
+        <a routerLink="/netcentric/subnets-vlans" queryParamsHandling="merge">
+          <span> Vlans </span>
+          <span class="inline-block ml-auto">
+            {{ vlanCount || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
         </a>
       </li>
     </ul>
-  </aside> -->
   </aside>
-</main>
-
-<!-- <aside class="dashboard__parentcard"> -->
-
-<aside class="dashboard__card" aria-label="Overall Environment">
-  <h2 class="dashboard__heading">Global Messages</h2>
-  <app-table [(itemsPerPage)]="messagesPerPage" [config]="messagesConfig" [data]="messages"></app-table>
-
-  <!-- <ul class="dash-card">
-      <li *ngFor="let message of messages?.data" class="dash-card__item">
-        <a style="display: list-item; overflow-wrap: anywhere">
-          <span>
-            {{ message.description }}
+  <aside class="dashboard__card">
+    <h4 class="dashboard__heading">Tenant Network Security</h4>
+    <ul class="dash-card">
+      <li class="dash-card__item">
+        <a routerLink="/netcentric/network-objects-groups" queryParamsHandling="merge">
+          <span> Network Objects </span>
+          <span class="inline-block ml-auto">
+            {{ networkObjectCount || 0 }}
           </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
         </a>
       </li>
-    </ul> -->
-</aside>
+      <li class="dash-card__item">
+        <a routerLink="/netcentric/network-objects-groups" queryParamsHandling="merge">
+          <span> Network Object Groups </span>
+          <span class="inline-block ml-auto">
+            {{ networkObjectGroupCount || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
+        </a>
+      </li>
+      <li class="dash-card__item">
+        <a routerLink="/netcentric/service-objects-groups" queryParamsHandling="merge">
+          <span> Service Objects </span>
+          <span class="inline-block ml-auto">
+            {{ serviceObjectCount || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
+        </a>
+      </li>
+      <li class="dash-card__item">
+        <a routerLink="/netcentric/service-objects-groups" queryParamsHandling="merge">
+          <span> Service Object Groups </span>
+          <span class="inline-block ml-auto">
+            {{ serviceObjectCount || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
+        </a>
+      </li>
+      <li class="dash-card__item">
+        <a routerLink="/netcentric/firewall-rules" queryParamsHandling="merge">
+          <span> Firewall Rules </span>
+          <span class="inline-block ml-auto">
+            {{ firewallRuleCount || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
+        </a>
+      </li>
+      <li class="dash-card__item">
+        <a routerLink="/netcentric/nat-rules" queryParamsHandling="merge">
+          <span> Nat Rules </span>
+          <span class="inline-block ml-auto">
+            {{ natRuleCount || 0 }}
+          </span>
+          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
+        </a>
+      </li>
+    </ul>
+  </aside>
 
-<!-- <aside class="dashboard__card"> -->
-<!-- <mat-grid-list style="width: 100%; left: 5%; height: 100%" cols="2" rowHeight="300px">
-      @for (card of cards | async; track card) {
-      <mat-grid-tile [colspan]="card.cols" [rowspan]="card.rows">
-        <mat-card class="dashboard-card">
-          <mat-card-header style="text-decoration: underline">
-            <mat-card-title>
-              {{ card.title }}
-            </mat-card-title>
-          </mat-card-header>
-          <mat-card-content class="dashboard-card-content">
-            <div *ngIf="card.data[0]">
-              <div *ngFor="let line of card.data">
-                <ul>
-                  <li style="width: 10%; text-wrap: nowrap">{{ line | json }}</li>
-                </ul>
-              </div>
-            </div>
-          </mat-card-content>
-        </mat-card>
-      </mat-grid-tile>
-      }
-    </mat-grid-list> -->
-<!-- </aside> -->
-<!-- </aside> -->
+  <aside class="dashboard__card" style="margin-right: 0">
+    <h4 class="dashboard__heading">Tenant Recent Deployments</h4>
+    <ul class="dash-card">
+      <li class="dash-card__item">
+        <a style="display: block" routerLink="/netcentric/jobs" queryParamsHandling="merge">
+          <app-table [config]="config" [data]="jobs"></app-table>
+        </a>
+      </li>
+    </ul>
+  </aside>
+  <!-- </aside> -->
+</main>
+
+<ng-container *ngIf="messages?.data.length">
+  <!-- <aside class="dashboard__parentcard"> -->
+
+  <aside style="margin-right: 0" class="dashboard__card" aria-label="Overall Environment">
+    <h2 class="dashboard__heading">Global Messages</h2>
+    <app-table
+      (tableEvent)="onTableEvent($event)"
+      [(itemsPerPage)]="messagesPerPage"
+      [config]="messagesConfig"
+      [data]="messages"
+    ></app-table>
+  </aside>
+</ng-container>
 
 <aside class="dashboard__card">
+  <div>
+    <h4 class="dashboard__heading">Tenant Messages</h4>
+  </div>
   <mat-grid-list style="left: 5%" cols="2" rowHeight="300px">
     @for (card of cards | async; track card) {
     <mat-grid-tile [colspan]="card.cols" [rowspan]="card.rows">
@@ -197,7 +159,19 @@
           <div *ngIf="card.data[0]">
             <div *ngFor="let line of card.data">
               <ul>
-                <li style="width: 10%; text-wrap: nowrap">{{ line | json }}</li>
+                <li style="width: 10%; text-wrap: nowrap">
+                  <a
+                    *ngIf="card.title === 'Training'"
+                    href="https://confluenceent.cms.gov/pages/viewpage.action?spaceKey=DRaaS&title=Development+PI-23"
+                  >
+                    {{ line | json }}
+                  </a>
+                  <a
+                    href="https://jiraent.cms.gov/secure/RapidBoard.jspa?rapidView=1120&view=planning&selectedIssue=DPT-17121&quickFilter=14592&issueLimit=100#"
+                    *ngIf="card.title === 'New Features'"
+                    >{{ line | json }}</a
+                  >
+                </li>
               </ul>
             </div>
           </div>

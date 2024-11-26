@@ -39,7 +39,17 @@
           <div *ngIf="f.description.errors.maxlength">Description must be at less than 100 characters</div>
         </div>
       </div>
+      <div class="form-group">
+        <label for="tenant">Optional Tenant</label>
+        <select id="tenant" name="tenant" class="form-control" formControlName="tenant" aria-label="Tenant">
+          <option></option>
+          <option *ngFor="let availableTenant of availableTenants" [ngValue]="availableTenant.tenant">
+            {{ availableTenant.tenantFullName }}
+          </option>
+        </select>
+      </div>
     </div>
+
     <footer class="modal-footer">
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">Cancel</button>
       <button type="submit" class="btn btn-success" data-dismiss="modal">

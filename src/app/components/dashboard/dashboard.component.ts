@@ -25,6 +25,7 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import { TableConfig } from 'src/app/common/table/table.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 
 @Component({
   selector: 'app-dashboard',
@@ -76,7 +77,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   auditLogs;
   messages: any;
   messagesPerPage = 5;
+  otherMessages;
   currentTenant;
+  public messageTableComponentDto = new TableComponentDto();
+
   @ViewChild('jobTimestampTemplate') jobTimestampTemplate: TemplateRef<any>;
 
   @ViewChild('messageTimestampTemplate') messageTimestampTemplate: TemplateRef<any>;
@@ -90,7 +94,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   };
 
   public messagesConfig: TableConfig<any> = {
-    description: 'Global Messages',
+    description: 'Dashboard Global Messages',
     columns: [
       { name: 'Description', property: 'description' },
       { name: 'Created At', template: () => this.messageTimestampTemplate },
@@ -122,6 +126,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   );
 
   ngOnInit() {
+    this.messageTableComponentDto.page = 1;
+    this.messageTableComponentDto.perPage = this.messagesPerPage;
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.currentDatacenter = cd;
@@ -134,22 +140,54 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.userRoles = this.user.dcsPermissions.map(p => p.roles).flat();
       });
     }
-    this.currentTenant = localStorage.getItem('tenantQueryParam').replace(/['"]+/g, '');
-    this.loadDashboard(this.userRoles);
     this.getGlobalMessages();
+    this.currentTenant = localStorage.getItem('tenantQueryParam');
+    if (this.currentTenant) {
+      this.currentTenant = this.currentTenant.replace(/['"]+/g, '');
+    }
+    this.loadDashboard(this.userRoles);
+
+    this.getTenantMessages();
     this.dashboardPoller = setInterval(() => this.loadDashboard(this.userRoles), 1000 * 300);
   }
 
-  private getGlobalMessages() {
+  public onTableEvent(event: TableComponentDto): void {
+    this.messageTableComponentDto = event;
+    this.getGlobalMessages(event);
+  }
+
+  private getGlobalMessages(event?) {
+    if (event) {
+      this.messageTableComponentDto.page = event.page ? event.page : 1;
+      this.messageTableComponentDto.perPage = event.perPage ? event.perPage : 20;
+    } else {
+      this.messageTableComponentDto.searchText = undefined;
+    }
     this.globalMessagesService
-      .getManyMessage({ page: 1, perPage: 100, sort: ['createdAt,DESC'], filter: ['messageType||eq||General'] })
+      .getManyMessage({
+        page: this.messageTableComponentDto.page,
+        perPage: this.messageTableComponentDto.perPage,
+        sort: ['createdAt,DESC'],
+        filter: ['messageType||eq||General'],
+      })
+      .subscribe(
+        data => {
+          this.messages = data;
+        },
+        () => {},
+      );
+  }
+
+  public getTenantMessages() {
+    this.globalMessagesService
+      .getManyMessage({ page: 1, perPage: 100, sort: ['createdAt,DESC'], filter: [`tenantName||eq||${this.currentTenant}`] })
       .subscribe(data => {
-        this.messages = data;
+        this.otherMessages = data;
 
         // use this to dynamically change the title / messages in the bottom cards
         const trainingMessages = [];
         const newFeatureMessages = [];
-        this.messages.data = this.messages.data.filter(message => {
+        this.otherMessages.data = this.otherMessages.data.filter(message => {
           if (message.messageType === 'Training') {
             if (trainingMessages.length === 5) {
               return;
@@ -163,8 +201,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
           }
           return message.messageType !== 'Training' && message.messageType !== 'NewFeature';
         });
-
-        // this.messages.data = this.messages.data.slice(0, 5);
 
         console.log('trainingMessages', trainingMessages);
         console.log('newFeatureMessages', newFeatureMessages);
@@ -292,7 +328,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.jobService
       .getManyJob({
         page: 1,
-        perPage: 3,
+        perPage: 5,
         sort: ['updatedAt,DESC'],
       })
       .subscribe(data => {

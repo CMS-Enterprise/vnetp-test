@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Message, V3GlobalMessagesService } from 'client';
+import { Message, UserDto, V3GlobalMessagesService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-global-messages-modal',
@@ -14,13 +16,26 @@ export class GlobalMessagesModalComponent implements OnInit {
   submitted: boolean;
   modalMode: ModalMode;
   messageId: string;
+  public user: UserDto;
+  currentUserSubscription: Subscription;
+  availableTenants;
 
   constructor(
     private messageService: V3GlobalMessagesService,
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
+    private auth: AuthService,
   ) {}
   ngOnInit(): void {
+    if (this.auth.currentUser) {
+      this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
+        this.user = user;
+        this.auth.getTenants(this.user.token).subscribe(data => {
+          this.availableTenants = data;
+        });
+      });
+    }
+
     this.buildForm();
   }
 
@@ -50,6 +65,7 @@ export class GlobalMessagesModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       messageType: ['', Validators.required],
       description: ['', Validators.compose([Validators.maxLength(100), Validators.required])],
+      tenant: [''],
     });
   }
 
@@ -65,11 +81,12 @@ export class GlobalMessagesModalComponent implements OnInit {
       return;
     }
 
-    const { description, messageType } = this.form.value;
+    const { description, messageType, tenant } = this.form.value;
     const message = {
       messageType,
       description,
-    } as Message;
+      tenantName: tenant,
+    } as any;
     if (this.modalMode === ModalMode.Create) {
       this.createMessage(message);
     }
