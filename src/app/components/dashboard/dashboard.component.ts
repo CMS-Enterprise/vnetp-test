@@ -80,6 +80,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   otherMessages;
   currentTenant;
   public messageTableComponentDto = new TableComponentDto();
+  showOtherMessages = false;
 
   @ViewChild('jobTimestampTemplate') jobTimestampTemplate: TemplateRef<any>;
 
@@ -335,7 +336,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.jobs = data;
       });
   }
-
   // private addLinks(message) {
   //   const anchorTag = document.getElementById('anchorTag') as any;
   //   if (message.linkUrl) {

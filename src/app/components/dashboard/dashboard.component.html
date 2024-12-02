@@ -4,8 +4,6 @@
   </h2>
 </div>
 <main class="dashboard">
-  <!-- Service Status -->
-
   <!-- <aside class="dashboard__parentcard"> -->
   <aside class="dashboard__card" aria-label="Overall Environment">
     <h4 class="dashboard__heading">Tenant Network Environment</h4>
@@ -144,9 +142,25 @@
 
 <aside class="dashboard__card">
   <div>
-    <h4 class="dashboard__heading">Tenant Messages</h4>
+    <h2 class="dashboard__heading">
+      Tenant Messages
+      <fa-icon
+        *ngIf="!this.showOtherMessages"
+        style="cursor: pointer"
+        class="icon"
+        (click)="this.showOtherMessages = !this.showOtherMessages"
+        [icon]="['fas', 'plus']"
+      ></fa-icon>
+      <fa-icon
+        *ngIf="this.showOtherMessages"
+        style="cursor: pointer"
+        class="icon"
+        (click)="this.showOtherMessages = !this.showOtherMessages"
+        [icon]="['fas', 'minus']"
+      ></fa-icon>
+    </h2>
   </div>
-  <mat-grid-list style="left: 5%" cols="2" rowHeight="300px">
+  <mat-grid-list *ngIf="this.showOtherMessages" style="left: 5%" cols="2" rowHeight="300px">
     @for (card of cards | async; track card) {
     <mat-grid-tile [colspan]="card.cols" [rowspan]="card.rows">
       <mat-card class="dashboard-card">
@@ -160,7 +174,12 @@
             <div *ngFor="let line of card.data">
               <ul>
                 <li style="width: 10%; text-wrap: nowrap">
-                  <a id="anchorTag" href="https://confluenceent.cms.gov/display/DRaaS/Development+PI-25" *ngIf="card.title === 'Training'">
+                  <a
+                    target="_blank"
+                    id="anchorTag"
+                    href="https://confluenceent.cms.gov/display/DRaaS/Development+PI-25"
+                    *ngIf="card.title === 'Training'"
+                  >
                     {{ line | json }}
                   </a>
                   <a

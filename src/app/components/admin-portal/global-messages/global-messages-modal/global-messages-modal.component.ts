@@ -89,7 +89,6 @@ export class GlobalMessagesModalComponent implements OnInit {
       tenantName: tenant,
       // linkUrl
     } as any;
-    console.log('message', message);
     if (this.modalMode === ModalMode.Create) {
       this.createMessage(message);
     }
