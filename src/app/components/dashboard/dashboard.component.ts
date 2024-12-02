@@ -192,6 +192,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             if (trainingMessages.length === 5) {
               return;
             }
+            // setTimeout(() => this.addLinks(message), 500);
+
             trainingMessages.push(message.description);
           } else if (message.messageType === 'NewFeature') {
             if (newFeatureMessages.length === 5) {
@@ -199,11 +201,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }
             newFeatureMessages.push(message.description);
           }
+
           return message.messageType !== 'Training' && message.messageType !== 'NewFeature';
         });
-
-        console.log('trainingMessages', trainingMessages);
-        console.log('newFeatureMessages', newFeatureMessages);
 
         // use this to dynamically change the title / messages in the bottom cards
         this.cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
@@ -335,4 +335,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.jobs = data;
       });
   }
+
+  // private addLinks(message) {
+  //   const anchorTag = document.getElementById('anchorTag') as any;
+  //   if (message.linkUrl) {
+  //     anchorTag.setAttribute('href', `${message.linkUrl}`)
+  //   }
+  // }
 }

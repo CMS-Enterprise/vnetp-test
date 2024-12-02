@@ -17,8 +17,7 @@
           <option></option>
           <option value="General">General</option>
           <option value="Training">Training</option>
-          <option value="NewFeature">NewFeature</option>
-          <option value="UpcomingFeature">UpcomingFeature</option>
+          <option value="NewFeature">New Feature</option>
         </select>
         <div *ngIf="submitted && f.messageType.errors" class="invalid-feedback">
           <div *ngIf="f.messageType.errors.required">Message Type is required</div>
@@ -48,6 +47,18 @@
           </option>
         </select>
       </div>
+
+      <!-- <div class="form-group">
+        <label for="linkUrl">URL Link</label>
+        <input
+          type="linkUrl"
+          id="description"
+          formControlName="linkUrl"
+          class="form-control"
+          [class.is-invalid]="submitted && f.linkUrl.errors"
+          aria-label="linkUrl"
+        />
+      </div> -->
     </div>
 
     <footer class="modal-footer">

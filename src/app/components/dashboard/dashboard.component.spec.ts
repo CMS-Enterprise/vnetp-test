@@ -66,7 +66,7 @@ describe('DashboardComponent', () => {
         DashboardComponent,
         MockTooltipComponent,
         MockFontAwesomeComponent,
-        MockComponent({ selector: 'app-table', inputs: ['config', 'data'] }),
+        MockComponent({ selector: 'app-table', inputs: ['itemsPerPage', 'config', 'data'] }),
       ],
       providers: [
         { provide: V1DatacentersService, useValue: datacenterService },

@@ -128,7 +128,7 @@
   <!-- </aside> -->
 </main>
 
-<ng-container *ngIf="messages?.data.length">
+<ng-container>
   <!-- <aside class="dashboard__parentcard"> -->
 
   <aside style="margin-right: 0" class="dashboard__card" aria-label="Overall Environment">
@@ -156,14 +156,11 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content class="dashboard-card-content">
-          <div *ngIf="card.data[0]">
+          <div>
             <div *ngFor="let line of card.data">
               <ul>
                 <li style="width: 10%; text-wrap: nowrap">
-                  <a
-                    *ngIf="card.title === 'Training'"
-                    href="https://confluenceent.cms.gov/pages/viewpage.action?spaceKey=DRaaS&title=Development+PI-23"
-                  >
+                  <a id="anchorTag" href="https://confluenceent.cms.gov/display/DRaaS/Development+PI-25" *ngIf="card.title === 'Training'">
                     {{ line | json }}
                   </a>
                   <a

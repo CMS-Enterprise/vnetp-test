@@ -90,6 +90,7 @@ describe('GlobalMessagesModalComponent', () => {
       messageType: 'General',
       description: 'Description',
       tenant: '',
+      // linkUrl: ''
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -107,6 +108,25 @@ describe('GlobalMessagesModalComponent', () => {
       messageType: 'General',
       description: 'Description',
       tenant: 'dcs_sandbox1_cms-east_000000000',
+      // linkUrl: ''
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createMessageSpy).toHaveBeenCalled();
+  });
+
+  it('should call to create a message with optional link URL param', () => {
+    const service = TestBed.inject(V3GlobalMessagesService);
+    const createMessageSpy = jest.spyOn(service, 'createOneMessage');
+
+    component.modalMode = ModalMode.Create;
+    component.form.setValue({
+      messageType: 'General',
+      description: 'Description',
+      tenant: 'dcs_sandbox1_cms-east_000000000',
+      // linkUrl: 'some-fake-websitr.com'
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -124,6 +144,7 @@ describe('GlobalMessagesModalComponent', () => {
       messageType: '',
       description: '',
       tenant: '',
+      // linkUrl: ''
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
