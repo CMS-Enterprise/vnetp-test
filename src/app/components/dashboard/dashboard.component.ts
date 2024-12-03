@@ -81,6 +81,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   currentTenant;
   public messageTableComponentDto = new TableComponentDto();
   showOtherMessages = false;
+  tenantShowName;
 
   @ViewChild('jobTimestampTemplate') jobTimestampTemplate: TemplateRef<any>;
 
@@ -145,6 +146,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.currentTenant = localStorage.getItem('tenantQueryParam');
     if (this.currentTenant) {
       this.currentTenant = this.currentTenant.replace(/['"]+/g, '');
+      this.tenantShowName = this.currentTenant.split('_').slice(0, -1).toString().replaceAll(',', '_');
     }
     this.loadDashboard(this.userRoles);
 
