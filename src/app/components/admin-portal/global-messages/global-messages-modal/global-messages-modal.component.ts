@@ -65,8 +65,7 @@ export class GlobalMessagesModalComponent implements OnInit {
     this.form = this.formBuilder.group({
       messageType: ['', Validators.required],
       description: ['', Validators.compose([Validators.maxLength(100), Validators.required])],
-      tenant: [''],
-      // linkUrl: [''],
+      tenant: ['', Validators.required],
     });
   }
 
@@ -87,7 +86,6 @@ export class GlobalMessagesModalComponent implements OnInit {
       messageType,
       description,
       tenantName: tenant,
-      // linkUrl
     } as any;
     if (this.modalMode === ModalMode.Create) {
       this.createMessage(message);

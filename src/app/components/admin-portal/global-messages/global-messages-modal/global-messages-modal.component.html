@@ -39,13 +39,23 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="tenant">Optional Tenant</label>
-        <select id="tenant" name="tenant" class="form-control" formControlName="tenant" aria-label="Tenant">
+        <label for="tenant">Tenant</label>
+        <select
+          [class.is-invalid]="submitted && f.tenant.errors"
+          id="tenant"
+          name="tenant"
+          class="form-control"
+          formControlName="tenant"
+          aria-label="Tenant"
+        >
           <option></option>
           <option *ngFor="let availableTenant of availableTenants" [ngValue]="availableTenant.tenant">
             {{ availableTenant.tenantFullName }}
           </option>
         </select>
+        <div *ngIf="submitted && f.tenant.errors" class="invalid-feedback">
+          <div *ngIf="f.tenant.errors.required">Tenant is required</div>
+        </div>
       </div>
 
       <!-- <div class="form-group">
