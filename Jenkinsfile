@@ -68,7 +68,7 @@ pipeline {
         stage('SonarQube - Static Analysis') {
             agent { label 'rehl8-prod' }
             when {
-                expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'int' || env.GIT_BRANCH == 'dpt-16674/dependabot-and-sonarqube-fixes'}
+                expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'int'}
             }
             steps {
                 script {
