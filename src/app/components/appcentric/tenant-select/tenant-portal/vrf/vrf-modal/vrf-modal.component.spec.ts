@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -8,7 +9,7 @@ import { MockProvider } from 'src/test/mock-providers';
 
 import { VrfModalComponent } from './vrf-modal.component';
 import { By } from '@angular/platform-browser';
-import { V2AppCentricRouteProfilesService, V2AppCentricVrfsService } from 'client';
+import { V2AppCentricVrfsService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
 describe('VrfModalComponent', () => {

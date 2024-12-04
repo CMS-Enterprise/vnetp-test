@@ -52,6 +52,13 @@ describe('ConsumedContractsComponent', () => {
     expect(getProvidedContractsMock).toHaveBeenCalled();
   });
 
+  it('should add contract', () => {
+    component.selectedContract = { id: '123', tenantId: 'tenantId-123' };
+    component.addContract();
+    const getProvidedContractsMock = jest.spyOn(component['endpointGroupsService'], 'getOneEndpointGroup');
+    expect(getProvidedContractsMock).toHaveBeenCalled();
+  });
+
   describe('importAppProfilesConfig', () => {
     const mockNgxSmartModalComponent = {
       getData: jest.fn().mockReturnValue({ modalYes: true }),

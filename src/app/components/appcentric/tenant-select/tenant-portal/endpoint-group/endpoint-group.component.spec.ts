@@ -1,9 +1,8 @@
+/* eslint-disable */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EndpointGroupComponent } from './endpoint-group.component';
 import { EndpointGroup, V2AppCentricEndpointGroupsService } from '../../../../../../../client';
-import { TableContextService } from '../../../../../services/table-context.service';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Router } from '@angular/router';
 import {
   MockComponent,
   MockFontAwesomeComponent,
@@ -83,7 +82,7 @@ describe('EndpointGroupComponent', () => {
     it('should import route profiles and refresh the table on confirmation', () => {
       const event = [{ name: 'EndpointGroup 1' }, { name: 'EndpointGroup 2' }] as any;
       jest.spyOn(component, 'getEndpointGroups');
-      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm) => {
         onConfirm();
 
         expect(component['endpointGroupService'].createManyEndpointGroup).toHaveBeenCalledWith({
