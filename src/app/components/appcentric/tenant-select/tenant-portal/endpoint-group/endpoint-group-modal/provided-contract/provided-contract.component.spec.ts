@@ -10,7 +10,7 @@ import { ProvidedContractComponent } from './provided-contract.component';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Subscription } from 'rxjs';
-import { V2AppCentricContractsService, V2AppCentricEndpointGroupsService } from 'client';
+import { Contract, V2AppCentricContractsService, V2AppCentricEndpointGroupsService } from 'client';
 
 describe('ProvidedContractsComponent', () => {
   let component: ProvidedContractComponent;
@@ -45,6 +45,12 @@ describe('ProvidedContractsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should remove contract', () => {
+    const contractToDelete = { id: '123', description: 'Bye!', endpointGroupId: 'epgId-123', tenantId: 'tenantId-123' } as Contract;
+    component.removeContract(contractToDelete);
+    const getProvidedContractsMock = jest.spyOn(component['endpointGroupsService'], 'getOneEndpointGroup');
+    expect(getProvidedContractsMock).toHaveBeenCalled();
+  });
   describe('importProvidedContractsEpgRelationonfig', () => {
     const mockNgxSmartModalComponent = {
       getData: jest.fn().mockReturnValue({ modalYes: true }),
@@ -92,6 +98,7 @@ describe('ProvidedContractsComponent', () => {
             onConfirm();
           }
         });
+        expect(component.getProvidedContracts).toHaveBeenCalled();
 
         return new Subscription();
       });

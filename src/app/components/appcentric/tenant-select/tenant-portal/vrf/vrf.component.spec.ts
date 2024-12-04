@@ -14,10 +14,12 @@ import {
 import { MockProvider } from 'src/test/mock-providers';
 
 import { VrfComponent } from './vrf.component';
-import { Subscription } from 'rxjs';
+import { of, Subject, Subscription } from 'rxjs';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { V2AppCentricVrfsService } from 'client';
+import { V2AppCentricVrfsService, Vrf } from 'client';
+import { VrfModalDto } from 'src/app/models/appcentric/vrf-modal-dto';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 
 describe('VrfComponent', () => {
   let component: VrfComponent;
@@ -103,6 +105,79 @@ describe('VrfComponent', () => {
       component.importVrfs(event);
 
       expect(component.getVrfs).toHaveBeenCalled();
+    });
+  });
+
+  it('should delete route profile', () => {
+    const vrfToDelete = { id: '123', description: 'Bye!' } as Vrf;
+    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    component.deleteVrf(vrfToDelete);
+    const getAppProfilesMock = jest.spyOn(component['vrfService'], 'getManyVrf');
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+    expect(getAppProfilesMock).toHaveBeenCalled();
+  });
+
+  it('should restore route profile', () => {
+    const vrf = { id: '1', deletedAt: true } as any;
+    jest.spyOn(component['vrfService'], 'restoreOneVrf').mockReturnValue(of({} as any));
+    jest.spyOn(component, 'getVrfs');
+    component.restoreVrf(vrf);
+    expect(component['vrfService'].restoreOneVrf).toHaveBeenCalledWith({ id: vrf.id });
+    expect(component.getVrfs).toHaveBeenCalled();
+  });
+
+  it('should routely search params when filtered results is true', () => {
+    const vrf = { id: '1', deletedAt: true } as any;
+    jest.spyOn(component['vrfService'], 'restoreOneVrf').mockReturnValue(of({} as any));
+
+    const getAppProfilesSpy = jest.spyOn(component, 'getVrfs');
+    const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
+    jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+
+    component.restoreVrf(vrf);
+
+    // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
+    // expect(component.tableComponentDto.searchText).toBe(params.searchText);
+    expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
+  });
+
+  describe('openVrfModal', () => {
+    describe('openModal', () => {
+      beforeEach(() => {
+        jest.spyOn(component, 'getVrfs');
+        jest.spyOn(component['ngx'], 'resetModalData');
+      });
+
+      it('should subscribe to vrfModal onCloseFinished event and unsubscribe afterwards', () => {
+        const onCloseFinished = new Subject<void>();
+        const mockModal = { onCloseFinished, open: jest.fn() };
+        jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
+
+        const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
+
+        component.subscribeToVrfModal();
+
+        expect(component['ngx'].getModal).toHaveBeenCalledWith('vrfModal');
+        expect(component.vrfModalSubscription).toBeDefined();
+
+        onCloseFinished.next();
+
+        expect(component.getVrfs).toHaveBeenCalled();
+        expect(component['ngx'].resetModalData).toHaveBeenCalledWith('vrfModal');
+
+        expect(unsubscribeSpy).toHaveBeenCalled();
+      });
+      it('should call ngx.setModalData and ngx.getModal().open', () => {
+        const vrf = { id: 1, name: 'Test App Profile' } as any;
+        component.tenantId = { id: '1' } as any;
+        component.openVrfModal(ModalMode.Edit, vrf);
+
+        expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(VrfModalDto), 'vrfModal');
+        expect(component['ngx'].getModal).toHaveBeenCalledWith('vrfModal');
+
+        const modal = component['ngx'].getModal('vrfModal');
+        expect(modal).toBeDefined();
+      });
     });
   });
 });

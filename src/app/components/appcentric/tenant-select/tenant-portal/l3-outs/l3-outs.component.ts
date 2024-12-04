@@ -25,7 +25,7 @@ export class L3OutsComponent implements OnInit {
   public perPage = 20;
   public l3Outs = {} as GetManyL3OutResponseDto;
   public tableComponentDto = new TableComponentDto();
-  private l3OutsModalSubscription: Subscription;
+  public l3OutsModalSubscription: Subscription;
   public tenantId: string;
   public vrfs: GetManyVrfResponseDto;
 
@@ -183,7 +183,7 @@ export class L3OutsComponent implements OnInit {
     this.ngx.getModal('l3OutsModal').open();
   }
 
-  private subscribeToL3OutsModal(): void {
+  public subscribeToL3OutsModal(): void {
     this.l3OutsModalSubscription = this.ngx.getModal('l3OutsModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('l3OutsModal');
       this.l3OutsModalSubscription.unsubscribe();

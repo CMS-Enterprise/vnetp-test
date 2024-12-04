@@ -7,6 +7,9 @@ import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/m
 import { MockProvider } from 'src/test/mock-providers';
 
 import { VrfModalComponent } from './vrf-modal.component';
+import { By } from '@angular/platform-browser';
+import { V2AppCentricRouteProfilesService, V2AppCentricVrfsService } from 'client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 
 describe('VrfModalComponent', () => {
   let component: VrfModalComponent;
@@ -92,6 +95,79 @@ describe('VrfModalComponent', () => {
     });
     optionalFields.forEach(r => {
       expect(isRequired(r)).toBe(false);
+    });
+  });
+
+  it('should call to create a Vrf', () => {
+    const service = TestBed.inject(V2AppCentricVrfsService);
+    const createVrfSpy = jest.spyOn(service, 'createOneVrf');
+
+    component.modalMode = ModalMode.Create;
+    component.form.setValue({
+      policyControlEnforced: true,
+      policyControlEnforcementIngress: true,
+      name: 'vrf1',
+      alias: '',
+      description: 'description!',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createVrfSpy).toHaveBeenCalled();
+  });
+
+  it('should call to update a  Vrf', () => {
+    const service = TestBed.inject(V2AppCentricVrfsService);
+    const updateVrfSpy = jest.spyOn(service, 'updateOneVrf');
+
+    component.modalMode = ModalMode.Edit;
+    component.vrfId = '123';
+    component.form.setValue({
+      policyControlEnforced: true,
+      policyControlEnforcementIngress: true,
+      name: 'vrf1',
+      alias: '',
+      description: 'updated description!',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(updateVrfSpy).toHaveBeenCalled();
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    const ngx = component['ngx'];
+
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    component['closeModal']();
+
+    expect(ngxSpy).toHaveBeenCalledWith('vrfModal');
+  });
+
+  it('should reset the form when closing the modal', () => {
+    component.form.controls.description.setValue('Test');
+
+    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
+    cancelButton.nativeElement.click();
+
+    expect(component.form.controls.description.value).toBe('');
+  });
+
+  describe('getData', () => {
+    const createVrfDto = () => ({
+      ModalMode: ModalMode.Edit,
+      vrf: { id: 1 },
+    });
+    it('should run getData', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createVrfDto());
+
+      component.getData();
+
+      expect(component.form.controls.description.enabled).toBe(true);
     });
   });
 });
