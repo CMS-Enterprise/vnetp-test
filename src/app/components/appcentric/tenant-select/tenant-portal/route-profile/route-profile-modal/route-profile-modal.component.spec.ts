@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -138,11 +139,11 @@ describe('RouteProfilesModalComponent', () => {
   });
 
   it('should call ngx.close with the correct argument when cancelled', () => {
-    const ngx = component.ngx;
+    const ngx = component['ngx'];
 
     const ngxSpy = jest.spyOn(ngx, 'close');
 
-    component.closeModal();
+    component['closeModal']();
 
     expect(ngxSpy).toHaveBeenCalledWith('routeProfileModal');
   });
