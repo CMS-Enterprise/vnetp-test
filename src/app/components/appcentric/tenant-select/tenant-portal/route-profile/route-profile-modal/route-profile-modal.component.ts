@@ -35,12 +35,12 @@ export class RouteProfileModalComponent implements OnInit {
   }
 
   public closeModal(): void {
-    this.ngx.close('routeProfilesModal');
+    this.ngx.close('routeProfileModal');
     this.reset();
   }
 
   public getData(): void {
-    this.dto = Object.assign({}, this.ngx.getModalData('routeProfilesModal') as RouteProfileModalDto);
+    this.dto = Object.assign({}, this.ngx.getModalData('routeProfileModal') as RouteProfileModalDto);
 
     this.modalMode = this.dto.modalMode;
     if (this.modalMode === ModalMode.Edit) {
@@ -56,12 +56,12 @@ export class RouteProfileModalComponent implements OnInit {
       this.form.controls.description.setValue(routeProfiles.description);
       this.form.controls.alias.setValue(routeProfiles.alias);
     }
-    this.ngx.resetModalData('routeProfilesModal');
+    this.ngx.resetModalData('routeProfileModal');
   }
 
   public reset(): void {
     this.submitted = false;
-    this.ngx.resetModalData('routeProfilesModal');
+    this.ngx.resetModalData('routeProfileModal');
     this.buildForm();
   }
 
@@ -111,7 +111,6 @@ export class RouteProfileModalComponent implements OnInit {
       description,
       alias,
       tenantId,
-      vrfId,
     } as RouteProfile;
 
     if (this.modalMode === ModalMode.Create) {

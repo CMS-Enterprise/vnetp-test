@@ -10,8 +10,8 @@
     <app-table
       [config]="config"
       [data]="routeProfiles"
-      (clearResults)="getRouteProfile($event)"
-      (searchParams)="getRouteProfile($event)"
+      (clearResults)="getRouteProfiles($event)"
+      (searchParams)="getRouteProfiles($event)"
       [searchColumns]="searchColumns"
       [(itemsPerPage)]="perPage"
       (tableEvent)="onTableEvent($event)"

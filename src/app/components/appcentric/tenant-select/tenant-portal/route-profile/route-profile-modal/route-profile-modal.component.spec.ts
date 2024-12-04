@@ -6,6 +6,9 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { RouteProfileModalComponent } from './route-profile-modal.component';
+import { V2AppCentricRouteProfilesService } from 'client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { By } from '@angular/platform-browser';
 
 describe('RouteProfilesModalComponent', () => {
   let component: RouteProfileModalComponent;
@@ -96,6 +99,75 @@ describe('RouteProfilesModalComponent', () => {
     });
     optionalFields.forEach(r => {
       expect(isRequired(r)).toBe(false);
+    });
+  });
+
+  it('should call to create a Route Profile', () => {
+    const service = TestBed.inject(V2AppCentricRouteProfilesService);
+    const createRouteProfileSpy = jest.spyOn(service, 'createOneRouteProfile');
+
+    component.modalMode = ModalMode.Create;
+    component.form.setValue({
+      name: 'route-profile1',
+      alias: '',
+      description: 'description!',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createRouteProfileSpy).toHaveBeenCalled();
+  });
+
+  it('should call to update a Route Profile', () => {
+    const service = TestBed.inject(V2AppCentricRouteProfilesService);
+    const updateRouteProfileSpy = jest.spyOn(service, 'updateOneRouteProfile');
+
+    component.modalMode = ModalMode.Edit;
+    component.routeProfileId = '123';
+    component.form.setValue({
+      name: 'route-profile1',
+      alias: '',
+      description: 'updated description!',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(updateRouteProfileSpy).toHaveBeenCalled();
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    const ngx = component['ngx'];
+
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    component['closeModal']();
+
+    expect(ngxSpy).toHaveBeenCalledWith('routeProfileModal');
+  });
+
+  it('should reset the form when closing the modal', () => {
+    component.form.controls.description.setValue('Test');
+
+    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
+    cancelButton.nativeElement.click();
+
+    expect(component.form.controls.description.value).toBe('');
+  });
+
+  describe('getData', () => {
+    const createRouteProfileDto = () => ({
+      ModalMode: ModalMode.Edit,
+      ApplicationProfile: { id: 1 },
+    });
+    it('should run getData', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createRouteProfileDto());
+
+      component.getData();
+
+      expect(component.form.controls.description.enabled).toBe(true);
     });
   });
 });

@@ -11,7 +11,9 @@ import { ContractModalComponent } from './contract-modal.component';
 import { Subscription } from 'rxjs';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { V2AppCentricSubjectsService } from 'client';
+import { V2AppCentricContractsService, V2AppCentricSubjectsService } from 'client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { By } from '@angular/platform-browser';
 
 describe('ContractModalComponent', () => {
   let component: ContractModalComponent;
@@ -160,6 +162,70 @@ describe('ContractModalComponent', () => {
       component.importSubjects(event);
 
       expect(component.getSubjects).toHaveBeenCalled();
+    });
+  });
+
+  it('should call to create a Contract', () => {
+    const service = TestBed.inject(V2AppCentricContractsService);
+    const createContractSpy = jest.spyOn(service, 'createOneContract');
+
+    component.modalMode = ModalMode.Create;
+    component.form.setValue({
+      name: 'contract1',
+      alias: '',
+      description: 'description!',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createContractSpy).toHaveBeenCalled();
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    const ngx = component['ngx'];
+
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    component['closeModal']();
+
+    expect(ngxSpy).toHaveBeenCalledWith('contractModal');
+  });
+
+  it('should reset the form when closing the modal', () => {
+    component.form.controls.description.setValue('Test');
+
+    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
+    cancelButton.nativeElement.click();
+
+    expect(component.form.controls.description.value).toBe('');
+  });
+
+  it('should have correct required and optional fields by default', () => {
+    const requiredFields = ['name'];
+    const optionalFields = ['alias', 'description'];
+
+    requiredFields.forEach(r => {
+      expect(isRequired(r)).toBe(true);
+    });
+    optionalFields.forEach(r => {
+      expect(isRequired(r)).toBe(false);
+    });
+  });
+
+  describe('getData', () => {
+    const createContractDto = () => ({
+      ModalMode: ModalMode.Edit,
+      ApplicationProfile: { id: 1 },
+    });
+    it('should run getData', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createContractDto());
+
+      component.getData();
+
+      expect(component.form.controls.description.enabled).toBe(true);
+      expect(component.getSubjects).toHaveBeenCalled;
     });
   });
 });

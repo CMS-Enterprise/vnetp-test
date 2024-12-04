@@ -116,46 +116,6 @@ describe('ApplicationProfileComponent', () => {
     });
   });
 
-  describe('openApplicationProfileModal', () => {
-    describe('openModal', () => {
-      beforeEach(() => {
-        jest.spyOn(component, 'getApplicationProfiles');
-        jest.spyOn(component['ngx'], 'resetModalData');
-      });
-
-      it('should subscribe to globalMessagesModal onCloseFinished event and unsubscribe afterwards', () => {
-        const onCloseFinished = new Subject<void>();
-        const mockModal = { onCloseFinished, open: jest.fn() };
-        jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
-
-        const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
-
-        component.subscribeToApplicationProfileModal();
-
-        expect(component['ngx'].getModal).toHaveBeenCalledWith('applicationProfileModal');
-        expect(component.applicationPofileModalSubscription).toBeDefined();
-
-        onCloseFinished.next();
-
-        expect(component.getApplicationProfiles).toHaveBeenCalled();
-        expect(component['ngx'].resetModalData).toHaveBeenCalledWith('applicationProfileModal');
-
-        expect(unsubscribeSpy).toHaveBeenCalled();
-      });
-      it('should call ngx.setModalData and ngx.getModal().open', () => {
-        const appProfile = { id: 1, name: 'Test App Profile' } as any;
-        component.tenantId = { id: '1' } as any;
-        component.openApplicationProfileModal(ModalMode.Edit, appProfile);
-
-        expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(ApplicationProfileModalDto), 'applicationProfileModal');
-        expect(component['ngx'].getModal).toHaveBeenCalledWith('applicationProfileModal');
-
-        const modal = component['ngx'].getModal('applicationProfileModal');
-        expect(modal).toBeDefined();
-      });
-    });
-  });
-
   it('should delete app profile', () => {
     const appProfileToDelete = { id: '123', description: 'Bye!' } as ApplicationProfile;
     const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
@@ -187,5 +147,45 @@ describe('ApplicationProfileComponent', () => {
     // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
     // expect(component.tableComponentDto.searchText).toBe(params.searchText);
     expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
+  });
+
+  describe('openApplicationProfileModal', () => {
+    describe('openModal', () => {
+      beforeEach(() => {
+        jest.spyOn(component, 'getApplicationProfiles');
+        jest.spyOn(component['ngx'], 'resetModalData');
+      });
+
+      it('should subscribe to applicationProfileModal onCloseFinished event and unsubscribe afterwards', () => {
+        const onCloseFinished = new Subject<void>();
+        const mockModal = { onCloseFinished, open: jest.fn() };
+        jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
+
+        const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
+
+        component.subscribeToApplicationProfileModal();
+
+        expect(component['ngx'].getModal).toHaveBeenCalledWith('applicationProfileModal');
+        expect(component.applicationPofileModalSubscription).toBeDefined();
+
+        onCloseFinished.next();
+
+        expect(component.getApplicationProfiles).toHaveBeenCalled();
+        expect(component['ngx'].resetModalData).toHaveBeenCalledWith('applicationProfileModal');
+
+        expect(unsubscribeSpy).toHaveBeenCalled();
+      });
+      it('should call ngx.setModalData and ngx.getModal().open', () => {
+        const appProfile = { id: 1, name: 'Test App Profile' } as any;
+        component.tenantId = { id: '1' } as any;
+        component.openApplicationProfileModal(ModalMode.Edit, appProfile);
+
+        expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(ApplicationProfileModalDto), 'applicationProfileModal');
+        expect(component['ngx'].getModal).toHaveBeenCalledWith('applicationProfileModal');
+
+        const modal = component['ngx'].getModal('applicationProfileModal');
+        expect(modal).toBeDefined();
+      });
+    });
   });
 });
