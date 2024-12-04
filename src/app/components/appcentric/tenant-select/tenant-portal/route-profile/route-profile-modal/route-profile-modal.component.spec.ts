@@ -138,11 +138,11 @@ describe('RouteProfilesModalComponent', () => {
   });
 
   it('should call ngx.close with the correct argument when cancelled', () => {
-    const ngx = component['ngx'];
+    const ngx = component.ngx;
 
     const ngxSpy = jest.spyOn(ngx, 'close');
 
-    component['closeModal']();
+    component.closeModal();
 
     expect(ngxSpy).toHaveBeenCalledWith('routeProfileModal');
   });
