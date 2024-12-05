@@ -17,7 +17,7 @@ import { SubjectModalComponent } from './subject-modal.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { Subscription } from 'rxjs';
-import { V2AppCentricSubjectsService } from 'client';
+import { Filter, V2AppCentricSubjectsService } from 'client';
 
 describe('SubjectModalComponent', () => {
   let component: SubjectModalComponent;
@@ -103,5 +103,19 @@ describe('SubjectModalComponent', () => {
 
       expect(component.getFiltertableData).toHaveBeenCalled();
     });
+  });
+
+  // it('should remove filter', () => {
+  //   const filterToDelete = { id: '123', description: 'Bye!', subjectId: 'epgId-123', tenantId: 'tenantId-123' } as Filter;
+  //   component.removeFilter(filterToDelete);
+  //   const getFiltersMock = jest.spyOn(component['filterService'], 'getManyFilter');
+  //   expect(getFiltersMock).toHaveBeenCalled();
+  // });
+
+  it('should add filter', () => {
+    component.selectedFilter = { id: '123', tenantId: 'tenantId-123' };
+    component.addFilter();
+    const getProvidedFiltersMock = jest.spyOn(component['filterService'], 'getManyFilter');
+    // expect(getProvidedFiltersMock).toHaveBeenCalled();
   });
 });

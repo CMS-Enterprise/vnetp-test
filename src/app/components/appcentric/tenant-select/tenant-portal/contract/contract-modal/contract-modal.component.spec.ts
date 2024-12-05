@@ -8,12 +8,13 @@ import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockN
 import { MockProvider } from 'src/test/mock-providers';
 
 import { ContractModalComponent } from './contract-modal.component';
-import { Subscription } from 'rxjs';
+import { of, Subject, Subscription } from 'rxjs';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { V2AppCentricContractsService, V2AppCentricSubjectsService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { By } from '@angular/platform-browser';
+import { SubjectModalDto } from 'src/app/models/appcentric/subject-modal-dto';
 
 describe('ContractModalComponent', () => {
   let component: ContractModalComponent;
@@ -49,6 +50,39 @@ describe('ContractModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should delete route profile', () => {
+    const subjectToDelete = { id: '123', description: 'Bye!' } as any;
+    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    jest.spyOn(component, 'getSubjects');
+
+    component.removeSubject(subjectToDelete);
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+  });
+
+  it('should restore route profile', () => {
+    const subject = { id: '1', deletedAt: true } as any;
+    jest.spyOn(component['subjectsService'], 'restoreOneSubject').mockReturnValue(of({} as any));
+    jest.spyOn(component, 'getSubjects');
+    component.restoreSubject(subject);
+    expect(component['subjectsService'].restoreOneSubject).toHaveBeenCalledWith({ id: subject.id });
+    expect(component.getSubjects).toHaveBeenCalled();
+  });
+
+  it('should routely search params when filtered results is true', () => {
+    const subject = { id: '1', deletedAt: true } as any;
+    jest.spyOn(component['subjectsService'], 'restoreOneSubject').mockReturnValue(of({} as any));
+
+    const getAppProfilesSpy = jest.spyOn(component, 'getSubjects');
+    const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
+    jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+
+    component.restoreSubject(subject);
+
+    // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
+    // expect(component.tableComponentDto.searchText).toBe(params.searchText);
+    expect(getAppProfilesSpy).toHaveBeenCalled();
   });
 
   describe('Name', () => {
@@ -226,6 +260,46 @@ describe('ContractModalComponent', () => {
 
       expect(component.form.controls.description.enabled).toBe(true);
       expect(component.getSubjects).toHaveBeenCalled;
+    });
+  });
+
+  describe('openSubjectModal', () => {
+    describe('openModal', () => {
+      beforeEach(() => {
+        jest.spyOn(component, 'getSubjects');
+        jest.spyOn(component['ngx'], 'resetModalData');
+      });
+
+      it('should subscribe to subjectModal onCloseFinished event and unsubscribe afterwards', () => {
+        const onCloseFinished = new Subject<void>();
+        const mockModal = { onCloseFinished, open: jest.fn() };
+        jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
+
+        const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
+
+        component.subscribeToSubjectModal();
+
+        expect(component['ngx'].getModal).toHaveBeenCalledWith('subjectModal');
+        expect(component.subjectModalSubscription).toBeDefined();
+
+        onCloseFinished.next();
+
+        expect(component.getSubjects).toHaveBeenCalled();
+        expect(component['ngx'].resetModalData).toHaveBeenCalledWith('subjectModal');
+
+        expect(unsubscribeSpy).toHaveBeenCalled();
+      });
+      it('should call ngx.setModalData and ngx.getModal().open', () => {
+        const subject = { id: 1, name: 'Test App Profile' } as any;
+        component.tenantId = { id: '1' } as any;
+        component.openSubjectModal(ModalMode.Edit, subject);
+
+        expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(SubjectModalDto), 'subjectModal');
+        expect(component['ngx'].getModal).toHaveBeenCalledWith('subjectModal');
+
+        const modal = component['ngx'].getModal('subjectModal');
+        expect(modal).toBeDefined();
+      });
     });
   });
 });

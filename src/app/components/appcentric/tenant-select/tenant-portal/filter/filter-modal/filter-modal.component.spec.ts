@@ -12,8 +12,12 @@ import { FilterEntryModalComponent } from './filter-entry-modal/filter-entry-mod
 import { FilterModalComponent } from './filter-modal.component';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { Subscription } from 'rxjs';
-import { V2AppCentricFilterEntriesService } from 'client';
+import { of, Subject, Subscription } from 'rxjs';
+import { FilterEntry, V2AppCentricFilterEntriesService, V2AppCentricFiltersService } from 'client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { By } from '@angular/platform-browser';
+import { RouteProfileModalDto } from 'src/app/models/appcentric/route-profile-modal-dto';
+import { FilterEntryModalDto } from 'src/app/models/appcentric/filter-entry-modal.dto';
 
 describe('FilterEntryModalComponent', () => {
   let component: FilterModalComponent;
@@ -50,6 +54,23 @@ describe('FilterEntryModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should delete route profile', () => {
+    const filterEntryToDelete = { id: '123', description: 'Bye!' } as FilterEntry;
+    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    component.removeFilterEntry(filterEntryToDelete);
+    jest.spyOn(component, 'getFilterEntries');
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+  });
+
+  it('should restore route profile', () => {
+    const filterEntry = { id: '1', deletedAt: true } as any;
+    jest.spyOn(component['filterEntriesService'], 'restoreOneFilterEntry').mockReturnValue(of({} as any));
+    jest.spyOn(component, 'getFilterEntries');
+    component.restoreFilterEntry(filterEntry);
+    expect(component['filterEntriesService'].restoreOneFilterEntry).toHaveBeenCalledWith({ id: filterEntry.id });
+    expect(component.getFilterEntries).toHaveBeenCalled();
   });
 
   describe('Name', () => {
@@ -151,6 +172,111 @@ describe('FilterEntryModalComponent', () => {
       component.importFilterEntries(event);
 
       expect(component.getFilterEntries).toHaveBeenCalled();
+    });
+  });
+
+  it('should call to create an Application Profile', () => {
+    const service = TestBed.inject(V2AppCentricFiltersService);
+    const createAppProfileSpy = jest.spyOn(service, 'createOneFilter');
+
+    component.modalMode = ModalMode.Create;
+    component.form.setValue({
+      name: 'ap-1',
+      alias: '',
+      description: 'description!',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createAppProfileSpy).toHaveBeenCalled();
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    const ngx = component['ngx'];
+
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    component['closeModal']();
+
+    expect(ngxSpy).toHaveBeenCalledWith('filterModal');
+  });
+
+  it('should reset the form when closing the modal', () => {
+    component.form.controls.description.setValue('Test');
+
+    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
+    cancelButton.nativeElement.click();
+
+    expect(component.form.controls.description.value).toBe('');
+  });
+
+  it('should have correct required and optional fields by default', () => {
+    const requiredFields = ['name'];
+    const optionalFields = ['alias', 'description'];
+
+    requiredFields.forEach(r => {
+      expect(isRequired(r)).toBe(true);
+    });
+    optionalFields.forEach(r => {
+      expect(isRequired(r)).toBe(false);
+    });
+  });
+
+  describe('getData', () => {
+    const createAppProfileDto = () => ({
+      modalMode: ModalMode.Edit,
+      filter: { id: 1 },
+    });
+    it('should run getData', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createAppProfileDto());
+      jest.spyOn(component, 'getFilterEntries');
+      component.getData();
+
+      expect(component.form.controls.description.enabled).toBe(true);
+
+      expect(component.getFilterEntries).toHaveBeenCalled();
+    });
+  });
+
+  describe('openRouteProfileModal', () => {
+    describe('openModal', () => {
+      beforeEach(() => {
+        jest.spyOn(component, 'getFilterEntries');
+        jest.spyOn(component['ngx'], 'resetModalData');
+      });
+
+      it('should subscribe to routeProfileModal onCloseFinished event and unsubscribe afterwards', () => {
+        const onCloseFinished = new Subject<void>();
+        const mockModal = { onCloseFinished, open: jest.fn() };
+        jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
+
+        const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
+
+        component.subscribeToFilterEntryModal();
+
+        expect(component['ngx'].getModal).toHaveBeenCalledWith('filterEntryModal');
+        expect(component.filterEntryEditModalSubscription).toBeDefined();
+
+        onCloseFinished.next();
+
+        expect(component.getFilterEntries).toHaveBeenCalled();
+        expect(component['ngx'].resetModalData).toHaveBeenCalledWith('filterEntryModal');
+
+        expect(unsubscribeSpy).toHaveBeenCalled();
+      });
+      it('should call ngx.setModalData and ngx.getModal().open', () => {
+        const filterEntry = { id: 1, name: 'Test App Profile' } as any;
+        component.tenantId = { id: '1' } as any;
+        component.openFilterEntryModal(ModalMode.Edit, filterEntry);
+
+        expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(FilterEntryModalDto), 'filterEntryModal');
+        expect(component['ngx'].getModal).toHaveBeenCalledWith('filterEntryModal');
+
+        const modal = component['ngx'].getModal('filterEntryModal');
+        expect(modal).toBeDefined();
+      });
     });
   });
 });

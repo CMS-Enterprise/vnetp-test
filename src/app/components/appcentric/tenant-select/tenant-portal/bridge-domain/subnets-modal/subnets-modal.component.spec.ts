@@ -10,14 +10,17 @@ import {
   MockIconButtonComponent,
   MockImportExportComponent,
   MockNgxSmartModalComponent,
+  MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 
 import { SubnetsModalComponent } from './subnets-modal.component';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { Subscription } from 'rxjs';
-import { V2AppCentricAppCentricSubnetsService } from 'client';
+import { of, Subscription } from 'rxjs';
+import { AppCentricSubnet, Subnet, V2AppCentricAppCentricSubnetsService } from 'client';
+import { By } from '@angular/platform-browser';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 
 describe('SubnetsModalComponent', () => {
   let component: SubnetsModalComponent;
@@ -33,6 +36,7 @@ describe('SubnetsModalComponent', () => {
         MockIconButtonComponent,
         MockImportExportComponent,
         MockComponent({ selector: 'app-subnets-edit-modal', inputs: ['bridgeDomainId', 'tenantId'] }),
+        MockYesNoModalComponent,
       ],
       imports: [RouterTestingModule, HttpClientModule, ReactiveFormsModule],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricAppCentricSubnetsService)],
@@ -194,5 +198,65 @@ describe('SubnetsModalComponent', () => {
 
       expect(component.getSubnets).toHaveBeenCalled();
     });
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    const ngx = component['ngx'];
+
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    component['closeModal']();
+
+    expect(ngxSpy).toHaveBeenCalledWith('subnetsModal');
+  });
+
+  describe('getData', () => {
+    const createAppProfileDto = () => ({
+      ModalMode: ModalMode.Edit,
+      bridgeDomain: { id: 1 },
+    });
+    it('should run getData', () => {
+      jest.spyOn(component, 'getSubnets');
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createAppProfileDto());
+
+      component.getData();
+
+      expect(component.form.controls.description.enabled).toBe(true);
+      expect(component.getSubnets).toHaveBeenCalled();
+    });
+  });
+
+  it('should delete route profile', () => {
+    const subnetToDelete = { id: '123', description: 'Bye!' } as AppCentricSubnet;
+    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    component.removeSubnet(subnetToDelete);
+    const getAppProfilesMock = jest.spyOn(component['subnetsService'], 'getManyAppCentricSubnet');
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+    expect(getAppProfilesMock).toHaveBeenCalled();
+  });
+
+  it('should restore route profile', () => {
+    const subnet = { id: '1', deletedAt: true } as any;
+    jest.spyOn(component['subnetsService'], 'restoreOneAppCentricSubnet').mockReturnValue(of({} as any));
+    jest.spyOn(component, 'getSubnets');
+    component.restoreSubnet(subnet);
+    expect(component['subnetsService'].restoreOneAppCentricSubnet).toHaveBeenCalledWith({ id: subnet.id });
+    expect(component.getSubnets).toHaveBeenCalled();
+  });
+
+  it('should routely search params when filtered results is true', () => {
+    const subnet = { id: '1', deletedAt: true } as any;
+    jest.spyOn(component['subnetsService'], 'restoreOneAppCentricSubnet').mockReturnValue(of({} as any));
+
+    const getAppProfilesSpy = jest.spyOn(component, 'getSubnets');
+    const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
+    jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+
+    component.restoreSubnet(subnet);
+
+    // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
+    // expect(component.tableComponentDto.searchText).toBe(params.searchText);
+    expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
   });
 });
