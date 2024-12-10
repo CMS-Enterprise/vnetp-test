@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -14,7 +15,6 @@ import { MockProvider } from 'src/test/mock-providers';
 
 import { TenantSelectComponent } from './tenant-select.component';
 import { of, Subject, Subscription } from 'rxjs';
-import { EndpointGroupModalDto } from 'src/app/models/appcentric/endpoint-group-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
 
