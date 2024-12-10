@@ -16,8 +16,10 @@ import { MockProvider } from 'src/test/mock-providers';
 import { SubjectModalComponent } from './subject-modal.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { Subscription } from 'rxjs';
-import { Filter, V2AppCentricSubjectsService } from 'client';
+import { of, Subscription } from 'rxjs';
+import { Filter, V2AppCentricSubjectsService, V2AppCentricVrfsService } from 'client';
+import { By } from '@angular/platform-browser';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 
 describe('SubjectModalComponent', () => {
   let component: SubjectModalComponent;
@@ -46,6 +48,99 @@ describe('SubjectModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should get Filters', () => {
+    jest.spyOn(component['filterService'], 'getManyFilter').mockReturnValue(of({} as any));
+    component.getFilters();
+    expect(component['filterService'].getManyFilter).toHaveBeenCalled();
+  });
+
+  it('should get filter table data', () => {
+    component.subjectId = '1';
+    jest.spyOn(component['subjectsService'], 'getOneSubject').mockReturnValue(of({} as any));
+    component.getFiltertableData();
+    expect(component['subjectsService'].getOneSubject).toHaveBeenCalledWith({ id: '1', relations: ['filters'] });
+  });
+
+  it('should remove filter', () => {
+    component.subjectId = '1';
+    const filterToRemove = { id: '123', description: 'Bye!', contractId: 'epgId-123', tenantId: 'tenantId-123' };
+    component.removeFilter(filterToRemove);
+    const getFiltersSpy = jest.spyOn(component['filterService'], 'getManyFilter');
+    jest.spyOn(component['subjectsService'], 'getOneSubject').mockReturnValue(of({} as any));
+    // expect(getFiltersSpy).toHaveBeenCalled();
+    // expect(component['subjectsService'].getOneSubject).toHaveBeenCalledWith({id: '1', relations: ['filters']});
+  });
+
+  it('should add filter', () => {
+    component.subjectId = '1';
+    component.selectedFilter = { id: '123', tenantId: 'tenantId-123' };
+    component.addFilter();
+    const getFiltersSpy = jest.spyOn(component['filterService'], 'getManyFilter');
+    jest.spyOn(component['subjectsService'], 'getOneSubject').mockReturnValue(of({} as any));
+    // expect(getFiltersSpy).toHaveBeenCalled();
+    // expect(component['subjectsService'].getOneSubject).toHaveBeenCalledWith({id: '1', relations: ['filters']});
+  });
+
+  it('should call to create a subject', () => {
+    const service = TestBed.inject(V2AppCentricSubjectsService);
+    const createSubjectSpy = jest.spyOn(service, 'createOneSubject');
+
+    component.modalMode = ModalMode.Create;
+    component.form.setValue({
+      applyBothDirections: true,
+      reverseFilterPorts: true,
+      globalAlias: '',
+      name: 'subject1',
+      alias: '',
+      description: 'description!',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createSubjectSpy).toHaveBeenCalled();
+  });
+
+  it('should call to update a Subject', () => {
+    const service = TestBed.inject(V2AppCentricSubjectsService);
+    const updateSubjectSpy = jest.spyOn(service, 'updateOneSubject');
+
+    component.modalMode = ModalMode.Edit;
+    component.contractId = '123';
+    component.form.setValue({
+      applyBothDirections: true,
+      reverseFilterPorts: true,
+      globalAlias: '',
+      name: 'subject',
+      alias: '',
+      description: 'updated description!',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(updateSubjectSpy).toHaveBeenCalled();
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    const ngx = component['ngx'];
+
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    component['closeModal']();
+
+    expect(ngxSpy).toHaveBeenCalledWith('subjectModal');
+  });
+
+  it('should reset the form when closing the modal', () => {
+    component.form.controls.description.setValue('Test');
+
+    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
+    cancelButton.nativeElement.click();
+
+    expect(component.form.controls.description.value).toBe('');
   });
 
   describe('importSubjectFiltersConfig', () => {
@@ -103,19 +198,5 @@ describe('SubjectModalComponent', () => {
 
       expect(component.getFiltertableData).toHaveBeenCalled();
     });
-  });
-
-  // it('should remove filter', () => {
-  //   const filterToDelete = { id: '123', description: 'Bye!', subjectId: 'epgId-123', tenantId: 'tenantId-123' } as Filter;
-  //   component.removeFilter(filterToDelete);
-  //   const getFiltersMock = jest.spyOn(component['filterService'], 'getManyFilter');
-  //   expect(getFiltersMock).toHaveBeenCalled();
-  // });
-
-  it('should add filter', () => {
-    component.selectedFilter = { id: '123', tenantId: 'tenantId-123' };
-    component.addFilter();
-    const getProvidedFiltersMock = jest.spyOn(component['filterService'], 'getManyFilter');
-    // expect(getProvidedFiltersMock).toHaveBeenCalled();
   });
 });

@@ -202,4 +202,27 @@ describe('BridgeDomainModalComponent', () => {
       expect(component.getL3OutsTableData).toHaveBeenCalled();
     });
   });
+
+  it('should add associated l3out', () => {
+    component.selectedL3Out = { id: '123', tenantId: 'tenantId-123', vrfId: 'vrfId-123' };
+    component.addL3Out();
+    const getL3OutTableDataMock = jest.spyOn(component['bridgeDomainService'], 'getOneBridgeDomain');
+    expect(getL3OutTableDataMock).toHaveBeenCalled();
+  });
+
+  it('should remove associated l3out', () => {
+    jest.spyOn(component, 'getL3OutsTableData');
+    jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+      onConfirm();
+
+      expect(component['bridgeDomainService'].removeL3OutFromBridgeDomainBridgeDomain).toHaveBeenCalled();
+
+      return new Subscription();
+    });
+
+    const l3OutToDelete = { id: '123', description: 'Bye!', tenantId: 'tenantId-123', vrfId: 'vrfId-123' };
+    component.bridgeDomainId = 'bridgeDomainId-123';
+    component.removeL3Out(l3OutToDelete);
+    expect(component.getL3OutsTableData).toHaveBeenCalled();
+  });
 });

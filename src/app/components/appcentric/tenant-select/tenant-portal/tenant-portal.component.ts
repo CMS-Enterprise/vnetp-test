@@ -27,7 +27,7 @@ export class TenantPortalComponent implements OnInit {
 
   public tabs: Tab[] = tabs.map(t => ({ name: t.name }));
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private tenantService: V2AppCentricTenantsService) {
+  constructor(public activatedRoute: ActivatedRoute, private router: Router, private tenantService: V2AppCentricTenantsService) {
     // get tenantId in URL snapshot
     const match = this.router.routerState.snapshot.url.match(
       /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
@@ -71,7 +71,7 @@ export class TenantPortalComponent implements OnInit {
     this.initialTabIndex = this.getInitialTabIndex();
   }
 
-  private getInitialTabIndex(): number {
+  public getInitialTabIndex(): number {
     const regex = /\(tenant-portal:([\w\/-]+)\)/g;
     const page = regex.exec(this.router.url);
     if (!page || !page[1]) {

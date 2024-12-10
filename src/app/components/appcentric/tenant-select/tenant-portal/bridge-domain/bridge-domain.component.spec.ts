@@ -114,7 +114,7 @@ describe('BridgeDomainComponent', () => {
     });
   });
 
-  it('should delete route profile', () => {
+  it('should delete bridge domain', () => {
     const bridgeDomainToDelete = { id: '123', description: 'Bye!' } as BridgeDomain;
     const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
     component.deleteBridgeDomain(bridgeDomainToDelete);
@@ -123,7 +123,7 @@ describe('BridgeDomainComponent', () => {
     expect(getAppProfilesMock).toHaveBeenCalled();
   });
 
-  it('should restore route profile', () => {
+  it('should restore bridge domain', () => {
     const bridgeDomain = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['bridgeDomainService'], 'restoreOneBridgeDomain').mockReturnValue(of({} as any));
     jest.spyOn(component, 'getBridgeDomains');
@@ -212,17 +212,6 @@ describe('BridgeDomainComponent', () => {
         expect(bridgeDomainsSpy).toHaveBeenCalled();
         expect(vrfsSpy).toHaveBeenCalled();
       });
-      // it('should call ngx.setModalData and ngx.getModal().open', () => {
-      //   const bridgeDomain = { id: 1, name: 'Test App Profile' } as any;
-      //   component.tenantId = { id: '1' } as any;
-      //   component.openSubnetsModal(bridgeDomain);
-
-      //   expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(SubnetModalDto), 'subnetsModal');
-      //   expect(component['ngx'].getModal).toHaveBeenCalledWith('subnetsModal');
-
-      //   const modal = component['ngx'].getModal('subnetsModal');
-      //   expect(modal).toBeDefined();
-      // });
     });
   });
 });

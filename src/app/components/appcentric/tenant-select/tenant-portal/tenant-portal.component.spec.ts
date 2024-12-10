@@ -6,6 +6,7 @@ import { MockComponent } from 'src/test/mock-components';
 import { TenantPortalComponent } from './tenant-portal.component';
 import { V2AppCentricTenantsService } from 'client';
 import { HttpClientModule } from '@angular/common/http';
+import { of } from 'rxjs';
 
 describe('TenantPortalComponent', () => {
   let component: TenantPortalComponent;
@@ -27,5 +28,19 @@ describe('TenantPortalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should get Tenants', () => {
+    jest.spyOn(component['tenantService'], 'getManyTenant').mockReturnValue(of({} as any));
+    component.getTenants();
+    expect(component['tenantService'].getManyTenant).toHaveBeenCalled();
+  });
+
+  it('should run onInit', () => {
+    const getTenantsSpy = jest.spyOn(component, 'getTenants');
+    const getInitialTabIndexSpy = jest.spyOn(component, 'getInitialTabIndex');
+    component.ngOnInit();
+    expect(getTenantsSpy).toHaveBeenCalled();
+    expect(getInitialTabIndexSpy).toHaveBeenCalled();
   });
 });

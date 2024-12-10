@@ -106,14 +106,14 @@ describe('EndpointGroupComponent', () => {
     });
   });
 
-  it('should delete route profile', () => {
+  it('should delete endpoint group', () => {
     const endpointGroupToDelete = { id: '123', description: 'Bye!' } as EndpointGroup;
     component.deleteEndpointGroup(endpointGroupToDelete);
     const getAppProfilesMock = jest.spyOn(component['endpointGroupService'], 'getManyEndpointGroup');
     expect(getAppProfilesMock).toHaveBeenCalled();
   });
 
-  it('should restore route profile', () => {
+  it('should restore endpoint group', () => {
     const endpointGroup = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['endpointGroupService'], 'restoreOneEndpointGroup').mockReturnValue(of({} as any));
     jest.spyOn(component, 'getEndpointGroups');
@@ -164,7 +164,7 @@ describe('EndpointGroupComponent', () => {
         expect(unsubscribeSpy).toHaveBeenCalled();
       });
       it('should call ngx.setModalData and ngx.getModal().open', () => {
-        const endpointGroup = { id: 1, name: 'Test App Profile' } as any;
+        const endpointGroup = { id: 1, name: 'Test Endpoint Group' } as any;
         component.tenantId = { id: '1' } as any;
         component.openEndpointGroupModal(ModalMode.Edit, endpointGroup);
 

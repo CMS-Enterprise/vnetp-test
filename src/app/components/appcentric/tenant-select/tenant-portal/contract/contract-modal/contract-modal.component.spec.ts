@@ -52,7 +52,7 @@ describe('ContractModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should delete route profile', () => {
+  it('should delete subject', () => {
     const subjectToDelete = { id: '123', description: 'Bye!' } as any;
     const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
     jest.spyOn(component, 'getSubjects');
@@ -61,7 +61,7 @@ describe('ContractModalComponent', () => {
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
   });
 
-  it('should restore route profile', () => {
+  it('should restore subject', () => {
     const subject = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['subjectsService'], 'restoreOneSubject').mockReturnValue(of({} as any));
     jest.spyOn(component, 'getSubjects');

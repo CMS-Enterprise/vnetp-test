@@ -107,13 +107,13 @@ describe('EndpointGroupModalComponent', () => {
     });
   });
 
-  it('should call to create a Route Profile', () => {
+  it('should call to create an Endpoint Group', () => {
     const service = TestBed.inject(V2AppCentricEndpointGroupsService);
     const createEndpointGroupSpy = jest.spyOn(service, 'createOneEndpointGroup');
 
     component.ModalMode = ModalMode.Create;
     component.form.setValue({
-      name: 'route-profile1',
+      name: 'epg1',
       bridgeDomain: 'bd-123',
       applicationProfileId: 'ap-123',
       intraEpgIsolation: true,
@@ -137,7 +137,7 @@ describe('EndpointGroupModalComponent', () => {
       bridgeDomain: 'bd-123',
       applicationProfileId: 'ap-123',
       intraEpgIsolation: true,
-      name: 'route-profile1',
+      name: 'epg1',
       alias: '',
       description: 'updated description!',
     });

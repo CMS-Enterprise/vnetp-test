@@ -108,7 +108,7 @@ describe('ContractComponent', () => {
     });
   });
 
-  it('should delete app profile', () => {
+  it('should delete contract', () => {
     const contractToDelete = { id: '123', description: 'Bye!' } as Contract;
     const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
     component.deleteContract(contractToDelete);
@@ -117,7 +117,7 @@ describe('ContractComponent', () => {
     expect(getContractsMock).toHaveBeenCalled();
   });
 
-  it('should restore application profile', () => {
+  it('should restore contract', () => {
     const contract = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['contractService'], 'restoreOneContract').mockReturnValue(of({} as any));
     jest.spyOn(component, 'getContracts');
@@ -168,7 +168,7 @@ describe('ContractComponent', () => {
         expect(unsubscribeSpy).toHaveBeenCalled();
       });
       it('should call ngx.setModalData and ngx.getModal().open', () => {
-        const contract = { id: 1, name: 'Test App Profile' } as any;
+        const contract = { id: 1, name: 'Test Contract' } as any;
         component.tenantId = { id: '1' } as any;
         component.openContractModal(ModalMode.Edit, contract);
 
