@@ -127,7 +127,7 @@ describe('EndpointGroupModalComponent', () => {
     expect(createEndpointGroupSpy).toHaveBeenCalled();
   });
 
-  it('should call to update a Route Profile', () => {
+  it('should call to update an Endpoint Group ', () => {
     const service = TestBed.inject(V2AppCentricEndpointGroupsService);
     const updateEndpointGroupSpy = jest.spyOn(service, 'updateOneEndpointGroup');
 

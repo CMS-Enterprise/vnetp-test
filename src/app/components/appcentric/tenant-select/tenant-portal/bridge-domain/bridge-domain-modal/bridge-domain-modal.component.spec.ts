@@ -20,6 +20,8 @@ import { V2AppCentricBridgeDomainsService } from 'client';
 import { Subscription } from 'rxjs';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { By } from '@angular/platform-browser';
 describe('BridgeDomainModalComponent', () => {
   let component: BridgeDomainModalComponent;
   let fixture: ComponentFixture<BridgeDomainModalComponent>;
@@ -224,5 +226,94 @@ describe('BridgeDomainModalComponent', () => {
     component.bridgeDomainId = 'bridgeDomainId-123';
     component.removeL3Out(l3OutToDelete);
     expect(component.getL3OutsTableData).toHaveBeenCalled();
+  });
+
+  it('should call to create an Bridge Domain', () => {
+    const service = TestBed.inject(V2AppCentricBridgeDomainsService);
+    const createBridgeDomainSpy = jest.spyOn(service, 'createOneBridgeDomain');
+
+    component.modalMode = ModalMode.Create;
+    component.form.setValue({
+      name: 'bridge-domain1',
+      arpFlooding: true,
+      bdMacAddress: '',
+      epMoveDetectionModeGarp: false,
+      limitLocalIpLearning: true,
+      unicastRouting: true,
+      vrfId: 'vrfId123',
+      alias: '',
+      description: 'description!',
+      l3OutForRouteProfileId: 'uuid123',
+      routeProfileId: 'route-profile123',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createBridgeDomainSpy).toHaveBeenCalled();
+  });
+
+  it('should call to update a Bridge Domain', () => {
+    const service = TestBed.inject(V2AppCentricBridgeDomainsService);
+    const updateBridgeDomainSpy = jest.spyOn(service, 'updateOneBridgeDomain');
+    jest.spyOn(component, 'closeModal');
+
+    component.modalMode = ModalMode.Edit;
+    component.bridgeDomainId = '123';
+    component.form.setValue({
+      name: 'bridge-domain1',
+      arpFlooding: true,
+      bdMacAddress: '',
+      epMoveDetectionModeGarp: false,
+      limitLocalIpLearning: true,
+      unicastRouting: true,
+      vrfId: 'vrfId123',
+      alias: '',
+      description: 'description!',
+      l3OutForRouteProfileId: 'uuid123',
+      routeProfileId: 'route-profile123',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(updateBridgeDomainSpy).toHaveBeenCalled();
+    expect(component['closeModal']).toHaveBeenCalled();
+  });
+
+  describe('getData', () => {
+    const createBridgeDomainDto = () => ({
+      ModalMode: ModalMode.Edit,
+      BridgeDomain: { id: 1 },
+    });
+    it('should run getData', () => {
+      jest.spyOn(component, 'getVrfs');
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createBridgeDomainDto());
+
+      component.getData();
+
+      expect(component.form.controls.description.enabled).toBe(true);
+      expect(component.getVrfs).toHaveBeenCalled();
+    });
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    const ngx = component['ngx'];
+
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    component['closeModal']();
+
+    expect(ngxSpy).toHaveBeenCalledWith('bridgeDomainModal');
+  });
+
+  it('should reset the form when closing the modal', () => {
+    component.form.controls.description.setValue('Test');
+
+    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
+    cancelButton.nativeElement.click();
+
+    expect(component.form.controls.description.value).toBe('');
   });
 });
