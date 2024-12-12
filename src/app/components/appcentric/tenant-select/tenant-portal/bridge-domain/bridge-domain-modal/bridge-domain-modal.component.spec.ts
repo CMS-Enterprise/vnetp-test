@@ -150,7 +150,7 @@ describe('BridgeDomainModalComponent', () => {
     });
   });
 
-  describe('importConsumedContractsEpgRelationonfig', () => {
+  describe('importAssociatedL3Outs', () => {
     const mockNgxSmartModalComponent = {
       getData: jest.fn().mockReturnValue({ modalYes: true }),
       removeData: jest.fn(),

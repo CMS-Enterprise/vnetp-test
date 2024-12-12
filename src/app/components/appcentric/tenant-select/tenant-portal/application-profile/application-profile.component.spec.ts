@@ -143,9 +143,6 @@ describe('ApplicationProfileComponent', () => {
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
     component.restoreApplicationProfile(appProfile);
-
-    // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
-    // expect(component.tableComponentDto.searchText).toBe(params.searchText);
     expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
   });
 

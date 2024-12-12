@@ -111,9 +111,9 @@ describe('RouteProfilesComponent', () => {
     const routeProfileToDelete = { id: '123', description: 'Bye!' } as RouteProfile;
     const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
     component.deleteRouteProfile(routeProfileToDelete);
-    const getAppProfilesMock = jest.spyOn(component['routeProfileService'], 'getManyRouteProfile');
+    const getRouteProfilesSpy = jest.spyOn(component['routeProfileService'], 'getManyRouteProfile');
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getAppProfilesMock).toHaveBeenCalled();
+    expect(getRouteProfilesSpy).toHaveBeenCalled();
   });
 
   it('should restore route profile', () => {
@@ -125,19 +125,16 @@ describe('RouteProfilesComponent', () => {
     expect(component.getRouteProfiles).toHaveBeenCalled();
   });
 
-  it('should routely search params when filtered results is true', () => {
+  it('should apply search params when filtered results is true', () => {
     const routeProfile = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['routeProfileService'], 'restoreOneRouteProfile').mockReturnValue(of({} as any));
 
-    const getAppProfilesSpy = jest.spyOn(component, 'getRouteProfiles');
+    const getRouteProfilesSpy = jest.spyOn(component, 'getRouteProfiles');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
     component.restoreRouteProfile(routeProfile);
-
-    // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
-    // expect(component.tableComponentDto.searchText).toBe(params.searchText);
-    expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
+    expect(getRouteProfilesSpy).toHaveBeenCalledWith(params);
   });
 
   describe('openRouteProfileModal', () => {
@@ -167,7 +164,7 @@ describe('RouteProfilesComponent', () => {
         expect(unsubscribeSpy).toHaveBeenCalled();
       });
       it('should call ngx.setModalData and ngx.getModal().open', () => {
-        const routeProfile = { id: 1, name: 'Test App Profile' } as any;
+        const routeProfile = { id: 1, name: 'Test Route Profile' } as any;
         component.tenantId = { id: '1' } as any;
         component.openRouteProfileModal(ModalMode.Edit, routeProfile);
 

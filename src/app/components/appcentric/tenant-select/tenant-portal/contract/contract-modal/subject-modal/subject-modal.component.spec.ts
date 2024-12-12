@@ -67,23 +67,17 @@ describe('SubjectModalComponent', () => {
     component.subjectId = '1';
     const filterToRemove = { id: '123', description: 'Bye!', contractId: 'epgId-123', tenantId: 'tenantId-123' };
     component.removeFilter(filterToRemove);
-    const getFiltersSpy = jest.spyOn(component['filterService'], 'getManyFilter');
     jest.spyOn(component['subjectsService'], 'getOneSubject').mockReturnValue(of({} as any));
-    // expect(getFiltersSpy).toHaveBeenCalled();
-    // expect(component['subjectsService'].getOneSubject).toHaveBeenCalledWith({id: '1', relations: ['filters']});
   });
 
   it('should add filter', () => {
     component.subjectId = '1';
     component.selectedFilter = { id: '123', tenantId: 'tenantId-123' };
     component.addFilter();
-    const getFiltersSpy = jest.spyOn(component['filterService'], 'getManyFilter');
     jest.spyOn(component['subjectsService'], 'getOneSubject').mockReturnValue(of({} as any));
-    // expect(getFiltersSpy).toHaveBeenCalled();
-    // expect(component['subjectsService'].getOneSubject).toHaveBeenCalledWith({id: '1', relations: ['filters']});
   });
 
-  it('should call to create a subject', () => {
+  it('should call to create a Subject', () => {
     const service = TestBed.inject(V2AppCentricSubjectsService);
     const createSubjectSpy = jest.spyOn(service, 'createOneSubject');
 

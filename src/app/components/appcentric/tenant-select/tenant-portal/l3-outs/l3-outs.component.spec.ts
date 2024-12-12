@@ -108,16 +108,16 @@ describe('L3OutsComponent', () => {
     });
   });
 
-  it('should delete route profile', () => {
+  it('should delete L3 out', () => {
     const l3outToDelete = { id: '123', description: 'Bye!' } as L3Out;
     const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
     component.deleteL3Out(l3outToDelete);
-    const getAppProfilesMock = jest.spyOn(component['l3OutService'], 'getManyL3Out');
+    const getL3OutsSpy = jest.spyOn(component['l3OutService'], 'getManyL3Out');
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getAppProfilesMock).toHaveBeenCalled();
+    expect(getL3OutsSpy).toHaveBeenCalled();
   });
 
-  it('should restore route profile', () => {
+  it('should restore L3 out', () => {
     const l3out = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['l3OutService'], 'restoreOneL3Out').mockReturnValue(of({} as any));
     jest.spyOn(component, 'getL3Outs');
@@ -126,19 +126,16 @@ describe('L3OutsComponent', () => {
     expect(component.getL3Outs).toHaveBeenCalled();
   });
 
-  it('should routely search params when filtered results is true', () => {
+  it('should apply search params when filtered results is true', () => {
     const l3out = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['l3OutService'], 'restoreOneL3Out').mockReturnValue(of({} as any));
 
-    const getAppProfilesSpy = jest.spyOn(component, 'getL3Outs');
+    const getL3OutsSpy = jest.spyOn(component, 'getL3Outs');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
     component.restoreL3Out(l3out);
-
-    // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
-    // expect(component.tableComponentDto.searchText).toBe(params.searchText);
-    expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
+    expect(getL3OutsSpy).toHaveBeenCalledWith(params);
   });
 
   describe('openL3OutModal', () => {

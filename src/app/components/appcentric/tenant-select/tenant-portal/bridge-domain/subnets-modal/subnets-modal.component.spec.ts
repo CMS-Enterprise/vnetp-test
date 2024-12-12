@@ -211,14 +211,14 @@ describe('SubnetsModalComponent', () => {
   });
 
   describe('getData', () => {
-    const createAppProfileDto = () => ({
+    const createSubnetDto = () => ({
       ModalMode: ModalMode.Edit,
       bridgeDomain: { id: 1 },
     });
     it('should run getData', () => {
       jest.spyOn(component, 'getSubnets');
       const ngx = TestBed.inject(NgxSmartModalService);
-      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createAppProfileDto());
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createSubnetDto());
 
       component.getData();
 
@@ -227,16 +227,16 @@ describe('SubnetsModalComponent', () => {
     });
   });
 
-  it('should delete route profile', () => {
+  it('should delete subnet', () => {
     const subnetToDelete = { id: '123', description: 'Bye!' } as AppCentricSubnet;
     const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
     component.removeSubnet(subnetToDelete);
-    const getAppProfilesMock = jest.spyOn(component['subnetsService'], 'getManyAppCentricSubnet');
+    const getSubnetsMock = jest.spyOn(component['subnetsService'], 'getManyAppCentricSubnet');
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getAppProfilesMock).toHaveBeenCalled();
+    expect(getSubnetsMock).toHaveBeenCalled();
   });
 
-  it('should restore route profile', () => {
+  it('should restore subnet', () => {
     const subnet = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['subnetsService'], 'restoreOneAppCentricSubnet').mockReturnValue(of({} as any));
     jest.spyOn(component, 'getSubnets');
@@ -245,18 +245,16 @@ describe('SubnetsModalComponent', () => {
     expect(component.getSubnets).toHaveBeenCalled();
   });
 
-  it('should routely search params when filtered results is true', () => {
+  it('should apply search params when filtered results is true', () => {
     const subnet = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['subnetsService'], 'restoreOneAppCentricSubnet').mockReturnValue(of({} as any));
 
-    const getAppProfilesSpy = jest.spyOn(component, 'getSubnets');
+    const getSubnetsSpy = jest.spyOn(component, 'getSubnets');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
     component.restoreSubnet(subnet);
 
-    // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
-    // expect(component.tableComponentDto.searchText).toBe(params.searchText);
-    expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
+    expect(getSubnetsSpy).toHaveBeenCalledWith(params);
   });
 });

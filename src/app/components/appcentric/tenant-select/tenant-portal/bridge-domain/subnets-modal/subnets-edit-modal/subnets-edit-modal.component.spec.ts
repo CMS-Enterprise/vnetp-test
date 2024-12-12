@@ -97,7 +97,7 @@ describe('SubnetsEditModalComponent', () => {
     });
   });
 
-  it('should call to create a Route Profile', () => {
+  it('should call to create an AppCentric Subnet', () => {
     const service = TestBed.inject(V2AppCentricAppCentricSubnetsService);
     const createSubnetSpy = jest.spyOn(service, 'createOneAppCentricSubnet');
 
@@ -121,7 +121,7 @@ describe('SubnetsEditModalComponent', () => {
     expect(createSubnetSpy).toHaveBeenCalled();
   });
 
-  it('should call to update a Route Profile', () => {
+  it('should call to update an AppCentric Subnet', () => {
     const service = TestBed.inject(V2AppCentricAppCentricSubnetsService);
     const updateSubnetSpy = jest.spyOn(service, 'updateOneAppCentricSubnet');
 

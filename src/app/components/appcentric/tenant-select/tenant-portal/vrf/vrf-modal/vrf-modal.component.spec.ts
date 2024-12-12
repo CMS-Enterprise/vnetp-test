@@ -118,7 +118,7 @@ describe('VrfModalComponent', () => {
     expect(createVrfSpy).toHaveBeenCalled();
   });
 
-  it('should call to update a  Vrf', () => {
+  it('should call to update a Vrf', () => {
     const service = TestBed.inject(V2AppCentricVrfsService);
     const updateVrfSpy = jest.spyOn(service, 'updateOneVrf');
 

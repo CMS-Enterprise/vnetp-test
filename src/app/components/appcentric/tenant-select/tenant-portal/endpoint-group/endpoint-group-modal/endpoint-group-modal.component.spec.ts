@@ -170,7 +170,7 @@ describe('EndpointGroupModalComponent', () => {
   describe('getData', () => {
     const createEndpointGroupDto = () => ({
       ModalMode: ModalMode.Edit,
-      ApplicationProfile: { id: 1 },
+      endpointGroup: { id: 1 },
     });
     it('should run getData', () => {
       const ngx = TestBed.inject(NgxSmartModalService);

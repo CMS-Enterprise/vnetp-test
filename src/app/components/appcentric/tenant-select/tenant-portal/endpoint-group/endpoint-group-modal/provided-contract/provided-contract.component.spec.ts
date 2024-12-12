@@ -45,14 +45,14 @@ describe('ProvidedContractsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should remove contract', () => {
+  it('should remove provided contract', () => {
     const contractToDelete = { id: '123', description: 'Bye!', endpointGroupId: 'epgId-123', tenantId: 'tenantId-123' } as Contract;
     component.removeContract(contractToDelete);
     const getProvidedContractsMock = jest.spyOn(component['endpointGroupsService'], 'getOneEndpointGroup');
     expect(getProvidedContractsMock).toHaveBeenCalled();
   });
 
-  it('should add contract', () => {
+  it('should add provided contract', () => {
     component.selectedContract = { id: '123', tenantId: 'tenantId-123' };
     component.addContract();
     const getProvidedContractsMock = jest.spyOn(component['endpointGroupsService'], 'getOneEndpointGroup');

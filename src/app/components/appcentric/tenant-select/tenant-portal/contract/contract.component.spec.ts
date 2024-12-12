@@ -135,9 +135,6 @@ describe('ContractComponent', () => {
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
     component.restoreContract(contract);
-
-    // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
-    // expect(component.tableComponentDto.searchText).toBe(params.searchText);
     expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
   });
 

@@ -70,19 +70,17 @@ describe('ContractModalComponent', () => {
     expect(component.getSubjects).toHaveBeenCalled();
   });
 
-  it('should routely search params when filtered results is true', () => {
+  it('should apply search params when filtered results is true', () => {
     const subject = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['subjectsService'], 'restoreOneSubject').mockReturnValue(of({} as any));
 
-    const getAppProfilesSpy = jest.spyOn(component, 'getSubjects');
+    const getSubjectsMock = jest.spyOn(component, 'getSubjects');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
     component.restoreSubject(subject);
 
-    // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
-    // expect(component.tableComponentDto.searchText).toBe(params.searchText);
-    expect(getAppProfilesSpy).toHaveBeenCalled();
+    expect(getSubjectsMock).toHaveBeenCalled();
   });
 
   describe('Name', () => {
@@ -250,7 +248,7 @@ describe('ContractModalComponent', () => {
   describe('getData', () => {
     const createContractDto = () => ({
       ModalMode: ModalMode.Edit,
-      ApplicationProfile: { id: 1 },
+      contract: { id: 1 },
     });
     it('should run getData', () => {
       const ngx = TestBed.inject(NgxSmartModalService);

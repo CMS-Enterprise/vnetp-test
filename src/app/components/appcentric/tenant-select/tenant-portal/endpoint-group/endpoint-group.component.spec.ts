@@ -109,8 +109,8 @@ describe('EndpointGroupComponent', () => {
   it('should delete endpoint group', () => {
     const endpointGroupToDelete = { id: '123', description: 'Bye!' } as EndpointGroup;
     component.deleteEndpointGroup(endpointGroupToDelete);
-    const getAppProfilesMock = jest.spyOn(component['endpointGroupService'], 'getManyEndpointGroup');
-    expect(getAppProfilesMock).toHaveBeenCalled();
+    const getEndpointGroupsMock = jest.spyOn(component['endpointGroupService'], 'getManyEndpointGroup');
+    expect(getEndpointGroupsMock).toHaveBeenCalled();
   });
 
   it('should restore endpoint group', () => {
@@ -122,19 +122,16 @@ describe('EndpointGroupComponent', () => {
     expect(component.getEndpointGroups).toHaveBeenCalled();
   });
 
-  it('should routely search params when filtered results is true', () => {
+  it('should apply search params when filtered results is true', () => {
     const endpointGroup = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['endpointGroupService'], 'restoreOneEndpointGroup').mockReturnValue(of({} as any));
 
-    const getAppProfilesSpy = jest.spyOn(component, 'getEndpointGroups');
+    const getEndpointGroupsSpy = jest.spyOn(component, 'getEndpointGroups');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
     component.restoreEndpointGroup(endpointGroup);
-
-    // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
-    // expect(component.tableComponentDto.searchText).toBe(params.searchText);
-    expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
+    expect(getEndpointGroupsSpy).toHaveBeenCalledWith(params);
   });
 
   describe('openEndpointGroupModal', () => {

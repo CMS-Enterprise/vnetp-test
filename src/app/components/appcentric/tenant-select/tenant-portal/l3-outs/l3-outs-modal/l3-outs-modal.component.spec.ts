@@ -106,7 +106,7 @@ describe('L3OutsModalComponent', () => {
 
   it('should call to create a l3Out', () => {
     const service = TestBed.inject(V2AppCentricL3outsService);
-    const createVrfSpy = jest.spyOn(service, 'createOneL3Out');
+    const createL3OutSpy = jest.spyOn(service, 'createOneL3Out');
 
     component.modalMode = ModalMode.Create;
     component.form.setValue({
@@ -119,12 +119,12 @@ describe('L3OutsModalComponent', () => {
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
     saveButton.nativeElement.click();
 
-    expect(createVrfSpy).toHaveBeenCalled();
+    expect(createL3OutSpy).toHaveBeenCalled();
   });
 
   it('should call to update an l3Out', () => {
     const service = TestBed.inject(V2AppCentricL3outsService);
-    const updateVrfSpy = jest.spyOn(service, 'updateOneL3Out');
+    const updateL3OutSpy = jest.spyOn(service, 'updateOneL3Out');
 
     component.modalMode = ModalMode.Edit;
     component.l3OutId = '123';
@@ -138,7 +138,7 @@ describe('L3OutsModalComponent', () => {
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
     saveButton.nativeElement.click();
 
-    expect(updateVrfSpy).toHaveBeenCalled();
+    expect(updateL3OutSpy).toHaveBeenCalled();
   });
 
   it('should call ngx.close with the correct argument when cancelled', () => {
@@ -161,7 +161,7 @@ describe('L3OutsModalComponent', () => {
   });
 
   describe('getData', () => {
-    const createVrfDto = () => ({
+    const createL3OutDto = () => ({
       ModalMode: ModalMode.Edit,
       l3Out: { id: 1, vrfId: 1 },
     });
@@ -171,11 +171,10 @@ describe('L3OutsModalComponent', () => {
       const getOneVrfSpy = jest.spyOn(vrfService, 'getOneVrf');
 
       const ngx = TestBed.inject(NgxSmartModalService);
-      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createVrfDto());
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createL3OutDto());
 
       component.getData();
 
-      // expect(getVrfsSpy).toHaveBeenCalled();
       expect(getOneVrfSpy).toHaveBeenCalled();
       expect(component.form.controls.description.enabled).toBe(true);
       component.getVrfs();

@@ -108,16 +108,16 @@ describe('VrfComponent', () => {
     });
   });
 
-  it('should delete route profile', () => {
+  it('should delete a vrf', () => {
     const vrfToDelete = { id: '123', description: 'Bye!' } as Vrf;
     const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
     component.deleteVrf(vrfToDelete);
-    const getAppProfilesMock = jest.spyOn(component['vrfService'], 'getManyVrf');
+    const getVrfsMock = jest.spyOn(component['vrfService'], 'getManyVrf');
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getAppProfilesMock).toHaveBeenCalled();
+    expect(getVrfsMock).toHaveBeenCalled();
   });
 
-  it('should restore route profile', () => {
+  it('should restore a vrf', () => {
     const vrf = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['vrfService'], 'restoreOneVrf').mockReturnValue(of({} as any));
     jest.spyOn(component, 'getVrfs');
@@ -126,19 +126,16 @@ describe('VrfComponent', () => {
     expect(component.getVrfs).toHaveBeenCalled();
   });
 
-  it('should routely search params when filtered results is true', () => {
+  it('should apply search params when filtered results is true', () => {
     const vrf = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['vrfService'], 'restoreOneVrf').mockReturnValue(of({} as any));
 
-    const getAppProfilesSpy = jest.spyOn(component, 'getVrfs');
+    const getVrfsMock = jest.spyOn(component, 'getVrfs');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
     component.restoreVrf(vrf);
-
-    // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
-    // expect(component.tableComponentDto.searchText).toBe(params.searchText);
-    expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
+    expect(getVrfsMock).toHaveBeenCalledWith(params);
   });
 
   describe('openVrfModal', () => {
@@ -168,7 +165,7 @@ describe('VrfComponent', () => {
         expect(unsubscribeSpy).toHaveBeenCalled();
       });
       it('should call ngx.setModalData and ngx.getModal().open', () => {
-        const vrf = { id: 1, name: 'Test App Profile' } as any;
+        const vrf = { id: 1, name: 'Test Vrf' } as any;
         component.tenantId = { id: '1' } as any;
         component.openVrfModal(ModalMode.Edit, vrf);
 

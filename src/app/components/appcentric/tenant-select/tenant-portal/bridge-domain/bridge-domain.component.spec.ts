@@ -20,7 +20,6 @@ import { of, Subject, Subscription } from 'rxjs';
 import { BridgeDomain, V2AppCentricBridgeDomainsService, V2AppCentricVrfsService } from 'client';
 import { BridgeDomainModalDto } from 'src/app/models/appcentric/bridge-domain-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
 
 describe('BridgeDomainComponent', () => {
   let component: BridgeDomainComponent;
@@ -118,9 +117,9 @@ describe('BridgeDomainComponent', () => {
     const bridgeDomainToDelete = { id: '123', description: 'Bye!' } as BridgeDomain;
     const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
     component.deleteBridgeDomain(bridgeDomainToDelete);
-    const getAppProfilesMock = jest.spyOn(component['bridgeDomainService'], 'getManyBridgeDomain');
+    const getBridgeDomainSpy = jest.spyOn(component['bridgeDomainService'], 'getManyBridgeDomain');
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getAppProfilesMock).toHaveBeenCalled();
+    expect(getBridgeDomainSpy).toHaveBeenCalled();
   });
 
   it('should restore bridge domain', () => {
@@ -132,19 +131,17 @@ describe('BridgeDomainComponent', () => {
     expect(component.getBridgeDomains).toHaveBeenCalled();
   });
 
-  it('should routely search params when filtered results is true', () => {
+  it('should apply search params when filtered results is true', () => {
     const bridgeDomain = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['bridgeDomainService'], 'restoreOneBridgeDomain').mockReturnValue(of({} as any));
 
-    const getAppProfilesSpy = jest.spyOn(component, 'getBridgeDomains');
+    const getBridgeDomainSpy = jest.spyOn(component, 'getBridgeDomains');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
     component.restoreBridgeDomain(bridgeDomain);
 
-    // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
-    // expect(component.tableComponentDto.searchText).toBe(params.searchText);
-    expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
+    expect(getBridgeDomainSpy).toHaveBeenCalledWith(params);
   });
 
   describe('openBridgeDomainModal', () => {

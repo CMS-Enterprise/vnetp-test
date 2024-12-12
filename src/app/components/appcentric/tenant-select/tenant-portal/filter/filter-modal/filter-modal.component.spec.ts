@@ -56,23 +56,6 @@ describe('FilterEntryModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should delete route profile', () => {
-    const filterEntryToDelete = { id: '123', description: 'Bye!' } as FilterEntry;
-    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
-    component.removeFilterEntry(filterEntryToDelete);
-    jest.spyOn(component, 'getFilterEntries');
-    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-  });
-
-  it('should restore route profile', () => {
-    const filterEntry = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['filterEntriesService'], 'restoreOneFilterEntry').mockReturnValue(of({} as any));
-    jest.spyOn(component, 'getFilterEntries');
-    component.restoreFilterEntry(filterEntry);
-    expect(component['filterEntriesService'].restoreOneFilterEntry).toHaveBeenCalledWith({ id: filterEntry.id });
-    expect(component.getFilterEntries).toHaveBeenCalled();
-  });
-
   describe('Name', () => {
     it('should have a minimum length of 3 and maximum length of 100', () => {
       const { name } = component.form.controls;
@@ -117,6 +100,23 @@ describe('FilterEntryModalComponent', () => {
       description.setValue('a'.repeat(501));
       expect(description.valid).toBe(false);
     });
+  });
+
+  it('should delete filter entry', () => {
+    const filterEntryToDelete = { id: '123', description: 'Bye!' } as FilterEntry;
+    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    component.removeFilterEntry(filterEntryToDelete);
+    jest.spyOn(component, 'getFilterEntries');
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+  });
+
+  it('should restore filter entry', () => {
+    const filterEntry = { id: '1', deletedAt: true } as any;
+    jest.spyOn(component['filterEntriesService'], 'restoreOneFilterEntry').mockReturnValue(of({} as any));
+    jest.spyOn(component, 'getFilterEntries');
+    component.restoreFilterEntry(filterEntry);
+    expect(component['filterEntriesService'].restoreOneFilterEntry).toHaveBeenCalledWith({ id: filterEntry.id });
+    expect(component.getFilterEntries).toHaveBeenCalled();
   });
 
   describe('importFilterEntries', () => {
@@ -175,9 +175,9 @@ describe('FilterEntryModalComponent', () => {
     });
   });
 
-  it('should call to create an Application Profile', () => {
+  it('should call to create a filter', () => {
     const service = TestBed.inject(V2AppCentricFiltersService);
-    const createAppProfileSpy = jest.spyOn(service, 'createOneFilter');
+    const createFilterSpy = jest.spyOn(service, 'createOneFilter');
 
     component.modalMode = ModalMode.Create;
     component.form.setValue({
@@ -189,7 +189,7 @@ describe('FilterEntryModalComponent', () => {
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
     saveButton.nativeElement.click();
 
-    expect(createAppProfileSpy).toHaveBeenCalled();
+    expect(createFilterSpy).toHaveBeenCalled();
   });
 
   it('should call ngx.close with the correct argument when cancelled', () => {
@@ -224,13 +224,13 @@ describe('FilterEntryModalComponent', () => {
   });
 
   describe('getData', () => {
-    const createAppProfileDto = () => ({
+    const createFilterDto = () => ({
       modalMode: ModalMode.Edit,
       filter: { id: 1 },
     });
     it('should run getData', () => {
       const ngx = TestBed.inject(NgxSmartModalService);
-      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createAppProfileDto());
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createFilterDto());
       jest.spyOn(component, 'getFilterEntries');
       component.getData();
 
@@ -240,14 +240,14 @@ describe('FilterEntryModalComponent', () => {
     });
   });
 
-  describe('openRouteProfileModal', () => {
+  describe('openFilterEntryModal', () => {
     describe('openModal', () => {
       beforeEach(() => {
         jest.spyOn(component, 'getFilterEntries');
         jest.spyOn(component['ngx'], 'resetModalData');
       });
 
-      it('should subscribe to routeProfileModal onCloseFinished event and unsubscribe afterwards', () => {
+      it('should subscribe to filterEntryModal onCloseFinished event and unsubscribe afterwards', () => {
         const onCloseFinished = new Subject<void>();
         const mockModal = { onCloseFinished, open: jest.fn() };
         jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
@@ -267,7 +267,7 @@ describe('FilterEntryModalComponent', () => {
         expect(unsubscribeSpy).toHaveBeenCalled();
       });
       it('should call ngx.setModalData and ngx.getModal().open', () => {
-        const filterEntry = { id: 1, name: 'Test App Profile' } as any;
+        const filterEntry = { id: 1, name: 'Test Filter Entry' } as any;
         component.tenantId = { id: '1' } as any;
         component.openFilterEntryModal(ModalMode.Edit, filterEntry);
 

@@ -160,7 +160,7 @@ describe('RouteProfilesModalComponent', () => {
   describe('getData', () => {
     const createRouteProfileDto = () => ({
       ModalMode: ModalMode.Edit,
-      ApplicationProfile: { id: 1 },
+      RouteProfile: { id: 1 },
     });
     it('should run getData', () => {
       const ngx = TestBed.inject(NgxSmartModalService);

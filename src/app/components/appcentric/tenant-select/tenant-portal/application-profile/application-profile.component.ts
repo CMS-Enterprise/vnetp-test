@@ -204,30 +204,6 @@ export class ApplicationProfileComponent implements OnInit {
     });
   }
 
-  // public openEndpointGroupModal(applicationProfile: ApplicationProfile): void {
-  //   const dto = new ApplicationProfileModalDto();
-
-  //   dto.ApplicationProfile = applicationProfile;
-  //   this.subscribeToEndpointGroupModal();
-  //   this.ngx.setModalData(dto, 'endpointGroupModal');
-  //   this.ngx.getModal('endpointGroupModal').open();
-  // }
-
-  // private subscribeToEndpointGroupModal(): void {
-  //   this.endpointGroupModalSubscription = this.ngx.getModal('endpointGroupModal').onCloseFinished.subscribe(() => {
-  //     this.ngx.resetModalData('endpointGroupModal');
-  //     this.endpointGroupModalSubscription.unsubscribe();
-  //     const params = this.tableContextService.getSearchLocalStorage();
-  //     const { filteredResults } = params;
-
-  //     if (filteredResults) {
-  //       this.getApplicationProfiles(params);
-  //     } else {
-  //       this.getApplicationProfiles();
-  //     }
-  //   });
-  // }
-
   public sanitizeData(entities) {
     return entities.map(entity => {
       this.mapToCsv(entity);

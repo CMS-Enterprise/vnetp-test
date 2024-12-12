@@ -109,16 +109,16 @@ describe('FilterComponent', () => {
     });
   });
 
-  it('should delete route profile', () => {
+  it('should delete filter', () => {
     const filterToDelete = { id: '123', description: 'Bye!' } as Filter;
     const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
     component.deleteFilter(filterToDelete);
-    const getAppProfilesMock = jest.spyOn(component['filterService'], 'getManyFilter');
+    const getFiltersMock = jest.spyOn(component['filterService'], 'getManyFilter');
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getAppProfilesMock).toHaveBeenCalled();
+    expect(getFiltersMock).toHaveBeenCalled();
   });
 
-  it('should restore route profile', () => {
+  it('should restore filter', () => {
     const filter = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['filterService'], 'restoreOneFilter').mockReturnValue(of({} as any));
     jest.spyOn(component, 'getFilters');
@@ -131,15 +131,12 @@ describe('FilterComponent', () => {
     const filter = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['filterService'], 'restoreOneFilter').mockReturnValue(of({} as any));
 
-    const getAppProfilesSpy = jest.spyOn(component, 'getFilters');
+    const getFiltersMock = jest.spyOn(component, 'getFilters');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
     component.restoreFilter(filter);
-
-    // expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
-    // expect(component.tableComponentDto.searchText).toBe(params.searchText);
-    expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
+    expect(getFiltersMock).toHaveBeenCalledWith(params);
   });
 
   describe('openFilterModal', () => {

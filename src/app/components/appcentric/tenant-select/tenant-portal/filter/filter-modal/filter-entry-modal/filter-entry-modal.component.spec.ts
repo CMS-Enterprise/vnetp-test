@@ -42,6 +42,18 @@ describe('FilterEntryModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should have correct required and optional fields by default', () => {
+    const requiredFields = ['name'];
+    const optionalFields = ['alias', 'description'];
+
+    requiredFields.forEach(r => {
+      expect(isRequired(r)).toBe(true);
+    });
+    optionalFields.forEach(r => {
+      expect(isRequired(r)).toBe(false);
+    });
+  });
+
   describe('etherType', () => {
     it('ip Protocol', () => {
       const etherType = getFormControl('etherType');
@@ -206,9 +218,9 @@ describe('FilterEntryModalComponent', () => {
     });
   });
 
-  it('should call to create an Application Profile', () => {
+  it('should call to create a Filter Entry', () => {
     const service = TestBed.inject(V2AppCentricFilterEntriesService);
-    const createAppProfileSpy = jest.spyOn(service, 'createOneFilterEntry');
+    const createFilterEntrySpy = jest.spyOn(service, 'createOneFilterEntry');
 
     component.modalMode = ModalMode.Create;
     component.form.setValue({
@@ -230,7 +242,7 @@ describe('FilterEntryModalComponent', () => {
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
     saveButton.nativeElement.click();
 
-    expect(createAppProfileSpy).toHaveBeenCalled();
+    expect(createFilterEntrySpy).toHaveBeenCalled();
   });
 
   it('should call ngx.close with the correct argument when cancelled', () => {
@@ -252,26 +264,14 @@ describe('FilterEntryModalComponent', () => {
     expect(component.form.controls.description.value).toBe('');
   });
 
-  it('should have correct required and optional fields by default', () => {
-    const requiredFields = ['name'];
-    const optionalFields = ['alias', 'description'];
-
-    requiredFields.forEach(r => {
-      expect(isRequired(r)).toBe(true);
-    });
-    optionalFields.forEach(r => {
-      expect(isRequired(r)).toBe(false);
-    });
-  });
-
   describe('getData', () => {
-    const createAppProfileDto = () => ({
+    const createFilterEntryDto = () => ({
       ModalMode: ModalMode.Edit,
       filterEntryId: { id: 1 },
     });
     it('should run getData', () => {
       const ngx = TestBed.inject(NgxSmartModalService);
-      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createAppProfileDto());
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createFilterEntryDto());
 
       component.getData();
 
