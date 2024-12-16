@@ -34,8 +34,8 @@
           aria-label="description"
         />
         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.required">Description is required</div>
-          <div *ngIf="f.description.errors.maxlength">Description must be at less than 100 characters</div>
+          <div *ngIf="f.description.errors.required">Message is required</div>
+          <div *ngIf="f.description.errors.maxlength">Message must be less than 100 characters</div>
         </div>
       </div>
       <div class="form-group">
