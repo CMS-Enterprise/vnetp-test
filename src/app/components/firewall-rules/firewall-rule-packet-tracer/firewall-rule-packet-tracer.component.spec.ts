@@ -246,6 +246,13 @@ describe('FirewallRulesPacketTracerComponent', () => {
         expect(result).toBeTruthy();
       });
 
+      it('should return true for range port match', () => {
+        const rule = { sourcePorts: '1-81', serviceType: 'Port' } as any;
+        const control = { value: '80' } as AbstractControl;
+        const result = component.handlePortMatch(rule, 'source', control);
+        expect(result).toBeTruthy();
+      });
+
       it('should return false when ports dont match', () => {
         const rule = { sourcePorts: '80', serviceType: 'Port', panosApplications: [] } as any;
         const control = { value: '8080' } as AbstractControl;
