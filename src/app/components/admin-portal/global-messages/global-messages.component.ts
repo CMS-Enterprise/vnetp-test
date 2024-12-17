@@ -28,6 +28,7 @@ export class GlobalMessagesComponent implements OnInit {
     columns: [
       { name: 'Message Type', property: 'messageType' },
       { name: 'Message', property: 'description' },
+      { name: 'Tenant name', property: 'tenantName' },
       { name: '', template: () => this.actionsTemplate },
     ],
     hideAdvancedSearch: true,
@@ -79,6 +80,9 @@ export class GlobalMessagesComponent implements OnInit {
       .subscribe(
         data => {
           this.messages = data;
+          this.messages.data.map(message => {
+            message.tenantName = message.tenantName.replace(/['"]+/g, '').split('_').slice(0, -1).toString().replaceAll(',', '_');
+          });
         },
         () => {
           this.isLoading = false;

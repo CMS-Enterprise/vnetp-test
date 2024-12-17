@@ -141,25 +141,23 @@
 </ng-container>
 
 <aside class="dashboard__card">
-  <div>
-    <h2 class="dashboard__heading">
-      Tenant Messages
-      <fa-icon
-        *ngIf="!this.showOtherMessages"
-        style="cursor: pointer"
-        class="icon"
-        (click)="this.showOtherMessages = !this.showOtherMessages"
-        [icon]="['fas', 'plus']"
-      ></fa-icon>
-      <fa-icon
-        *ngIf="this.showOtherMessages"
-        style="cursor: pointer"
-        class="icon"
-        (click)="this.showOtherMessages = !this.showOtherMessages"
-        [icon]="['fas', 'minus']"
-      ></fa-icon>
-    </h2>
-  </div>
+  <h2 class="dashboard__heading">
+    <span style="cursor: pointer" (click)="this.showOtherMessages = !this.showOtherMessages"> Tenant Messages </span>
+    <fa-icon
+      style="cursor: pointer"
+      (click)="this.showOtherMessages = !this.showOtherMessages"
+      *ngIf="!this.showOtherMessages"
+      class="icon"
+      [icon]="['fas', 'plus']"
+    ></fa-icon>
+    <fa-icon
+      style="cursor: pointer"
+      (click)="this.showOtherMessages = !this.showOtherMessages"
+      *ngIf="this.showOtherMessages"
+      class="icon"
+      [icon]="['fas', 'minus']"
+    ></fa-icon>
+  </h2>
   <mat-grid-list *ngIf="this.showOtherMessages" style="left: 5%" cols="2" rowHeight="300px">
     @for (card of cards | async; track card) {
     <mat-grid-tile [colspan]="card.cols" [rowspan]="card.rows">

@@ -162,7 +162,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private getGlobalMessages(event?) {
     if (event) {
       this.messageTableComponentDto.page = event.page ? event.page : 1;
-      this.messageTableComponentDto.perPage = event.perPage ? event.perPage : 20;
+      this.messageTableComponentDto.perPage = event.perPage ? event.perPage : 5;
     } else {
       this.messageTableComponentDto.searchText = undefined;
     }
@@ -192,15 +192,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
         const newFeatureMessages = [];
         this.otherMessages.data = this.otherMessages.data.filter(message => {
           if (message.messageType === 'Training') {
-            if (trainingMessages.length === 5) {
-              return;
-            }
+            // if (trainingMessages.length === 5) {
+            //   return;
+            // }
 
             trainingMessages.push(message.description);
           } else if (message.messageType === 'NewFeature') {
-            if (newFeatureMessages.length === 5) {
-              return;
-            }
+            // if (newFeatureMessages.length === 5) {
+            //   return;
+            // }
             newFeatureMessages.push(message.description);
           }
 
