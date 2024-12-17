@@ -76,7 +76,7 @@
       </td>
     </tfoot>
   </table>
-  <section *ngIf="paginationControlsOn" class="btn-toolbar btn-toolbar--start" role="toolbar">
+  <section *ngIf="showEntitiesPerPage" class="btn-toolbar btn-toolbar--start" role="toolbar">
     <span class="mr-3">Entities per page</span>
     <div class="btn-group" role="group">
       <button type="button" value="20" (click)="itemsPerPage = $event.target.value; onTableEvent()" class="btn btn-light">20</button>

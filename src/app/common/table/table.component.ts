@@ -76,6 +76,7 @@ export class TableComponent<T> implements AfterViewInit {
 
   public showSearchBar = true;
   public paginationControlsOn = true;
+  public showEntitiesPerPage = true;
 
   public advancedSearchAdapterSubject: Subject<any> = new Subject<any>();
 
@@ -138,7 +139,18 @@ export class TableComponent<T> implements AfterViewInit {
       'bd-l3outs',
       'tenants-and-datacenters',
       'object-usage',
+    ];
+
+    const hideEntitiesPerPage = [
       'dashboard-deployments',
+      'dashboard-global-messages',
+      'import-preview',
+      'detailed-audit-log-entry',
+      'unused-network-objects/groups',
+      'unused-service-objects/groups',
+      'bd-l3outs',
+      'tenants-and-datacenters',
+      'object-usage',
     ];
 
     // if tableId is a badList ID, we hide the search bar
@@ -150,14 +162,13 @@ export class TableComponent<T> implements AfterViewInit {
       this.paginationControlsOn = false;
     }
 
+    if (hideEntitiesPerPage.includes(this.uniqueTableId)) {
+      this.showEntitiesPerPage = false;
+    }
+
     this.expandableRows = Boolean(this.config.expandableRows);
 
     this.changeRef.detectChanges();
-
-    // console.log('this.paginationControlsOn',this.paginationControlsOn);
-    // console.log('this.data', this.data);
-    // console.log('this.currentPage', this.currentPage);
-    // console.log('this.itemsPerPage', this.itemsPerPage);
   }
 
   // user has registered search parameters, we take these parameters and emit them forward
