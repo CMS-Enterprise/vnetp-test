@@ -21,5 +21,5 @@
   <a id="search-button" aria-label="searchButton" (click)="searchThis()">
     <fa-icon class="icon" [icon]="['fas', 'search']"></fa-icon>
   </a>
-  <span (keyup.enter)="clearFilteredResults()" *ngIf="filteredResults" tabindex="0" id="clear" (click)="clearFilteredResults()">clear</span>
+  <span (keyup.enter)="clearFilteredResults()" *ngIf="filteredResults" id="clear" (click)="clearFilteredResults()">clear</span>
 </div>
