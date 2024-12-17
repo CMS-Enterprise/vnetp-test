@@ -19,6 +19,7 @@ import { NatRuleGroupComponent } from './nat-rule-group.component';
 import { of, Subject, Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { RouterTestingModule } from '@angular/router/testing';
+import { EntityService } from 'src/app/services/entity.service';
 
 describe('NatRuleGroupComponent', () => {
   let component: NatRuleGroupComponent;
@@ -110,29 +111,60 @@ describe('NatRuleGroupComponent', () => {
     });
   });
 
-  // describe('Get Tiers', () => {
-  //   it('should fetch tiers joined with nat rule group', () => {
-  //     const tierService = TestBed.inject(V1TiersService);
-  //     const tiersMock = [
-  //       { name: 'tier1', natRuleGroups: ['tier1NATRuleGroup1', 'tier1NATRuleGroup2'] },
-  //       { name: 'tier2', natRuleGroups: ['tier2NATRuleGroup1', 'tier2NATRuleGroup2'] },
-  //     ];
-  //     component.tiers = tiersMock;
+  it('should call deleteOneNatRuleGroup without event params', () => {
+    const natRuleGroupService = TestBed.inject(V1NetworkSecurityNatRuleGroupsService);
+    const entityService = TestBed.inject(EntityService);
 
-  //     // const natRuleGroupsMock = ['tier1NATRuleGroup1', 'tier1NATRuleGroup2','tier2NATRuleGroup1', 'tier2NATRuleGroup2']
+    const natRuleGroup = { id: 'testId' } as any;
+    const deleteOneNatRuleGroupSpy = jest.spyOn(natRuleGroupService, 'deleteOneNatRuleGroup').mockResolvedValue({} as never);
+    const softDeleteOneNatRuleGroupSpy = jest.spyOn(natRuleGroupService, 'softDeleteOneNatRuleGroup').mockResolvedValue({} as never);
+    const natRuleGroupsMock = [
+      { name: 'fwRuleGroup1', tierName: 'tier1' },
+      { name: 'fwRuleGroup2', tierName: 'tier1' },
+      { name: 'fwRuleGroup1', tierName: 'tier2' },
+      { name: 'fwRuleGroup1', tierName: 'tier2' },
+    ];
 
-  //     // component.natRuleGroups = natRuleGroupsMock
+    const getManyNatRuleGroupSpy = jest.spyOn(natRuleGroupService, 'getManyNatRuleGroup').mockReturnValue(of({ natRuleGroupsMock } as any));
 
-  //     // const mapSpy = jest.spyOn(component.tiers, 'map')
+    const entityServiceDeleteSpy = jest.spyOn(entityService, 'deleteEntity').mockImplementationOnce((entity, options) => {
+      options.onSuccess();
+      return new Subscription();
+    });
 
-  //     const getManyTiersSpy = jest.spyOn(tierService, 'getManyTier').mockReturnValue(of({ tiersMock } as any));
+    component.deleteNatRuleGroup(natRuleGroup);
+    natRuleGroupService.getManyNatRuleGroup({
+      page: 1,
+      perPage: 20,
+      s: `{"AND": [], "OR": [{"name": {"eq": "External"}}, {"name": {"eq": "Intervrf"}}, {"type": {"eq": "ZoneBased"}}]}`,
+    });
+    expect(entityServiceDeleteSpy).toHaveBeenCalled();
 
-  //     tierService.getManyTier({ join: ['natRuleGroups'] });
-  //     expect(getManyTiersSpy).toHaveBeenCalledWith({ page: 1, perPage: 20, join: ['natRuleGroups'] });
+    expect(deleteOneNatRuleGroupSpy).toHaveBeenCalledWith({ id: natRuleGroup.id });
+    expect(softDeleteOneNatRuleGroupSpy).toHaveBeenCalledWith({ id: natRuleGroup.id });
+    expect(getManyNatRuleGroupSpy).toHaveBeenCalled();
+  });
 
-  //     // expect(mapSpy).toHaveBeenCalled()
-  //   });
-  // });
+  it('should call deleteOneNatRule with event params', () => {
+    const natRuleGroup = { id: 'testId' } as any;
+    jest.spyOn(component['natRuleGroupService'], 'deleteOneNatRuleGroup').mockResolvedValue({} as never);
+    jest.spyOn(component['natRuleGroupService'], 'softDeleteOneNatRuleGroup').mockResolvedValue({} as never);
+
+    jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
+      options.onSuccess();
+      return new Subscription();
+    });
+
+    const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
+    jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+    const getNatRuleGroupsSpy = jest.spyOn(component, 'getNatRuleGroups');
+
+    component.deleteNatRuleGroup(natRuleGroup);
+
+    expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
+    expect(component.tableComponentDto.searchText).toBe(params.searchText);
+    expect(getNatRuleGroupsSpy).toHaveBeenCalledWith(component.tableComponentDto);
+  });
   describe('openModal', () => {
     beforeEach(() => {
       jest.spyOn(component, 'getNatRuleGroups');

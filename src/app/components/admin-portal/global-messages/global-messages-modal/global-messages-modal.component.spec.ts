@@ -81,23 +81,6 @@ describe('GlobalMessagesModalComponent', () => {
     expect(component.form.controls.description.value).toBe('');
   });
 
-  // it('should call to create a message when the form is valid', () => {
-  //   const service = TestBed.inject(V3GlobalMessagesService);
-  //   const createMessageSpy = jest.spyOn(service, 'createOneMessage');
-
-  //   component.modalMode = ModalMode.Create;
-  //   component.form.setValue({
-  //     messageType: 'General',
-  //     description: 'Description',
-  //     tenant: '',
-  //   });
-
-  //   const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
-  //   saveButton.nativeElement.click();
-
-  //   expect(createMessageSpy).toHaveBeenCalled();
-  // });
-
   it('should call to create a message with tenant param', () => {
     const service = TestBed.inject(V3GlobalMessagesService);
     const createMessageSpy = jest.spyOn(service, 'createOneMessage');
@@ -114,23 +97,6 @@ describe('GlobalMessagesModalComponent', () => {
 
     expect(createMessageSpy).toHaveBeenCalled();
   });
-
-  // it('should call to create a message with optional link URL param', () => {
-  //   const service = TestBed.inject(V3GlobalMessagesService);
-  //   const createMessageSpy = jest.spyOn(service, 'createOneMessage');
-
-  //   component.modalMode = ModalMode.Create;
-  //   component.form.setValue({
-  //     messageType: 'General',
-  //     description: 'Description',
-  //     tenant: 'dcs_sandbox1_cms-east_000000000',
-  //   });
-
-  //   const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
-  //   saveButton.nativeElement.click();
-
-  //   expect(createMessageSpy).toHaveBeenCalled();
-  // });
 
   it('should not call to create a message when the form is invalid', () => {
     const service = TestBed.inject(V3GlobalMessagesService);
@@ -162,4 +128,21 @@ describe('GlobalMessagesModalComponent', () => {
       expect(component.form.controls.description.enabled).toBe(true);
     });
   });
+
+  // it('should call to create a message with optional link URL param', () => {
+  //   const service = TestBed.inject(V3GlobalMessagesService);
+  //   const createMessageSpy = jest.spyOn(service, 'createOneMessage');
+
+  //   component.modalMode = ModalMode.Create;
+  //   component.form.setValue({
+  //     messageType: 'General',
+  //     description: 'Description',
+  //     tenant: 'dcs_sandbox1_cms-east_000000000',
+  //   });
+
+  //   const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+  //   saveButton.nativeElement.click();
+
+  //   expect(createMessageSpy).toHaveBeenCalled();
+  // });
 });

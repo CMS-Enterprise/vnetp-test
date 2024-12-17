@@ -103,7 +103,6 @@ export class RuleGroupZonesComponent implements OnInit {
   ngOnInit(): void {
     this.getTiers();
     setTimeout(() => this.getZones(), 250);
-    // this.getZones();
   }
 
   public subscribeToRuleGroupZonesModal(): void {
@@ -202,7 +201,7 @@ export class RuleGroupZonesComponent implements OnInit {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  private sanitizeData(entities: any[]): any[] {
+  public sanitizeData(entities: any[]): any[] {
     return entities.map(entity => {
       this.mapToCsv(entity);
       return entity;
@@ -220,7 +219,6 @@ export class RuleGroupZonesComponent implements OnInit {
         delete obj[key];
       }
     });
-    console.log('object', obj);
     return obj;
   }
 }

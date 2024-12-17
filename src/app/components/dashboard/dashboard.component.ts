@@ -195,7 +195,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
             if (trainingMessages.length === 5) {
               return;
             }
-            // setTimeout(() => this.addLinks(message), 500);
 
             trainingMessages.push(message.description);
           } else if (message.messageType === 'NewFeature') {

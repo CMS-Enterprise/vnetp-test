@@ -3,12 +3,10 @@
 .dashboard {
   display: flex;
   justify-content: flex-start;
-  // flex-wrap: wrap;
   &__parentcard {
     padding: 1.5rem 2rem;
     border-radius: 4px;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    // margin-right: 2rem;
     margin-bottom: 2rem;
     display: flex;
     flex: auto;

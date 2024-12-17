@@ -18,7 +18,6 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import { FirewallRuleGroupComponent } from './firewall-rule-group.component';
 import { of, Subject, Subscription } from 'rxjs';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { TableContextService } from 'src/app/services/table-context.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EntityService } from 'src/app/services/entity.service';
 
@@ -67,15 +66,12 @@ describe('FirewallRuleGroupComponent', () => {
 
   describe('Get Rule Groups', () => {
     it('Get Firewall Rule Groups and add tierName as a property', () => {
-      const tierService = TestBed.inject(V1TiersService);
       const firewallRuleGroupService = TestBed.inject(V1NetworkSecurityFirewallRuleGroupsService);
       const tiersMock = [
         { name: 'tier1', firewallRuleGroups: ['tier1FWRuleGroup1', 'tier1FWRuleGroup2'] },
         { name: 'tier2', firewallRuleGroups: ['tier2FWRuleGroup1', 'tier2FWRuleGroup2'] },
       ];
       component.tiers = tiersMock;
-
-      const getManyTiersSpy = jest.spyOn(tierService, 'getManyTier').mockReturnValue(of({ tiersMock } as any));
 
       const firewallRuleGroupsMock = [
         { name: 'fwRuleGroup1', tierName: 'tier1' },
@@ -113,157 +109,64 @@ describe('FirewallRuleGroupComponent', () => {
     });
   });
 
-  // describe('Delete Firewall Rule Group', () => {
-  //   it('should delete firewallrulegroup', () => {
-  //     const service = TestBed.inject(V1NetworkSecurityFirewallRuleGroupsService);
-  //     const ruleGroupToDelete = { id: '1', tierId: '123' } as any;
-  //     component.deleteFirewallRuleGroup(ruleGroupToDelete);
-  //     const getZonesMock = jest.spyOn(service, 'getManyFirewallRuleGroup');
-  //     expect(getZonesMock).toHaveBeenCalled();
-  //   });
-  // });
+  it('should call deleteOneFirewallRuleGroup without event params', () => {
+    const firewallRuleGroupService = TestBed.inject(V1NetworkSecurityFirewallRuleGroupsService);
+    const entityService = TestBed.inject(EntityService);
 
-  // describe('delete FirewaullRuleGroup', () => {
+    const firewallRuleGroup = { id: 'testId' } as any;
+    const deleteOneFirewallRuleGroupSpy = jest.spyOn(firewallRuleGroupService, 'deleteOneFirewallRuleGroup').mockResolvedValue({} as never);
+    const softDeleteOneFirewallRuleGroupSpy = jest
+      .spyOn(firewallRuleGroupService, 'softDeleteOneFirewallRuleGroup')
+      .mockResolvedValue({} as never);
+    const firewallRuleGroupsMock = [
+      { name: 'fwRuleGroup1', tierName: 'tier1' },
+      { name: 'fwRuleGroup2', tierName: 'tier1' },
+      { name: 'fwRuleGroup1', tierName: 'tier2' },
+      { name: 'fwRuleGroup1', tierName: 'tier2' },
+    ];
 
-  // it('should call deleteOneFirewallRuleGroup without event params', () => {
-  //   const firewallRuleGroupService = TestBed.inject(V1NetworkSecurityFirewallRuleGroupsService);
-  //   const entityService = TestBed.inject(EntityService);
+    const getManyFirewallRuleGroupSpy = jest
+      .spyOn(firewallRuleGroupService, 'getManyFirewallRuleGroup')
+      .mockReturnValue(of({ firewallRuleGroupsMock } as any));
 
-  //   const firewallRuleGroup = { id: 'testId' } as any;
-  //   const deleteOneFirewallRuleGroupSpy = jest.spyOn(firewallRuleGroupService, 'deleteOneFirewallRuleGroup').mockResolvedValue({} as never);
-  //   const softDeleteOneFirewallRuleGroupSpy = jest.spyOn(firewallRuleGroupService, 'softDeleteOneFirewallRuleGroup').mockResolvedValue({} as never);
-  //   const firewallRuleGroupsMock = [{ name: 'fwRuleGroup1', tierName: 'tier1' }, { name: 'fwRuleGroup2', tierName: 'tier1' }, { name: 'fwRuleGroup1', tierName: 'tier2' }, { name: 'fwRuleGroup1', tierName: 'tier2' }]
+    const entityServiceDeleteSpy = jest.spyOn(entityService, 'deleteEntity').mockImplementationOnce((entity, options) => {
+      options.onSuccess();
+      return new Subscription();
+    });
 
-  //   const getManyFirewallRuleGroupSpy = jest.spyOn(firewallRuleGroupService, 'getManyFirewallRuleGroup').mockReturnValue(of({ firewallRuleGroupsMock } as any));
+    component.deleteFirewallRuleGroup(firewallRuleGroup);
+    firewallRuleGroupService.getManyFirewallRuleGroup({
+      page: 1,
+      perPage: 20,
+      s: `{"AND": [], "OR": [{"name": {"eq": "External"}}, {"name": {"eq": "Intervrf"}}, {"type": {"eq": "ZoneBased"}}]}`,
+    });
+    expect(entityServiceDeleteSpy).toHaveBeenCalled();
 
-  //   const entityServiceDeleteSpy = jest.spyOn(entityService, 'deleteEntity').mockImplementationOnce((entity, options) => {
-  //     options.onSuccess();
-  //     return new Subscription();
-  //   });
+    expect(deleteOneFirewallRuleGroupSpy).toHaveBeenCalledWith({ id: firewallRuleGroup.id });
+    expect(softDeleteOneFirewallRuleGroupSpy).toHaveBeenCalledWith({ id: firewallRuleGroup.id });
+    expect(getManyFirewallRuleGroupSpy).toHaveBeenCalled();
+  });
 
-  //   component.deleteFirewallRuleGroup(firewallRuleGroup);
-  //   firewallRuleGroupService.getManyFirewallRuleGroup({ page: 1, perPage: 20, s: `{"AND": [], "OR": [{"name": {"eq": "External"}}, {"name": {"eq": "Intervrf"}}, {"type": {"eq": "ZoneBased"}}]}` });
-  //   expect(entityServiceDeleteSpy).toHaveBeenCalled()
+  it('should call deleteOneFirewallRule with event params', () => {
+    const firewallRuleGroup = { id: 'testId' } as any;
+    jest.spyOn(component['firewallRuleGroupService'], 'deleteOneFirewallRuleGroup').mockResolvedValue({} as never);
+    jest.spyOn(component['firewallRuleGroupService'], 'softDeleteOneFirewallRuleGroup').mockResolvedValue({} as never);
 
-  //   expect(deleteOneFirewallRuleGroupSpy).toHaveBeenCalledWith({ id: firewallRuleGroup.id });
-  //   expect(softDeleteOneFirewallRuleGroupSpy).toHaveBeenCalledWith({ id: firewallRuleGroup.id });
-  //   expect(getManyFirewallRuleGroupSpy).toHaveBeenCalled();
+    jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
+      options.onSuccess();
+      return new Subscription();
+    });
 
-  // });
-  // it('should call deleteOneFirewallRule without event params', () => {
-  //   const firewallRuleGroupService = TestBed.inject(V1NetworkSecurityFirewallRuleGroupsService);
-  //   const entityService = TestBed.inject(EntityService);
+    const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
+    jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+    const getFirewallRuleGroupsSpy = jest.spyOn(component, 'getFirewallRuleGroups');
 
-  //   const firewallRuleGroup = { id: 'testId' } as any;
-  //   const deleteOneFirewallRuleGroupSpy = jest.spyOn(firewallRuleGroupService, 'deleteOneFirewallRuleGroup').mockResolvedValue({} as never);
-  //   const softDeleteOneFirewallRuleGroupSpy = jest.spyOn(firewallRuleGroupService, 'softDeleteOneFirewallRuleGroup').mockResolvedValue({} as never);
-  //   const firewallRuleGroupsMock = [{ name: 'fwRuleGroup1', tierName: 'tier1' }, { name: 'fwRuleGroup2', tierName: 'tier1' }, { name: 'fwRuleGroup1', tierName: 'tier2' }, { name: 'fwRuleGroup1', tierName: 'tier2' }]
+    component.deleteFirewallRuleGroup(firewallRuleGroup);
 
-  //   const getManyFirewallRuleGroupSpy = jest.spyOn(firewallRuleGroupService, 'getManyFirewallRuleGroup').mockReturnValue(of({ firewallRuleGroupsMock } as any));
-
-  //   const entityServiceDeleteSpy = jest.spyOn(entityService, 'deleteEntity').mockImplementationOnce((entity, options) => {
-  //     options.onSuccess();
-  //     return new Subscription();
-  //   });
-
-  //   component.deleteFirewallRuleGroup(firewallRuleGroup);
-  //   firewallRuleGroupService.getManyFirewallRuleGroup({ page: 1, perPage: 20, s: `{"AND": [], "OR": [{"name": {"eq": "External"}}, {"name": {"eq": "Intervrf"}}, {"type": {"eq": "ZoneBased"}}]}` });
-  //   expect(entityServiceDeleteSpy).toHaveBeenCalled()
-
-  //   expect(deleteOneFirewallRuleGroupSpy).toHaveBeenCalledWith({ id: firewallRuleGroup.id });
-  //   expect(softDeleteOneFirewallRuleGroupSpy).toHaveBeenCalledWith({ id: firewallRuleGroup.id });
-  //   expect(getManyFirewallRuleGroupSpy).toHaveBeenCalled();
-
-  // });
-  // });
-
-  // it('should call deleteOneFirewallRule without event params', () => {
-  //   const firewallRuleGroupService = TestBed.inject(V1NetworkSecurityFirewallRuleGroupsService);
-  //   const firewallRuleGroup = { id: 'testId' } as any;
-  //   const deleteOneFirewallRuleGroupSpy = jest.spyOn(firewallRuleGroupService, 'deleteOneFirewallRuleGroup').mockResolvedValue({} as never);
-  //   const softDeleteOneFirewallRuleGroupSpy = jest.spyOn(firewallRuleGroupService, 'softDeleteOneFirewallRuleGroup').mockResolvedValue({} as never);
-
-  //   jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
-  //     options.onSuccess();
-  //     return new Subscription();
-  //   });
-
-  //   const getFirewallRuleGroupsSpy = jest.spyOn(component, 'getFirewallRuleGroups');
-  //   component.deleteFirewallRuleGroup(firewallRuleGroup);
-
-  //   expect(component['entityService'].deleteEntity).toHaveBeenCalled();
-  //   expect(deleteOneFirewallRuleGroupSpy).toHaveBeenCalledWith({ id: firewallRuleGroup.id });
-  //   expect(softDeleteOneFirewallRuleGroupSpy).toHaveBeenCalledWith({ id: firewallRuleGroup.id });
-  //   expect(getFirewallRuleGroupsSpy).toHaveBeenCalled();
-  // });
-
-  // it('should call deleteOneFirewallRule with event params', () => {
-  //   const firewallRuleGroup = { id: 'testId' } as any;
-  //   // component.firewallRuleGroups;
-  //   jest.spyOn(component['firewallRuleGroupService'], 'deleteOneFirewallRuleGroup').mockResolvedValue({} as never);
-  //   jest.spyOn(component['firewallRuleGroupService'], 'softDeleteOneFirewallRuleGroup').mockResolvedValue({} as never);
-
-  //   jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
-  //     options.onSuccess();
-  //     return new Subscription();
-  //   });
-
-  //   const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
-  //   jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
-  //   const getFirewallRuleGroupsSpy = jest.spyOn(component, 'getFirewallRuleGroups');
-
-  //   component.deleteFirewallRuleGroup(firewallRuleGroup);
-
-  //   expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
-  //   expect(component.tableComponentDto.searchText).toBe(params.searchText);
-  //   expect(getFirewallRuleGroupsSpy).toHaveBeenCalledWith(component.tableComponentDto);
-  // });
-
-  // it('should call deleteOneFirewallRule without event params', () => {
-  //   const firewallRuleGroup = { id: 'testId' } as any;
-  //   component.firewallRuleGroups = { id: 'test' } as any;
-  //   const deleteOneFirewallRuleSpy = jest.spyOn(component['firewallRuleService'], 'deleteOneFirewallRule').mockResolvedValue({} as never);
-  //   const softDeleteOneFirewallRuleSpy = jest
-  //     .spyOn(component['firewallRuleService'], 'softDeleteOneFirewallRule')
-  //     .mockResolvedValue({} as never);
-
-  //   jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
-  //     options.onSuccess();
-  //     return new Subscription();
-  //   });
-
-  //   const getFirewallRulesSpy = jest.spyOn(component, 'getFirewallRules');
-  //   component.deleteFirewallRule(firewallRule);
-
-  //   expect(component['entityService'].deleteEntity).toHaveBeenCalled();
-  //   expect(deleteOneFirewallRuleSpy).toHaveBeenCalledWith({ id: firewallRule.id });
-  //   expect(softDeleteOneFirewallRuleSpy).toHaveBeenCalledWith({ id: firewallRule.id });
-  //   expect(getFirewallRulesSpy).toHaveBeenCalled();
-  // });
-
-  // describe('Get Tiers', () => {
-  //   it('should fetch tiers joined with firewall rule group', () => {
-  //     const tierService = TestBed.inject(V1TiersService);
-  //     const tiersMock = [
-  //       { name: 'tier1', firewallRuleGroups: ['tier1FWRuleGroup1', 'tier1FWRuleGroup2'] },
-  //       { name: 'tier2', firewallRuleGroups: ['tier2FWRuleGroup1', 'tier2FWRuleGroup2'] },
-  //     ];
-  //     component.tiers = tiersMock;
-
-  //     // const firewallRuleGroupsMock = ['tier1FWRuleGroup1', 'tier1FWRuleGroup2','tier2FWRuleGroup1', 'tier2FWRuleGroup2']
-
-  //     // component.firewallRuleGroups = firewallRuleGroupsMock
-
-  //     // const mapSpy = jest.spyOn(component.tiers, 'map')
-
-  //     const getManyTiersSpy = jest.spyOn(tierService, 'getManyTier').mockReturnValue(of({ tiersMock } as any));
-
-  //     tierService.getManyTier({ join: ['firewallRuleGroups'] });
-  //     expect(getManyTiersSpy).toHaveBeenCalledWith({ page: 1, perPage: 20, join: ['firewallRuleGroups'] });
-
-  //     // expect(mapSpy).toHaveBeenCalled()
-  //   });
-  // });
+    expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
+    expect(component.tableComponentDto.searchText).toBe(params.searchText);
+    expect(getFirewallRuleGroupsSpy).toHaveBeenCalledWith(component.tableComponentDto);
+  });
 
   describe('openModal', () => {
     beforeEach(() => {

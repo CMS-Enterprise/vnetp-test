@@ -20,6 +20,8 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { RuleGroupZonesComponent } from './rule-group-zones.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { RouterTestingModule } from '@angular/router/testing';
+import { EntityService } from 'src/app/services/entity.service';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 describe('RuleGroupZonesComponent', () => {
   let component: RuleGroupZonesComponent;
@@ -89,6 +91,36 @@ describe('RuleGroupZonesComponent', () => {
       expect(getManyZoneSpy).toHaveBeenCalled();
     });
   });
+
+  it('should call delete one zone without event params', () => {
+    const service = TestBed.inject(V1NetworkSecurityZonesService);
+    const entityService = TestBed.inject(EntityService);
+
+    const zone = { id: 'testId' } as any;
+    const deleteOneZoneSpy = jest.spyOn(service, 'deleteOneZone').mockResolvedValue({} as never);
+    const softDeleteOneZoneSpy = jest.spyOn(service, 'softDeleteOneZone').mockResolvedValue({} as never);
+    const zonesMock = [
+      { name: 'zone1', tierName: 'tier1' },
+      { name: 'zone2', tierName: 'tier1' },
+      { name: 'zone1', tierName: 'tier2' },
+      { name: 'zone2', tierName: 'tier2' },
+    ];
+
+    const getManyZoneSpy = jest.spyOn(service, 'getManyZone').mockReturnValue(of({ zonesMock } as any));
+
+    const entityServiceDeleteSpy = jest.spyOn(entityService, 'deleteEntity').mockImplementationOnce((entity, options) => {
+      options.onSuccess();
+      return new Subscription();
+    });
+
+    component.deleteZone(zone);
+    expect(entityServiceDeleteSpy).toHaveBeenCalled();
+
+    expect(deleteOneZoneSpy).toHaveBeenCalledWith({ id: zone.id });
+    expect(softDeleteOneZoneSpy).toHaveBeenCalledWith({ id: zone.id });
+    expect(getManyZoneSpy).toHaveBeenCalled();
+  });
+
   describe('openModal', () => {
     beforeEach(() => {
       jest.spyOn(component, 'getZones');
@@ -132,17 +164,6 @@ describe('RuleGroupZonesComponent', () => {
     });
   });
 
-  // describe('Delete Zone', () => {
-  //   it('should delete zone', () => {
-  //     const zoneService = TestBed.inject(V1NetworkSecurityZonesService);
-  //     jest.spyOn(component['zoneService'], 'deleteOneZone').mockResolvedValue({} as never);
-  //     const zoneToDelete = { id: '1', tierId: '123' } as any;
-  //     component.deleteZone(zoneToDelete);
-  //     const getZonesSpy = jest.spyOn(component, 'getZones');
-  //     expect(getZonesSpy).toHaveBeenCalled();
-  //   });
-  // });
-
   it('should apply search params when filtered results is true', () => {
     const zone = { id: '1' } as any;
     jest.spyOn(component['zoneService'], 'deleteOneZone').mockResolvedValue({} as never);
@@ -162,5 +183,45 @@ describe('RuleGroupZonesComponent', () => {
     expect(component.tableComponentDto.searchColumn).toBe(params.searchColumn);
     expect(component.tableComponentDto.searchText).toBe(params.searchText);
     expect(getZonesSpy).toHaveBeenCalledWith(component.tableComponentDto);
+  });
+
+  it('should import zones', () => {
+    const mockNgxSmartModalComponent = {
+      getData: jest.fn().mockReturnValue({ modalYes: true }),
+      removeData: jest.fn(),
+      onCloseFinished: {
+        subscribe: jest.fn(),
+      },
+    };
+    component['ngx'] = {
+      getModal: jest.fn().mockReturnValue({
+        ...mockNgxSmartModalComponent,
+        open: jest.fn(),
+      }),
+      setModalData: jest.fn(),
+    } as any;
+    const event = [{ name: 'zone1' }, { name: 'zone2' }] as any;
+    jest.spyOn(component, 'getZones');
+    jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+      onConfirm();
+
+      expect(component['zoneService'].createManyZone).toHaveBeenCalledWith({
+        createManyZoneDto: { bulk: component.sanitizeData(event) },
+      });
+
+      mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+        const data = modal.getData() as YesNoModalDto;
+        modal.removeData();
+        if (data && data.modalYes) {
+          onConfirm();
+        }
+      });
+
+      return new Subscription();
+    });
+
+    component.importZonesConfig(event);
+
+    expect(component.getZones).toHaveBeenCalled();
   });
 });

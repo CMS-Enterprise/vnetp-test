@@ -66,19 +66,6 @@ export class SearchBarComponent implements OnInit {
       }
       this.searchText = previousSearchText;
     }
-
-    // currently this results in a page refresh persisting the values, but a page navigation
-    // performs accordingly and wipes the search parameters from local storage
-    // const searchParams = this.tableContextService.getSearchLocalStorage();
-    // const { searchColumn: previousSearchColumn, searchText: previousSearchText, filteredResults } = searchParams;
-    // if (filteredResults) {
-    //   this.filteredResults = filteredResults;
-    // }
-    // this.searchColumn = previousSearchColumn;
-    // if (!previousSearchColumn) {
-    //   this.searchColumn = this.defaultSearch.propertyName;
-    // }
-    // this.searchText = previousSearchText;
   }
 
   public searchThis(): void {
