@@ -46,25 +46,30 @@ export class SearchBarComponent implements OnInit {
   constructor(private tableContextService: TableContextService) {}
 
   ngOnInit(): void {
+    // after a search has occured, technically a new instance of the app-table has been created
+    // therefore we must use localStorage to get the previous values for consistency once the new
+    // table has been created.
+    const searchParams = this.tableContextService.getSearchLocalStorage();
+    const { searchColumn: previousSearchColumn, searchText: previousSearchText, filteredResults } = searchParams;
+    if (filteredResults) {
+      this.filteredResults = filteredResults;
+    }
+    this.searchColumn = previousSearchColumn;
+    if (!previousSearchColumn) {
+      this.searchColumn = this.columns[0].propertyName;
+    }
+    this.searchText = previousSearchText;
+
     // if we want to remove the default "name" search column
     if (this.removeDefaultSearchColumn) {
       // set the default search column to the first column in the searchColumns config
-      this.searchColumn = this.columns[0].propertyName;
-    } else {
-      // after a search has occured, technically a new instance of the app-table has been created
-      // therefore we must use localStorage to get the previous values for consistency once the new
-      // table has been created.
-
-      const searchParams = this.tableContextService.getSearchLocalStorage();
-      const { searchColumn: previousSearchColumn, searchText: previousSearchText, filteredResults } = searchParams;
-      if (filteredResults) {
-        this.filteredResults = filteredResults;
+      if (!previousSearchColumn) {
+        this.searchColumn = this.columns[0].propertyName;
       }
-      this.searchColumn = previousSearchColumn;
+    } else {
       if (!previousSearchColumn) {
         this.searchColumn = this.defaultSearch.propertyName;
       }
-      this.searchText = previousSearchText;
     }
   }
 

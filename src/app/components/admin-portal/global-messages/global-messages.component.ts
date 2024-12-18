@@ -20,7 +20,10 @@ export class GlobalMessagesComponent implements OnInit {
   isLoading = false;
   ModalMode = ModalMode;
 
-  public searchColumns: SearchColumnConfig[] = [{ displayName: 'Message Type', propertyName: 'messageType' }];
+  public searchColumns: SearchColumnConfig[] = [
+    { displayName: 'Message Type', propertyName: 'messageType' },
+    { displayName: 'Tenant Name', propertyName: 'tenantName' },
+  ];
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   public config: TableConfig<any> = {
@@ -72,17 +75,15 @@ export class GlobalMessagesComponent implements OnInit {
       if (propertyName) {
         eventParams = `${propertyName}||eq||${searchText}`;
       }
-    } else {
-      this.tableComponentDto.searchText = undefined;
     }
     this.globalMessagesService
       .getManyMessage({ filter: [eventParams], page: this.tableComponentDto.page, perPage: this.tableComponentDto.perPage })
       .subscribe(
         data => {
           this.messages = data;
-          this.messages.data.map(message => {
-            message.tenantName = message.tenantName.replace(/['"]+/g, '').split('_').slice(0, -1).toString().replaceAll(',', '_');
-          });
+          // this.messages.data.map(message => {
+          //   message.tenantName = message.tenantName.replace(/['"]+/g, '').split('_').slice(0, -1).toString().replaceAll(',', '_');
+          // });
         },
         () => {
           this.isLoading = false;
