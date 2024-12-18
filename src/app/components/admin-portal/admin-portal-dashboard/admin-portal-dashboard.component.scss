@@ -6,6 +6,7 @@
 
   &__heading {
     margin-bottom: 20px;
+    text-decoration: underline;
   }
 
   &__card {
@@ -14,7 +15,7 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     margin-right: 2rem;
     margin-bottom: 2rem;
-    flex: 0 1 calc(33% - 1rem);
+    flex: 0 1 calc(50% - 1rem);
 
     &:last-child {
       margin-right: 0;
