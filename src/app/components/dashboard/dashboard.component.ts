@@ -228,6 +228,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private loadDashboard(roles?: string[]): void {
     this.getDatacenters();
     this.getTiers();
+    this.getJobs();
     if (roles && roles.includes('admin')) {
       this.getFWRules();
       this.getNatRules();
@@ -237,7 +238,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.getServiceObjectGroups();
       this.getSubnets();
       this.getVlans();
-      this.getJobs();
     }
   }
 
