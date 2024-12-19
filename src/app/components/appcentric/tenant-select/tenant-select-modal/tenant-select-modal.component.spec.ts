@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -6,6 +7,9 @@ import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/m
 import { MockProvider } from 'src/test/mock-providers';
 
 import { TenantSelectModalComponent } from './tenant-select-modal.component';
+import { V2AppCentricTenantsService } from 'client';
+import { By } from '@angular/platform-browser';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 
 describe('TenantSelectModalComponent', () => {
   let component: TenantSelectModalComponent;
@@ -91,6 +95,57 @@ describe('TenantSelectModalComponent', () => {
     });
     optionalFields.forEach(r => {
       expect(isRequired(r)).toBe(false);
+    });
+  });
+
+  it('should call to create a Tenant', () => {
+    const service = TestBed.inject(V2AppCentricTenantsService);
+    const createTenantSpy = jest.spyOn(service, 'createOneTenant');
+
+    component.ModalMode = ModalMode.Create;
+    component.form.setValue({
+      name: 'ap-1',
+      alias: '',
+      description: 'description!',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createTenantSpy).toHaveBeenCalled();
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    const ngx = component['ngx'];
+
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    component['closeModal']();
+
+    expect(ngxSpy).toHaveBeenCalledWith('tenantModal');
+  });
+
+  it('should reset the form when closing the modal', () => {
+    component.form.controls.description.setValue('Test');
+
+    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
+    cancelButton.nativeElement.click();
+
+    expect(component.form.controls.description.value).toBe('');
+  });
+
+  describe('getData', () => {
+    const createTenantDto = () => ({
+      ModalMode: ModalMode.Edit,
+      Tenant: { id: 1 },
+    });
+    it('should run getData', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createTenantDto());
+
+      component.getData();
+
+      expect(component.form.controls.description.enabled).toBe(true);
     });
   });
 });

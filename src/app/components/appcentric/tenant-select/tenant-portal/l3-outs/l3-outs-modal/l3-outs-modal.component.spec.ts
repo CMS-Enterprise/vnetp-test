@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -7,6 +8,9 @@ import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent } f
 import { MockProvider } from 'src/test/mock-providers';
 
 import { L3OutsModalComponent } from './l3-outs-modal.component';
+import { V2AppCentricL3outsService, V2AppCentricVrfsService } from 'client';
+import { By } from '@angular/platform-browser';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 
 describe('L3OutsModalComponent', () => {
   let component: L3OutsModalComponent;
@@ -97,6 +101,84 @@ describe('L3OutsModalComponent', () => {
     });
     optionalFields.forEach(r => {
       expect(isRequired(r)).toBe(false);
+    });
+  });
+
+  it('should call to create a l3Out', () => {
+    const service = TestBed.inject(V2AppCentricL3outsService);
+    const createL3OutSpy = jest.spyOn(service, 'createOneL3Out');
+
+    component.modalMode = ModalMode.Create;
+    component.form.setValue({
+      vrfId: '123',
+      name: 'l3out1',
+      alias: '',
+      description: 'description!',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createL3OutSpy).toHaveBeenCalled();
+  });
+
+  it('should call to update an l3Out', () => {
+    const service = TestBed.inject(V2AppCentricL3outsService);
+    const updateL3OutSpy = jest.spyOn(service, 'updateOneL3Out');
+
+    component.modalMode = ModalMode.Edit;
+    component.l3OutId = '123';
+    component.form.setValue({
+      vrfId: '123',
+      name: 'l3Out1',
+      alias: '',
+      description: 'updated description!',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(updateL3OutSpy).toHaveBeenCalled();
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    const ngx = component['ngx'];
+
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    component['closeModal']();
+
+    expect(ngxSpy).toHaveBeenCalledWith('l3OutsModal');
+  });
+
+  it('should reset the form when closing the modal', () => {
+    component.form.controls.description.setValue('Test');
+
+    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
+    cancelButton.nativeElement.click();
+
+    expect(component.form.controls.description.value).toBe('');
+  });
+
+  describe('getData', () => {
+    const createL3OutDto = () => ({
+      ModalMode: ModalMode.Edit,
+      l3Out: { id: 1, vrfId: 1 },
+    });
+    it('should run getData', () => {
+      const vrfService = TestBed.inject(V2AppCentricVrfsService);
+      const getVrfsSpy = jest.spyOn(vrfService, 'getManyVrf');
+      const getOneVrfSpy = jest.spyOn(vrfService, 'getOneVrf');
+
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createL3OutDto());
+
+      component.getData();
+
+      expect(getOneVrfSpy).toHaveBeenCalled();
+      expect(component.form.controls.description.enabled).toBe(true);
+      component.getVrfs();
+      expect(getVrfsSpy).toHaveBeenCalled();
     });
   });
 });

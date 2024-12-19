@@ -31,8 +31,8 @@ export class BridgeDomainComponent implements OnInit {
   public perPage = 20;
   public bridgeDomains = {} as GetManyBridgeDomainResponseDto;
   public tableComponentDto = new TableComponentDto();
-  private bridgeDomainModalSubscription: Subscription;
-  private subnetsModalSubscription: Subscription;
+  public bridgeDomainModalSubscription: Subscription;
+  public subnetsModalSubscription: Subscription;
   public tenantId: string;
   public vrfs: GetManyVrfResponseDto;
 
@@ -198,7 +198,7 @@ export class BridgeDomainComponent implements OnInit {
     this.ngx.getModal('bridgeDomainModal').open();
   }
 
-  private subscribeToBridgeDomainModal(): void {
+  public subscribeToBridgeDomainModal(): void {
     this.bridgeDomainModalSubscription = this.ngx.getModal('bridgeDomainModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('bridgeDomainModal');
       this.bridgeDomainModalSubscription.unsubscribe();
@@ -226,7 +226,7 @@ export class BridgeDomainComponent implements OnInit {
     this.ngx.getModal('subnetsModal').open();
   }
 
-  private subscribeToSubnetsModal(): void {
+  public subscribeToSubnetsModal(): void {
     this.subnetsModalSubscription = this.ngx.getModal('subnetsModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('subnetsModal');
       this.subnetsModalSubscription.unsubscribe();
@@ -299,7 +299,7 @@ export class BridgeDomainComponent implements OnInit {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
-  private getVrfs(event?): void {
+  public getVrfs(event?): void {
     this.isLoading = true;
     let eventParams;
     if (event) {

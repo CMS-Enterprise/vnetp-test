@@ -9,10 +9,12 @@ import { MockComponent, MockFontAwesomeComponent, MockIconButtonComponent, MockN
 import { MockProvider } from 'src/test/mock-providers';
 
 import { ApplicationProfileModalComponent } from './application-profile-modal.component';
-import { V2AppCentricBridgeDomainsService, V2AppCentricEndpointGroupsService } from 'client';
+import { V2AppCentricApplicationProfilesService, V2AppCentricBridgeDomainsService, V2AppCentricEndpointGroupsService } from 'client';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Subscription } from 'rxjs';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { By } from '@angular/platform-browser';
 
 describe('ApplicationProfileModalComponent', () => {
   let component: ApplicationProfileModalComponent;
@@ -100,6 +102,42 @@ describe('ApplicationProfileModalComponent', () => {
     });
   });
 
+  it('should call to create an Application Profile', () => {
+    const service = TestBed.inject(V2AppCentricApplicationProfilesService);
+    const createAppProfileSpy = jest.spyOn(service, 'createOneApplicationProfile');
+
+    component.modalMode = ModalMode.Create;
+    component.form.setValue({
+      name: 'ap-1',
+      alias: '',
+      description: 'description!',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createAppProfileSpy).toHaveBeenCalled();
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    const ngx = component['ngx'];
+
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    component['closeModal']();
+
+    expect(ngxSpy).toHaveBeenCalledWith('applicationProfileModal');
+  });
+
+  it('should reset the form when closing the modal', () => {
+    component.form.controls.description.setValue('Test');
+
+    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
+    cancelButton.nativeElement.click();
+
+    expect(component.form.controls.description.value).toBe('');
+  });
+
   it('should have correct required and optional fields by default', () => {
     const requiredFields = ['name'];
     const optionalFields = ['alias', 'description'];
@@ -109,6 +147,28 @@ describe('ApplicationProfileModalComponent', () => {
     });
     optionalFields.forEach(r => {
       expect(isRequired(r)).toBe(false);
+    });
+  });
+
+  describe('getData', () => {
+    const createAppProfileDto = () => ({
+      ModalMode: ModalMode.Edit,
+      ApplicationProfile: { id: 1 },
+    });
+    it('should run getData', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createAppProfileDto());
+
+      component.getData();
+
+      expect(component.form.controls.description.enabled).toBe(true);
+    });
+
+    it('should run onInit', () => {
+      const bridgeDomainsSpy = jest.spyOn(component, 'getBridgeDomains');
+
+      component.ngOnInit();
+      expect(bridgeDomainsSpy).toHaveBeenCalled();
     });
   });
 });

@@ -24,7 +24,7 @@ export class FilterComponent implements OnInit {
   public perPage = 20;
   public filters = {} as GetManyFilterResponseDto;
   public tableComponentDto = new TableComponentDto();
-  private filterModalSubscription: Subscription;
+  public filterModalSubscription: Subscription;
   public tenantId: string;
 
   public isLoading = false;
@@ -177,7 +177,7 @@ export class FilterComponent implements OnInit {
     this.ngx.getModal('filterModal').open();
   }
 
-  private subscribeToFilterModal(): void {
+  public subscribeToFilterModal(): void {
     this.filterModalSubscription = this.ngx.getModal('filterModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('filterModal');
       this.filterModalSubscription.unsubscribe();

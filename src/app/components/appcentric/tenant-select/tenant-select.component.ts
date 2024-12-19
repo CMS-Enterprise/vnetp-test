@@ -19,7 +19,7 @@ export class TenantSelectComponent implements OnInit {
   public perPage = 20;
   public tenants = {} as GetManyTenantResponseDto;
   public tableComponentDto = new TableComponentDto();
-  private tenantModalSubscription: Subscription;
+  public tenantModalSubscription: Subscription;
   selectedTenantToDelete: Tenant;
   objectType = 'tenant';
 
@@ -166,7 +166,7 @@ export class TenantSelectComponent implements OnInit {
     // SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  private subscribeToTenantModal(): void {
+  public subscribeToTenantModal(): void {
     this.tenantModalSubscription = this.ngx.getModal('tenantModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('tenantModal');
       this.tenantModalSubscription.unsubscribe();

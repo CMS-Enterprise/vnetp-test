@@ -164,6 +164,7 @@ describe('DeployComponent', () => {
     });
 
     it('should call to deploys tiers after confirming', () => {
+      const launchTierProvisioningJobsSpy = jest.spyOn(component, 'launchTierProvisioningJobs');
       jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn) => {
         confirmFn();
         return of().subscribe();
@@ -177,6 +178,7 @@ describe('DeployComponent', () => {
       const deployButton = fixture.debugElement.query(By.css('.btn.btn-danger'));
       deployButton.nativeElement.click();
       expect(deploySpy).toHaveBeenCalled();
+      expect(launchTierProvisioningJobsSpy).toHaveBeenCalled();
     });
   });
 
