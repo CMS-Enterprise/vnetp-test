@@ -36,3 +36,101 @@
 .form-check label {
   margin-bottom: 0;
 }
+
+td.mat-cell {
+  text-align: center;
+}
+
+/* Style table */
+table {
+  width: 100%;
+}
+
+.mat-elevation-z8 {
+  margin: 20px 0;
+}
+
+.mat-row.highlight-row ::ng-deep {
+  background-color: #e3f2fd;
+}
+
+/* Highlight column (including header) */
+.mat-header-cell.highlight-column,
+.mat-cell.highlight-column ::ng-deep {
+  background-color: #bbdefb;
+}
+
+.drawer-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.radio-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+::ng-deep .nsm-content {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.5rem;
+  height: 45rem;
+  position: relative;
+}
+
+.toolbar {
+  float: right;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+}
+
+::ng-deep label {
+  margin-bottom: 0;
+  padding-right: 8px !important;
+}
+
+.search-toggle-icon {
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.search-bar {
+  position: relative;
+  overflow: hidden;
+  width: 0;
+  transition: width 0.15s ease-in-out;
+  border-bottom: 2px solid transparent;
+}
+
+.search-bar.active {
+  width: 200px; /* Expand width when active */
+  border-color: black; /* Show the black border */
+}
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 16px;
+  padding-bottom: 0;
+  border-bottom: -2px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.empty-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

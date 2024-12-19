@@ -1,9 +1,8 @@
 /* tslint:disable */
 
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { IsIpV4NoSubnetValidator, ValidatePortNumber } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
 import { FirewallRule, NetworkObjectGroup, ServiceObjectGroup } from '../../../../../client';
 import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-rule-packet-tracer-dto';
@@ -11,20 +10,29 @@ import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { IsIpV4NoSubnetValidator, ValidatePortNumber } from '../../../validators/network-form-validators';
+import { cloneDeep } from 'lodash';
+
+type FirewallRulePacketTracerOutputMap = {
+  [name: string]: {
+    checkList: FirewallRulePacketTracerChecklist;
+  };
+};
 
 type FirewallRulePacketTracerOutput = {
-  checkList: FirewallRulePacketTracerChecklist;
-  name: string;
+  [name: string]: FirewallRulePacketTracerChecklist;
 };
 
 type FirewallRulePacketTracerChecklist = {
+  action: boolean;
   sourceInRange: boolean;
   destInRange: boolean;
-  sourcePortMatch: boolean;
-  destPortMatch: boolean;
-  directionMatch: boolean;
-  protocolMatch: boolean;
-  enabledMatch: boolean;
+  sourcePort: boolean;
+  destPort: boolean;
+  direction: boolean;
+  protocol: boolean;
+  enabled: boolean;
+  application: boolean;
   softDeleted: boolean;
 };
 
@@ -33,25 +41,71 @@ type FirewallRulePacketTracerChecklist = {
   templateUrl: './firewall-rule-packet-tracer.component.html',
   styleUrls: ['./firewall-rule-packet-tracer.component.css'],
 })
-export class FirewallRulePacketTracerComponent implements OnInit {
+export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
   @Input() objects: FirewallRulePacketTracerDto;
-  form: FormGroup;
   submitted: boolean;
+  firewallRulesWithChecklist: FirewallRulePacketTracerOutputMap = {};
+  filteredChecklist: FirewallRulePacketTracerOutputMap = {};
+  form: FormGroup;
 
-  rulesHit = [];
-  filteredRules = [];
-
-  currentPage = 1;
   pageSize = 10;
 
-  filterExact = false;
-  filterPartial = false;
+  filterExact = null;
 
-  dropdownOpen = false;
   serviceTypeSubscription: Subscription;
 
   public environment = environment;
   public appIdEnabled: boolean = this.environment?.dynamic?.appIdEnabled;
+
+  hoveredRow: any = null;
+  hoveredColumn: string | null = null;
+
+  tableConfig = {
+    displayedColumns: [
+      'name',
+      'action',
+      'sourceInRange',
+      'destInRange',
+      'direction',
+      'protocol',
+      'enabled',
+      'sourcePort',
+      'destPort',
+      'application',
+    ],
+    columnLabels: {
+      name: 'Name',
+      action: 'Action',
+      sourceInRange: 'Source IP',
+      destInRange: 'Destination IP',
+      direction: 'Direction',
+      protocol: 'Protocol',
+      enabled: 'Enabled',
+      sourcePort: 'Source Port',
+      destPort: 'Destination Port',
+      application: 'Application',
+    },
+    columnFunctions: {
+      sourceInRange: (rule: FirewallRule) => this.handleInRange(rule, 'source', this.form.controls.sourceInRange),
+      destInRange: (rule: FirewallRule) => this.handleInRange(rule, 'destination', this.form.controls.destInRange),
+      sourcePort: (rule: FirewallRule) => this.handlePortMatch(rule, 'source', this.form.controls.sourcePort),
+      destPort: (rule: FirewallRule) => this.handlePortMatch(rule, 'destination', this.form.controls.destPort),
+      direction: (rule: FirewallRule) => this.form.controls.direction.value === rule.direction,
+      protocol: (rule: FirewallRule) => this.form.controls.protocol.value === rule.protocol,
+      enabled: (rule: FirewallRule) => this.form.controls.enabled.value === rule.enabled,
+      action: (rule: FirewallRule) => this.form.controls.action.value === rule.action,
+      application: (rule: FirewallRule) => this.handleApplication(rule, this.form.controls.application.value.id),
+      softDeleted: (rule: FirewallRule) => Boolean(rule.deletedAt),
+    },
+  };
+
+  protocols = ['IP', 'ICP', 'TCP', 'UDP'];
+
+  isDrawerOpened = false;
+  fieldSubscriptions: Subscription[] = [];
+  isSearchOpen = false;
+  searchQuery = '';
+  @ViewChild('searchInput') searchInput!: ElementRef;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private toastrService: ToastrService) {}
 
@@ -59,24 +113,35 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.buildForm();
     this.setFormValidators();
     this.applyFilter();
+
+    this.createFormListeners();
   }
 
-  toggleDropdown(): void {
-    this.dropdownOpen = !this.dropdownOpen;
+  ngOnDestroy(): void {
+    this.unsubAll();
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    const clickedElement = event.target as HTMLElement; // Cast to HTMLElement
-    if (!clickedElement.closest('.dropdown')) {
-      this.dropdownOpen = false;
-    }
+  onOpen(): void {
+    this.isDrawerOpened = true;
+  }
+
+  createFormListeners(): void {
+    Object.keys(this.form.controls).forEach(field => {
+      const control = this.form.get(field);
+      if (control) {
+        const subscription = control.valueChanges.subscribe(() => {
+          this.setChecklistsForRulesByField(field);
+          this.applyFilter();
+        });
+        this.fieldSubscriptions.push(subscription);
+      }
+    });
   }
 
   isExactMatch(rule: FirewallRulePacketTracerOutput): boolean {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { softDeleted, ...otherValues } = rule.checkList;
-    return Object.values(otherValues).every(value => value === true);
+    return Object.values(otherValues).every(value => value === true || value === null);
   }
 
   isPartialMatch(rule: FirewallRulePacketTracerOutput): boolean {
@@ -86,60 +151,43 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   }
 
   applyFilter(): void {
-    if (!this.filterExact && !this.filterPartial) {
-      this.filteredRules = [...this.rulesHit];
-    } else {
-      this.filteredRules = this.rulesHit.filter(rule => {
+    this.filteredChecklist = cloneDeep(this.firewallRulesWithChecklist);
+    if (this.filterExact === null && !this.searchQuery) {
+      return;
+    }
+
+    if (this.filterExact !== null) {
+      Object.keys(this.firewallRulesWithChecklist).forEach(ruleName => {
+        const rule = this.firewallRulesWithChecklist[ruleName];
         const isExact = this.isExactMatch(rule);
         const isPartial = this.isPartialMatch(rule);
-        return (this.filterExact && isExact) || (this.filterPartial && isPartial);
+        if ((this.filterExact && isExact) || (this.filterExact === false && isPartial)) {
+          this.filteredChecklist[ruleName] = rule;
+        } else {
+          delete this.filteredChecklist[ruleName];
+        }
       });
     }
-    this.currentPage = 1;
+
+    if (this.searchQuery) {
+      Object.keys(this.filteredChecklist).forEach(ruleName => {
+        if (!ruleName.toLowerCase().includes(this.searchQuery.toLowerCase())) {
+          delete this.filteredChecklist[ruleName];
+        }
+      });
+    }
   }
 
   resetFilter(): void {
-    this.filterExact = false;
-    this.filterPartial = false;
+    this.filterExact = null;
+    this.searchQuery = '';
+    this.applyFilter();
   }
 
   // converts octect IPs to decimals
   dot2num(dot): number {
     const d = dot.split('.');
     return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3];
-  }
-
-  search(): void {
-    this.rulesHit = [];
-    this.submitted = true;
-    if (this.form.invalid) {
-      return;
-    }
-
-    this.objects.firewallRules.forEach(rule => {
-      const checkList = {
-        sourceInRange: this.handleInRange(rule, 'source', this.form.controls.sourceIpAddress),
-        destInRange: this.handleInRange(rule, 'destination', this.form.controls.destinationIpAddress),
-        sourcePortMatch: this.handlePortMatch(rule, 'source', this.form.controls.sourcePorts),
-        destPortMatch: this.handlePortMatch(rule, 'destination', this.form.controls.destinationPorts),
-        directionMatch: this.form.controls.direction.value === rule.direction,
-        protocolMatch: this.form.controls.protocol.value === rule.protocol,
-        enabledMatch: this.form.controls.enabled.value === rule.enabled,
-        softDeleted: Boolean(rule.deletedAt),
-        actionMatch: this.form.controls.action.value === rule.action,
-        applicationMatch: this.handleApplication(rule, this.form.controls.application.value),
-      };
-
-      if (checkList.sourcePortMatch === null || checkList.destPortMatch === null) {
-        delete checkList.sourcePortMatch;
-        delete checkList.destPortMatch;
-      }
-
-      this.rulesHit.push({ checkList, name: rule.name });
-    });
-    this.resetFilter();
-    this.applyFilter();
-    this.toastrService.success('Packet Tracer Executed.');
   }
 
   handleApplication(rule: FirewallRule, applicationId: string): boolean {
@@ -164,6 +212,50 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     } else if (lookupType === 'NetworkObjectGroup') {
       return this.networkObjectGroupLookup(rule, location, control);
     }
+  }
+
+  setChecklistsForRulesByField(fieldName: string): void {
+    const fieldValue = this.form.controls[fieldName].value;
+    const errors = this.form.controls[fieldName].errors;
+    if (errors || fieldValue === null || fieldValue === '' || fieldValue === undefined) {
+      Object.keys(this.firewallRulesWithChecklist).forEach(ruleName => {
+        this.clearChecklist(ruleName, fieldName);
+      });
+      return;
+    }
+    this.objects.firewallRules.forEach(rule => {
+      this.setChecklist(rule, fieldName);
+    });
+  }
+
+  setChecklist(firewallRule: FirewallRule, fieldName: string): void {
+    const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRule.name];
+    if (!ruleWithChecklist) {
+      this.firewallRulesWithChecklist[firewallRule.name] = { checkList: this.createNewChecklist() };
+    }
+    this.firewallRulesWithChecklist[firewallRule.name].checkList[fieldName] = this.getCellValue(fieldName, firewallRule);
+  }
+
+  clearChecklist(firewallRuleName: string, fieldName: string): void {
+    const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRuleName];
+    if (ruleWithChecklist) {
+      this.firewallRulesWithChecklist[firewallRuleName].checkList[fieldName] = null;
+    }
+  }
+
+  createNewChecklist(): FirewallRulePacketTracerChecklist {
+    return {
+      action: null,
+      sourceInRange: null,
+      destInRange: null,
+      sourcePort: null,
+      destPort: null,
+      direction: null,
+      protocol: null,
+      enabled: null,
+      application: null,
+      softDeleted: null,
+    };
   }
 
   handlePortMatch(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean | null {
@@ -306,9 +398,13 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     });
   }
 
+  private unsubAll() {
+    SubscriptionUtil.unsubscribe([this.serviceTypeSubscription, ...this.fieldSubscriptions]);
+  }
+
   setFormValidators() {
-    const sourcePorts = this.form.controls.sourcePorts;
-    const destinationPorts = this.form.controls.destinationPorts;
+    const sourcePorts = this.form.controls.sourcePort;
+    const destinationPorts = this.form.controls.destPort;
     this.serviceTypeSubscription = this.form.controls.protocol.valueChanges.subscribe(serviceType => {
       switch (serviceType) {
         case 'TCP':
@@ -340,29 +436,21 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       action: [''],
       direction: [''],
       protocol: [''],
-      enabled: [true],
-      sourceIpAddress: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
-      destinationIpAddress: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
-
-      sourcePorts: ['', ValidatePortNumber],
-      destinationPorts: ['', ValidatePortNumber],
-      application: ['any'],
+      enabled: [''],
+      sourceInRange: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
+      destInRange: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
+      application: [''],
+      sourcePort: ['', ValidatePortNumber],
+      destPort: ['', ValidatePortNumber],
     });
     this.setFormValidators();
-  }
-
-  private unsubAll() {
-    SubscriptionUtil.unsubscribe([this.serviceTypeSubscription]);
   }
 
   reset(): void {
     this.unsubAll();
     this.submitted = false;
-    this.rulesHit = [];
-    this.form.reset();
     this.resetFilter();
     this.ngx.resetModalData('firewallRulePacketTracer');
-    this.buildForm();
   }
 
   close(): void {
@@ -375,5 +463,49 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   }
   getServiceObjectGroup(id): ServiceObjectGroup {
     return this.objects.serviceObjectGroups.find(obj => obj.id === id);
+  }
+
+  onHover(row: any, column: string | null) {
+    this.hoveredRow = row;
+    this.hoveredColumn = column;
+  }
+
+  getCellValue(column: string, rule: FirewallRule): boolean {
+    const columnFunction = this.tableConfig.columnFunctions[column];
+    return columnFunction ? columnFunction(rule) : false;
+  }
+
+  isChecklistFieldEmpty(fieldName: string, firewallRule: FirewallRule): boolean {
+    return this.firewallRulesWithChecklist[firewallRule.name].checkList[fieldName] === null;
+  }
+
+  get firewallRulesArray() {
+    return Object.keys(this.filteredChecklist).map(name => ({
+      name,
+      ...this.filteredChecklist[name],
+    }));
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    const tableElement = document.querySelector('.table-container');
+    const rect = tableElement?.getBoundingClientRect();
+    if (rect && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) {
+      this.onHover(null, null);
+    }
+  }
+
+  toggleSearch(): void {
+    this.isSearchOpen = !this.isSearchOpen;
+    if (this.isSearchOpen) {
+      setTimeout(() => {
+        this.searchInput?.nativeElement.focus();
+      });
+    }
+  }
+
+  resetForm(): void {
+    this.form.reset();
+    this.firewallRulesWithChecklist = {};
+    this.resetFilter();
   }
 }

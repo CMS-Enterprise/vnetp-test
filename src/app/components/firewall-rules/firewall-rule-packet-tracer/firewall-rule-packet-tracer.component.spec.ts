@@ -7,17 +7,22 @@ import {
   MockNgxSmartModalComponent,
 } from 'src/test/mock-components';
 import { AbstractControl, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { FirewallRulePacketTracerComponent } from '../firewall-rule-packet-tracer/firewall-rule-packet-tracer.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { FirewallRuleDirectionEnum, FirewallRuleProtocolEnum } from '../../../../../client';
-import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { MockProvider } from '../../../../test/mock-providers';
 import { ToastrService } from 'ngx-toastr';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('FirewallRulesPacketTracerComponent', () => {
   let component: FirewallRulePacketTracerComponent;
@@ -31,7 +36,20 @@ describe('FirewallRulesPacketTracerComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [FormsModule, NgxPaginationModule, NgSelectModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+      imports: [
+        FormsModule,
+        NgxPaginationModule,
+        NgSelectModule,
+        ReactiveFormsModule,
+        MatTableModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatRadioModule,
+        MatInputModule,
+        MatMenuModule,
+        BrowserAnimationsModule,
+      ],
       declarations: [
         FirewallRulePacketTracerComponent,
         ImportExportComponent,
@@ -61,18 +79,218 @@ describe('FirewallRulesPacketTracerComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('toggleDropdown', () => {
-    it('should set dropdownOpen to true initially', () => {
-      component.dropdownOpen = true;
-      component.toggleDropdown();
-      expect(component.dropdownOpen).toBeFalsy();
+  describe('column functions', () => {
+    it('should return the correct value for sourceInRange', () => {
+      jest.spyOn(component, 'handleInRange').mockReturnValue(true);
+      const result = component.getCellValue('sourceInRange', 'source' as any);
+      expect(result).toBeTruthy();
     });
 
-    it('should set dropdownOpen to false', () => {
-      component.dropdownOpen = false;
-      component.toggleDropdown();
-      expect(component.dropdownOpen).toBeTruthy();
+    it('should return the correct value for destInRange', () => {
+      jest.spyOn(component, 'handleInRange').mockReturnValue(true);
+      const result = component.getCellValue('destInRange', 'destination' as any);
+      expect(result).toBeTruthy();
     });
+
+    it('should return the correct value for sourcePort', () => {
+      jest.spyOn(component, 'handlePortMatch').mockReturnValue(true);
+      const result = component.getCellValue('sourcePort', 'source' as any);
+      expect(result).toBeTruthy();
+    });
+
+    it('should return the correct value for destPort', () => {
+      jest.spyOn(component, 'handlePortMatch').mockReturnValue(true);
+      const result = component.getCellValue('destPort', 'destination' as any);
+      expect(result).toBeTruthy();
+    });
+
+    it('should return the correct value for direction', () => {
+      component.form.controls.direction.setValue('in');
+      const result = component.getCellValue('direction', { direction: 'in' } as any);
+      expect(result).toBeTruthy();
+    });
+
+    it('should return the correct value for protocol', () => {
+      component.form.controls.protocol.setValue('tcp');
+      const result = component.getCellValue('protocol', { protocol: 'tcp' } as any);
+      expect(result).toBeTruthy();
+    });
+
+    it('should return the correct value for action', () => {
+      component.form.controls.action.setValue('allow');
+      const result = component.getCellValue('action', { action: 'allow' } as any);
+      expect(result).toBeTruthy();
+    });
+
+    it('should return the correct value for enabled', () => {
+      component.form.controls.enabled.setValue(true);
+      const result = component.getCellValue('enabled', { enabled: true } as any);
+      expect(result).toBeTruthy();
+    });
+
+    it('should return the correct value for application', () => {
+      jest.spyOn(component, 'handleApplication').mockReturnValue(true);
+      const result = component.getCellValue('application', 'application' as any);
+      expect(result).toBeTruthy();
+    });
+
+    it('should return the correct value for softDeleted', () => {
+      const result = component.getCellValue('softDeleted', { deletedAt: new Date() } as any);
+      expect(result).toBeTruthy();
+    });
+
+    it('should return false if column function doesnt exist', () => {
+      const result = component.getCellValue('unknown', 'unknown' as any);
+      expect(result).toBeFalsy();
+    });
+  });
+
+  it('should set drawer to open', () => {
+    component.onOpen();
+    expect(component.isDrawerOpened).toBeTruthy();
+  });
+
+  it('should reset filter', () => {
+    component.filterExact = true;
+    component.searchQuery = 'test';
+    const applyFilterSpy = jest.spyOn(component, 'applyFilter').mockImplementation();
+    component.reset();
+    expect(component.filterExact).toBeNull();
+    expect(component.searchQuery).toBe('');
+    expect(applyFilterSpy).toHaveBeenCalled();
+  });
+
+  describe('applyFilter', () => {
+    it('should set filteredChecklist to firewallRulesWithChecklist if searchQuery and filter is empty', () => {
+      const mockChecklist = {
+        mockRuleName: {
+          checkList: {
+            mockFieldName: true,
+          },
+        },
+      };
+      component.firewallRulesWithChecklist = mockChecklist as any;
+      component.applyFilter();
+      expect(component.filteredChecklist).toEqual(mockChecklist);
+    });
+
+    it('should filter by exact if set', () => {
+      const mockChecklist = {
+        mockRuleName: {
+          checkList: {
+            mockFieldName: true,
+            mockFieldName2: true,
+          },
+        },
+        mockRuleName2: {
+          checkList: {
+            mockFieldName: true,
+            mockFieldName2: false,
+          },
+        },
+      };
+
+      component.filterExact = true;
+      component.firewallRulesWithChecklist = mockChecklist as any;
+      component.applyFilter();
+      expect(component.filteredChecklist).toEqual({
+        mockRuleName: {
+          checkList: {
+            mockFieldName: true,
+            mockFieldName2: true,
+          },
+        },
+      });
+    });
+
+    it('should filter by search query', () => {
+      const mockChecklist = {
+        mockRuleName: {
+          checkList: {
+            mockFieldName: 'test',
+            mockFieldName2: 'test',
+          },
+        },
+        mockRuleName2: {
+          checkList: {
+            mockFieldName: 'test',
+            mockFieldName2: 'not test',
+          },
+        },
+      };
+
+      component.searchQuery = 'mockRuleName2';
+      component.firewallRulesWithChecklist = mockChecklist as any;
+      component.applyFilter();
+      expect(component.filteredChecklist).toEqual({
+        mockRuleName2: {
+          checkList: {
+            mockFieldName: 'test',
+            mockFieldName2: 'not test',
+          },
+        },
+      });
+    });
+  });
+
+  describe('handleApplication', () => {
+    it('should return true if app id is not enabled', () => {
+      component.appIdEnabled = false;
+      const result = component.handleApplication('test' as any, 'test');
+      expect(result).toBeTruthy();
+    });
+
+    it('should return true if app id is enabled and applicationId is any', () => {
+      component.appIdEnabled = true;
+      const result = component.handleApplication('test' as any, 'any');
+      expect(result).toBeTruthy();
+    });
+
+    it('should return true if applicationId is present', () => {
+      const mockRule = { panosApplications: [{ id: 'test' }] } as any;
+      component.appIdEnabled = true;
+      component.form.controls.application.setValue('test');
+      const result = component.handleApplication(mockRule, 'test');
+      expect(result).toBeTruthy();
+    });
+
+    it('should return false if applicationId is not present', () => {
+      const mockRule = { panosApplications: [{ id: 'test' }] } as any;
+      component.appIdEnabled = true;
+      component.form.controls.application.setValue('not present');
+      const result = component.handleApplication(mockRule, 'test');
+      expect(result).toBeFalsy();
+    });
+  });
+
+  it('should set hovered row and col', () => {
+    component.onHover('row', 'col');
+    expect(component.hoveredRow).toBe('row');
+    expect(component.hoveredColumn).toBe('col');
+  });
+
+  it('should reset form', () => {
+    component.form.controls.sourcePort.setValue('80');
+    component.form.controls.destPort.setValue('80');
+    component.form.controls.direction.setValue('in');
+    component.form.controls.protocol.setValue('tcp');
+    component.form.controls.action.setValue('allow');
+    component.form.controls.enabled.setValue(true);
+    component.form.controls.application.setValue('test');
+    const resetFilterSpy = jest.spyOn(component, 'resetFilter').mockImplementation();
+    component.resetForm();
+    expect(component.form.value).toEqual({
+      sourceInRange: null,
+      destInRange: null,
+      sourcePort: null,
+      destPort: null,
+      direction: null,
+      protocol: null,
+      action: null,
+      enabled: null,
+      application: null,
+    });
+    expect(resetFilterSpy).toHaveBeenCalled();
   });
 
   describe('isExactMatch', () => {
@@ -116,107 +334,46 @@ describe('FirewallRulesPacketTracerComponent', () => {
     });
   });
 
-  describe('search', () => {
-    // Use beforeEach to reset mocks and set up a common testing environment
-    beforeEach(() => {
-      component.form.reset(); // Reset the form before each test
-      component.submitted = false;
-      component.rulesHit = [];
-
-      jest.mock(
-        'netmask',
-        () =>
-          class {
-            contains() {
-              return true;
-            }
+  describe('setChecklistsForRulesByField', () => {
+    it('should set fields to null if field is null', () => {
+      const mockChecklist = {
+        mockRuleName: {
+          checkList: {
+            action: true,
           },
-      );
+        },
+      };
+
+      component.form.controls.action.setValue(null);
+      component.firewallRulesWithChecklist = mockChecklist as any;
+      component.setChecklistsForRulesByField('action');
+      expect(component.firewallRulesWithChecklist.mockRuleName.checkList.action).toBeNull();
     });
 
-    it('should populate rulesHit when the form is valid', () => {
-      component.objects = {
-        firewallRules: [],
-      } as any;
-      // Set up a valid form configuration
-      component.form.controls['sourceIpAddress'].setValue('192.168.1.10');
-      component.form.controls['destinationIpAddress'].setValue('10.0.0.5');
-      component.form.controls['direction'].setValue('In');
-      component.form.controls['protocol'].setValue('TCP');
-      component.form.controls['enabled'].setValue(true);
-      component.form.controls['sourcePorts'].setValue('any');
-      component.form.controls['destinationPorts'].setValue('80');
-      component.objects.firewallRules = [
-        {
-          sourceIpAddress: '192.168.1.10',
-          destinationIpAddress: '10.0.0.5',
-          direction: FirewallRuleDirectionEnum.In,
-          protocol: FirewallRuleProtocolEnum.Tcp,
-          sourcePorts: 'any',
-          destinationPorts: '80',
-          enabled: true,
-        } as any,
-      ];
-
-      // Execute the search!
-      component.search();
-
-      // Assertion
-      expect(component.rulesHit.length).toBeGreaterThan(0);
+    it('should call set checklist if there are no issues', () => {
+      const mockFwrs = { firewallRules: [{ name: 'mockRuleName' }] } as any;
+      jest.spyOn(component, 'setChecklist').mockImplementation();
+      component.form.controls.action.setValue(true);
+      component.objects = mockFwrs;
+      component.setChecklistsForRulesByField('action');
+      expect(component.setChecklist).toHaveBeenCalled();
     });
+  });
 
-    it('should set submitted to true', () => {
-      // Set up a valid form configuration (as above)
-      component.search();
-      expect(component.submitted).toBeTruthy();
-    });
-
-    it('should not populate rulesHit when the form is invalid', () => {
-      // Set up an invalid form configuration
-      component.form.controls['sourceIpAddress'].setValue(''); // Invalid source IP
-
-      component.search();
-      expect(component.rulesHit.length).toBe(0);
-    });
-
-    it('should handle null destPortMatch', () => {
-      component.objects = {
-        firewallRules: [],
-      } as any;
-      // Set up form with a value that would cause destPortMatch to be null
-      component.form.controls['destinationPorts'].setValue('80'); // Example of a port range
-      component.form.controls['sourceIpAddress'].setValue('192.168.1.10');
-      component.form.controls['destinationIpAddress'].setValue('10.0.0.5');
-      component.form.controls['direction'].setValue('In');
-      component.form.controls['protocol'].setValue('IP');
-      component.form.controls['enabled'].setValue(true);
-      component.objects.firewallRules = [
-        {
-          sourceIpAddress: '192.168.1.10',
-          destinationIpAddress: '10.0.0.5',
-          direction: FirewallRuleDirectionEnum.In,
-          protocol: FirewallRuleProtocolEnum.Tcp,
-          enabled: true,
-        } as any,
-      ];
-
-      component.handlePortMatch = jest.fn().mockImplementation().mockReturnValueOnce(true).mockReturnValueOnce(null);
-
-      component.search();
-
-      // Assertion - This depends on how your component should behave in this case
-      const checkList = component.rulesHit[0].checkList;
-      const result = 'destPortMatch' in checkList;
-      expect(result).toBeFalsy();
+  describe('setChecklist', () => {
+    it('should create rule with checklist if it doesnt exist', () => {
+      const mockRule = { name: 'mockRuleName' } as any;
+      component.setChecklist(mockRule, 'action');
+      expect(component.firewallRulesWithChecklist[mockRule.name]).toBeTruthy();
     });
   });
 
   describe('handleInRange', () => {
     it('should call ip lookup', () => {
       const ipLookupSpy = jest.spyOn(component, 'ipLookup').mockReturnValue(true);
-      const rule = { sourceIpAddress: '192.168.1.0/24', sourceAddressType: 'IpAddress', panosApplications: [] } as any;
+      const rule = { destinationIpAddress: '192.168.1.0/24', destinationAddressType: 'IpAddress', panosApplications: [] } as any;
       const control = { value: '192.168.1.100' } as AbstractControl;
-      const result = component.handleInRange(rule, 'source', control);
+      const result = component.handleInRange(rule, 'destination', control);
       expect(result).toBeTruthy();
       expect(ipLookupSpy).toHaveBeenCalled();
     });
@@ -268,12 +425,6 @@ describe('FirewallRulesPacketTracerComponent', () => {
       });
     });
 
-    it('should reset the filter', () => {
-      component.resetFilter();
-      expect(component.filterPartial).toBeFalsy();
-      expect(component.filterExact).toBeFalsy();
-    });
-
     it('should convert a valid IPv4 address to a decimal number', () => {
       const ipAddress = '192.168.1.1';
       const expectedDecimal = 3232235777;
@@ -295,75 +446,6 @@ describe('FirewallRulesPacketTracerComponent', () => {
       const serviceObjectGroupPortMatchSpy = jest.spyOn(component, 'serviceObjectGroupPortMatch').mockImplementation();
       component.handlePortMatch(rule, 'destination', control);
       expect(serviceObjectGroupPortMatchSpy).toBeCalled();
-    });
-  });
-
-  describe('applyFilter', () => {
-    beforeEach(() => {
-      // Set up sample rulesHit for testing
-      component.rulesHit = [
-        { checkList: { sourceInRange: true, destInRange: true /* ... */ }, name: 'Rule 1' }, // Exact match
-        { checkList: { sourceInRange: true, destInRange: false /* ... */ }, name: 'Rule 2' }, // Partial match
-        { checkList: { sourceInRange: false, destInRange: false /* ... */ }, name: 'Rule 3' }, // No match
-      ];
-    });
-
-    it('should show all rules when no filters are applied', () => {
-      component.filterExact = false;
-      component.filterPartial = false;
-      component.applyFilter();
-
-      expect(component.filteredRules.length).toBe(3);
-      expect(component.filteredRules).toEqual(component.rulesHit); // Check if arrays are deeply equal
-    });
-
-    it('should filter only exact matches', () => {
-      component.filterExact = true;
-      component.filterPartial = false;
-      component.applyFilter();
-
-      expect(component.filteredRules.length).toBe(1);
-      expect(component.filteredRules[0].name).toBe('Rule 1');
-    });
-
-    it('should filter only partial matches', () => {
-      component.filterExact = false;
-      component.filterPartial = true;
-      component.applyFilter();
-
-      expect(component.filteredRules.length).toBe(1);
-      expect(component.filteredRules[0].name).toBe('Rule 2');
-    });
-
-    it('should reset currentPage to 1', () => {
-      component.currentPage = 5; // Set to a value other than 1
-      component.applyFilter(); // Any filter combination will do
-
-      expect(component.currentPage).toBe(1);
-    });
-  });
-
-  describe('reset', () => {
-    beforeEach(() => {
-      component.submitted = true; // Initial state
-      component.rulesHit = [{ name: 'Rule 1' }];
-      component.form.controls['sourceIpAddress'].setValue('192.168.1.1');
-    });
-
-    it('should reset component state', () => {
-      // Spy on other component methods for verification
-      jest.spyOn(component, 'resetFilter');
-      jest.spyOn(SubscriptionUtil, 'unsubscribe').mockImplementation(() => {});
-      const formResetSpy = jest.spyOn(component.form, 'reset');
-
-      component.reset();
-
-      // Assertions
-      expect(component.submitted).toBeFalsy();
-      expect(component.rulesHit.length).toBe(0);
-      expect(formResetSpy).toHaveBeenCalled();
-      expect(component.resetFilter).toHaveBeenCalled();
-      expect(mockNgxSmartModalService.resetModalData).toHaveBeenCalledWith('firewallRulePacketTracer');
     });
   });
 
@@ -470,6 +552,103 @@ describe('FirewallRulesPacketTracerComponent', () => {
     });
   });
 
+  it('should create new check list', () => {
+    const result = component.createNewChecklist();
+    expect(result).toEqual({
+      action: null,
+      sourceInRange: null,
+      destInRange: null,
+      sourcePort: null,
+      destPort: null,
+      direction: null,
+      protocol: null,
+      enabled: null,
+      application: null,
+      softDeleted: null,
+    });
+  });
+
+  it('should clear checklist', () => {
+    const mockChecklist = {
+      mockRuleName: {
+        checkList: {
+          mockFieldName: true,
+        },
+      },
+    };
+    component.firewallRulesWithChecklist = mockChecklist as any;
+    component.clearChecklist('mockRuleName', 'mockFieldName');
+    expect(component.firewallRulesWithChecklist.mockRuleName.checkList['mockFieldName'] as any).toBeNull();
+  });
+
+  it('should get firewall rules array', () => {
+    const mockChecklist = {
+      mockRuleName: {
+        checkList: {
+          mockFieldName: true,
+        },
+      },
+    };
+    component.filteredChecklist = mockChecklist as any;
+    const result = component.firewallRulesArray;
+    expect(result).toEqual([{ name: 'mockRuleName', checkList: { mockFieldName: true } }]);
+  });
+
+  it('should toggle search', () => {
+    component.isSearchOpen = false;
+    component.toggleSearch();
+    expect(component.isSearchOpen).toBeTruthy();
+  });
+
+  it('should return if checklist field is empty', () => {
+    const mockChecklist = {
+      mockRuleName: {
+        checkList: {
+          mockFieldName: true,
+        },
+      },
+    };
+    component.firewallRulesWithChecklist = mockChecklist as any;
+    const result = component.isChecklistFieldEmpty('mockFieldName', { name: 'mockRuleName' } as any);
+    expect(result).toBeFalsy();
+  });
+  describe('onMouseMove', () => {
+    it('should call on hover on mouse event outside left of rect', () => {
+      const mockEvent = { clientX: 0, clientY: 0 } as MouseEvent;
+      const mockRect = { left: 1, top: 0, bottom: 0, right: 0 } as DOMRect;
+      jest.spyOn(document, 'querySelector').mockReturnValueOnce({ getBoundingClientRect: () => mockRect } as any);
+      const onHoverSpy = jest.spyOn(component, 'onHover').mockImplementation();
+      component.onMouseMove(mockEvent);
+      expect(onHoverSpy).toHaveBeenCalled();
+    });
+
+    it('should call on hover on mouse event outside right of rect', () => {
+      const mockEvent = { clientX: 1, clientY: 0 } as MouseEvent;
+      const mockRect = { left: 0, top: 0, bottom: 0, right: 0 } as DOMRect;
+      jest.spyOn(document, 'querySelector').mockReturnValueOnce({ getBoundingClientRect: () => mockRect } as any);
+      const onHoverSpy = jest.spyOn(component, 'onHover').mockImplementation();
+      component.onMouseMove(mockEvent);
+      expect(onHoverSpy).toHaveBeenCalled();
+    });
+
+    it('should call on hover on mouse event outside bottom of rect', () => {
+      const mockEvent = { clientX: 0, clientY: 1 } as MouseEvent;
+      const mockRect = { left: 0, top: 0, bottom: 0, right: 0 } as DOMRect;
+      jest.spyOn(document, 'querySelector').mockReturnValueOnce({ getBoundingClientRect: () => mockRect } as any);
+      const onHoverSpy = jest.spyOn(component, 'onHover').mockImplementation();
+      component.onMouseMove(mockEvent);
+      expect(onHoverSpy).toHaveBeenCalled();
+    });
+
+    it('should call on hover on mouse event outside top of rect', () => {
+      const mockEvent = { clientX: 0, clientY: 0 } as MouseEvent;
+      const mockRect = { left: 0, top: 1, bottom: 0, right: 0 } as DOMRect;
+      jest.spyOn(document, 'querySelector').mockReturnValueOnce({ getBoundingClientRect: () => mockRect } as any);
+      const onHoverSpy = jest.spyOn(component, 'onHover').mockImplementation();
+      component.onMouseMove(mockEvent);
+      expect(onHoverSpy).toHaveBeenCalled();
+    });
+  });
   describe('networkObjectGroupLookup', () => {
     let mockNetmask: any;
 
@@ -663,68 +842,68 @@ describe('FirewallRulesPacketTracerComponent', () => {
       expect(isRequired('protocol')).toBeFalsy();
     });
 
-    it('should require sourceIpAddress', () => {
-      expect(isRequired('sourceIpAddress')).toBeTruthy();
+    it('should require sourceInRange', () => {
+      expect(isRequired('sourceInRange')).toBeTruthy();
     });
 
-    it('should require destinationIpAddress', () => {
-      expect(isRequired('destinationIpAddress')).toBeTruthy();
+    it('should require destInRange', () => {
+      expect(isRequired('destInRange')).toBeTruthy();
     });
 
-    it('should not require destinationPorts', () => {
-      expect(isRequired('destinationPorts')).toBeFalsy();
+    it('should not require destPort', () => {
+      expect(isRequired('destPort')).toBeFalsy();
     });
 
-    it('should not require sourcePorts', () => {
-      expect(isRequired('sourcePorts')).toBeFalsy();
+    it('should not require sourcePort', () => {
+      expect(isRequired('sourcePort')).toBeFalsy();
     });
 
     it('should require destination ports if protocol is not IP or ICMP', () => {
-      const fc = getFormControl('destinationPorts');
+      const fc = getFormControl('destPort');
       fc.setValue('');
       getFormControl('protocol').setValue('IP');
       expect(fc.errors).toBeNull();
       getFormControl('protocol').setValue('ICMP');
       expect(fc.errors).toBeNull();
       getFormControl('protocol').setValue('TCP');
-      expect(isRequired('destinationPorts')).toBeTruthy();
+      expect(isRequired('destPort')).toBeTruthy();
       getFormControl('protocol').setValue('UDP');
-      expect(isRequired('destinationPorts')).toBeTruthy();
+      expect(isRequired('destPort')).toBeTruthy();
     });
 
     it('should require source ports if protocol is not IP or ICMP', () => {
-      const fc = getFormControl('sourcePorts');
+      const fc = getFormControl('sourcePort');
       fc.setValue('');
       getFormControl('protocol').setValue('IP');
       expect(fc.errors).toBeNull();
       getFormControl('protocol').setValue('ICMP');
       expect(fc.errors).toBeNull();
       getFormControl('protocol').setValue('TCP');
-      expect(isRequired('sourcePorts')).toBeTruthy();
+      expect(isRequired('sourcePort')).toBeTruthy();
       getFormControl('protocol').setValue('UDP');
-      expect(isRequired('sourcePorts')).toBeTruthy();
+      expect(isRequired('sourcePort')).toBeTruthy();
     });
 
     it('should not allow invalid translatedSourceIp', () => {
-      const fc = getFormControl('sourceIpAddress');
+      const fc = getFormControl('sourceInRange');
       fc.setValue('192.168.0.1/24');
       expect(fc.errors).toBeTruthy();
     });
 
     it('should not allow invalid translatedDestinationIp', () => {
-      const fc = getFormControl('destinationIpAddress');
+      const fc = getFormControl('destInRange');
       fc.setValue('192.168.0.1/24');
       expect(fc.errors).toBeTruthy();
     });
 
     it('should allow valid originalSourceIp', () => {
-      const fc = getFormControl('sourceIpAddress');
+      const fc = getFormControl('sourceInRange');
       fc.setValue('192.168.0.1');
       expect(fc.errors).toBeFalsy();
     });
 
     it('should allow valid originalDestinationIp', () => {
-      const fc = getFormControl('destinationIpAddress');
+      const fc = getFormControl('destInRange');
       fc.setValue('192.168.0.1');
       expect(fc.errors).toBeFalsy();
     });
