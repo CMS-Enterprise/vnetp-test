@@ -51,26 +51,26 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
       tagValue.setValidators(Validators.required);
 
       // remove validators for EPG and IpSubnet form groups
-      epgSelector.removeValidators(Validators.required);
-      ipSubnet.removeValidators(Validators.compose([Validators.required, IpAddressAnyValidator]));
+      epgSelector.clearValidators();
+      ipSubnet.clearValidators();
     } else if (this.navIndex === 1) {
       // set validator for EPGSelector form group
       epgSelector.addValidators(Validators.required);
 
       // remove validators for tag selector and IpSubnet form groups
-      tagKey.removeValidators(Validators.required);
-      valueOperator.removeValidators(Validators.required);
-      tagValue.removeValidators(Validators.required);
-      ipSubnet.removeValidators(Validators.compose([Validators.required, IpAddressAnyValidator]));
+      tagKey.clearValidators();
+      valueOperator.clearValidators();
+      tagValue.clearValidators();
+      ipSubnet.clearValidators();
     } else if (this.navIndex === 2) {
       // set validator for ipSubnet form group
       ipSubnet.setValidators(Validators.compose([Validators.required, IpAddressAnyValidator]));
 
       // remove validators for tag selector and EPG selector form groups
-      tagKey.removeValidators(Validators.required);
-      valueOperator.removeValidators(Validators.required);
-      tagValue.removeValidators(Validators.required);
-      epgSelector.removeValidators(Validators.required);
+      tagKey.clearValidators();
+      valueOperator.clearValidators();
+      tagValue.clearValidators();
+      epgSelector.clearValidators();
     }
 
     tagKey.updateValueAndValidity();
@@ -79,6 +79,7 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
 
     epgSelector.updateValueAndValidity();
     ipSubnet.updateValueAndValidity();
+    console.log('ipSubnet', ipSubnet);
   }
 
   ngOnInit(): void {
@@ -92,7 +93,7 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
       valueOperator: ['', Validators.required],
       tagValue: ['', Validators.required],
       epgId: [null, Validators.required],
-      IpSubnet: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
+      IpSubnet: [null, Validators.compose([Validators.required, IpAddressAnyValidator])],
       description: ['', Validators.maxLength(500)],
     });
   }
@@ -103,6 +104,7 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
 
   public save() {
     this.submitted = true;
+    console.log('this.form.', this.form);
     if (this.form.invalid) {
       return;
     }
@@ -121,6 +123,7 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
       this.selector.selectorType = 'IpSubnet';
       this.selector.IpSubnet = this.form.value.IpSubnet;
     }
+    console.log('this.selector', this.selector);
     this.selectorService.createOneSelector({ selector: this.selector }).subscribe(data => {
       this.reset();
       return data;
