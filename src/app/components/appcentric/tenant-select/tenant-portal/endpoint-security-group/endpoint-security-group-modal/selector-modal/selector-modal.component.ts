@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { EndpointGroup, V2AppCentricEndpointGroupsService, V2AppCentricSelectorsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -125,8 +125,8 @@ export class SelectorModalComponent implements OnInit {
       let selectedEndpointGroup = {} as any;
 
       // update the endpoint group entity to reflect that it is now matched to an ESG via a Selector
-      this.endpointGroupService.getOneEndpointGroup({ id: this.selector.epgId }).subscribe(data => {
-        selectedEndpointGroup = data;
+      this.endpointGroupService.getOneEndpointGroup({ id: this.selector.epgId }).subscribe(epg => {
+        selectedEndpointGroup = epg;
 
         // remove properties that can not be updated
         delete selectedEndpointGroup.name;
@@ -139,7 +139,7 @@ export class SelectorModalComponent implements OnInit {
         // update endpoint group entity
         this.endpointGroupService
           .updateOneEndpointGroup({ id: selectedEndpointGroup.id, endpointGroup: selectedEndpointGroup })
-          .subscribe(data => {});
+          .subscribe();
       });
       this.reset();
       this.selector = null;
@@ -156,9 +156,9 @@ export class SelectorModalComponent implements OnInit {
   public getData() {
     console.log('this.selector', this.selector);
     console.log('this.endpointGroups', this.endpointGroups);
-    this.endpointGroups = this.endpointGroups.filter(epg => {
-      return this.selector.existingEpgSelectors.some(selectorEpg => selectorEpg.id === epg.id);
-    });
+    this.endpointGroups = this.endpointGroups.filter(epg =>
+      this.selector.existingEpgSelectors.some(selectorEpg => selectorEpg.id === epg.id),
+    );
     this.setFormValidators();
   }
 

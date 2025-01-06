@@ -8,9 +8,7 @@ import {
   V2AppCentricVrfsService,
   Vrf,
   V2AppCentricSelectorsService,
-  Selector,
   V2AppCentricEndpointGroupsService,
-  EndpointGroup,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Tab } from 'src/app/common/tabs/tabs.component';
@@ -25,7 +23,6 @@ import { Subscription } from 'rxjs';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { SelectorModalDto } from 'src/app/models/appcentric/appcentric-selector-modal-dto';
 import { EntityService } from 'src/app/services/entity.service';
-import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 const tabs = [{ name: 'Endpoint Security Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }];
 

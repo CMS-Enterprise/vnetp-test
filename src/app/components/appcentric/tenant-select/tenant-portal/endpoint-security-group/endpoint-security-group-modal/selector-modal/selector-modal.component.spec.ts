@@ -41,12 +41,12 @@ describe('SelectorModalComponent', () => {
     fixture.detectChanges();
   });
 
-  const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
-  const isRequired = (prop: string): boolean => {
-    const fc = getFormControl(prop);
-    fc.setValue(null);
-    return !!fc.errors && !!fc.errors.required;
-  };
+  // const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
+  // const isRequired = (prop: string): boolean => {
+  //   const fc = getFormControl(prop);
+  //   fc.setValue(null);
+  //   return !!fc.errors && !!fc.errors.required;
+  // };
 
   it('should create', () => {
     expect(component).toBeTruthy();
