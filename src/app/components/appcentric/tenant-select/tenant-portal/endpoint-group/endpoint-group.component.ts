@@ -56,6 +56,7 @@ export class EndpointGroupComponent implements OnInit {
       { name: 'Intra Epg Isolation', property: 'intraEpgIsolation' },
       { name: 'Application Profile', template: () => this.applicationProfileTemplate },
       { name: 'Bridge Domain', template: () => this.bridgeDomainTemplate },
+      { name: 'Esg Matched', property: 'esgMatched' },
       { name: '', template: () => this.actionsTemplate },
     ],
     // TODO: Implement appcentric aci runtime

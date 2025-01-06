@@ -12,7 +12,7 @@ import { IpAddressAnyValidator } from 'src/app/validators/network-form-validator
   templateUrl: './selector-modal.component.html',
   styleUrls: ['./selector-modal.component.scss'],
 })
-export class SelectorModalComponent implements OnInit, OnDestroy {
+export class SelectorModalComponent implements OnInit {
   public form: UntypedFormGroup;
   public submitted: boolean;
   public selectorModalSubscription: Subscription;
@@ -33,7 +33,6 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
     private ngx: NgxSmartModalService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
   ) {}
-  ngOnDestroy(): void {}
 
   public setFormValidators() {
     this.submitted = false;
@@ -104,7 +103,6 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
 
   public save() {
     this.submitted = true;
-    console.log('this.form.', this.form);
     if (this.form.invalid) {
       return;
     }
@@ -123,9 +121,28 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
       this.selector.selectorType = 'IpSubnet';
       this.selector.IpSubnet = this.form.value.IpSubnet;
     }
-    console.log('this.selector', this.selector);
     this.selectorService.createOneSelector({ selector: this.selector }).subscribe(data => {
+      let selectedEndpointGroup = {} as any;
+
+      // update the endpoint group entity to reflect that it is now matched to an ESG via a Selector
+      this.endpointGroupService.getOneEndpointGroup({ id: this.selector.epgId }).subscribe(data => {
+        selectedEndpointGroup = data;
+
+        // remove properties that can not be updated
+        delete selectedEndpointGroup.name;
+        delete selectedEndpointGroup.tenantId;
+        delete selectedEndpointGroup.applicationProfileId;
+
+        // set esgMatched property to true
+        selectedEndpointGroup.esgMatched = true;
+
+        // update endpoint group entity
+        this.endpointGroupService
+          .updateOneEndpointGroup({ id: selectedEndpointGroup.id, endpointGroup: selectedEndpointGroup })
+          .subscribe(data => {});
+      });
       this.reset();
+      this.selector = null;
       return data;
     });
   }
@@ -137,6 +154,11 @@ export class SelectorModalComponent implements OnInit, OnDestroy {
   }
 
   public getData() {
+    console.log('this.selector', this.selector);
+    console.log('this.endpointGroups', this.endpointGroups);
+    this.endpointGroups = this.endpointGroups.filter(epg => {
+      return this.selector.existingEpgSelectors.some(selectorEpg => selectorEpg.id === epg.id);
+    });
     this.setFormValidators();
   }
 

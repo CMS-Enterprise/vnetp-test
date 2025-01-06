@@ -87,7 +87,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   public IpSubnetSelectorConfig: TableConfig<any> = {
     description: 'IpSubnet Selectors',
     columns: [
-      { name: 'ipSubnet', property: 'IpSubnet' },
+      { name: 'IpSubnet', property: 'IpSubnet' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -132,7 +132,9 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       });
   }
 
-  public openSelectorModal(modalMode, selector?: Selector): void {
+  public openSelectorModal(modalMode): void {
+    const selector = {} as any;
+    selector.existingEpgSelectors = this.epgSelectors.data;
     this.IpSubnetSelectors.data = [];
     this.epgSelectors.data = [];
     this.tagSelectors.data = [];
