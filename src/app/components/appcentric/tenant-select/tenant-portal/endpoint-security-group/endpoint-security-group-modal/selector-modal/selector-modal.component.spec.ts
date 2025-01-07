@@ -1,6 +1,6 @@
 import { MockComponent, MockFontAwesomeComponent, MockImportExportComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { SelectorModalComponent } from './selector-modal.component';
-import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { V2AppCentricEndpointSecurityGroupsService, V2AppCentricSelectorsService } from 'client';
 import { HttpClientModule } from '@angular/common/http';
