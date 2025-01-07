@@ -23,7 +23,7 @@ export class SelectorModalComponent implements OnInit {
   @Input() endpointSecurityGroupId;
 
   endpointGroups: EndpointGroup[];
-  public selector = { endpointGroups: [] } as any;
+  public selector;
 
   public tabs: Tab[] = [{ name: 'Tag Selector' }, { name: 'EPG Selector' }, { name: 'IP Subnet Selector' }];
 
@@ -78,7 +78,6 @@ export class SelectorModalComponent implements OnInit {
 
     epgSelector.updateValueAndValidity();
     ipSubnet.updateValueAndValidity();
-    console.log('ipSubnet', ipSubnet);
   }
 
   ngOnInit(): void {
@@ -122,9 +121,15 @@ export class SelectorModalComponent implements OnInit {
       this.selector.IpSubnet = this.form.value.IpSubnet;
     }
     this.selectorService.createOneSelector({ selector: this.selector }).subscribe(data => {
-      let selectedEndpointGroup = {} as any;
+      this.reset();
+      this.selector = null;
+      return data;
+    });
 
-      // update the endpoint group entity to reflect that it is now matched to an ESG via a Selector
+    // if the selector matches an EPG to an ESG
+    // update the endpoint group entity to reflect that it is now matched to an ESG via a Selector
+    if (this.selector.selectorType === 'EPG') {
+      let selectedEndpointGroup = {} as any;
       this.endpointGroupService.getOneEndpointGroup({ id: this.selector.epgId }).subscribe(epg => {
         selectedEndpointGroup = epg;
 
@@ -141,10 +146,7 @@ export class SelectorModalComponent implements OnInit {
           .updateOneEndpointGroup({ id: selectedEndpointGroup.id, endpointGroup: selectedEndpointGroup })
           .subscribe();
       });
-      this.reset();
-      this.selector = null;
-      return data;
-    });
+    }
   }
 
   public reset() {
@@ -154,11 +156,10 @@ export class SelectorModalComponent implements OnInit {
   }
 
   public getData() {
-    console.log('this.selector', this.selector);
-    console.log('this.endpointGroups', this.endpointGroups);
-    this.endpointGroups = this.endpointGroups.filter(epg =>
-      this.selector.existingEpgSelectors.some(selectorEpg => selectorEpg.id === epg.id),
-    );
+    const dto = Object.assign({}, this.ngx.getModalData('selectorModal') as any);
+    this.selector = dto.selector;
+    this.getEndpointGroups();
+
     this.setFormValidators();
   }
 
@@ -177,6 +178,11 @@ export class SelectorModalComponent implements OnInit {
       .getManyEndpointGroup({ filter: [`tenantId||eq||${this.tenantId}`], page: 1, perPage: 100 })
       .subscribe(data => {
         this.endpointGroups = data.data;
+        if (this.selector) {
+          this.endpointGroups = this.endpointGroups.filter(
+            epg => !this.selector.existingEpgSelectors.some(selectorEpg => selectorEpg.endpointGroupName === epg.name),
+          );
+        }
       });
   }
 }

@@ -139,6 +139,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
 
     dto.modalMode = modalMode;
     dto.selector = selector;
+    console.log('dto', dto);
 
     this.subscribeToSelectorModal();
     this.ngx.setModalData(dto, 'selectorModal');
