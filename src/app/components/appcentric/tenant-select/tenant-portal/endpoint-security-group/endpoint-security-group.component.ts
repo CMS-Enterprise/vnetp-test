@@ -126,19 +126,21 @@ export class EndpointSecurityGroupComponent implements OnInit {
     if (endpointsecurityGroup.deletedAt) {
       const modalDto = new YesNoModalDto(
         'Delete EndpointSecurity Group',
-        `Are you sure you want to permanently delete this endpointsecurity group ${endpointsecurityGroup.name}?`,
+        `Are you sure you want to permanently delete this endpointsecurity group and its selectors? ${endpointsecurityGroup.name}?`,
       );
       const onConfirm = () => {
-        this.endpointsecurityGroupService.deleteOneEndpointSecurityGroup({ id: endpointsecurityGroup.id }).subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
+        this.endpointsecurityGroupService
+          .cascadeDeleteTierEndpointSecurityGroup({ endpointSecurityGroupId: endpointsecurityGroup.id })
+          .subscribe(() => {
+            const params = this.tableContextService.getSearchLocalStorage();
+            const { filteredResults } = params;
 
-          if (filteredResults) {
-            this.getEndpointSecurityGroups(params);
-          } else {
-            this.getEndpointSecurityGroups();
-          }
-        });
+            if (filteredResults) {
+              this.getEndpointSecurityGroups(params);
+            } else {
+              this.getEndpointSecurityGroups();
+            }
+          });
       };
       SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
     } else {
