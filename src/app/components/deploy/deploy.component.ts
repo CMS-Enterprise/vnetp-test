@@ -163,7 +163,7 @@ export class DeployComponent implements OnInit {
       });
   }
 
-  private launchTierProvisioningJobs(tiersToDeploy: Tier[]): void {
+  public launchTierProvisioningJobs(tiersToDeploy: Tier[]): void {
     tiersToDeploy.forEach(tier => {
       const tierProvisionJob = {} as Job;
 

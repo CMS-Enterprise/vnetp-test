@@ -24,7 +24,7 @@ export class ContractComponent implements OnInit {
   public perPage = 20;
   public contracts = {} as GetManyContractResponseDto;
   public tableComponentDto = new TableComponentDto();
-  private contractModalSubscription: Subscription;
+  public contractModalSubscription: Subscription;
   public tenantId: string;
 
   public isLoading = false;
@@ -178,7 +178,7 @@ export class ContractComponent implements OnInit {
     this.ngx.getModal('contractModal').open();
   }
 
-  private subscribeToContractModal(): void {
+  public subscribeToContractModal(): void {
     this.contractModalSubscription = this.ngx.getModal('contractModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('contractModal');
       this.contractModalSubscription.unsubscribe();

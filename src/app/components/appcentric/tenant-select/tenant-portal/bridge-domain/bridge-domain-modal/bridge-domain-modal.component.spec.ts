@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -10,11 +11,17 @@ import {
   MockComponent,
   MockIconButtonComponent,
   MockImportExportComponent,
+  MockYesNoModalComponent,
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 
 import { BridgeDomainModalComponent } from './bridge-domain-modal.component';
 import { V2AppCentricBridgeDomainsService } from 'client';
+import { Subscription } from 'rxjs';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { By } from '@angular/platform-browser';
 describe('BridgeDomainModalComponent', () => {
   let component: BridgeDomainModalComponent;
   let fixture: ComponentFixture<BridgeDomainModalComponent>;
@@ -28,6 +35,7 @@ describe('BridgeDomainModalComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockIconButtonComponent,
         MockImportExportComponent,
+        MockYesNoModalComponent,
       ],
       imports: [NgSelectModule, FormsModule, ReactiveFormsModule, RouterTestingModule, HttpClientModule],
       providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricBridgeDomainsService)],
@@ -142,60 +150,170 @@ describe('BridgeDomainModalComponent', () => {
     });
   });
 
-  // describe('importConsumedContractsEpgRelationonfig', () => {
-  //   const mockNgxSmartModalComponent = {
-  //     getData: jest.fn().mockReturnValue({ modalYes: true }),
-  //     removeData: jest.fn(),
-  //     onCloseFinished: {
-  //       subscribe: jest.fn(),
-  //     },
-  //   };
+  describe('importAssociatedL3Outs', () => {
+    const mockNgxSmartModalComponent = {
+      getData: jest.fn().mockReturnValue({ modalYes: true }),
+      removeData: jest.fn(),
+      onCloseFinished: {
+        subscribe: jest.fn(),
+      },
+    };
 
-  //   beforeEach(() => {
-  //     component['ngx'] = {
-  //       getModal: jest.fn().mockReturnValue({
-  //         ...mockNgxSmartModalComponent,
-  //         open: jest.fn(),
-  //       }),
-  //       setModalData: jest.fn(),
-  //     } as any;
-  //   });
+    beforeEach(() => {
+      component['ngx'] = {
+        getModal: jest.fn().mockReturnValue({
+          ...mockNgxSmartModalComponent,
+          open: jest.fn(),
+        }),
+        resetModalData: jest.fn(),
+        setModalData: jest.fn(),
+      } as any;
+    });
 
-  //   it('should display a confirmation modal with the correct message', () => {
-  //     const event = [{ name: 'L3Out 1' }, { name: 'L3Out 2' }] as any;
-  //     const modalDto = new YesNoModalDto(
-  //       'Import L3 Outs',
-  //       `Are you sure you would like to import ${event.length} L3 Outs?`,
-  //     );
-  //     const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    it('should display a confirmation modal with the correct message', () => {
+      const event = [{ name: 'L3Out 1' }, { name: 'L3Out 2' }] as any;
+      const modalDto = new YesNoModalDto('Import L3 Outs', `Are you sure you would like to import ${event.length} L3 Outs?`);
+      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
 
-  //     component.importBridgeDomainL3OutRelation(event);
+      component.importBridgeDomainL3OutRelation(event);
 
-  //     expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
-  //   });
+      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
+    });
 
-  //   it('should import L3Outs and refresh on confirmation', () => {
-  //     const event = [{ name: 'L3Out 1' }, { name: 'L3Out 2' }] as any;
-  //     jest.spyOn(component, 'getL3OutsTableData');
-  //     jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
-  //       onConfirm();
+    it('should import L3Outs and refresh on confirmation', () => {
+      const event = [{ name: 'L3Out 1' }, { name: 'L3Out 2' }] as any;
+      jest.spyOn(component, 'getL3OutsTableData');
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        onConfirm();
 
-  //       expect(component['bridgeDomainService'].addL3OutToBridgeDomainBridgeDomain).toHaveBeenCalledTimes(2);
+        expect(component['bridgeDomainService'].addL3OutToBridgeDomainBridgeDomain).toHaveBeenCalledTimes(2);
 
-  //       mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
-  //         const data = modal.getData() as YesNoModalDto;
-  //         modal.removeData();
-  //         if (data && data.modalYes) {
-  //           onConfirm();
-  //         }
-  //       });
+        mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+          const data = modal.getData() as YesNoModalDto;
+          modal.removeData();
+          if (data && data.modalYes) {
+            onConfirm();
+          }
+        });
 
-  //       return new Subscription();
-  //     });
+        return new Subscription();
+      });
 
-  //     component.importBridgeDomainL3OutRelation(event);
+      component.importBridgeDomainL3OutRelation(event);
 
-  //     expect(component.getL3OutsTableData).toHaveBeenCalled();
-  //   });
-  // });
+      expect(component.getL3OutsTableData).toHaveBeenCalled();
+    });
+  });
+
+  it('should add associated l3out', () => {
+    component.selectedL3Out = { id: '123', tenantId: 'tenantId-123', vrfId: 'vrfId-123' };
+    component.addL3Out();
+    const getL3OutTableDataMock = jest.spyOn(component['bridgeDomainService'], 'getOneBridgeDomain');
+    expect(getL3OutTableDataMock).toHaveBeenCalled();
+  });
+
+  it('should remove associated l3out', () => {
+    jest.spyOn(component, 'getL3OutsTableData');
+    jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+      onConfirm();
+
+      expect(component['bridgeDomainService'].removeL3OutFromBridgeDomainBridgeDomain).toHaveBeenCalled();
+
+      return new Subscription();
+    });
+
+    const l3OutToDelete = { id: '123', description: 'Bye!', tenantId: 'tenantId-123', vrfId: 'vrfId-123' };
+    component.bridgeDomainId = 'bridgeDomainId-123';
+    component.removeL3Out(l3OutToDelete);
+    expect(component.getL3OutsTableData).toHaveBeenCalled();
+  });
+
+  it('should call to create an Bridge Domain', () => {
+    const service = TestBed.inject(V2AppCentricBridgeDomainsService);
+    const createBridgeDomainSpy = jest.spyOn(service, 'createOneBridgeDomain');
+
+    component.modalMode = ModalMode.Create;
+    component.form.setValue({
+      name: 'bridge-domain1',
+      arpFlooding: true,
+      bdMacAddress: '',
+      epMoveDetectionModeGarp: false,
+      limitLocalIpLearning: true,
+      unicastRouting: true,
+      vrfId: 'vrfId123',
+      alias: '',
+      description: 'description!',
+      l3OutForRouteProfileId: 'uuid123',
+      routeProfileId: 'route-profile123',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createBridgeDomainSpy).toHaveBeenCalled();
+  });
+
+  it('should call to update a Bridge Domain', () => {
+    const service = TestBed.inject(V2AppCentricBridgeDomainsService);
+    const updateBridgeDomainSpy = jest.spyOn(service, 'updateOneBridgeDomain');
+    jest.spyOn(component, 'closeModal');
+
+    component.modalMode = ModalMode.Edit;
+    component.bridgeDomainId = '123';
+    component.form.setValue({
+      name: 'bridge-domain1',
+      arpFlooding: true,
+      bdMacAddress: '',
+      epMoveDetectionModeGarp: false,
+      limitLocalIpLearning: true,
+      unicastRouting: true,
+      vrfId: 'vrfId123',
+      alias: '',
+      description: 'description!',
+      l3OutForRouteProfileId: 'uuid123',
+      routeProfileId: 'route-profile123',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(updateBridgeDomainSpy).toHaveBeenCalled();
+    expect(component['closeModal']).toHaveBeenCalled();
+  });
+
+  describe('getData', () => {
+    const createBridgeDomainDto = () => ({
+      ModalMode: ModalMode.Edit,
+      BridgeDomain: { id: 1 },
+    });
+    it('should run getData', () => {
+      jest.spyOn(component, 'getVrfs');
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createBridgeDomainDto());
+
+      component.getData();
+
+      expect(component.form.controls.description.enabled).toBe(true);
+      expect(component.getVrfs).toHaveBeenCalled();
+    });
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    const ngx = component['ngx'];
+
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    component['closeModal']();
+
+    expect(ngxSpy).toHaveBeenCalledWith('bridgeDomainModal');
+  });
+
+  it('should reset the form when closing the modal', () => {
+    component.form.controls.description.setValue('Test');
+
+    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
+    cancelButton.nativeElement.click();
+
+    expect(component.form.controls.description.value).toBe('');
+  });
 });

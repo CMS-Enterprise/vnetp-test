@@ -72,7 +72,7 @@ export class TenantPortalComponent implements OnInit {
     this.initialTabIndex = this.getInitialTabIndex();
   }
 
-  private getInitialTabIndex(): number {
+  public getInitialTabIndex(): number {
     const regex = /\(tenant-portal:([\w\/-]+)\)/g;
     const page = regex.exec(this.router.url);
     if (!page || !page[1]) {

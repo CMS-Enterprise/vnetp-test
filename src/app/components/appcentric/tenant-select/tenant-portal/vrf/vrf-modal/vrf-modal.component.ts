@@ -12,7 +12,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   styleUrls: ['./vrf-modal.component.css'],
 })
 export class VrfModalComponent implements OnInit {
-  public ModalMode: ModalMode;
+  public modalMode: ModalMode;
   public vrfId: string;
   public form: UntypedFormGroup;
   public submitted: boolean;
@@ -36,8 +36,8 @@ export class VrfModalComponent implements OnInit {
   public getData(): void {
     const dto = Object.assign({}, this.ngx.getModalData('vrfModal') as VrfModalDto);
 
-    this.ModalMode = dto.ModalMode;
-    if (this.ModalMode === ModalMode.Edit) {
+    this.modalMode = dto.ModalMode;
+    if (this.modalMode === ModalMode.Edit) {
       this.vrfId = dto.vrf.id;
     } else {
       this.form.controls.name.enable();
@@ -115,7 +115,7 @@ export class VrfModalComponent implements OnInit {
       tenantId,
     } as Vrf;
 
-    if (this.ModalMode === ModalMode.Create) {
+    if (this.modalMode === ModalMode.Create) {
       this.createVrf(vrf);
     } else {
       this.editVrf(vrf);

@@ -192,7 +192,7 @@ export class EndpointGroupComponent implements OnInit {
     this.ngx.getModal('endpointGroupModal').open();
   }
 
-  private subscribeToApEndpointGroupModal(): void {
+  public subscribeToApEndpointGroupModal(): void {
     this.endpointGroupModalSubscription = this.ngx.getModal('endpointGroupModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('endpointGroupModal');
       this.endpointGroupModalSubscription.unsubscribe();
@@ -274,7 +274,7 @@ export class EndpointGroupComponent implements OnInit {
     this.getEndpointGroups(event);
   }
 
-  private getBridgeDomains(): void {
+  public getBridgeDomains(): void {
     this.isLoading = true;
     this.bridgeDomainService
       .getManyBridgeDomain({
@@ -294,7 +294,7 @@ export class EndpointGroupComponent implements OnInit {
         // },
       );
   }
-  private getApplicationProfiles(): void {
+  public getApplicationProfiles(): void {
     this.isLoading = true;
     this.applicationProfileService
       .getManyApplicationProfile({

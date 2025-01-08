@@ -83,7 +83,6 @@ export class ApplicationProfileModalComponent implements OnInit {
   }
 
   private createApplicationProfile(applicationProfile: ApplicationProfile): void {
-    console.log(applicationProfile);
     this.applicationProfileService.createOneApplicationProfile({ applicationProfile }).subscribe(
       () => {
         this.closeModal();
@@ -131,7 +130,7 @@ export class ApplicationProfileModalComponent implements OnInit {
     }
   }
 
-  private getBridgeDomains(): void {
+  public getBridgeDomains(): void {
     this.isLoading = true;
     this.bridgeDomainService
       .getManyBridgeDomain({
