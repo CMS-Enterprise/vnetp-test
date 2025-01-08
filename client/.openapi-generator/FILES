@@ -16,7 +16,6 @@ api/v1LoadBalancerRoutes.service.ts
 api/v1LoadBalancerSelfIps.service.ts
 api/v1LoadBalancerVirtualServers.service.ts
 api/v1LoadBalancerVlans.service.ts
-api/v1NetworkScopeFormsExternalRoute.service.ts
 api/v1NetworkScopeFormsWanForm.service.ts
 api/v1NetworkScopeFormsWanFormSubnet.service.ts
 api/v1NetworkSecurityFirewallRuleGroups.service.ts
@@ -32,6 +31,7 @@ api/v1NetworkStaticRoutes.service.ts
 api/v1NetworkSubnets.service.ts
 api/v1NetworkVlans.service.ts
 api/v1RuntimeDataAciRuntime.service.ts
+api/v1RuntimeDataExternalRoute.service.ts
 api/v1RuntimeDataF5Config.service.ts
 api/v1RuntimeDataHitcount.service.ts
 api/v1SelfService.service.ts
@@ -43,12 +43,10 @@ api/v2AppCentricApplicationProfiles.service.ts
 api/v2AppCentricBridgeDomains.service.ts
 api/v2AppCentricContracts.service.ts
 api/v2AppCentricEndpointGroups.service.ts
-api/v2AppCentricEndpointSecurityGroups.service.ts
 api/v2AppCentricFilterEntries.service.ts
 api/v2AppCentricFilters.service.ts
 api/v2AppCentricL3outs.service.ts
 api/v2AppCentricRouteProfiles.service.ts
-api/v2AppCentricSelectors.service.ts
 api/v2AppCentricSubjects.service.ts
 api/v2AppCentricTenants.service.ts
 api/v2AppCentricVrfs.service.ts
@@ -70,8 +68,6 @@ model/createManyBridgeDomainDto.ts
 model/createManyContractDto.ts
 model/createManyDatacenterDto.ts
 model/createManyEndpointGroupDto.ts
-model/createManyEndpointSecurityGroupDto.ts
-model/createManyExternalRouteDto.ts
 model/createManyFilterDto.ts
 model/createManyFilterEntryDto.ts
 model/createManyFirewallRuleDto.ts
@@ -92,7 +88,6 @@ model/createManyNatRuleGroupDto.ts
 model/createManyNetworkObjectDto.ts
 model/createManyNetworkObjectGroupDto.ts
 model/createManyRouteProfileDto.ts
-model/createManySelectorDto.ts
 model/createManyServiceObjectDto.ts
 model/createManyServiceObjectGroupDto.ts
 model/createManyStaticRouteDto.ts
@@ -109,8 +104,8 @@ model/createManyZoneDto.ts
 model/datacenter.ts
 model/dcsPermissions.ts
 model/endpointGroup.ts
-model/endpointSecurityGroup.ts
 model/externalRoute.ts
+model/externalRouteJobCreateDto.ts
 model/f5ConfigJobCreateDto.ts
 model/f5Runtime.ts
 model/f5RuntimeCertsReference.ts
@@ -141,8 +136,6 @@ model/getManyBridgeDomainResponseDto.ts
 model/getManyContractResponseDto.ts
 model/getManyDatacenterResponseDto.ts
 model/getManyEndpointGroupResponseDto.ts
-model/getManyEndpointSecurityGroupResponseDto.ts
-model/getManyExternalRouteResponseDto.ts
 model/getManyFilterEntryResponseDto.ts
 model/getManyFilterResponseDto.ts
 model/getManyFirewallRuleGroupResponseDto.ts
@@ -164,7 +157,6 @@ model/getManyNatRuleResponseDto.ts
 model/getManyNetworkObjectGroupResponseDto.ts
 model/getManyNetworkObjectResponseDto.ts
 model/getManyRouteProfileResponseDto.ts
-model/getManySelectorResponseDto.ts
 model/getManyServiceObjectGroupResponseDto.ts
 model/getManyServiceObjectResponseDto.ts
 model/getManyStaticRouteResponseDto.ts
@@ -211,7 +203,6 @@ model/paginationDTO.ts
 model/poolImportCollectionDto.ts
 model/routeProfile.ts
 model/ruleOperationDto.ts
-model/selector.ts
 model/selfService.ts
 model/selfServiceConfig.ts
 model/selfServiceConvertedArtifactObjects.ts

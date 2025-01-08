@@ -14,35 +14,13 @@ import { WanForm } from './wanForm';
 
 export interface ExternalRoute { 
     readonly id?: string;
-    readonly createdAt?: string;
-    readonly updatedAt?: string;
-    readonly version?: number;
-    readonly deletedAt?: string;
-    readonly provisionedAt?: string;
-    readonly provisionedVersion?: number;
-    description?: string;
-    externalRouteIp: string;
-    vrf: ExternalRouteVrfEnum;
-    environment: ExternalRouteEnvironmentEnum;
-    wanFormId: string;
-    readonly wanForm?: WanForm;
-    datacenterId?: string;
-    tenantId?: string;
+    network: string;
+    prefixLength: number;
+    protocol?: string;
+    vrf: string;
+    metric: number;
+    uptime?: string;
+    readonly wanForms?: Array<WanForm>;
+    runtimeDataLastRefreshed?: string;
 }
-export enum ExternalRouteVrfEnum {
-    Appprod = 'appprod',
-    Appdev = 'appdev',
-    Dataprod = 'dataprod',
-    Datadev = 'datadev',
-    Edcmgmt = 'edcmgmt',
-    Transport = 'transport'
-};
-export enum ExternalRouteEnvironmentEnum {
-    Prod = 'prod',
-    Dev = 'dev',
-    Val = 'val',
-    Imp = 'imp'
-};
-
-
 

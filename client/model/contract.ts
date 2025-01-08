@@ -9,7 +9,6 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { EndpointSecurityGroup } from './endpointSecurityGroup';
 import { Tenant } from './tenant';
 import { EndpointGroup } from './endpointGroup';
 import { Subject } from './subject';
@@ -31,7 +30,5 @@ export interface Contract {
     readonly consumingEndpointGroups?: Array<EndpointGroup>;
     readonly providingEndpointGroups?: Array<EndpointGroup>;
     readonly subjects?: Array<Subject>;
-    readonly consumingEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
-    readonly providingEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
 }
 
