@@ -144,6 +144,8 @@ export class LoginComponent implements OnInit {
   }
 
   setTenantAndNavigate(tenant, mode) {
+    console.log('tenant', tenant);
+    console.log('mode', mode);
     const { tenantQueryParameter } = tenant;
     mode = mode.toLowerCase();
     this.toastr.success(`Welcome ${this.userpass.username}!`);
