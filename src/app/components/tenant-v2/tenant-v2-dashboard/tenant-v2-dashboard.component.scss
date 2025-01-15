@@ -1,0 +1,158 @@
+@import '../../../../assets/styles/variables';
+
+.dashboard {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+
+  &__heading {
+    margin-bottom: 20px;
+  }
+
+  &__card {
+    padding: 1.5rem 2rem;
+    border-radius: 4px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+    flex: 0 1 calc(33% - 1rem);
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  width: 100%;
+
+  span {
+    font-size: 18px;
+  }
+
+  &--large {
+    justify-content: space-evenly;
+
+    span {
+      font-size: 22px;
+    }
+    .status-light {
+      height: 45px;
+      width: 75px;
+    }
+  }
+}
+
+.status-light {
+  display: inline-block;
+  height: 30px;
+  width: 50px;
+  background-position: center;
+  background-repeat: no-repeat;
+  &.green {
+    background-image: url('../../../../assets/img/status-green.svg');
+  }
+
+  &.yellow {
+    background-image: url('../../../../assets/img/status-yellow.svg');
+  }
+
+  &.red {
+    background-image: url('../../../../assets/img/status-red.svg');
+  }
+}
+
+.chart-wrap {
+  display: flex;
+  justify-content: space-around;
+}
+
+.chart {
+  height: 300px;
+  width: 300px;
+  border-radius: 100%;
+  background-color: $c-gray-400;
+}
+
+.legend {
+  p {
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+
+  .legend-color {
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    margin-right: 10px;
+
+    &.success {
+      background-color: $c-green-400;
+    }
+    &.danger {
+      background-color: $c-red-400;
+    }
+    &.warning {
+      background-color: $c-yellow-100;
+    }
+    &.info {
+      background-color: $c-blue-400;
+    }
+    &.medium {
+      background-color: $c-gray-400;
+    }
+  }
+
+  .legend-subtitle {
+    display: block;
+    color: $c-gray-400;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin: 5px 0 15px 35px;
+  }
+}
+
+.dash-card {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    font-size: 18px;
+
+    a {
+      display: flex;
+      width: 100%;
+      color: $c-gray-700;
+    }
+  }
+
+  .icon {
+    margin-left: 20px;
+  }
+
+  &__item {
+    border-radius: 4px;
+    transition: background-color 150ms;
+
+    &:hover {
+      background-color: $c-gray-100;
+
+      a {
+        text-decoration: none;
+      }
+
+      .icon {
+        color: $c-blue-400;
+      }
+    }
+  }
+}

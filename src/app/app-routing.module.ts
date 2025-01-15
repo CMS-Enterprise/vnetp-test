@@ -25,7 +25,7 @@ const routes: Routes = [
   {
     path: 'tenantv2',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./components/tenant-v2/tenantv2.module').then(m => m.TenantV2Module),
+    loadChildren: () => import('./components/tenant-v2/tenant-v2.module').then(m => m.TenantV2Module),
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
