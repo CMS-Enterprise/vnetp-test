@@ -44,5 +44,7 @@ export interface Tenant {
     readonly filterEntries?: Array<FilterEntry>;
     readonly auditLogs?: Array<AuditLog>;
     readonly wanForms?: WanForm;
+    datacenterId?: string;
+    tenantVersion?: number;
 }
 

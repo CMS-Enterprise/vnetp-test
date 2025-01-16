@@ -22944,6 +22944,14 @@
             "items": {
               "$ref": "#/components/schemas/WanForm"
             }
+          },
+          "appCentricTenants": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
           }
         },
         "required": [
@@ -23388,6 +23396,12 @@
                 "$ref": "#/components/schemas/WanForm"
               }
             ]
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "tenantVersion": {
+            "type": "number"
           }
         }
       },
