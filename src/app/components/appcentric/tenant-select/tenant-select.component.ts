@@ -1,4 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { Tenant, GetManyTenantResponseDto, V2AppCentricTenantsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -42,6 +43,7 @@ export class TenantSelectComponent implements OnInit {
   typeDeletemodalSubscription: Subscription;
 
   constructor(
+    private router: Router,
     private tenantService: V2AppCentricTenantsService,
     private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
@@ -57,6 +59,10 @@ export class TenantSelectComponent implements OnInit {
   }
 
   public getTenants(): void {
+    let eventParams;
+    if (this.router.url.includes('adminportal')) {
+      eventParams = 'tenantVersion||eq||2';
+    }
     this.isLoading = true;
     // let eventParams;
     // if (event) {
@@ -70,6 +76,7 @@ export class TenantSelectComponent implements OnInit {
     // }
     this.tenantService
       .getManyTenant({
+        filter: [`${eventParams}`],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })

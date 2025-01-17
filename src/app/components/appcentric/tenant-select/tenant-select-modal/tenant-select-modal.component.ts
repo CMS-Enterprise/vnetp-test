@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Tenant, V2AppCentricTenantsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
@@ -18,12 +19,14 @@ export class TenantSelectModalComponent implements OnInit {
   public submitted: boolean;
 
   constructor(
+    private router: Router,
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private tenantService: V2AppCentricTenantsService,
   ) {}
 
   ngOnInit(): void {
+    console.log('on init');
     this.buildForm();
   }
 
@@ -37,6 +40,7 @@ export class TenantSelectModalComponent implements OnInit {
   }
 
   public getData(): void {
+    console.log('get data when modal is opened URL ', this.router.url);
     const dto = Object.assign({}, this.ngx.getModalData('tenantModal') as TenantModalDto);
 
     this.ModalMode = dto.ModalMode;
@@ -106,6 +110,10 @@ export class TenantSelectModalComponent implements OnInit {
       description,
       alias,
     } as Tenant;
+
+    if (this.router.url.includes('adminportal')) {
+      tenant.tenantVersion = 2;
+    }
 
     if (this.ModalMode === ModalMode.Create) {
       this.createTenant(tenant);
