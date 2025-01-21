@@ -46,7 +46,7 @@ export class FilterModalComponent implements OnInit {
 
   public filter: Filter;
 
-  private filterEntryEditModalSubscription: Subscription;
+  public filterEntryEditModalSubscription: Subscription;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('sourcePortTemplate') sourcePortTemplate: TemplateRef<any>;
@@ -229,7 +229,7 @@ export class FilterModalComponent implements OnInit {
     this.ngx.getModal('filterEntryModal').open();
   }
 
-  private subscribeToFilterEntryModal(): void {
+  public subscribeToFilterEntryModal(): void {
     this.filterEntryEditModalSubscription = this.ngx.getModal('filterEntryModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('filterEntryModal');
       this.filterEntryEditModalSubscription.unsubscribe();
