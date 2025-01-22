@@ -21,6 +21,7 @@ export class SelectorModalComponent implements OnInit {
   public currentTab: string;
   @Input() tenantId;
   @Input() endpointSecurityGroupId;
+  @Input() vrfId;
 
   endpointGroups: EndpointGroup[];
   public selector;
@@ -82,7 +83,6 @@ export class SelectorModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-    this.getEndpointGroups();
   }
 
   private buildForm(): void {
@@ -175,9 +175,10 @@ export class SelectorModalComponent implements OnInit {
 
   public getEndpointGroups() {
     this.endpointGroupService
-      .getManyEndpointGroup({ filter: [`tenantId||eq||${this.tenantId}`], page: 1, perPage: 100 })
+      .getManyEndpointGroup({ filter: [`tenantId||eq||${this.tenantId}`], page: 1, perPage: 100, join: ['bridgeDomain'] })
       .subscribe(data => {
         this.endpointGroups = data.data;
+        this.endpointGroups = this.endpointGroups.filter(epg => epg.bridgeDomain.vrfId === this.vrfId);
         if (this.selector) {
           this.endpointGroups = this.endpointGroups.filter(
             epg => !this.selector.existingEpgSelectors.some(selectorEpg => selectorEpg.endpointGroupName === epg.name),

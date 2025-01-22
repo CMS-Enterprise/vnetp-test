@@ -9,6 +9,7 @@ import {
   Vrf,
   V2AppCentricSelectorsService,
   V2AppCentricEndpointGroupsService,
+  EndpointGroup,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Tab } from 'src/app/common/tabs/tabs.component';
@@ -46,12 +47,13 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   public selectedBridgeDomain = undefined;
   public applicationProfiles: ApplicationProfile[];
   public tableComponentDto = new TableComponentDto();
-  endpointGroups;
+  endpointGroups: EndpointGroup[];
   tagSelectors = { data: [] };
   IpSubnetSelectors = { data: [] };
   epgSelectors = { data: [] };
   selectors;
   selectorModalSubscription: Subscription;
+  esgVrfId;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -211,6 +213,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
 
     const endpointSecurityGroup = dto.endpointSecurityGroup;
     if (endpointSecurityGroup !== undefined) {
+      this.esgVrfId = endpointSecurityGroup.vrfId;
       this.form.controls.name.setValue(endpointSecurityGroup.name);
       this.form.controls.name.disable();
       this.form.controls.description.setValue(endpointSecurityGroup.description);

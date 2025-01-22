@@ -30,7 +30,7 @@ describe('EndpointSecurityGroupModalComponent', () => {
         MockFontAwesomeComponent,
         MockImportExportComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
-        MockComponent({ selector: 'app-selector-modal', inputs: ['tenantId', 'endpointSecurityGroupId'] }),
+        MockComponent({ selector: 'app-selector-modal', inputs: ['tenantId', 'endpointSecurityGroupId', 'vrfId'] }),
       ],
       providers: [
         { provide: FormBuilder, useValue: jest.fn() },
