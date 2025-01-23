@@ -63,7 +63,7 @@ export class EndpointSecurityGroupComponent implements OnInit {
     // expandableRows: () => this.expandedRows,
   };
   constructor(
-    private endpointsecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
+    private endpointSecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
     private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
     private router: Router,
@@ -71,7 +71,7 @@ export class EndpointSecurityGroupComponent implements OnInit {
     private vrfService: V2AppCentricVrfsService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<EndpointSecurityGroup>();
-    advancedSearchAdapter.setService(this.endpointsecurityGroupService);
+    advancedSearchAdapter.setService(this.endpointSecurityGroupService);
     advancedSearchAdapter.setServiceName('V2AppCentricEndpointSecurityGroupsService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
 
@@ -102,7 +102,7 @@ export class EndpointSecurityGroupComponent implements OnInit {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
-    this.endpointsecurityGroupService
+    this.endpointSecurityGroupService
       .getManyEndpointSecurityGroup({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
@@ -129,7 +129,7 @@ export class EndpointSecurityGroupComponent implements OnInit {
         `Are you sure you want to permanently delete this endpointsecurity group and its selectors? ${endpointsecurityGroup.name}?`,
       );
       const onConfirm = () => {
-        this.endpointsecurityGroupService
+        this.endpointSecurityGroupService
           .cascadeDeleteTierEndpointSecurityGroup({ endpointSecurityGroupId: endpointsecurityGroup.id })
           .subscribe(() => {
             const params = this.tableContextService.getSearchLocalStorage();
@@ -144,7 +144,7 @@ export class EndpointSecurityGroupComponent implements OnInit {
       };
       SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
     } else {
-      this.endpointsecurityGroupService
+      this.endpointSecurityGroupService
         .softDeleteOneEndpointSecurityGroup({
           id: endpointsecurityGroup.id,
         })
@@ -166,7 +166,7 @@ export class EndpointSecurityGroupComponent implements OnInit {
       return;
     }
 
-    this.endpointsecurityGroupService
+    this.endpointSecurityGroupService
       .restoreOneEndpointSecurityGroup({
         id: endpointsecurityGroup.id,
       })
@@ -258,7 +258,7 @@ export class EndpointSecurityGroupComponent implements OnInit {
 
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.endpointsecurityGroupService.createManyEndpointSecurityGroup({ createManyEndpointSecurityGroupDto: { bulk: dto } }).subscribe(
+      this.endpointSecurityGroupService.createManyEndpointSecurityGroup({ createManyEndpointSecurityGroupDto: { bulk: dto } }).subscribe(
         () => {},
         () => {},
         () => {
@@ -271,7 +271,6 @@ export class EndpointSecurityGroupComponent implements OnInit {
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
-    return;
   }
 
   public onTableEvent(event: TableComponentDto): void {

@@ -185,5 +185,6 @@ export class SelectorModalComponent implements OnInit {
           );
         }
       });
+    return this.endpointGroups;
   }
 }
