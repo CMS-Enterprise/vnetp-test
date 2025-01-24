@@ -122,7 +122,6 @@ export class SelectorModalComponent implements OnInit {
     }
     this.selectorService.createOneSelector({ selector: this.selector }).subscribe(data => {
       this.reset();
-      this.selector = null;
       return data;
     });
 
