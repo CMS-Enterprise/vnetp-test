@@ -15,7 +15,6 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockProvider } from 'src/test/mock-providers';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { EndpointSecurityGroupModalDto } from 'src/app/models/appcentric/endpoint-security-group-modal-dto';
 import { EndpointSecurityGroupComponent } from './endpoint-security-group.component';
 
 describe('EndpointSecurityGroupComponent', () => {
@@ -47,93 +46,67 @@ describe('EndpointSecurityGroupComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('importEndpointSecurityGroupsConfig', () => {
-    const mockNgxSmartModalComponent = {
-      getData: jest.fn().mockReturnValue({ modalYes: true }),
-      removeData: jest.fn(),
-      onCloseFinished: {
-        subscribe: jest.fn(),
-      },
-    };
+  it('should run onInit', () => {
+    const endpointSecurityGroupSpy = jest.spyOn(component, 'getEndpointSecurityGroups');
+    const appProfilesSpy = jest.spyOn(component as any, 'getApplicationProfiles');
+    const vrfsSpy = jest.spyOn(component as any, 'getVrfs');
 
-    beforeEach(() => {
-      component['ngx'] = {
-        getModal: jest.fn().mockReturnValue({
-          ...mockNgxSmartModalComponent,
-          open: jest.fn(),
-        }),
-        setModalData: jest.fn(),
-      } as any;
-    });
+    component.ngOnInit();
+    expect(endpointSecurityGroupSpy).toHaveBeenCalled();
 
-    it('should display a confirmation modal with the correct message', () => {
-      const event = [{ name: 'EndpointSecurityGroup 1' }, { name: 'EndpointSecurityGroup 2' }] as any;
-      const modalDto = new YesNoModalDto(
-        'Import EndpointSecurity Groups',
-        `Are you sure you would like to import ${event.length} EndpointSecurity Groups?`,
-      );
-      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
-
-      component.importEndpointSecurityGroups(event);
-
-      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
-    });
-
-    it('should import route profiles and refresh the table on confirmation', () => {
-      const event = [{ name: 'EndpointSecurityGroup 1' }, { name: 'EndpointSecurityGroup 2' }] as any;
-      jest.spyOn(component, 'getEndpointSecurityGroups');
-      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm) => {
-        onConfirm();
-
-        expect(component['endpointSecurityGroupService'].createManyEndpointSecurityGroup).toHaveBeenCalledWith({
-          createManyEndpointSecurityGroupDto: { bulk: component.sanitizeData(event) },
-        });
-
-        mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
-          const data = modal.getData() as YesNoModalDto;
-          modal.removeData();
-          if (data && data.modalYes) {
-            onConfirm();
-          }
-        });
-
-        return new Subscription();
-      });
-
-      component.importEndpointSecurityGroups(event);
-
-      expect(component.getEndpointSecurityGroups).toHaveBeenCalled();
-    });
+    expect(appProfilesSpy).toHaveBeenCalled();
+    expect(vrfsSpy).toHaveBeenCalled();
   });
 
-  it('should delete endpoint security group', () => {
-    const endpointSecurityGroupToDelete = { id: '123', description: 'Bye!' } as EndpointSecurityGroup;
-    component.deleteEndpointSecurityGroup(endpointSecurityGroupToDelete);
-    const getEndpointSecurityGroupsMock = jest.spyOn(component['endpointSecurityGroupService'], 'getManyEndpointSecurityGroup');
-    expect(getEndpointSecurityGroupsMock).toHaveBeenCalled();
-  });
-
-  it('should restore endpoint security group', () => {
-    const endpointSecurityGroup = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['endpointSecurityGroupService'], 'restoreOneEndpointSecurityGroup').mockReturnValue(of({} as any));
+  it('should call getEndpointSecurityGroups on table event', () => {
     jest.spyOn(component, 'getEndpointSecurityGroups');
-    component.restoreEndpointSecurityGroup(endpointSecurityGroup);
-    expect(component['endpointSecurityGroupService'].restoreOneEndpointSecurityGroup).toHaveBeenCalledWith({
-      id: endpointSecurityGroup.id,
-    });
+    component.onTableEvent({} as any);
     expect(component.getEndpointSecurityGroups).toHaveBeenCalled();
   });
 
-  it('should apply search params when filtered results is true', () => {
-    const endpointSecurityGroup = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['endpointSecurityGroupService'], 'restoreOneEndpointSecurityGroup').mockReturnValue(of({} as any));
+  describe('ESG functions', () => {
+    it('should delete endpoint security group', () => {
+      const endpointSecurityGroupToDelete = { id: '123', description: 'Bye!' } as EndpointSecurityGroup;
+      component.deleteEndpointSecurityGroup(endpointSecurityGroupToDelete);
+      const getEndpointSecurityGroupsMock = jest.spyOn(component['endpointSecurityGroupService'], 'getManyEndpointSecurityGroup');
+      expect(getEndpointSecurityGroupsMock).toHaveBeenCalled();
+    });
 
-    const getEndpointSecurityGroupsSpy = jest.spyOn(component, 'getEndpointSecurityGroups');
-    const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
-    jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+    it('should apply search params when filtered results is true', () => {
+      const endpointSecurityGroup = { id: '1', deletedAt: true } as any;
+      jest.spyOn(component['endpointSecurityGroupService'], 'cascadeDeleteTierEndpointSecurityGroup').mockReturnValue(of({} as any));
 
-    component.restoreEndpointSecurityGroup(endpointSecurityGroup);
-    expect(getEndpointSecurityGroupsSpy).toHaveBeenCalledWith(params);
+      const getEsgsSpy = jest.spyOn(component['endpointSecurityGroupService'], 'getManyEndpointSecurityGroup');
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+      component.deleteEndpointSecurityGroup(endpointSecurityGroup);
+      expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+      expect(getEsgsSpy).toHaveBeenCalled();
+    });
+
+    it('should restore endpoint security group', () => {
+      const endpointSecurityGroup = { id: '1', deletedAt: true } as any;
+      jest.spyOn(component['endpointSecurityGroupService'], 'restoreOneEndpointSecurityGroup').mockReturnValue(of({} as any));
+      jest.spyOn(component, 'getEndpointSecurityGroups');
+      component.restoreEndpointSecurityGroup(endpointSecurityGroup);
+      expect(component['endpointSecurityGroupService'].restoreOneEndpointSecurityGroup).toHaveBeenCalledWith({
+        id: endpointSecurityGroup.id,
+      });
+      expect(component.getEndpointSecurityGroups).toHaveBeenCalled();
+    });
+
+    it('should apply search params when filtered results is true', () => {
+      const endpointSecurityGroup = { id: '1', deletedAt: true } as any;
+      jest.spyOn(component['endpointSecurityGroupService'], 'restoreOneEndpointSecurityGroup').mockReturnValue(of({} as any));
+
+      const getEndpointSecurityGroupsSpy = jest.spyOn(component, 'getEndpointSecurityGroups');
+      const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
+      jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+
+      component.restoreEndpointSecurityGroup(endpointSecurityGroup);
+      expect(getEndpointSecurityGroupsSpy).toHaveBeenCalledWith(params);
+    });
   });
 
   describe('openEndpointSecurityGroupModal', () => {
@@ -176,15 +149,62 @@ describe('EndpointSecurityGroupComponent', () => {
     });
   });
 
-  it('should run onInit', () => {
-    const endpointSecurityGroupSpy = jest.spyOn(component, 'getEndpointSecurityGroups');
-    const appProfilesSpy = jest.spyOn(component as any, 'getApplicationProfiles');
-    const vrfsSpy = jest.spyOn(component as any, 'getVrfs');
+  describe('importEndpointSecurityGroupsConfig', () => {
+    const mockNgxSmartModalComponent = {
+      getData: jest.fn().mockReturnValue({ modalYes: true }),
+      removeData: jest.fn(),
+      onCloseFinished: {
+        subscribe: jest.fn(),
+      },
+    };
 
-    component.ngOnInit();
-    expect(endpointSecurityGroupSpy).toHaveBeenCalled();
+    beforeEach(() => {
+      component['ngx'] = {
+        getModal: jest.fn().mockReturnValue({
+          ...mockNgxSmartModalComponent,
+          open: jest.fn(),
+        }),
+        setModalData: jest.fn(),
+      } as any;
+    });
 
-    expect(appProfilesSpy).toHaveBeenCalled();
-    expect(vrfsSpy).toHaveBeenCalled();
+    it('should display a confirmation modal with the correct message', () => {
+      const event = [{ name: 'EndpointSecurityGroup 1' }, { name: 'EndpointSecurityGroup 2' }] as any;
+      const modalDto = new YesNoModalDto(
+        'Import EndpointSecurity Groups',
+        `Are you sure you would like to import ${event.length} EndpointSecurity Groups?`,
+      );
+      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+
+      component.importEndpointSecurityGroups(event);
+
+      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
+    });
+
+    it('should import Endpoint Security Groups and refresh the table on confirmation', () => {
+      const event = [{ name: 'EndpointSecurityGroup 1' }, { name: 'EndpointSecurityGroup 2' }] as any;
+      jest.spyOn(component, 'getEndpointSecurityGroups');
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm) => {
+        onConfirm();
+
+        expect(component['endpointSecurityGroupService'].createManyEndpointSecurityGroup).toHaveBeenCalledWith({
+          createManyEndpointSecurityGroupDto: { bulk: component.sanitizeData(event) },
+        });
+
+        mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+          const data = modal.getData() as YesNoModalDto;
+          modal.removeData();
+          if (data && data.modalYes) {
+            onConfirm();
+          }
+        });
+
+        return new Subscription();
+      });
+
+      component.importEndpointSecurityGroups(event);
+
+      expect(component.getEndpointSecurityGroups).toHaveBeenCalled();
+    });
   });
 });

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { MockComponent, MockFontAwesomeComponent, MockImportExportComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { SelectorModalComponent } from './selector-modal.component';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
