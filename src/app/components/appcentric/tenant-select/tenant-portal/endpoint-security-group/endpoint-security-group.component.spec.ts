@@ -106,14 +106,14 @@ describe('EndpointSecurityGroupComponent', () => {
     });
   });
 
-  it('should delete endpoint group', () => {
+  it('should delete endpoint security group', () => {
     const endpointSecurityGroupToDelete = { id: '123', description: 'Bye!' } as EndpointSecurityGroup;
     component.deleteEndpointSecurityGroup(endpointSecurityGroupToDelete);
     const getEndpointSecurityGroupsMock = jest.spyOn(component['endpointSecurityGroupService'], 'getManyEndpointSecurityGroup');
     expect(getEndpointSecurityGroupsMock).toHaveBeenCalled();
   });
 
-  it('should restore endpoint group', () => {
+  it('should restore endpoint security group', () => {
     const endpointSecurityGroup = { id: '1', deletedAt: true } as any;
     jest.spyOn(component['endpointSecurityGroupService'], 'restoreOneEndpointSecurityGroup').mockReturnValue(of({} as any));
     jest.spyOn(component, 'getEndpointSecurityGroups');
@@ -150,7 +150,7 @@ describe('EndpointSecurityGroupComponent', () => {
 
         const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
 
-        (component as any).subscribeToApEndpointSecurityGroupModal();
+        (component as any).subscribeToEndpointSecurityGroupModal();
 
         expect(component['ngx'].getModal).toHaveBeenCalledWith('endpointSecurityGroupModal');
         expect((component as any).endpointSecurityGroupModalSubscription).toBeDefined();
@@ -162,17 +162,17 @@ describe('EndpointSecurityGroupComponent', () => {
 
         expect(unsubscribeSpy).toHaveBeenCalled();
       });
-      // it('should call ngx.setModalData and ngx.getModal().open', () => {
-      //   const endpointSecurityGroup = { id: 1, name: 'Test Endpoint Security Group' } as any;
-      //   component.tenantId = { id: '1' } as any;
-      //   component.openEndpointSecurityGroupModal(ModalMode.Edit, endpointSecurityGroup);
+      it('should call ngx.setModalData and ngx.getModal().open', () => {
+        const endpointSecurityGroup = { id: 1, name: 'Test Endpoint Security Group' } as any;
+        component.tenantId = { id: '1' } as any;
+        component.openEndpointSecurityGroupModal(ModalMode.Edit, endpointSecurityGroup);
 
-      //   expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(EndpointSecurityGroupModalDto), 'endpointSecurityGroupModal');
-      //   expect(component['ngx'].getModal).toHaveBeenCalledWith('endpointSecurityGroupModal');
+        expect(component['ngx'].setModalData).toHaveBeenCalled();
+        expect(component['ngx'].getModal).toHaveBeenCalledWith('endpointSecurityGroupModal');
 
-      //   const modal = component['ngx'].getModal('endpointSecurityGroupModal');
-      //   expect(modal).toBeDefined();
-      // });
+        const modal = component['ngx'].getModal('endpointSecurityGroupModal');
+        expect(modal).toBeDefined();
+      });
     });
   });
 

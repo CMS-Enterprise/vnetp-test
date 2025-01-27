@@ -51,9 +51,8 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   tagSelectors = { data: [] };
   IpSubnetSelectors = { data: [] };
   epgSelectors = { data: [] };
-  selectors;
   selectorModalSubscription: Subscription;
-  esgVrfId;
+  esgVrfId: string;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -141,14 +140,13 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
 
     dto.modalMode = modalMode;
     dto.selector = selector;
-    console.log('dto', dto);
 
     this.subscribeToSelectorModal();
     this.ngx.setModalData(dto, 'selectorModal');
     this.ngx.getModal('selectorModal').open();
   }
 
-  private subscribeToSelectorModal(): void {
+  public subscribeToSelectorModal(): void {
     this.selectorModalSubscription = this.ngx.getModal('selectorModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('selectorModal');
       this.selectorModalSubscription.unsubscribe();

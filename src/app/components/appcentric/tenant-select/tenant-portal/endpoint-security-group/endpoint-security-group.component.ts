@@ -192,12 +192,12 @@ export class EndpointSecurityGroupComponent implements OnInit {
       dto.selectors = endpointSecurityGroup.selectors;
     }
 
-    this.subscribeToApEndpointSecurityGroupModal();
+    this.subscribeToEndpointSecurityGroupModal();
     this.ngx.setModalData(dto, 'endpointSecurityGroupModal');
     this.ngx.getModal('endpointSecurityGroupModal').open();
   }
 
-  private subscribeToApEndpointSecurityGroupModal(): void {
+  private subscribeToEndpointSecurityGroupModal(): void {
     this.endpointSecurityGroupModalSubscription = this.ngx.getModal('endpointSecurityGroupModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('endpointSecurityGroupModal');
       this.endpointSecurityGroupModalSubscription.unsubscribe();

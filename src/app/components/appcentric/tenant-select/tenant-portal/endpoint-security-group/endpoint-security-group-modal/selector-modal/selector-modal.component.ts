@@ -85,7 +85,7 @@ export class SelectorModalComponent implements OnInit {
     this.buildForm();
   }
 
-  private buildForm(): void {
+  public buildForm(): void {
     this.form = this.formBuilder.group({
       tagKey: ['', Validators.required],
       valueOperator: ['', Validators.required],

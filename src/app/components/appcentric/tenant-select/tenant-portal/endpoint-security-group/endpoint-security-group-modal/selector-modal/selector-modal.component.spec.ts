@@ -14,8 +14,8 @@ describe('SelectorModalComponent', () => {
   let component: SelectorModalComponent;
   let fixture: ComponentFixture<SelectorModalComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       declarations: [
         MockComponent({ selector: 'app-tabs', inputs: ['tabs'] }),
         SelectorModalComponent,
@@ -53,108 +53,132 @@ describe('SelectorModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should require tagKey, valueOperator, and tagValue when navIndex is 0, all others should be false', () => {
-    component.navIndex = 0;
-    component.setFormValidators();
+  describe('form field validation', () => {
+    it('should require tagKey, valueOperator, and tagValue when navIndex is 0, all others should be false', () => {
+      component.navIndex = 0;
+      component.setFormValidators();
 
-    expect(isRequired('tagKey')).toBe(true);
-    expect(isRequired('valueOperator')).toBe(true);
-    expect(isRequired('tagValue')).toBe(true);
+      expect(isRequired('tagKey')).toBe(true);
+      expect(isRequired('valueOperator')).toBe(true);
+      expect(isRequired('tagValue')).toBe(true);
 
-    expect(isRequired('epgId')).toBe(false);
-    expect(isRequired('IpSubnet')).toBe(false);
-    expect(isRequired('description')).toBe(false);
+      expect(isRequired('epgId')).toBe(false);
+      expect(isRequired('IpSubnet')).toBe(false);
+      expect(isRequired('description')).toBe(false);
+    });
+
+    it('should require epgId when navIndex is 1, all others should be false', () => {
+      component.navIndex = 1;
+      component.setFormValidators();
+
+      expect(isRequired('epgId')).toBe(true);
+
+      expect(isRequired('tagKey')).toBe(false);
+      expect(isRequired('valueOperator')).toBe(false);
+      expect(isRequired('tagValue')).toBe(false);
+      expect(isRequired('IpSubnet')).toBe(false);
+      expect(isRequired('description')).toBe(false);
+    });
+
+    it('should require IpSubnet when navIndex is 2, all others should be false', () => {
+      component.navIndex = 2;
+      component.setFormValidators();
+
+      expect(isRequired('IpSubnet')).toBe(true);
+
+      expect(isRequired('tagKey')).toBe(false);
+      expect(isRequired('valueOperator')).toBe(false);
+      expect(isRequired('tagValue')).toBe(false);
+      expect(isRequired('epgId')).toBe(false);
+      expect(isRequired('description')).toBe(false);
+    });
   });
 
-  it('should require epgId when navIndex is 1, all others should be false', () => {
-    component.navIndex = 1;
-    component.setFormValidators();
+  describe('closing modal functions', () => {
+    it('should call ngx.close with the correct argument when cancelled', () => {
+      const ngx = component['ngx'];
 
-    expect(isRequired('epgId')).toBe(true);
+      const ngxSpy = jest.spyOn(ngx, 'close');
 
-    expect(isRequired('tagKey')).toBe(false);
-    expect(isRequired('valueOperator')).toBe(false);
-    expect(isRequired('tagValue')).toBe(false);
-    expect(isRequired('IpSubnet')).toBe(false);
-    expect(isRequired('description')).toBe(false);
+      component['reset']();
+
+      expect(ngxSpy).toHaveBeenCalledWith('selectorModal');
+    });
+
+    it('should reset the form when closing the modal', () => {
+      component.form.controls.description.setValue('Test');
+
+      jest.spyOn(component, 'reset');
+      const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
+      cancelButton.nativeElement.click();
+
+      expect(component.form.controls.description.value).toBe(null);
+      expect(component.reset).toHaveBeenCalled();
+    });
   });
 
-  it('should require IpSubnet when navIndex is 2, all others should be false', () => {
-    component.navIndex = 2;
-    component.setFormValidators();
+  describe('create different Selectors', () => {
+    it('should call to create an EPG Selector', () => {
+      component.endpointSecurityGroupId = '123';
+      component.selector = { selectorType: 'Tag' };
+      const createSelectorSpy = jest.spyOn(component.selectorService, 'createOneSelector');
+      jest.spyOn(component, 'reset');
+      const getOneEpg = jest.spyOn(component['endpointGroupService'], 'getOneEndpointGroup');
 
-    expect(isRequired('IpSubnet')).toBe(true);
+      component.navIndex = 1;
+      component.selector = { selectorType: 'EPG' };
+      component.setFormValidators();
 
-    expect(isRequired('tagKey')).toBe(false);
-    expect(isRequired('valueOperator')).toBe(false);
-    expect(isRequired('tagValue')).toBe(false);
-    expect(isRequired('epgId')).toBe(false);
-    expect(isRequired('description')).toBe(false);
+      const { epgId } = component.form.controls;
+      epgId.setValue('epgId-123');
+
+      component.save();
+      expect(component.selector.epgId).toBe('epgId-123');
+
+      expect(createSelectorSpy).toHaveBeenCalledWith({ selector: component.selector });
+      expect(component.reset).toHaveBeenCalled();
+      expect(getOneEpg).toHaveBeenCalled();
+    });
+
+    it('should save the form and set correct values', () => {
+      component.endpointSecurityGroupId = '123';
+      component.selector = { selectorType: 'Tag' };
+
+      const { tagKey, valueOperator, tagValue } = component.form.controls;
+
+      const createSelectorSpy = jest.spyOn(component.selectorService, 'createOneSelector');
+      component.navIndex = 0;
+
+      component.setFormValidators();
+      tagKey.setValue('someTagKey');
+      valueOperator.setValue('Contains');
+      tagValue.setValue('someTagValue');
+      component.selector = { selectorType: 'IpSubnet' };
+
+      jest.spyOn(component, 'reset');
+      component.save();
+      expect(component.selector.selectorType).toBe('Tag');
+      expect(component.selector.valueOperator).toBe('Contains');
+      expect(component.selector.tagValue).toBe('someTagValue');
+
+      expect(createSelectorSpy).toHaveBeenCalledWith({ selector: component.selector });
+      expect(component.reset).toHaveBeenCalled();
+    });
   });
 
-  it('should save the form and set correct values', () => {
-    component.endpointSecurityGroupId = '123';
-    component.selector = { selectorType: 'Tag' };
+  describe('getData', () => {
+    const createSelectorDto = () => ({
+      selector: { id: 1 },
+    });
+    it('should run getData', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createSelectorDto());
+      jest.spyOn(component, 'getEndpointGroups');
 
-    const { tagKey, valueOperator, tagValue } = component.form.controls;
+      component.getData();
 
-    const createSelectorSpy = jest.spyOn(component.selectorService, 'createOneSelector');
-    component.navIndex = 0;
-
-    component.setFormValidators();
-    tagKey.setValue('someTagKey');
-    valueOperator.setValue('Contains');
-    tagValue.setValue('someTagValue');
-    component.selector = { selectorType: 'IpSubnet' };
-
-    jest.spyOn(component, 'reset');
-    component.save();
-    expect(component.selector.selectorType).toBe('Tag');
-    expect(component.selector.valueOperator).toBe('Contains');
-    expect(component.selector.tagValue).toBe('someTagValue');
-
-    expect(createSelectorSpy).toHaveBeenCalledWith({ selector: component.selector });
-    expect(component.reset).toHaveBeenCalled();
+      expect(component.form.controls.description.enabled).toBe(true);
+      expect(component.getEndpointGroups).toHaveBeenCalled();
+    });
   });
-
-  it('should call ngx.close with the correct argument when cancelled', () => {
-    const ngx = component['ngx'];
-
-    const ngxSpy = jest.spyOn(ngx, 'close');
-
-    component['reset']();
-
-    expect(ngxSpy).toHaveBeenCalledWith('selectorModal');
-  });
-
-  it('should reset the form when closing the modal', () => {
-    component.form.controls.description.setValue('Test');
-
-    jest.spyOn(component, 'reset');
-    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
-    cancelButton.nativeElement.click();
-
-    expect(component.form.controls.description.value).toBe(null);
-    expect(component.reset).toHaveBeenCalled();
-  });
-
-  // it('should call to create an IpSubnet Selector', () => {
-  //   const service = TestBed.inject(V2AppCentricSelectorsService);
-  //   const createEndpointGroupSpy = jest.spyOn(service, 'createOneSelector');
-  //   component.navIndex = 0;
-  //   component.selector = {selectorType: 'EPG'}
-  //   component.form.setValue({
-  //     tagKey: [null],
-  //     valueOperator: [null],
-  //     tagValue: [null],
-  //     epgId: ['123'],
-  //     IpSubnet: [null],
-  //     description: [''],
-  //   });
-
-  //   const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
-  //   saveButton.nativeElement.click();
-
-  //   expect(createEndpointGroupSpy).toHaveBeenCalled();
-  // });
 });
