@@ -59,6 +59,7 @@ describe('SelectorModalComponent', () => {
       component.navIndex = 0;
       component.setFormValidators();
 
+      // expectations
       expect(isRequired('tagKey')).toBe(true);
       expect(isRequired('valueOperator')).toBe(true);
       expect(isRequired('tagValue')).toBe(true);
@@ -72,8 +73,8 @@ describe('SelectorModalComponent', () => {
       component.navIndex = 1;
       component.setFormValidators();
 
+      // expectations
       expect(isRequired('epgId')).toBe(true);
-
       expect(isRequired('tagKey')).toBe(false);
       expect(isRequired('valueOperator')).toBe(false);
       expect(isRequired('tagValue')).toBe(false);
@@ -85,8 +86,8 @@ describe('SelectorModalComponent', () => {
       component.navIndex = 2;
       component.setFormValidators();
 
+      // expectations
       expect(isRequired('IpSubnet')).toBe(true);
-
       expect(isRequired('tagKey')).toBe(false);
       expect(isRequired('valueOperator')).toBe(false);
       expect(isRequired('tagValue')).toBe(false);
@@ -119,7 +120,7 @@ describe('SelectorModalComponent', () => {
   });
 
   describe('create different Selectors', () => {
-    it('should call to create an EPG Selector', () => {
+    it('should save form and call to create to create an EPG Selector', () => {
       component.endpointSecurityGroupId = '123';
       component.selector = { selectorType: 'Tag' };
       const createSelectorSpy = jest.spyOn(component.selectorService, 'createOneSelector');
@@ -141,27 +142,29 @@ describe('SelectorModalComponent', () => {
       expect(getOneEpg).toHaveBeenCalled();
     });
 
-    it('should save the form and set correct values', () => {
+    it('should save form and call to create a Tag Selector', () => {
       component.endpointSecurityGroupId = '123';
       component.selector = { selectorType: 'Tag' };
-
       const { tagKey, valueOperator, tagValue } = component.form.controls;
-
       const createSelectorSpy = jest.spyOn(component.selectorService, 'createOneSelector');
+
       component.navIndex = 0;
 
       component.setFormValidators();
+
       tagKey.setValue('someTagKey');
       valueOperator.setValue('Contains');
       tagValue.setValue('someTagValue');
-      component.selector = { selectorType: 'IpSubnet' };
 
+      component.selector = { selectorType: 'IpSubnet' };
       jest.spyOn(component, 'reset');
+
       component.save();
+
+      // expectations
       expect(component.selector.selectorType).toBe('Tag');
       expect(component.selector.valueOperator).toBe('Contains');
       expect(component.selector.tagValue).toBe('someTagValue');
-
       expect(createSelectorSpy).toHaveBeenCalledWith({ selector: component.selector });
       expect(component.reset).toHaveBeenCalled();
     });

@@ -47,13 +47,15 @@ describe('EndpointSecurityGroupComponent', () => {
   });
 
   it('should run onInit', () => {
+    // spy functions
     const endpointSecurityGroupSpy = jest.spyOn(component, 'getEndpointSecurityGroups');
     const appProfilesSpy = jest.spyOn(component as any, 'getApplicationProfiles');
     const vrfsSpy = jest.spyOn(component as any, 'getVrfs');
 
     component.ngOnInit();
-    expect(endpointSecurityGroupSpy).toHaveBeenCalled();
 
+    // expectations
+    expect(endpointSecurityGroupSpy).toHaveBeenCalled();
     expect(appProfilesSpy).toHaveBeenCalled();
     expect(vrfsSpy).toHaveBeenCalled();
   });
@@ -64,6 +66,7 @@ describe('EndpointSecurityGroupComponent', () => {
     expect(component.getEndpointSecurityGroups).toHaveBeenCalled();
   });
 
+  // ESG Functions
   describe('ESG functions', () => {
     it('should delete endpoint security group', () => {
       const endpointSecurityGroupToDelete = { id: '123', description: 'Bye!' } as EndpointSecurityGroup;
@@ -74,22 +77,31 @@ describe('EndpointSecurityGroupComponent', () => {
 
     it('should apply search params when filtered results is true', () => {
       const endpointSecurityGroup = { id: '1', deletedAt: true } as any;
-      jest.spyOn(component['endpointSecurityGroupService'], 'cascadeDeleteTierEndpointSecurityGroup').mockReturnValue(of({} as any));
 
+      // spy functions
+      jest.spyOn(component['endpointSecurityGroupService'], 'cascadeDeleteTierEndpointSecurityGroup').mockReturnValue(of({} as any));
+      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
       const getEsgsSpy = jest.spyOn(component['endpointSecurityGroupService'], 'getManyEndpointSecurityGroup');
       const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
-      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+
       component.deleteEndpointSecurityGroup(endpointSecurityGroup);
+
+      // expectations
       expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
       expect(getEsgsSpy).toHaveBeenCalled();
     });
 
     it('should restore endpoint security group', () => {
       const endpointSecurityGroup = { id: '1', deletedAt: true } as any;
+
+      // spy functions
       jest.spyOn(component['endpointSecurityGroupService'], 'restoreOneEndpointSecurityGroup').mockReturnValue(of({} as any));
       jest.spyOn(component, 'getEndpointSecurityGroups');
+
       component.restoreEndpointSecurityGroup(endpointSecurityGroup);
+
+      // expectations
       expect(component['endpointSecurityGroupService'].restoreOneEndpointSecurityGroup).toHaveBeenCalledWith({
         id: endpointSecurityGroup.id,
       });
@@ -98,13 +110,16 @@ describe('EndpointSecurityGroupComponent', () => {
 
     it('should apply search params when filtered results is true', () => {
       const endpointSecurityGroup = { id: '1', deletedAt: true } as any;
-      jest.spyOn(component['endpointSecurityGroupService'], 'restoreOneEndpointSecurityGroup').mockReturnValue(of({} as any));
 
-      const getEndpointSecurityGroupsSpy = jest.spyOn(component, 'getEndpointSecurityGroups');
+      // spy functions
+      jest.spyOn(component['endpointSecurityGroupService'], 'restoreOneEndpointSecurityGroup').mockReturnValue(of({} as any));
       const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
       jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+      const getEndpointSecurityGroupsSpy = jest.spyOn(component, 'getEndpointSecurityGroups');
 
       component.restoreEndpointSecurityGroup(endpointSecurityGroup);
+
+      // expectation
       expect(getEndpointSecurityGroupsSpy).toHaveBeenCalledWith(params);
     });
   });
@@ -138,8 +153,10 @@ describe('EndpointSecurityGroupComponent', () => {
       it('should call ngx.setModalData and ngx.getModal().open', () => {
         const endpointSecurityGroup = { id: 1, name: 'Test Endpoint Security Group' } as any;
         component.tenantId = { id: '1' } as any;
+
         component.openEndpointSecurityGroupModal(ModalMode.Edit, endpointSecurityGroup);
 
+        // expectations
         expect(component['ngx'].setModalData).toHaveBeenCalled();
         expect(component['ngx'].getModal).toHaveBeenCalledWith('endpointSecurityGroupModal');
 
@@ -183,6 +200,8 @@ describe('EndpointSecurityGroupComponent', () => {
 
     it('should import Endpoint Security Groups and refresh the table on confirmation', () => {
       const event = [{ name: 'EndpointSecurityGroup 1' }, { name: 'EndpointSecurityGroup 2' }] as any;
+
+      // spy functions
       jest.spyOn(component, 'getEndpointSecurityGroups');
       jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm) => {
         onConfirm();
@@ -204,6 +223,7 @@ describe('EndpointSecurityGroupComponent', () => {
 
       component.importEndpointSecurityGroups(event);
 
+      // expectations
       expect(component.getEndpointSecurityGroups).toHaveBeenCalled();
     });
   });

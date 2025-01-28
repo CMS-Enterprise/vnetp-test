@@ -172,11 +172,15 @@ describe('EndpointSecurityGroupModalComponent', () => {
     });
     it('should run getData', () => {
       const ngx = TestBed.inject(NgxSmartModalService);
+
+      // spy functions
       jest.spyOn(ngx, 'getModalData').mockImplementation(() => createEndpointSecurityGroupDto());
       jest.spyOn(component, 'getVrfs');
       jest.spyOn(component, 'getApplicationProfiles');
+
       component.getData();
 
+      // expectations
       expect(component.form.controls.description.enabled).toBe(true);
       expect(component.getVrfs).toHaveBeenCalled();
       expect(component.getApplicationProfiles).toHaveBeenCalled();
@@ -186,6 +190,7 @@ describe('EndpointSecurityGroupModalComponent', () => {
   describe('Selector Functions', () => {
     it('should delete selector', () => {
       component.endpointSecurityGroupId = '123';
+      // spy functions
       const selector = { id: '1' } as any;
       const deleteOneSelectorSpy = jest.spyOn(component['selectorService'], 'deleteOneSelector').mockResolvedValue({} as never);
       const softDeleteOneSelectorSpy = jest.spyOn(component['selectorService'], 'softDeleteOneSelector').mockResolvedValue({} as never);
@@ -199,6 +204,7 @@ describe('EndpointSecurityGroupModalComponent', () => {
 
       component.deleteSelector(selector);
 
+      // expectations
       expect(component['entityService'].deleteEntity).toHaveBeenCalled();
       expect(deleteOneSelectorSpy).toHaveBeenCalledWith({ id: selector.id });
       expect(softDeleteOneSelectorSpy).toHaveBeenCalledWith({ id: selector.id });
