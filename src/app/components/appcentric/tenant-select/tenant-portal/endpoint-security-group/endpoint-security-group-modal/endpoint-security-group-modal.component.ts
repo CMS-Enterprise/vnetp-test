@@ -21,7 +21,6 @@ import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { Subscription } from 'rxjs';
-import { TableContextService } from 'src/app/services/table-context.service';
 import { SelectorModalDto } from 'src/app/models/appcentric/appcentric-selector-modal-dto';
 import { EntityService } from 'src/app/services/entity.service';
 
@@ -93,7 +92,6 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   constructor(
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
-    private tableContextService: TableContextService,
     private endpointSecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
     private vrfService: V2AppCentricVrfsService,
     private applicationProfileService: V2AppCentricApplicationProfilesService,
@@ -130,15 +128,13 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       });
   }
 
-  public openSelectorModal(modalMode): void {
+  public openSelectorModal(): void {
     const selector = {} as any;
     selector.existingEpgSelectors = this.epgSelectors.data;
     this.IpSubnetSelectors.data = [];
     this.epgSelectors.data = [];
     this.tagSelectors.data = [];
     const dto = new SelectorModalDto();
-
-    dto.modalMode = modalMode;
     dto.selector = selector;
 
     this.subscribeToSelectorModal();
@@ -150,15 +146,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     this.selectorModalSubscription = this.ngx.getModal('selectorModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('selectorModal');
       this.selectorModalSubscription.unsubscribe();
-
-      const params = this.tableContextService.getSearchLocalStorage();
-      const { filteredResults } = params;
-
-      if (filteredResults) {
-        this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
-      } else {
-        this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
-      }
+      this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
     });
   }
 
@@ -364,7 +352,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     });
   }
 
-  public getEndpointGroups() {
+  public getEndpointGroups(): void {
     this.endpointGroupService
       .getManyEndpointGroup({
         filter: [`tenantId||eq||${this.tenantId}`],

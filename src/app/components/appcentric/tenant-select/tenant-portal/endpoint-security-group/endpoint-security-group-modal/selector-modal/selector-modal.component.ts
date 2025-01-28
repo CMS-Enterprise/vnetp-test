@@ -35,7 +35,7 @@ export class SelectorModalComponent implements OnInit {
     private endpointGroupService: V2AppCentricEndpointGroupsService,
   ) {}
 
-  public setFormValidators() {
+  public setFormValidators(): void {
     this.submitted = false;
 
     const tagKey = this.form.get('tagKey');
@@ -100,7 +100,7 @@ export class SelectorModalComponent implements OnInit {
     return this.form.controls;
   }
 
-  public save() {
+  public save(): void {
     this.submitted = true;
     if (this.form.invalid) {
       return;
@@ -148,13 +148,13 @@ export class SelectorModalComponent implements OnInit {
     }
   }
 
-  public reset() {
+  public reset(): void {
     this.form.reset();
     this.ngx.resetModalData('selectorModal');
     this.ngx.close('selectorModal');
   }
 
-  public getData() {
+  public getData(): void {
     const dto = Object.assign({}, this.ngx.getModalData('selectorModal') as any);
     this.selector = dto.selector;
     this.getEndpointGroups();
@@ -172,12 +172,15 @@ export class SelectorModalComponent implements OnInit {
     this.setFormValidators();
   }
 
-  public getEndpointGroups() {
+  public getEndpointGroups(): EndpointGroup[] {
     this.endpointGroupService
       .getManyEndpointGroup({ filter: [`tenantId||eq||${this.tenantId}`], page: 1, perPage: 100, join: ['bridgeDomain'] })
       .subscribe(data => {
         this.endpointGroups = data.data;
+        // available endpoint groups MUST belong to the same vrf as the endpoint security group
         this.endpointGroups = this.endpointGroups.filter(epg => epg.bridgeDomain.vrfId === this.vrfId);
+
+        // filter out EPGs that have already been used to create a Selector for this ESG
         if (this.selector) {
           this.endpointGroups = this.endpointGroups.filter(
             epg => !this.selector.existingEpgSelectors.some(selectorEpg => selectorEpg.endpointGroupName === epg.name),

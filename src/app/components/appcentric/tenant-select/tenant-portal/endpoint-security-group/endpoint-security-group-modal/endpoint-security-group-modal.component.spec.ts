@@ -238,7 +238,7 @@ describe('EndpointSecurityGroupModalComponent', () => {
       it('should call ngx.setModalData and ngx.getModal().open', () => {
         component.epgSelectors = { data: [] };
         component.tenantId = { id: '1' } as any;
-        component.openSelectorModal('Create');
+        component.openSelectorModal();
 
         expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(SelectorModalDto), 'selectorModal');
         expect(component['ngx'].getModal).toHaveBeenCalledWith('selectorModal');
