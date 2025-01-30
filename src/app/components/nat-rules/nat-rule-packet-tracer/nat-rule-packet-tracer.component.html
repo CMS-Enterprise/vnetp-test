@@ -196,7 +196,9 @@
           />
           <div *ngIf="submitted && f.originalSourceIp.errors" class="invalid-feedback">
             <div *ngIf="f.originalSourceIp.errors.required">Original Source IP Address is required</div>
-            <div *ngIf="f.originalSourceIp.errors.invalidIpAny">Original Source IP address, must be a valid IPv4 address</div>
+            <div *ngIf="f.originalSourceIp.errors.invalidIpNoSubnet">
+              Original Source IP address must be a valid IPv4 or IPv6 address with no CIDR
+            </div>
           </div>
         </div>
       </div>
@@ -214,7 +216,9 @@
           />
           <div *ngIf="submitted && f.originalDestinationIp.errors" class="invalid-feedback">
             <div *ngIf="f.originalDestinationIp.errors.required">Original Destination IP is required</div>
-            <div *ngIf="f.originalDestinationIp.errors.invalidIpAny">Original Destination IP address, must be a valid IPv4 address</div>
+            <div *ngIf="f.originalDestinationIp.errors.invalidIpNoSubnet">
+              Original Destination IP address must be a valid IPv4 or IPv6 address with no CIDR
+            </div>
           </div>
         </div>
       </div>
@@ -236,7 +240,9 @@
           />
           <div *ngIf="submitted && f.translatedSourceIp.errors" class="invalid-feedback">
             <div *ngIf="f.translatedSourceIp.errors.required">Translated Source IP is required</div>
-            <div *ngIf="f.translatedSourceIp.errors.invalidIpAny">Translated Source IP address must be a valid IPv4 address</div>
+            <div *ngIf="f.translatedSourceIp.errors.invalidIpNoSubnet">
+              Translated Source IP address must be a valid IPv4 or IPv6 address with no CIDR
+            </div>
           </div>
         </div>
       </div>
@@ -256,7 +262,9 @@
           />
           <div *ngIf="submitted && f.translatedDestinationIp.errors" class="invalid-feedback">
             <div *ngIf="f.translatedDestinationIp.errors.required">Translated Destination IP is required</div>
-            <div *ngIf="f.translatedDestinationIp.errors.invalidIpAny">Translated Destination IP address must be a valid IPv4 address</div>
+            <div *ngIf="f.translatedDestinationIp.errors.invalidIpNoSubnet">
+              Translated Destination IP address must be a valid IPv4 or IPv6 address with no CIDR
+            </div>
           </div>
         </div>
       </div>

@@ -84,6 +84,42 @@ export function IsIpV4NoSubnetValidator(control: UntypedFormControl): { invalidI
   return { invalidIp: true };
 }
 
+export function IsIpV6NoSubnetValidator(control: UntypedFormControl): { invalidIpNoSubnet: boolean } | { invalidIp: boolean } {
+  if (!control?.value) {
+    return null;
+  }
+
+  if (control.value.includes('/')) {
+    return { invalidIpNoSubnet: true };
+  }
+
+  const isValid = isIP(control.value, 6);
+
+  if (isValid) {
+    return null;
+  }
+
+  return { invalidIp: true };
+}
+
+export function IsIpNoSubnet(control: UntypedFormControl): { invalidIpNoSubnet: boolean } | { invalidIp: boolean } {
+  if (!control?.value) {
+    return null;
+  }
+
+  if (control.value.includes('/')) {
+    return { invalidIpNoSubnet: true };
+  }
+  const value = control.value;
+
+  if (isIP(value, 4)) {
+    return IsIpV4NoSubnetValidator(control);
+  }
+  if (isIP(value, 6)) {
+    return IsIpV6NoSubnetValidator(control);
+  }
+}
+
 export function IpAddressIpValidator(control: UntypedFormControl): { invalidIpAddress: boolean } {
   if (!control?.value) {
     return null;

@@ -702,27 +702,39 @@ describe('FirewallRulesPacketTracerComponent', () => {
       expect(isRequired('sourcePorts')).toBeTruthy();
     });
 
-    it('should not allow invalid translatedSourceIp', () => {
+    it('should not allow invalid Ipv4 CIDR sourceIpAddress', () => {
       const fc = getFormControl('sourceIpAddress');
       fc.setValue('192.168.0.1/24');
       expect(fc.errors).toBeTruthy();
     });
 
-    it('should not allow invalid translatedDestinationIp', () => {
+    it('should not allow invalid Ipv4 CIDR destinationIpAddress', () => {
       const fc = getFormControl('destinationIpAddress');
       fc.setValue('192.168.0.1/24');
       expect(fc.errors).toBeTruthy();
     });
 
-    it('should allow valid originalSourceIp', () => {
+    it('should not allow invalid Ipv6 CIRD destinationIpAddress', () => {
+      const fc = getFormControl('destinationIpAddress');
+      fc.setValue('2001:db8:1234:123:123/96');
+      expect(fc.errors).toBeTruthy();
+    });
+
+    it('should allow valid Ipv4 sourceIpAddress', () => {
       const fc = getFormControl('sourceIpAddress');
       fc.setValue('192.168.0.1');
       expect(fc.errors).toBeFalsy();
     });
 
-    it('should allow valid originalDestinationIp', () => {
+    it('should allow valid Ipv4 destinationIpAddress', () => {
       const fc = getFormControl('destinationIpAddress');
       fc.setValue('192.168.0.1');
+      expect(fc.errors).toBeFalsy();
+    });
+
+    it('should allow valid Ipv6 destinationIpAddress', () => {
+      const fc = getFormControl('destinationIpAddress');
+      fc.setValue('2001:db8:1234::');
       expect(fc.errors).toBeFalsy();
     });
   });

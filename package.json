@@ -34,6 +34,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@ng-select/ng-select": "^12.0.7",
     "bootstrap": "^4.6.2",
+    "is-in-subnet": "^4.0.1",
     "jquery": "^3.7.1",
     "netmask": "^2.0.2",
     "ngx-pagination": "^6.0.3",

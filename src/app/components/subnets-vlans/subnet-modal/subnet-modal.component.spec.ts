@@ -106,7 +106,7 @@ describe('SubnetModalComponent', () => {
     expect(createSubnetSpy).not.toHaveBeenCalled();
   });
 
-  it('should call to create a subnet when in create mode', () => {
+  it('should call to create an ipv4 subnet when in create mode', () => {
     const service = TestBed.inject(V1NetworkSubnetsService);
     const createSubnetSpy = jest.spyOn(service, 'createOneSubnet');
 
@@ -130,6 +130,36 @@ describe('SubnetModalComponent', () => {
         description: 'Description',
         network: '255.255.255.255/32',
         gateway: '255.255.255.255',
+        vlanId: '3',
+        sharedBetweenVrfs: true,
+      },
+    });
+  });
+
+  it('should call to create an ipv6subnet when in create mode', () => {
+    const service = TestBed.inject(V1NetworkSubnetsService);
+    const createSubnetSpy = jest.spyOn(service, 'createOneSubnet');
+
+    component.ModalMode = ModalMode.Create;
+    component.form.setValue({
+      name: 'Test',
+      description: 'Description',
+      network: '2001:db8:1234::/96',
+      gateway: '2001:db8:1::',
+      vlan: '3',
+      sharedBetweenVrfs: true,
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createSubnetSpy).toHaveBeenCalledWith({
+      subnet: {
+        name: 'Test',
+        tierId: '1',
+        description: 'Description',
+        network: '2001:db8:1234::/96',
+        gateway: '2001:db8:1::',
         vlanId: '3',
         sharedBetweenVrfs: true,
       },

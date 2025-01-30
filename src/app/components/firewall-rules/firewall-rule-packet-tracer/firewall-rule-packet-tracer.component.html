@@ -186,7 +186,9 @@
           />
           <div *ngIf="submitted && f.sourceIpAddress.errors" class="invalid-feedback">
             <div *ngIf="f.sourceIpAddress.errors.required">Source IP Address is required</div>
-            <div *ngIf="f.sourceIpAddress.errors.invalidIp">Invalid IP address, must be a valid IPv4</div>
+            <div *ngIf="f.sourceIpAddress.errors.invalidIpNoSubnet">
+              Invalid IP address, must be a valid IPv4 or IPv6 address with no CIDR
+            </div>
           </div>
         </div>
       </div>
@@ -204,7 +206,9 @@
           />
           <div *ngIf="submitted && f.destinationIpAddress.errors" class="invalid-feedback">
             <div *ngIf="f.destinationIpAddress.errors.required">Destination IP is required</div>
-            <div *ngIf="f.destinationIpAddress.errors.invalidIpAny">Invalid IP address, must be a valid IPv4 address</div>
+            <div *ngIf="f.destinationIpAddress.errors.invalidIpNoSubnet">
+              Invalid IP address, must be a valid IPv4 or IPv6 address with no CIDR
+            </div>
           </div>
         </div>
       </div>

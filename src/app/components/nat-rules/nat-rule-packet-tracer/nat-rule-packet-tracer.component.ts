@@ -2,11 +2,12 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { IsIpV4NoSubnetValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
+import { IsIpNoSubnet, IsIpV4NoSubnetValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
 import { NatRule, NetworkObject, NetworkObjectGroup } from '../../../../../client';
 import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';
 import { ToastrService } from 'ngx-toastr';
+import { isInSubnet } from 'is-in-subnet';
 
 type NatRulePacketTracerOutput = {
   checkList: NatRulePacketTracerCheckList;
@@ -155,9 +156,9 @@ export class NatRulePacketTracerComponent implements OnInit {
     if (ruleNetworkObject.type === 'IpAddress') {
       const ruleSourceIp = ruleNetworkObject.ipAddress;
       try {
-        const block = new Netmask(ruleSourceIp);
-        if (block.contains(formIpValue)) {
-          return true; // The form IP is within the rule's IP range
+        // The form IP value is within the rule's IP range
+        if (isInSubnet(formIpValue, ruleSourceIp)) {
+          return true;
         }
       } catch (error) {}
     }
@@ -202,9 +203,8 @@ export class NatRulePacketTracerComponent implements OnInit {
       if (sourceMember.type === 'IpAddress') {
         const sourceMemberIp = sourceMember.ipAddress;
         try {
-          const block = new Netmask(sourceMemberIp);
-          if (block.contains(formIpValue)) {
-            // If the form IP is within the rule's IP range or matches the IP
+          // The form IP value is within the rule's IP range
+          if (isInSubnet(formIpValue, sourceMemberIp)) {
             return true;
           }
         } catch (error) {}
@@ -322,13 +322,13 @@ export class NatRulePacketTracerComponent implements OnInit {
       biDirectional: [''],
       enabled: [true],
 
-      originalSourceIp: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
-      originalDestinationIp: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
+      originalSourceIp: ['', Validators.compose([Validators.required, IsIpNoSubnet])],
+      originalDestinationIp: ['', Validators.compose([Validators.required, IsIpNoSubnet])],
       originalSourcePort: ['', ValidatePortRange],
       originalDestinationPort: ['', ValidatePortRange],
 
-      translatedSourceIp: ['', IsIpV4NoSubnetValidator],
-      translatedDestinationIp: ['', IsIpV4NoSubnetValidator],
+      translatedSourceIp: ['', IsIpNoSubnet],
+      translatedDestinationIp: ['', IsIpNoSubnet],
       translatedSourcePort: ['', ValidatePortRange],
       translatedDestinationPort: ['', ValidatePortRange],
     });

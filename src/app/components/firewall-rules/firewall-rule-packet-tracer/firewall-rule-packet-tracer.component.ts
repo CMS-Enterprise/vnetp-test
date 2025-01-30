@@ -3,13 +3,19 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { IsIpV4NoSubnetValidator, ValidatePortNumber } from 'src/app/validators/network-form-validators';
+import {
+  IpAddressAnyValidator,
+  IsIpNoSubnet,
+  IsIpV4NoSubnetValidator,
+  ValidatePortNumber,
+} from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
 import { FirewallRule, NetworkObjectGroup, ServiceObjectGroup } from '../../../../../client';
 import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-rule-packet-tracer-dto';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
+import { isInSubnet } from 'is-in-subnet';
 
 type FirewallRulePacketTracerOutput = {
   checkList: FirewallRulePacketTracerChecklist;
@@ -186,9 +192,9 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
     // Using Netmask to handle subnet calculations
     try {
-      const block = new Netmask(ruleIpValue);
-      if (block.contains(formIpValue)) {
-        return true; // The form IP is within the rule's IP range
+      // The form IP value is within the rule's IP range
+      if (isInSubnet(formIpValue, ruleIpValue)) {
+        return true;
       }
     } catch (error) {}
 
@@ -204,9 +210,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     if (ruleNetworkObject.type === 'IpAddress') {
       const ruleSourceIp = ruleNetworkObject.ipAddress;
       try {
-        const block = new Netmask(ruleSourceIp);
-        if (block.contains(formIpValue)) {
-          return true; // The form IP is within the rule's IP range
+        if (isInSubnet(formIpValue, ruleSourceIp)) {
+          return true;
         }
       } catch (error) {}
     }
@@ -236,9 +241,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       if (sourceMember.type === 'IpAddress') {
         const sourceMemberIp = sourceMember.ipAddress;
         try {
-          const block = new Netmask(sourceMemberIp);
-          if (block.contains(formIpValue)) {
-            // If the form IP is within the rule's IP range or matches the IP
+          if (isInSubnet(formIpValue, sourceMemberIp)) {
             return true;
           }
         } catch (error) {}
@@ -324,8 +327,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       direction: [''],
       protocol: [''],
       enabled: [true],
-      sourceIpAddress: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
-      destinationIpAddress: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
+      sourceIpAddress: ['', Validators.compose([Validators.required, IsIpNoSubnet])],
+      destinationIpAddress: ['', Validators.compose([Validators.required, IsIpNoSubnet])],
 
       sourcePorts: ['', ValidatePortNumber],
       destinationPorts: ['', ValidatePortNumber],
