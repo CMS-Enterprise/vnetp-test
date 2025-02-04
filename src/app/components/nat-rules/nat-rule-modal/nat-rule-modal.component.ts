@@ -28,6 +28,8 @@ import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { NatRuleModalDto } from '../../../models/nat/nat-rule-modal-dto';
 import FormUtils from '../../../utils/FormUtils';
 import { NatRuleModalHelpText } from '../../../helptext/help-text-networking';
+import { isFQDN, isIP, isMACAddress } from 'validator';
+import { IsIpV4Any } from 'src/app/validators/network-form-validators';
 
 @Component({
   selector: 'app-nat-rule-modal',
@@ -134,7 +136,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     this.initForm();
   }
 
-  public save(): void {
+  public async save() {
     this.submitted = true;
     if (this.form.invalid) {
       console.log('form invalid');
@@ -142,6 +144,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       return;
     }
     const modalNatRule = this.form.getRawValue();
+    console.log('modalNatRule', modalNatRule);
+
     modalNatRule.originalServiceObjectId = null;
     modalNatRule.originalSourceNetworkObjectId = null;
     modalNatRule.originalSourceNetworkObjectGroupId = null;
@@ -187,6 +191,43 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     } else if (modalNatRule.translatedDestinationAddressType === NatRuleTranslatedDestinationAddressTypeEnum.NetworkObjectGroup) {
       modalNatRule.translatedDestinationNetworkObjectGroupId = modalNatRule.translatedDestinationNetworkObjectGroup;
       delete modalNatRule.translatedDestinationNetworkObjectGroup;
+    }
+
+    if (modalNatRule.translationType === NatRuleTranslationTypeEnum.Nat64) {
+      console.log('modalNatRule.translationType', modalNatRule.translationType);
+      const orgSrcNetObj = await this.networkObjectService
+        .getOneNetworkObject({ id: modalNatRule.originalSourceNetworkObjectId })
+        .toPromise();
+      const orgDestNetObj = await this.networkObjectService
+        .getOneNetworkObject({ id: modalNatRule.originalDestinationNetworkObjectId })
+        .toPromise();
+      const trnsSrcNetObj = await this.networkObjectService
+        .getOneNetworkObject({ id: modalNatRule.translatedSourceNetworkObjectId })
+        .toPromise();
+      const trnsDestNetObj = await this.networkObjectService
+        .getOneNetworkObject({ id: modalNatRule.translatedDestinationNetworkObjectId })
+        .toPromise();
+      if (isIP(orgSrcNetObj.ipAddress, 4)) {
+        this.form.controls.originalSourceNetworkObject.setErrors({ nonIPv6Address: true });
+        console.log('orgSrcNetObj cannot be IPV4', orgSrcNetObj);
+      }
+      if (isIP(orgDestNetObj.ipAddress, 4)) {
+        this.form.controls.originalDestinationNetworkObject.setErrors({ nonIPv6Address: true });
+        console.log('orgDestNetObj cannot be IPV4', orgSrcNetObj);
+      }
+
+      if (isIP(trnsSrcNetObj.ipAddress, 6)) {
+        this.form.controls.translatedSourceNetworkObject.setErrors({ nonIPv4Address: true });
+        console.log('trnsSrcNetObj cannot be IPv6', trnsSrcNetObj);
+      }
+      if (isIP(trnsDestNetObj.ipAddress, 6)) {
+        this.form.controls.translatedDestinationNetworkObject.setErrors({ nonIPv4Address: true });
+        console.log('trnsDestNetObj cannot be IPv6', trnsDestNetObj);
+      }
+    }
+    if (this.form.invalid) {
+      console.log('2nd form check', this.form);
+      return;
     }
 
     if (this.NatRuleGroupType === NatRuleGroupTypeEnum.ZoneBased) {
@@ -381,8 +422,14 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   // when the translation type is updated, update the appropriate form controls
   private subscribeToTranslationTypeChanges(): Subscription {
-    const { biDirectional, originalSourceAddressType, translatedDestinationAddressType, translatedSourceAddressType, translationType } =
-      this.form.controls;
+    const {
+      biDirectional,
+      originalSourceAddressType,
+      originalDestinationAddressType,
+      translatedDestinationAddressType,
+      translatedSourceAddressType,
+      translationType,
+    } = this.form.controls;
 
     const requireTranslatedFields = () => {
       if (translatedSourceAddressType.value === NatRuleTranslatedSourceAddressTypeEnum.NetworkObjectGroup) {
@@ -412,10 +459,30 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       originalSourceAddressType.updateValueAndValidity();
     };
 
+    const translationTypeNat64 = () => {
+      if (originalSourceAddressType.value === NatRuleOriginalSourceAddressTypeEnum.None) {
+        originalSourceAddressType.setValue(NatRuleOriginalSourceAddressTypeEnum.NetworkObject);
+        originalSourceAddressType.setValidators(Validators.required);
+      }
+      if (translatedSourceAddressType.value === NatRuleTranslatedSourceAddressTypeEnum.None) {
+        translatedSourceAddressType.setValue(NatRuleTranslatedSourceAddressTypeEnum.NetworkObject);
+        translatedSourceAddressType.setValidators(Validators.required);
+      }
+      if (originalDestinationAddressType.value === NatRuleOriginalDestinationAddressTypeEnum.None) {
+        originalDestinationAddressType.setValue(NatRuleOriginalDestinationAddressTypeEnum.NetworkObject);
+        originalDestinationAddressType.setValidators(Validators.required);
+      }
+      if (translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressTypeEnum.None) {
+        translatedDestinationAddressType.setValue(NatRuleTranslatedDestinationAddressTypeEnum.NetworkObject);
+        translatedDestinationAddressType.setValidators(Validators.required);
+      }
+    };
+
     const handler: Record<NatRuleTranslationTypeEnum, () => void> = {
       [NatRuleTranslationTypeEnum.Static]: requireTranslatedFields,
       [NatRuleTranslationTypeEnum.DynamicIp]: translationTypeNotStatic,
       [NatRuleTranslationTypeEnum.DynamicIpAndPort]: translationTypeNotStatic,
+      [NatRuleTranslationTypeEnum.Nat64]: translationTypeNat64,
     };
     return translationType.valueChanges.subscribe((type: NatRuleTranslationTypeEnum) => this.updateForm(type, handler));
   }
@@ -567,12 +634,14 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     return modalNatRule;
   }
 
-  getObjectInfo(property, objectType, objectId) {
+  getObjectInfo(property, objectType, objectId, showModal?) {
+    console.log('hit', property, objectType, objectId, showModal);
     if (objectId) {
       switch (objectType) {
         case 'NetworkObject': {
-          this.handleNetworkObject(property, objectId);
-          break;
+          const netObj = this.handleNetworkObject(property, objectId, showModal);
+          console.log('netObj');
+          return netObj;
         }
         case 'NetworkObjectGroup': {
           this.handleNetworkObjectGroup(property, objectId);
@@ -586,7 +655,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleNetworkObject(property, objectId) {
+  handleNetworkObject(property, objectId, showModal: boolean) {
     this.networkObjectService.getOneNetworkObject({ id: objectId }).subscribe(data => {
       const objectName = data.name;
       const modalTitle = `${property} : ${objectName}`;
@@ -603,6 +672,11 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         modalTitle,
         modalBody,
       };
+      console.log('showModal', showModal);
+      if (showModal === false) {
+        return data;
+      }
+
       this.subscribeToObjectInfoModal();
       this.ngx.setModalData(dto, 'natRuleObjectInfoModal');
       this.ngx.getModal('natRuleObjectInfoModal').open();

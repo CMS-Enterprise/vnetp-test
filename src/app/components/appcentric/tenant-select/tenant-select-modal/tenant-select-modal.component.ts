@@ -26,7 +26,6 @@ export class TenantSelectModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('on init');
     this.buildForm();
   }
 

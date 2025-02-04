@@ -24089,7 +24089,8 @@
             "enum": [
               "Static",
               "DynamicIp",
-              "DynamicIpAndPort"
+              "DynamicIpAndPort",
+              "Nat64"
             ]
           },
           "direction": {
@@ -26110,7 +26111,8 @@
             "enum": [
               "Static",
               "DynamicIp",
-              "DynamicIpAndPort"
+              "DynamicIpAndPort",
+              "Nat64"
             ]
           },
           "direction": {

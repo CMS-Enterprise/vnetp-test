@@ -66,6 +66,34 @@ export function IpAddressHostNetworkCidrValidator(control: FormControl): { inval
   return { invalidHost: true };
 }
 
+export function IsIpV6Any(control: UntypedFormControl): { nonIPv6Address: boolean } {
+  if (!control?.value) {
+    return null;
+  }
+
+  const isValid = isIP(control.value, 6);
+
+  if (isValid) {
+    return null;
+  }
+
+  return { nonIPv6Address: true };
+}
+
+export function IsIpV4Any(control: UntypedFormControl): { nonIPv4Address: boolean } {
+  if (!control?.value) {
+    return null;
+  }
+
+  const isValid = isIP(control.value, 4);
+
+  if (isValid) {
+    return null;
+  }
+
+  return { nonIPv4Address: true };
+}
+
 export function IsIpV4NoSubnetValidator(control: UntypedFormControl): { invalidIpNoSubnet: boolean } | { invalidIp: boolean } {
   if (!control?.value) {
     return null;
