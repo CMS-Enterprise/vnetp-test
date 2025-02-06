@@ -640,7 +640,6 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       switch (objectType) {
         case 'NetworkObject': {
           const netObj = this.handleNetworkObject(property, objectId, showModal);
-          console.log('netObj');
           return netObj;
         }
         case 'NetworkObjectGroup': {
@@ -672,7 +671,6 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         modalTitle,
         modalBody,
       };
-      console.log('showModal', showModal);
       if (showModal === false) {
         return data;
       }
