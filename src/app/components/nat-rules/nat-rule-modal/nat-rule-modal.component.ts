@@ -28,8 +28,7 @@ import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { NatRuleModalDto } from '../../../models/nat/nat-rule-modal-dto';
 import FormUtils from '../../../utils/FormUtils';
 import { NatRuleModalHelpText } from '../../../helptext/help-text-networking';
-import { isFQDN, isIP, isMACAddress } from 'validator';
-import { IsIpV4Any } from 'src/app/validators/network-form-validators';
+import { isIP } from 'validator';
 
 @Component({
   selector: 'app-nat-rule-modal',
