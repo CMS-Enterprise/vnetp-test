@@ -141,6 +141,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       console.log(new FormUtils().findInvalidControlsRecursive(this.form));
       return;
     }
+    console.log('this.form.invalid', this.form.invalid);
     const modalNatRule = this.form.getRawValue();
 
     modalNatRule.originalServiceObjectId = null;

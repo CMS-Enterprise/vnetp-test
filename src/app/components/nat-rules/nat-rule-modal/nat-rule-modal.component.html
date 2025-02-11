@@ -524,9 +524,6 @@
             ></ng-select>
             <div *ngIf="submitted && f.translatedSourceNetworkObject.errors" class="invalid-feedback">
               <div *ngIf="f.translatedSourceNetworkObject.errors.required">Translated Source Network Object is required</div>
-              <div *ngIf="f.translatedSourceNetworkObject.errors.nonIPv4Address">
-                When Translation is Type NAT64, the translated source network object must be an IPv4 address
-              </div>
             </div>
             <span
               *ngIf="f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObject"
@@ -587,7 +584,9 @@
               [class.is-invalid]="submitted && f.translatedDestinationAddressType.errors"
             >
               <option
-                *ngIf="f.translationType.value === NatRuleTranslationType.Static"
+                *ngIf="
+                  f.translationType.value !== NatRuleTranslationType.Static && f.translationType.value !== NatRuleTranslationType.Nat64
+                "
                 [value]="NatRuleTranslatedDestinationAddressType.None"
               >
                 None
@@ -626,9 +625,6 @@
             ></ng-select>
             <div *ngIf="submitted && f.translatedDestinationNetworkObject.errors" class="invalid-feedback">
               <div *ngIf="f.translatedDestinationNetworkObject.errors.required">Translated Destination Network Object is required</div>
-              <div *ngIf="f.translatedDestinationNetworkObject.errors.nonIPv4Address">
-                When Translation is Type NAT64, the translated destination network object must be an IPv4 address
-              </div>
             </div>
             <span
               *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObject"
