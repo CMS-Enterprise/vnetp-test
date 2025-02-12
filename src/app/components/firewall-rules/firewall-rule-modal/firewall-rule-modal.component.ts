@@ -403,7 +403,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       description: [''],
       action: ['', Validators.required],
       protocol: ['', Validators.required],
-      direction: [''],
+      direction: ['', Validators.required],
       selectedToZone: [''],
       selectedFromZone: [''],
       ruleIndex: [1, Validators.compose([Validators.required, Validators.min(1)])],
@@ -429,8 +429,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       serviceObject: [''],
       serviceObjectGroup: [''],
 
-      logging: [false],
-      enabled: [true],
+      logging: [false, Validators.required],
+      enabled: [true, Validators.required],
     });
   }
 

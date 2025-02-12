@@ -73,11 +73,12 @@ describe('FirewallRuleModalComponent', () => {
       'sourcePorts',
       'destinationIpAddress',
       'destinationPorts',
+      'direction',
+      'logging',
     ];
     const optionalFields = [
       'description',
-      'direction',
-      'logging',
+
       'sourceNetworkType',
       'sourceNetworkObject',
       'sourceNetworkObjectGroup',
