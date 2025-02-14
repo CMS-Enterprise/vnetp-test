@@ -10,7 +10,7 @@ import { ConsumedContractComponent } from './consumed-contract.component';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Subscription } from 'rxjs';
-import { V2AppCentricContractsService, V2AppCentricEndpointGroupsService } from 'client';
+import { Contract, V2AppCentricContractsService, V2AppCentricEndpointGroupsService } from 'client';
 
 describe('ConsumedContractsComponent', () => {
   let component: ConsumedContractComponent;
@@ -45,7 +45,21 @@ describe('ConsumedContractsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('importAppProfilesConfig', () => {
+  it('should remove consumed contract', () => {
+    const contractToDelete = { id: '123', description: 'Bye!', endpointGroupId: 'epgId-123', tenantId: 'tenantId-123' } as Contract;
+    component.removeContract(contractToDelete);
+    const getProvidedContractsMock = jest.spyOn(component['endpointGroupsService'], 'getOneEndpointGroup');
+    expect(getProvidedContractsMock).toHaveBeenCalled();
+  });
+
+  it('should add consumed contract', () => {
+    component.selectedContract = { id: '123', tenantId: 'tenantId-123' };
+    component.addContract();
+    const getProvidedContractsMock = jest.spyOn(component['endpointGroupsService'], 'getOneEndpointGroup');
+    expect(getProvidedContractsMock).toHaveBeenCalled();
+  });
+
+  describe('importProvidedContractsEpgRelationonfig', () => {
     const mockNgxSmartModalComponent = {
       getData: jest.fn().mockReturnValue({ modalYes: true }),
       removeData: jest.fn(),

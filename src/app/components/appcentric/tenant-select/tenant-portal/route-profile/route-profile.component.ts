@@ -23,7 +23,7 @@ export class RouteProfileComponent implements OnInit {
   public perPage = 20;
   public routeProfiles = {} as GetManyRouteProfileResponseDto;
   public tableComponentDto = new TableComponentDto();
-  private routeProfilesModalSubscription: Subscription;
+  public routeProfileModalSubscription: Subscription;
   public tenantId: string;
 
   public isLoading = false;
@@ -66,15 +66,15 @@ export class RouteProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getRouteProfile();
+    this.getRouteProfiles();
   }
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getRouteProfile(event);
+    this.getRouteProfiles(event);
   }
 
-  public getRouteProfile(event?): void {
+  public getRouteProfiles(event?): void {
     this.isLoading = true;
     let eventParams;
     if (event) {
@@ -114,9 +114,9 @@ export class RouteProfileComponent implements OnInit {
         // if routeProfileed results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getRouteProfile(params);
+          this.getRouteProfiles(params);
         } else {
-          this.getRouteProfile();
+          this.getRouteProfiles();
         }
       });
     } else {
@@ -131,9 +131,9 @@ export class RouteProfileComponent implements OnInit {
           // if routeProfileed results boolean is true, apply search params in the
           // subsequent get call
           if (filteredResults) {
-            this.getRouteProfile(params);
+            this.getRouteProfiles(params);
           } else {
-            this.getRouteProfile();
+            this.getRouteProfiles();
           }
         });
     }
@@ -155,9 +155,9 @@ export class RouteProfileComponent implements OnInit {
         // if routeProfileed results boolean is true, apply search params in the
         // subsequent get call
         if (filteredResults) {
-          this.getRouteProfile(params);
+          this.getRouteProfiles(params);
         } else {
-          this.getRouteProfile();
+          this.getRouteProfiles();
         }
       });
   }
@@ -172,14 +172,14 @@ export class RouteProfileComponent implements OnInit {
     }
 
     this.subscribeToRouteProfileModal();
-    this.ngx.setModalData(dto, 'routeProfilesModal');
-    this.ngx.getModal('routeProfilesModal').open();
+    this.ngx.setModalData(dto, 'routeProfileModal');
+    this.ngx.getModal('routeProfileModal').open();
   }
 
-  private subscribeToRouteProfileModal(): void {
-    this.routeProfilesModalSubscription = this.ngx.getModal('routeProfilesModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('routeProfilesModal');
-      this.routeProfilesModalSubscription.unsubscribe();
+  public subscribeToRouteProfileModal(): void {
+    this.routeProfileModalSubscription = this.ngx.getModal('routeProfileModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('routeProfileModal');
+      this.routeProfileModalSubscription.unsubscribe();
       // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
@@ -187,9 +187,9 @@ export class RouteProfileComponent implements OnInit {
       // if routeProfile results boolean is true, apply search params in the
       // subsequent get call
       if (filteredResults) {
-        this.getRouteProfile(params);
+        this.getRouteProfiles(params);
       } else {
-        this.getRouteProfile();
+        this.getRouteProfiles();
       }
     });
   }
@@ -232,12 +232,12 @@ export class RouteProfileComponent implements OnInit {
         () => {},
         () => {},
         () => {
-          this.getRouteProfile();
+          this.getRouteProfiles();
         },
       );
     };
     const onClose = () => {
-      this.getRouteProfile();
+      this.getRouteProfiles();
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);

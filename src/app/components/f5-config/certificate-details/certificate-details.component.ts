@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { F5ConfigService } from '../f5-config.service';
 import { F5Runtime } from '../../../../../client';
@@ -8,7 +8,7 @@ import { LiteTableConfig } from '../../../common/lite-table/lite-table.component
   selector: 'app-cert-details',
   templateUrl: './certificate-details.component.html',
 })
-export class CertificateDetailsComponent implements OnInit, OnDestroy {
+export class CertificateDetailsComponent implements OnInit {
   urlF5Id: string;
   f5Config: F5Runtime;
   certInfo: any;
@@ -23,8 +23,6 @@ export class CertificateDetailsComponent implements OnInit, OnDestroy {
   };
 
   constructor(private f5ConfigStateManagementService: F5ConfigService, private route: ActivatedRoute) {}
-
-  ngOnDestroy(): void {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {

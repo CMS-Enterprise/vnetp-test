@@ -252,6 +252,15 @@ export class NatRulePacketTracerComponent implements OnInit {
     // Determine which port value to use based on the location parameter
     const serviceObjectPortValue = location === 'source' ? serviceObject.sourcePorts : serviceObject.destinationPorts;
 
+    // Check if form port value falls within range of rule port value
+    if (serviceObjectPortValue.includes('-')) {
+      const firstNumberInPortRange = Number(serviceObjectPortValue.split('-')[0]);
+      const lastNumberInPortRange = Number(serviceObjectPortValue.split('-')[1]);
+      if (formPortValue >= firstNumberInPortRange || formPortValue <= lastNumberInPortRange) {
+        return true;
+      }
+    }
+
     // Compare the form port value to the service object port value
     return formPortValue === serviceObjectPortValue;
   }

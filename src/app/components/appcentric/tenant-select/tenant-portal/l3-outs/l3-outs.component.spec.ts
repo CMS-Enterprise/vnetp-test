@@ -15,9 +15,11 @@ import { MockProvider } from 'src/test/mock-providers';
 
 import { L3OutsComponent } from './l3-outs.component';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { Subscription } from 'rxjs';
+import { of, Subject, Subscription } from 'rxjs';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import { V2AppCentricL3outsService } from 'client';
+import { L3Out, V2AppCentricL3outsService } from 'client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { L3OutsModalDto } from 'src/app/models/appcentric/l3-outs-model-dto';
 
 describe('L3OutsComponent', () => {
   let component: L3OutsComponent;
@@ -32,7 +34,7 @@ describe('L3OutsComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockImportExportComponent,
         MockIconButtonComponent,
-        MockComponent({ selector: 'app-l3-outs-modal', inputs: ['vrfs', 'tenantId'] }),
+        MockComponent({ selector: 'app-l3-outs-modal', inputs: ['l3outs', 'tenantId', 'vrfs'] }),
         MockYesNoModalComponent,
       ],
       imports: [RouterTestingModule, HttpClientModule],
@@ -103,6 +105,76 @@ describe('L3OutsComponent', () => {
       component.importL3Outs(event);
 
       expect(component.getL3Outs).toHaveBeenCalled();
+    });
+  });
+
+  it('should delete L3 out', () => {
+    const l3outToDelete = { id: '123', description: 'Bye!' } as L3Out;
+    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    component.deleteL3Out(l3outToDelete);
+    const getL3OutsSpy = jest.spyOn(component['l3OutService'], 'getManyL3Out');
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+    expect(getL3OutsSpy).toHaveBeenCalled();
+  });
+
+  it('should restore L3 out', () => {
+    const l3out = { id: '1', deletedAt: true } as any;
+    jest.spyOn(component['l3OutService'], 'restoreOneL3Out').mockReturnValue(of({} as any));
+    jest.spyOn(component, 'getL3Outs');
+    component.restoreL3Out(l3out);
+    expect(component['l3OutService'].restoreOneL3Out).toHaveBeenCalledWith({ id: l3out.id });
+    expect(component.getL3Outs).toHaveBeenCalled();
+  });
+
+  it('should apply search params when filtered results is true', () => {
+    const l3out = { id: '1', deletedAt: true } as any;
+    jest.spyOn(component['l3OutService'], 'restoreOneL3Out').mockReturnValue(of({} as any));
+
+    const getL3OutsSpy = jest.spyOn(component, 'getL3Outs');
+    const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
+    jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+
+    component.restoreL3Out(l3out);
+    expect(getL3OutsSpy).toHaveBeenCalledWith(params);
+  });
+
+  describe('openL3OutModal', () => {
+    describe('openModal', () => {
+      beforeEach(() => {
+        jest.spyOn(component, 'getL3Outs');
+        jest.spyOn(component['ngx'], 'resetModalData');
+      });
+
+      it('should subscribe to l3outModal onCloseFinished event and unsubscribe afterwards', () => {
+        const onCloseFinished = new Subject<void>();
+        const mockModal = { onCloseFinished, open: jest.fn() };
+        jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
+
+        const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
+
+        component.subscribeToL3OutsModal();
+
+        expect(component['ngx'].getModal).toHaveBeenCalledWith('l3OutsModal');
+        expect(component.l3OutsModalSubscription).toBeDefined();
+
+        onCloseFinished.next();
+
+        expect(component.getL3Outs).toHaveBeenCalled();
+        expect(component['ngx'].resetModalData).toHaveBeenCalledWith('l3OutsModal');
+
+        expect(unsubscribeSpy).toHaveBeenCalled();
+      });
+      it('should call ngx.setModalData and ngx.getModal().open', () => {
+        const l3out = { id: 1, name: 'Test App Profile' } as any;
+        component.tenantId = { id: '1' } as any;
+        component.openL3OutsModal(ModalMode.Edit, l3out);
+
+        expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(L3OutsModalDto), 'l3OutsModal');
+        expect(component['ngx'].getModal).toHaveBeenCalledWith('l3OutsModal');
+
+        const modal = component['ngx'].getModal('l3OutsModal');
+        expect(modal).toBeDefined();
+      });
     });
   });
 });
