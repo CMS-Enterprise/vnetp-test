@@ -322,7 +322,10 @@
             [class.is-invalid]="submitted && f.originalDestinationAddressType.errors"
           >
             <option
-              *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.None"
+              *ngIf="
+                f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.None &&
+                f.translationType.value !== NatRuleTranslationType.Nat64
+              "
               [value]="NatRuleOriginalDestinationAddressType.None"
             >
               None
@@ -583,15 +586,14 @@
               class="form-control"
               [class.is-invalid]="submitted && f.translatedDestinationAddressType.errors"
             >
+              <option [value]="NatRuleTranslatedDestinationAddressType.None">None</option>
               <option
-                *ngIf="
-                  f.translationType.value !== NatRuleTranslationType.Static && f.translationType.value !== NatRuleTranslationType.Nat64
-                "
-                [value]="NatRuleTranslatedDestinationAddressType.None"
+                *ngIf="f.translationType.value !== NatRuleTranslationType.Nat64"
+                [value]="NatRuleTranslatedDestinationAddressType.NetworkObject"
               >
-                None
+                Network Object
               </option>
-              <option [value]="NatRuleTranslatedDestinationAddressType.NetworkObject">Network Object</option>
+              <!-- <option [value]="NatRuleTranslatedDestinationAddressType.NetworkObject">Network Object</option> -->
               <option
                 *ngIf="
                   f.translationType.value !== NatRuleTranslationType.Static && f.translationType.value !== NatRuleTranslationType.Nat64

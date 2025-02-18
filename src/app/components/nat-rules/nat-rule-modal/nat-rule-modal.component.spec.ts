@@ -229,6 +229,20 @@ describe('NatRuleModalComponent', () => {
         expectedFalsyFields: ['biDirectional'],
       });
     });
+
+    it('should require "Original Source Address Type", and "Translated Source Address Type" ', () => {
+      testRequiredFields({
+        field: 'translationType',
+        newValue: NatRuleTranslationTypeEnum.Nat64,
+        expectedRequiredFields: [
+          'originalSourceAddressType',
+          'translatedSourceAddressType',
+          'translatedServiceType',
+          'originalDestinationAddressType',
+        ],
+        expectedOptionalFields: [],
+      });
+    });
   });
 
   describe('Translated Service Type', () => {

@@ -433,10 +433,6 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         originalDestinationAddressType.setValue(NatRuleOriginalDestinationAddressTypeEnum.NetworkObject);
         originalDestinationAddressType.setValidators(Validators.required);
       }
-      if (translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressTypeEnum.None) {
-        translatedDestinationAddressType.setValue(NatRuleTranslatedDestinationAddressTypeEnum.NetworkObject);
-        translatedDestinationAddressType.setValidators(Validators.required);
-      }
     };
 
     const handler: Record<NatRuleTranslationTypeEnum, () => void> = {
