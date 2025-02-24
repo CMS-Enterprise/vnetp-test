@@ -384,6 +384,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   // when the translation type is updated, update the appropriate form controls
   private subscribeToTranslationTypeChanges(): Subscription {
     const {
+      originalServiceType,
+      translatedServiceType,
       biDirectional,
       originalSourceAddressType,
       originalDestinationAddressType,
@@ -421,6 +423,9 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     };
 
     const translationTypeNat64 = () => {
+      originalServiceType.setValue(NatRuleOriginalServiceTypeEnum.None);
+      translatedServiceType.setValue(NatRuleTranslatedServiceTypeEnum.None);
+
       if (originalSourceAddressType.value === NatRuleOriginalSourceAddressTypeEnum.None) {
         originalSourceAddressType.setValue(NatRuleOriginalSourceAddressTypeEnum.NetworkObject);
         originalSourceAddressType.setValidators(Validators.required);
