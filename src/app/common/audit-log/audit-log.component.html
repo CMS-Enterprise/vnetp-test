@@ -1,5 +1,5 @@
 <h1>Audit Log</h1>
-<ng-container *ngIf="currentDatacenter; else warningMessage">
+<ng-container>
   <ng-container *ngIf="!isLoading; else loading">
     <app-table
       *ngIf="!showingAppCentricLogs"

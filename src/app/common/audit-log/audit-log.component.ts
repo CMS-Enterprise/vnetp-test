@@ -472,6 +472,9 @@ export class AuditLogComponent implements OnInit {
         } else {
           this.getTiers();
         }
+      } else if (this.showingAppCentricLogs) {
+        this.getAppCentricTenants();
+        this.getAppCentricObjects();
       }
     });
   }
