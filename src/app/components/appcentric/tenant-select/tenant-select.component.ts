@@ -64,6 +64,7 @@ export class TenantSelectComponent implements OnInit {
       eventParams = 'tenantVersion||eq||2';
     }
     this.isLoading = true;
+    console.log('eventParams', eventParams);
     // let eventParams;
     // if (event) {
     //   this.tableComponentDto.page = event.page ? event.page : 1;
@@ -74,23 +75,42 @@ export class TenantSelectComponent implements OnInit {
     //     eventParams = `${propertyName}||cont||${searchText}`;
     //   }
     // }
-    this.tenantService
-      .getManyTenant({
-        filter: [`${eventParams}`],
-        page: this.tableComponentDto.page,
-        perPage: this.tableComponentDto.perPage,
-      })
-      .subscribe(
-        data => {
-          this.tenants = data;
-        },
-        () => {
-          this.tenants = null;
-        },
-        () => {
-          this.isLoading = false;
-        },
-      );
+    if (eventParams === undefined) {
+      this.tenantService
+        .getManyTenant({
+          page: this.tableComponentDto.page,
+          perPage: this.tableComponentDto.perPage,
+        })
+        .subscribe(
+          data => {
+            this.tenants = data;
+          },
+          () => {
+            this.tenants = null;
+          },
+          () => {
+            this.isLoading = false;
+          },
+        );
+    } else {
+      this.tenantService
+        .getManyTenant({
+          filter: [`${eventParams}`],
+          page: this.tableComponentDto.page,
+          perPage: this.tableComponentDto.perPage,
+        })
+        .subscribe(
+          data => {
+            this.tenants = data;
+          },
+          () => {
+            this.tenants = null;
+          },
+          () => {
+            this.isLoading = false;
+          },
+        );
+    }
   }
 
   public openTenantModal(modalMode: ModalMode, tenant?: Tenant): void {
