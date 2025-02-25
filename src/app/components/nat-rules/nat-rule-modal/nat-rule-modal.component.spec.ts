@@ -230,16 +230,11 @@ describe('NatRuleModalComponent', () => {
       });
     });
 
-    it('should require "Original Source Address Type", and "Translated Source Address Type" ', () => {
+    it('should require "Original Source Address Type", "Translated Source Address Type", and "Original Destination Addres Type" when set to "Nat64" ', () => {
       testRequiredFields({
         field: 'translationType',
         newValue: NatRuleTranslationTypeEnum.Nat64,
-        expectedRequiredFields: [
-          'originalSourceAddressType',
-          'translatedSourceAddressType',
-          'translatedServiceType',
-          'originalDestinationAddressType',
-        ],
+        expectedRequiredFields: ['originalSourceAddressType', 'translatedSourceAddressType', 'originalDestinationAddressType'],
         expectedOptionalFields: [],
       });
     });

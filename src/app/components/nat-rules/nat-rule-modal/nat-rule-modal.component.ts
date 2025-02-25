@@ -425,7 +425,8 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     const translationTypeNat64 = () => {
       originalServiceType.setValue(NatRuleOriginalServiceTypeEnum.None);
       translatedServiceType.setValue(NatRuleTranslatedServiceTypeEnum.None);
-
+      originalServiceType.clearValidators();
+      translatedServiceType.clearValidators();
       if (originalSourceAddressType.value === NatRuleOriginalSourceAddressTypeEnum.None) {
         originalSourceAddressType.setValue(NatRuleOriginalSourceAddressTypeEnum.NetworkObject);
         originalSourceAddressType.setValidators(Validators.required);
