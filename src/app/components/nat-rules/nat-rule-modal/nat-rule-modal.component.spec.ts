@@ -230,6 +230,7 @@ describe('NatRuleModalComponent', () => {
       });
     });
 
+    // eslint-disable-next-line
     it('should require "Original Source Address Type", "Translated Source Address Type", and "Original Destination Addres Type" when set to "Nat64" ', () => {
       testRequiredFields({
         field: 'translationType',
