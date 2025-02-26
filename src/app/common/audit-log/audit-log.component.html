@@ -24,9 +24,15 @@
   <div *ngIf="auditLog.entityAfter">
     <span *ngIf="auditLog.actionType === 'Update'" (click)="openDetailedModal(auditLog)">{{ auditLog.entityAfter.name }}</span>
     <div *ngIf="auditLog.actionType !== 'Update'">{{ auditLog.entityAfter.name }}</div>
+    <div *ngIf="auditLog.entityType === 'Selector'">{{ auditLog?.entityAfter?.IpSubnet }}</div>
+    <div *ngIf="auditLog.entityType === 'Selector'">{{ auditLog?.entityAfter?.tagKey }}</div>
+    <div *ngIf="auditLog.entityType === 'Selector'">{{ auditLog?.entityAfter?.endpointGroupName }}</div>
   </div>
   <div *ngIf="auditLog.entityBefore && !auditLog.entityAfter">
     <div>{{ auditLog.entityBefore.name }}</div>
+    <div *ngIf="auditLog.entityType === 'Selector'">{{ auditLog?.entityBefore?.IpSubnet }}</div>
+    <div *ngIf="auditLog.entityType === 'Selector'">{{ auditLog?.entityBefore?.tagKey }}</div>
+    <div *ngIf="auditLog.entityType === 'Selector'">{{ auditLog?.entityBefore?.endpointGroupName }}</div>
   </div>
   <div *ngIf="auditLog.entityAfter?.definition?.vrf_name">
     <span (click)="openDetailedModal(auditLog)">{{ auditLog.entityAfter.definition.vrf_name }}</span>
