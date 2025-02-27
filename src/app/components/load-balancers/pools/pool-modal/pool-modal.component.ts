@@ -298,7 +298,9 @@ export class PoolModalComponent implements OnInit {
       })
       .subscribe((tier: Tier) => {
         this.availableNodes = tier.loadBalancerNodes;
+        this.availableNodes = this.availableNodes.filter(node => node.deletedAt === null);
         this.availableHealthMonitors = tier.loadBalancerHealthMonitors;
+        this.availableHealthMonitors = this.availableHealthMonitors.filter(healthMonitor => healthMonitor.deletedAt === null);
       });
   }
 }

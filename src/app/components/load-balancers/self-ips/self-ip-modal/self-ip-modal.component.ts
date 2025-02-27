@@ -93,7 +93,7 @@ export class SelfIpModalComponent implements OnInit {
   public loadVlans(): void {
     this.vlansService
       .getManyLoadBalancerVlan({
-        filter: [`tierId||eq||${this.tierId}`],
+        filter: [`tierId||eq||${this.tierId}`, 'deletedAt||isnull'],
         // review what to do in this scenario. currently it is a unique issue but
         // if we carry this functionality over to LB-pools it will share the same issue
         perPage: 10000,

@@ -64,7 +64,7 @@ export class VirtualServerModalComponent implements OnInit {
 
   private loadProfiles(): void {
     this.profilesService
-      .getManyLoadBalancerProfile({ filter: [`tierId||eq||${this.tierId}`], perPage: 10000, page: 1 })
+      .getManyLoadBalancerProfile({ filter: [`tierId||eq||${this.tierId}`, 'deletedAt||isnull'], perPage: 10000, page: 1 })
       .subscribe(response => {
         this.availableProfiles = response.data;
       });
@@ -72,16 +72,18 @@ export class VirtualServerModalComponent implements OnInit {
 
   private loadPolicies(): void {
     this.policiesService
-      .getManyLoadBalancerPolicy({ filter: [`tierId||eq||${this.tierId}`], perPage: 10000, page: 1 })
+      .getManyLoadBalancerPolicy({ filter: [`tierId||eq||${this.tierId}`, 'deletedAt||isnull'], perPage: 10000, page: 1 })
       .subscribe(response => {
         this.availablePolicies = response.data;
       });
   }
 
   private loadIRules(): void {
-    this.iRulesService.getManyLoadBalancerIrule({ filter: [`tierId||eq||${this.tierId}`], perPage: 10000, page: 1 }).subscribe(response => {
-      this.availableIRules = response.data;
-    });
+    this.iRulesService
+      .getManyLoadBalancerIrule({ filter: [`tierId||eq||${this.tierId}`, 'deletedAt||isnull'], perPage: 10000, page: 1 })
+      .subscribe(response => {
+        this.availableIRules = response.data;
+      });
   }
 
   get f() {
@@ -277,6 +279,7 @@ export class VirtualServerModalComponent implements OnInit {
       })
       .subscribe(pools => {
         this.pools = pools.data;
+        this.pools = this.pools.filter(pool => pool.deletedAt === null);
       });
   }
 
