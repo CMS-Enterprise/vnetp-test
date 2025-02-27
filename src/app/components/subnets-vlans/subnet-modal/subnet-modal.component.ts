@@ -62,7 +62,7 @@ export class SubnetModalComponent implements OnInit {
   private getTierVlans(): void {
     this.vlanService
       .getManyVlan({
-        filter: [`tierId||eq||${this.TierId}`],
+        filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
         sort: ['updatedAt,ASC'],
         page: 1,
         perPage: 10000,
