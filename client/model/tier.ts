@@ -68,6 +68,7 @@ export interface Tier {
     readonly loadBalancerSelfIps?: Array<LoadBalancerSelfIp>;
     readonly loadBalancerRoutes?: Array<LoadBalancerRoute>;
     readonly appVersion?: string;
+    readonly appIdEnabled?: boolean;
     runtimeDataLastRefreshed?: string;
 }
 export enum TierTierTypeEnum {

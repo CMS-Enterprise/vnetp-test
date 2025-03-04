@@ -53,7 +53,6 @@ import { AppIdRuntimeService } from '../../app-id-runtime/app-id-runtime.service
 import { TierContextService } from '../../../services/tier-context.service';
 import { FirewallRuleModalComponent } from '../firewall-rule-modal/firewall-rule-modal.component';
 import { MatTooltip } from '@angular/material/tooltip';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -123,8 +122,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   firewallRuleIdToPanosApp = new Map<string, { panosApplication: PanosApplication; open: boolean }>();
 
-  public environment = environment;
-  public appIdEnabled: boolean = this.environment?.dynamic?.appIdEnabled;
+  public appIdEnabled: boolean;
 
   // Templates
   @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
@@ -141,7 +139,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   @ViewChild('paAppsTemplate') paAppsTemplate: TemplateRef<any>;
   @ViewChild('tooltip') matTooltip: MatTooltip;
 
-  expandableRows = this.appIdEnabled ? () => [this.appIdTemplate, this.hitcountTemplate] : () => this.hitcountTemplate;
+  expandableRows = () => [this.appIdTemplate, this.hitcountTemplate];
 
   public config: TableConfig<any> = {
     description: 'Firewall Rules for the currently selected Tier',
@@ -218,6 +216,17 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.appIdEnabled = history.state.appIdEnabled;
+
+    if (this.appIdEnabled === undefined) {
+      console.warn('appIdEnabled not passed. Using default value.');
+      this.appIdEnabled = false;
+    }
+
+    if (!this.appIdEnabled) {
+      this.expandableRows = () => [this.hitcountTemplate];
+    }
+
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.datacenterId = cd.id;
@@ -260,6 +269,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   refreshAppId(): void {
+    return;
     if (this.runtimeDataService.isRecentlyRefreshed(this.tier.runtimeDataLastRefreshed) || this.isRefreshingAppIdRuntimeData) {
       return;
     }
@@ -470,7 +480,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       zoneRequest,
     ]).subscribe(result => {
       this.tier = result[0];
-
       this.TierName = this.tier.name;
       this.networkObjects = result[1].data;
       this.networkObjectGroups = result[2].data;
@@ -478,13 +487,15 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       this.serviceObjectGroups = result[4].data;
       this.zones = result[5].data;
       this.getFirewallRules();
-      if (this.appIdEnabled) {
-        this.getObjectsAppId();
-      }
+      this.getObjectsAppId();
     });
   }
 
   private getObjectsAppId(): void {
+    if (!this.appIdEnabled) {
+      return;
+    }
+
     this.appIdService.loadPanosApplications(this.tier.appVersion, true);
 
     if (!this.hasBeenRefreshedSinceDayTime(1, 7)) {

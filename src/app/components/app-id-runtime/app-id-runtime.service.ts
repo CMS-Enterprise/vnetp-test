@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  FirewallRule,
-  PanosApplication,
-  PanosApplicationFirewallRuleDto,
-  V1NetworkSecurityFirewallRulesService,
-  V1RuntimeDataAppIdRuntimeService,
-} from '../../../../client';
+import { FirewallRule, PanosApplication, V1RuntimeDataAppIdRuntimeService } from '../../../../client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
@@ -23,13 +17,13 @@ export class AppIdRuntimeService {
 
   public panosApplications$: Observable<Map<string, PanosApplication[]>> = this.panosApplicationsSubject.asObservable();
 
-  public dto: PanosApplicationFirewallRuleDto = {
+  public dto = {
     panosApplicationsToAdd: [],
     panosApplicationsToRemove: [],
     firewallRuleId: '',
   };
 
-  constructor(private appIdService: V1RuntimeDataAppIdRuntimeService, private firewallRuleService: V1NetworkSecurityFirewallRulesService) {}
+  constructor(private appIdService: V1RuntimeDataAppIdRuntimeService) {}
 
   // Load PanosApplications for a specific version and store in the Map
   loadPanosApplications(appVersion: string, forceReload: boolean = false): void {
