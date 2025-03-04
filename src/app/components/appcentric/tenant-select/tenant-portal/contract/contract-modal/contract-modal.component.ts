@@ -30,7 +30,7 @@ export class ContractModalComponent implements OnInit {
 
   public tableComponentDto = new TableComponentDto();
   public subjects: GetManySubjectResponseDto;
-  private subjectModalSubscription: Subscription;
+  public subjectModalSubscription: Subscription;
   public perPage = 20;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
@@ -256,7 +256,7 @@ export class ContractModalComponent implements OnInit {
     this.ngx.getModal('subjectModal').open();
   }
 
-  private subscribeToSubjectModal(): void {
+  public subscribeToSubjectModal(): void {
     this.subjectModalSubscription = this.ngx.getModal('subjectModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('subjectModal');
       this.subjectModalSubscription.unsubscribe();
