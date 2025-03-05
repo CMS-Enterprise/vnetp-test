@@ -55,7 +55,7 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
   serviceTypeSubscription: Subscription;
 
   public environment = environment;
-  public appIdEnabled: boolean = this.environment?.dynamic?.appIdEnabled;
+  public appIdEnabled = false;
 
   hoveredRow: any = null;
   hoveredColumn: string | null = null;
@@ -71,7 +71,7 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
       'enabled',
       'sourcePort',
       'destPort',
-      'application',
+      // 'application',
     ],
     columnLabels: {
       name: 'Name',
@@ -83,7 +83,7 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
       enabled: 'Enabled',
       sourcePort: 'Source Port',
       destPort: 'Destination Port',
-      application: 'Application',
+      // application: 'Application',
     },
     columnFunctions: {
       sourceInRange: (rule: FirewallRule) => this.handleInRange(rule, 'source', this.form.controls.sourceInRange),
@@ -94,7 +94,7 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
       protocol: (rule: FirewallRule) => this.form.controls.protocol.value === rule.protocol,
       enabled: (rule: FirewallRule) => this.form.controls.enabled.value === rule.enabled,
       action: (rule: FirewallRule) => this.form.controls.action.value === rule.action,
-      application: (rule: FirewallRule) => this.handleApplication(rule, this.form.controls.application.value.id),
+      // application: (rule: FirewallRule) => this.handleApplication(rule, this.form.controls.application.value.id),
       softDeleted: (rule: FirewallRule) => Boolean(rule.deletedAt),
     },
   };
@@ -486,13 +486,13 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
     }));
   }
 
-  onMouseMove(event: MouseEvent): void {
-    const tableElement = document.querySelector('.table-container');
-    const rect = tableElement?.getBoundingClientRect();
-    if (rect && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) {
-      this.onHover(null, null);
-    }
-  }
+  // onMouseMove(event: MouseEvent): void {
+  //   const tableElement = document.querySelector('.table-container');
+  //   const rect = tableElement?.getBoundingClientRect();
+  //   if (rect && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) {
+  //     this.onHover(null, null);
+  //   }
+  // }
 
   toggleSearch(): void {
     this.isSearchOpen = !this.isSearchOpen;

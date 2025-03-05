@@ -5,7 +5,6 @@
   (onOpen)="onOpen()"
   [dismissable]="false"
   customClass="xxlarge-modal"
-  (mousemove)="onMouseMove($event)"
 >
   <mat-drawer-container style="position: absolute; top: 0; bottom: 0; right: 0; left: 0">
     <mat-drawer-content>
@@ -63,7 +62,6 @@
               mat-cell
               *matCellDef="let firewallrule"
               [style.backgroundColor]="hoveredRow?.name === firewallrule?.name || hoveredColumn === col ? '#e3f2fd' : null"
-              (mouseenter)="onHover(firewallrule, col)"
               [style.textAlign]="'center'"
             >
               <ng-container *ngIf="col === 'name'; else dynamicCell">

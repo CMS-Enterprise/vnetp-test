@@ -74,7 +74,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   disableAppIdIcmp = false;
 
   public environment = environment;
-  public appIdEnabled: boolean = this.environment?.dynamic?.appIdEnabled;
+  public appIdEnabled = false;
 
   @ViewChild('appIdColumnTemplate') iconTemplate: TemplateRef<any>;
 

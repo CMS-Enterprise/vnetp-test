@@ -124,7 +124,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   firewallRuleIdToPanosApp = new Map<string, { panosApplication: PanosApplication; open: boolean }>();
 
   public environment = environment;
-  public appIdEnabled: boolean = this.environment?.dynamic?.appIdEnabled;
+  public appIdEnabled = false;
 
   // Templates
   @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
@@ -372,7 +372,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     this.firewallRuleService
       .getManyFirewallRule({
         filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`, eventParams],
-        join: ['fromZone', 'toZone', 'panosApplications'],
+        // join: ['fromZone', 'toZone', 'panosApplications'],
+        join: ['fromZone', 'toZone'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
         sort: ['ruleIndex,ASC'],
@@ -714,7 +715,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           'destinationNetworkObjectGroup',
           'serviceObject',
           'serviceObjectGroup',
-          'panosApplications',
+          // 'panosApplications',
         ],
         page: 1,
         perPage: 50000,
