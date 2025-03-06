@@ -26,6 +26,17 @@ import { ToastrModule } from 'ngx-toastr';
 import { FirewallRuleObjectInfoModalComponent } from '../firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
 import { TierContextService } from '../../../services/tier-context.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -41,6 +52,18 @@ describe('FirewallRulesDetailComponent', () => {
         HttpClientTestingModule,
         ToastrModule.forRoot(),
         NgSelectModule,
+        MatSidenavModule,
+        MatDialogModule,
+        MatTooltipModule,
+        MatIconModule,
+        MatTableModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatRadioModule,
+        MatInputModule,
+        MatMenuModule,
+        BrowserAnimationsModule,
       ],
       declarations: [
         FirewallRulesDetailComponent,

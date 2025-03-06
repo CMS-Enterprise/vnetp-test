@@ -34,6 +34,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const routes: Routes = [
   {
@@ -80,6 +81,7 @@ const routes: Routes = [
     MatRadioModule,
     MatInputModule,
     MatMenuModule,
+    BrowserAnimationsModule,
   ],
   declarations: [
     FirewallRulesComponent,

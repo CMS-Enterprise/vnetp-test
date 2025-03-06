@@ -32,7 +32,7 @@ type FirewallRulePacketTracerChecklist = {
   direction: boolean;
   protocol: boolean;
   enabled: boolean;
-  application: boolean;
+  // application: boolean;
   softDeleted: boolean;
 };
 
@@ -190,17 +190,17 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
     return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3];
   }
 
-  handleApplication(rule: FirewallRule, applicationId: string): boolean {
-    if (!this.appIdEnabled) {
-      return true;
-    }
+  // handleApplication(rule: FirewallRule, applicationId: string): boolean {
+  //   if (!this.appIdEnabled) {
+  //     return true;
+  //   }
 
-    if (applicationId === 'any') {
-      return true;
-    }
+  //   if (applicationId === 'any') {
+  //     return true;
+  //   }
 
-    return rule?.panosApplications?.some(app => app.id === this.form.controls.application.value);
-  }
+  //   return rule?.panosApplications?.some(app => app.id === this.form.controls.application.value);
+  // }
 
   handleInRange(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean {
     const lookupType = location === 'source' ? rule.sourceAddressType : rule.destinationAddressType;
@@ -253,7 +253,7 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
       direction: null,
       protocol: null,
       enabled: null,
-      application: null,
+      // application: null,
       softDeleted: null,
     };
   }
@@ -439,7 +439,7 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
       enabled: [''],
       sourceInRange: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
       destInRange: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
-      application: [''],
+      // application: [''],
       sourcePort: ['', ValidatePortNumber],
       destPort: ['', ValidatePortNumber],
     });
