@@ -106,7 +106,7 @@
             <option [ngValue]="true">True</option>
           </select>
           <div *ngIf="submitted && f.logging.errors" class="invalid-feedback">
-            <div *ngIf="f.logging.errors.required">Protocol is required</div>
+            <div *ngIf="f.logging.errors.required">Logging is required</div>
           </div>
         </div>
 
@@ -124,6 +124,9 @@
             <option [ngValue]="false">False</option>
             <option [ngValue]="true">True</option>
           </select>
+          <div *ngIf="submitted && f.enabled.errors" class="invalid-feedback">
+            <div *ngIf="f.enabled.errors.required">Enabled is required</div>
+          </div>
         </div>
 
         <div class="form-group col-md-2">
