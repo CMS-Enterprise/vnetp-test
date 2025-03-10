@@ -75,7 +75,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     }
     if (this.form.invalid) {
       console.log('this.form', this.form);
-      console.log('form invalid');
       console.log(new FormUtils().findInvalidControlsRecursive(this.form));
       return;
     }
