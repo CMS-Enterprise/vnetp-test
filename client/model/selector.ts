@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { EndpointSecurityGroup } from './endpointSecurityGroup';
+import { Tenant } from './tenant';
 
 
 export interface Selector { 
@@ -29,6 +30,8 @@ export interface Selector {
     endpointGroupName?: string;
     readonly endpointSecurityGroup?: EndpointSecurityGroup;
     endpointSecurityGroupId: string;
+    readonly tenant?: Tenant;
+    tenantId: string;
 }
 export enum SelectorSelectorTypeEnum {
     Tag = 'Tag',

@@ -23235,10 +23235,22 @@
           },
           "endpointSecurityGroupId": {
             "type": "string"
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
           }
         },
         "required": [
-          "endpointSecurityGroupId"
+          "endpointSecurityGroupId",
+          "tenantId"
         ]
       },
       "EndpointSecurityGroup": {
@@ -23925,11 +23937,13 @@
               "BridgeDomain",
               "Contract",
               "EndpointGroup",
+              "EndpointSecurityGroup",
               "Filter",
               "FilterEntry",
               "Subject",
               "Vrf",
               "RouteProfile",
+              "Selector",
               "WanForm",
               "ExternalRoute",
               "WanFormSubnet"
