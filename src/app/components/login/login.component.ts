@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
   disableUserPass = true;
   showTenantButton = false;
   showAdminPortalButton = false;
-  globalOnlyUser = false;
+  showAccountSelectionButton = true;
 
   selectedMode = 'netcentric';
 
@@ -117,16 +117,15 @@ export class LoginComponent implements OnInit {
                     // if user is a global admin user we show the admin portal navigation button
                     if (role === 'global-admin') {
                       this.showAdminPortalButton = true;
-                      this.globalOnlyUser = true;
                     }
                   });
                 } else {
                   // If the user is not a global admin, filter current tenats based on their tenants.
                   this.availableTenants = currentTenants.filter(ct => userTenants.find(ut => ct.tenant === ut));
                 }
-                const roles = data.dcsPermissions[0].roles;
 
                 this.showTenantButton = true;
+                this.showAccountSelectionButton = true;
               },
               () => {
                 this.toastr.error('Error getting tenants');
