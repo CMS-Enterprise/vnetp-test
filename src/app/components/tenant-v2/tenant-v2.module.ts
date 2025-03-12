@@ -20,23 +20,41 @@ import { LoadBalancersModule } from '../load-balancers/load-balancers.module';
 import { TenantV2DashboardModule } from './tenant-v2-dashboard/tenant-v2-dashboard.module';
 import { TenantV2DashboardComponent } from './tenant-v2-dashboard/tenant-v2-dashboard.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TENANT_V2_ROUTE_DATA, mergeRouteData } from '../../common/route-utils/route-data.utils';
 
 const routes: Routes = [
   {
     path: '',
     component: TenantV2Component,
+    // Apply default data to the parent route
+    data: TENANT_V2_ROUTE_DATA,
     children: [
       {
         path: 'dashboard',
         canActivate: [AuthGuard],
         component: TenantV2DashboardComponent,
-        data: { title: 'vNETP - Dashboard' },
+        data: mergeRouteData(TENANT_V2_ROUTE_DATA, {
+          breadcrumb: 'Dashboard',
+          title: 'Dashboard',
+        }),
         loadChildren: () => import('./tenant-v2-dashboard/tenant-v2-dashboard.module').then(m => m.TenantV2DashboardModule),
+      },
+      {
+        path: 'audit-log',
+        canActivate: [AuthGuard],
+        data: mergeRouteData(TENANT_V2_ROUTE_DATA, {
+          breadcrumb: 'Audit Log',
+          title: 'Audit Log',
+        }),
+        loadChildren: () => import('../../common/audit-log/audit-log.module').then(m => m.AuditLogModule),
       },
       {
         path: 'environment-summary',
         canActivate: [AuthGuard],
-        data: { breadcrumb: 'Environment Summary', title: 'vNETP - Environment Summary' },
+        data: mergeRouteData(TENANT_V2_ROUTE_DATA, {
+          breadcrumb: 'Environment Summary',
+          title: 'Environment Summary',
+        }),
         loadChildren: () => import('../../common/environment-summary/environment-summary.module').then(m => m.EnvironmentSummaryModule),
       },
     ],

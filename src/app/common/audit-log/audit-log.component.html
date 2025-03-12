@@ -1,21 +1,26 @@
 <h1>Audit Log</h1>
-<ng-container *ngIf="currentDatacenter; else warningMessage">
+
+<!-- NetCentric Mode - Requires datacenter to be selected -->
+<ng-container *ngIf="currentMode === auditLogMode.NETCENTRIC">
+  <ng-container *ngIf="currentDatacenter; else warningMessage">
+    <ng-container *ngIf="!isLoading; else loading">
+      <app-table [config]="config" [data]="auditLogs" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"> </app-table>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<!-- AppCentric Mode - Does not require datacenter -->
+<ng-container *ngIf="currentMode === auditLogMode.APPCENTRIC">
   <ng-container *ngIf="!isLoading; else loading">
-    <app-table
-      *ngIf="!showingAppCentricLogs"
-      [config]="config"
-      [data]="auditLogs"
-      [(itemsPerPage)]="perPage"
-      (tableEvent)="onTableEvent($event)"
-    >
+    <app-table [config]="appCentricConfig" [data]="auditLogs" [(itemsPerPage)]="perPage" (tableEvent)="onAppCentricTableEvent($event)">
     </app-table>
-    <app-table
-      *ngIf="showingAppCentricLogs"
-      (tableEvent)="onAppCentricTableEvent($event)"
-      [config]="appCentricConfig"
-      [data]="auditLogs"
-      [(itemsPerPage)]="perPage"
-    >
+  </ng-container>
+</ng-container>
+
+<!-- TenantV2 Mode - Does not require datacenter -->
+<ng-container *ngIf="currentMode === auditLogMode.TENANTV2">
+  <ng-container *ngIf="!isLoading; else loading">
+    <app-table [config]="tenantV2Config" [data]="auditLogs" [(itemsPerPage)]="perPage" (tableEvent)="onTenantV2TableEvent($event)">
     </app-table>
   </ng-container>
 </ng-container>
