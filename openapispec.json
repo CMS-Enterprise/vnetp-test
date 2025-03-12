@@ -17651,6 +17651,31 @@
         ]
       }
     },
+    "/v2/app-centric/endpoint-groups/{endpointGroupId}/cascadeDelete": {
+      "delete": {
+        "operationId": "cascadeDeleteTierEndpointGroup",
+        "summary": "",
+        "description": "Cascade Delete ESG",
+        "parameters": [
+          {
+            "name": "endpointGroupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
     "/v2/app-centric/endpoint-groups/{endpointGroupId}/consumed-contracts/{contractId}": {
       "post": {
         "operationId": "addConsumedContractToEndpointGroupEndpointGroup",

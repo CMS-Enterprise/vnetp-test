@@ -30,7 +30,6 @@ export class EndpointSecurityGroupComponent implements OnInit {
   public ModalMode = ModalMode;
   public tableComponentDto = new TableComponentDto();
   public searchColumns: SearchColumnConfig[] = [
-    { displayName: 'Name', propertyName: 'name', searchOperator: 'cont' },
     { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
     { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
     { displayName: 'IntraEsgIsolation', propertyName: 'intraEsgIsolation', propertyType: 'boolean' },
@@ -98,7 +97,9 @@ export class EndpointSecurityGroupComponent implements OnInit {
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'intraEsgIsolation') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
