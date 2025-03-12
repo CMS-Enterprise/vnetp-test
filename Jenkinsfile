@@ -1,4 +1,4 @@
-def nodeImage = 'node:18.18'
+def nodeImage = 'node:20.16'
 def sonarImage = 'sonarsource/sonar-scanner-cli'
 
 def shouldDisableTests() {

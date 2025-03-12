@@ -136,6 +136,9 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   public async save() {
     this.submitted = true;
+    if (Number.isNaN(this.form.controls.ruleIndex.value)) {
+      this.form.controls.ruleIndex.setValue(null);
+    }
     if (this.form.invalid) {
       console.log('form invalid');
       console.log(new FormUtils().findInvalidControlsRecursive(this.form));
