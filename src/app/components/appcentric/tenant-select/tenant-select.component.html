@@ -2,7 +2,7 @@
 <ng-container>
   <section class="btn-toolbar" role="toolbar">
     <!-- Create Tenant -->
-    <button type="button" class="btn btn-success" (click)="openTenantModal(ModalMode.Create)">
+    <button type="button" class="btn btn-success" (click)="openTenantModal(ModalMode.Create)" [disabled]="isTenantV2Mode">
       <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
       <span>Create Tenant</span>
     </button>

@@ -5,4 +5,5 @@ export enum applicationMode {
   NETCENTRIC = 'netcentric',
   APPCENTRIC = 'appcentric',
   TENANTV2 = 'tenantv2',
+  ADMINPORTAL = 'adminportal',
 }

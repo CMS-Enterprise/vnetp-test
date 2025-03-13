@@ -1,4 +1,4 @@
-import { applicationMode } from '../../models/other/vnetp-mode-enum';
+import { applicationMode } from '../../models/other/application-mode-enum';
 import { TENANT_V2_ROUTE_DATA, NETCENTRIC_ROUTE_DATA, APPCENTRIC_ROUTE_DATA, mergeRouteData } from './route-data.utils';
 
 describe('Route Data Utilities', () => {

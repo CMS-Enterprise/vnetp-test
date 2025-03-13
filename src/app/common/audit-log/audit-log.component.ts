@@ -34,7 +34,7 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { Router, ActivatedRoute } from '@angular/router';
-import { applicationMode } from '../../models/other/vnetp-mode-enum';
+import { applicationMode } from '../../models/other/application-mode-enum';
 
 // TODO: TenantV2 - when loading audit logs for a V2 tenant we need to get data from what was traditionally in "appcentric" audit logs
 // and what was traditionally in "netcentric" audit logs. TenantV2 consists of an updated app-centric tenant and the security management

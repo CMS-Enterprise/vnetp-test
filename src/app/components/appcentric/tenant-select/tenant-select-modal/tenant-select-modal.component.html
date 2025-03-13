@@ -11,6 +11,7 @@
   </header>
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
+      <!-- Common tenant information -->
       <div class="form-group">
         <label for="name">Name</label>
         <input
@@ -58,14 +59,226 @@
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
+
+      <!-- AdminPortal specific sections -->
+      <div *ngIf="isAdminPortalMode" class="admin-portal-sections mt-4">
+        <!-- Base Tenant Options -->
+        <h5 class="section-title">Base Tenant Options</h5>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="tenantSize">Tenant Size</label>
+              <div class="d-flex align-items-center">
+                <select id="tenantSize" formControlName="tenantSize" class="form-control mr-2">
+                  <option value="x-small">X-Small</option>
+                  <option value="small">Small</option>
+                  <option value="medium">Medium</option>
+                  <option value="large">Large</option>
+                  <option value="x-large">X-Large</option>
+                </select>
+                <tooltip [message]="helpText.TenantSize"></tooltip>
+              </div>
+              <small class="form-text text-muted">Sizing affects virtual firewall resources and VCD parameters</small>
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-5" />
+
+        <!-- North/South Firewall Configuration -->
+        <h5 class="section-title">North/South Firewall Configuration</h5>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="northSouthFirewallVendor">Firewall Vendor</label>
+              <select id="northSouthFirewallVendor" formControlName="northSouthFirewallVendor" class="form-control">
+                <option *ngFor="let option of firewallVendorOptions" [value]="option">{{ option }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="northSouthFirewallArchitecture">Firewall Architecture</label>
+              <select id="northSouthFirewallArchitecture" formControlName="northSouthFirewallArchitecture" class="form-control">
+                <option *ngFor="let option of firewallArchitectureOptions" [value]="option">{{ option }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- North/South HA Option -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="feature-flag-item">
+              <input type="checkbox" id="northSouthHa" class="form-check-input" formControlName="northSouthHa" />
+              <label class="form-check-label" for="northSouthHa"> High Availability (HA) </label>
+              <tooltip [message]="helpText.HighAvailability"></tooltip>
+            </div>
+          </div>
+        </div>
+
+        <!-- North/South Feature Flags -->
+        <div class="feature-flags-container mb-3">
+          <div class="feature-flag-item mb-3">
+            <input type="checkbox" id="northSouthAppId" class="form-check-input" formControlName="northSouthAppId" />
+            <label class="form-check-label" for="northSouthAppId"> App-ID </label>
+            <tooltip [message]="helpText.NorthSouthAppId"></tooltip>
+          </div>
+
+          <div class="feature-flag-item">
+            <input type="checkbox" id="nat64NorthSouth" class="form-check-input" formControlName="nat64NorthSouth" />
+            <label class="form-check-label" for="nat64NorthSouth"> NAT64 North/South </label>
+            <tooltip [message]="helpText.Nat64NorthSouth"></tooltip>
+          </div>
+        </div>
+
+        <hr class="my-5" />
+
+        <!-- East/West Firewall Configuration -->
+        <h5 class="section-title">East/West Firewall Configuration</h5>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="eastWestFirewallVendor">Firewall Vendor</label>
+              <select id="eastWestFirewallVendor" formControlName="eastWestFirewallVendor" class="form-control">
+                <option *ngFor="let option of firewallVendorOptions" [value]="option">{{ option }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="eastWestFirewallArchitecture">Firewall Architecture</label>
+              <select id="eastWestFirewallArchitecture" formControlName="eastWestFirewallArchitecture" class="form-control">
+                <option *ngFor="let option of firewallArchitectureOptions" [value]="option">{{ option }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- East/West HA Option -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="feature-flag-item">
+              <input type="checkbox" id="eastWestHa" class="form-check-input" formControlName="eastWestHa" />
+              <label class="form-check-label" for="eastWestHa"> High Availability (HA) </label>
+              <tooltip [message]="helpText.HighAvailability"></tooltip>
+            </div>
+          </div>
+        </div>
+
+        <!-- East/West Feature Flags -->
+        <div class="feature-flags-container">
+          <div class="feature-flag-item mb-3">
+            <input type="checkbox" id="eastWestAppId" class="form-check-input" formControlName="eastWestAppId" />
+            <label class="form-check-label" for="eastWestAppId"> App-ID </label>
+            <tooltip [message]="helpText.EastWestAppId"></tooltip>
+          </div>
+
+          <div class="feature-flag-item mb-3">
+            <input type="checkbox" id="eastWestAllowSgBypass" class="form-check-input" formControlName="eastWestAllowSgBypass" />
+            <label class="form-check-label" for="eastWestAllowSgBypass"> Allow Service Graph Bypass </label>
+            <tooltip [message]="helpText.EastWestAllowSgBypass"></tooltip>
+          </div>
+
+          <div class="feature-flag-item mb-3">
+            <input type="checkbox" id="eastWestNat" class="form-check-input" formControlName="eastWestNat" />
+            <label class="form-check-label" for="eastWestNat"> NAT </label>
+            <tooltip [message]="helpText.EastWestNat"></tooltip>
+          </div>
+        </div>
+
+        <hr class="my-5" />
+
+        <!-- VMware Cloud Director Integration -->
+        <h5 class="section-title">VMware Cloud Director Integration</h5>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="vcdLocation">VCD Location</label>
+              <select id="vcdLocation" formControlName="vcdLocation" class="form-control">
+                <option value="VCD-East">VCD-East</option>
+                <option value="VCD-West">VCD-West</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="vcdTenantType">VCD Tenant Type</label>
+              <select id="vcdTenantType" formControlName="vcdTenantType" class="form-control">
+                <option value="new">New VCD Tenant</option>
+                <option value="existing">Existing VCD Tenant</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3" *ngIf="f.vcdTenantType.value === 'existing'">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="vcdTenantId">VCD Tenant ID</label>
+              <input
+                type="text"
+                id="vcdTenantId"
+                formControlName="vcdTenantId"
+                class="form-control"
+                placeholder="Enter existing VCD Tenant ID"
+              />
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-5" />
+
+        <h5 class="section-title">Tenant Template</h5>
+        <div class="form-group">
+          <label for="tenantTemplateFile">Upload Tenant Template YAML</label>
+          <div class="custom-file">
+            <input type="file" id="tenantTemplateFile" class="custom-file-input" accept=".yaml,.yml" (change)="onFileSelected($event)" />
+            <label class="custom-file-label" for="tenantTemplateFile">
+              {{ selectedFile ? selectedFile.name : 'Choose file...' }}
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
 
     <footer class="modal-footer">
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">Cancel</button>
-      <button class="btn btn-success" data-dismiss="modal">
+      <button type="submit" class="btn btn-success" data-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>
     </footer>
   </form>
 </ngx-smart-modal>
+
+<style>
+  .section-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .feature-flags-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .feature-flag-item {
+    display: flex;
+    align-items: flex-start;
+    margin-left: 15px; /* Add left margin to make checkboxes inboard */
+  }
+
+  .feature-flag-item .form-check-input {
+    margin-top: 0.3rem;
+    margin-right: 0.75rem;
+  }
+
+  hr {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .fa-info-circle {
+    cursor: pointer;
+  }
+</style>

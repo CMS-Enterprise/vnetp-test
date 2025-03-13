@@ -1,4 +1,4 @@
-import { applicationMode } from '../../models/other/vnetp-mode-enum';
+import { applicationMode } from '../../models/other/application-mode-enum';
 
 // Common route data for TenantV2 module
 export const TENANT_V2_ROUTE_DATA = {
@@ -22,6 +22,14 @@ export const APPCENTRIC_ROUTE_DATA = {
   mode: applicationMode.APPCENTRIC,
   baseTitle: 'vNETP - AppCentric',
   section: 'appcentric',
+};
+
+// Common route data for AdminPortal module
+export const ADMINPORTAL_ROUTE_DATA = {
+  // Common properties for all AdminPortal routes
+  mode: applicationMode.ADMINPORTAL,
+  baseTitle: 'vNETP - AdminPortal',
+  section: 'adminportal',
 };
 
 /**
