@@ -301,7 +301,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     this.isLoading = true;
     this.vrfService
       .getManyVrf({
-        filter: [`tenantId||eq||${this.tenantId}`],
+        filter: [`tenantId||eq||${this.tenantId}`, 'deletedAt||isnull'],
         page: 1,
         perPage: 1000,
       })
@@ -326,7 +326,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     this.isLoading = true;
     this.applicationProfileService
       .getManyApplicationProfile({
-        filter: [`tenantId||eq||${this.tenantId}`],
+        filter: [`tenantId||eq||${this.tenantId}`, 'deletedAt||isnull'],
       })
       .subscribe(
         data => {
@@ -347,6 +347,11 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       delete$: this.selectorService.deleteOneSelector({ id: selector.id }),
       softDelete$: this.selectorService.softDeleteOneSelector({ id: selector.id }),
       onSuccess: () => {
+        // if selector is type EPG, we must update that EPGs "esgMatched" property to false
+        if (selector.selectorType === 'EPG') {
+          const epgToUpdate = this.endpointGroups.find(epg => epg.name === selector.endpointGroupName);
+          this.retrieveAndUpdateEndpointGroup(epgToUpdate.id);
+        }
         this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
       },
     });
@@ -362,5 +367,15 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       .subscribe(data => {
         this.endpointGroups = data.data;
       });
+  }
+
+  private retrieveAndUpdateEndpointGroup(epgId: string): void {
+    this.endpointGroupService.getOneEndpointGroup({ id: epgId }).subscribe(epg => {
+      epg.esgMatched = false;
+      delete epg.name;
+      delete epg.tenantId;
+      delete epg.applicationProfileId;
+      return this.endpointGroupService.updateOneEndpointGroup({ id: epg.id, endpointGroup: epg }).subscribe();
+    });
   }
 }

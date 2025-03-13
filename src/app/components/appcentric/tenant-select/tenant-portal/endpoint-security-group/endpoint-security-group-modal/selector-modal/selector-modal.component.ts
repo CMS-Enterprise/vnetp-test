@@ -175,7 +175,12 @@ export class SelectorModalComponent implements OnInit {
 
   public getEndpointGroups(): EndpointGroup[] {
     this.endpointGroupService
-      .getManyEndpointGroup({ filter: [`tenantId||eq||${this.tenantId}`], page: 1, perPage: 100, join: ['bridgeDomain'] })
+      .getManyEndpointGroup({
+        filter: [`tenantId||eq||${this.tenantId}`, 'deletedAt||isnull'],
+        page: 1,
+        perPage: 1000,
+        join: ['bridgeDomain'],
+      })
       .subscribe(data => {
         this.endpointGroups = data.data;
         // available endpoint groups MUST belong to the same vrf as the endpoint security group
