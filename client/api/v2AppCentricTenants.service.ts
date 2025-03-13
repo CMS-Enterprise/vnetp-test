@@ -18,6 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { CreateManyTenantDto } from '../model/models';
+import { CreateTenantV2Dto } from '../model/models';
 import { GetManyTenantResponseDto } from '../model/models';
 import { Tenant } from '../model/models';
 
@@ -35,6 +36,10 @@ export interface CreateManyTenantRequestParams {
 
 export interface CreateOneTenantRequestParams {
     tenant: Tenant;
+}
+
+export interface CreateOneV2TenantTenantRequestParams {
+    createTenantV2Dto: CreateTenantV2Dto;
 }
 
 export interface DeleteOneTenantRequestParams {
@@ -308,6 +313,61 @@ export class V2AppCentricTenantsService {
 
         return this.httpClient.post<Tenant>(`${this.configuration.basePath}/v2/app-centric/tenants`,
             tenant,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Create V2 Tenant
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createOneV2TenantTenant(requestParameters: CreateOneV2TenantTenantRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createOneV2TenantTenant(requestParameters: CreateOneV2TenantTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createOneV2TenantTenant(requestParameters: CreateOneV2TenantTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createOneV2TenantTenant(requestParameters: CreateOneV2TenantTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const createTenantV2Dto = requestParameters.createTenantV2Dto;
+        if (createTenantV2Dto === null || createTenantV2Dto === undefined) {
+            throw new Error('Required parameter createTenantV2Dto was null or undefined when calling createOneV2TenantTenant.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/tenants/tenant-v2`,
+            createTenantV2Dto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

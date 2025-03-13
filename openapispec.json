@@ -13276,6 +13276,32 @@
         ]
       }
     },
+    "/v2/app-centric/tenants/tenant-v2": {
+      "post": {
+        "operationId": "createOneV2TenantTenant",
+        "summary": "",
+        "description": "Create V2 Tenant",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenantV2Dto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
+      }
+    },
     "/v2/app-centric/tenants/{id}/cascade": {
       "delete": {
         "operationId": "cascadeDeleteTenantTenant",
@@ -22945,7 +22971,7 @@
               "$ref": "#/components/schemas/WanForm"
             }
           },
-          "appCentricTenants": {
+          "appCentricTenant": {
             "readOnly": true,
             "allOf": [
               {
@@ -24631,7 +24657,8 @@
               "Intravrf",
               "Intervrf",
               "External",
-              "ZoneBased"
+              "ZoneBased",
+              "OneArmServiceGraph"
             ]
           },
           "tierId": {
@@ -26901,6 +26928,20 @@
           "finished",
           "status",
           "failed"
+        ]
+      },
+      "CreateTenantV2Dto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the tenant",
+            "minLength": 3,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "name"
         ]
       },
       "SelfServiceRawConfig": {

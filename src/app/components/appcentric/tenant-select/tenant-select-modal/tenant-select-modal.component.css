@@ -1,0 +1,29 @@
+.section-title {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.feature-flags-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-flag-item {
+  display: flex;
+  align-items: flex-start;
+  margin-left: 15px; /* Add left margin to make checkboxes inboard */
+}
+
+.feature-flag-item .form-check-input {
+  margin-top: 0.3rem;
+  margin-right: 0.75rem;
+}
+
+hr {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.fa-info-circle {
+  cursor: pointer;
+}

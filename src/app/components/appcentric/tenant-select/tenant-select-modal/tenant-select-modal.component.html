@@ -83,6 +83,17 @@
           </div>
         </div>
 
+        <!-- Vendor Agnostic NAT option -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="feature-flag-item">
+              <input type="checkbox" id="vendorAgnosticNat" class="form-check-input" formControlName="vendorAgnosticNat" />
+              <label class="form-check-label" for="vendorAgnosticNat"> Vendor-Agnostic NAT </label>
+              <tooltip [message]="helpText.VendorAgnosticNat"></tooltip>
+            </div>
+          </div>
+        </div>
+
         <hr class="my-5" />
 
         <!-- North/South Firewall Configuration -->
@@ -250,35 +261,3 @@
     </footer>
   </form>
 </ngx-smart-modal>
-
-<style>
-  .section-title {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    font-weight: 500;
-  }
-
-  .feature-flags-container {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .feature-flag-item {
-    display: flex;
-    align-items: flex-start;
-    margin-left: 15px; /* Add left margin to make checkboxes inboard */
-  }
-
-  .feature-flag-item .form-check-input {
-    margin-top: 0.3rem;
-    margin-right: 0.75rem;
-  }
-
-  hr {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-  }
-
-  .fa-info-circle {
-    cursor: pointer;
-  }
-</style>

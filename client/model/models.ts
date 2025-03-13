@@ -44,6 +44,7 @@ export * from './createManyVrfDto';
 export * from './createManyWanFormDto';
 export * from './createManyWanFormSubnetDto';
 export * from './createManyZoneDto';
+export * from './createTenantV2Dto';
 export * from './datacenter';
 export * from './dcsPermissions';
 export * from './endpointGroup';

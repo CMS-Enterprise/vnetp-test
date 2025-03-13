@@ -32,6 +32,6 @@ export interface Datacenter {
     readonly auditLogs?: Array<AuditLog>;
     readonly selfServices?: SelfService;
     readonly wanForms?: Array<WanForm>;
-    readonly appCentricTenants?: Tenant;
+    readonly appCentricTenant?: Tenant;
 }
 

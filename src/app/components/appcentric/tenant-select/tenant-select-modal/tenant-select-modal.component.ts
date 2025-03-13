@@ -41,6 +41,10 @@ export class TenantSelectModalComponent implements OnInit {
       'Large: High-capacity virtual firewall, advanced VCD resources\n' +
       'X-Large: Maximum capacity virtual firewall, premium VCD resources',
     HighAvailability: 'Enable redundant firewall deployment for high availability and failover protection',
+    VendorAgnosticNat:
+      'Adds a UI option when creating NAT rules that generates a corresponding firewall rule ' +
+      'to match NAT traffic and uses a vendor-agnostic firewall automation strategy that ' +
+      'handles differences in processing flow between ASA and PANOS',
   };
 
   constructor(
@@ -172,6 +176,7 @@ export class TenantSelectModalComponent implements OnInit {
 
       // Base tenant options
       tenantSize: ['medium'],
+      vendorAgnosticNat: [false],
 
       // AdminPortal specific fields
       northSouthFirewallVendor: ['PANOS'],
@@ -232,12 +237,21 @@ export class TenantSelectModalComponent implements OnInit {
   }
 
   private createTenant(tenant: Tenant): void {
-    this.tenantService.createOneTenant({ tenant }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    if (this.isAdminPortalMode) {
+      this.tenantService.createOneV2TenantTenant({ createTenantV2Dto: { name: tenant.name } }).subscribe(
+        () => {
+          this.closeModal();
+        },
+        () => {},
+      );
+    } else {
+      this.tenantService.createOneTenant({ tenant }).subscribe(
+        () => {
+          this.closeModal();
+        },
+        () => {},
+      );
+    }
   }
 
   private editTenant(tenant: Tenant): void {
@@ -266,6 +280,7 @@ export class TenantSelectModalComponent implements OnInit {
       description,
       alias,
       tenantSize,
+      vendorAgnosticNat,
       northSouthFirewallVendor,
       northSouthFirewallArchitecture,
       northSouthHa,
@@ -296,6 +311,7 @@ export class TenantSelectModalComponent implements OnInit {
       // But for now we'll just log them
       console.log('AdminPortal Tenant Configuration:', {
         tenantSize,
+        vendorAgnosticNat,
         northSouthFirewallVendor,
         northSouthFirewallArchitecture,
         northSouthHa,

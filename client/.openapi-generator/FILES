@@ -101,6 +101,7 @@ model/createManyVrfDto.ts
 model/createManyWanFormDto.ts
 model/createManyWanFormSubnetDto.ts
 model/createManyZoneDto.ts
+model/createTenantV2Dto.ts
 model/datacenter.ts
 model/dcsPermissions.ts
 model/endpointGroup.ts
