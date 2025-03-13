@@ -182,7 +182,7 @@ export class EndpointGroupModalComponent implements OnInit {
     this.isLoading = true;
     this.bridgeDomainService
       .getManyBridgeDomain({
-        filter: [`tenantId||eq||${this.tenantId}`],
+        filter: [`tenantId||eq||${this.tenantId}`, 'deletedAt||isnull'],
         page: 1,
         perPage: 1000,
       })
@@ -207,7 +207,7 @@ export class EndpointGroupModalComponent implements OnInit {
     this.isLoading = true;
     this.applicationProfileService
       .getManyApplicationProfile({
-        filter: [`tenantId||eq||${this.tenantId}`],
+        filter: [`tenantId||eq||${this.tenantId}`, 'deletedAt||isnull'],
       })
       .subscribe(
         data => {

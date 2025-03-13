@@ -177,7 +177,7 @@ export class SubjectModalComponent implements OnInit {
     this.isLoading = true;
     this.filterService
       .getManyFilter({
-        filter: [`tenantId||eq||${this.tenantId}`],
+        filter: [`tenantId||eq||${this.tenantId}`, 'deletedAt||isnull'],
         page: 1,
         perPage: 1000,
       })

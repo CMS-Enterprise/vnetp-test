@@ -272,7 +272,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.l3OutService
       .getManyL3Out({
-        filter: [`tenantId||eq||${this.tenantId}`],
+        filter: [`tenantId||eq||${this.tenantId}`, 'deletedAt||isnull'],
         page: 1,
         perPage: 1000,
       })
@@ -293,7 +293,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.vrfService
       .getManyVrf({
-        filter: [`tenantId||eq||${this.tenantId}`],
+        filter: [`tenantId||eq||${this.tenantId}`, 'deletedAt||isnull'],
         page: 1,
         perPage: 1000,
       })
@@ -310,7 +310,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.routeProfileService
       .getManyRouteProfile({
-        filter: [`tenantId||eq||${this.tenantId}`],
+        filter: [`tenantId||eq||${this.tenantId}`, 'deletedAt||isnull'],
         page: 1,
         perPage: 1000,
       })
