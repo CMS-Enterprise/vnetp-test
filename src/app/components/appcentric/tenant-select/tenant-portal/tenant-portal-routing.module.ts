@@ -56,6 +56,12 @@ const routes: Routes = [
         data: { breadcrumb: 'Route Profile', title: 'Tenant Portal - Route Profile' },
         loadChildren: () => import('./route-profile/route-profile.module').then(m => m.RouteProfileModule),
       },
+      {
+        outlet,
+        path: 'east-west-firewall',
+        data: { breadcrumb: 'Tenant Select', title: 'East-West' },
+        loadChildren: () => import('../../../firewall-rules/firewall-rules.module').then(m => m.FirewallRulesModule),
+      },
     ],
   },
 ];

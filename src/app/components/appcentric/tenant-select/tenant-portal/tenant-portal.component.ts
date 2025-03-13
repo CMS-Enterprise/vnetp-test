@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GetManyTenantResponseDto, V2AppCentricTenantsService } from 'client';
 import { Tab } from 'src/app/common/tabs/tabs.component';
+import { applicationMode } from 'src/app/models/other/application-mode-enum';
 
 const tabs = [
   { name: 'Application Profile', route: ['application-profile'] },
@@ -12,6 +13,7 @@ const tabs = [
   { name: 'L3 Outs', route: ['l3-outs'] },
   { name: 'VRF', route: ['vrf'] },
   { name: 'Route Profile', route: ['route-profile'] },
+  { name: 'East-West', route: ['east-west-firewall'] },
 ];
 
 @Component({
@@ -24,6 +26,7 @@ export class TenantPortalComponent implements OnInit {
   public tenants: GetManyTenantResponseDto;
   public currentTenantName: string;
   public tenantId: string;
+  public mode: applicationMode;
 
   public tabs: Tab[] = tabs.map(t => ({ name: t.name }));
 
@@ -36,6 +39,12 @@ export class TenantPortalComponent implements OnInit {
       const uuid = match[0].split('/')[2];
       this.tenantId = uuid;
     }
+
+    // Access the route data to get the mode
+    this.activatedRoute.data.subscribe(data => {
+      this.mode = data.mode;
+      console.log('Application mode:', this.mode);
+    });
   }
 
   public async handleTabChange(tab: Tab): Promise<any> {
