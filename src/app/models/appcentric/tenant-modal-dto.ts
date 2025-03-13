@@ -12,9 +12,17 @@ export class TenantModalDto {
   northSouthFirewallVendor?: 'ASA' | 'PANOS';
   northSouthFirewallArchitecture?: 'Physical' | 'Virtual';
   northSouthHa?: boolean;
+  northSouthHaMode?: 'Active-Passive' | 'Active-Active';
   eastWestFirewallVendor?: 'ASA' | 'PANOS';
   eastWestFirewallArchitecture?: 'Physical' | 'Virtual';
   eastWestHa?: boolean;
+  eastWestHaMode?: 'Active-Passive' | 'Active-Active';
+
+  // Regional HA options
+  regionalHa?: boolean;
+  primaryDatacenter?: 'East' | 'West';
+  secondaryDatacenter?: string;
+  deploymentMode?: 'Hot Site First' | 'Cold Site First' | 'Scheduled Sync';
 
   // VMware Cloud Director Integration
   vcdLocation?: 'VCD-East' | 'VCD-West';

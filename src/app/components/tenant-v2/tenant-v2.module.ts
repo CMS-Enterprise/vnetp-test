@@ -40,6 +40,15 @@ const routes: Routes = [
         loadChildren: () => import('./tenant-v2-dashboard/tenant-v2-dashboard.module').then(m => m.TenantV2DashboardModule),
       },
       {
+        path: 'tenant-select',
+        canActivate: [AuthGuard],
+        data: mergeRouteData(TENANT_V2_ROUTE_DATA, {
+          breadcrumb: 'Configuration',
+          title: 'Configuration',
+        }),
+        loadChildren: () => import('../../components/appcentric/tenant-select/tenant-select.module').then(m => m.TenantSelectModule),
+      },
+      {
         path: 'audit-log',
         canActivate: [AuthGuard],
         data: mergeRouteData(TENANT_V2_ROUTE_DATA, {

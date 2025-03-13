@@ -4,6 +4,17 @@
   font-weight: 500;
 }
 
+.compact-title {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.feature-section-title {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
 .feature-flags-container {
   display: flex;
   flex-direction: column;
@@ -12,7 +23,7 @@
 .feature-flag-item {
   display: flex;
   align-items: flex-start;
-  margin-left: 15px; /* Add left margin to make checkboxes inboard */
+  margin-left: 15px;
 }
 
 .feature-flag-item .form-check-input {
@@ -22,8 +33,91 @@
 
 hr {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 1rem 0;
 }
 
 .fa-info-circle {
   cursor: pointer;
+}
+
+/* Regional HA section styling */
+.regional-ha-section {
+  padding-left: 1rem;
+  border-left: 2px solid #f0f0f0;
+  margin-bottom: 1rem;
+}
+
+/* Styling for disabled form controls */
+select:disabled,
+input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+/* Highlight active HA status */
+.ha-enabled {
+  color: #28a745;
+  font-weight: 500;
+}
+
+/* Tooltip styling enhancement */
+tooltip {
+  margin-left: 0.5rem;
+}
+
+/* Add spacing between form elements */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+/* Compact form group for dense forms */
+.compact-form-group {
+  margin-bottom: 0.75rem;
+}
+
+/* Tab styling */
+.nav-tabs .nav-link {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* Improve visibility of logical sections */
+.config-section {
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.config-section:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Row styling in the configuration sections */
+.config-row {
+  margin-bottom: 0.75rem;
+}
+
+/* Modal sizing and scrolling */
+.large-modal .modal-body {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+/* Label alignment */
+.col-form-label {
+  padding-top: calc(0.25rem + 1px);
+  padding-bottom: calc(0.25rem + 1px);
+  font-size: 0.9rem;
+}
+
+/* Smaller form controls */
+.form-control-sm {
+  height: calc(1.5em + 0.5rem + 2px);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Tab content padding */
+.tab-content {
+  padding: 1rem 0.5rem;
 }
