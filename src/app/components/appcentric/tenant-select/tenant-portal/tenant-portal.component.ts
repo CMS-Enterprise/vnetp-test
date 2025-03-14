@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GetManyTenantResponseDto, V2AppCentricTenantsService } from 'client';
+import { Datacenter, FirewallRuleGroup, GetManyTenantResponseDto, Tier, V2AppCentricTenantsService } from 'client';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import { applicationMode } from 'src/app/models/other/application-mode-enum';
+import { V1DatacentersService } from 'client';
+import { V1TiersService } from 'client';
 
 const tabs = [
   { name: 'Application Profile', route: ['application-profile'] },
@@ -27,10 +29,21 @@ export class TenantPortalComponent implements OnInit {
   public currentTenantName: string;
   public tenantId: string;
   public mode: applicationMode;
+  public networkServicesContainerDatacenter: Datacenter;
+  public networkServicesContainerNsTier: Tier;
+  public networkServicesContainerEwTier: Tier;
+  public networkServicesContainerEwFirewallRuleGroup: FirewallRuleGroup;
+  public networkServicesContainerNsFirewallRuleGroup: FirewallRuleGroup;
 
   public tabs: Tab[] = tabs.map(t => ({ name: t.name }));
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private tenantService: V2AppCentricTenantsService) {
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private tenantService: V2AppCentricTenantsService,
+    private datacenterService: V1DatacentersService,
+    private tierService: V1TiersService,
+  ) {
     // get tenantId in URL snapshot
     const match = this.router.routerState.snapshot.url.match(
       /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
@@ -58,21 +71,39 @@ export class TenantPortalComponent implements OnInit {
 
   public getTenants(): void {
     this.tenantService
-      .getManyTenant({
-        page: 1,
-        perPage: 500,
+      .getOneTenant({
+        id: this.tenantId,
       })
       .subscribe(
-        data => {
-          this.tenants = data;
+        response => {
+          this.currentTenantName = response.name;
 
-          // match this.tenantId with list of currentTenants to get the tenantName
-          this.currentTenantName = this.tenants.data.find(ten => ten.id === this.tenantId).name;
+          if (this.mode === applicationMode.TENANTV2 && response.tenantVersion === 2) {
+            this.getNetworkServicesContainerDatacenter(response.datacenterId);
+          } else {
+            throw new Error('Tenant is not in TenantV2 mode');
+          }
         },
         () => {
           this.tenants = null;
         },
       );
+  }
+
+  public getNetworkServicesContainerDatacenter(datacenterId: string): void {
+    this.datacenterService.getOneDatacenter({ id: datacenterId, join: ['tiers'] }).subscribe(response => {
+      this.networkServicesContainerDatacenter = response;
+      this.networkServicesContainerNsTier = response.tiers.find(t => t.name === 'ew_fw_svc_tier');
+      this.networkServicesContainerEwTier = response.tiers.find(t => t.name === 'ns_fw_svc_tier');
+
+      this.tierService.getOneTier({ id: this.networkServicesContainerNsTier.id, join: ['firewallRuleGroups'] }).subscribe(nsResponse => {
+        this.networkServicesContainerNsFirewallRuleGroup = nsResponse.firewallRuleGroups[0];
+      });
+
+      this.tierService.getOneTier({ id: this.networkServicesContainerEwTier.id, join: ['firewallRuleGroups'] }).subscribe(eWresponse => {
+        this.networkServicesContainerEwFirewallRuleGroup = eWresponse.firewallRuleGroups[0];
+      });
+    });
   }
 
   ngOnInit(): void {

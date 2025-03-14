@@ -7,7 +7,7 @@
       <li class="dash-card__item">
         <a routerLink="/tenantv2/tenant-select" queryParamsHandling="merge">
           <span> Logical Tenants </span>
-          <span class="inline-block ml-auto"> 0 </span>
+          <span class="inline-block ml-auto"> {{ tenants || 0 }} </span>
         </a>
       </li>
       <li class="dash-card__item">

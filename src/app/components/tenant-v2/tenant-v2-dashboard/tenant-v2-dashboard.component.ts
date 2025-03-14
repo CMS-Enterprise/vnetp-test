@@ -11,6 +11,7 @@ import {
   V2AppCentricContractsService,
   V2AppCentricEndpointGroupsService,
   V2AppCentricVrfsService,
+  V2AppCentricTenantsService,
   V3GlobalMessagesService,
 } from 'client';
 import { Subscription } from 'rxjs';
@@ -38,6 +39,7 @@ export class TenantV2DashboardComponent implements OnInit {
   public bridgeDomains: number;
   public contracts: number;
   public endpointGroups: number;
+  public tenants: number;
 
   dashboardPoller;
 
@@ -60,6 +62,7 @@ export class TenantV2DashboardComponent implements OnInit {
     private bridgeDomainsService: V2AppCentricBridgeDomainsService,
     private contractsService: V2AppCentricContractsService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
+    private tenantsService: V2AppCentricTenantsService,
   ) {}
   ngOnInit() {
     if (this.auth.currentUser) {
@@ -80,17 +83,24 @@ export class TenantV2DashboardComponent implements OnInit {
   // only fetch the dashboard entities that the user has the correct permissions to view
   private loadDashboard(roles?: string[]): void {
     if (roles) {
-      this.getFWRules();
-      this.getNatRules();
-      this.getNetworkObjects();
-      this.getNetworkObjectGroups();
-      this.getServiceObjects();
-      this.getServiceObjectGroups();
-      this.getVrfCount();
-      this.getBridgeDomainCount();
-      this.getContractCount();
-      this.getEpgs();
+      // this.getFWRules();
+      // this.getNatRules();
+      // this.getNetworkObjects();
+      // this.getNetworkObjectGroups();
+      // this.getServiceObjects();
+      // this.getServiceObjectGroups();
+      // this.getVrfCount();
+      // this.getBridgeDomainCount();
+      // this.getContractCount();
+      // this.getEpgs();
+      this.getTenants();
     }
+  }
+
+  private getTenants(): void {
+    this.tenantsService.getManyTenant({ page: 1, perPage: 1, filter: ['tenantVersion||eq||2'] }).subscribe(data => {
+      this.tenants = data.total;
+    });
   }
 
   private getFWRules(): void {
