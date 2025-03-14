@@ -7,6 +7,7 @@ import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { applicationMode } from 'src/app/models/other/application-mode-enum';
 import { NameValidator } from 'src/app/validators/name-validator';
+import { TenantSelectModalHelpText } from 'src/app/helptext/help-text-networking';
 
 @Component({
   selector: 'app-tenant-select-modal',
@@ -30,29 +31,7 @@ export class TenantSelectModalComponent implements OnInit {
   public deploymentModeOptions = ['Hot Site First', 'Cold Site First', 'Scheduled Sync'];
 
   // Help text for tooltips
-  public helpText = {
-    NorthSouthAppId: 'Allow PANOS App-ID (requires PANOS firewall vendor)',
-    EastWestAppId: 'Allow PANOS App-ID (requires PANOS firewall vendor)',
-    Nat64NorthSouth: 'Enable NAT64 and DNS64 functionality for IPv6-to-IPv4 communication on the north/south firewall',
-    EastWestAllowSgBypass: 'Allows tenant to define additional contract subjects and filters that bypass the service graph',
-    EastWestNat:
-      'Create host subnets in source EPG when firewall performs source NAT and host subnets in dest EPG when firewall performs dest NAT',
-    TenantSize:
-      'X-Small: Small virtual firewall, limited VCD resources\n' +
-      'Small: Basic virtual firewall, standard VCD resources\n' +
-      'Medium: Mid-size virtual firewall, enhanced VCD resources\n' +
-      'Large: High-capacity virtual firewall, advanced VCD resources\n' +
-      'X-Large: Maximum capacity virtual firewall, premium VCD resources',
-    HighAvailability: 'Enable redundant firewall deployment for high availability and failover protection',
-    HAMode: 'Active-Passive: One active firewall with passive standby\nActive-Active: Both firewalls actively processing traffic',
-    VendorAgnosticNat:
-      'Adds a UI option when creating NAT rules that generates a corresponding firewall rule ' +
-      'to match NAT traffic and uses a vendor-agnostic firewall automation strategy that ' +
-      'handles differences in processing flow between ASA and PANOS',
-    RegionalHA: 'Configure high availability across multiple datacenter regions',
-    DeploymentMode:
-      'Hot Site First: Deploy to primary site first, then secondary\nCold Site First: Deploy to secondary site first, then primary\nScheduled Sync: Schedule regular synchronization between sites\n\nNote: A failure in the secondary deployment will halt the workflow and rollback the changes to the secondary environment.',
-  };
+  public helpText: TenantSelectModalHelpText;
 
   constructor(
     private router: Router,
@@ -60,7 +39,10 @@ export class TenantSelectModalComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private tenantService: V2AppCentricTenantsService,
-  ) {}
+    helpText: TenantSelectModalHelpText,
+  ) {
+    this.helpText = helpText;
+  }
 
   ngOnInit(): void {
     this.buildForm();

@@ -25,6 +25,7 @@ import {
   HealthMonitorModalHelpText,
   ContractModalHelpText,
   DashboardHelpText,
+  TenantSelectModalHelpText,
 } from './help-text-networking';
 
 describe('HelpTextService', () => {
@@ -50,6 +51,7 @@ describe('HelpTextService', () => {
   let healthMonitorModalHelpText: HealthMonitorModalHelpText;
   let contractModalHelpText: ContractModalHelpText;
   let dashboardHelpText: DashboardHelpText;
+  let tenantSelectModalHelpText: TenantSelectModalHelpText;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
@@ -75,6 +77,7 @@ describe('HelpTextService', () => {
     healthMonitorModalHelpText = TestBed.inject(HealthMonitorModalHelpText);
     contractModalHelpText = TestBed.inject(ContractModalHelpText);
     dashboardHelpText = TestBed.inject(DashboardHelpText);
+    tenantSelectModalHelpText = TestBed.inject(TenantSelectModalHelpText);
   });
 
   it('should create SearchBarHelpText service', () => {
@@ -635,6 +638,70 @@ describe('HelpTextService', () => {
 
     it('should have the correct LbVirtualServers help text', () => {
       expect(dashboardHelpText.LbVirtualServers).toEqual('Total Load Balancer Virtual Servers within the current tenant.');
+    });
+  });
+
+  describe('TenantSelectModalHelpText', () => {
+    it('should create an instance', () => {
+      expect(tenantSelectModalHelpText).toBeTruthy();
+    });
+
+    it('should have the correct NorthSouthAppId help text', () => {
+      expect(tenantSelectModalHelpText.NorthSouthAppId).toEqual('Allow PANOS App-ID (requires PANOS firewall vendor)');
+    });
+
+    it('should have the correct EastWestAppId help text', () => {
+      expect(tenantSelectModalHelpText.EastWestAppId).toEqual('Allow PANOS App-ID (requires PANOS firewall vendor)');
+    });
+
+    it('should have the correct Nat64NorthSouth help text', () => {
+      expect(tenantSelectModalHelpText.Nat64NorthSouth).toEqual(
+        'Enable NAT64 and DNS64 functionality for IPv6-to-IPv4 communication on the north/south firewall',
+      );
+    });
+
+    it('should have the correct EastWestAllowSgBypass help text', () => {
+      expect(tenantSelectModalHelpText.EastWestAllowSgBypass).toEqual(
+        'Allows tenant to define additional contract subjects and filters that bypass the service graph',
+      );
+    });
+
+    it('should have the correct EastWestNat help text', () => {
+      expect(tenantSelectModalHelpText.EastWestNat).toEqual(
+        'Create host subnets in source EPG when firewall performs source NAT and host subnets in dest EPG when firewall performs dest NAT',
+      );
+    });
+
+    it('should have the correct TenantSize help text', () => {
+      expect(tenantSelectModalHelpText.TenantSize).toContain('X-Small: Small virtual firewall, limited VCD resources');
+      expect(tenantSelectModalHelpText.TenantSize).toContain('Large: High-capacity virtual firewall, advanced VCD resources');
+    });
+
+    it('should have the correct HighAvailability help text', () => {
+      expect(tenantSelectModalHelpText.HighAvailability).toEqual(
+        'Enable redundant firewall deployment for high availability and failover protection',
+      );
+    });
+
+    it('should have the correct HAMode help text', () => {
+      expect(tenantSelectModalHelpText.HAMode).toEqual(
+        'Active-Passive: One active firewall with passive standby\nActive-Active: Both firewalls actively processing traffic',
+      );
+    });
+
+    it('should have the correct VendorAgnosticNat help text', () => {
+      expect(tenantSelectModalHelpText.VendorAgnosticNat).toContain(
+        'Adds a UI option when creating NAT rules that generates a corresponding firewall rule',
+      );
+    });
+
+    it('should have the correct RegionalHA help text', () => {
+      expect(tenantSelectModalHelpText.RegionalHA).toEqual('Configure high availability across multiple datacenter regions');
+    });
+
+    it('should have the correct DeploymentMode help text', () => {
+      expect(tenantSelectModalHelpText.DeploymentMode).toContain('Hot Site First: Deploy to primary site first, then secondary');
+      expect(tenantSelectModalHelpText.DeploymentMode).toContain('Note: A failure in the secondary deployment will halt the workflow');
     });
   });
 });
