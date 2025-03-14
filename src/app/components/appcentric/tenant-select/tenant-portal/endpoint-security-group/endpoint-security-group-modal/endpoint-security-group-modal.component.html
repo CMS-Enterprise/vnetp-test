@@ -185,6 +185,13 @@
       [type]="selector?.deletedAt ? 'danger' : 'default'"
       (handleClick)="deleteSelector(selector)"
     ></app-icon-button>
+    <app-icon-button
+      icon="undo"
+      *ngIf="selector?.deletedAt"
+      label="Soft-Delete/Delete Selector"
+      type="success"
+      (handleClick)="restoreSelector(selector)"
+    ></app-icon-button>
   </section>
 </ng-template>
 

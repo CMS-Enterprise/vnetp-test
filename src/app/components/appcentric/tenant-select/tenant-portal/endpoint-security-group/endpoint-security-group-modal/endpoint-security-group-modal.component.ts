@@ -350,10 +350,18 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
         // if selector is type EPG, we must update that EPGs "esgMatched" property to false
         if (selector.selectorType === 'EPG') {
           const epgToUpdate = this.endpointGroups.find(epg => epg.name === selector.endpointGroupName);
-          this.retrieveAndUpdateEndpointGroup(epgToUpdate.id);
+          this.retrieveAndUpdateEndpointGroup(epgToUpdate.id, false);
         }
         this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
       },
+    });
+  }
+
+  public restoreSelector(selector): void {
+    this.selectorService.restoreOneSelector({ id: selector.id }).subscribe(data => {
+      const epgToUpdate = this.endpointGroups.find(epg => epg.name === selector.endpointGroupName);
+      this.retrieveAndUpdateEndpointGroup(epgToUpdate.id, true);
+      return this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
     });
   }
 
@@ -369,9 +377,9 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       });
   }
 
-  private retrieveAndUpdateEndpointGroup(epgId: string): void {
+  private retrieveAndUpdateEndpointGroup(epgId: string, esgMatched): void {
     this.endpointGroupService.getOneEndpointGroup({ id: epgId }).subscribe(epg => {
-      epg.esgMatched = false;
+      epg.esgMatched = esgMatched;
       delete epg.name;
       delete epg.tenantId;
       delete epg.applicationProfileId;
