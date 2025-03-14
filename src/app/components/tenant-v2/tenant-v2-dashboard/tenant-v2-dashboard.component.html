@@ -1,127 +1,86 @@
 <h1>Dashboard - TenantV2</h1>
 <main class="dashboard">
   <!-- Overall Environment -->
-  <aside class="dashboard__card">
-    <h4 class="dashboard__heading">Net Centric Environment</h4>
-    <ul class="dash-card">
-      <li class="dash-card__item">
-        <a routerLink="/netcentric/network-objects-groups" queryParamsHandling="merge">
-          <span> Network Objects </span>
-          <span class="inline-block ml-auto">
-            {{ networkObjectCount || 0 }}
-          </span>
-          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-        </a>
-      </li>
-      <li class="dash-card__item">
-        <a routerLink="/netcentric/network-objects-groups" queryParamsHandling="merge">
-          <span> Network Object Groups </span>
-          <span class="inline-block ml-auto">
-            {{ networkObjectGroupCount || 0 }}
-          </span>
-          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-        </a>
-      </li>
-      <li class="dash-card__item">
-        <a routerLink="/netcentric/service-objects-groups" queryParamsHandling="merge">
-          <span> Service Objects </span>
-          <span class="inline-block ml-auto">
-            {{ serviceObjectCount || 0 }}
-          </span>
-          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-        </a>
-      </li>
-      <li class="dash-card__item">
-        <a routerLink="/netcentric/service-objects-groups" queryParamsHandling="merge">
-          <span> Service Object Groups </span>
-          <span class="inline-block ml-auto">
-            {{ serviceObjectCount || 0 }}
-          </span>
-          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-        </a>
-      </li>
-      <li class="dash-card__item">
-        <a routerLink="/netcentric/firewall-rules" queryParamsHandling="merge">
-          <span> Firewall Rules </span>
-          <span class="inline-block ml-auto">
-            {{ firewallRuleCount || 0 }}
-          </span>
-          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-        </a>
-      </li>
-      <li class="dash-card__item">
-        <a routerLink="/netcentric/nat-rules" queryParamsHandling="merge">
-          <span> Nat Rules </span>
-          <span class="inline-block ml-auto">
-            {{ natRuleCount || 0 }}
-          </span>
-          <fa-icon class="icon" [icon]="['fas', 'chevron-right']"></fa-icon>
-        </a>
-      </li>
-    </ul>
-  </aside>
-  <aside class="dashboard__card" aria-label="App Centric Environment">
-    <h4 class="dashboard__heading">App Centric Environment</h4>
+  <aside class="dashboard__card" aria-label="Network Environment">
+    <h4 class="dashboard__heading">Network Environment</h4>
     <ul class="dash-card">
       <li class="dash-card__item">
         <a routerLink="/tenantv2/tenant-select" queryParamsHandling="merge">
-          <span>
-            Endpoint Groups
-            <!-- <tooltip [message]="helpText.Vrfs"></tooltip> -->
-          </span>
-          <span class="inline-block ml-auto">
-            {{ endpointGroups || 0 }}
-          </span>
+          <span> Logical Tenants </span>
+          <span class="inline-block ml-auto"> 0 </span>
         </a>
       </li>
       <li class="dash-card__item">
-        <a routerLink="/appcentric/dashboard" queryParamsHandling="merge">
+        <a routerLink="/tenantv2/dashboard" queryParamsHandling="merge">
           <span>
-            Vrfs
+            Placeholder
             <!-- <tooltip [message]="helpText.Vrfs"></tooltip> -->
           </span>
-          <span class="inline-block ml-auto">
-            {{ vrfs || 0 }}
-          </span>
+          <span class="inline-block ml-auto"> 0 </span>
         </a>
       </li>
       <li class="dash-card__item">
-        <a routerLink="/appcentric/dashboard" queryParamsHandling="merge">
+        <a routerLink="/tenantv2/dashboard" queryParamsHandling="merge">
           <span>
-            Bridge Domains
+            Placeholder
             <!-- <tooltip [message]="helpText.BridgeDomains"></tooltip> -->
           </span>
-          <span class="inline-block ml-auto">
-            {{ bridgeDomains || 0 }}
-          </span>
+          <span class="inline-block ml-auto"> 0 </span>
         </a>
       </li>
       <li class="dash-card__item">
-        <a routerLink="/appcentric/dashboard" queryParamsHandling="merge">
+        <a routerLink="/tenantv2/dashboard" queryParamsHandling="merge">
           <span>
-            Contracts
+            Placeholder
             <!-- <tooltip [message]="helpText.Contracts"></tooltip> -->
           </span>
-          <span class="inline-block ml-auto">
-            {{ contracts || 0 }}
-          </span>
+          <span class="inline-block ml-auto"> 0 </span>
         </a>
       </li>
     </ul>
   </aside>
 
-  <aside class="dashboard__card" aria-label="App Centric Environment">
-    <h4 class="dashboard__heading">VCD Environment??</h4>
+  <!-- Network Services Card -->
+  <aside class="dashboard__card" aria-label="Attached Network Services">
+    <h4 class="dashboard__heading">Attached Network Services</h4>
     <ul class="dash-card">
       <li class="dash-card__item">
-        <a routerLink="/appcentric/dashboard" queryParamsHandling="merge">
+        <a routerLink="/tenantv2/dashboard" queryParamsHandling="merge">
+          <span> North/South Firewalls </span>
+          <span class="inline-block ml-auto"> 0 </span>
+        </a>
+      </li>
+      <li class="dash-card__item">
+        <a routerLink="/tenantv2/dashboard" queryParamsHandling="merge">
+          <span> East/West Firewalls </span>
+          <span class="inline-block ml-auto"> 0 </span>
+        </a>
+      </li>
+      <li class="dash-card__item">
+        <a routerLink="/tenantv2/dashboard" queryParamsHandling="merge">
+          <span> Load Balancers </span>
+          <span class="inline-block ml-auto"> 0 </span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <aside class="dashboard__card" aria-label="Compute Environment">
+    <h4 class="dashboard__heading">Compute Environment</h4>
+    <ul class="dash-card">
+      <li class="dash-card__item">
+        <a routerLink="/tenantv2/dashboard" queryParamsHandling="merge">
           <span>
-            Vrfs
+            VCD Tenants
             <!-- <tooltip [message]="helpText.Vrfs"></tooltip> -->
           </span>
-          <span class="inline-block ml-auto">
-            {{ vrfs || 0 }}
-          </span>
+          <span class="inline-block ml-auto"> 0 </span>
+        </a>
+      </li>
+      <li class="dash-card__item">
+        <a routerLink="/tenantv2/dashboard" queryParamsHandling="merge">
+          <span> VDCs </span>
+          <span class="inline-block ml-auto"> 0 </span>
         </a>
       </li>
     </ul>
