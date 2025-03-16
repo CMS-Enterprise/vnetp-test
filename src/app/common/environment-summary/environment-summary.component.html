@@ -19,6 +19,11 @@
       environmentSummary.name
     }}</a>
   </section>
+  <section *ngIf="environmentSummary.type === 'TenantV2'">
+    <a routerLink="/tenantv2/tenant-select/edit/{{ environmentSummary.id }}/home" queryParamsHandling="merge">{{
+      environmentSummary.name
+    }}</a>
+  </section>
   <section *ngIf="environmentSummary.type === 'Netcentric'">
     <a (click)="switchDatacenter(environmentSummary.id)" class="clickable-link">{{ environmentSummary.name }}</a>
   </section>

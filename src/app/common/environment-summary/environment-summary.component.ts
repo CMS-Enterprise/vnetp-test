@@ -52,12 +52,14 @@ export class EnvironmentSummaryComponent implements OnInit, OnDestroy {
       this.datacenters = datacenters;
       if (this.datacenters) {
         this.datacenters.forEach(datacenter => {
-          this.tableData.push({
-            name: datacenter.name,
-            description: datacenter.description,
-            type: 'Netcentric',
-            id: datacenter.id,
-          });
+          if (datacenter.tenantVersion === 1) {
+            this.tableData.push({
+              name: datacenter.name,
+              description: datacenter.description,
+              type: 'Netcentric',
+              id: datacenter.id,
+            });
+          }
         });
       }
     });
@@ -88,7 +90,7 @@ export class EnvironmentSummaryComponent implements OnInit, OnDestroy {
               this.tableData.push({
                 name: tenant.name,
                 description: tenant.description,
-                type: 'Appcentric',
+                type: tenant.tenantVersion === 1 ? 'Appcentric' : 'TenantV2',
                 id: tenant.id,
               });
             });
