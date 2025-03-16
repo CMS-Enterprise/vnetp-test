@@ -59,8 +59,17 @@ const routes: Routes = [
       {
         outlet,
         path: 'east-west-firewall',
-        data: { breadcrumb: 'Tenant Select', title: 'East-West' },
-        loadChildren: () => import('../../../firewall-rules/firewall-rules.module').then(m => m.FirewallRulesModule),
+        data: {
+          breadcrumb: 'East-West Firewall',
+          title: 'East-West Firewall',
+        },
+        loadChildren: () => import('./tenant-v2-firewall/tenant-v2-firewall.module').then(m => m.TenantV2FirewallModule),
+      },
+      {
+        outlet,
+        path: 'north-south-firewall',
+        data: { breadcrumb: 'North-South Firewall', title: 'North-South Firewall' },
+        loadChildren: () => import('./tenant-v2-firewall/tenant-v2-firewall.module').then(m => m.TenantV2FirewallModule),
       },
     ],
   },

@@ -5,6 +5,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, forkJoin } from 'rxjs';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { FirewallRuleScope } from 'src/app/models/other/firewall-rule-scope';
+import { applicationMode } from 'src/app/models/other/application-mode-enum';
 import {
   V1NetworkSecurityFirewallRuleGroupsService,
   FirewallRule,
@@ -125,6 +126,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     ],
     expandableRows: () => this.expandableRowsTemplate,
   };
+
+  public applicationMode = applicationMode;
+  public mode: applicationMode;
 
   get scopeString() {
     return this.scope;

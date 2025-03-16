@@ -15,7 +15,8 @@ const tabs = [
   { name: 'L3 Outs', route: ['l3-outs'] },
   { name: 'VRF', route: ['vrf'] },
   { name: 'Route Profile', route: ['route-profile'] },
-  { name: 'East-West', route: ['east-west-firewall'] },
+  { name: 'East/West Firewall', route: ['east-west-firewall'] },
+  { name: 'North/South Firewall', route: ['north-south-firewall'] },
 ];
 
 @Component({
@@ -63,10 +64,29 @@ export class TenantPortalComponent implements OnInit {
   public async handleTabChange(tab: Tab): Promise<any> {
     this.currentTab = tab.name;
     const tabRoute = tabs.find(t => t.name === tab.name);
-    this.router.navigate([{ outlets: { 'tenant-portal': tabRoute.route } }], {
-      queryParamsHandling: 'merge',
-      relativeTo: this.activatedRoute,
-    });
+    // TODO: Not switching properly to the correct firewall rule group.
+    if (tab.name === 'East/West Firewall' && this.networkServicesContainerEwFirewallRuleGroup) {
+      this.router.navigate(
+        [{ outlets: { 'tenant-portal': ['east-west-firewall', 'edit', this.networkServicesContainerEwFirewallRuleGroup.id] } }],
+        {
+          queryParamsHandling: 'merge',
+          relativeTo: this.activatedRoute,
+        },
+      );
+    } else if (tab.name === 'North/South Firewall' && this.networkServicesContainerNsFirewallRuleGroup) {
+      this.router.navigate(
+        [{ outlets: { 'tenant-portal': ['east-west-firewall', 'edit', this.networkServicesContainerNsFirewallRuleGroup.id] } }],
+        {
+          queryParamsHandling: 'merge',
+          relativeTo: this.activatedRoute,
+        },
+      );
+    } else {
+      this.router.navigate([{ outlets: { 'tenant-portal': tabRoute.route } }], {
+        queryParamsHandling: 'merge',
+        relativeTo: this.activatedRoute,
+      });
+    }
   }
 
   public getTenants(): void {
