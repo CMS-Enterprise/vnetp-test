@@ -23,6 +23,7 @@ export interface Datacenter {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
+    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     name: string;
     description?: string;
@@ -33,5 +34,6 @@ export interface Datacenter {
     readonly selfServices?: SelfService;
     readonly wanForms?: Array<WanForm>;
     readonly appCentricTenant?: Tenant;
+    readonly appCentricTenantId?: string;
 }
 

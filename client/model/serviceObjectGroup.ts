@@ -17,6 +17,7 @@ export interface ServiceObjectGroup {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
+    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;

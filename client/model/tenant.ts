@@ -27,6 +27,7 @@ export interface Tenant {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
+    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
@@ -44,7 +45,6 @@ export interface Tenant {
     readonly filterEntries?: Array<FilterEntry>;
     readonly auditLogs?: Array<AuditLog>;
     readonly wanForms?: WanForm;
-    datacenterId?: string;
-    tenantVersion?: number;
+    readonly datacenterId: string;
 }
 

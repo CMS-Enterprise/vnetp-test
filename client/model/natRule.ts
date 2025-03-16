@@ -20,6 +20,7 @@ export interface NatRule {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
+    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     name: string;
     description?: string;

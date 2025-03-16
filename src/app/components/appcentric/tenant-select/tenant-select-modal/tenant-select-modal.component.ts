@@ -437,8 +437,6 @@ export class TenantSelectModalComponent implements OnInit {
     } as Tenant;
 
     if (this.isAdminPortalMode) {
-      tenant.tenantVersion = 2;
-
       // Add AdminPortal specific properties
       // Note: These would normally be added to a tenant configuration object or metadata
       // But for now we'll just log them

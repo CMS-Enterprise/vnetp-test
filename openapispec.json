@@ -21564,6 +21564,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -21612,6 +21616,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -21683,6 +21691,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -21764,6 +21776,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -21878,6 +21894,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -21968,6 +21988,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -22036,6 +22060,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -22183,6 +22211,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -22318,6 +22350,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -22393,6 +22429,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -22491,6 +22531,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -22914,6 +22958,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -22978,6 +23026,10 @@
                 "$ref": "#/components/schemas/Tenant"
               }
             ]
+          },
+          "appCentricTenantId": {
+            "type": "string",
+            "readOnly": true
           }
         },
         "required": [
@@ -23002,6 +23054,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23078,6 +23134,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23230,6 +23290,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23315,6 +23379,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23424,12 +23492,13 @@
             ]
           },
           "datacenterId": {
-            "type": "string"
-          },
-          "tenantVersion": {
-            "type": "number"
+            "type": "string",
+            "readOnly": true
           }
-        }
+        },
+        "required": [
+          "datacenterId"
+        ]
       },
       "EndpointGroup": {
         "type": "object",
@@ -23449,6 +23518,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23624,6 +23697,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23699,6 +23776,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23766,6 +23847,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23823,6 +23908,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23944,6 +24033,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -24010,6 +24103,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -24086,6 +24183,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -24347,6 +24448,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -24427,6 +24532,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -24479,7 +24588,9 @@
             "enum": [
               "IpAddress",
               "NetworkObject",
-              "NetworkObjectGroup"
+              "NetworkObjectGroup",
+              "EndpointGroup",
+              "EndpointSecurityGroup"
             ]
           },
           "destinationAddressType": {
@@ -24487,7 +24598,9 @@
             "enum": [
               "IpAddress",
               "NetworkObject",
-              "NetworkObjectGroup"
+              "NetworkObjectGroup",
+              "EndpointGroup",
+              "EndpointSecurityGroup"
             ]
           },
           "serviceType": {
@@ -24526,6 +24639,12 @@
             "type": "string"
           },
           "serviceObjectGroupId": {
+            "type": "string"
+          },
+          "sourceEndpointGroupId": {
+            "type": "string"
+          },
+          "destinationEndpointGroupId": {
             "type": "string"
           },
           "firewallRuleGroupId": {
@@ -24593,6 +24712,22 @@
               "$ref": "#/components/schemas/Zone"
             }
           },
+          "sourceEndpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
+          "destinationEndpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
           "hitCount": {
             "type": "number"
           }
@@ -24629,6 +24764,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -24703,6 +24842,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -24770,6 +24913,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -24843,6 +24990,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -24925,6 +25076,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25028,6 +25183,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25105,6 +25264,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25171,6 +25334,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25289,6 +25456,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25353,6 +25524,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25405,6 +25580,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25465,6 +25644,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25519,6 +25702,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25751,6 +25938,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25803,7 +25994,9 @@
             "enum": [
               "IpAddress",
               "NetworkObject",
-              "NetworkObjectGroup"
+              "NetworkObjectGroup",
+              "EndpointGroup",
+              "EndpointSecurityGroup"
             ]
           },
           "destinationAddressType": {
@@ -25811,7 +26004,9 @@
             "enum": [
               "IpAddress",
               "NetworkObject",
-              "NetworkObjectGroup"
+              "NetworkObjectGroup",
+              "EndpointGroup",
+              "EndpointSecurityGroup"
             ]
           },
           "serviceType": {
@@ -25850,6 +26045,12 @@
             "type": "string"
           },
           "serviceObjectGroupId": {
+            "type": "string"
+          },
+          "sourceEndpointGroupId": {
+            "type": "string"
+          },
+          "destinationEndpointGroupId": {
             "type": "string"
           },
           "firewallRuleGroupId": {
@@ -25916,6 +26117,22 @@
             "items": {
               "$ref": "#/components/schemas/Zone"
             }
+          },
+          "sourceEndpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
+          "destinationEndpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
           },
           "hitCount": {
             "type": "number"
@@ -26109,6 +26326,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26421,6 +26642,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -26516,6 +26741,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26681,6 +26910,10 @@
             "type": "number",
             "readOnly": true
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -26821,6 +27054,10 @@
             "readOnly": true
           },
           "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
