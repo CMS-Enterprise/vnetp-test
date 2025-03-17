@@ -39,7 +39,7 @@
         "
       >
         <tr
-          [ngStyle]="config.rowStyle ? config.rowStyle(datum) : null"
+          [ngStyle]="getRowStyle(datum)"
           (click)="handleRowClick($event, datum)"
           [class.expandableRow]="expandableRows"
           [attr.aria-expanded]="datum.expanded ? 'true' : 'false'"

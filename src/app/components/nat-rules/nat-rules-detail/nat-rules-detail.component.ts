@@ -118,12 +118,6 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
       { name: '', template: () => this.actionsTemplate },
     ],
     expandableRows: () => this.expandableRowsTemplate,
-    rowStyle: (natRule: NatRule) => {
-      if (natRule.enabled === false) {
-        return { color: '#aaaaaa', textDecoration: 'line-through' };
-      }
-      return {};
-    },
   };
 
   constructor(

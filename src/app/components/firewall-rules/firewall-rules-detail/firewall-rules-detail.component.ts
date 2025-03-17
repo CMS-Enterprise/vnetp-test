@@ -124,12 +124,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       { name: '', template: () => this.actionsTemplate },
     ],
     expandableRows: () => this.expandableRowsTemplate,
-    rowStyle: (firewallRule: FirewallRule) => {
-      if (firewallRule.enabled === false) {
-        return { color: '#aaaaaa', textDecoration: 'line-through' };
-      }
-      return {};
-    },
   };
 
   get scopeString() {
