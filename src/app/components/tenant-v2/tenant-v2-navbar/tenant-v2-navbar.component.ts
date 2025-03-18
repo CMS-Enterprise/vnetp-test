@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-tenant-v2-navbar',
@@ -11,13 +12,13 @@ export class TenantV2NavbarComponent implements OnInit {
   public tenant: string;
   public userRoles: string[];
 
-  constructor(private modalService: NgxSmartModalService) {}
+  constructor(private modalService: NgxSmartModalService, private auth: AuthService) {}
 
   ngOnInit(): void {
     // TODO: Implement user and tenant data fetching
     this.user = {
-      uid: 'testuser',
-      cn: 'Test User',
+      uid: 'TODO-user',
+      cn: 'TODO User',
     };
     this.tenant = 'Test Tenant';
     this.userRoles = ['admin'];
@@ -28,7 +29,6 @@ export class TenantV2NavbarComponent implements OnInit {
   }
 
   public logout(): void {
-    // TODO: Implement logout logic
-    console.log('Logout clicked');
+    this.auth.logout();
   }
 }
