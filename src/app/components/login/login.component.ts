@@ -143,20 +143,22 @@ export class LoginComponent implements OnInit {
   }
 
   setTenantAndNavigate(tenant, mode) {
-    console.log('tenant', tenant);
-    console.log('mode', mode);
     const { tenantQueryParameter } = tenant;
     mode = mode.toLowerCase();
     this.toastr.success(`Welcome ${this.userpass.username}!`);
     this.authService.currentTenantValue = tenantQueryParameter;
-    // if the user had a session expire, and they can choose from multiple tenants,
-    // we pre-select their old tenant for them above if they stay with that same tenant,
-    // we will apply the returnURL from that session, to redirect them back to whatever
-    // page they were on after login if they choose a different tenant, we redirect them
-    // to the dashboard after they login
-    if (tenantQueryParameter !== this.oldTenant) {
+
+    // Check if the returnUrl contains a different mode than the selected one
+    const modeInReturnUrl = this.returnUrl?.split('/')[1];
+    const validModes = ['appcentric', 'netcentric', 'tenantv2'];
+
+    if (validModes.includes(modeInReturnUrl) && modeInReturnUrl !== mode) {
+      // If mode has changed, redirect to the dashboard of the new mode
+      this.returnUrl = `/${mode}/dashboard`;
+    } else if (tenantQueryParameter !== this.oldTenant) {
       this.returnUrl = `/${mode}/dashboard`;
     }
+
     // if the returnUrl is /dashboard then we assume the user is starting a brand new session
     // when they login we allow them to select a tenant and then they are brought to the dashboard
     if (this.returnUrl === `/${mode}/dashboard`) {
