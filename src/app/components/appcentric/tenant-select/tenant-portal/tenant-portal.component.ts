@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Datacenter, FirewallRuleGroup, GetManyTenantResponseDto, Tier, V2AppCentricTenantsService } from 'client';
 import { Tab } from 'src/app/common/tabs/tabs.component';
-import { applicationMode } from 'src/app/models/other/application-mode-enum';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { V1DatacentersService } from 'client';
 import { V1TiersService } from 'client';
 
@@ -29,7 +29,7 @@ export class TenantPortalComponent implements OnInit {
   public tenants: GetManyTenantResponseDto;
   public currentTenantName: string;
   public tenantId: string;
-  public mode: applicationMode;
+  public mode: ApplicationMode;
   public networkServicesContainerDatacenter: Datacenter;
   public networkServicesContainerNsTier: Tier;
   public networkServicesContainerEwTier: Tier;
@@ -57,7 +57,8 @@ export class TenantPortalComponent implements OnInit {
     // Access the route data to get the mode
     this.activatedRoute.data.subscribe(data => {
       this.mode = data.mode;
-      console.log('Application mode:', this.mode);
+
+      // In Tenant V2 we automate the datacenter/tier selection
     });
   }
 
@@ -75,7 +76,7 @@ export class TenantPortalComponent implements OnInit {
       );
     } else if (tab.name === 'North/South Firewall' && this.networkServicesContainerNsFirewallRuleGroup) {
       this.router.navigate(
-        [{ outlets: { 'tenant-portal': ['east-west-firewall', 'edit', this.networkServicesContainerNsFirewallRuleGroup.id] } }],
+        [{ outlets: { 'tenant-portal': ['north-south-firewall', 'edit', this.networkServicesContainerNsFirewallRuleGroup.id] } }],
         {
           queryParamsHandling: 'merge',
           relativeTo: this.activatedRoute,
@@ -98,7 +99,7 @@ export class TenantPortalComponent implements OnInit {
         response => {
           this.currentTenantName = response.name;
 
-          if (this.mode === applicationMode.TENANTV2 && response.tenantVersion === 2) {
+          if (this.mode === ApplicationMode.TENANTV2 && response.tenantVersion === 2) {
             this.getNetworkServicesContainerDatacenter(response.datacenterId);
           } else {
             throw new Error('Tenant is not in TenantV2 mode');
@@ -113,8 +114,8 @@ export class TenantPortalComponent implements OnInit {
   public getNetworkServicesContainerDatacenter(datacenterId: string): void {
     this.datacenterService.getOneDatacenter({ id: datacenterId, join: ['tiers'] }).subscribe(response => {
       this.networkServicesContainerDatacenter = response;
-      this.networkServicesContainerNsTier = response.tiers.find(t => t.name === 'ew_fw_svc_tier');
-      this.networkServicesContainerEwTier = response.tiers.find(t => t.name === 'ns_fw_svc_tier');
+      this.networkServicesContainerNsTier = response.tiers.find(t => t.name === 'ns_fw_svc_tier');
+      this.networkServicesContainerEwTier = response.tiers.find(t => t.name === 'ew_fw_svc_tier');
 
       this.tierService.getOneTier({ id: this.networkServicesContainerNsTier.id, join: ['firewallRuleGroups'] }).subscribe(nsResponse => {
         this.networkServicesContainerNsFirewallRuleGroup = nsResponse.firewallRuleGroups[0];

@@ -34,7 +34,7 @@ import { DatacenterContextService } from 'src/app/services/datacenter-context.se
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { Router, ActivatedRoute } from '@angular/router';
-import { applicationMode } from '../../models/other/application-mode-enum';
+import { ApplicationMode } from '../../models/other/application-mode-enum';
 
 // TODO: TenantV2 - when loading audit logs for a V2 tenant we need to get data from what was traditionally in "appcentric" audit logs
 // and what was traditionally in "netcentric" audit logs. TenantV2 consists of an updated app-centric tenant and the security management
@@ -61,9 +61,9 @@ export class AuditLogComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
 
   // Expose the enum to the template
-  public auditLogMode = applicationMode;
+  public auditLogMode = ApplicationMode;
 
-  public currentMode: applicationMode;
+  public currentMode: ApplicationMode;
 
   public appCentricConfig: TableConfig<any> = {
     description: 'Audit Log',
@@ -138,7 +138,7 @@ export class AuditLogComponent implements OnInit {
     private l3OutService: V2AppCentricL3outsService,
   ) {
     // We'll determine the mode in ngOnInit after we have access to route data
-    this.currentMode = applicationMode.NETCENTRIC; // Default mode
+    this.currentMode = ApplicationMode.NETCENTRIC; // Default mode
   }
 
   getAppCentricObjects(): void {
@@ -500,7 +500,7 @@ export class AuditLogComponent implements OnInit {
         console.log(`Mode set from router config: ${this.currentMode}`);
       } else {
         // If no mode is specified in router config, use NETCENTRIC as default
-        this.currentMode = applicationMode.NETCENTRIC;
+        this.currentMode = ApplicationMode.NETCENTRIC;
         console.log(`No mode specified in route data. Using default mode: ${this.currentMode}`);
       }
 
@@ -514,7 +514,7 @@ export class AuditLogComponent implements OnInit {
         this.currentDatacenter = cd;
 
         // Only the netcentric mode needs to respond to datacenter changes
-        if (this.currentMode === applicationMode.NETCENTRIC) {
+        if (this.currentMode === ApplicationMode.NETCENTRIC) {
           this.getTiers();
         }
       }
@@ -526,17 +526,17 @@ export class AuditLogComponent implements OnInit {
    */
   private initializeForCurrentMode(): void {
     switch (this.currentMode) {
-      case applicationMode.APPCENTRIC:
+      case ApplicationMode.APPCENTRIC:
         this.getAppCentricTenants();
         this.getAppCentricObjects();
         break;
 
-      case applicationMode.TENANTV2:
+      case ApplicationMode.TENANTV2:
         this.getAppCentricTenants();
         this.getAppCentricObjects();
         break;
 
-      case applicationMode.NETCENTRIC:
+      case ApplicationMode.NETCENTRIC:
         // For netcentric mode, initialization will happen through the datacenter subscription
         break;
     }

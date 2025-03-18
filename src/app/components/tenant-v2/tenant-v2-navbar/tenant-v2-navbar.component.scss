@@ -1,0 +1,74 @@
+.navbar {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 1rem;
+
+  .navbar-brand {
+    padding: 0.5rem;
+    .icon {
+      font-size: 1.5rem;
+      color: #007bff;
+    }
+  }
+
+  .navbar-toggler {
+    border: none;
+    padding: 0.5rem;
+    .icon {
+      font-size: 1.5rem;
+      color: #6c757d;
+    }
+  }
+
+  .nav-item {
+    .nav-link {
+      color: #6c757d;
+      padding: 0.5rem 1rem;
+      &:hover {
+        color: #007bff;
+      }
+    }
+
+    &.active {
+      .nav-link {
+        color: #007bff;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+
+    .dropdown-item {
+      padding: 0.5rem 1rem;
+      color: #6c757d;
+      &:hover {
+        background-color: #f8f9fa;
+        color: #007bff;
+      }
+    }
+  }
+
+  #accountNumber {
+    .nav-link {
+      color: #6c757d;
+      font-weight: 500;
+    }
+  }
+}
+
+.modal-header {
+  border-bottom: 1px solid #dee2e6;
+  padding: 1rem;
+}
+
+.modal-body {
+  padding: 1rem;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  padding: 1rem;
+}

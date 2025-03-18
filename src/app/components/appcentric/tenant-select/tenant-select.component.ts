@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
-import { applicationMode } from 'src/app/models/other/application-mode-enum';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
@@ -26,7 +26,7 @@ export class TenantSelectComponent implements OnInit {
   objectType = 'tenant';
   public isAdminPortalMode = false;
   public isTenantV2Mode = false;
-  public currentMode: applicationMode;
+  public currentMode: ApplicationMode;
 
   public isLoading = false;
 
@@ -64,8 +64,8 @@ export class TenantSelectComponent implements OnInit {
     this.route.data.subscribe(data => {
       if (data && data.mode) {
         this.currentMode = data.mode;
-        this.isAdminPortalMode = this.currentMode === applicationMode.ADMINPORTAL;
-        this.isTenantV2Mode = this.currentMode === applicationMode.TENANTV2;
+        this.isAdminPortalMode = this.currentMode === ApplicationMode.ADMINPORTAL;
+        this.isTenantV2Mode = this.currentMode === ApplicationMode.TENANTV2;
       } else {
         // Fallback to checking URL path
         this.isAdminPortalMode = this.router.url.includes('adminportal');

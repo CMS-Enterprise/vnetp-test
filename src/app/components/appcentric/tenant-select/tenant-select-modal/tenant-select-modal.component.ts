@@ -5,7 +5,7 @@ import { Tenant, V2AppCentricTenantsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { applicationMode } from 'src/app/models/other/application-mode-enum';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { TenantSelectModalHelpText } from 'src/app/helptext/help-text-networking';
 
@@ -21,7 +21,7 @@ export class TenantSelectModalComponent implements OnInit {
   public submitted: boolean;
   public isAdminPortalMode = false;
   public isTenantV2Mode = false;
-  public currentMode: applicationMode;
+  public currentMode: ApplicationMode;
   public modalData: TenantModalDto;
   public selectedFile: File = null;
   public firewallVendorOptions = ['ASA', 'PANOS'];
@@ -159,8 +159,8 @@ export class TenantSelectModalComponent implements OnInit {
     this.route.data.subscribe(data => {
       if (data && data.mode) {
         this.currentMode = data.mode;
-        this.isAdminPortalMode = this.currentMode === applicationMode.ADMINPORTAL;
-        this.isTenantV2Mode = this.currentMode === applicationMode.TENANTV2;
+        this.isAdminPortalMode = this.currentMode === ApplicationMode.ADMINPORTAL;
+        this.isTenantV2Mode = this.currentMode === ApplicationMode.TENANTV2;
       } else {
         // Fallback to checking URL path
         this.isAdminPortalMode = this.router.url.includes('adminportal');

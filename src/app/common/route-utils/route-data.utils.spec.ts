@@ -1,25 +1,25 @@
-import { applicationMode } from '../../models/other/application-mode-enum';
+import { ApplicationMode } from '../../models/other/application-mode-enum';
 import { TENANT_V2_ROUTE_DATA, NETCENTRIC_ROUTE_DATA, APPCENTRIC_ROUTE_DATA, mergeRouteData } from './route-data.utils';
 
 describe('Route Data Utilities', () => {
   describe('Default Route Data Constants', () => {
     it('should export TENANT_V2_ROUTE_DATA with correct values', () => {
       expect(TENANT_V2_ROUTE_DATA).toBeDefined();
-      expect(TENANT_V2_ROUTE_DATA.mode).toEqual(applicationMode.TENANTV2);
+      expect(TENANT_V2_ROUTE_DATA.mode).toEqual(ApplicationMode.TENANTV2);
       expect(TENANT_V2_ROUTE_DATA.baseTitle).toEqual('vNETP - TenantV2');
       expect(TENANT_V2_ROUTE_DATA.section).toEqual('tenant-v2');
     });
 
     it('should export NETCENTRIC_ROUTE_DATA with correct values', () => {
       expect(NETCENTRIC_ROUTE_DATA).toBeDefined();
-      expect(NETCENTRIC_ROUTE_DATA.mode).toEqual(applicationMode.NETCENTRIC);
+      expect(NETCENTRIC_ROUTE_DATA.mode).toEqual(ApplicationMode.NETCENTRIC);
       expect(NETCENTRIC_ROUTE_DATA.baseTitle).toEqual('vNETP');
       expect(NETCENTRIC_ROUTE_DATA.section).toEqual('netcentric');
     });
 
     it('should export APPCENTRIC_ROUTE_DATA with correct values', () => {
       expect(APPCENTRIC_ROUTE_DATA).toBeDefined();
-      expect(APPCENTRIC_ROUTE_DATA.mode).toEqual(applicationMode.APPCENTRIC);
+      expect(APPCENTRIC_ROUTE_DATA.mode).toEqual(ApplicationMode.APPCENTRIC);
       expect(APPCENTRIC_ROUTE_DATA.baseTitle).toEqual('vNETP - AppCentric');
       expect(APPCENTRIC_ROUTE_DATA.section).toEqual('appcentric');
     });

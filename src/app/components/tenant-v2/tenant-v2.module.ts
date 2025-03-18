@@ -21,6 +21,11 @@ import { TenantV2DashboardModule } from './tenant-v2-dashboard/tenant-v2-dashboa
 import { TenantV2DashboardComponent } from './tenant-v2-dashboard/tenant-v2-dashboard.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TENANT_V2_ROUTE_DATA, mergeRouteData } from '../../common/route-utils/route-data.utils';
+import { TableModule } from 'src/app/common/table/table.module';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { TenantV2NavbarComponent } from './tenant-v2-navbar/tenant-v2-navbar.component';
 
 const routes: Routes = [
   {
@@ -71,7 +76,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [TenantV2Component, TenantV2DashboardComponent],
+  declarations: [TenantV2Component, TenantV2DashboardComponent, TenantV2NavbarComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -91,6 +96,10 @@ const routes: Routes = [
     LoadBalancersModule,
     TenantV2DashboardModule,
     FontAwesomeModule,
+    TableModule,
+    IconButtonModule,
+    YesNoModalModule,
+    NgxSmartModalModule,
   ],
 })
 export class TenantV2Module {}
