@@ -13,10 +13,6 @@ const routes: Routes = [
     path: 'edit/:id',
     loadChildren: () => import('src/app/components/firewall-rules/firewall-rules.module').then(m => m.FirewallRulesModule),
   },
-  {
-    path: 'edit/:id',
-    loadChildren: () => import('src/app/components/firewall-rules/firewall-rules.module').then(m => m.FirewallRulesModule),
-  },
 ];
 
 @NgModule({

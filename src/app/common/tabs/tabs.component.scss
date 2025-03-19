@@ -3,3 +3,14 @@
 .nav-tabs .nav-item a {
   color: $c-gray-700;
 }
+
+.sub-tabs {
+  margin-top: -1px;
+  border-top: none;
+  padding-left: 16px;
+
+  .nav-item a {
+    font-size: 0.9em;
+    padding: 0.4rem 0.8rem;
+  }
+}

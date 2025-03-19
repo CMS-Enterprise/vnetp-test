@@ -6,3 +6,18 @@
     </a>
   </li>
 </ul>
+
+<!-- Sub-tabs row that appears when the active tab has sub-tabs -->
+<ul class="nav nav-tabs sub-tabs" *ngIf="activeTab?.subTabs && activeTab.subTabs.length > 0">
+  <li
+    class="nav-item"
+    *ngFor="let subTab of activeTab.subTabs; let i = index"
+    (click)="setActiveSubTab(subTab)"
+    (keyup.enter)="setActiveSubTab(subTab)"
+  >
+    <a class="nav-link" [class.active]="activeSubTab?.name === subTab.name">
+      <span>{{ subTab.name }}</span>
+      <tooltip *ngIf="subTab.tooltip" [message]="subTab.tooltip"></tooltip>
+    </a>
+  </li>
+</ul>

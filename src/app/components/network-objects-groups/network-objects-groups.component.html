@@ -1,8 +1,8 @@
-<app-tier-select></app-tier-select>
+<app-tier-select *ngIf="applicationMode === ApplicationMode.NETCENTRIC"></app-tier-select>
 
-<h1 *ngIf="navIndex === 0">Network Objects</h1>
+<h1 *ngIf="navIndex === 0 && applicationMode === ApplicationMode.NETCENTRIC">Network Objects</h1>
 
-<h1 *ngIf="navIndex === 1">Network Object Groups</h1>
+<h1 *ngIf="navIndex === 1 && applicationMode === ApplicationMode.NETCENTRIC">Network Object Groups</h1>
 
 <ng-container *ngIf="currentTier; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
