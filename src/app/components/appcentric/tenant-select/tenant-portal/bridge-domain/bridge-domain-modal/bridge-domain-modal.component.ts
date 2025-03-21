@@ -115,6 +115,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       this.form.controls.arpFlooding.setValue(true);
       this.form.controls.limitLocalIpLearning.setValue(true);
       this.form.controls.epMoveDetectionModeGarp.setValue(false);
+      this.form.controls.hostBasedRouting.setValue(false);
     }
 
     this.getVrfs();
@@ -133,6 +134,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       this.form.controls.vrfId.setValue(bridgeDomain.vrfId);
       this.form.controls.l3OutForRouteProfileId.setValue(bridgeDomain.l3OutForRouteProfileId);
       this.form.controls.routeProfileId.setValue(bridgeDomain.routeProfileId);
+      this.form.controls.hostBasedRouting.setValue(bridgeDomain.hostBasedRouting);
     }
 
     this.ngx.resetModalData('bridgeDomainModal');
@@ -158,6 +160,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       vrfId: ['', Validators.required],
       l3OutForRouteProfileId: [''],
       routeProfileId: [''],
+      hostBasedRouting: [null],
     });
   }
 
@@ -209,8 +212,18 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const { name, description, alias, unicastRouting, arpFlooding, bdMacAddress, limitLocalIpLearning, epMoveDetectionModeGarp, vrfId } =
-      this.form.value;
+    const {
+      name,
+      description,
+      alias,
+      unicastRouting,
+      arpFlooding,
+      bdMacAddress,
+      limitLocalIpLearning,
+      epMoveDetectionModeGarp,
+      vrfId,
+      hostBasedRouting,
+    } = this.form.value;
 
     let { l3OutForRouteProfileId, routeProfileId } = this.form.value;
     // Check if these fields are empty strings, and if so, set them to null
@@ -236,6 +249,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       epMoveDetectionModeGarp,
       l3OutForRouteProfileId,
       routeProfileId,
+      hostBasedRouting,
     } as BridgeDomain;
 
     bridgeDomain.vrfId = vrfId;
