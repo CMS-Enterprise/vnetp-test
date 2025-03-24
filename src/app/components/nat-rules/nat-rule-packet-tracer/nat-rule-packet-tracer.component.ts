@@ -154,6 +154,11 @@ export class NatRulePacketTracerComponent implements OnInit {
     // Check if ruleNetworkObject is an IP/Subnet
     if (ruleNetworkObject.type === 'IpAddress') {
       const ruleSourceIp = ruleNetworkObject.ipAddress;
+      // if rule IP value is quad 0's, that will match every IP address
+      if (ruleSourceIp === '0.0.0.0/0') {
+        // so return true
+        return true;
+      }
       try {
         const block = new Netmask(ruleSourceIp);
         if (block.contains(formIpValue)) {
@@ -201,6 +206,11 @@ export class NatRulePacketTracerComponent implements OnInit {
     return networkObjectMembers.some(sourceMember => {
       if (sourceMember.type === 'IpAddress') {
         const sourceMemberIp = sourceMember.ipAddress;
+        // if rule IP value is quad 0's, that will match every IP address
+        if (sourceMemberIp === '0.0.0.0/0') {
+          // so return true
+          return true;
+        }
         try {
           const block = new Netmask(sourceMemberIp);
           if (block.contains(formIpValue)) {
@@ -251,6 +261,12 @@ export class NatRulePacketTracerComponent implements OnInit {
 
     // Determine which port value to use based on the location parameter
     const serviceObjectPortValue = location === 'source' ? serviceObject.sourcePorts : serviceObject.destinationPorts;
+
+    // a service object port value of "any" matches all port values
+    if (serviceObjectPortValue === 'any') {
+      // so return true
+      return true;
+    }
 
     // Check if form port value falls within range of rule port value
     if (serviceObjectPortValue.includes('-')) {
