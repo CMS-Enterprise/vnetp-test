@@ -237,8 +237,6 @@
             class="form-control"
             [class.is-invalid]="submitted && f.translatedSourceIp.errors"
             aria-label="Translated Source IP"
-            aria-placeholder="None"
-            placeholder="None"
           />
           <div *ngIf="submitted && f.translatedSourceIp.errors" class="invalid-feedback">
             <div *ngIf="f.translatedSourceIp.errors.required">Translated Source IP is required</div>
@@ -260,8 +258,6 @@
             class="form-control"
             [class.is-invalid]="submitted && f.translatedDestinationIp.errors"
             aria-label="Translated Destination IP"
-            aria-placeholder="None"
-            placeholder="None"
           />
           <div *ngIf="submitted && f.translatedDestinationIp.errors" class="invalid-feedback">
             <div *ngIf="f.translatedDestinationIp.errors.required">Translated Destination IP is required</div>
@@ -285,8 +281,6 @@
             class="form-control"
             [class.is-invalid]="submitted && f.originalSourcePort.errors"
             aria-label="Original Source Port"
-            aria-placeholder="any"
-            placeholder="any"
           />
           <div *ngIf="submitted && f.originalSourcePort.errors" class="invalid-feedback">
             <div *ngIf="f.originalSourcePort.errors.invalidPortNumber">Original Source Port must be between 1-65535</div>
@@ -303,8 +297,6 @@
             class="form-control"
             [class.is-invalid]="submitted && f.originalDestinationPort.errors"
             aria-label="Original Destination Port"
-            aria-placeholder="any"
-            placeholder="any"
           />
           <div *ngIf="submitted && f.originalDestinationPort.errors" class="invalid-feedback">
             <div *ngIf="f.originalDestinationPort.errors.invalidPortNumber">Original Destination Port must be between 1-65535</div>
@@ -323,8 +315,6 @@
             class="form-control"
             [class.is-invalid]="submitted && f.translatedSourcePort.errors"
             aria-label="Translated Source Port"
-            aria-placeholder="None"
-            placeholder="None"
           />
           <div *ngIf="submitted && f.translatedSourcePort.errors" class="invalid-feedback">
             <div *ngIf="f.translatedSourcePort.errors.invalidPortNumber">Translated Source Port must be between 1-65535</div>
@@ -341,8 +331,6 @@
             class="form-control"
             [class.is-invalid]="submitted && f.translatedDestinationPort.errors"
             aria-label="Translated Destination Port"
-            aria-placeholder="None"
-            placeholder="None"
           />
           <div *ngIf="submitted && f.translatedDestinationPort.errors" class="invalid-feedback">
             <div *ngIf="f.translatedDestinationPort.errors.invalidPortNumber">Translated Destination Port must be between 1-65535</div>
