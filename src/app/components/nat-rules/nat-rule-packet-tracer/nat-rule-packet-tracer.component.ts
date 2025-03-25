@@ -2,7 +2,7 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { IsIpV4NoSubnetValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
+import { IsIpV4NoSubnetValidator, ValidatePortRange, ValidatePortNumber } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
 import { NatRule, NetworkObject, NetworkObjectGroup } from '../../../../../client';
 import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';
@@ -346,13 +346,13 @@ export class NatRulePacketTracerComponent implements OnInit {
 
       originalSourceIp: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
       originalDestinationIp: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
-      originalSourcePort: ['', ValidatePortRange],
-      originalDestinationPort: ['', ValidatePortRange],
+      originalSourcePort: ['', ValidatePortNumber],
+      originalDestinationPort: ['', ValidatePortNumber],
 
       translatedSourceIp: ['', IsIpV4NoSubnetValidator],
       translatedDestinationIp: ['', IsIpV4NoSubnetValidator],
-      translatedSourcePort: ['', ValidatePortRange],
-      translatedDestinationPort: ['', ValidatePortRange],
+      translatedSourcePort: ['', ValidatePortNumber],
+      translatedDestinationPort: ['', ValidatePortNumber],
     });
   }
 
