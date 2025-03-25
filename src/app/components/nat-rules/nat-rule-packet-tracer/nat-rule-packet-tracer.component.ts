@@ -259,6 +259,12 @@ export class NatRulePacketTracerComponent implements OnInit {
       return false;
     }
 
+    // a form port value of "any" matches all port values
+    if (formPortValue === 'any') {
+      // so return true
+      return true;
+    }
+
     // Determine which port value to use based on the location parameter
     const serviceObjectPortValue = location === 'source' ? serviceObject.sourcePorts : serviceObject.destinationPorts;
 
