@@ -285,6 +285,7 @@
           <div *ngIf="submitted && f.originalSourcePort.errors" class="invalid-feedback">
             <div *ngIf="f.originalSourcePort.errors.invalidPortNumber">Original Source Port must be between 1-65535</div>
             <div *ngIf="f.originalSourcePort.errors.required">Original Source Port is required</div>
+            <div *ngIf="f.originalSourcePort.errors.portRangeNotAllowed">Port range not allowed</div>
           </div>
         </div>
 
@@ -301,6 +302,7 @@
           <div *ngIf="submitted && f.originalDestinationPort.errors" class="invalid-feedback">
             <div *ngIf="f.originalDestinationPort.errors.invalidPortNumber">Original Destination Port must be between 1-65535</div>
             <div *ngIf="f.originalDestinationPort.errors.required">Original Destination Port is required</div>
+            <div *ngIf="f.originalDestinationPort.errors.portRangeNotAllowed">Port range not allowed</div>
           </div>
         </div>
       </div>
@@ -319,6 +321,7 @@
           <div *ngIf="submitted && f.translatedSourcePort.errors" class="invalid-feedback">
             <div *ngIf="f.translatedSourcePort.errors.invalidPortNumber">Translated Source Port must be between 1-65535</div>
             <div *ngIf="f.translatedSourcePort.errors.required">Translated Source Port is required</div>
+            <div *ngIf="f.translatedSourcePort.errors.portRangeNotAllowed">Port range not allowed</div>
           </div>
         </div>
 
@@ -335,6 +338,7 @@
           <div *ngIf="submitted && f.translatedDestinationPort.errors" class="invalid-feedback">
             <div *ngIf="f.translatedDestinationPort.errors.invalidPortNumber">Translated Destination Port must be between 1-65535</div>
             <div *ngIf="f.translatedDestinationPort.errors.required">Translated Destination Port is required</div>
+            <div *ngIf="f.translatedDestinationPort.errors.portRangeNotAllowed">Port range not allowed</div>
           </div>
         </div>
       </div>
