@@ -713,7 +713,7 @@ describe('NatRulesPacketTracerComponent', () => {
       expect(result).toBe(true);
     });
 
-    it('should return true if original service object source port is "any"', () => {
+    it('should return true for an "any" port match from the rule side', () => {
       const rule = {
         originalServiceObject: {
           id: 'test-id',
@@ -730,6 +730,26 @@ describe('NatRulesPacketTracerComponent', () => {
 
       const control = { value: '80' } as AbstractControl;
       const result = component.handleServiceObjectPortMatch(rule as any, 'original', 'source', control);
+      expect(result).toBe(true);
+    });
+
+    it('should return true for an "any" port match from the form side', () => {
+      const rule = {
+        originalServiceObject: {
+          id: 'test-id',
+          protocol: 'TCP',
+          sourcePorts: '5',
+          destinationPorts: '2',
+        },
+      };
+
+      component.objects = {
+        natRules: [],
+        networkObjectGroups: [],
+      };
+
+      const control = { value: 'any' } as AbstractControl;
+      const result = component.handleServiceObjectPortMatch(rule as any, 'original', 'destination', control);
       expect(result).toBe(true);
     });
 
