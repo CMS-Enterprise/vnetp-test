@@ -1,16 +1,81 @@
 @import '../../../assets/styles/variables';
 
-.nav-tabs .nav-item a {
-  color: $c-gray-700;
+.nav-tabs {
+  border-bottom: 1px solid #dee2e6;
+  margin-bottom: 0;
+
+  .nav-item {
+    margin-bottom: -1px;
+    cursor: pointer;
+
+    .nav-link {
+      border: 1px solid transparent;
+      border-top-left-radius: 0.25rem;
+      border-top-right-radius: 0.25rem;
+      color: #6c757d;
+      padding: 0.75rem 1.25rem;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        border-color: #e9ecef #e9ecef #dee2e6;
+        color: #495057;
+      }
+
+      &.active {
+        color: #007bff;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+        font-weight: 500;
+      }
+
+      span {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  & + .nav-tabs {
+    margin-top: 0;
+  }
 }
 
+// Sub-tabs styling
 .sub-tabs {
-  margin-top: -1px;
-  border-top: none;
-  padding-left: 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #dee2e6;
+  background: #fff;
 
-  .nav-item a {
-    font-size: 0.9em;
-    padding: 0.4rem 0.8rem;
+  .nav-item {
+    margin-bottom: -1px;
+
+    .nav-link {
+      padding: 0.5rem 1rem;
+      font-size: 0.95rem;
+      border: 1px solid transparent;
+      border-top-left-radius: 0.25rem;
+      border-top-right-radius: 0.25rem;
+      margin-right: 0.25rem;
+      color: #6c757d;
+
+      &:hover {
+        border-color: #e9ecef #e9ecef #dee2e6;
+        color: #495057;
+      }
+
+      &.active {
+        color: #007bff;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+        font-weight: 500;
+      }
+    }
   }
+}
+
+// Add visual separation between tabs and content
+.nav-tabs + router-outlet,
+.sub-tabs + router-outlet {
+  margin-top: 1rem;
+  display: block;
 }
