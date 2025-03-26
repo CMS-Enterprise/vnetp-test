@@ -9,6 +9,7 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { EntityService } from 'src/app/services/entity.service';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 
 @Component({
   selector: 'app-firewall-rule-group',
@@ -59,7 +60,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
     this.getFirewallRuleGroups(event);
   }
 
-  public getFirewallRuleGroups(event?) {
+  public getFirewallRuleGroups(event?): void {
     this.isLoadingObjects = true;
     const eventParams = [];
     if (event) {
@@ -129,7 +130,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
     });
   }
 
-  public openFWRuleGroupModal(modalMode?): void {
+  public openFWRuleGroupModal(modalMode?: ModalMode): void {
     const dto: any = {};
     dto.ModalMode = modalMode;
     this.subscribeToFirewallRuleGroupModal();
@@ -147,7 +148,7 @@ export class FirewallRuleGroupComponent implements OnInit, OnDestroy {
     return ObjectUtil.getObjectId(tierName, this.tiers, 'Error Resolving Name');
   }
 
-  restoreFirewallRuleGroup(firewallRuleGroup): void {
+  restoreFirewallRuleGroup(firewallRuleGroup: FirewallRuleGroup): void {
     if (firewallRuleGroup.deletedAt) {
       this.firewallRuleGroupService.restoreOneFirewallRuleGroup({ id: firewallRuleGroup.id }).subscribe(() => {
         // get search params from local storage

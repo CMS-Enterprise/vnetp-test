@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { V1NetworkSecurityZonesService, V1TiersService } from 'client';
+import { V1NetworkSecurityZonesService, V1TiersService, Zone } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
@@ -27,7 +27,7 @@ export class RuleGroupZonesModalComponent implements OnInit {
     this.buildForm();
   }
 
-  public getTiers() {
+  public getTiers(): void {
     this.tierService.getManyTier({ page: 1, perPage: 500, sort: ['updatedAt,ASC'] }).subscribe(data => {
       this.tiers = data.data;
     });
@@ -63,7 +63,7 @@ export class RuleGroupZonesModalComponent implements OnInit {
     });
   }
 
-  private createZone(zone): void {
+  private createZone(zone: Zone): void {
     this.zoneService.createOneZone({ zone }).subscribe(() => {
       this.closeModal();
     });

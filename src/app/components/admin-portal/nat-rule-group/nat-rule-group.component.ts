@@ -9,6 +9,7 @@ import { EntityService } from 'src/app/services/entity.service';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 
 @Component({
   selector: 'app-nat-rule-group',
@@ -55,7 +56,7 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
     private tierService: V1TiersService,
   ) {}
 
-  public getNatRuleGroups(event?) {
+  public getNatRuleGroups(event?): void {
     this.isLoadingObjects = true;
     const eventParams = [];
     if (event) {
@@ -130,7 +131,7 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
     });
   }
 
-  public openNatRuleGroupModal(modalMode?): void {
+  public openNatRuleGroupModal(modalMode?: ModalMode): void {
     const dto: any = {};
     dto.ModalMode = modalMode;
     this.subscribeToNatRuleGroupModal();
@@ -148,7 +149,7 @@ export class NatRuleGroupComponent implements OnInit, OnDestroy {
     return ObjectUtil.getObjectId(tierName, this.tiers, 'Error Resolving Name');
   }
 
-  restoreNatRuleGroup(natRuleGroup): void {
+  restoreNatRuleGroup(natRuleGroup: NatRuleGroup): void {
     if (natRuleGroup.deletedAt) {
       this.natRuleGroupService.restoreOneNatRuleGroup({ id: natRuleGroup.id }).subscribe(() => {
         // get search params from local storage

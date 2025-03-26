@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { V1NetworkSecurityZonesService, V1TiersService } from 'client';
+import { V1NetworkSecurityZonesService, V1TiersService, Zone } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -53,7 +53,7 @@ export class RuleGroupZonesComponent implements OnInit {
     return ObjectUtil.getObjectId(tierName, this.tiers, 'Error Resolving Name');
   }
 
-  public getZones(event?) {
+  public getZones(event?): void {
     this.isLoadingObjects = true;
     const eventParams = [];
     if (event) {
@@ -95,7 +95,7 @@ export class RuleGroupZonesComponent implements OnInit {
       );
   }
 
-  public getTiers() {
+  public getTiers(): void {
     this.tierService.getManyTier({ page: 1, perPage: 500, sort: ['updatedAt,ASC'] }).subscribe(data => {
       this.tiers = data.data;
     });
@@ -123,7 +123,7 @@ export class RuleGroupZonesComponent implements OnInit {
     });
   }
 
-  public openRuleGroupZonesModal(modalMode?): void {
+  public openRuleGroupZonesModal(modalMode?: ModalMode): void {
     const dto: any = {};
     dto.ModalMode = modalMode;
     this.subscribeToRuleGroupZonesModal();
@@ -136,7 +136,7 @@ export class RuleGroupZonesComponent implements OnInit {
     this.getZones(event);
   }
 
-  restoreZone(zone): void {
+  restoreZone(zone: Zone): void {
     if (zone.deletedAt) {
       this.zoneService.restoreOneZone({ id: zone.id }).subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
@@ -157,7 +157,7 @@ export class RuleGroupZonesComponent implements OnInit {
     }
   }
 
-  public deleteZone(zone): void {
+  public deleteZone(zone: Zone): void {
     this.entityService.deleteEntity(zone, {
       entityName: 'Zone',
       delete$: this.zoneService.deleteOneZone({ id: zone.id }),

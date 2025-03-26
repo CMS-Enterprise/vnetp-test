@@ -83,7 +83,7 @@ describe('RuleGroupZonesComponent', () => {
   describe('restore zone', () => {
     it('should restore zone', () => {
       const zoneService = TestBed.inject(V1NetworkSecurityZonesService);
-      const zoneMock = { id: '1', deletedAt: true };
+      const zoneMock = { id: '1', deletedAt: true } as any;
       const restoreOneSpy = jest.spyOn(zoneService, 'restoreOneZone').mockReturnValue(of({} as any));
       const getManyZoneSpy = jest.spyOn(zoneService, 'getManyZone');
       component.restoreZone(zoneMock);

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { V1NetworkSecurityFirewallRuleGroupsService, V1TiersService } from 'client';
+import { FirewallRuleGroup, V1NetworkSecurityFirewallRuleGroupsService, V1TiersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
@@ -26,7 +26,7 @@ export class FirewallRuleGroupModalComponent implements OnInit {
     this.buildForm();
   }
 
-  public getTiers() {
+  public getTiers(): void {
     this.tierService.getManyTier({ page: 1, perPage: 500, sort: ['updatedAt,ASC'] }).subscribe(data => {
       this.tiers = data.data;
     });
@@ -61,7 +61,7 @@ export class FirewallRuleGroupModalComponent implements OnInit {
     });
   }
 
-  private createFirewallRuleGroup(firewallRuleGroup): void {
+  private createFirewallRuleGroup(firewallRuleGroup: FirewallRuleGroup): void {
     this.firewallRuleGroupService.createOneFirewallRuleGroup({ firewallRuleGroup }).subscribe(() => {
       this.closeModal();
     });

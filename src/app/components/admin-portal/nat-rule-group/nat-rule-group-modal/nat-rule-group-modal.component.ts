@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { V1NetworkSecurityNatRuleGroupsService, V1TiersService } from 'client';
+import { NatRuleGroup, V1NetworkSecurityNatRuleGroupsService, V1TiersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
@@ -26,7 +26,7 @@ export class NatRuleGroupModalComponent implements OnInit {
     this.buildForm();
   }
 
-  public getTiers() {
+  public getTiers(): void {
     this.tierService.getManyTier({ page: 1, perPage: 500, sort: ['updatedAt,ASC'] }).subscribe(data => {
       this.tiers = data.data;
     });
@@ -61,7 +61,7 @@ export class NatRuleGroupModalComponent implements OnInit {
     });
   }
 
-  private createNatRuleGroup(natRuleGroup): void {
+  private createNatRuleGroup(natRuleGroup: NatRuleGroup): void {
     this.natRuleGroupService.createOneNatRuleGroup({ natRuleGroup }).subscribe(() => {
       this.closeModal();
     });
