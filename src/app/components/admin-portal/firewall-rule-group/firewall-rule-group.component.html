@@ -1,0 +1,69 @@
+<h1>Creating Firewall Rule Groups</h1>
+<ng-container>
+  <section class="btn-toolbar" role="toolbar">
+    <button type="button" class="btn btn-success" (click)="openFWRuleGroupModal()">
+      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+      <span>Create Firewall Rule Group</span>
+    </button>
+  </section>
+
+  <ng-container *ngIf="!isLoadingObjects; else loading">
+    <app-table
+      [config]="config"
+      (clearResults)="getFirewallRuleGroups($event)"
+      (searchParams)="getFirewallRuleGroups($event)"
+      [searchColumns]="searchColumns"
+      [data]="firewallRuleGroups"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
+  </ng-container>
+</ng-container>
+
+<ng-template #nameTemplate let-firewallRuleGroup="datum">
+  <section>
+    {{ firewallRuleGroup.name }}
+  </section>
+</ng-template>
+
+<ng-template #stateTemplate let-firewallRuleGroup="datum">
+  <section>
+    <span>{{ firewallRuleGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+  </section>
+</ng-template>
+
+<ng-template #actionsTemplate let-firewallRuleGroup="datum">
+  <section class="table__actions">
+    <app-icon-button
+      *ngIf="firewallRuleGroup?.deletedAt"
+      icon="undo"
+      label="Restore FirewallRuleGroup"
+      type="success"
+      (handleClick)="restoreFirewallRuleGroup(firewallRuleGroup)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="!firewallRuleGroup?.provisionedAt && firewallRuleGroup.type === 'ZoneBased'"
+      icon="delete"
+      label="Soft-Delete/Delete Rule Group"
+      [type]="firewallRuleGroup?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteFirewallRuleGroup(firewallRuleGroup)"
+    ></app-icon-button>
+  </section>
+</ng-template>
+
+<ng-template #groupStateTemplate let-netObjGroup="datum">
+  <section>
+    <span>{{ netObjGroup.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}</span>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+</ng-template>
+<app-yes-no-modal></app-yes-no-modal>
+<ng-template #warningMessage>
+  <p>Select a Tier to display Firewall Rule groups.</p>
+</ng-template>
+
+<app-firewall-rule-group-modal></app-firewall-rule-group-modal>

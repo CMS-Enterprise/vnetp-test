@@ -7,7 +7,7 @@ export default class ObjectUtil {
     return object ? object.name : defaultName;
   }
 
-  static getObjectId(nameOrId: string, objects: Lookup[]): string {
+  static getObjectId(nameOrId: string, objects: Lookup[], defaultName = 'N/A'): string {
     if (!objects || objects.length === 0) {
       return null;
     }

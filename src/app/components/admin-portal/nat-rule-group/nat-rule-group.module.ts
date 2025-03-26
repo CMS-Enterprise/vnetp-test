@@ -1,0 +1,50 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { NatRuleGroupComponent } from './nat-rule-group.component';
+import { CommonModule } from '@angular/common';
+import { ImportExportModule } from 'src/app/common/import-export/import-export.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
+import { TierSelectModule } from 'src/app/common/tier-select/tier-select.module';
+import { TableModule } from 'src/app/common/table/table.module';
+import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.module';
+// eslint-disable-next-line max-len
+import { ApplicationPipesModule } from 'src/app/pipes/application-pipes.module';
+import { NatRuleGroupModalComponent } from './nat-rule-group-modal/nat-rule-group-modal.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: NatRuleGroupComponent,
+  },
+];
+
+@NgModule({
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    ApplicationPipesModule,
+    ImportExportModule,
+    FontAwesomeModule,
+    NgxPaginationModule,
+    YesNoModalModule,
+    TierSelectModule,
+    TableModule,
+    IconButtonModule,
+    NgxSmartModalModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TooltipModule,
+    NgSelectModule,
+    PreviewModalModule,
+  ],
+  providers: [TierSelectModule],
+  declarations: [NatRuleGroupComponent, NatRuleGroupModalComponent],
+})
+export class NatRuleGroupModule {}

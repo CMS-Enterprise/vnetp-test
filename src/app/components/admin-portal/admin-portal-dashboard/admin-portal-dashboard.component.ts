@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserDto, V3GlobalMessagesService } from 'client';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -13,8 +14,10 @@ export class AdminPortalDashboardComponent implements OnInit {
   private currentUserSubscription: Subscription;
   public user: UserDto;
   public userRoles: string[];
-  globalMessages;
+  globalMessageTotal: number;
+  selectedTenant: string;
 
+  availableTenants;
   dashboardPoller;
 
   public status = [
@@ -23,31 +26,43 @@ export class AdminPortalDashboardComponent implements OnInit {
     { name: 'Infrastructure', status: 'green' },
   ];
 
-  constructor(private auth: AuthService, private globalMessagesService: V3GlobalMessagesService) {}
-  ngOnInit() {
+  constructor(private router: Router, private auth: AuthService, private globalMessagesService: V3GlobalMessagesService) {}
+  ngOnInit(): void {
     if (this.auth.currentUser) {
       this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
         this.user = user;
         this.userRoles = this.user.dcsPermissions.map(p => p.roles).flat();
         this.loadDashboard();
+        this.auth.getTenants(this.user.token).subscribe(data => {
+          this.availableTenants = data;
+        });
         this.dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
       });
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     clearInterval(this.dashboardPoller);
     SubscriptionUtil.unsubscribe([this.currentUserSubscription]);
   }
 
   public loadDashboard(): void {
-    this.getGlobalMessages();
+    // this.getGlobalMessages();
   }
 
-  public getGlobalMessages() {
-    this.globalMessagesService.getMessagesMessage({ page: 1, perPage: 10000 }).subscribe(data => {
-      this.globalMessages = data.total;
-      this.status[1].status = 'green';
-    });
+  // public getGlobalMessages(): void {
+  //   this.globalMessagesService.getManyMessage({ page: 1, perPage: 10000 }).subscribe(data => {
+  //     this.globalMessageTotal = data.total;
+  //     this.status[1].status = 'green';
+  //   });
+  // }
+
+  public setTenant(tenant): void {
+    const { tenantQueryParameter } = tenant;
+    this.selectedTenant = this.auth.currentTenantValue;
+    this.auth.currentTenantValue = tenantQueryParameter;
+    localStorage.setItem('tenantQueryParam', JSON.stringify(tenantQueryParameter));
+    this.router.navigate(['adminportal/dashboard'], { queryParams: { tenant: tenantQueryParameter } });
+    setTimeout(location.reload.bind(window.location), 250);
   }
 }

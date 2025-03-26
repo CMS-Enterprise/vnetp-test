@@ -1,7 +1,7 @@
 <h1>Dashboard</h1>
 <main class="dashboard">
   <!-- Service Status -->
-  <aside class="dashboard__card" aria-label="Service Status">
+  <!-- <aside class="dashboard__card" aria-label="Service Status">
     <h4 class="dashboard__heading">Service Status</h4>
     <div *ngFor="let service of status" class="status-item">
       <span>
@@ -9,20 +9,51 @@
       </span>
       <div class="status-light" [ngClass]="service.status"></div>
     </div>
-  </aside>
+  </aside> -->
 
   <!-- Overall Environment -->
   <aside class="dashboard__card" aria-label="Overall Environment">
-    <h4 class="dashboard__heading">Overall Environment</h4>
+    <h4 class="dashboard__heading">Provider Admin & Messages</h4>
     <ul class="dash-card">
       <li>
         <a routerLink="/adminportal/global-messages" queryParamsHandling="merge">
           <span> Global Messages </span>
-          <span class="inline-block ml-auto">
-            {{ globalMessages || 0 }}
-          </span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/adminportal/firewall-rule-group" queryParamsHandling="merge">
+          <span> Firewall Rule Groups </span>
+          <span class="inline-block ml-auto"> </span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/adminportal/nat-rule-group" queryParamsHandling="merge">
+          <span> Nat Rule Groups </span>
+          <span class="inline-block ml-auto"> </span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/adminportal/rule-group-zones" queryParamsHandling="merge">
+          <span> Zones </span>
+          <span class="inline-block ml-auto"> </span>
         </a>
       </li>
     </ul>
+  </aside>
+
+  <aside style="justify-items: center" class="dashboard__card" aria-label="Overall Environment">
+    <div style="justify-items: center" class="form-group">
+      <h4 class="dashboard__heading">Switch Tenants</h4>
+      <select id="tenant" name="tenant" class="form-control" aria-label="Tenant" #tenant="ngModel" [(ngModel)]="selectedTenant" required>
+        <option></option>
+        <option *ngFor="let availableTenant of availableTenants" [ngValue]="availableTenant">
+          {{ availableTenant.tenantFullName }}
+        </option>
+      </select>
+    </div>
+    <button class="btn btn-primary btn-lg" (click)="setTenant(selectedTenant)">Select Account</button>
   </aside>
 </main>
