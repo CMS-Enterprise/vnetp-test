@@ -7,6 +7,7 @@ export default class ObjectUtil {
     return object ? object.name : defaultName;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static getObjectId(nameOrId: string, objects: Lookup[], defaultName = 'N/A'): string {
     if (!objects || objects.length === 0) {
       return null;
