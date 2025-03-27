@@ -168,7 +168,7 @@ export class SelectorModalComponent implements OnInit {
     if (this.navIndex === this.tabs.findIndex(t => t.name === tab.name)) {
       return;
     }
-    this.ngx.resetModalData('selectorModal');
+    this.form.reset();
     this.navIndex = this.tabs.findIndex(t => t.name === tab.name);
     this.setFormValidators();
   }
