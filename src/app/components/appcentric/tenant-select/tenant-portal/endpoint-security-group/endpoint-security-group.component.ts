@@ -249,7 +249,7 @@ export class EndpointSecurityGroupComponent implements OnInit {
       }
       if (key === 'vrfName') {
         obj[key] = ObjectUtil.getObjectId(val as string, this.vrfs.data);
-        obj.bridgeDomainId = obj[key];
+        obj.vrfId = obj[key];
         delete obj[key];
       }
     });
