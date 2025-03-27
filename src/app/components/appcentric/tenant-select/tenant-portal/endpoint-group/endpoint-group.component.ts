@@ -130,7 +130,8 @@ export class EndpointGroupComponent implements OnInit {
     if (endpointGroup.deletedAt) {
       const modalDto = new YesNoModalDto(
         'Delete Endpoint Group',
-        `Are you sure you want to permanently delete this endpoint group ${endpointGroup.name} AND ANY SELECTORS THAT THIS EPG IS ASSOCIATED WITH? `,
+        `Are you sure you want to permanently delete this endpoint group ${endpointGroup.name} 
+        AND ANY SELECTORS THAT THIS EPG IS ASSOCIATED WITH? `,
       );
       const onConfirm = () => {
         this.endpointGroupService.cascadeDeleteTierEndpointGroup({ endpointGroupId: endpointGroup.id }).subscribe(() => {

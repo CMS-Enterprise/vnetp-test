@@ -23,9 +23,6 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { Subscription } from 'rxjs';
 import { SelectorModalDto } from 'src/app/models/appcentric/appcentric-selector-modal-dto';
 import { EntityService } from 'src/app/services/entity.service';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
-import ObjectUtil from 'src/app/utils/ObjectUtil';
-import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 const tabs = [{ name: 'Endpoint Security Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }];
 
@@ -361,7 +358,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   }
 
   public restoreSelector(selector): void {
-    this.selectorService.restoreOneSelector({ id: selector.id }).subscribe(data => {
+    this.selectorService.restoreOneSelector({ id: selector.id }).subscribe(() => {
       const epgToUpdate = this.endpointGroups.find(epg => epg.name === selector.endpointGroupName);
       this.retrieveAndUpdateEndpointGroup(epgToUpdate.id, true);
       return this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
