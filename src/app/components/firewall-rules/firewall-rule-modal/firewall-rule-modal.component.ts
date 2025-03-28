@@ -70,8 +70,11 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   save() {
     this.submitted = true;
+    if (Number.isNaN(this.form.controls.ruleIndex.value)) {
+      this.form.controls.ruleIndex.setValue(null);
+    }
     if (this.form.invalid) {
-      console.log('form invalid');
+      console.log('this.form', this.form);
       console.log(new FormUtils().findInvalidControlsRecursive(this.form));
       return;
     }
@@ -429,8 +432,8 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       serviceObject: [''],
       serviceObjectGroup: [''],
 
-      logging: [false],
-      enabled: [true],
+      logging: [false, Validators.required],
+      enabled: [true, Validators.required],
     });
   }
 

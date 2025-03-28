@@ -23,6 +23,7 @@ export interface Vlan {
     name: string;
     description?: string;
     vlanNumber: number;
+    hostBasedRouting?: boolean;
     vcdVlanType?: VlanVcdVlanTypeEnum;
     tierId: string;
     readonly aciRuntimes?: AciRuntime;
