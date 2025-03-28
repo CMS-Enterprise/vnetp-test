@@ -2,7 +2,7 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { IsIpV4NoSubnetValidator, ValidatePortRange } from 'src/app/validators/network-form-validators';
+import { IsIpV4NoSubnetValidator, ValidatePortRange, ValidatePortNumber } from 'src/app/validators/network-form-validators';
 import { Netmask } from 'netmask';
 import { NatRule, NetworkObject, NetworkObjectGroup } from '../../../../../client';
 import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';
@@ -154,6 +154,11 @@ export class NatRulePacketTracerComponent implements OnInit {
     // Check if ruleNetworkObject is an IP/Subnet
     if (ruleNetworkObject.type === 'IpAddress') {
       const ruleSourceIp = ruleNetworkObject.ipAddress;
+      // if rule IP value is quad 0's, that will match every IP address
+      if (ruleSourceIp === '0.0.0.0/0') {
+        // so return true
+        return true;
+      }
       try {
         const block = new Netmask(ruleSourceIp);
         if (block.contains(formIpValue)) {
@@ -201,6 +206,11 @@ export class NatRulePacketTracerComponent implements OnInit {
     return networkObjectMembers.some(sourceMember => {
       if (sourceMember.type === 'IpAddress') {
         const sourceMemberIp = sourceMember.ipAddress;
+        // if rule IP value is quad 0's, that will match every IP address
+        if (sourceMemberIp === '0.0.0.0/0') {
+          // so return true
+          return true;
+        }
         try {
           const block = new Netmask(sourceMemberIp);
           if (block.contains(formIpValue)) {
@@ -249,8 +259,20 @@ export class NatRulePacketTracerComponent implements OnInit {
       return false;
     }
 
+    // a form port value of "any" matches all port values
+    if (formPortValue === 'any') {
+      // so return true
+      return true;
+    }
+
     // Determine which port value to use based on the location parameter
     const serviceObjectPortValue = location === 'source' ? serviceObject.sourcePorts : serviceObject.destinationPorts;
+
+    // a service object port value of "any" matches all port values
+    if (serviceObjectPortValue === 'any') {
+      // so return true
+      return true;
+    }
 
     // Check if form port value falls within range of rule port value
     if (serviceObjectPortValue.includes('-')) {
@@ -324,13 +346,13 @@ export class NatRulePacketTracerComponent implements OnInit {
 
       originalSourceIp: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
       originalDestinationIp: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
-      originalSourcePort: ['', ValidatePortRange],
-      originalDestinationPort: ['', ValidatePortRange],
+      originalSourcePort: ['', ValidatePortNumber],
+      originalDestinationPort: ['', ValidatePortNumber],
 
       translatedSourceIp: ['', IsIpV4NoSubnetValidator],
       translatedDestinationIp: ['', IsIpV4NoSubnetValidator],
-      translatedSourcePort: ['', ValidatePortRange],
-      translatedDestinationPort: ['', ValidatePortRange],
+      translatedSourcePort: ['', ValidatePortNumber],
+      translatedDestinationPort: ['', ValidatePortNumber],
     });
   }
 

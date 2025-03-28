@@ -245,6 +245,7 @@ describe('BridgeDomainModalComponent', () => {
       description: 'description!',
       l3OutForRouteProfileId: 'uuid123',
       routeProfileId: 'route-profile123',
+      hostBasedRouting: false,
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
@@ -272,6 +273,7 @@ describe('BridgeDomainModalComponent', () => {
       description: 'description!',
       l3OutForRouteProfileId: 'uuid123',
       routeProfileId: 'route-profile123',
+      hostBasedRouting: false,
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));

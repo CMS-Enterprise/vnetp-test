@@ -58,7 +58,7 @@ export class BridgeDomainComponent implements OnInit {
       { name: 'Arp Flooding', property: 'arpFlooding' },
       { name: 'Mac Address', property: 'bdMacAddress' },
       { name: 'Limit Local IP Learning', property: 'limitLocalIpLearning' },
-      { name: 'Move Detection Mode Garp', property: 'epMoveDetectionModeGarp' },
+      { name: 'Host Based Routing', property: 'hostBasedRouting' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
