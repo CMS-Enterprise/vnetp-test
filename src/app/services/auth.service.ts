@@ -16,8 +16,10 @@ export class AuthService {
   public currentTenant: Observable<string> = this.currentTenantSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const tenantQueryParam = JSON.parse(localStorage.getItem('tenantQueryParam'));
+    const userStr = localStorage.getItem('user');
+    const user = userStr ? JSON.parse(userStr) : null;
+    const tenantQueryParamStr = localStorage.getItem('tenantQueryParam');
+    const tenantQueryParam = tenantQueryParamStr ? JSON.parse(tenantQueryParamStr) : null;
 
     if (user && tenantQueryParam) {
       // Since we aren't storing the tenant in local storage,

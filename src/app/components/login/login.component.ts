@@ -144,6 +144,11 @@ export class LoginComponent implements OnInit {
   }
 
   setTenantAndNavigate(tenant, mode) {
+    if (!tenant || !tenant.tenantQueryParameter) {
+      this.toastr.error('Invalid tenant configuration');
+      return;
+    }
+
     const { tenantQueryParameter } = tenant;
     mode = mode.toLowerCase();
     this.toastr.success(`Welcome ${this.userpass.username}!`);
@@ -174,11 +179,12 @@ export class LoginComponent implements OnInit {
   }
 
   navToAdminPortal(tenant) {
-    if (!this.selectedTenant) {
-      return false;
+    if (!tenant || !tenant.tenantQueryParameter) {
+      this.toastr.error('Invalid tenant configuration');
+      return;
     }
-    const { tenantQueryParameter } = tenant;
 
+    const { tenantQueryParameter } = tenant;
     this.authService.currentTenantValue = tenantQueryParameter;
     localStorage.setItem('tenantQueryParam', JSON.stringify(tenantQueryParameter));
 
