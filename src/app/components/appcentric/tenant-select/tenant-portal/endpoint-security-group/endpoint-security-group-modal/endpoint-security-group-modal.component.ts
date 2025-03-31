@@ -23,6 +23,8 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { Subscription } from 'rxjs';
 import { SelectorModalDto } from 'src/app/models/appcentric/appcentric-selector-modal-dto';
 import { EntityService } from 'src/app/services/entity.service';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 const tabs = [{ name: 'Endpoint Security Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }];
 
@@ -386,4 +388,65 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       return this.endpointGroupService.updateOneEndpointGroup({ id: epg.id, endpointGroup: epg }).subscribe();
     });
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public importSelectors(event): void {
+    const modalDto = new YesNoModalDto(
+      'Import Selectors',
+      `Are you sure you would like to import ${event.length} Selector${event.length > 1 ? 's' : ''}?`,
+    );
+
+    const onConfirm = () => {
+      const dto = this.sanitizeSelectorData(event);
+      this.selectorService.createManySelector({ createManySelectorDto: { bulk: dto } }).subscribe(
+        () => {},
+        () => {},
+        () => {
+          this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
+        },
+      );
+    };
+    const onClose = () => {
+      this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
+
+  sanitizeSelectorData(entities: any) {
+    return entities.map(entity => {
+      this.mapSelectorToCsv(entity);
+      return entity;
+    });
+  }
+
+  mapSelectorToCsv = obj => {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (val === 'false' || val === 'f') {
+        obj[key] = false;
+      }
+      if (val === 'true' || val === 't') {
+        obj[key] = true;
+      }
+      if (val === null || val === '') {
+        delete obj[key];
+      }
+      if (key === 'EPGName') {
+        if (val !== '') {
+          obj.endpointGroupName = val;
+        }
+        delete obj[key];
+      }
+      if (key === 'endpointSecurityGroupName') {
+        obj[key] = this.endpointSecurityGroupId;
+        obj.endpointSecurityGroupId = obj[key];
+        delete obj[key];
+      }
+      if (key === 'tenantName') {
+        obj.tenantId = this.tenantId;
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
 }

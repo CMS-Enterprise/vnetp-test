@@ -9,7 +9,12 @@ import {
   V2AppCentricContractsService,
   V2AppCentricEndpointSecurityGroupsService,
 } from '../../../../../../../../client';
-import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent } from '../../../../../../../test/mock-components';
+import {
+  MockComponent,
+  MockFontAwesomeComponent,
+  MockImportExportComponent,
+  MockNgxSmartModalComponent,
+} from '../../../../../../../test/mock-components';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -31,6 +36,7 @@ describe('EndpointSecurityGroupModalComponent', () => {
         EndpointSecurityGroupModalComponent,
         MockNgxSmartModalComponent,
         MockFontAwesomeComponent,
+        MockImportExportComponent,
       ],
       providers: [
         MockProvider(NgxSmartModalService),
