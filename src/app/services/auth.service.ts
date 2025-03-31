@@ -15,11 +15,21 @@ export class AuthService {
   private currentTenantSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
   public currentTenant: Observable<string> = this.currentTenantSubject.asObservable();
 
+  private getFromLocalStorage<T>(key: string): T | null {
+    const item = localStorage.getItem(key);
+    if (!item) {
+      return null;
+    }
+    try {
+      return JSON.parse(item);
+    } catch {
+      return null;
+    }
+  }
+
   constructor(private http: HttpClient) {
-    const userStr = localStorage.getItem('user');
-    const user = userStr ? JSON.parse(userStr) : null;
-    const tenantQueryParamStr = localStorage.getItem('tenantQueryParam');
-    const tenantQueryParam = tenantQueryParamStr ? JSON.parse(tenantQueryParamStr) : null;
+    const user = this.getFromLocalStorage<UserDto>('user');
+    const tenantQueryParam = this.getFromLocalStorage<string>('tenantQueryParam');
 
     if (user && tenantQueryParam) {
       // Since we aren't storing the tenant in local storage,
