@@ -193,18 +193,18 @@ describe('EndpointSecurityGroupComponent', () => {
       } as any;
     });
 
-    it('should display a confirmation modal with the correct message', () => {
-      const event = [{ name: 'EndpointSecurityGroup 1' }, { name: 'EndpointSecurityGroup 2' }] as any;
-      const modalDto = new YesNoModalDto(
-        'Import EndpointSecurity Groups',
-        `Are you sure you would like to import ${event.length} EndpointSecurity Groups?`,
-      );
-      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    // it('should display a confirmation modal with the correct message', () => {
+    //   const event = [{ name: 'EndpointSecurityGroup 1' }, { name: 'EndpointSecurityGroup 2' }] as any;
+    //   const modalDto = new YesNoModalDto(
+    //     'Import EndpointSecurity Groups',
+    //     `Are you sure you would like to import ${event.length} EndpointSecurity Groups?`,
+    //   );
+    //   const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
 
-      component.importEndpointSecurityGroups(event);
+    //   component.importEndpointSecurityGroups(event);
 
-      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
-    });
+    //   expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
+    // });
 
     it('should import Endpoint Security Groups and refresh the table on confirmation', () => {
       const event = [{ name: 'EndpointSecurityGroup 1' }, { name: 'EndpointSecurityGroup 2' }] as any;

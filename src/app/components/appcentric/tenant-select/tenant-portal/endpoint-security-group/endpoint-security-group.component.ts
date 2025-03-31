@@ -259,8 +259,8 @@ export class EndpointSecurityGroupComponent implements OnInit {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public importEndpointSecurityGroups(event): void {
     const modalDto = new YesNoModalDto(
-      'Import EndpointSecurity Groups',
-      `Are you sure you would like to import ${event.length} EndpointSecurity Group${event.length > 1 ? 's' : ''}?`,
+      'Import EndpointSecurity Groups OR Selectors?',
+      `Select Yes For EndpointSecurity Groups, Select No for Selectors`,
     );
 
     const onConfirm = () => {
@@ -274,7 +274,14 @@ export class EndpointSecurityGroupComponent implements OnInit {
       );
     };
     const onClose = () => {
-      this.getEndpointSecurityGroups();
+      const dto = this.sanitizeSelectorData(event);
+      this.selectorService.createManySelector({ createManySelectorDto: { bulk: dto } }).subscribe(
+        () => {},
+        () => {},
+        () => {
+          this.getEndpointSecurityGroups();
+        },
+      );
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
