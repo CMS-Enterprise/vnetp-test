@@ -9,7 +9,6 @@ import {
   GetManyVrfResponseDto,
   GetManyApplicationProfileResponseDto,
   V2AppCentricEndpointGroupsService,
-  V2AppCentricSelectorsService,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -71,9 +70,8 @@ export class EndpointSecurityGroupComponent implements OnInit {
     private router: Router,
     private applicationProfileService: V2AppCentricApplicationProfilesService,
     private vrfService: V2AppCentricVrfsService,
-    private endpointGroupService: V2AppCentricEndpointGroupsService,
-  ) // private selectorService: V2AppCentricSelectorsService,
-  {
+    private endpointGroupService: V2AppCentricEndpointGroupsService, // private selectorService: V2AppCentricSelectorsService,
+  ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<EndpointSecurityGroup>();
     advancedSearchAdapter.setService(this.endpointSecurityGroupService);
     advancedSearchAdapter.setServiceName('V2AppCentricEndpointSecurityGroupsService');
