@@ -72,8 +72,8 @@ export class EndpointSecurityGroupComponent implements OnInit {
     private applicationProfileService: V2AppCentricApplicationProfilesService,
     private vrfService: V2AppCentricVrfsService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
-    private selectorService: V2AppCentricSelectorsService,
-  ) {
+  ) // private selectorService: V2AppCentricSelectorsService,
+  {
     const advancedSearchAdapter = new AdvancedSearchAdapter<EndpointSecurityGroup>();
     advancedSearchAdapter.setService(this.endpointSecurityGroupService);
     advancedSearchAdapter.setServiceName('V2AppCentricEndpointSecurityGroupsService');
@@ -92,7 +92,7 @@ export class EndpointSecurityGroupComponent implements OnInit {
     this.getEndpointSecurityGroups();
     this.getApplicationProfiles();
     this.getVrfs();
-    this.getEndpointGroups();
+    // this.getEndpointGroups();
   }
 
   public getEndpointSecurityGroups(event?): void {
@@ -259,8 +259,8 @@ export class EndpointSecurityGroupComponent implements OnInit {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public importEndpointSecurityGroups(event): void {
     const modalDto = new YesNoModalDto(
-      'Import EndpointSecurity Groups OR Selectors?',
-      `Select Yes For EndpointSecurity Groups, Select No for Selectors`,
+      'Import EndpointSecurity Groups',
+      `Are you sure you would like to import ${event.length} EndpointSecurity Group${event.length > 1 ? 's' : ''}?`,
     );
 
     const onConfirm = () => {
@@ -274,14 +274,7 @@ export class EndpointSecurityGroupComponent implements OnInit {
       );
     };
     const onClose = () => {
-      const dto = this.sanitizeSelectorData(event);
-      this.selectorService.createManySelector({ createManySelectorDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
-          this.getEndpointSecurityGroups();
-        },
-      );
+      this.getEndpointSecurityGroups();
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
@@ -328,96 +321,96 @@ export class EndpointSecurityGroupComponent implements OnInit {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public importSelectors(event): void {
-    const modalDto = new YesNoModalDto(
-      'Import Selectors',
-      `Are you sure you would like to import ${event.length} Selector${event.length > 1 ? 's' : ''}?`,
-    );
+  // public importSelectors(event): void {
+  //   const modalDto = new YesNoModalDto(
+  //     'Import Selectors',
+  //     `Are you sure you would like to import ${event.length} Selector${event.length > 1 ? 's' : ''}?`,
+  //   );
 
-    const onConfirm = () => {
-      const dto = this.sanitizeSelectorData(event);
-      this.selectorService.createManySelector({ createManySelectorDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
-          this.getEndpointSecurityGroups();
-        },
-      );
-    };
-    const onClose = () => {
-      this.getEndpointSecurityGroups();
-    };
+  //   const onConfirm = () => {
+  //     const dto = this.sanitizeSelectorData(event);
+  //     this.selectorService.createManySelector({ createManySelectorDto: { bulk: dto } }).subscribe(
+  //       () => {},
+  //       () => {},
+  //       () => {
+  //         this.getEndpointSecurityGroups();
+  //       },
+  //     );
+  //   };
+  //   const onClose = () => {
+  //     this.getEndpointSecurityGroups();
+  //   };
 
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
-  }
+  //   SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  // }
 
-  sanitizeSelectorData(entities: any) {
-    return entities.map(entity => {
-      this.mapSelectorToCsv(entity);
-      return entity;
-    });
-  }
+  // sanitizeSelectorData(entities: any) {
+  //   return entities.map(entity => {
+  //     this.mapSelectorToCsv(entity);
+  //     return entity;
+  //   });
+  // }
 
-  mapSelectorToCsv = obj => {
-    Object.entries(obj).forEach(([key, val]) => {
-      if (val === 'false' || val === 'f') {
-        obj[key] = false;
-      }
-      if (val === 'true' || val === 't') {
-        obj[key] = true;
-      }
-      if (val === null || val === '') {
-        delete obj[key];
-      }
-      if (key === 'EPGName') {
-        if (val !== '') {
-          obj.endpointGroupName = val;
-        }
-        delete obj[key];
-      }
-      if (key === 'endpointSecurityGroupName') {
-        obj[key] = ObjectUtil.getObjectId(val as string, this.endpointSecurityGroups.data);
-        obj.endpointSecurityGroupId = obj[key];
-        delete obj[key];
-      }
-      if (key === 'tenantName') {
-        obj.tenantId = this.tenantId;
-        delete obj[key];
-      }
-    });
-    return obj;
-  };
+  // mapSelectorToCsv = obj => {
+  //   Object.entries(obj).forEach(([key, val]) => {
+  //     if (val === 'false' || val === 'f') {
+  //       obj[key] = false;
+  //     }
+  //     if (val === 'true' || val === 't') {
+  //       obj[key] = true;
+  //     }
+  //     if (val === null || val === '') {
+  //       delete obj[key];
+  //     }
+  //     if (key === 'EPGName') {
+  //       if (val !== '') {
+  //         obj.endpointGroupName = val;
+  //       }
+  //       delete obj[key];
+  //     }
+  //     if (key === 'endpointSecurityGroupName') {
+  //       obj[key] = ObjectUtil.getObjectId(val as string, this.endpointSecurityGroups.data);
+  //       obj.endpointSecurityGroupId = obj[key];
+  //       delete obj[key];
+  //     }
+  //     if (key === 'tenantName') {
+  //       obj.tenantId = this.tenantId;
+  //       delete obj[key];
+  //     }
+  //   });
+  //   return obj;
+  // };
 
-  public getEndpointGroups(event?): void {
-    this.isLoading = true;
-    let eventParams;
-    if (event) {
-      this.tableComponentDto.page = event.page ? event.page : 1;
-      this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
-      const { searchText } = event;
-      const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName === 'intraEpgIsolation' || propertyName === 'esgMatched') {
-        eventParams = `${propertyName}||eq||${searchText}`;
-      } else if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
-      }
-    }
-    this.endpointGroupService
-      .getManyEndpointGroup({
-        filter: [`tenantId||eq||${this.tenantId}`, eventParams],
-        page: this.tableComponentDto.page,
-        perPage: this.tableComponentDto.perPage,
-      })
-      .subscribe(
-        data => {
-          this.endpointGroups = data;
-        },
-        () => {
-          this.endpointGroups = null;
-        },
-        () => {
-          this.isLoading = false;
-        },
-      );
-  }
+  // public getEndpointGroups(event?): void {
+  //   this.isLoading = true;
+  //   let eventParams;
+  //   if (event) {
+  //     this.tableComponentDto.page = event.page ? event.page : 1;
+  //     this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
+  //     const { searchText } = event;
+  //     const propertyName = event.searchColumn ? event.searchColumn : null;
+  //     if (propertyName === 'intraEpgIsolation' || propertyName === 'esgMatched') {
+  //       eventParams = `${propertyName}||eq||${searchText}`;
+  //     } else if (propertyName) {
+  //       eventParams = `${propertyName}||cont||${searchText}`;
+  //     }
+  //   }
+  //   this.endpointGroupService
+  //     .getManyEndpointGroup({
+  //       filter: [`tenantId||eq||${this.tenantId}`, eventParams],
+  //       page: this.tableComponentDto.page,
+  //       perPage: this.tableComponentDto.perPage,
+  //     })
+  //     .subscribe(
+  //       data => {
+  //         this.endpointGroups = data;
+  //       },
+  //       () => {
+  //         this.endpointGroups = null;
+  //       },
+  //       () => {
+  //         this.isLoading = false;
+  //       },
+  //     );
+  // }
 }

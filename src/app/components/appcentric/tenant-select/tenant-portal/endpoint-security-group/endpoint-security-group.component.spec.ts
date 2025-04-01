@@ -193,18 +193,18 @@ describe('EndpointSecurityGroupComponent', () => {
       } as any;
     });
 
-    // it('should display a confirmation modal with the correct message', () => {
-    //   const event = [{ name: 'EndpointSecurityGroup 1' }, { name: 'EndpointSecurityGroup 2' }] as any;
-    //   const modalDto = new YesNoModalDto(
-    //     'Import EndpointSecurity Groups',
-    //     `Are you sure you would like to import ${event.length} EndpointSecurity Groups?`,
-    //   );
-    //   const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    it('should display a confirmation modal with the correct message', () => {
+      const event = [{ name: 'EndpointSecurityGroup 1' }, { name: 'EndpointSecurityGroup 2' }] as any;
+      const modalDto = new YesNoModalDto(
+        'Import EndpointSecurity Groups',
+        `Are you sure you would like to import ${event.length} EndpointSecurity Groups?`,
+      );
+      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
 
-    //   component.importEndpointSecurityGroups(event);
+      component.importEndpointSecurityGroups(event);
 
-    //   expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
-    // });
+      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
+    });
 
     it('should import Endpoint Security Groups and refresh the table on confirmation', () => {
       const event = [{ name: 'EndpointSecurityGroup 1' }, { name: 'EndpointSecurityGroup 2' }] as any;
@@ -235,36 +235,36 @@ describe('EndpointSecurityGroupComponent', () => {
       expect(component.getEndpointSecurityGroups).toHaveBeenCalled();
     });
 
-    it('should import Selectors and refresh the table on confirmation', () => {
-      const event = [
-        { selectorType: 'IpSubnet', IpSubnet: '192.168.0.0/24' },
-        { selectorType: 'EPG', endpointGroupName: 'epg1' },
-      ] as any;
+    // it('should import Selectors and refresh the table on confirmation', () => {
+    //   const event = [
+    //     { selectorType: 'IpSubnet', IpSubnet: '192.168.0.0/24' },
+    //     { selectorType: 'EPG', endpointGroupName: 'epg1' },
+    //   ] as any;
 
-      // spy functions
-      jest.spyOn(component, 'getEndpointSecurityGroups');
-      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm) => {
-        onConfirm();
+    //   // spy functions
+    //   jest.spyOn(component, 'getEndpointSecurityGroups');
+    //   jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm) => {
+    //     onConfirm();
 
-        expect(component['selectorService'].createManySelector).toHaveBeenCalledWith({
-          createManySelectorDto: { bulk: component.sanitizeSelectorData(event) },
-        });
+    //     expect(component['selectorService'].createManySelector).toHaveBeenCalledWith({
+    //       createManySelectorDto: { bulk: component.sanitizeSelectorData(event) },
+    //     });
 
-        mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
-          const data = modal.getData() as YesNoModalDto;
-          modal.removeData();
-          if (data && data.modalYes) {
-            onConfirm();
-          }
-        });
+    //     mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+    //       const data = modal.getData() as YesNoModalDto;
+    //       modal.removeData();
+    //       if (data && data.modalYes) {
+    //         onConfirm();
+    //       }
+    //     });
 
-        return new Subscription();
-      });
+    //     return new Subscription();
+    //   });
 
-      component.importSelectors(event);
+    //   component.importSelectors(event);
 
-      // expectations
-      expect(component.getEndpointSecurityGroups).toHaveBeenCalled();
-    });
+    //   // expectations
+    //   expect(component.getEndpointSecurityGroups).toHaveBeenCalled();
+    // });
   });
 });

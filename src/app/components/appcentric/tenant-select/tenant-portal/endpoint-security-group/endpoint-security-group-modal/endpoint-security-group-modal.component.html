@@ -174,10 +174,11 @@
         </button>
       </footer>
     </form>
-    <section class="btn-toolbar" role="toolbar">
-      <app-import-export exportFileName="selectors" [disableJson]="false" (import)="importSelectors($event)"></app-import-export>
-    </section>
   </div>
+
+  <section role="toolbar">
+    <app-import-export exportFileName="selectors" [disableJson]="false" (import)="importSelectors($event)"></app-import-export>
+  </section>
 </ngx-smart-modal>
 
 <ng-template #actionsTemplate let-selector="datum">
