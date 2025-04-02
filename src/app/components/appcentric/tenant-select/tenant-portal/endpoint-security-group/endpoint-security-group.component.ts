@@ -135,7 +135,7 @@ export class EndpointSecurityGroupComponent implements OnInit {
       );
       const onConfirm = () => {
         this.endpointSecurityGroupService
-          .cascadeDeleteTierEndpointSecurityGroup({ endpointSecurityGroupId: endpointsecurityGroup.id })
+          .cascadeDeleteEsgEndpointSecurityGroup({ endpointSecurityGroupId: endpointsecurityGroup.id })
           .subscribe(() => {
             const params = this.tableContextService.getSearchLocalStorage();
             const { filteredResults } = params;

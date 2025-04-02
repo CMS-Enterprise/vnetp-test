@@ -104,7 +104,7 @@ describe('ConsumedContractsComponent', () => {
       jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
         onConfirm();
 
-        expect(component['endpointGroupsService'].addConsumedContractToEndpointGroupEndpointGroup).toHaveBeenCalledTimes(2);
+        expect(component['endpointGroupsService'].addManyConsumedContractsToEndpointGroupEndpointGroup).toHaveBeenCalledTimes(1);
 
         mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
           const data = modal.getData() as YesNoModalDto;

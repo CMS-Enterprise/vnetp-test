@@ -17751,6 +17751,41 @@
         ]
       }
     },
+    "/v2/app-centric/endpoint-groups/{endpointGroupId}/consumed-contracts": {
+      "post": {
+        "operationId": "addManyConsumedContractsToEndpointGroupEndpointGroup",
+        "summary": "",
+        "description": "Add Many Consumed Contract to Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointGroupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
     "/v2/app-centric/endpoint-groups/{endpointGroupId}/provided-contracts/{contractId}": {
       "post": {
         "operationId": "addProvidedContractToEndpointGroupEndpointGroup",
@@ -17826,6 +17861,41 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/{endpointGroupId}/provided-contracts": {
+      "post": {
+        "operationId": "addManyProvidedContractsToEndpointGroupEndpointGroup",
+        "summary": "",
+        "description": "Add Many Provided Contract to Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointGroupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
           }
         },
         "tags": [
@@ -19233,7 +19303,7 @@
     },
     "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/cascadeDelete": {
       "delete": {
-        "operationId": "cascadeDeleteTierEndpointSecurityGroup",
+        "operationId": "cascadeDeleteEsgEndpointSecurityGroup",
         "summary": "",
         "description": "Cascade Delete ESG",
         "parameters": [
@@ -19331,6 +19401,41 @@
         ]
       }
     },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/consumed-contracts": {
+      "post": {
+        "operationId": "addManyConsumedContractsToEndpointGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Many Consumed Contract to Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
     "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/provided-contracts/{contractId}": {
       "post": {
         "operationId": "addProvidedContractToEndpointSecurityGroupEndpointSecurityGroup",
@@ -19406,6 +19511,41 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/provided-contracts": {
+      "post": {
+        "operationId": "addManyProvidedContractsToEndpointGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Many Provided Contract to Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
           }
         },
         "tags": [
@@ -23816,6 +23956,10 @@
             "type": "boolean",
             "description": "ARP Flooding enabled, default: true."
           },
+          "hostBasedRouting": {
+            "type": "boolean",
+            "description": "Host Based Routing enabled, default: false."
+          },
           "bdMacAddress": {
             "type": "string",
             "description": "Bridge Domain MAC address, default: null."
@@ -23897,6 +24041,7 @@
         "required": [
           "unicastRouting",
           "arpFlooding",
+          "hostBasedRouting",
           "bdMacAddress",
           "limitLocalIpLearning",
           "epMoveDetectionModeGarp",
@@ -24990,6 +25135,9 @@
             "type": "number",
             "minimum": 1,
             "maximum": 4094
+          },
+          "hostBasedRouting": {
+            "type": "boolean"
           },
           "vcdVlanType": {
             "type": "string",

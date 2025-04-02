@@ -87,7 +87,7 @@ describe('EndpointSecurityGroupComponent', () => {
       const endpointSecurityGroup = { id: '1', deletedAt: true } as any;
 
       // spy functions
-      jest.spyOn(component['endpointSecurityGroupService'], 'cascadeDeleteTierEndpointSecurityGroup').mockReturnValue(of({} as any));
+      jest.spyOn(component['endpointSecurityGroupService'], 'cascadeDeleteEsgEndpointSecurityGroup').mockReturnValue(of({} as any));
       const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
       const getEsgsSpy = jest.spyOn(component['endpointSecurityGroupService'], 'getManyEndpointSecurityGroup');
       const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };

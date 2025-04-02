@@ -32,6 +32,16 @@ export interface AddConsumedContractToEndpointSecurityGroupEndpointSecurityGroup
     contractId: string;
 }
 
+export interface AddManyConsumedContractsToEndpointGroupEndpointSecurityGroupRequestParams {
+    endpointSecurityGroupId: string;
+    body: string;
+}
+
+export interface AddManyProvidedContractsToEndpointGroupEndpointSecurityGroupRequestParams {
+    endpointSecurityGroupId: string;
+    body: string;
+}
+
 export interface AddProvidedContractToEndpointSecurityGroupEndpointSecurityGroupRequestParams {
     /** EndpointSecurity Group that the Contract is being added to/removed from. */
     endpointSecurityGroupId: string;
@@ -39,7 +49,7 @@ export interface AddProvidedContractToEndpointSecurityGroupEndpointSecurityGroup
     contractId: string;
 }
 
-export interface CascadeDeleteTierEndpointSecurityGroupRequestParams {
+export interface CascadeDeleteEsgEndpointSecurityGroupRequestParams {
     endpointSecurityGroupId: string;
 }
 
@@ -240,6 +250,124 @@ export class V2AppCentricEndpointSecurityGroupsService {
     }
 
     /**
+     * Add Many Consumed Contract to Endpoint Security Group
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public addManyConsumedContractsToEndpointGroupEndpointSecurityGroup(requestParameters: AddManyConsumedContractsToEndpointGroupEndpointSecurityGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public addManyConsumedContractsToEndpointGroupEndpointSecurityGroup(requestParameters: AddManyConsumedContractsToEndpointGroupEndpointSecurityGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public addManyConsumedContractsToEndpointGroupEndpointSecurityGroup(requestParameters: AddManyConsumedContractsToEndpointGroupEndpointSecurityGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public addManyConsumedContractsToEndpointGroupEndpointSecurityGroup(requestParameters: AddManyConsumedContractsToEndpointGroupEndpointSecurityGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const endpointSecurityGroupId = requestParameters.endpointSecurityGroupId;
+        if (endpointSecurityGroupId === null || endpointSecurityGroupId === undefined) {
+            throw new Error('Required parameter endpointSecurityGroupId was null or undefined when calling addManyConsumedContractsToEndpointGroupEndpointSecurityGroup.');
+        }
+        const body = requestParameters.body;
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling addManyConsumedContractsToEndpointGroupEndpointSecurityGroup.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-security-groups/${encodeURIComponent(String(endpointSecurityGroupId))}/consumed-contracts`,
+            body,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Add Many Provided Contract to Endpoint Security Group
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public addManyProvidedContractsToEndpointGroupEndpointSecurityGroup(requestParameters: AddManyProvidedContractsToEndpointGroupEndpointSecurityGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public addManyProvidedContractsToEndpointGroupEndpointSecurityGroup(requestParameters: AddManyProvidedContractsToEndpointGroupEndpointSecurityGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public addManyProvidedContractsToEndpointGroupEndpointSecurityGroup(requestParameters: AddManyProvidedContractsToEndpointGroupEndpointSecurityGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public addManyProvidedContractsToEndpointGroupEndpointSecurityGroup(requestParameters: AddManyProvidedContractsToEndpointGroupEndpointSecurityGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const endpointSecurityGroupId = requestParameters.endpointSecurityGroupId;
+        if (endpointSecurityGroupId === null || endpointSecurityGroupId === undefined) {
+            throw new Error('Required parameter endpointSecurityGroupId was null or undefined when calling addManyProvidedContractsToEndpointGroupEndpointSecurityGroup.');
+        }
+        const body = requestParameters.body;
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling addManyProvidedContractsToEndpointGroupEndpointSecurityGroup.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-security-groups/${encodeURIComponent(String(endpointSecurityGroupId))}/provided-contracts`,
+            body,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Add Provided Contract to Endpoint Security Group
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -296,13 +424,13 @@ export class V2AppCentricEndpointSecurityGroupsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public cascadeDeleteTierEndpointSecurityGroup(requestParameters: CascadeDeleteTierEndpointSecurityGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public cascadeDeleteTierEndpointSecurityGroup(requestParameters: CascadeDeleteTierEndpointSecurityGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public cascadeDeleteTierEndpointSecurityGroup(requestParameters: CascadeDeleteTierEndpointSecurityGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public cascadeDeleteTierEndpointSecurityGroup(requestParameters: CascadeDeleteTierEndpointSecurityGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public cascadeDeleteEsgEndpointSecurityGroup(requestParameters: CascadeDeleteEsgEndpointSecurityGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public cascadeDeleteEsgEndpointSecurityGroup(requestParameters: CascadeDeleteEsgEndpointSecurityGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public cascadeDeleteEsgEndpointSecurityGroup(requestParameters: CascadeDeleteEsgEndpointSecurityGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public cascadeDeleteEsgEndpointSecurityGroup(requestParameters: CascadeDeleteEsgEndpointSecurityGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const endpointSecurityGroupId = requestParameters.endpointSecurityGroupId;
         if (endpointSecurityGroupId === null || endpointSecurityGroupId === undefined) {
-            throw new Error('Required parameter endpointSecurityGroupId was null or undefined when calling cascadeDeleteTierEndpointSecurityGroup.');
+            throw new Error('Required parameter endpointSecurityGroupId was null or undefined when calling cascadeDeleteEsgEndpointSecurityGroup.');
         }
 
         let headers = this.defaultHeaders;
