@@ -129,8 +129,8 @@ describe('ConsumedContractsComponent', () => {
         onConfirm();
 
         expect(
-          component['endpointSecurityGroupsService'].addConsumedContractToEndpointSecurityGroupEndpointSecurityGroup,
-        ).toHaveBeenCalledTimes(2);
+          component['endpointSecurityGroupsService'].addManyConsumedContractsToEndpointSecurityGroupEndpointSecurityGroup,
+        ).toHaveBeenCalledTimes(1);
 
         mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
           const data = modal.getData() as YesNoModalDto;
