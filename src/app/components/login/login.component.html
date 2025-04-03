@@ -65,13 +65,13 @@
           required
         />
 
-        <div class="form-group col-md-3">
-          <button id="getAccountsButton" *ngIf="!showTenantButton" class="btn btn-primary btn-lg" type="submit">Get Accounts</button>
-        </div>
-
         <div *ngIf="form.submitted && password.invalid" class="invalid-feedback">
           <div *ngIf="password.errors.required">Password is required</div>
         </div>
+      </div>
+
+      <div class="button-container">
+        <button id="getAccountsButton" *ngIf="!showTenantButton" class="btn btn-primary btn-lg" type="submit">Get Accounts</button>
       </div>
 
       <div *ngIf="errorMessage" class="alert alert-danger mt-3">

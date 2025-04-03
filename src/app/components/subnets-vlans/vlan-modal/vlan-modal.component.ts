@@ -54,6 +54,7 @@ export class VlanModalComponent implements OnInit {
       this.form.controls.vlanNumber.setValue(vlan.vlanNumber);
       this.form.controls.vlanNumber.disable();
       this.form.controls.vcdVlanType.setValue(vlan.vcdVlanType);
+      this.form.controls.hostBasedRouting.setValue(vlan.hostBasedRouting);
     }
     this.ngx.resetModalData('vlanModal');
   }
@@ -71,8 +72,8 @@ export class VlanModalComponent implements OnInit {
       return;
     }
 
-    const { name, description, vcdVlanType } = this.form.value;
-    const vlan = { name, description, vcdVlanType: vcdVlanType || null } as Vlan;
+    const { name, description, vcdVlanType, hostBasedRouting } = this.form.value;
+    const vlan = { name, description, hostBasedRouting, vcdVlanType: vcdVlanType || null } as Vlan;
 
     if (this.ModalMode === ModalMode.Create) {
       this.createVlan(vlan);
@@ -87,6 +88,7 @@ export class VlanModalComponent implements OnInit {
       description: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(500)])],
       vcdVlanType: [null],
       vlanNumber: ['', Validators.compose([Validators.required, Validators.min(1), Validators.max(4094)])],
+      hostBasedRouting: [false],
     });
   }
 

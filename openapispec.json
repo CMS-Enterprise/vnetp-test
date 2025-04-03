@@ -22707,7 +22707,11 @@
   ],
   "servers": [
     {
-      "url": "http://localhost/v1",
+      "url": "http://local
+      
+      
+      
+      /v1",
       "description": ""
     }
   ],

@@ -6,9 +6,12 @@
   text-align: left;
 }
 
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
 #getAccountsButton {
-  width: fit-content;
-  position: absolute;
-  left: 910px;
-  bottom: 0px;
+  margin: 0 auto;
 }

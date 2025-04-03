@@ -98,6 +98,7 @@ describe('VlanModalComponent', () => {
         description: 'Description',
         vlanNumber: null,
         vcdVlanType: '3',
+        hostBasedRouting: false,
       });
 
       clickSaveButton();
@@ -115,6 +116,7 @@ describe('VlanModalComponent', () => {
         description: 'Description',
         vlanNumber: 400,
         vcdVlanType: VlanVcdVlanTypeEnum.Dev,
+        hostBasedRouting: false,
       });
 
       clickSaveButton();
@@ -126,6 +128,7 @@ describe('VlanModalComponent', () => {
           description: 'Description',
           vlanNumber: 400,
           vcdVlanType: VlanVcdVlanTypeEnum.Dev,
+          hostBasedRouting: false,
         },
       });
     });
@@ -140,6 +143,7 @@ describe('VlanModalComponent', () => {
         description: 'Description stays',
         vlanNumber: 401,
         vcdVlanType: 'Dev',
+        hostBasedRouting: true,
       });
 
       clickSaveButton();
@@ -149,6 +153,7 @@ describe('VlanModalComponent', () => {
         vlan: {
           description: 'Description stays',
           vcdVlanType: 'Dev',
+          hostBasedRouting: true,
         },
       });
     });
