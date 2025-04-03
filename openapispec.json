@@ -19403,7 +19403,7 @@
     },
     "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/consumed-contracts": {
       "post": {
-        "operationId": "addManyConsumedContractsToEndpointGroupEndpointSecurityGroup",
+        "operationId": "addManyConsumedContractsToEndpointSecurityGroupEndpointSecurityGroup",
         "summary": "",
         "description": "Add Many Consumed Contract to Endpoint Security Group",
         "parameters": [
@@ -19520,7 +19520,7 @@
     },
     "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/provided-contracts": {
       "post": {
-        "operationId": "addManyProvidedContractsToEndpointGroupEndpointSecurityGroup",
+        "operationId": "addManyProvidedContractsToEndpointSecurityGroupEndpointSecurityGroup",
         "summary": "",
         "description": "Add Many Provided Contract to Endpoint Security Group",
         "parameters": [

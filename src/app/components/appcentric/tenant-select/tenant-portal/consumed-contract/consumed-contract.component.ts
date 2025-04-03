@@ -277,15 +277,18 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
 
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      dto.map(relation => {
-        this.endpointSecurityGroupsService.addConsumedContractToEndpointSecurityGroupEndpointSecurityGroup(relation).subscribe(
+      this.endpointSecurityGroupsService
+        .addManyConsumedContractsToEndpointSecurityGroupEndpointSecurityGroup({
+          endpointSecurityGroupId: `${this.endpointSecurityGroupId}`,
+          body: dto,
+        })
+        .subscribe(
           () => {},
           () => {},
           () => {
             this.getEsgConsumedContracts();
           },
         );
-      });
     };
 
     const onClose = () => {

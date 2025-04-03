@@ -276,15 +276,18 @@ export class ProvidedContractComponent implements OnInit, OnChanges {
 
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      dto.map(relation => {
-        this.endpointSecurityGroupService.addProvidedContractToEndpointSecurityGroupEndpointSecurityGroup(relation).subscribe(
+      this.endpointSecurityGroupService
+        .addManyProvidedContractsToEndpointSecurityGroupEndpointSecurityGroup({
+          endpointSecurityGroupId: `${this.endpointSecurityGroupId}`,
+          body: dto,
+        })
+        .subscribe(
           () => {},
           () => {},
           () => {
             this.getEsgProvidedContracts();
           },
         );
-      });
     };
     const onClose = () => {
       this.getEsgProvidedContracts();
