@@ -58,7 +58,7 @@
             id="direction"
             formControlName="direction"
             class="form-control"
-            [class.is-invalid]="submitted && f.action.errors"
+            [class.is-invalid]="submitted && f.direction.errors"
             aria-label="Direction"
           >
             <option></option>
@@ -117,7 +117,7 @@
             id="enabled"
             formControlName="enabled"
             class="form-control"
-            [class.is-invalid]="submitted && f.logging.errors"
+            [class.is-invalid]="submitted && f.enabled.errors"
             aria-label="Logging"
           >
             <option></option>

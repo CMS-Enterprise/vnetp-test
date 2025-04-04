@@ -38,6 +38,10 @@ export interface BridgeDomain {
      */
     arpFlooding: boolean;
     /**
+     * Host Based Routing enabled, default: false.
+     */
+    hostBasedRouting: boolean;
+    /**
      * Bridge Domain MAC address, default: null.
      */
     bdMacAddress: string;

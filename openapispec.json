@@ -22102,6 +22102,10 @@
             "type": "boolean",
             "description": "ARP Flooding enabled, default: true."
           },
+          "hostBasedRouting": {
+            "type": "boolean",
+            "description": "Host Based Routing enabled, default: false."
+          },
           "bdMacAddress": {
             "type": "string",
             "description": "Bridge Domain MAC address, default: null."
@@ -22183,6 +22187,7 @@
         "required": [
           "unicastRouting",
           "arpFlooding",
+          "hostBasedRouting",
           "bdMacAddress",
           "limitLocalIpLearning",
           "epMoveDetectionModeGarp",
@@ -23728,6 +23733,9 @@
             "type": "number",
             "minimum": 1,
             "maximum": 4094
+          },
+          "hostBasedRouting": {
+            "type": "boolean"
           },
           "vcdVlanType": {
             "type": "string",
