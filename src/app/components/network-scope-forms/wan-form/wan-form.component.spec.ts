@@ -215,7 +215,7 @@ describe('WanFormComponent', () => {
 
   describe('onTenantSelect', () => {
     it('should navigate to WAN form page with selected tenant', () => {
-      const tenantMock = { id: '1' };
+      const tenantMock = { id: '1', datacenterId: 'testDatacenterId' };
       const queryParams = { ...mockRoute.snapshot.queryParams, tenantId: tenantMock.id };
       component.onTenantSelect(tenantMock);
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/appcentric/wan-form'], { queryParams });

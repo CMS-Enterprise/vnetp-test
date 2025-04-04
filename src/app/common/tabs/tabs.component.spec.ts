@@ -93,7 +93,7 @@ describe('TabsComponent', () => {
     subTabs[1].nativeElement.click();
 
     // Verify the event was emitted with the correct sub-tab
-    expect(eventSpy).toHaveBeenCalledWith({ name: 'Child2' });
+    expect(eventSpy).toHaveBeenCalledWith({ name: 'Child2', isSubTab: true });
     expect(component.activeSubTab.name).toBe('Child2');
   });
 });

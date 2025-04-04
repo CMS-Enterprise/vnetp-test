@@ -42,7 +42,7 @@ describe('NetworkSummaryComponent', () => {
       .spyOn(component['tenantService'], 'getManyTenant')
       .mockReturnValue(of({ data: [{ name: 'test-name', description: 'test-description', id: 'test-id' }] } as any));
     component.getTenants();
-    expect(component.tableData).toEqual([{ name: 'test-name', description: 'test-description', id: 'test-id', type: 'Appcentric' }]);
+    expect(component.tableData).toEqual([{ name: 'test-name', description: 'test-description', id: 'test-id', type: 'TenantV2' }]);
   });
 
   it('should switch datacenter and route', () => {

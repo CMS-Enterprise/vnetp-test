@@ -50,7 +50,7 @@ describe('TenantSelectComponent', () => {
   });
 
   it('should delete tenant', () => {
-    const tenantToDelete = { id: '123', description: 'Bye!' };
+    const tenantToDelete = { id: '123', description: 'Bye!', datacenterId: 'testDatacenterId' };
     component.deleteTenant(tenantToDelete);
     const getTenantsMock = jest.spyOn(component['tenantService'], 'getManyTenant');
     expect(getTenantsMock).toHaveBeenCalled();
