@@ -259,7 +259,6 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     delete endpointSecurityGroup.tenantId;
     delete endpointSecurityGroup.applicationProfileId;
     delete endpointSecurityGroup.vrfId;
-    delete endpointSecurityGroup.adminState;
     this.endpointSecurityGroupService
       .updateOneEndpointSecurityGroup({
         id: this.endpointSecurityGroupId,

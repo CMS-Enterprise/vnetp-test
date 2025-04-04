@@ -65,7 +65,7 @@
             <option [ngValue]="false">Exclude</option>
           </select>
           <div *ngIf="submitted && f.preferredGroupMember.errors" class="invalid-feedback">
-            <div *ngIf="f.preferredGroupMember.errors.maxlength">Alias must be 100 characters or less.</div>
+            <div *ngIf="f.preferredGroupMember.errors.required">Preffered group member is required</div>
           </div>
         </div>
 
@@ -82,7 +82,7 @@
             <option value="AdminShut">Admin Shut</option>
           </select>
           <div *ngIf="submitted && f.adminState.errors" class="invalid-feedback">
-            <div *ngIf="f.adminState.errors.maxlength">Alias must be 100 characters or less.</div>
+            <div *ngIf="f.adminState.errors.required">Admin State is required</div>
           </div>
         </div>
 
