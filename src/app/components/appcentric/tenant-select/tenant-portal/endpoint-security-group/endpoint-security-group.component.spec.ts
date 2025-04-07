@@ -234,37 +234,5 @@ describe('EndpointSecurityGroupComponent', () => {
       // expectations
       expect(component.getEndpointSecurityGroups).toHaveBeenCalled();
     });
-
-    // it('should import Selectors and refresh the table on confirmation', () => {
-    //   const event = [
-    //     { selectorType: 'IpSubnet', IpSubnet: '192.168.0.0/24' },
-    //     { selectorType: 'EPG', endpointGroupName: 'epg1' },
-    //   ] as any;
-
-    //   // spy functions
-    //   jest.spyOn(component, 'getEndpointSecurityGroups');
-    //   jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm) => {
-    //     onConfirm();
-
-    //     expect(component['selectorService'].createManySelector).toHaveBeenCalledWith({
-    //       createManySelectorDto: { bulk: component.sanitizeSelectorData(event) },
-    //     });
-
-    //     mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
-    //       const data = modal.getData() as YesNoModalDto;
-    //       modal.removeData();
-    //       if (data && data.modalYes) {
-    //         onConfirm();
-    //       }
-    //     });
-
-    //     return new Subscription();
-    //   });
-
-    //   component.importSelectors(event);
-
-    //   // expectations
-    //   expect(component.getEndpointSecurityGroups).toHaveBeenCalled();
-    // });
   });
 });

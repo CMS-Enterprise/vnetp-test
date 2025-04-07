@@ -235,7 +235,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
     return obj;
   };
 
-  public importConsumedContractRelation(event) {
+  public importConsumedContractRelation(event): void {
     if (this.mode === 'epg') {
       this.importConsumedContractEpgRelation(event);
     } else {
@@ -298,7 +298,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
-  public addContract() {
+  public addContract(): void {
     if (this.mode === 'epg') {
       this.addEpgContract();
     } else {
@@ -306,7 +306,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
     }
   }
 
-  public removeContract(contract) {
+  public removeContract(contract: Contract): void {
     if (this.mode === 'epg') {
       this.removeEpgContract(contract);
     } else {
@@ -314,7 +314,7 @@ export class ConsumedContractComponent implements OnInit, OnChanges {
     }
   }
 
-  public getConsumedContracts() {
+  public getConsumedContracts(): void {
     if (this.mode === 'epg') {
       this.getEpgConsumedContracts();
     } else {
