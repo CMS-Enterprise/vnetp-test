@@ -184,10 +184,18 @@
 <ng-template #actionsTemplate let-selector="datum">
   <section class="table__actions">
     <app-icon-button
+      *ngIf="!selector?.deletedAt"
       icon="delete"
-      label="Soft-Delete/Delete Selector"
+      label="Soft-Delete"
       [type]="selector?.deletedAt ? 'danger' : 'default'"
-      (handleClick)="deleteSelector(selector)"
+      (handleClick)="softDeleteSelector(selector)"
+    ></app-icon-button>
+    <app-icon-button
+      *ngIf="selector?.deletedAt"
+      icon="delete"
+      label="Delete Selector"
+      [type]="selector?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="hardDeleteSelector(selector)"
     ></app-icon-button>
     <app-icon-button
       icon="undo"

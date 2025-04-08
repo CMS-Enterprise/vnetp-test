@@ -10,6 +10,7 @@ import {
   V2AppCentricSelectorsService,
   V2AppCentricEndpointGroupsService,
   EndpointGroup,
+  Selector,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Tab } from 'src/app/common/tabs/tabs.component';
@@ -342,23 +343,23 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       );
   }
 
-  public deleteSelector(selector): void {
-    this.entityService.deleteEntity(selector, {
-      entityName: 'Selector',
-      delete$: this.selectorService.deleteOneSelector({ id: selector.id }),
-      softDelete$: this.selectorService.softDeleteOneSelector({ id: selector.id }),
-      onSuccess: () => {
-        // if selector is type EPG, we must update that EPGs "esgMatched" property to false
-        if (selector.selectorType === 'EPG') {
-          const epgToUpdate = this.endpointGroups.find(epg => epg.name === selector.endpointGroupName);
-          this.retrieveAndUpdateEndpointGroup(epgToUpdate.id, false);
-        }
-        this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
-      },
+  public softDeleteSelector(selector: Selector): void {
+    this.selectorService.softDeleteOneSelector({ id: selector.id }).subscribe(() => {
+      return this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
     });
   }
 
-  public restoreSelector(selector): void {
+  public hardDeleteSelector(selector: Selector): void {
+    this.selectorService.deleteOneSelector({ id: selector.id }).subscribe(() => {
+      if (selector.selectorType === 'EPG') {
+        const epgToUpdate = this.endpointGroups.find(epg => epg.name === selector.endpointGroupName);
+        this.retrieveAndUpdateEndpointGroup(epgToUpdate.id, false);
+      }
+      this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
+    });
+  }
+
+  public restoreSelector(selector: Selector): void {
     this.selectorService.restoreOneSelector({ id: selector.id }).subscribe(() => {
       const epgToUpdate = this.endpointGroups.find(epg => epg.name === selector.endpointGroupName);
       this.retrieveAndUpdateEndpointGroup(epgToUpdate.id, true);
