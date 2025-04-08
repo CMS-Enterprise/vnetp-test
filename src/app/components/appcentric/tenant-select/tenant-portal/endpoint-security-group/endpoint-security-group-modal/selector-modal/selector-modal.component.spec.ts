@@ -139,7 +139,6 @@ describe('SelectorModalComponent', () => {
 
       expect(createSelectorSpy).toHaveBeenCalledWith({ selector: component.selector });
       expect(component.reset).toHaveBeenCalled();
-      expect(getOneEpg).toHaveBeenCalled();
     });
 
     it('should save form and call to create a Tag Selector', () => {

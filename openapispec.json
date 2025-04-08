@@ -22707,11 +22707,7 @@
   ],
   "servers": [
     {
-      "url": "http://local
-      
-      
-      
-      /v1",
+      "url": "http://localhost/v1",
       "description": ""
     }
   ],
@@ -22922,628 +22918,6 @@
           "tenantId"
         ]
       },
-      "FilterEntry": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "etherType": {
-            "type": "string",
-            "description": "The EtherType of the filter entry.",
-            "enum": [
-              "ip",
-              "ipv6",
-              "ipv4",
-              "mplsunicast",
-              "trill",
-              "arp",
-              "fcoe",
-              "macsecurity"
-            ]
-          },
-          "arpFlag": {
-            "type": "string",
-            "description": "The Address Resolution Protocol flag for a filter entry. The filter entry is a combination of network traffic classification properties.",
-            "enum": [
-              "arpreply",
-              "arprequest"
-            ]
-          },
-          "ipProtocol": {
-            "type": "string",
-            "description": "The IP protocol for a filter entry. The filter entry is a combination of network traffic classification properties.",
-            "enum": [
-              "eigrp",
-              "egp",
-              "icmp",
-              "icmpv6",
-              "igmp",
-              "igp",
-              "l2tp",
-              "ospfigp",
-              "pim",
-              "tcp",
-              "udp"
-            ]
-          },
-          "matchOnlyFragments": {
-            "type": "boolean",
-            "description": "Match only packet fragments. When enabled, the rule applies to any IP fragment with an offset that is greater than 0 (all IP fragments except the first). When disabled, the rule will not apply to IP fragments with an offset greater than 0 because TCP/UDP port information can only be checked in initial fragments."
-          },
-          "sourceFromPort": {
-            "type": "number"
-          },
-          "sourceToPort": {
-            "type": "number"
-          },
-          "destinationFromPort": {
-            "type": "number"
-          },
-          "destinationToPort": {
-            "type": "number"
-          },
-          "stateful": {
-            "type": "boolean"
-          },
-          "filter": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Filter"
-              }
-            ]
-          },
-          "filterId": {
-            "type": "string"
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "etherType",
-          "filterId",
-          "tenantId"
-        ]
-      },
-      "Filter": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "filterEntries": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FilterEntry"
-            }
-          },
-          "subjects": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Subject"
-            }
-          }
-        },
-        "required": [
-          "tenantId"
-        ]
-      },
-      "Subject": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "applyBothDirections": {
-            "type": "boolean",
-            "description": "Sets the contract filter to apply on both ingress and egress traffic directions."
-          },
-          "reverseFilterPorts": {
-            "type": "boolean",
-            "description": "Enables the filter to apply on both ingress and egress traffic."
-          },
-          "globalAlias": {
-            "type": "string",
-            "description": "The scope of a contract between two or more EPGs."
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "contract": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Contract"
-              }
-            ]
-          },
-          "contractId": {
-            "type": "string"
-          },
-          "filters": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          }
-        },
-        "required": [
-          "applyBothDirections",
-          "reverseFilterPorts",
-          "globalAlias",
-          "tenantId",
-          "contractId"
-        ]
-      },
-      "Contract": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "consumingEndpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "providingEndpointGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointGroup"
-            }
-          },
-          "subjects": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Subject"
-            }
-          },
-          "consumingEndpointSecurityGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointSecurityGroup"
-            }
-          },
-          "providingEndpointSecurityGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointSecurityGroup"
-            }
-          }
-        },
-        "required": [
-          "tenantId"
-        ]
-      },
-      "Selector": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "selectorType": {
-            "type": "string",
-            "enum": [
-              "Tag",
-              "EPG",
-              "IpSubnet"
-            ]
-          },
-          "IpSubnet": {
-            "type": "string"
-          },
-          "tagKey": {
-            "type": "string"
-          },
-          "valueOperator": {
-            "type": "string"
-          },
-          "tagValue": {
-            "type": "string"
-          },
-          "endpointGroupName": {
-            "type": "string"
-          },
-          "endpointSecurityGroup": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EndpointSecurityGroup"
-              }
-            ]
-          },
-          "endpointSecurityGroupId": {
-            "type": "string"
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "endpointSecurityGroupId",
-          "tenantId"
-        ]
-      },
-      "EndpointSecurityGroup": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "adminState": {
-            "type": "string",
-            "enum": [
-              "AdminUp",
-              "AdminShut"
-            ]
-          },
-          "intraEsgIsolation": {
-            "type": "boolean",
-            "description": "Intra-ESG isolation policies provide full isolation for virtual or physical endpoints;no communication is allowed between endpoints in an ESG that is operating with isolation enforced."
-          },
-          "preferredGroupMember": {
-            "type": "boolean"
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          },
-          "consumedContracts": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Contract"
-            }
-          },
-          "providedContracts": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Contract"
-            }
-          },
-          "selectors": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Selector"
-            }
-          },
-          "vrf": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Vrf"
-              }
-            ]
-          },
-          "vrfId": {
-            "type": "string"
-          },
-          "applicationProfile": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ApplicationProfile"
-              }
-            ]
-          },
-          "applicationProfileId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "intraEsgIsolation",
-          "preferredGroupMember",
-          "tenantId",
-          "vrfId",
-          "applicationProfileId"
-        ]
-      },
       "Vrf": {
         "type": "object",
         "properties": {
@@ -23616,13 +22990,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/BridgeDomain"
-            }
-          },
-          "endpointSecurityGroups": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EndpointSecurityGroup"
             }
           }
         },
@@ -24051,6 +23418,628 @@
           "epMoveDetectionModeGarp",
           "tenantId",
           "vrfId"
+        ]
+      },
+      "FilterEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "etherType": {
+            "type": "string",
+            "description": "The EtherType of the filter entry.",
+            "enum": [
+              "ip",
+              "ipv6",
+              "ipv4",
+              "mplsunicast",
+              "trill",
+              "arp",
+              "fcoe",
+              "macsecurity"
+            ]
+          },
+          "arpFlag": {
+            "type": "string",
+            "description": "The Address Resolution Protocol flag for a filter entry. The filter entry is a combination of network traffic classification properties.",
+            "enum": [
+              "arpreply",
+              "arprequest"
+            ]
+          },
+          "ipProtocol": {
+            "type": "string",
+            "description": "The IP protocol for a filter entry. The filter entry is a combination of network traffic classification properties.",
+            "enum": [
+              "eigrp",
+              "egp",
+              "icmp",
+              "icmpv6",
+              "igmp",
+              "igp",
+              "l2tp",
+              "ospfigp",
+              "pim",
+              "tcp",
+              "udp"
+            ]
+          },
+          "matchOnlyFragments": {
+            "type": "boolean",
+            "description": "Match only packet fragments. When enabled, the rule applies to any IP fragment with an offset that is greater than 0 (all IP fragments except the first). When disabled, the rule will not apply to IP fragments with an offset greater than 0 because TCP/UDP port information can only be checked in initial fragments."
+          },
+          "sourceFromPort": {
+            "type": "number"
+          },
+          "sourceToPort": {
+            "type": "number"
+          },
+          "destinationFromPort": {
+            "type": "number"
+          },
+          "destinationToPort": {
+            "type": "number"
+          },
+          "stateful": {
+            "type": "boolean"
+          },
+          "filter": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Filter"
+              }
+            ]
+          },
+          "filterId": {
+            "type": "string"
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "etherType",
+          "filterId",
+          "tenantId"
+        ]
+      },
+      "Filter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "filterEntries": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterEntry"
+            }
+          },
+          "subjects": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Subject"
+            }
+          }
+        },
+        "required": [
+          "tenantId"
+        ]
+      },
+      "Subject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "applyBothDirections": {
+            "type": "boolean",
+            "description": "Sets the contract filter to apply on both ingress and egress traffic directions."
+          },
+          "reverseFilterPorts": {
+            "type": "boolean",
+            "description": "Enables the filter to apply on both ingress and egress traffic."
+          },
+          "globalAlias": {
+            "type": "string",
+            "description": "The scope of a contract between two or more EPGs."
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "contract": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Contract"
+              }
+            ]
+          },
+          "contractId": {
+            "type": "string"
+          },
+          "filters": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
+          }
+        },
+        "required": [
+          "applyBothDirections",
+          "reverseFilterPorts",
+          "globalAlias",
+          "tenantId",
+          "contractId"
+        ]
+      },
+      "Selector": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "selectorType": {
+            "type": "string",
+            "enum": [
+              "Tag",
+              "EPG",
+              "IpSubnet"
+            ]
+          },
+          "IpSubnet": {
+            "type": "string"
+          },
+          "tagKey": {
+            "type": "string"
+          },
+          "valueOperator": {
+            "type": "string"
+          },
+          "tagValue": {
+            "type": "string"
+          },
+          "endpointGroupName": {
+            "type": "string"
+          },
+          "endpointSecurityGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointSecurityGroup"
+              }
+            ]
+          },
+          "endpointSecurityGroupId": {
+            "type": "string"
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "endpointSecurityGroupId",
+          "tenantId"
+        ]
+      },
+      "EndpointSecurityGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "adminState": {
+            "type": "string",
+            "enum": [
+              "AdminUp",
+              "AdminShut"
+            ]
+          },
+          "intraEsgIsolation": {
+            "type": "boolean",
+            "description": "Intra-ESG isolation policies provide full isolation for virtual or physical endpoints;no communication is allowed between endpoints in an ESG that is operating with isolation enforced."
+          },
+          "preferredGroupMember": {
+            "type": "boolean"
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "consumedContracts": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          },
+          "providedContracts": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          },
+          "selectors": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Selector"
+            }
+          },
+          "vrf": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Vrf"
+              }
+            ]
+          },
+          "vrfId": {
+            "type": "string"
+          },
+          "applicationProfile": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ApplicationProfile"
+              }
+            ]
+          },
+          "applicationProfileId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "intraEsgIsolation",
+          "preferredGroupMember",
+          "tenantId",
+          "vrfId",
+          "applicationProfileId"
+        ]
+      },
+      "Contract": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "consumingEndpointGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointGroup"
+            }
+          },
+          "providingEndpointGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointGroup"
+            }
+          },
+          "subjects": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Subject"
+            }
+          },
+          "consumingEndpointSecurityGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointSecurityGroup"
+            }
+          },
+          "providingEndpointSecurityGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointSecurityGroup"
+            }
+          }
+        },
+        "required": [
+          "tenantId"
         ]
       },
       "AuditLog": {
