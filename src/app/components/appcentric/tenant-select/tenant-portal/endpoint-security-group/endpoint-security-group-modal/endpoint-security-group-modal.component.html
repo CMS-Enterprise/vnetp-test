@@ -176,7 +176,7 @@
     </form>
   </div>
 
-  <section *ngIf="currentTab === 'Endpoint Security Group'" role="toolbar">
+  <section *ngIf="currentTab === 'Endpoint Security Group' && ModalMode === 'Edit'" role="toolbar">
     <app-import-export exportFileName="selectors" [disableJson]="false" (import)="importSelectors($event)"></app-import-export>
   </section>
 </ngx-smart-modal>
