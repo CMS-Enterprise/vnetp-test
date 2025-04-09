@@ -398,7 +398,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
 
     const onConfirm = () => {
       const dto = this.sanitizeSelectorData(event);
-      this.selectorService.createManySelector({ createManySelectorDto: { bulk: dto } }).subscribe(
+      this.selectorService.bulkUploadSelectors({ selector: dto }).subscribe(
         () => {},
         () => {},
         () => {

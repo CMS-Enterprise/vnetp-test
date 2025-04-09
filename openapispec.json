@@ -20212,6 +20212,41 @@
         ]
       }
     },
+    "/v2/app-centric/selectors/:/bulk": {
+      "post": {
+        "operationId": "bulkUploadSelectors",
+        "summary": "Bulk Upload Selectors",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Selector"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Selector"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      }
+    },
     "/v2/app-centric/selectors/bulk": {
       "post": {
         "operationId": "createManySelector",
