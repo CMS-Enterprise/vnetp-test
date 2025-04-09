@@ -344,9 +344,9 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   }
 
   public softDeleteSelector(selector: Selector): void {
-    this.selectorService.softDeleteOneSelector({ id: selector.id }).subscribe(() => {
-      return this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
-    });
+    this.selectorService
+      .softDeleteOneSelector({ id: selector.id })
+      .subscribe(() => this.getEndpointSecurityGroup(this.endpointSecurityGroupId));
   }
 
   public hardDeleteSelector(selector: Selector): void {

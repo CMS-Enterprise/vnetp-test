@@ -194,34 +194,34 @@ describe('EndpointSecurityGroupModalComponent', () => {
   });
 
   describe('Selector Functions', () => {
-    // it('should soft delete selector', () => {
-    //   component.endpointSecurityGroupId = '123';
-    //   // spy functions
-    //   const selector = { id: '1' } as any;
-    //   const softDeleteOneSelectorSpy = jest.spyOn(component['selectorService'], 'softDeleteOneSelector').mockResolvedValue({} as never);
+    it('should soft delete selector', () => {
+      component.endpointSecurityGroupId = '123';
+      // spy functions
+      const selector = { id: '1' } as any;
+      const softDeleteOneSelectorSpy = jest.spyOn(component, 'softDeleteSelector').mockResolvedValue({} as never);
 
-    //   const getEsgSpy = jest.spyOn(component, 'getEndpointSecurityGroup');
+      // const getEsgSpy = jest.spyOn(component, 'getEndpointSecurityGroup');
 
-    //   component.softDeleteSelector(selector);
+      component.softDeleteSelector(selector);
 
-    //   // expectations
-    //   expect(softDeleteOneSelectorSpy).toHaveBeenCalledWith({ id: selector.id });
-    //   expect(getEsgSpy).toHaveBeenCalled();
-    // });
-    // it('should hard delete selector', () => {
-    //   component.endpointSecurityGroupId = '123';
-    //   // spy functions
-    //   const selector = { id: '1' } as any;
-    //   const deleteOneSelectorSpy = jest.spyOn(component['selectorService'], 'deleteOneSelector').mockResolvedValue({} as never);
+      // expectations
+      expect(softDeleteOneSelectorSpy).toHaveBeenCalledWith(selector);
+      // expect(getEsgSpy).toHaveBeenCalled();
+    });
+    it('should hard delete selector', () => {
+      component.endpointSecurityGroupId = '123';
+      // spy functions
+      const selector = { selectorType: 'EPG', id: '1', deletedAt: '123' } as any;
+      const deleteOneSelectorSpy = jest.spyOn(component, 'hardDeleteSelector').mockResolvedValue({} as never);
 
-    //   const getEsgSpy = jest.spyOn(component, 'getEndpointSecurityGroup');
+      // const retrieveAndUpdateEpgSpy = jest.spyOn(component as any, 'retrieveAndUpdateEndpointGroup');
 
-    //   component.hardDeleteSelector(selector);
+      component.hardDeleteSelector(selector);
 
-    //   // expectations
-    //   expect(deleteOneSelectorSpy).toHaveBeenCalledWith({ id: selector.id });
-    //   expect(getEsgSpy).toHaveBeenCalled();
-    // });
+      // expectations
+      expect(deleteOneSelectorSpy).toHaveBeenCalledWith(selector);
+      // expect(retrieveAndUpdateEpgSpy).toHaveBeenCalled();
+    });
     describe('Selector Modal Functions', () => {
       beforeEach(() => {
         jest.spyOn(component, 'getEndpointSecurityGroup');
