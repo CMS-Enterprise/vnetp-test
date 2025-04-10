@@ -135,7 +135,7 @@ describe('SelectorModalComponent', () => {
       epgId.setValue('epgId-123');
 
       component.save();
-      expect(component.selector.epgId).toBe('epgId-123');
+      expect(component.selector.endpointGroupId).toBe('epgId-123');
 
       expect(createSelectorSpy).toHaveBeenCalledWith({ selector: component.selector });
       expect(component.reset).toHaveBeenCalled();
