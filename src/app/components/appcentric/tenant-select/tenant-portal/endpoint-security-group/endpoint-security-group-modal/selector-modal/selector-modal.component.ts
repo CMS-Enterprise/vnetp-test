@@ -125,28 +125,6 @@ export class SelectorModalComponent implements OnInit {
       this.reset();
       return data;
     });
-
-    // if the selector matches an EPG to an ESG
-    // update the endpoint group entity to reflect that it is now matched to an ESG via a Selector
-    // if (this.selector.selectorType === 'EPG') {
-    //   let selectedEndpointGroup = {} as any;
-    //   this.endpointGroupService.getOneEndpointGroup({ id: this.selector.epgId }).subscribe(epg => {
-    //     selectedEndpointGroup = epg;
-
-    //     // remove properties that can not be updated
-    //     delete selectedEndpointGroup.name;
-    //     delete selectedEndpointGroup.tenantId;
-    //     delete selectedEndpointGroup.applicationProfileId;
-
-    //     // set esgMatched property to true
-    //     selectedEndpointGroup.esgMatched = true;
-
-    //     // update endpoint group entity
-    //     this.endpointGroupService
-    //       .updateOneEndpointGroup({ id: selectedEndpointGroup.id, endpointGroup: selectedEndpointGroup })
-    //       .subscribe();
-    //   });
-    // }
   }
 
   public reset(): void {

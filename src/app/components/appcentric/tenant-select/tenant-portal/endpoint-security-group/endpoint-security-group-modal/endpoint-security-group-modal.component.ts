@@ -361,8 +361,6 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
 
   public restoreSelector(selector: Selector): void {
     this.selectorService.restoreOneSelector({ id: selector.id }).subscribe(() => {
-      const epgToUpdate = this.endpointGroups.find(epg => epg.name === selector.endpointGroupName);
-      this.retrieveAndUpdateEndpointGroup(epgToUpdate.id, true);
       return this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
     });
   }
@@ -389,7 +387,6 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public importSelectors(event): void {
     const modalDto = new YesNoModalDto(
       'Import Selectors',
