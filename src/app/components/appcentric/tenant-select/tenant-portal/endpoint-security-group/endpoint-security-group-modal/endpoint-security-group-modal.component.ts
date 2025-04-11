@@ -360,9 +360,9 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   }
 
   public restoreSelector(selector: Selector): void {
-    this.selectorService.restoreOneSelector({ id: selector.id }).subscribe(() => {
-      return this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
-    });
+    this.selectorService
+      .restoreOneSelector({ id: selector.id })
+      .subscribe(() => this.getEndpointSecurityGroup(this.endpointSecurityGroupId));
   }
 
   public getEndpointGroups(): void {
