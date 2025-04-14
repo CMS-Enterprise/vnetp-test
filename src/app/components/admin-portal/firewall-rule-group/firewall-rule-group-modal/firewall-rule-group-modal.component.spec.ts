@@ -9,7 +9,7 @@ import {
   MockNgxSmartModalComponent,
 } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { V1NetworkSecurityFirewallRuleGroupsService, V1TiersService, V3GlobalMessagesService } from 'client';
+import { V1DatacentersService, V1NetworkSecurityFirewallRuleGroupsService, V1TiersService, V3GlobalMessagesService } from 'client';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { FirewallRuleGroupModalComponent } from './firewall-rule-group-modal.component';
@@ -32,6 +32,7 @@ describe('FirewallRuleGroupModalComponent', () => {
         MockProvider(NgxSmartModalService),
         MockProvider(V1NetworkSecurityFirewallRuleGroupsService),
         MockProvider(V1TiersService),
+        MockProvider(V1DatacentersService),
       ],
     })
       .compileComponents()

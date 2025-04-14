@@ -9,7 +9,7 @@ import {
   MockNgxSmartModalComponent,
 } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { V1NetworkSecurityNatRuleGroupsService, V1TiersService, V3GlobalMessagesService } from 'client';
+import { V1DatacentersService, V1NetworkSecurityNatRuleGroupsService, V1TiersService, V3GlobalMessagesService } from 'client';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NatRuleGroupModalComponent } from './nat-rule-group-modal.component';
@@ -28,7 +28,12 @@ describe('NatRuleGroupModalComponent', () => {
         MockFontAwesomeComponent,
         MockNgSelectComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityNatRuleGroupsService), MockProvider(V1TiersService)],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1NetworkSecurityNatRuleGroupsService),
+        MockProvider(V1TiersService),
+        MockProvider(V1DatacentersService),
+      ],
     })
       .compileComponents()
       .then(() => {

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { V1NetworkSecurityZonesService, V1TiersService, Zone } from 'client';
+import { Datacenter, V1DatacentersService, V1NetworkSecurityZonesService, V1TiersService, Zone } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 @Component({
   selector: 'app-rule-group-zones-modal',
@@ -15,21 +16,34 @@ export class RuleGroupZonesModalComponent implements OnInit {
   modalMode: ModalMode;
   messageId: string;
   tiers;
+  datacenters: Datacenter[];
 
   constructor(
     private tierService: V1TiersService,
     private zoneService: V1NetworkSecurityZonesService,
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
+    private datacenterService: V1DatacentersService,
   ) {}
   ngOnInit(): void {
-    this.getTiers();
+    this.getDatacenters();
+    setTimeout(() => this.getTiers(), 250);
     this.buildForm();
+  }
+
+  public getDatacenters(): void {
+    this.datacenterService.getManyDatacenter({ page: 1, perPage: 500 }).subscribe(data => {
+      this.datacenters = data.data;
+    });
   }
 
   public getTiers(): void {
     this.tierService.getManyTier({ page: 1, perPage: 500, sort: ['updatedAt,ASC'] }).subscribe(data => {
       this.tiers = data.data;
+      this.tiers.map(tier => {
+        const datacenterName = ObjectUtil.getObjectName(tier.datacenterId, this.datacenters);
+        tier.nameWithDatacenter = `${tier.name} (${datacenterName})`;
+      });
     });
   }
 

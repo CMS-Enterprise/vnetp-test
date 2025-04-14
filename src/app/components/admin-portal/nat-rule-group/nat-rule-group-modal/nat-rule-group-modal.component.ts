@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { NatRuleGroup, V1NetworkSecurityNatRuleGroupsService, V1TiersService } from 'client';
+import { NatRuleGroup, V1DatacentersService, V1NetworkSecurityNatRuleGroupsService, V1TiersService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 @Component({
   selector: 'app-nat-rule-group-modal',
@@ -14,21 +15,34 @@ export class NatRuleGroupModalComponent implements OnInit {
   modalMode: ModalMode;
   messageId: string;
   tiers;
+  datacenters;
 
   constructor(
     private tierService: V1TiersService,
     private natRuleGroupService: V1NetworkSecurityNatRuleGroupsService,
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
+    private datacenterService: V1DatacentersService,
   ) {}
   ngOnInit(): void {
-    this.getTiers();
+    this.getDatacenters();
+    setTimeout(() => this.getTiers(), 250);
     this.buildForm();
+  }
+
+  public getDatacenters(): void {
+    this.datacenterService.getManyDatacenter({ page: 1, perPage: 500 }).subscribe(data => {
+      this.datacenters = data.data;
+    });
   }
 
   public getTiers(): void {
     this.tierService.getManyTier({ page: 1, perPage: 500, sort: ['updatedAt,ASC'] }).subscribe(data => {
       this.tiers = data.data;
+      this.tiers.map(tier => {
+        const datacenterName = ObjectUtil.getObjectName(tier.datacenterId, this.datacenters);
+        tier.nameWithDatacenter = `${tier.name} (${datacenterName})`;
+      });
     });
   }
 

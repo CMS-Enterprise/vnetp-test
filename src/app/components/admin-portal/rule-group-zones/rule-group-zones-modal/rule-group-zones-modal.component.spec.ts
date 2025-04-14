@@ -12,7 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { RuleGroupZonesModalComponent } from './rule-group-zones-modal.component';
-import { V1NetworkSecurityZonesService, V1TiersService } from 'client';
+import { V1DatacentersService, V1NetworkSecurityZonesService, V1TiersService } from 'client';
 
 describe('RuleGroupZonesModalComponent', () => {
   let component: RuleGroupZonesModalComponent;
@@ -28,7 +28,12 @@ describe('RuleGroupZonesModalComponent', () => {
         MockFontAwesomeComponent,
         MockNgSelectComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1NetworkSecurityZonesService), MockProvider(V1TiersService)],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1NetworkSecurityZonesService),
+        MockProvider(V1TiersService),
+        MockProvider(V1DatacentersService),
+      ],
     })
       .compileComponents()
       .then(() => {
