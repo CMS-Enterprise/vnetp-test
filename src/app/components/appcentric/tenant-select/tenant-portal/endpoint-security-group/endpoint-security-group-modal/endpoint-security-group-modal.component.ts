@@ -26,6 +26,7 @@ import { SelectorModalDto } from 'src/app/models/appcentric/appcentric-selector-
 import { EntityService } from 'src/app/services/entity.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 
 const tabs = [{ name: 'Endpoint Security Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }];
 
@@ -395,7 +396,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
 
     const onConfirm = () => {
       const dto = this.sanitizeSelectorData(event);
-      this.selectorService.bulkUploadSelectors({ selector: dto }).subscribe(
+      this.selectorService.bulkUploadSelectors({ requestBody: dto }).subscribe(
         () => {},
         () => {},
         () => {
@@ -432,11 +433,18 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
         if (val !== '') {
           obj.endpointGroupName = val;
         }
+        obj[key] = ObjectUtil.getObjectId(val as string, this.endpointGroups);
+        obj.endpointGroupId = obj[key];
         delete obj[key];
       }
       if (key === 'endpointSecurityGroupName') {
         obj[key] = this.endpointSecurityGroupId;
         obj.endpointSecurityGroupId = obj[key];
+        delete obj[key];
+      }
+      if (key === 'vrfName') {
+        obj[key] = ObjectUtil.getObjectId(val as string, this.vrfs);
+        obj.vrfId = obj[key];
         delete obj[key];
       }
       if (key === 'tenantName') {

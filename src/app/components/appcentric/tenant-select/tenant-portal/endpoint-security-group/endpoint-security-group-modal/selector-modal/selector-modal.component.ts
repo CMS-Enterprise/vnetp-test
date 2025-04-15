@@ -121,7 +121,9 @@ export class SelectorModalComponent implements OnInit {
       this.selector.IpSubnet = this.form.value.IpSubnet;
     }
     this.selector.tenantId = this.tenantId;
-    this.selectorService.createOneSelector({ selector: this.selector }).subscribe(data => {
+    this.selector.vrfId = this.vrfId;
+    this.selector.endpointSecurityGroupId = this.endpointSecurityGroupId;
+    this.selectorService.createSelectorCheck({ selector: this.selector }).subscribe(data => {
       this.reset();
       return data;
     });
