@@ -108,6 +108,7 @@ export class AuditLogComponent implements OnInit {
   public serviceObjects: ServiceObject[] = [];
   public serviceObjectGroups: ServiceObjectGroup[] = [];
   public isLoading = false;
+  public showingAppCentricLogs = true;
   selectedAuditLog;
 
   routeProfiles: RouteProfile[];
