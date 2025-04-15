@@ -9,6 +9,7 @@ export class IconButtonComponent {
   @Input() icon: Icon;
   @Input() type = 'default';
   @Input() label = '';
+  @Input() disabled = false;
 
   @Output() handleClick = new EventEmitter<Event>();
 
@@ -26,6 +27,7 @@ export class IconButtonComponent {
     clone: ['far', 'clone'],
     check: ['fas', 'check'],
     times: ['fas', 'times'],
+    clock: ['fas', 'clock'],
   };
 
   public typeLookup: Record<IconType, string> = {
@@ -49,5 +51,6 @@ export type Icon =
   | 'asterisk'
   | 'clone'
   | 'check'
-  | 'times';
+  | 'times'
+  | 'clock';
 export type IconType = 'default' | 'danger' | 'success' | 'info';

@@ -79,5 +79,6 @@ const routes: Routes = [
     MatToolbar,
     MatTooltip,
   ],
+  exports: [WanFormDetailComponent],
 })
 export class WanFormModule {}

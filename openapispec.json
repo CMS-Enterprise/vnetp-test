@@ -20329,6 +20329,269 @@
         ]
       }
     },
+    "/v3/global/wan-form-request": {
+      "post": {
+        "operationId": "createOneWanFormRequest",
+        "summary": "Create one WAN form request",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WanFormRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WanFormRequest"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/wan-form-request"
+        ]
+      },
+      "get": {
+        "operationId": "getManyWanFormRequests",
+        "summary": "Get many WAN form requests",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyWanFormRequestResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WanFormRequest"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/wan-form-request"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneWanFormRequest",
+        "summary": "Delete one WAN form request",
+        "parameters": [
+          {
+            "name": "wanFormId",
+            "required": false,
+            "in": "query",
+            "description": "ID of the WAN form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wanFormRequestId",
+            "required": false,
+            "in": "query",
+            "description": "ID of the WAN form request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WanFormRequest"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/wan-form-request"
+        ]
+      }
+    },
+    "/v3/global/wan-form-request/approve/{id}": {
+      "post": {
+        "operationId": "approveOneWanFormRequest",
+        "summary": "Approve one WAN form request",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WanFormRequest"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/wan-form-request"
+        ]
+      }
+    },
     "/v1/network-scope-forms/wan-form/{id}/activate": {
       "put": {
         "operationId": "activateWanFormWanForm",
@@ -23235,8 +23498,8 @@
               }
             ]
           },
-          "active": {
-            "type": "boolean"
+          "status": {
+            "type": "string"
           },
           "wanFormSubnets": {
             "readOnly": true,
@@ -27614,6 +27877,62 @@
       "DeleteResult": {
         "type": "object",
         "properties": {}
+      },
+      "WanFormRequestDto": {
+        "type": "object",
+        "properties": {
+          "wanFormId": {
+            "type": "string"
+          },
+          "tenant": {
+            "type": "string"
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "aciTenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "wanFormId",
+          "tenant"
+        ]
+      },
+      "WanFormRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "wanFormId": {
+            "type": "string",
+            "readOnly": true
+          },
+          "tenant": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "aciTenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "wanFormId",
+          "tenant"
+        ]
       }
     }
   }

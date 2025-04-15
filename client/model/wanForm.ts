@@ -27,7 +27,7 @@ export interface WanForm {
     description?: string;
     datacenterId?: string;
     readonly datacenter?: Datacenter;
-    active?: boolean;
+    status?: string;
     readonly wanFormSubnets?: Array<WanFormSubnet>;
     readonly tenant?: Tenant;
     tenantId?: string;

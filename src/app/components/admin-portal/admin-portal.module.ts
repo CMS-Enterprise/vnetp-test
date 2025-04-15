@@ -13,6 +13,7 @@ import { AdminPortalNavbarComponent } from './admin-portal-navbar/admin-portal-n
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module';
 import { GlobalMessagesComponent } from './global-messages/global-messages.component';
+import { WanFormRequestComponent } from './wan-form-request/wan-form-request.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,13 @@ const routes: Routes = [
         canActivate: [AdminAuthGuard],
         data: { breadcrumb: 'Global Messages', title: 'Global Messages' },
         loadChildren: () => import('./global-messages/global-messages.module').then(m => m.GlobalMessagesModule),
+      },
+      {
+        path: 'wan-form-request',
+        component: WanFormRequestComponent,
+        canActivate: [AdminAuthGuard],
+        data: { breadcrumb: 'WAN Form Requests', title: 'WAN Form Requests' },
+        loadChildren: () => import('./wan-form-request/wan-form-request.module').then(m => m.WanFormRequestModule),
       },
     ],
   },

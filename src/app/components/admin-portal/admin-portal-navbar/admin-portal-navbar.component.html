@@ -32,6 +32,10 @@
           <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="global-messages" queryParamsHandling="merge"
             >Global Messages</a
           >
+
+          <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="wan-form-request" queryParamsHandling="merge"
+            >Wan Form Requests</a
+          >
         </div>
       </li>
     </ul>

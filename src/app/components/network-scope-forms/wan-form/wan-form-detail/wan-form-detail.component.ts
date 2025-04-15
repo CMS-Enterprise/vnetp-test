@@ -11,6 +11,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class WanFormDetailComponent implements OnInit {
   @Input() wanForm: WanForm;
   dcsMode: string;
+  private _global: boolean;
+
+  @Input()
+  set global(value: boolean | undefined) {
+    this._global = value ?? false;
+  }
+
+  get global(): boolean {
+    return this._global;
+  }
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
