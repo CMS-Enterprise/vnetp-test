@@ -12,6 +12,7 @@ export class EntityService {
 
   public deleteEntity(entity: Entity, config: DeleteEntityConfig): Subscription {
     const { deletedAt, name } = entity;
+
     const { entityName, delete$, softDelete$, onSuccess } = config;
 
     const deleteDescription = deletedAt ? 'Delete' : 'Soft-Delete';
@@ -24,13 +25,25 @@ export class EntityService {
       }
     };
 
-    const dto = new YesNoModalDto(
-      `${deleteDescription} ${entityName}`,
-      `Do you want to ${deleteDescription.toLowerCase()} ${entityName.toLowerCase()} "${name}"?`,
-      `${deleteDescription} ${entityName}`,
-      'Cancel',
-      'danger',
-    );
+    let dto;
+
+    if (name === undefined) {
+      dto = new YesNoModalDto(
+        `${deleteDescription} ${entityName}`,
+        `Do you want to ${deleteDescription.toLowerCase()} ${entityName.toLowerCase()}?`,
+        `${deleteDescription} ${entityName}`,
+        'Cancel',
+        'danger',
+      );
+    } else {
+      dto = new YesNoModalDto(
+        `${deleteDescription} ${entityName}`,
+        `Do you want to ${deleteDescription.toLowerCase()} ${entityName.toLowerCase()} "${name}"?`,
+        `${deleteDescription} ${entityName}`,
+        'Cancel',
+        'danger',
+      );
+    }
 
     return SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm);
   }

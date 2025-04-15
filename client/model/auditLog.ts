@@ -72,11 +72,13 @@ export enum AuditLogEntityTypeEnum {
     BridgeDomain = 'BridgeDomain',
     Contract = 'Contract',
     EndpointGroup = 'EndpointGroup',
+    EndpointSecurityGroup = 'EndpointSecurityGroup',
     Filter = 'Filter',
     FilterEntry = 'FilterEntry',
     Subject = 'Subject',
     Vrf = 'Vrf',
     RouteProfile = 'RouteProfile',
+    Selector = 'Selector',
     WanForm = 'WanForm',
     ExternalRoute = 'ExternalRoute',
     WanFormSubnet = 'WanFormSubnet'

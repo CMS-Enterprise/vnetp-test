@@ -11,28 +11,33 @@
  */
 import { EndpointSecurityGroup } from './endpointSecurityGroup';
 import { Tenant } from './tenant';
-import { EndpointGroup } from './endpointGroup';
-import { Subject } from './subject';
 
 
-export interface Contract { 
+export interface Selector { 
     readonly id?: string;
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
-    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
-    name?: string;
-    alias?: string;
     description?: string;
+    selectorType?: SelectorSelectorTypeEnum;
+    IpSubnet?: string;
+    tagKey?: string;
+    valueOperator?: string;
+    tagValue?: string;
+    endpointGroupName?: string;
+    readonly endpointSecurityGroup?: EndpointSecurityGroup;
+    endpointSecurityGroupId: string;
     readonly tenant?: Tenant;
     tenantId: string;
-    readonly consumingEndpointGroups?: Array<EndpointGroup>;
-    readonly providingEndpointGroups?: Array<EndpointGroup>;
-    readonly subjects?: Array<Subject>;
-    readonly consumingEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
-    readonly providingEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
 }
+export enum SelectorSelectorTypeEnum {
+    Tag = 'Tag',
+    Epg = 'EPG',
+    IpSubnet = 'IpSubnet'
+};
+
+
 

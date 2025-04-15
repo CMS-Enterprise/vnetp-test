@@ -4,22 +4,27 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { MockIconButtonComponent, MockFontAwesomeComponent, MockComponent, MockImportExportComponent } from 'src/test/mock-components';
+import { MockFontAwesomeComponent, MockComponent, MockIconButtonComponent, MockImportExportComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
-import { ProvidedContractComponent } from './provided-contract.component';
+import { ConsumedContractComponent } from './consumed-contract.component';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { Subscription } from 'rxjs';
-import { Contract, V2AppCentricContractsService, V2AppCentricEndpointGroupsService } from 'client';
+import {
+  Contract,
+  V2AppCentricContractsService,
+  V2AppCentricEndpointGroupsService,
+  V2AppCentricEndpointSecurityGroupsService,
+} from 'client';
 
-describe('ProvidedContractsComponent', () => {
-  let component: ProvidedContractComponent;
-  let fixture: ComponentFixture<ProvidedContractComponent>;
+describe('ConsumedContractsComponent', () => {
+  let component: ConsumedContractComponent;
+  let fixture: ComponentFixture<ConsumedContractComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
-        ProvidedContractComponent,
+        ConsumedContractComponent,
         MockIconButtonComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
@@ -29,15 +34,17 @@ describe('ProvidedContractsComponent', () => {
       providers: [
         MockProvider(NgxSmartModalService),
         MockProvider(V2AppCentricEndpointGroupsService),
+        MockProvider(V2AppCentricEndpointSecurityGroupsService),
         MockProvider(V2AppCentricContractsService),
       ],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProvidedContractComponent);
+    fixture = TestBed.createComponent(ConsumedContractComponent);
     component = fixture.componentInstance;
     component.endpointGroupId = 'uuid';
+    component.endpointSecurityGroupId = 'uuid';
     fixture.detectChanges();
   });
 
@@ -45,14 +52,14 @@ describe('ProvidedContractsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should remove provided contract', () => {
+  it('should remove consumed contract', () => {
     const contractToDelete = { id: '123', description: 'Bye!', endpointGroupId: 'epgId-123', tenantId: 'tenantId-123' } as Contract;
     component.removeContract(contractToDelete);
     const getProvidedContractsMock = jest.spyOn(component['endpointGroupsService'], 'getOneEndpointGroup');
     expect(getProvidedContractsMock).toHaveBeenCalled();
   });
 
-  it('should add provided contract', () => {
+  it('should add consumed contract', () => {
     component.selectedContract = { id: '123', tenantId: 'tenantId-123' };
     component.addContract();
     const getProvidedContractsMock = jest.spyOn(component['endpointGroupsService'], 'getOneEndpointGroup');
@@ -79,25 +86,25 @@ describe('ProvidedContractsComponent', () => {
     });
 
     it('should display a confirmation modal with the correct message', () => {
-      const event = [{ name: 'Provided Contract 1' }, { name: 'Provided Contract 1' }] as any;
+      const event = [{ name: 'Consumed Contract 1' }, { name: 'Consumed Contract 1' }] as any;
       const modalDto = new YesNoModalDto(
-        'Import Provided Contracts',
-        `Are you sure you would like to import ${event.length} Provided Contracts?`,
+        'Import Consumed Contracts',
+        `Are you sure you would like to import ${event.length} Consumed Contracts?`,
       );
       const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
 
-      component.importProvidedContractEpgRelation(event);
+      component.importConsumedContractEpgRelation(event);
 
       expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
     });
 
-    it('should import provided contracts and refresh on confirmation', () => {
-      const event = [{ name: 'Provided Contract 1' }, { name: 'Provided Contract 1' }] as any;
-      jest.spyOn(component, 'getProvidedContracts');
+    it('should import consumed contracts to EPG relations and refresh the table on confirmation', () => {
+      const event = [{ name: 'Consumed Contract 1' }, { name: 'Consumed Contract 1' }] as any;
+      jest.spyOn(component, 'getEpgConsumedContracts');
       jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
         onConfirm();
 
-        expect(component['endpointGroupsService'].addProvidedContractToEndpointGroupEndpointGroup).toHaveBeenCalledTimes(2);
+        expect(component['endpointGroupsService'].addManyConsumedContractsToEndpointGroupEndpointGroup).toHaveBeenCalledTimes(1);
 
         mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
           const data = modal.getData() as YesNoModalDto;
@@ -106,14 +113,38 @@ describe('ProvidedContractsComponent', () => {
             onConfirm();
           }
         });
-        expect(component.getProvidedContracts).toHaveBeenCalled();
 
         return new Subscription();
       });
 
-      component.importProvidedContractEpgRelation(event);
+      component.importConsumedContractRelation(event);
 
-      expect(component.getProvidedContracts).toHaveBeenCalled();
+      expect(component.getEpgConsumedContracts).toHaveBeenCalled();
+    });
+
+    it('should import consumed contracts to ESG relations and refresh the table on confirmation', () => {
+      const event = [{ name: 'Consumed Contract 1' }, { name: 'Consumed Contract 1' }] as any;
+      jest.spyOn(component, 'getEsgConsumedContracts');
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        onConfirm();
+
+        expect(
+          component['endpointSecurityGroupsService'].addManyConsumedContractsToEndpointSecurityGroupEndpointSecurityGroup,
+        ).toHaveBeenCalledTimes(1);
+
+        mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+          const data = modal.getData() as YesNoModalDto;
+          modal.removeData();
+          if (data && data.modalYes) {
+            onConfirm();
+          }
+        });
+
+        return new Subscription();
+      });
+      component.mode = 'esg';
+      component.importConsumedContractRelation(event);
+      expect(component.getEsgConsumedContracts).toHaveBeenCalled();
     });
   });
 });

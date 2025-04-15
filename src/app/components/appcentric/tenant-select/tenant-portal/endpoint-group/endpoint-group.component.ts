@@ -8,6 +8,7 @@ import {
   V2AppCentricApplicationProfilesService,
   V2AppCentricBridgeDomainsService,
   V2AppCentricEndpointGroupsService,
+  V2AppCentricSelectorsService,
 } from '../../../../../../../client';
 import { YesNoModalDto } from '../../../../../models/other/yes-no-modal-dto';
 import { TableContextService } from '../../../../../services/table-context.service';
@@ -29,10 +30,10 @@ export class EndpointGroupComponent implements OnInit {
   public ModalMode = ModalMode;
   public tableComponentDto = new TableComponentDto();
   public searchColumns: SearchColumnConfig[] = [
-    { displayName: 'Name', propertyName: 'name', searchOperator: 'cont' },
     { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
     { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
     { displayName: 'IntraEpgIsolation', propertyName: 'intraEpgIsolation', propertyType: 'boolean' },
+    { displayName: 'Esg Matched', propertyName: 'esgMatched', propertyType: 'boolean' },
   ];
   public isLoading = false;
   public endpointGroups: GetManyEndpointGroupResponseDto;
@@ -56,6 +57,7 @@ export class EndpointGroupComponent implements OnInit {
       { name: 'Intra Epg Isolation', property: 'intraEpgIsolation' },
       { name: 'Application Profile', template: () => this.applicationProfileTemplate },
       { name: 'Bridge Domain', template: () => this.bridgeDomainTemplate },
+      { name: 'Esg Matched', property: 'esgMatched' },
       { name: '', template: () => this.actionsTemplate },
     ],
     // TODO: Implement appcentric aci runtime
@@ -68,6 +70,7 @@ export class EndpointGroupComponent implements OnInit {
     private router: Router,
     private applicationProfileService: V2AppCentricApplicationProfilesService,
     private bridgeDomainService: V2AppCentricBridgeDomainsService,
+    private selectorService: V2AppCentricSelectorsService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<EndpointGroup>();
     advancedSearchAdapter.setService(this.endpointGroupService);
@@ -97,7 +100,9 @@ export class EndpointGroupComponent implements OnInit {
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
+      if (propertyName === 'intraEpgIsolation' || propertyName === 'esgMatched') {
+        eventParams = `${propertyName}||eq||${searchText}`;
+      } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
@@ -125,10 +130,11 @@ export class EndpointGroupComponent implements OnInit {
     if (endpointGroup.deletedAt) {
       const modalDto = new YesNoModalDto(
         'Delete Endpoint Group',
-        `Are you sure you want to permanently delete this endpoint group ${endpointGroup.name}?`,
+        `Are you sure you want to permanently delete this endpoint group ${endpointGroup.name} 
+        AND ANY SELECTORS THAT THIS EPG IS ASSOCIATED WITH? `,
       );
       const onConfirm = () => {
-        this.endpointGroupService.deleteOneEndpointGroup({ id: endpointGroup.id }).subscribe(() => {
+        this.endpointGroupService.cascadeDeleteTierEndpointGroup({ endpointGroupId: endpointGroup.id }).subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
           const { filteredResults } = params;
 

@@ -517,6 +517,9 @@ export class AuditLogComponent implements OnInit {
         if (this.currentMode === ApplicationMode.NETCENTRIC) {
           this.getTiers();
         }
+      } else if (this.showingAppCentricLogs) {
+        this.getAppCentricTenants();
+        this.getAppCentricObjects();
       }
     });
   }

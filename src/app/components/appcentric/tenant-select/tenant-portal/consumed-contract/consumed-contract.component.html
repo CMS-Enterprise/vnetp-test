@@ -11,6 +11,18 @@
   <span>Add Consumed Contract</span>
 </button>
 <app-table
+  *ngIf="mode === 'epg'"
+  [config]="config"
+  [data]="contractTableData"
+  (clearResults)="getConsumedContracts()"
+  (searchParams)="getConsumedContracts()"
+  [searchColumns]="searchColumns"
+  [(itemsPerPage)]="perPage"
+  (tableEvent)="onTableEvent($event)"
+></app-table>
+
+<app-table
+  *ngIf="mode === 'esg'"
   [config]="config"
   [data]="contractTableData"
   (clearResults)="getConsumedContracts()"
@@ -22,12 +34,7 @@
 
 <ng-template #actionsTemplate let-contract="datum">
   <section class="table__actions">
-    <app-icon-button
-      icon="delete"
-      label="Soft-Delete/Delete Contract"
-      [type]="contract?.deletedAt ? 'danger' : 'default'"
-      (handleClick)="removeContract(contract)"
-    ></app-icon-button>
+    <app-icon-button icon="delete" label="Remove Contract" (handleClick)="removeContract(contract)"></app-icon-button>
   </section>
 </ng-template>
 
@@ -35,5 +42,5 @@
   [exportObject]="contracts"
   exportFileName="contracts"
   [disableJson]="false"
-  (import)="importConsumedContractEpgRelation($event)"
+  (import)="importConsumedContractRelation($event)"
 ></app-import-export>
