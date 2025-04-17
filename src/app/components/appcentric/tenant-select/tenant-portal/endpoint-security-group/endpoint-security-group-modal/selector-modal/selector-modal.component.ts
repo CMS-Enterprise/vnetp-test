@@ -115,14 +115,13 @@ export class SelectorModalComponent implements OnInit {
     } else if (this.navIndex === 1) {
       this.selector.selectorType = 'EPG';
       this.selector.endpointGroupId = this.form.value.epgId;
-      this.selector.endpointGroupName = ObjectUtil.getObjectName(this.form.value.epgId, this.endpointGroups);
     } else {
       this.selector.selectorType = 'IpSubnet';
       this.selector.IpSubnet = this.form.value.IpSubnet;
     }
     this.selector.tenantId = this.tenantId;
     this.selector.vrfId = this.vrfId;
-    this.selector.endpointSecurityGroupId = this.endpointSecurityGroupId;
+    this.selector.description = this.form.value.description;
     this.selectorService.createSelectorCheck({ selector: this.selector }).subscribe(data => {
       this.reset();
       return data;

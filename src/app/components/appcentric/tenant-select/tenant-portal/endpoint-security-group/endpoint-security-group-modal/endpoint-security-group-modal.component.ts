@@ -75,6 +75,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       { name: 'Tag Key', property: 'tagKey' },
       { name: 'Value Operator', property: 'valueOperator' },
       { name: 'Tag Value', property: 'tagValue' },
+      { name: 'Description', property: 'description' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -82,6 +83,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     description: 'EPG Selectors',
     columns: [
       { name: 'EPG', property: 'endpointGroupName' },
+      { name: 'Description', property: 'description' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -89,6 +91,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     description: 'IpSubnet Selectors',
     columns: [
       { name: 'IpSubnet', property: 'IpSubnet' },
+      { name: 'Description', property: 'description' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
