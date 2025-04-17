@@ -4,7 +4,6 @@ import { EndpointGroup, V2AppCentricEndpointGroupsService, V2AppCentricSelectors
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { Tab } from 'src/app/common/tabs/tabs.component';
-import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { IpAddressAnyValidator } from 'src/app/validators/network-form-validators';
 
 @Component({
