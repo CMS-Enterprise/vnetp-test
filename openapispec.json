@@ -20045,6 +20045,73 @@
         ]
       }
     },
+    "/v2/app-centric/selectors/selectorCheck": {
+      "post": {
+        "operationId": "createSelectorCheck",
+        "summary": "Create Selector Check",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Selector"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Selector"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      }
+    },
+    "/v2/app-centric/selectors/:/bulk": {
+      "post": {
+        "operationId": "bulkUploadSelectors",
+        "summary": "Bulk Upload Selectors",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Selector"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      }
+    },
     "/v2/app-centric/selectors": {
       "post": {
         "operationId": "createOneSelector",
@@ -20228,41 +20295,6 @@
                     "pageCount",
                     "totalPages"
                   ]
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/selectors"
-        ]
-      }
-    },
-    "/v2/app-centric/selectors/:/bulk": {
-      "post": {
-        "operationId": "bulkUploadSelectors",
-        "summary": "Bulk Upload Selectors",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Selector"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Selector"
                 }
               }
             }
@@ -23892,6 +23924,9 @@
             "type": "string"
           },
           "endpointGroupName": {
+            "type": "string"
+          },
+          "endpointGroupId": {
             "type": "string"
           },
           "endpointSecurityGroup": {

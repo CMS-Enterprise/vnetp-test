@@ -271,7 +271,6 @@ export class EndpointGroupComponent implements OnInit {
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
-    return;
   }
 
   public onTableEvent(event: TableComponentDto): void {

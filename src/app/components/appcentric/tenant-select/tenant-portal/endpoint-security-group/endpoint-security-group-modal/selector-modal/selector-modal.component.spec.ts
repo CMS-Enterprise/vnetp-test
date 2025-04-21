@@ -123,7 +123,7 @@ describe('SelectorModalComponent', () => {
     it('should save form and call to create to create an EPG Selector', () => {
       component.endpointSecurityGroupId = '123';
       component.selector = { selectorType: 'Tag' };
-      const createSelectorSpy = jest.spyOn(component.selectorService, 'createOneSelector');
+      const createSelectorSpy = jest.spyOn(component.selectorService, 'createSelectorCheck');
       jest.spyOn(component, 'reset');
       const getOneEpg = jest.spyOn(component['endpointGroupService'], 'getOneEndpointGroup');
 
@@ -145,7 +145,7 @@ describe('SelectorModalComponent', () => {
       component.endpointSecurityGroupId = '123';
       component.selector = { selectorType: 'Tag' };
       const { tagKey, valueOperator, tagValue } = component.form.controls;
-      const createSelectorSpy = jest.spyOn(component.selectorService, 'createOneSelector');
+      const createSelectorSpy = jest.spyOn(component.selectorService, 'createSelectorCheck');
 
       component.navIndex = 0;
 

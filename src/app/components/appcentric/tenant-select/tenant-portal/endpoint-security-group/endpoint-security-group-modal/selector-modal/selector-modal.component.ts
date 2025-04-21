@@ -4,7 +4,6 @@ import { EndpointGroup, V2AppCentricEndpointGroupsService, V2AppCentricSelectors
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { Tab } from 'src/app/common/tabs/tabs.component';
-import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { IpAddressAnyValidator } from 'src/app/validators/network-form-validators';
 
 @Component({
@@ -115,13 +114,14 @@ export class SelectorModalComponent implements OnInit {
     } else if (this.navIndex === 1) {
       this.selector.selectorType = 'EPG';
       this.selector.endpointGroupId = this.form.value.epgId;
-      this.selector.endpointGroupName = ObjectUtil.getObjectName(this.form.value.epgId, this.endpointGroups);
     } else {
       this.selector.selectorType = 'IpSubnet';
       this.selector.IpSubnet = this.form.value.IpSubnet;
     }
     this.selector.tenantId = this.tenantId;
-    this.selectorService.createOneSelector({ selector: this.selector }).subscribe(data => {
+    this.selector.vrfId = this.vrfId;
+    this.selector.description = this.form.value.description;
+    this.selectorService.createSelectorCheck({ selector: this.selector }).subscribe(data => {
       this.reset();
       return data;
     });

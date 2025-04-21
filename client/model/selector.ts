@@ -28,6 +28,7 @@ export interface Selector {
     valueOperator?: string;
     tagValue?: string;
     endpointGroupName?: string;
+    endpointGroupId?: string;
     readonly endpointSecurityGroup?: EndpointSecurityGroup;
     endpointSecurityGroupId: string;
     readonly tenant?: Tenant;

@@ -26,7 +26,7 @@ import { Configuration }                                     from '../configurat
 
 
 export interface BulkUploadSelectorsRequestParams {
-    selector: Array<Selector>;
+    requestBody: Array<string>;
 }
 
 export interface CreateManySelectorRequestParams {
@@ -34,6 +34,10 @@ export interface CreateManySelectorRequestParams {
 }
 
 export interface CreateOneSelectorRequestParams {
+    selector: Selector;
+}
+
+export interface CreateSelectorCheckRequestParams {
     selector: Selector;
 }
 
@@ -171,9 +175,9 @@ export class V2AppCentricSelectorsService {
     public bulkUploadSelectors(requestParameters: BulkUploadSelectorsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Selector>>;
     public bulkUploadSelectors(requestParameters: BulkUploadSelectorsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Selector>>;
     public bulkUploadSelectors(requestParameters: BulkUploadSelectorsRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const selector = requestParameters.selector;
-        if (selector === null || selector === undefined) {
-            throw new Error('Required parameter selector was null or undefined when calling bulkUploadSelectors.');
+        const requestBody = requestParameters.requestBody;
+        if (requestBody === null || requestBody === undefined) {
+            throw new Error('Required parameter requestBody was null or undefined when calling bulkUploadSelectors.');
         }
 
         let headers = this.defaultHeaders;
@@ -206,7 +210,7 @@ export class V2AppCentricSelectorsService {
         }
 
         return this.httpClient.post<Selector>(`${this.configuration.basePath}/v2/app-centric/selectors/:/bulk`,
-            selector,
+            requestBody,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -318,6 +322,62 @@ export class V2AppCentricSelectorsService {
         }
 
         return this.httpClient.post<Selector>(`${this.configuration.basePath}/v2/app-centric/selectors`,
+            selector,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Create Selector Check
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createSelectorCheck(requestParameters: CreateSelectorCheckRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Selector>;
+    public createSelectorCheck(requestParameters: CreateSelectorCheckRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Selector>>;
+    public createSelectorCheck(requestParameters: CreateSelectorCheckRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Selector>>;
+    public createSelectorCheck(requestParameters: CreateSelectorCheckRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const selector = requestParameters.selector;
+        if (selector === null || selector === undefined) {
+            throw new Error('Required parameter selector was null or undefined when calling createSelectorCheck.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<Selector>(`${this.configuration.basePath}/v2/app-centric/selectors/selectorCheck`,
             selector,
             {
                 responseType: <any>responseType,
