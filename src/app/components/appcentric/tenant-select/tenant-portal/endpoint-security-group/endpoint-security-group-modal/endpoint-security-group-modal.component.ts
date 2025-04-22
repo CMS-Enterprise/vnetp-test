@@ -174,8 +174,8 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   }
 
   public closeModal(): void {
-    this.ngx.close('endpointSecurityGroupModal');
     this.reset();
+    this.ngx.close('endpointSecurityGroupModal');
   }
 
   public getData(): void {
