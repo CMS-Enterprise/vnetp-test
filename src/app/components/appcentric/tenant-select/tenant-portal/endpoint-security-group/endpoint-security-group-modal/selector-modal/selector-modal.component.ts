@@ -157,17 +157,18 @@ export class SelectorModalComponent implements OnInit {
         filter: [`tenantId||eq||${this.tenantId}`, 'deletedAt||isnull'],
         page: 1,
         perPage: 1000,
-        join: ['bridgeDomain'],
+        join: ['bridgeDomain', 'selector'],
       })
       .subscribe(data => {
         this.endpointGroups = data.data;
         // available endpoint groups MUST belong to the same vrf as the endpoint security group
         this.endpointGroups = this.endpointGroups.filter(epg => epg.bridgeDomain.vrfId === this.vrfId);
 
-        // filter out EPGs that have already been used to create a Selector for this ESG
+        // filter out EPGs that have already been used to create a Selector for this ESG and those that already have a Selector
         if (this.selector) {
           this.endpointGroups = this.endpointGroups.filter(
-            epg => !this.selector.existingEpgSelectors.some(selectorEpg => selectorEpg.endpointGroupName === epg.name),
+            epg =>
+              !this.selector.existingEpgSelectors.some(selectorEpg => selectorEpg.endpointGroupName === epg.name) && epg.selector == null,
           );
         }
       });
