@@ -14,6 +14,7 @@ import { Tenant } from './tenant';
 import { BridgeDomain } from './bridgeDomain';
 import { ApplicationProfile } from './applicationProfile';
 import { Contract } from './contract';
+import { Selector } from './selector';
 
 
 export interface EndpointGroup { 
@@ -31,7 +32,6 @@ export interface EndpointGroup {
      * Intra-EPG endpoint isolation policies provide full isolation for virtual or physical endpoints;no communication is allowed between endpoints in an EPG that is operating with isolation enforced.
      */
     intraEpgIsolation: boolean;
-    esgMatched: boolean;
     readonly tenant?: Tenant;
     tenantId: string;
     readonly bridgeDomain?: BridgeDomain;
@@ -41,5 +41,6 @@ export interface EndpointGroup {
     readonly consumedContracts?: Array<Contract>;
     readonly providedContracts?: Array<Contract>;
     readonly aciRuntimes?: AciRuntime;
+    readonly selector?: Selector;
 }
 

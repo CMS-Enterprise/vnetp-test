@@ -23860,6 +23860,14 @@
           "endpointGroupName": {
             "type": "string"
           },
+          "endpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
           "endpointGroupId": {
             "type": "string"
           },
@@ -25025,10 +25033,6 @@
             "type": "boolean",
             "description": "Intra-EPG endpoint isolation policies provide full isolation for virtual or physical endpoints;no communication is allowed between endpoints in an EPG that is operating with isolation enforced."
           },
-          "esgMatched": {
-            "type": "boolean",
-            "description": ""
-          },
           "tenant": {
             "readOnly": true,
             "allOf": [
@@ -25083,11 +25087,18 @@
                 "$ref": "#/components/schemas/AciRuntime"
               }
             ]
+          },
+          "selector": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Selector"
+              }
+            ]
           }
         },
         "required": [
           "intraEpgIsolation",
-          "esgMatched",
           "tenantId",
           "bridgeDomainId",
           "applicationProfileId"

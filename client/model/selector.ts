@@ -11,6 +11,7 @@
  */
 import { EndpointSecurityGroup } from './endpointSecurityGroup';
 import { Tenant } from './tenant';
+import { EndpointGroup } from './endpointGroup';
 
 
 export interface Selector { 
@@ -28,6 +29,7 @@ export interface Selector {
     valueOperator?: string;
     tagValue?: string;
     endpointGroupName?: string;
+    readonly endpointGroup?: EndpointGroup;
     endpointGroupId?: string;
     readonly endpointSecurityGroup?: EndpointSecurityGroup;
     endpointSecurityGroupId: string;

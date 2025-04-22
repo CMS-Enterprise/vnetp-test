@@ -47,7 +47,7 @@ export class EndpointGroupComponent implements OnInit {
   @ViewChild('expandedRows') expandedRows: TemplateRef<any>;
   @ViewChild('applicationProfileTemplate') applicationProfileTemplate: TemplateRef<any>;
   @ViewChild('bridgeDomainTemplate') bridgeDomainTemplate: TemplateRef<any>;
-
+  @ViewChild('selectorTemplate') selectorTemplate: TemplateRef<any>;
   public config: TableConfig<any> = {
     description: 'Endpoint Groups',
     columns: [
@@ -57,7 +57,7 @@ export class EndpointGroupComponent implements OnInit {
       { name: 'Intra Epg Isolation', property: 'intraEpgIsolation' },
       { name: 'Application Profile', template: () => this.applicationProfileTemplate },
       { name: 'Bridge Domain', template: () => this.bridgeDomainTemplate },
-      { name: 'Esg Matched', property: 'esgMatched' },
+      { name: 'ESG Matched', template: () => this.selectorTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
     // TODO: Implement appcentric aci runtime
@@ -111,7 +111,7 @@ export class EndpointGroupComponent implements OnInit {
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        relations: ['applicationProfile', 'bridgeDomain'],
+        relations: ['applicationProfile', 'bridgeDomain', 'selector'],
       })
       .subscribe(
         data => {
