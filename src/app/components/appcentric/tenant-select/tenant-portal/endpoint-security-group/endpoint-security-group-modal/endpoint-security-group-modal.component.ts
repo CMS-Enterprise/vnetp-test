@@ -357,7 +357,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     this.selectorService.deleteOneSelector({ id: selector.id }).subscribe(() => {
       if (selector.selectorType === 'EPG') {
         const epgToUpdate = this.endpointGroups.find(epg => epg.name === selector.endpointGroupName);
-        this.retrieveAndUpdateEndpointGroup(epgToUpdate.id, false);
+        this.retrieveAndUpdateEndpointGroup(epgToUpdate.id);
       }
       this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
     });
@@ -381,9 +381,8 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       });
   }
 
-  private retrieveAndUpdateEndpointGroup(epgId: string, esgMatched): void {
+  private retrieveAndUpdateEndpointGroup(epgId: string): void {
     this.endpointGroupService.getOneEndpointGroup({ id: epgId }).subscribe(epg => {
-      epg.esgMatched = esgMatched;
       delete epg.name;
       delete epg.tenantId;
       delete epg.applicationProfileId;

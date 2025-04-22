@@ -76,4 +76,10 @@
   </section>
 </ng-template>
 
+<ng-template #selectorTemplate let-endpointGroup="datum">
+  <section>
+    <span>{{ endpointGroup?.selector !== null ? 'Yes' : 'No' }}</span>
+  </section>
+</ng-template>
+
 <app-yes-no-modal></app-yes-no-modal>
