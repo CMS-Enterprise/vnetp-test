@@ -228,7 +228,9 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     this.tagSelectors.data = [];
     this.ngx.resetModalData('endpointSecurityGroupModal');
     this.buildForm();
-
+    // this.providedContractRef.clearSelectedContract();
+    // this.consumedContractRef.clearSelectedContract();
+    // this.currentTab = this.tabs[0].name;
     if (this.currentTab === 'Provided Contracts') {
       this.providedContractRef.clearSelectedContract();
     }
@@ -236,6 +238,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     if (this.currentTab === 'Consumed Contracts') {
       this.consumedContractRef.clearSelectedContract();
     }
+    this.currentTab = this.tabs[0].name;
   }
 
   private buildForm(): void {
