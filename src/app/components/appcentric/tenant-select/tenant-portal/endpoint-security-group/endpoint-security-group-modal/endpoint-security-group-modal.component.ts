@@ -355,10 +355,6 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
 
   public hardDeleteSelector(selector: Selector): void {
     this.selectorService.deleteOneSelector({ id: selector.id }).subscribe(() => {
-      if (selector.selectorType === 'EPG') {
-        const epgToUpdate = this.endpointGroups.find(epg => epg.name === selector.endpointGroupName);
-        this.retrieveAndUpdateEndpointGroup(epgToUpdate.id);
-      }
       this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
     });
   }
