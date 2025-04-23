@@ -57,4 +57,6 @@ export class NatRulesComponent implements OnInit, OnDestroy {
   checkUndeployedChangesGroup(group: NatRuleGroup): boolean {
     return UndeployedChangesUtil.hasUndeployedChanges(group);
   }
+
+  public filterNatRuleGroup = (natRuleGroup: NatRuleGroup): boolean => natRuleGroup.name !== 'Intravrf' && !natRuleGroup.deletedAt;
 }

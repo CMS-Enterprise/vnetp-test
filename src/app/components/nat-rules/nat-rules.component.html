@@ -22,7 +22,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let natRuleGroup of natRuleGroups | paginate : { itemsPerPage: perPage, currentPage: currentNatRulePage }">
+      <tr
+        *ngFor="
+          let natRuleGroup of natRuleGroups
+            | filter : filterNatRuleGroup
+            | paginate : { itemsPerPage: perPage, currentPage: currentNatRulePage }
+        "
+      >
         <td>
           {{ getTierName(natRuleGroup.tierId) }}
         </td>

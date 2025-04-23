@@ -38,7 +38,8 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
       });
   }
 
-  public filterFirewallRuleGroup = (firewallRuleGroup: FirewallRuleGroup): boolean => firewallRuleGroup.name !== 'Intravrf';
+  public filterFirewallRuleGroup = (firewallRuleGroup: FirewallRuleGroup): boolean =>
+    firewallRuleGroup.name !== 'Intravrf' && !firewallRuleGroup.deletedAt;
 
   public getTierName(tierId: string): string {
     return ObjectUtil.getObjectName(tierId, [this.currentTier], 'Error Resolving Name');
