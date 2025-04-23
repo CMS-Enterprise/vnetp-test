@@ -5482,31 +5482,6 @@
         ]
       }
     },
-    "/v2/app-centric/endpoint-groups/{endpointGroupId}/cascadeDelete": {
-      "delete": {
-        "operationId": "cascadeDeleteTierEndpointGroup",
-        "summary": "",
-        "description": "Cascade Delete ESG",
-        "parameters": [
-          {
-            "name": "endpointGroupId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
     "/v2/app-centric/endpoint-groups/{endpointGroupId}/consumed-contracts/{contractId}": {
       "post": {
         "operationId": "addConsumedContractToEndpointGroupEndpointGroup",
@@ -19399,31 +19374,6 @@
         },
         "tags": [
           "v2/app-centric/route-profiles"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/cascadeDelete": {
-      "delete": {
-        "operationId": "cascadeDeleteEsgEndpointSecurityGroup",
-        "summary": "",
-        "description": "Cascade Delete ESG",
-        "parameters": [
-          {
-            "name": "endpointSecurityGroupId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
         ]
       }
     },

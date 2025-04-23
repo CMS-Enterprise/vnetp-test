@@ -56,10 +56,6 @@ export interface AddProvidedContractToEndpointGroupEndpointGroupRequestParams {
     contractId: string;
 }
 
-export interface CascadeDeleteTierEndpointGroupRequestParams {
-    endpointGroupId: string;
-}
-
 export interface CreateManyEndpointGroupRequestParams {
     createManyEndpointGroupDto: CreateManyEndpointGroupDto;
 }
@@ -472,51 +468,6 @@ export class V2AppCentricEndpointGroupsService {
 
         return this.httpClient.post<EndpointGroup>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(endpointGroupId))}/provided-contracts/${encodeURIComponent(String(contractId))}`,
             null,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Cascade Delete ESG
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public cascadeDeleteTierEndpointGroup(requestParameters: CascadeDeleteTierEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public cascadeDeleteTierEndpointGroup(requestParameters: CascadeDeleteTierEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public cascadeDeleteTierEndpointGroup(requestParameters: CascadeDeleteTierEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public cascadeDeleteTierEndpointGroup(requestParameters: CascadeDeleteTierEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const endpointGroupId = requestParameters.endpointGroupId;
-        if (endpointGroupId === null || endpointGroupId === undefined) {
-            throw new Error('Required parameter endpointGroupId was null or undefined when calling cascadeDeleteTierEndpointGroup.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(endpointGroupId))}/cascadeDelete`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

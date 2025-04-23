@@ -56,10 +56,6 @@ export interface AddProvidedContractToEndpointSecurityGroupEndpointSecurityGroup
     contractId: string;
 }
 
-export interface CascadeDeleteEsgEndpointSecurityGroupRequestParams {
-    endpointSecurityGroupId: string;
-}
-
 export interface CreateManyEndpointSecurityGroupRequestParams {
     createManyEndpointSecurityGroupDto: CreateManyEndpointSecurityGroupDto;
 }
@@ -472,51 +468,6 @@ export class V2AppCentricEndpointSecurityGroupsService {
 
         return this.httpClient.post<EndpointSecurityGroup>(`${this.configuration.basePath}/v2/app-centric/endpoint-security-groups/${encodeURIComponent(String(endpointSecurityGroupId))}/provided-contracts/${encodeURIComponent(String(contractId))}`,
             null,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Cascade Delete ESG
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public cascadeDeleteEsgEndpointSecurityGroup(requestParameters: CascadeDeleteEsgEndpointSecurityGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public cascadeDeleteEsgEndpointSecurityGroup(requestParameters: CascadeDeleteEsgEndpointSecurityGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public cascadeDeleteEsgEndpointSecurityGroup(requestParameters: CascadeDeleteEsgEndpointSecurityGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public cascadeDeleteEsgEndpointSecurityGroup(requestParameters: CascadeDeleteEsgEndpointSecurityGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const endpointSecurityGroupId = requestParameters.endpointSecurityGroupId;
-        if (endpointSecurityGroupId === null || endpointSecurityGroupId === undefined) {
-            throw new Error('Required parameter endpointSecurityGroupId was null or undefined when calling cascadeDeleteEsgEndpointSecurityGroup.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-security-groups/${encodeURIComponent(String(endpointSecurityGroupId))}/cascadeDelete`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
