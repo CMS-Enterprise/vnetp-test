@@ -13,8 +13,7 @@ import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.modul
 import { AciRuntimeModule } from 'src/app/components/aci-runtime/aci-runtime.module';
 import { EndpointSecurityGroupModalComponent } from './endpoint-security-group-modal/endpoint-security-group-modal.component';
 import { EndpointSecurityGroupComponent } from './endpoint-security-group.component';
-import { ConsumedContractModule } from '../consumed-contract/consumed-contract.module';
-import { ProvidedContractModule } from '../provided-contract/provided-contract.module';
+import { ContractAssociationModule } from '../contract-association/contract-association.module';
 import { SelectorModalComponent } from './endpoint-security-group-modal/selector-modal/selector-modal.component';
 
 const routes: Routes = [
@@ -42,8 +41,7 @@ const routes: Routes = [
     NgxSmartModalModule,
     AciRuntimeModule,
     YesNoModalModule,
-    ConsumedContractModule,
-    ProvidedContractModule,
+    ContractAssociationModule,
   ],
   exports: [EndpointSecurityGroupComponent],
 })

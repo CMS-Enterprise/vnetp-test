@@ -21,6 +21,7 @@ export interface EndpointSecurityGroup {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
+    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
@@ -36,6 +37,7 @@ export interface EndpointSecurityGroup {
     tenantId: string;
     readonly consumedContracts?: Array<Contract>;
     readonly providedContracts?: Array<Contract>;
+    readonly intraContracts?: Array<Contract>;
     readonly selectors?: Array<Selector>;
     readonly vrf?: Vrf;
     vrfId: string;

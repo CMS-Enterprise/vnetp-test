@@ -8,14 +8,14 @@
 ></ng-select>
 <button type="button" class="btn btn-info" (click)="addContract()" [disabled]="!selectedContract">
   <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-  <span>Add Consumed Contract</span>
+  <span>Add {{ contractType | titlecase }} Contract</span>
 </button>
 <app-table
   *ngIf="mode === 'epg'"
   [config]="config"
   [data]="contractTableData"
-  (clearResults)="getConsumedContracts()"
-  (searchParams)="getConsumedContracts()"
+  (clearResults)="getAllContracts()"
+  (searchParams)="getAllContracts()"
   [searchColumns]="searchColumns"
   [(itemsPerPage)]="perPage"
   (tableEvent)="onTableEvent($event)"
@@ -25,8 +25,8 @@
   *ngIf="mode === 'esg'"
   [config]="config"
   [data]="contractTableData"
-  (clearResults)="getConsumedContracts()"
-  (searchParams)="getConsumedContracts()"
+  (clearResults)="getAllContracts()"
+  (searchParams)="getAllContracts()"
   [searchColumns]="searchColumns"
   [(itemsPerPage)]="perPage"
   (tableEvent)="onTableEvent($event)"
@@ -39,8 +39,9 @@
 </ng-template>
 
 <app-import-export
+  *ngIf="contractType !== 'intra'"
   [exportObject]="contracts"
   exportFileName="contracts"
   [disableJson]="false"
-  (import)="importConsumedContractRelation($event)"
+  (import)="importContractRelation($event)"
 ></app-import-export>

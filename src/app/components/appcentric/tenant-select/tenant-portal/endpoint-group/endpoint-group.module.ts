@@ -13,8 +13,7 @@ import { TabsModule } from '../../../../../common/tabs/tabs.module';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { AciRuntimeModule } from '../../../../aci-runtime/aci-runtime.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
-import { ProvidedContractModule } from '../provided-contract/provided-contract.module';
-import { ConsumedContractModule } from '../consumed-contract/consumed-contract.module';
+import { ContractAssociationModule } from '../contract-association/contract-association.module';
 
 const routes: Routes = [
   {
@@ -41,8 +40,7 @@ const routes: Routes = [
     NgxSmartModalModule,
     AciRuntimeModule,
     YesNoModalModule,
-    ProvidedContractModule,
-    ConsumedContractModule,
+    ContractAssociationModule,
   ],
   exports: [EndpointGroupComponent],
 })

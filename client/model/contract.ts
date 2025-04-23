@@ -31,8 +31,10 @@ export interface Contract {
     tenantId: string;
     readonly consumingEndpointGroups?: Array<EndpointGroup>;
     readonly providingEndpointGroups?: Array<EndpointGroup>;
+    readonly intraEndpointGroups?: Array<EndpointGroup>;
     readonly subjects?: Array<Subject>;
     readonly consumingEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
     readonly providingEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
+    readonly intraEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
 }
 

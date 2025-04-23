@@ -18,10 +18,28 @@
   ></app-tabs>
 
   <div class="modal-body" *ngIf="currentTab === 'Consumed Contracts'">
-    <app-consumed-contract #consumedContract [endpointGroupId]="endpointGroupId" [tenantId]="tenantId"></app-consumed-contract>
+    <app-contract-association
+      #consumedContract
+      [endpointGroupId]="endpointGroupId"
+      [tenantId]="tenantId"
+      contractType="consumed"
+    ></app-contract-association>
   </div>
   <div class="modal-body" *ngIf="currentTab === 'Provided Contracts'">
-    <app-provided-contract #providedContract [endpointGroupId]="endpointGroupId" [tenantId]="tenantId"></app-provided-contract>
+    <app-contract-association
+      #providedContract
+      [endpointGroupId]="endpointGroupId"
+      [tenantId]="tenantId"
+      contractType="provided"
+    ></app-contract-association>
+  </div>
+  <div class="modal-body" *ngIf="currentTab === 'Intra-EPG Contracts'">
+    <app-contract-association
+      #intraContract
+      [endpointGroupId]="endpointGroupId"
+      [tenantId]="tenantId"
+      contractType="intra"
+    ></app-contract-association>
   </div>
   <div *ngIf="currentTab === 'Endpoint Group'">
     <form [formGroup]="form" (ngSubmit)="save()">

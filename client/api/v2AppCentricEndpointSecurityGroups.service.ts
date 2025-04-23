@@ -32,6 +32,13 @@ export interface AddConsumedContractToEndpointSecurityGroupEndpointSecurityGroup
     contractId: string;
 }
 
+export interface AddIntraContractToEndpointSecurityGroupEndpointSecurityGroupRequestParams {
+    /** EndpointSecurity Group that the Contract is being added to/removed from. */
+    endpointSecurityGroupId: string;
+    /** Contract that is being added/removed from the EndpointSecurity Group. */
+    contractId: string;
+}
+
 export interface AddManyConsumedContractsToEndpointSecurityGroupEndpointSecurityGroupRequestParams {
     endpointSecurityGroupId: string;
     body: string;
@@ -109,6 +116,13 @@ export interface ProvisionOneEndpointSecurityGroupRequestParams {
 }
 
 export interface RemoveConsumedContractToEndpointSecurityGroupEndpointSecurityGroupRequestParams {
+    /** EndpointSecurity Group that the Contract is being added to/removed from. */
+    endpointSecurityGroupId: string;
+    /** Contract that is being added/removed from the EndpointSecurity Group. */
+    contractId: string;
+}
+
+export interface RemoveIntraContractToEndpointSecurityGroupEndpointSecurityGroupRequestParams {
     /** EndpointSecurity Group that the Contract is being added to/removed from. */
     endpointSecurityGroupId: string;
     /** Contract that is being added/removed from the EndpointSecurity Group. */
@@ -238,6 +252,56 @@ export class V2AppCentricEndpointSecurityGroupsService {
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-security-groups/${encodeURIComponent(String(endpointSecurityGroupId))}/consumed-contracts/${encodeURIComponent(String(contractId))}`,
+            null,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Add Intra Contract to Endpoint Security Group
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public addIntraContractToEndpointSecurityGroupEndpointSecurityGroup(requestParameters: AddIntraContractToEndpointSecurityGroupEndpointSecurityGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public addIntraContractToEndpointSecurityGroupEndpointSecurityGroup(requestParameters: AddIntraContractToEndpointSecurityGroupEndpointSecurityGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public addIntraContractToEndpointSecurityGroupEndpointSecurityGroup(requestParameters: AddIntraContractToEndpointSecurityGroupEndpointSecurityGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public addIntraContractToEndpointSecurityGroupEndpointSecurityGroup(requestParameters: AddIntraContractToEndpointSecurityGroupEndpointSecurityGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const endpointSecurityGroupId = requestParameters.endpointSecurityGroupId;
+        if (endpointSecurityGroupId === null || endpointSecurityGroupId === undefined) {
+            throw new Error('Required parameter endpointSecurityGroupId was null or undefined when calling addIntraContractToEndpointSecurityGroupEndpointSecurityGroup.');
+        }
+        const contractId = requestParameters.contractId;
+        if (contractId === null || contractId === undefined) {
+            throw new Error('Required parameter contractId was null or undefined when calling addIntraContractToEndpointSecurityGroupEndpointSecurityGroup.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-security-groups/${encodeURIComponent(String(endpointSecurityGroupId))}/intra-contracts/${encodeURIComponent(String(contractId))}`,
             null,
             {
                 responseType: <any>responseType,
@@ -923,6 +987,55 @@ export class V2AppCentricEndpointSecurityGroupsService {
         }
 
         return this.httpClient.delete<EndpointSecurityGroup>(`${this.configuration.basePath}/v2/app-centric/endpoint-security-groups/${encodeURIComponent(String(endpointSecurityGroupId))}/consumed-contracts/${encodeURIComponent(String(contractId))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Remove Intra Contract from Endpoint Security Group
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public removeIntraContractToEndpointSecurityGroupEndpointSecurityGroup(requestParameters: RemoveIntraContractToEndpointSecurityGroupEndpointSecurityGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public removeIntraContractToEndpointSecurityGroupEndpointSecurityGroup(requestParameters: RemoveIntraContractToEndpointSecurityGroupEndpointSecurityGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public removeIntraContractToEndpointSecurityGroupEndpointSecurityGroup(requestParameters: RemoveIntraContractToEndpointSecurityGroupEndpointSecurityGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public removeIntraContractToEndpointSecurityGroupEndpointSecurityGroup(requestParameters: RemoveIntraContractToEndpointSecurityGroupEndpointSecurityGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const endpointSecurityGroupId = requestParameters.endpointSecurityGroupId;
+        if (endpointSecurityGroupId === null || endpointSecurityGroupId === undefined) {
+            throw new Error('Required parameter endpointSecurityGroupId was null or undefined when calling removeIntraContractToEndpointSecurityGroupEndpointSecurityGroup.');
+        }
+        const contractId = requestParameters.contractId;
+        if (contractId === null || contractId === undefined) {
+            throw new Error('Required parameter contractId was null or undefined when calling removeIntraContractToEndpointSecurityGroupEndpointSecurityGroup.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-security-groups/${encodeURIComponent(String(endpointSecurityGroupId))}/intra-contracts/${encodeURIComponent(String(contractId))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

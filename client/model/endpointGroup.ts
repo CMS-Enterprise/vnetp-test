@@ -41,6 +41,7 @@ export interface EndpointGroup {
     applicationProfileId: string;
     readonly consumedContracts?: Array<Contract>;
     readonly providedContracts?: Array<Contract>;
+    readonly intraContracts?: Array<Contract>;
     readonly aciRuntimes?: AciRuntime;
     readonly selector?: Selector;
 }

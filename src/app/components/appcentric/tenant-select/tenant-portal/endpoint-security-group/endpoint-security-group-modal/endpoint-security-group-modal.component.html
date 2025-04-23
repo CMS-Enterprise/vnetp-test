@@ -18,18 +18,28 @@
   ></app-tabs>
 
   <div class="modal-body" *ngIf="currentTab === 'Consumed Contracts'">
-    <app-consumed-contract
+    <app-contract-association
       #consumedContract
       [endpointSecurityGroupId]="endpointSecurityGroupId"
       [tenantId]="tenantId"
-    ></app-consumed-contract>
+      contractType="consumed"
+    ></app-contract-association>
   </div>
   <div class="modal-body" *ngIf="currentTab === 'Provided Contracts'">
-    <app-provided-contract
+    <app-contract-association
       #providedContract
       [endpointSecurityGroupId]="endpointSecurityGroupId"
       [tenantId]="tenantId"
-    ></app-provided-contract>
+      contractType="provided"
+    ></app-contract-association>
+  </div>
+  <div class="modal-body" *ngIf="currentTab === 'Intra-ESG Contracts'">
+    <app-contract-association
+      #intraContract
+      [endpointSecurityGroupId]="endpointSecurityGroupId"
+      [tenantId]="tenantId"
+      contractType="intra"
+    ></app-contract-association>
   </div>
   <div *ngIf="currentTab === 'Endpoint Security Group'">
     <form [formGroup]="form" (ngSubmit)="save()">

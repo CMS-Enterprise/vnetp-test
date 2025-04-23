@@ -32,6 +32,13 @@ export interface AddConsumedContractToEndpointGroupEndpointGroupRequestParams {
     contractId: string;
 }
 
+export interface AddIntraContractToEndpointGroupEndpointGroupRequestParams {
+    /** Endpoint Group that the Contract is being added to/removed from. */
+    endpointGroupId: string;
+    /** Contract that is being added/removed from the Endpoint Group. */
+    contractId: string;
+}
+
 export interface AddManyConsumedContractsToEndpointGroupEndpointGroupRequestParams {
     endpointGroupId: string;
     body: string;
@@ -109,6 +116,13 @@ export interface ProvisionOneEndpointGroupRequestParams {
 }
 
 export interface RemoveConsumedContractToEndpointGroupEndpointGroupRequestParams {
+    /** Endpoint Group that the Contract is being added to/removed from. */
+    endpointGroupId: string;
+    /** Contract that is being added/removed from the Endpoint Group. */
+    contractId: string;
+}
+
+export interface RemoveIntraContractToEndpointGroupEndpointGroupRequestParams {
     /** Endpoint Group that the Contract is being added to/removed from. */
     endpointGroupId: string;
     /** Contract that is being added/removed from the Endpoint Group. */
@@ -238,6 +252,56 @@ export class V2AppCentricEndpointGroupsService {
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(endpointGroupId))}/consumed-contracts/${encodeURIComponent(String(contractId))}`,
+            null,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Add Intra Contract to Endpoint Group
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public addIntraContractToEndpointGroupEndpointGroup(requestParameters: AddIntraContractToEndpointGroupEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public addIntraContractToEndpointGroupEndpointGroup(requestParameters: AddIntraContractToEndpointGroupEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public addIntraContractToEndpointGroupEndpointGroup(requestParameters: AddIntraContractToEndpointGroupEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public addIntraContractToEndpointGroupEndpointGroup(requestParameters: AddIntraContractToEndpointGroupEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const endpointGroupId = requestParameters.endpointGroupId;
+        if (endpointGroupId === null || endpointGroupId === undefined) {
+            throw new Error('Required parameter endpointGroupId was null or undefined when calling addIntraContractToEndpointGroupEndpointGroup.');
+        }
+        const contractId = requestParameters.contractId;
+        if (contractId === null || contractId === undefined) {
+            throw new Error('Required parameter contractId was null or undefined when calling addIntraContractToEndpointGroupEndpointGroup.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(endpointGroupId))}/intra-contracts/${encodeURIComponent(String(contractId))}`,
             null,
             {
                 responseType: <any>responseType,
@@ -923,6 +987,56 @@ export class V2AppCentricEndpointGroupsService {
         }
 
         return this.httpClient.delete<EndpointGroup>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(endpointGroupId))}/consumed-contracts/${encodeURIComponent(String(contractId))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Remove Intra Contract from Endpoint Group
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public removeIntraContractToEndpointGroupEndpointGroup(requestParameters: RemoveIntraContractToEndpointGroupEndpointGroupRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<EndpointGroup>;
+    public removeIntraContractToEndpointGroupEndpointGroup(requestParameters: RemoveIntraContractToEndpointGroupEndpointGroupRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<EndpointGroup>>;
+    public removeIntraContractToEndpointGroupEndpointGroup(requestParameters: RemoveIntraContractToEndpointGroupEndpointGroupRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<EndpointGroup>>;
+    public removeIntraContractToEndpointGroupEndpointGroup(requestParameters: RemoveIntraContractToEndpointGroupEndpointGroupRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const endpointGroupId = requestParameters.endpointGroupId;
+        if (endpointGroupId === null || endpointGroupId === undefined) {
+            throw new Error('Required parameter endpointGroupId was null or undefined when calling removeIntraContractToEndpointGroupEndpointGroup.');
+        }
+        const contractId = requestParameters.contractId;
+        if (contractId === null || contractId === undefined) {
+            throw new Error('Required parameter contractId was null or undefined when calling removeIntraContractToEndpointGroupEndpointGroup.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<EndpointGroup>(`${this.configuration.basePath}/v2/app-centric/endpoint-groups/${encodeURIComponent(String(endpointGroupId))}/intra-contracts/${encodeURIComponent(String(contractId))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

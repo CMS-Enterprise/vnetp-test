@@ -2,7 +2,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { V2AppCentricTenantsService } from 'client';
+import { Tenant, V2AppCentricTenantsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   MockComponent,
@@ -50,7 +50,7 @@ describe('TenantSelectComponent', () => {
   });
 
   it('should delete tenant', () => {
-    const tenantToDelete = { id: '123', description: 'Bye!', datacenterId: 'testDatacenterId' };
+    const tenantToDelete = { id: '123', description: 'Bye!', datacenterId: 'testDatacenterId' } as Tenant;
     component.deleteTenant(tenantToDelete);
     const getTenantsMock = jest.spyOn(component['tenantService'], 'getManyTenant');
     expect(getTenantsMock).toHaveBeenCalled();

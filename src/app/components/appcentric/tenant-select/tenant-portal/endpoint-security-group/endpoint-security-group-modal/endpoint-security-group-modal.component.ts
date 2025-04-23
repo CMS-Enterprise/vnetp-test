@@ -16,8 +16,6 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Tab } from 'src/app/common/tabs/tabs.component';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NameValidator } from 'src/app/validators/name-validator';
-import { ConsumedContractComponent } from '../../consumed-contract/consumed-contract.component';
-import { ProvidedContractComponent } from '../../provided-contract/provided-contract.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -27,8 +25,14 @@ import { EntityService } from 'src/app/services/entity.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import { ContractAssociationComponent } from '../../contract-association/contract-association.component';
 
-const tabs = [{ name: 'Endpoint Security Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }];
+const tabs = [
+  { name: 'Endpoint Security Group' },
+  { name: 'Consumed Contracts' },
+  { name: 'Provided Contracts' },
+  { name: 'Intra-ESG Contracts' },
+];
 
 @Component({
   selector: 'app-endpoint-security-group-modal',
@@ -60,10 +64,13 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
   @ViewChild('consumedContract', { static: false })
-  consumedContractRef: ConsumedContractComponent;
+  consumedContractRef: ContractAssociationComponent;
 
   @ViewChild('providedContract', { static: false })
-  providedContractRef: ProvidedContractComponent;
+  providedContractRef: ContractAssociationComponent;
+
+  @ViewChild('intraContract', { static: false })
+  intraContractRef: ContractAssociationComponent;
 
   public tabs: Tab[] = tabs.map(t => ({ name: t.name }));
 
