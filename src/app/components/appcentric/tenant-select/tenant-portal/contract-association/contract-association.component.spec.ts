@@ -271,95 +271,80 @@ describe('ContractAssociationComponent', () => {
         }),
         setModalData: jest.fn(),
       } as any;
-
-      // Reset all mocks before each test
-      jest.restoreAllMocks();
-      jest.clearAllMocks();
     });
 
     describe('Consumed Contracts', () => {
       beforeEach(() => {
         component.contractType = 'consumed';
-        component.mode = 'epg'; // Set default mode for tests
       });
 
       it('should display a confirmation modal for importing consumed contracts', () => {
         const event = [{ name: 'Consumed Contract 1' }, { name: 'Consumed Contract 2' }] as any;
 
-        // Mock the importContractEpgRelation to isolate the test
-        const importSpy = jest.spyOn(component, 'importContractEpgRelation').mockImplementation(() => {});
+        jest.spyOn(component, 'importContractEpgRelation');
+        const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
 
-        // Mock subscribeToYesNoModal so we know it's called with the right params
-        const modalSpy = jest
-          .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
-          .mockImplementation((modalDto, service, onConfirm, onClose) => {
-            return new Subscription();
-          });
-
-        // Call the method we're testing
         component.importContractRelation(event);
 
-        // Verify modalSpy was called at least once
-        expect(modalSpy).toHaveBeenCalled();
-
-        // For the consumed contract case, method should call importContractEpgRelation
-        // since we set mode to 'epg' in beforeEach
-        expect(importSpy).toHaveBeenCalledWith(event);
+        expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            message: expect.stringContaining('Consumed Contract'),
+          }),
+          expect.anything(),
+          expect.any(Function),
+          expect.any(Function),
+        );
       });
 
       it('should import consumed contracts to EPG relations and refresh the table on confirmation', () => {
         component.mode = 'epg';
         const event = [{ name: 'Consumed Contract 1' }, { name: 'Consumed Contract 2' }] as any;
+        jest.spyOn(component, 'getEpgContracts');
+        jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+          onConfirm();
 
-        // Mock getEpgContracts to verify it gets called
-        jest.spyOn(component, 'getEpgContracts').mockImplementation(() => {});
+          expect(component['endpointGroupsService'].addManyConsumedContractsToEndpointGroupEndpointGroup).toHaveBeenCalledTimes(1);
 
-        // Mock the endpointGroupsService.addManyConsumedContractsToEndpointGroupEndpointGroup
-        const addManySpy = jest
-          .spyOn(component['endpointGroupsService'], 'addManyConsumedContractsToEndpointGroupEndpointGroup')
-          .mockReturnValue({
-            subscribe: jest.fn((success, error, complete) => {
-              // Call the complete callback to simulate successful API call
-              if (complete) complete();
-              return {} as any;
-            }),
-          } as any);
+          mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+            const data = modal.getData() as YesNoModalDto;
+            modal.removeData();
+            if (data && data.modalYes) {
+              onConfirm();
+            }
+          });
 
-        // Call the method we're testing directly since we're testing what happens after confirmation
-        component.importContractEpgRelation(event);
+          return new Subscription();
+        });
 
-        // Verify the service method was called
-        expect(addManySpy).toHaveBeenCalled();
+        component.importContractRelation(event);
 
-        // Verify getEpgContracts was called to refresh data
         expect(component.getEpgContracts).toHaveBeenCalled();
       });
 
       it('should import consumed contracts to ESG relations and refresh the table on confirmation', () => {
         component.mode = 'esg';
         const event = [{ name: 'Consumed Contract 1' }, { name: 'Consumed Contract 2' }] as any;
+        jest.spyOn(component, 'getEsgContracts');
+        jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+          onConfirm();
 
-        // Mock getEsgContracts to verify it gets called
-        jest.spyOn(component, 'getEsgContracts').mockImplementation(() => {});
+          expect(
+            component['endpointSecurityGroupsService'].addManyConsumedContractsToEndpointSecurityGroupEndpointSecurityGroup,
+          ).toHaveBeenCalledTimes(1);
 
-        // Mock the endpointSecurityGroupsService.addManyConsumedContractsToEndpointSecurityGroupEndpointSecurityGroup
-        const addManySpy = jest
-          .spyOn(component['endpointSecurityGroupsService'], 'addManyConsumedContractsToEndpointSecurityGroupEndpointSecurityGroup')
-          .mockReturnValue({
-            subscribe: jest.fn((success, error, complete) => {
-              // Call the complete callback to simulate successful API call
-              if (complete) complete();
-              return {} as any;
-            }),
-          } as any);
+          mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+            const data = modal.getData() as YesNoModalDto;
+            modal.removeData();
+            if (data && data.modalYes) {
+              onConfirm();
+            }
+          });
 
-        // Call the method we're testing directly since we're testing what happens after confirmation
-        component.importContractEsgRelation(event);
+          return new Subscription();
+        });
 
-        // Verify the service method was called
-        expect(addManySpy).toHaveBeenCalled();
+        component.importContractRelation(event);
 
-        // Verify getEsgContracts was called to refresh data
         expect(component.getEsgContracts).toHaveBeenCalled();
       });
     });
@@ -367,86 +352,75 @@ describe('ContractAssociationComponent', () => {
     describe('Provided Contracts', () => {
       beforeEach(() => {
         component.contractType = 'provided';
-        component.mode = 'epg'; // Set default mode for tests
       });
 
       it('should display a confirmation modal for importing provided contracts', () => {
         const event = [{ name: 'Provided Contract 1' }, { name: 'Provided Contract 2' }] as any;
 
-        // Mock the importContractEpgRelation to isolate the test
-        const importSpy = jest.spyOn(component, 'importContractEpgRelation').mockImplementation(() => {});
+        jest.spyOn(component, 'importContractEpgRelation');
+        const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
 
-        // Mock subscribeToYesNoModal so we know it's called with the right params
-        const modalSpy = jest
-          .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
-          .mockImplementation((modalDto, service, onConfirm, onClose) => {
-            return new Subscription();
-          });
-
-        // Call the method we're testing
         component.importContractRelation(event);
 
-        // Verify modalSpy was called at least once
-        expect(modalSpy).toHaveBeenCalled();
-
-        // For the provided contract case, method should call importContractEpgRelation
-        // since we set mode to 'epg' in beforeEach
-        expect(importSpy).toHaveBeenCalledWith(event);
+        expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            message: expect.stringContaining('Provided Contract'),
+          }),
+          expect.anything(),
+          expect.any(Function),
+          expect.any(Function),
+        );
       });
 
       it('should import provided contracts to EPG relations and refresh the table on confirmation', () => {
         component.mode = 'epg';
         const event = [{ name: 'Provided Contract 1' }, { name: 'Provided Contract 2' }] as any;
+        jest.spyOn(component, 'getEpgContracts');
+        jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+          onConfirm();
 
-        // Mock getEpgContracts to verify it gets called
-        jest.spyOn(component, 'getEpgContracts').mockImplementation(() => {});
+          expect(component['endpointGroupsService'].addManyProvidedContractsToEndpointGroupEndpointGroup).toHaveBeenCalledTimes(1);
 
-        // Mock the endpointGroupsService.addManyProvidedContractsToEndpointGroupEndpointGroup
-        const addManySpy = jest
-          .spyOn(component['endpointGroupsService'], 'addManyProvidedContractsToEndpointGroupEndpointGroup')
-          .mockReturnValue({
-            subscribe: jest.fn((success, error, complete) => {
-              // Call the complete callback to simulate successful API call
-              if (complete) complete();
-              return {} as any;
-            }),
-          } as any);
+          mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+            const data = modal.getData() as YesNoModalDto;
+            modal.removeData();
+            if (data && data.modalYes) {
+              onConfirm();
+            }
+          });
 
-        // Call the method we're testing directly since we're testing what happens after confirmation
-        component.importContractEpgRelation(event);
+          return new Subscription();
+        });
 
-        // Verify the service method was called
-        expect(addManySpy).toHaveBeenCalled();
+        component.importContractRelation(event);
 
-        // Verify getEpgContracts was called to refresh data
         expect(component.getEpgContracts).toHaveBeenCalled();
       });
 
       it('should import provided contracts to ESG relations and refresh the table on confirmation', () => {
         component.mode = 'esg';
         const event = [{ name: 'Provided Contract 1' }, { name: 'Provided Contract 2' }] as any;
+        jest.spyOn(component, 'getEsgContracts');
+        jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+          onConfirm();
 
-        // Mock getEsgContracts to verify it gets called
-        jest.spyOn(component, 'getEsgContracts').mockImplementation(() => {});
+          expect(
+            component['endpointSecurityGroupsService'].addManyProvidedContractsToEndpointSecurityGroupEndpointSecurityGroup,
+          ).toHaveBeenCalledTimes(1);
 
-        // Mock the endpointSecurityGroupsService.addManyProvidedContractsToEndpointSecurityGroupEndpointSecurityGroup
-        const addManySpy = jest
-          .spyOn(component['endpointSecurityGroupsService'], 'addManyProvidedContractsToEndpointSecurityGroupEndpointSecurityGroup')
-          .mockReturnValue({
-            subscribe: jest.fn((success, error, complete) => {
-              // Call the complete callback to simulate successful API call
-              if (complete) complete();
-              return {} as any;
-            }),
-          } as any);
+          mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+            const data = modal.getData() as YesNoModalDto;
+            modal.removeData();
+            if (data && data.modalYes) {
+              onConfirm();
+            }
+          });
 
-        // Call the method we're testing directly since we're testing what happens after confirmation
-        component.importContractEsgRelation(event);
+          return new Subscription();
+        });
 
-        // Verify the service method was called
-        expect(addManySpy).toHaveBeenCalled();
+        component.importContractRelation(event);
 
-        // Verify getEsgContracts was called to refresh data
         expect(component.getEsgContracts).toHaveBeenCalled();
       });
     });
