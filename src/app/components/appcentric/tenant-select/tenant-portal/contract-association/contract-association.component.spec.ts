@@ -284,11 +284,11 @@ describe('ContractAssociationComponent', () => {
         const event = [{ name: 'Consumed Contract 1' }, { name: 'Consumed Contract 2' }] as any;
 
         jest.spyOn(component, 'importContractEpgRelation');
-        const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+        jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockReturnValue(new Subscription());
 
         component.importContractRelation(event);
 
-        expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(
+        expect(SubscriptionUtil.subscribeToYesNoModal).toHaveBeenCalledWith(
           expect.objectContaining({
             modalBody: expect.stringContaining('Consumed Contract'),
           }),
