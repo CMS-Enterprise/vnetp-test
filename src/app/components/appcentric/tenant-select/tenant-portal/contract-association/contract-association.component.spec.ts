@@ -276,9 +276,11 @@ describe('ContractAssociationComponent', () => {
     describe('Consumed Contracts', () => {
       beforeEach(() => {
         component.contractType = 'consumed';
+        jest.clearAllMocks();
       });
 
       it('should display a confirmation modal for importing consumed contracts', () => {
+        component.mode = 'epg';
         const event = [{ name: 'Consumed Contract 1' }, { name: 'Consumed Contract 2' }] as any;
 
         jest.spyOn(component, 'importContractEpgRelation');
@@ -288,7 +290,7 @@ describe('ContractAssociationComponent', () => {
 
         expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(
           expect.objectContaining({
-            message: expect.stringContaining('Consumed Contract'),
+            modalBody: expect.stringContaining('Consumed Contract'),
           }),
           expect.anything(),
           expect.any(Function),
@@ -352,19 +354,21 @@ describe('ContractAssociationComponent', () => {
     describe('Provided Contracts', () => {
       beforeEach(() => {
         component.contractType = 'provided';
+        jest.clearAllMocks();
       });
 
       it('should display a confirmation modal for importing provided contracts', () => {
+        component.mode = 'epg';
         const event = [{ name: 'Provided Contract 1' }, { name: 'Provided Contract 2' }] as any;
 
         jest.spyOn(component, 'importContractEpgRelation');
-        const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+        jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockReturnValue(new Subscription());
 
         component.importContractRelation(event);
 
-        expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(
+        expect(SubscriptionUtil.subscribeToYesNoModal).toHaveBeenCalledWith(
           expect.objectContaining({
-            message: expect.stringContaining('Provided Contract'),
+            modalBody: expect.stringContaining('Provided Contract'),
           }),
           expect.anything(),
           expect.any(Function),
