@@ -1,80 +1,77 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { TableConfig } from '../../../../../common/table/table.component';
-import { TableComponentDto } from '../../../../../models/other/table-component-dto';
-import { SearchColumnConfig } from '../../../../../common/search-bar/search-bar.component';
-import {
-  EndpointGroup,
-  GetManyEndpointGroupResponseDto,
-  V2AppCentricApplicationProfilesService,
-  V2AppCentricBridgeDomainsService,
-  V2AppCentricEndpointGroupsService,
-  V2AppCentricSelectorsService,
-} from '../../../../../../../client';
-import { YesNoModalDto } from '../../../../../models/other/yes-no-modal-dto';
-import { TableContextService } from '../../../../../services/table-context.service';
-import SubscriptionUtil from '../../../../../utils/SubscriptionUtil';
-import { NgxSmartModalService } from 'ngx-smart-modal';
-import { AdvancedSearchAdapter } from '../../../../../common/advanced-search/advanced-search.adapter';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalMode } from '../../../../../models/other/modal-mode';
-import { EndpointGroupModalDto } from '../../../../../models/appcentric/endpoint-group-modal-dto';
+import {
+  GetManyEndpointSecurityGroupResponseDto,
+  V2AppCentricEndpointSecurityGroupsService,
+  V2AppCentricApplicationProfilesService,
+  EndpointSecurityGroup,
+  V2AppCentricVrfsService,
+  GetManyVrfResponseDto,
+  GetManyApplicationProfileResponseDto,
+} from 'client';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
+import { TableConfig } from 'src/app/common/table/table.component';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import { TableContextService } from 'src/app/services/table-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
-  selector: 'app-endpoint-group',
-  templateUrl: './endpoint-group.component.html',
-  styleUrls: ['./endpoint-group.component.css'],
+  selector: 'app-endpoint-security-group',
+  templateUrl: './endpoint-security-group.component.html',
+  styleUrls: ['./endpoint-security-group.component.css'],
 })
-export class EndpointGroupComponent implements OnInit {
+export class EndpointSecurityGroupComponent implements OnInit {
   public ModalMode = ModalMode;
   public tableComponentDto = new TableComponentDto();
   public searchColumns: SearchColumnConfig[] = [
-    { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
     { displayName: 'Description', propertyName: 'description', searchOperator: 'cont' },
-    { displayName: 'IntraEpgIsolation', propertyName: 'intraEpgIsolation', propertyType: 'boolean' },
-    { displayName: 'Esg Matched', propertyName: 'esgMatched', propertyType: 'boolean' },
+    { displayName: 'Intra Esg Isolation', propertyName: 'intraEsgIsolation', propertyType: 'boolean' },
   ];
   public isLoading = false;
-  public endpointGroups: GetManyEndpointGroupResponseDto;
+  public endpointSecurityGroups: GetManyEndpointSecurityGroupResponseDto;
   public tenantId: string;
   public perPage = 20;
-  public endpointGroupModalSubscription: Subscription;
-  bridgeDomains;
-  applicationProfiles;
+  public endpointSecurityGroupModalSubscription: Subscription;
+  vrfs: GetManyVrfResponseDto;
+  applicationProfiles: GetManyApplicationProfileResponseDto;
+  endpointGroups;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('expandedRows') expandedRows: TemplateRef<any>;
   @ViewChild('applicationProfileTemplate') applicationProfileTemplate: TemplateRef<any>;
-  @ViewChild('bridgeDomainTemplate') bridgeDomainTemplate: TemplateRef<any>;
-  @ViewChild('selectorTemplate') selectorTemplate: TemplateRef<any>;
+  @ViewChild('vrfTemplate') vrfTemplate: TemplateRef<any>;
+
   public config: TableConfig<any> = {
-    description: 'Endpoint Groups',
+    description: 'EndpointSecurity Groups',
     columns: [
       { name: 'Name', property: 'name' },
-      { name: 'Alias', property: 'alias' },
+      { name: 'Admin State', property: 'adminState' },
       { name: 'Description', property: 'description' },
-      { name: 'Intra Epg Isolation', property: 'intraEpgIsolation' },
+      { name: 'Intra Esg Isolation', property: 'intraEsgIsolation' },
       { name: 'Application Profile', template: () => this.applicationProfileTemplate },
-      { name: 'Bridge Domain', template: () => this.bridgeDomainTemplate },
-      { name: 'ESG Matched', template: () => this.selectorTemplate },
+      { name: 'Vrf', template: () => this.vrfTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
     // TODO: Implement appcentric aci runtime
     // expandableRows: () => this.expandedRows,
   };
   constructor(
-    private endpointGroupService: V2AppCentricEndpointGroupsService,
+    private endpointSecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
     private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
     private router: Router,
     private applicationProfileService: V2AppCentricApplicationProfilesService,
-    private bridgeDomainService: V2AppCentricBridgeDomainsService,
-    private selectorService: V2AppCentricSelectorsService,
+    private vrfService: V2AppCentricVrfsService,
   ) {
-    const advancedSearchAdapter = new AdvancedSearchAdapter<EndpointGroup>();
-    advancedSearchAdapter.setService(this.endpointGroupService);
-    advancedSearchAdapter.setServiceName('V2AppCentricEndpointGroupsService');
+    const advancedSearchAdapter = new AdvancedSearchAdapter<EndpointSecurityGroup>();
+    advancedSearchAdapter.setService(this.endpointSecurityGroupService);
+    advancedSearchAdapter.setServiceName('V2AppCentricEndpointSecurityGroupsService');
     this.config.advancedSearchAdapter = advancedSearchAdapter;
 
     const match = this.router.routerState.snapshot.url.match(
@@ -87,12 +84,12 @@ export class EndpointGroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getEndpointGroups();
+    this.getEndpointSecurityGroups();
     this.getApplicationProfiles();
-    this.getBridgeDomains();
+    this.getVrfs();
   }
 
-  public getEndpointGroups(event?): void {
+  public getEndpointSecurityGroups(event?): void {
     this.isLoading = true;
     let eventParams;
     if (event) {
@@ -100,25 +97,25 @@ export class EndpointGroupComponent implements OnInit {
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName === 'intraEpgIsolation' || propertyName === 'esgMatched') {
+      if (propertyName === 'intraEsgIsolation') {
         eventParams = `${propertyName}||eq||${searchText}`;
       } else if (propertyName) {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
-    this.endpointGroupService
-      .getManyEndpointGroup({
+    this.endpointSecurityGroupService
+      .getManyEndpointSecurityGroup({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        relations: ['applicationProfile', 'bridgeDomain', 'selector'],
+        relations: ['applicationProfile', 'vrf', 'selectors'],
       })
       .subscribe(
         data => {
-          this.endpointGroups = data;
+          this.endpointSecurityGroups = data;
         },
         () => {
-          this.endpointGroups = null;
+          this.endpointSecurityGroups = null;
         },
         () => {
           this.isLoading = false;
@@ -126,88 +123,91 @@ export class EndpointGroupComponent implements OnInit {
       );
   }
 
-  public deleteEndpointGroup(endpointGroup: EndpointGroup): void {
-    if (endpointGroup.deletedAt) {
+  public deleteEndpointSecurityGroup(endpointsecurityGroup: EndpointSecurityGroup): void {
+    if (endpointsecurityGroup.deletedAt) {
       const modalDto = new YesNoModalDto(
-        'Delete Endpoint Group',
-        `Are you sure you want to permanently delete Endpoint Group ${endpointGroup.name}?`,
+        'Delete EndpointSecurity Group',
+        `Are you sure you want to permanently delete Endpoint Security Group ${endpointsecurityGroup.name}?`,
       );
       const onConfirm = () => {
-        this.endpointGroupService.deleteOneEndpointGroup({ id: endpointGroup.id }).subscribe(() => {
+        this.endpointSecurityGroupService.deleteOneEndpointSecurityGroup({ id: endpointsecurityGroup.id }).subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
           const { filteredResults } = params;
 
           if (filteredResults) {
-            this.getEndpointGroups(params);
+            this.getEndpointSecurityGroups(params);
           } else {
-            this.getEndpointGroups();
+            this.getEndpointSecurityGroups();
           }
         });
       };
       SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
     } else {
-      this.endpointGroupService
-        .softDeleteOneEndpointGroup({
-          id: endpointGroup.id,
+      this.endpointSecurityGroupService
+        .softDeleteOneEndpointSecurityGroup({
+          id: endpointsecurityGroup.id,
         })
         .subscribe(() => {
           const params = this.tableContextService.getSearchLocalStorage();
           const { filteredResults } = params;
 
           if (filteredResults) {
-            this.getEndpointGroups(params);
+            this.getEndpointSecurityGroups(params);
           } else {
-            this.getEndpointGroups();
+            this.getEndpointSecurityGroups();
           }
         });
     }
   }
 
-  public restoreEndpointGroup(endpointGroup: EndpointGroup): void {
-    if (!endpointGroup.deletedAt) {
+  public restoreEndpointSecurityGroup(endpointsecurityGroup: EndpointSecurityGroup): void {
+    if (!endpointsecurityGroup.deletedAt) {
       return;
     }
 
-    this.endpointGroupService
-      .restoreOneEndpointGroup({
-        id: endpointGroup.id,
+    this.endpointSecurityGroupService
+      .restoreOneEndpointSecurityGroup({
+        id: endpointsecurityGroup.id,
       })
       .subscribe(() => {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
         if (filteredResults) {
-          this.getEndpointGroups(params);
+          this.getEndpointSecurityGroups(params);
         } else {
-          this.getEndpointGroups();
+          this.getEndpointSecurityGroups();
         }
       });
   }
 
-  public openEndpointGroupModal(modalMode: ModalMode, endpointGroup?: EndpointGroup): void {
-    const dto = new EndpointGroupModalDto();
+  public openEndpointSecurityGroupModal(modalMode: ModalMode, endpointSecurityGroup?: EndpointSecurityGroup): void {
+    const dto = {} as any;
 
     dto.modalMode = modalMode;
 
-    dto.endpointGroup = endpointGroup;
+    dto.endpointSecurityGroup = endpointSecurityGroup;
+    if (dto.modalMode === 'Edit') {
+      dto.selectors = endpointSecurityGroup.selectors;
+    }
 
-    this.subscribeToApEndpointGroupModal();
-    this.ngx.setModalData(dto, 'endpointGroupModal');
-    this.ngx.getModal('endpointGroupModal').open();
+    this.subscribeToEndpointSecurityGroupModal();
+    this.ngx.setModalData(dto, 'endpointSecurityGroupModal');
+    this.ngx.getModal('endpointSecurityGroupModal').open();
   }
 
-  public subscribeToApEndpointGroupModal(): void {
-    this.endpointGroupModalSubscription = this.ngx.getModal('endpointGroupModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('endpointGroupModal');
-      this.endpointGroupModalSubscription.unsubscribe();
+  private subscribeToEndpointSecurityGroupModal(): void {
+    this.endpointSecurityGroupModalSubscription = this.ngx.getModal('endpointSecurityGroupModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('endpointSecurityGroupModal');
+      this.endpointSecurityGroupModalSubscription.unsubscribe();
 
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
 
       if (filteredResults) {
-        this.getEndpointGroups(params);
+        this.getEndpointSecurityGroups(params);
       } else {
-        this.getEndpointGroups();
+        this.getEndpointSecurityGroups();
       }
     });
   }
@@ -239,9 +239,9 @@ export class EndpointGroupComponent implements OnInit {
         obj.applicationProfileId = obj[key];
         delete obj[key];
       }
-      if (key === 'bridgeDomainName') {
-        obj[key] = ObjectUtil.getObjectId(val as string, this.bridgeDomains.data);
-        obj.bridgeDomainId = obj[key];
+      if (key === 'vrfName') {
+        obj[key] = ObjectUtil.getObjectId(val as string, this.vrfs.data);
+        obj.vrfId = obj[key];
         delete obj[key];
       }
     });
@@ -249,24 +249,24 @@ export class EndpointGroupComponent implements OnInit {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public importEndpointGroups(event): void {
+  public importEndpointSecurityGroups(event): void {
     const modalDto = new YesNoModalDto(
-      'Import Endpoint Groups',
-      `Are you sure you would like to import ${event.length} Endpoint Group${event.length > 1 ? 's' : ''}?`,
+      'Import EndpointSecurity Groups',
+      `Are you sure you would like to import ${event.length} EndpointSecurity Group${event.length > 1 ? 's' : ''}?`,
     );
 
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.endpointGroupService.createManyEndpointGroup({ createManyEndpointGroupDto: { bulk: dto } }).subscribe(
+      this.endpointSecurityGroupService.createManyEndpointSecurityGroup({ createManyEndpointSecurityGroupDto: { bulk: dto } }).subscribe(
         () => {},
         () => {},
         () => {
-          this.getEndpointGroups();
+          this.getEndpointSecurityGroups();
         },
       );
     };
     const onClose = () => {
-      this.getEndpointGroups();
+      this.getEndpointSecurityGroups();
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
@@ -274,30 +274,27 @@ export class EndpointGroupComponent implements OnInit {
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
-    this.getEndpointGroups(event);
+    this.getEndpointSecurityGroups(event);
   }
 
-  public getBridgeDomains(): void {
+  private getVrfs(): void {
     this.isLoading = true;
-    this.bridgeDomainService
-      .getManyBridgeDomain({
+    this.vrfService
+      .getManyVrf({
         filter: [`tenantId||eq||${this.tenantId}`],
         page: 1,
         perPage: 1000,
       })
       .subscribe(
         data => {
-          this.bridgeDomains = data;
+          this.vrfs = data;
         },
         () => {
-          this.bridgeDomains = null;
+          this.vrfs = null;
         },
-        // () => {
-        //   this.isLoading = false;
-        // },
       );
   }
-  public getApplicationProfiles(): void {
+  private getApplicationProfiles(): void {
     this.isLoading = true;
     this.applicationProfileService
       .getManyApplicationProfile({
@@ -312,9 +309,6 @@ export class EndpointGroupComponent implements OnInit {
         () => {
           this.applicationProfiles = null;
         },
-        // () => {
-        //   this.isLoading = false;
-        // },
       );
   }
 }

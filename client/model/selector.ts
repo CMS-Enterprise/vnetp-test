@@ -9,12 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { L3Out } from './l3Out';
+import { EndpointSecurityGroup } from './endpointSecurityGroup';
 import { Tenant } from './tenant';
-import { BridgeDomain } from './bridgeDomain';
+import { EndpointGroup } from './endpointGroup';
 
 
-export interface Vrf { 
+export interface Selector { 
     readonly id?: string;
     readonly createdAt?: string;
     readonly updatedAt?: string;
@@ -23,20 +23,25 @@ export interface Vrf {
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
-    name?: string;
-    alias?: string;
     description?: string;
-    /**
-     * Default True, Security rules (contracts) will be enforced.
-     */
-    policyControlEnforced: boolean;
-    /**
-     * Default True, If this is set to False, policy is enforced on egress traffic. If this is set to True, policy is enforced on ingress traffic.
-     */
-    policyControlEnforcementIngress: boolean;
+    selectorType?: SelectorSelectorTypeEnum;
+    IpSubnet?: string;
+    tagKey?: string;
+    valueOperator?: string;
+    tagValue?: string;
+    endpointGroupName?: string;
+    readonly endpointGroup?: EndpointGroup;
+    endpointGroupId?: string;
+    readonly endpointSecurityGroup?: EndpointSecurityGroup;
+    endpointSecurityGroupId: string;
     readonly tenant?: Tenant;
     tenantId: string;
-    readonly l3outs?: Array<L3Out>;
-    readonly bridgeDomains?: Array<BridgeDomain>;
 }
+export enum SelectorSelectorTypeEnum {
+    Tag = 'Tag',
+    Epg = 'EPG',
+    IpSubnet = 'IpSubnet'
+};
+
+
 

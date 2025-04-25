@@ -13,10 +13,8 @@ import { Tab } from '../../../../../../common/tabs/tabs.component';
 import { EndpointGroupModalDto } from '../../../../../../models/appcentric/endpoint-group-modal-dto';
 import { ModalMode } from '../../../../../../models/other/modal-mode';
 import { NameValidator } from '../../../../../../validators/name-validator';
-import { ConsumedContractComponent } from './consumed-contract/consumed-contract.component';
-import { ProvidedContractComponent } from './provided-contract/provided-contract.component';
-
-const tabs = [{ name: 'Endpoint Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }];
+import { ContractAssociationComponent } from '../../contract-association/contract-association.component';
+const tabs = [{ name: 'Endpoint Group' }, { name: 'Consumed Contracts' }, { name: 'Provided Contracts' }, { name: 'Intra-EPG Contracts' }];
 
 @Component({
   selector: 'app-endpoint-group-modal',
@@ -39,10 +37,13 @@ export class EndpointGroupModalComponent implements OnInit {
   public applicationProfiles: ApplicationProfile[];
 
   @ViewChild('consumedContract', { static: false })
-  consumedContractRef: ConsumedContractComponent;
+  consumedContractRef: ContractAssociationComponent;
 
   @ViewChild('providedContract', { static: false })
-  providedContractRef: ProvidedContractComponent;
+  providedContractRef: ContractAssociationComponent;
+
+  @ViewChild('intraContract', { static: false })
+  intraContractRef: ContractAssociationComponent;
 
   public tabs: Tab[] = tabs.map(t => ({ name: t.name }));
 

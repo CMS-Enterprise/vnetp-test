@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of, Subscription } from 'rxjs';
-import { V1NetworkScopeFormsWanFormService, V2AppCentricTenantsService } from '../../../../../client';
+import { Tenant, V1NetworkScopeFormsWanFormService, V2AppCentricTenantsService } from '../../../../../client';
 import { WanFormModalDto } from '../../../models/network-scope-forms/wan-form-modal.dto';
 import { ModalMode } from '../../../models/other/modal-mode';
 import { DatacenterContextService } from '../../../services/datacenter-context.service';
@@ -215,7 +215,7 @@ describe('WanFormComponent', () => {
 
   describe('onTenantSelect', () => {
     it('should navigate to WAN form page with selected tenant', () => {
-      const tenantMock = { id: '1', datacenterId: 'testDatacenterId' };
+      const tenantMock = { id: '1', datacenterId: 'testDatacenterId' } as Tenant;
       const queryParams = { ...mockRoute.snapshot.queryParams, tenantId: tenantMock.id };
       component.onTenantSelect(tenantMock);
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/appcentric/wan-form'], { queryParams });

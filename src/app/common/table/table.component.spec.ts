@@ -54,7 +54,7 @@ describe('TableComponent', () => {
     fixture.detectChanges();
 
     const el = fixture.debugElement.query(By.css('tbody td'));
-    expect(el.nativeElement.textContent).toBe('No Objects in this Tier');
+    expect(el.nativeElement.textContent).toBe('No Objects in this Table');
   });
 
   it('should register user search parameters', () => {

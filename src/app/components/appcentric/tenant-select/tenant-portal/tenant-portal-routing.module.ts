@@ -105,6 +105,12 @@ const routes: Routes = [
         loadChildren: () =>
           import('src/app/components/network-objects-groups/network-objects-groups.module').then(m => m.NetworkObjectsGroupsModule),
       },
+      {
+        outlet,
+        path: 'endpoint-security-group',
+        data: { breadcrumb: 'Endpoint Security Group', title: 'Tenant Portal - Endpoint Security Group' },
+        loadChildren: () => import('./endpoint-security-group/endpoint-security-group.module').then(m => m.EndpointSecurityGroupModule),
+      },
     ],
   },
 ];
