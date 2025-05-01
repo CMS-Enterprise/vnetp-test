@@ -29,7 +29,6 @@ export interface Tenant {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
-    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
@@ -53,5 +52,6 @@ export interface Tenant {
     readonly multiVrf: boolean;
     readonly multiL3out: boolean;
     readonly allowServiceGraphBypass: boolean;
+    readonly tenantVersion?: number;
 }
 

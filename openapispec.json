@@ -23003,10 +23003,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23030,6 +23026,10 @@
             "items": {
               "$ref": "#/components/schemas/TierGroup"
             }
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -23055,10 +23055,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23133,10 +23129,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23199,6 +23191,10 @@
           },
           "tenantId": {
             "type": "string"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -23224,10 +23220,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23290,6 +23282,10 @@
             "items": {
               "$ref": "#/components/schemas/BridgeDomain"
             }
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -23316,10 +23312,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23434,10 +23426,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23506,10 +23494,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23662,10 +23646,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23801,10 +23781,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23880,10 +23856,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23985,10 +23957,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -24087,10 +24055,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -24220,10 +24184,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -24677,10 +24637,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -24749,6 +24705,10 @@
           "appCentricTenantId": {
             "type": "string",
             "readOnly": true
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -24773,10 +24733,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -24853,10 +24809,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25009,10 +24961,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25098,10 +25046,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25240,6 +25184,10 @@
           "allowServiceGraphBypass": {
             "type": "boolean",
             "readOnly": true
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -25268,10 +25216,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25462,10 +25406,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25544,10 +25484,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25615,10 +25551,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25676,10 +25608,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25801,10 +25729,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25871,10 +25795,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25951,10 +25871,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26216,10 +26132,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -26272,6 +26184,10 @@
             "items": {
               "$ref": "#/components/schemas/NatRule"
             }
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -26297,10 +26213,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26498,6 +26410,10 @@
           },
           "hitCount": {
             "type": "number"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -26532,10 +26448,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26581,12 +26493,17 @@
           "runtimeDataLastRefreshed": {
             "format": "date-time",
             "type": "string"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
           "name",
           "type",
-          "tierId"
+          "tierId",
+          "tenantVersion"
         ]
       },
       "NatRuleGroup": {
@@ -26607,10 +26524,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26655,6 +26568,10 @@
           "runtimeDataLastRefreshed": {
             "format": "date-time",
             "type": "string"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -26681,10 +26598,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26758,10 +26671,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26844,10 +26753,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26951,10 +26856,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -27032,10 +26933,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -27102,10 +26999,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -27224,10 +27117,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -27292,10 +27181,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -27348,10 +27233,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -27412,10 +27293,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -27470,10 +27347,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -27678,6 +27551,10 @@
             "items": {
               "$ref": "#/components/schemas/LoadBalancerRoute"
             }
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -27703,10 +27580,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -27905,6 +27778,10 @@
           "hitCount": {
             "type": "number"
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "tierName": {
             "type": "string"
           },
@@ -28094,10 +27971,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -28410,10 +28283,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -28509,10 +28378,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -28678,10 +28543,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -28822,10 +28683,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },

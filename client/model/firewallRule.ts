@@ -22,7 +22,6 @@ export interface FirewallRule {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
-    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     name: string;
     description?: string;
@@ -59,6 +58,7 @@ export interface FirewallRule {
     readonly sourceEndpointGroup?: EndpointGroup;
     readonly destinationEndpointGroup?: EndpointGroup;
     hitCount?: number;
+    readonly tenantVersion?: number;
 }
 export enum FirewallRuleDirectionEnum {
     In = 'In',

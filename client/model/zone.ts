@@ -18,7 +18,6 @@ export interface Zone {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
-    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
@@ -29,5 +28,6 @@ export interface Zone {
     readonly firewallRulesFrom?: Array<FirewallRule>;
     readonly natRulesFrom?: Array<NatRule>;
     readonly natRulesTo?: Array<NatRule>;
+    readonly tenantVersion?: number;
 }
 
