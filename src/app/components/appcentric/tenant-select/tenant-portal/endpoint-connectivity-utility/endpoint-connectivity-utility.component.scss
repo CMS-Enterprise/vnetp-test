@@ -1,0 +1,757 @@
+.container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  margin-bottom: 20px;
+
+  h1 {
+    margin: 0;
+    color: #333;
+    font-weight: 500;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  flex: 1;
+}
+
+// Form styles
+.connectivity-form {
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 14px;
+
+      &:focus {
+        outline: none;
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      }
+    }
+
+    .error {
+      color: #dc3545;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+  }
+
+  .form-options {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+
+      input[type='checkbox'] {
+        margin-right: 8px;
+        width: auto;
+      }
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+
+    button {
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &.btn-primary {
+        background-color: #007bff;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background-color: #0069d9;
+        }
+
+        &:disabled {
+          background-color: #80bdff;
+          cursor: not-allowed;
+        }
+      }
+
+      &.btn-secondary {
+        background-color: #6c757d;
+        color: white;
+
+        &:hover {
+          background-color: #5a6268;
+        }
+      }
+    }
+  }
+}
+
+// Results and graph styles
+.connectivity-results {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .connection-status {
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
+
+    &.status-allowed {
+      background-color: rgba(40, 167, 69, 0.2);
+      color: #28a745;
+      border: 1px solid rgba(40, 167, 69, 0.3);
+    }
+
+    &.status-denied {
+      background-color: rgba(220, 53, 69, 0.2);
+      color: #dc3545;
+      border: 1px solid rgba(220, 53, 69, 0.3);
+    }
+
+    &.status-unknown {
+      background-color: rgba(108, 117, 125, 0.2);
+      color: #6c757d;
+      border: 1px solid rgba(108, 117, 125, 0.3);
+    }
+  }
+
+  // Hierarchy controls
+  .hierarchy-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 15px;
+
+    button {
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #fff;
+
+      &.btn-outline-primary {
+        color: #007bff;
+        border: 1px solid #007bff;
+
+        &:hover {
+          background-color: rgba(0, 123, 255, 0.1);
+        }
+      }
+
+      &.btn-outline-secondary {
+        color: #6c757d;
+        border: 1px solid #6c757d;
+
+        &:hover {
+          background-color: rgba(108, 117, 125, 0.1);
+        }
+      }
+    }
+  }
+
+  // Hierarchical visualization styles
+  .hierarchy-visualization {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+
+    // Common styles for all hierarchy nodes
+    .hierarchy-node {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+
+      .node-header {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.03);
+        }
+
+        &.expanded {
+          border-bottom: 1px solid #ddd;
+        }
+
+        .expand-icon {
+          margin-right: 8px;
+          font-size: 10px;
+          width: 12px;
+          height: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .node-type {
+          font-size: 12px;
+          text-transform: uppercase;
+          background-color: #f0f0f0;
+          padding: 2px 6px;
+          border-radius: 3px;
+          margin-right: 8px;
+        }
+
+        .node-title {
+          font-weight: 500;
+        }
+      }
+
+      .node-content {
+        padding: 12px;
+        background-color: #fcfcfc;
+      }
+
+      // Node-specific styling
+      &.tenant-node {
+        background-color: #f8f9fa;
+
+        > .node-header {
+          background-color: #3498db;
+          color: white;
+
+          .node-type {
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+          }
+
+          &:hover {
+            background-color: darken(#3498db, 5%);
+          }
+        }
+
+        > .node-content {
+          padding: 15px;
+        }
+      }
+
+      // Active path highlight styling
+      &.active-path {
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+
+        > .node-header {
+          position: relative;
+
+          &:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.05);
+            pointer-events: none;
+          }
+        }
+
+        &.esg-node,
+        &.epg-node {
+          position: relative;
+
+          &:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 4px;
+            background-color: rgba(100, 180, 255, 0.7);
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+          }
+        }
+
+        &.endpoint-node {
+          background-color: rgba(248, 249, 250, 0.8);
+        }
+      }
+
+      .node-role {
+        margin-left: auto;
+        font-size: 11px;
+        text-transform: uppercase;
+        background-color: #ff9800;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-weight: bold;
+      }
+
+      .relationship-indicators {
+        width: 100%;
+        padding-top: 5px;
+
+        .connection-indicator {
+          display: flex;
+          align-items: center;
+          padding: 3px 0;
+          font-size: 12px;
+
+          .indicator-label {
+            color: #666;
+            margin-right: 5px;
+          }
+
+          .indicator-value {
+            font-weight: 500;
+            color: #333;
+          }
+
+          .arrow-right,
+          .arrow-left {
+            position: relative;
+            width: 16px;
+            height: 12px;
+
+            &:after {
+              content: '';
+              position: absolute;
+              top: 50%;
+              width: 0;
+              height: 0;
+              border-top: 4px solid transparent;
+              border-bottom: 4px solid transparent;
+              transform: translateY(-50%);
+            }
+          }
+
+          .arrow-right {
+            margin-left: 5px;
+
+            &:before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 0;
+              width: 10px;
+              height: 2px;
+              background-color: #ff9800;
+              transform: translateY(-50%);
+            }
+
+            &:after {
+              right: 0;
+              border-left: 6px solid #ff9800;
+            }
+          }
+
+          .arrow-left {
+            margin-right: 5px;
+
+            &:before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              right: 0;
+              width: 10px;
+              height: 2px;
+              background-color: #2980b9;
+              transform: translateY(-50%);
+            }
+
+            &:after {
+              left: 0;
+              border-right: 6px solid #2980b9;
+            }
+          }
+        }
+      }
+
+      &.esg-node > .node-header {
+        background-color: #16a085;
+        color: white;
+
+        .node-type {
+          background-color: rgba(255, 255, 255, 0.3);
+          color: white;
+        }
+
+        &:hover {
+          background-color: darken(#16a085, 5%);
+        }
+      }
+
+      &.epg-node > .node-header {
+        background-color: #3498db;
+        color: white;
+
+        .node-type {
+          background-color: rgba(255, 255, 255, 0.3);
+          color: white;
+        }
+
+        &:hover {
+          background-color: darken(#3498db, 5%);
+        }
+      }
+
+      &.endpoint-node > .node-header {
+        background-color: #2c3e50;
+        color: white;
+
+        .node-type {
+          background-color: rgba(255, 255, 255, 0.3);
+          color: white;
+        }
+
+        &:hover {
+          background-color: darken(#2c3e50, 5%);
+        }
+      }
+
+      &.contract-node > .node-header {
+        background-color: #9b59b6;
+        color: white;
+
+        .node-type {
+          background-color: rgba(255, 255, 255, 0.3);
+          color: white;
+        }
+
+        &:hover {
+          background-color: darken(#9b59b6, 5%);
+        }
+      }
+
+      &.subject-node > .node-header {
+        background-color: #8e44ad;
+        color: white;
+
+        .node-type {
+          background-color: rgba(255, 255, 255, 0.3);
+          color: white;
+        }
+
+        &:hover {
+          background-color: darken(#8e44ad, 5%);
+        }
+      }
+
+      &.filter-node > .node-header {
+        background-color: #e67e22;
+        color: white;
+
+        .node-type {
+          background-color: rgba(255, 255, 255, 0.3);
+          color: white;
+        }
+
+        &:hover {
+          background-color: darken(#e67e22, 5%);
+        }
+      }
+
+      &.filter-entry-node > .node-header {
+        background-color: #d35400;
+        color: white;
+
+        .node-type {
+          background-color: rgba(255, 255, 255, 0.3);
+          color: white;
+        }
+
+        &:hover {
+          background-color: darken(#d35400, 5%);
+        }
+      }
+    }
+
+    // Tenant container layout
+    .tenant-container {
+      display: flex;
+      gap: 20px;
+
+      .consumer-container,
+      .contracts-container,
+      .provider-container {
+        flex: 1;
+        min-width: 250px;
+        border: 1px solid #eaeaea;
+        border-radius: 4px;
+        padding: 10px;
+        position: relative;
+
+        .column-title {
+          font-size: 14px;
+          text-transform: uppercase;
+          text-align: center;
+          margin: 0 0 15px 0;
+          padding-bottom: 8px;
+          border-bottom: 1px solid #eaeaea;
+          font-weight: 500;
+        }
+      }
+
+      .consumer-container {
+        .column-title {
+          color: #3498db;
+        }
+      }
+
+      .contracts-container {
+        .column-title {
+          color: #9b59b6;
+        }
+      }
+
+      .provider-container {
+        .column-title {
+          color: #e67e22;
+        }
+      }
+    }
+
+    // Contract flow visualization
+    .contract-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 15px;
+
+      .flow-arrow {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        position: relative;
+        padding-left: 15px;
+
+        &:before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 5px;
+          border-radius: 3px;
+        }
+
+        .arrow-label {
+          font-size: 12px;
+          font-weight: 500;
+        }
+
+        .flow-item {
+          font-size: 14px;
+          font-weight: 600;
+          padding: 5px 10px;
+          border-radius: 4px;
+          background-color: #f8f9fa;
+        }
+
+        &.consumer-flow {
+          &:before {
+            background-color: #3498db;
+          }
+
+          .arrow-label {
+            color: #3498db;
+          }
+        }
+
+        &.provider-flow {
+          &:before {
+            background-color: #e67e22;
+          }
+
+          .arrow-label {
+            color: #e67e22;
+          }
+        }
+      }
+    }
+
+    // Node roles styling
+    .node-role {
+      margin-left: auto;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: bold;
+
+      &.consumer-role {
+        background-color: #3498db;
+      }
+
+      &.provider-role {
+        background-color: #e67e22;
+      }
+    }
+
+    // Relationship indicators
+    .relationship-indicators {
+      width: 100%;
+      padding-top: 5px;
+
+      .connection-indicator {
+        display: flex;
+        align-items: center;
+        padding: 3px 0;
+        font-size: 12px;
+
+        .indicator-label {
+          color: #666;
+          margin-right: 5px;
+        }
+
+        .indicator-value {
+          font-weight: 500;
+          color: #333;
+        }
+
+        .arrow-right,
+        .arrow-left {
+          position: relative;
+          width: 16px;
+          height: 12px;
+
+          &:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 0;
+            height: 0;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            transform: translateY(-50%);
+          }
+        }
+
+        .arrow-right {
+          margin-left: 5px;
+
+          &:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 10px;
+            height: 2px;
+            background-color: #3498db;
+            transform: translateY(-50%);
+          }
+
+          &:after {
+            right: 0;
+            border-left: 6px solid #3498db;
+          }
+        }
+
+        .arrow-left {
+          margin-right: 5px;
+
+          &:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 10px;
+            height: 2px;
+            background-color: #e67e22;
+            transform: translateY(-50%);
+          }
+
+          &:after {
+            left: 0;
+            border-right: 6px solid #e67e22;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Error message
+.error-message {
+  margin-top: 20px;
+
+  .alert-danger {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #dc3545;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 992px) {
+  .tenant-container {
+    flex-direction: column !important;
+
+    .consumer-container,
+    .contracts-container,
+    .provider-container {
+      width: 100%;
+    }
+  }
+}
+
+// When visualization is larger, show scrollbar
+@media (min-height: 800px) {
+  .hierarchy-visualization {
+    max-height: 700px;
+    overflow-y: auto;
+  }
+}

@@ -111,6 +111,13 @@ const routes: Routes = [
         data: { breadcrumb: 'Endpoint Security Group', title: 'Tenant Portal - Endpoint Security Group' },
         loadChildren: () => import('./endpoint-security-group/endpoint-security-group.module').then(m => m.EndpointSecurityGroupModule),
       },
+      {
+        outlet,
+        path: 'endpoint-connectivity-utility',
+        data: { breadcrumb: 'Endpoint Connectivity Utility', title: 'Endpoint Connectivity Utility' },
+        loadChildren: () =>
+          import('./endpoint-connectivity-utility/endpoint-connectivity-utility.module').then(m => m.EndpointConnectivityUtilityModule),
+      },
     ],
   },
 ];

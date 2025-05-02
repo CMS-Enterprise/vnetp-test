@@ -20671,6 +20671,205 @@
         ]
       }
     },
+    "/v2/utilities/connectivity/report": {
+      "post": {
+        "operationId": "generateConnectivityReportUtilities",
+        "summary": "Generate connectivity report between two endpoints",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectivityQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Connectivity report generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectivityPath"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Utilities"
+        ]
+      }
+    },
+    "/v1/runtime-data/aci-runtime": {
+      "get": {
+        "operationId": "getManyAciRuntime",
+        "summary": "Get many Aci Runtime",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AciRuntime"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/aci-runtime"
+        ]
+      }
+    },
+    "/v1/runtime-data/aci-runtime/create-runtime-data-job": {
+      "post": {
+        "operationId": "createRuntimeDataJobAciRuntime",
+        "summary": "",
+        "description": "Create ACI Runtime Collection Job",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AciRuntimeJobCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/aci-runtime"
+        ]
+      }
+    },
     "/v1/status/tower": {
       "get": {
         "operationId": "getTowerStatusStatus",
@@ -21298,173 +21497,6 @@
         },
         "tags": [
           "v1/runtime-data/f5-config"
-        ]
-      }
-    },
-    "/v1/runtime-data/aci-runtime": {
-      "get": {
-        "operationId": "getManyAciRuntime",
-        "summary": "Get many Aci Runtime",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "fields",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "s",
-            "required": false,
-            "in": "query",
-            "description": "Where object for advanced AND/OR queries.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AciRuntime"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v1/runtime-data/aci-runtime"
-        ]
-      }
-    },
-    "/v1/runtime-data/aci-runtime/create-runtime-data-job": {
-      "post": {
-        "operationId": "createRuntimeDataJobAciRuntime",
-        "summary": "",
-        "description": "Create ACI Runtime Collection Job",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AciRuntimeJobCreateDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Job"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v1/runtime-data/aci-runtime"
         ]
       }
     },
@@ -24214,6 +24246,10 @@
             "type": "string",
             "maxLength": 500
           },
+          "addDefaultServiceGraphSubject": {
+            "type": "boolean",
+            "default": false
+          },
           "tenant": {
             "readOnly": true,
             "allOf": [
@@ -24221,6 +24257,16 @@
                 "$ref": "#/components/schemas/Tenant"
               }
             ]
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "applicationProfile",
+              "vrf",
+              "tenant",
+              "global"
+            ],
+            "default": "vrf"
           },
           "tenantId": {
             "type": "string"
@@ -28806,6 +28852,326 @@
           "name"
         ]
       },
+      "ConnectivityQuery": {
+        "type": "object",
+        "properties": {
+          "generatedConfigIdentifier": {
+            "type": "string",
+            "description": "Identifier for the generated configuration"
+          },
+          "sourceEndpointIp": {
+            "type": "string",
+            "description": "Source endpoint IP address"
+          },
+          "sourceEndpointPort": {
+            "type": "number",
+            "description": "Source endpoint port"
+          },
+          "destinationEndpointIp": {
+            "type": "string",
+            "description": "Destination endpoint IP address"
+          },
+          "destinationEndpointPort": {
+            "type": "number",
+            "description": "Destination endpoint port"
+          },
+          "ipProtocol": {
+            "type": "string",
+            "description": "IP protocol"
+          },
+          "bypassServiceGraph": {
+            "type": "boolean",
+            "description": "Does the user want to bypass the service graph?"
+          },
+          "generateConfig": {
+            "type": "boolean",
+            "description": "Generate configuration to enable connectivity if not already possible."
+          },
+          "applyConfig": {
+            "type": "boolean",
+            "description": "Apply the generated configuration to the endpoints."
+          },
+          "bidirectional": {
+            "type": "boolean",
+            "description": "Check for bi-directional connectivity."
+          },
+          "tenantId": {
+            "type": "string",
+            "description": "Tenant ID"
+          }
+        },
+        "required": [
+          "generatedConfigIdentifier",
+          "sourceEndpointIp",
+          "destinationEndpointIp",
+          "destinationEndpointPort",
+          "ipProtocol",
+          "bypassServiceGraph",
+          "generateConfig",
+          "applyConfig",
+          "bidirectional",
+          "tenantId"
+        ]
+      },
+      "ConnectivityNode": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the node"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the node",
+            "enum": [
+              "endpoint",
+              "epg",
+              "esg",
+              "ap",
+              "bd",
+              "vrf",
+              "contract",
+              "subject",
+              "filter",
+              "filter_entry",
+              "tenant",
+              "external",
+              "service_graph",
+              "l3_out"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the node"
+          },
+          "tenantId": {
+            "type": "string",
+            "description": "The tenant ID of the node"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "The metadata of the node"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "name",
+          "tenantId",
+          "metadata"
+        ]
+      },
+      "ConnectivityEdge": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "The ID of the source node"
+          },
+          "target": {
+            "type": "string",
+            "description": "The ID of the target node"
+          },
+          "sourceType": {
+            "type": "string",
+            "description": "The type of the source node",
+            "enum": [
+              "endpoint",
+              "epg",
+              "esg",
+              "ap",
+              "bd",
+              "vrf",
+              "contract",
+              "subject",
+              "filter",
+              "filter_entry",
+              "tenant",
+              "external",
+              "service_graph",
+              "l3_out"
+            ]
+          },
+          "targetType": {
+            "type": "string",
+            "description": "The type of the target node",
+            "enum": [
+              "endpoint",
+              "epg",
+              "esg",
+              "ap",
+              "bd",
+              "vrf",
+              "contract",
+              "subject",
+              "filter",
+              "filter_entry",
+              "tenant",
+              "external",
+              "service_graph",
+              "l3_out"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the edge",
+            "enum": [
+              "to",
+              "from"
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "description": "The metadata of the edge"
+          }
+        },
+        "required": [
+          "source",
+          "target",
+          "sourceType",
+          "targetType",
+          "type",
+          "metadata"
+        ]
+      },
+      "ConnectivityPathMetdata": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "allowed",
+              "denied",
+              "unknown"
+            ]
+          },
+          "bypassServiceGraph": {
+            "type": "boolean"
+          },
+          "failureReason": {
+            "type": "string"
+          },
+          "failureCode": {
+            "type": "string"
+          },
+          "recommendation": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "bypassServiceGraph",
+          "failureReason",
+          "failureCode",
+          "recommendation"
+        ]
+      },
+      "HierarchicalNode": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the node",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the node",
+            "example": "tenant"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the node",
+            "example": "Tenant 1"
+          },
+          "children": {
+            "description": "The children of the node",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HierarchicalNode"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "The metadata of the node"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "name",
+          "children",
+          "metadata"
+        ]
+      },
+      "ConnectivityPath": {
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "description": "The nodes in the path",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ConnectivityNode"
+              }
+            ]
+          },
+          "edges": {
+            "description": "The edges in the path",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ConnectivityEdge"
+              }
+            ]
+          },
+          "metadata": {
+            "description": "The metadata of the path",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ConnectivityPathMetdata"
+              }
+            ]
+          },
+          "hierarchy": {
+            "description": "The hierarchical structure of the path for containment visualization",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HierarchicalNode"
+            }
+          }
+        },
+        "required": [
+          "nodes",
+          "edges",
+          "metadata"
+        ]
+      },
+      "AciRuntimeJobCreateDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "FirewallRule",
+              "NatRule",
+              "F5Config",
+              "AciRuntime",
+              "ExternalRoute"
+            ]
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "vlanId": {
+            "type": "string"
+          },
+          "endpointGroupId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
       "SelfServiceRawConfig": {
         "type": "object",
         "properties": {
@@ -29420,33 +29786,6 @@
         "required": [
           "type",
           "id"
-        ]
-      },
-      "AciRuntimeJobCreateDto": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "FirewallRule",
-              "NatRule",
-              "F5Config",
-              "AciRuntime",
-              "ExternalRoute"
-            ]
-          },
-          "datacenterId": {
-            "type": "string"
-          },
-          "vlanId": {
-            "type": "string"
-          },
-          "endpointGroupId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
         ]
       },
       "ExternalRouteJobCreateDto": {

@@ -2,6 +2,7 @@
 README.md
 api.module.ts
 api/api.ts
+api/utilities.service.ts
 api/v1AuditLog.service.ts
 api/v1Auth.service.ts
 api/v1Datacenters.service.ts
@@ -63,6 +64,11 @@ model/appCentricSubnet.ts
 model/applicationProfile.ts
 model/auditLog.ts
 model/bridgeDomain.ts
+model/connectivityEdge.ts
+model/connectivityNode.ts
+model/connectivityPath.ts
+model/connectivityPathMetdata.ts
+model/connectivityQuery.ts
 model/contract.ts
 model/createManyAppCentricSubnetDto.ts
 model/createManyApplicationProfileDto.ts
@@ -178,6 +184,7 @@ model/getManyVrfResponseDto.ts
 model/getManyWanFormResponseDto.ts
 model/getManyWanFormSubnetResponseDto.ts
 model/getManyZoneResponseDto.ts
+model/hierarchicalNode.ts
 model/hitcountData.ts
 model/hitcountJobCreateDto.ts
 model/hitcountJobResultDto.ts

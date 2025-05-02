@@ -37,6 +37,11 @@ const tabs: Tab[] = [
       { name: 'Service Objects', route: ['north-south-service-objects'] },
     ],
   },
+  {
+    name: 'Endpoint Connectivity Utility',
+    tooltip: 'This utility allows you to test the connectivity between endpoints.',
+    route: ['endpoint-connectivity-utility'],
+  },
 ];
 
 @Component({

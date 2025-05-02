@@ -26,7 +26,9 @@ export interface Contract {
     name?: string;
     alias?: string;
     description?: string;
+    addDefaultServiceGraphSubject?: boolean;
     readonly tenant?: Tenant;
+    scope?: ContractScopeEnum;
     tenantId: string;
     readonly consumingEndpointGroups?: Array<EndpointGroup>;
     readonly providingEndpointGroups?: Array<EndpointGroup>;
@@ -36,4 +38,12 @@ export interface Contract {
     readonly providingEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
     readonly intraEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
 }
+export enum ContractScopeEnum {
+    ApplicationProfile = 'applicationProfile',
+    Vrf = 'vrf',
+    Tenant = 'tenant',
+    Global = 'global'
+};
+
+
 
