@@ -91,6 +91,7 @@
     <mat-drawer [opened]="isDrawerOpened" mode="side" position="start">
       <div class="drawer-content">
         <h3>Packet Tracer</h3>
+        <button type="submit" (click)="search()">Search</button>
         <form [formGroup]="form" class="form-container">
           <div>
             <mat-label>Action</mat-label>

@@ -125,6 +125,23 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
     this.isDrawerOpened = true;
   }
 
+  search() {
+    console.log('running search');
+    Object.keys(this.form.controls).forEach(field => {
+      console.log('field', field);
+      const control = this.form.get(field);
+      this.setChecklistsForRulesByField(field);
+      this.applyFilter();
+      // if (control) {
+      //   const subscription = control.valueChanges.subscribe(() => {
+      //     this.setChecklistsForRulesByField(field);
+      //     this.applyFilter();
+      //   });
+      //   this.fieldSubscriptions.push(subscription);
+      // }
+    });
+  }
+
   createFormListeners(): void {
     Object.keys(this.form.controls).forEach(field => {
       const control = this.form.get(field);
@@ -151,7 +168,10 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
   }
 
   applyFilter(): void {
+    const start = performance.now();
     this.filteredChecklist = cloneDeep(this.firewallRulesWithChecklist);
+    const end = performance.now();
+    console.log(`Execution time: ${end - start} ms`);
     if (this.filterExact === null && !this.searchQuery) {
       return;
     }
