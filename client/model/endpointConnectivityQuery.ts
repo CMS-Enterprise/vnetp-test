@@ -11,7 +11,7 @@
  */
 
 
-export interface ConnectivityQuery { 
+export interface EndpointConnectivityQuery { 
     /**
      * Identifier for the generated configuration
      */
@@ -44,10 +44,6 @@ export interface ConnectivityQuery {
      * Generate configuration to enable connectivity if not already possible.
      */
     generateConfig: boolean;
-    /**
-     * Apply the generated configuration to the endpoints.
-     */
-    applyConfig: boolean;
     /**
      * Check for bi-directional connectivity.
      */

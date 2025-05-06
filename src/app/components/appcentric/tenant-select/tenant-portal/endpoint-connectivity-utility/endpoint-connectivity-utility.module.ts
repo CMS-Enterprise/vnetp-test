@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { EndpointConnectivityUtilityComponent } from './endpoint-connectivity-utility.component';
+import { NgxGraphModule } from '@swimlane/ngx-graph';
+import { IconCodePipe } from './icon-code.pipe';
 
 const routes: Routes = [
   {
@@ -13,8 +15,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [EndpointConnectivityUtilityComponent],
-  imports: [CommonModule, RouterModule.forChild(routes), FormsModule, ReactiveFormsModule],
+  declarations: [EndpointConnectivityUtilityComponent, IconCodePipe],
+  imports: [CommonModule, RouterModule.forChild(routes), FormsModule, ReactiveFormsModule, NgxGraphModule],
   exports: [EndpointConnectivityUtilityComponent],
 })
 export class EndpointConnectivityUtilityModule {}

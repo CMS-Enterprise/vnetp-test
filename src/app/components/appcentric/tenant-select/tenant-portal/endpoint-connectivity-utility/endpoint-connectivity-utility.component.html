@@ -4,6 +4,7 @@
   </div>
 
   <div class="content">
+    <!-- Connectivity Test Form -->
     <div class="connectivity-form">
       <h2>Test Endpoint Connectivity</h2>
 
@@ -83,253 +84,162 @@
       </form>
     </div>
 
-    <div class="connectivity-results" *ngIf="graph">
+    <!-- Connectivity Results -->
+    <div class="connectivity-results" *ngIf="connectivityResult">
       <h2>Connectivity Results</h2>
 
-      <div class="connection-status" [ngClass]="getStatusClass()">Connection: {{ getConnectionStatus() | uppercase }}</div>
-
-      <div class="hierarchy-controls">
-        <button class="btn btn-sm btn-outline-primary" (click)="expandAllNodes()">Expand All</button>
-        <button class="btn btn-sm btn-outline-secondary" (click)="collapseAllNodes()">Collapse All</button>
+      <!-- Connection Status -->
+      <div class="connection-status" [ngClass]="getStatusClass()">
+        <div>Connection: {{ getConnectionStatus() | uppercase }}</div>
+        <div class="detail" *ngIf="getConnectionDetail()">{{ getConnectionDetail() }}</div>
       </div>
 
-      <div class="hierarchy-visualization">
-        <!-- Hierarchical view of tenants containing all objects -->
-        <ng-container *ngFor="let tenant of getTenants()">
-          <div class="hierarchy-node tenant-node">
-            <!-- Tenant header with expand/collapse -->
-            <div class="node-header" [ngClass]="{ expanded: isExpanded(tenant.id) }" (click)="toggleExpand(tenant.id)">
-              <span class="expand-icon">{{ isExpanded(tenant.id) ? '▼' : '►' }}</span>
-              <span class="node-type">Tenant</span>
-              <span class="node-title">{{ tenant.name }}</span>
-            </div>
+      <!-- Endpoints Information -->
+      <div class="endpoints-info">
+        <div class="source-endpoint">
+          <strong>Source:</strong> {{ connectivityResult.sourceEndpoint.ipAddress }}
+          <span *ngIf="connectivityResult.sourceEndpoint.endpointGroup?.name">
+            ({{ connectivityResult.sourceEndpoint.endpointGroup.name }})
+          </span>
+        </div>
+        <div class="destination-endpoint">
+          <strong>Destination:</strong> {{ connectivityResult.destinationEndpoint.ipAddress }}
+          <span *ngIf="connectivityResult.destinationEndpoint.endpointGroup?.name">
+            ({{ connectivityResult.destinationEndpoint.endpointGroup.name }})
+          </span>
+        </div>
+      </div>
 
-            <!-- Tenant content - only visible if expanded -->
-            <div class="node-content" *ngIf="isExpanded(tenant.id)">
-              <div class="tenant-container">
-                <!-- Consumer ESGs and their contents -->
-                <div class="consumer-container">
-                  <h3 class="column-title">Consumer</h3>
-                  <ng-container *ngFor="let esg of getChildrenByType(tenant, 'esg')">
-                    <div
-                      class="hierarchy-node esg-node"
-                      [ngClass]="{ 'active-path': isActivePathNode(esg.id) }"
-                      *ngIf="getNodeRole(esg.id) === 'consumer'"
-                    >
-                      <div class="node-header" [ngClass]="{ expanded: isExpanded(esg.id) }" (click)="toggleExpand(esg.id)">
-                        <span class="expand-icon">{{ isExpanded(esg.id) ? '▼' : '►' }}</span>
-                        <span class="node-type">ESG</span>
-                        <span class="node-title">{{ esg.name }}</span>
-                        <span class="node-role consumer-role">CONSUMER</span>
-                      </div>
+      <!-- Connection Path Visualization -->
+      <div class="path-visualization">
+        <h3>Connection Path</h3>
 
-                      <div class="node-content" *ngIf="isExpanded(esg.id)">
-                        <!-- EPGs within the ESG -->
-                        <ng-container *ngFor="let epg of getChildrenByType(esg, 'epg')">
-                          <div class="hierarchy-node epg-node" [ngClass]="{ 'active-path': isActivePathNode(epg.id) }">
-                            <div class="node-header" [ngClass]="{ expanded: isExpanded(epg.id) }" (click)="toggleExpand(epg.id)">
-                              <span class="expand-icon">{{ isExpanded(epg.id) ? '▼' : '►' }}</span>
-                              <span class="node-type">EPG</span>
-                              <span class="node-title">{{ epg.name }}</span>
-                              <span class="node-role consumer-role" *ngIf="getNodeRole(epg.id) === 'consumer'">CONSUMER</span>
-                              <div class="relationship-indicators" *ngIf="isActivePathNode(epg.id) && getNodeRole(epg.id) === 'consumer'">
-                                <div class="connection-indicator">
-                                  <span class="indicator-label">Consumes from:</span>
-                                  <span class="indicator-value">
-                                    {{ findNodeInHierarchy(getRelatedNode(epg.id, 'provider'))?.name }}
-                                  </span>
-                                  <span class="arrow-right"></span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="node-content" *ngIf="isExpanded(epg.id)">
-                              <!-- Endpoints within the EPG -->
-                              <ng-container *ngFor="let endpoint of getChildrenByType(epg, 'endpoint')">
-                                <div class="hierarchy-node endpoint-node" [ngClass]="{ 'active-path': isActivePathNode(endpoint.id) }">
-                                  <div
-                                    class="node-header"
-                                    [ngClass]="{ expanded: isExpanded(endpoint.id) }"
-                                    (click)="toggleExpand(endpoint.id)"
-                                  >
-                                    <span class="expand-icon">{{ isExpanded(endpoint.id) ? '▼' : '►' }}</span>
-                                    <span class="node-type">ENDPOINT</span>
-                                    <span class="node-title">{{ endpoint.metadata?.ipAddress }}</span>
-                                  </div>
-
-                                  <div class="node-content" *ngIf="isExpanded(endpoint.id)">
-                                    <div class="endpoint-details">
-                                      <div class="metadata-item" *ngFor="let item of getNodeMetadataDisplay(endpoint)">
-                                        {{ item }}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </ng-container>
-                            </div>
-                          </div>
-                        </ng-container>
-                      </div>
-                    </div>
-                  </ng-container>
-                </div>
-
-                <!-- Contracts and relationship arrows -->
-                <div class="contracts-container">
-                  <h3 class="column-title">Contract</h3>
-                  <ng-container *ngFor="let contract of getChildrenByType(tenant, 'contract')">
-                    <div class="hierarchy-node contract-node" [ngClass]="{ 'active-path': isActivePathNode(contract.id) }">
-                      <div class="node-header" [ngClass]="{ expanded: isExpanded(contract.id) }" (click)="toggleExpand(contract.id)">
-                        <span class="expand-icon">{{ isExpanded(contract.id) ? '▼' : '►' }}</span>
-                        <span class="node-type">CONTRACT</span>
-                        <span class="node-title">{{ contract.name }}</span>
-                      </div>
-
-                      <div class="node-content" *ngIf="isExpanded(contract.id)">
-                        <!-- Contract details -->
-                        <div class="contract-details">
-                          <div class="contract-flow">
-                            <div class="flow-arrow consumer-flow">
-                              <div class="arrow-label">Consumer</div>
-                              <div class="flow-item">{{ getConsumers(contract)[0]?.name }}</div>
-                            </div>
-
-                            <div class="flow-arrow provider-flow">
-                              <div class="arrow-label">Provider</div>
-                              <div class="flow-item">{{ getProviders(contract)[0]?.name }}</div>
-                            </div>
-                          </div>
-
-                          <!-- Subjects, Filters, and Filter Entries -->
-                          <ng-container *ngFor="let subject of getChildrenByType(contract, 'subject')">
-                            <div class="hierarchy-node subject-node">
-                              <div class="node-header" [ngClass]="{ expanded: isExpanded(subject.id) }" (click)="toggleExpand(subject.id)">
-                                <span class="expand-icon">{{ isExpanded(subject.id) ? '▼' : '►' }}</span>
-                                <span class="node-type">SUBJECT</span>
-                                <span class="node-title">{{ subject.name }}</span>
-                              </div>
-
-                              <div class="node-content" *ngIf="isExpanded(subject.id)">
-                                <!-- Filters within the subject -->
-                                <ng-container *ngFor="let filter of getChildrenByType(subject, 'filter')">
-                                  <div class="hierarchy-node filter-node">
-                                    <div
-                                      class="node-header"
-                                      [ngClass]="{ expanded: isExpanded(filter.id) }"
-                                      (click)="toggleExpand(filter.id)"
-                                    >
-                                      <span class="expand-icon">{{ isExpanded(filter.id) ? '▼' : '►' }}</span>
-                                      <span class="node-type">FILTER</span>
-                                      <span class="node-title">{{ filter.name }}</span>
-                                    </div>
-
-                                    <div class="node-content" *ngIf="isExpanded(filter.id)">
-                                      <!-- Filter entries -->
-                                      <ng-container *ngFor="let entry of getChildrenByType(filter, 'filter_entry')">
-                                        <div class="hierarchy-node filter-entry-node">
-                                          <div
-                                            class="node-header"
-                                            [ngClass]="{ expanded: isExpanded(entry.id) }"
-                                            (click)="toggleExpand(entry.id)"
-                                          >
-                                            <span class="expand-icon">{{ isExpanded(entry.id) ? '▼' : '►' }}</span>
-                                            <span class="node-type">FILTER ENTRY</span>
-                                            <span class="node-title">{{ entry.name }}</span>
-                                          </div>
-
-                                          <div class="node-content" *ngIf="isExpanded(entry.id)">
-                                            <div class="filter-entry-details">
-                                              <div class="metadata-item" *ngFor="let item of getNodeMetadataDisplay(entry)">
-                                                {{ item }}
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </ng-container>
-                                    </div>
-                                  </div>
-                                </ng-container>
-                              </div>
-                            </div>
-                          </ng-container>
-                        </div>
-                      </div>
-                    </div>
-                  </ng-container>
-                </div>
-
-                <!-- Provider ESGs and their contents -->
-                <div class="provider-container">
-                  <h3 class="column-title">Provider</h3>
-                  <ng-container *ngFor="let esg of getChildrenByType(tenant, 'esg')">
-                    <div
-                      class="hierarchy-node esg-node"
-                      [ngClass]="{ 'active-path': isActivePathNode(esg.id) }"
-                      *ngIf="getNodeRole(esg.id) === 'provider'"
-                    >
-                      <div class="node-header" [ngClass]="{ expanded: isExpanded(esg.id) }" (click)="toggleExpand(esg.id)">
-                        <span class="expand-icon">{{ isExpanded(esg.id) ? '▼' : '►' }}</span>
-                        <span class="node-type">ESG</span>
-                        <span class="node-title">{{ esg.name }}</span>
-                        <span class="node-role provider-role">PROVIDER</span>
-                      </div>
-
-                      <div class="node-content" *ngIf="isExpanded(esg.id)">
-                        <!-- EPGs within the ESG -->
-                        <ng-container *ngFor="let epg of getChildrenByType(esg, 'epg')">
-                          <div class="hierarchy-node epg-node" [ngClass]="{ 'active-path': isActivePathNode(epg.id) }">
-                            <div class="node-header" [ngClass]="{ expanded: isExpanded(epg.id) }" (click)="toggleExpand(epg.id)">
-                              <span class="expand-icon">{{ isExpanded(epg.id) ? '▼' : '►' }}</span>
-                              <span class="node-type">EPG</span>
-                              <span class="node-title">{{ epg.name }}</span>
-                              <span class="node-role provider-role" *ngIf="getNodeRole(epg.id) === 'provider'">PROVIDER</span>
-                              <div class="relationship-indicators" *ngIf="isActivePathNode(epg.id) && getNodeRole(epg.id) === 'provider'">
-                                <div class="connection-indicator">
-                                  <span class="arrow-left"></span>
-                                  <span class="indicator-label">Provides to:</span>
-                                  <span class="indicator-value">
-                                    {{ findNodeInHierarchy(getRelatedNode(epg.id, 'consumer'))?.name }}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="node-content" *ngIf="isExpanded(epg.id)">
-                              <!-- Endpoints within the EPG -->
-                              <ng-container *ngFor="let endpoint of getChildrenByType(epg, 'endpoint')">
-                                <div class="hierarchy-node endpoint-node" [ngClass]="{ 'active-path': isActivePathNode(endpoint.id) }">
-                                  <div
-                                    class="node-header"
-                                    [ngClass]="{ expanded: isExpanded(endpoint.id) }"
-                                    (click)="toggleExpand(endpoint.id)"
-                                  >
-                                    <span class="expand-icon">{{ isExpanded(endpoint.id) ? '▼' : '►' }}</span>
-                                    <span class="node-type">ENDPOINT</span>
-                                    <span class="node-title">{{ endpoint.metadata?.ipAddress }}</span>
-                                  </div>
-
-                                  <div class="node-content" *ngIf="isExpanded(endpoint.id)">
-                                    <div class="endpoint-details">
-                                      <div class="metadata-item" *ngFor="let item of getNodeMetadataDisplay(endpoint)">
-                                        {{ item }}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </ng-container>
-                            </div>
-                          </div>
-                        </ng-container>
-                      </div>
-                    </div>
-                  </ng-container>
-                </div>
+        <!-- Source Path -->
+        <div class="path-section source-path" *ngIf="hasPathNodes('source')">
+          <h4>Source Path</h4>
+          <div class="path-nodes">
+            <div
+              class="path-node"
+              *ngFor="let node of connectivityResult.connectionTrace.sourcePath; let last = last"
+              [ngStyle]="{ 'background-color': getNodeColor(node.nodeType, node.generated) }"
+              [ngClass]="{ 'last-node': last }"
+            >
+              <div class="node-label" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                {{ node.name || node.nodeType }}
               </div>
+              <div class="node-type" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                {{ node.nodeType }}
+              </div>
+              <div class="generated-badge" *ngIf="node.generated">Generated</div>
             </div>
           </div>
-        </ng-container>
+        </div>
+
+        <!-- Contract Path -->
+        <div class="path-section contract-path" *ngIf="hasPathNodes('contract')">
+          <h4>Contract Path</h4>
+          <div class="path-nodes">
+            <div
+              class="path-node"
+              *ngFor="let node of connectivityResult.connectionTrace.contractPath; let last = last"
+              [ngStyle]="{ 'background-color': getNodeColor(node.nodeType, node.generated) }"
+              [ngClass]="{ 'last-node': last }"
+            >
+              <div class="node-label" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                {{ node.name || node.nodeType }}
+              </div>
+              <div class="node-type" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                {{ node.nodeType }}
+              </div>
+              <div class="generated-badge" *ngIf="node.generated">Generated</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Destination Path -->
+        <div class="path-section destination-path" *ngIf="hasPathNodes('destination')">
+          <h4>Destination Path</h4>
+          <div class="path-nodes">
+            <div
+              class="path-node"
+              *ngFor="let node of connectivityResult.connectionTrace.destinationPath; let last = last"
+              [ngStyle]="{ 'background-color': getNodeColor(node.nodeType, node.generated) }"
+              [ngClass]="{ 'last-node': last }"
+            >
+              <div class="node-label" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                {{ node.name || node.nodeType }}
+              </div>
+              <div class="node-type" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                {{ node.nodeType }}
+              </div>
+              <div class="generated-badge" *ngIf="node.generated">Generated</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full Path -->
+        <div class="path-section full-path" *ngIf="hasPathNodes('full')">
+          <h4>Complete Path</h4>
+          <div class="path-nodes">
+            <ng-container *ngFor="let node of connectivityResult.connectionTrace.fullPath; let last = last">
+              <div
+                class="path-node"
+                [ngStyle]="{ 'background-color': getNodeColor(node.nodeType, node.generated) }"
+                [ngClass]="{ 'last-node': last }"
+              >
+                <div class="node-label" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                  {{ node.name || node.nodeType }}
+                </div>
+                <div class="node-type" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                  {{ node.nodeType }}
+                </div>
+                <div class="generated-badge" *ngIf="node.generated">Generated</div>
+              </div>
+              <div class="path-arrow" *ngIf="!last">→</div>
+            </ng-container>
+          </div>
+        </div>
       </div>
 
+      <!-- Generated Configuration -->
+      <div class="generated-config" *ngIf="shouldShowGeneratedConfig()">
+        <h3>Generated Configuration</h3>
+
+        <div class="config-section" *ngIf="connectivityResult.generatedConfig.existingContract">
+          <div class="section-title">Using Existing Contract</div>
+        </div>
+
+        <div class="config-section" *ngIf="connectivityResult.generatedConfig.Subjects?.length">
+          <div class="section-title">Subjects</div>
+          <div class="config-item" *ngFor="let subject of connectivityResult.generatedConfig.Subjects">
+            <span class="item-name">{{ subject.name }}</span>
+          </div>
+        </div>
+
+        <div class="config-section" *ngIf="connectivityResult.generatedConfig.Filters?.length">
+          <div class="section-title">Filters</div>
+          <div class="config-item" *ngFor="let filter of connectivityResult.generatedConfig.Filters">
+            <span class="item-name">{{ filter.name }}</span>
+          </div>
+        </div>
+
+        <div class="config-section" *ngIf="connectivityResult.generatedConfig.FilterEntries?.length">
+          <div class="section-title">Filter Entries</div>
+          <div class="filter-entry" *ngFor="let entry of connectivityResult.generatedConfig.FilterEntries">
+            <div>Protocol: {{ entry.ipProtocol }}</div>
+            <div *ngIf="entry.destinationFromPort && entry.destinationToPort">
+              Destination Port:
+              {{
+                entry.destinationFromPort === entry.destinationToPort
+                  ? entry.destinationFromPort
+                  : entry.destinationFromPort + '-' + entry.destinationToPort
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
       <div class="error-message" *ngIf="error">
         <div class="alert alert-danger">
           {{ error }}

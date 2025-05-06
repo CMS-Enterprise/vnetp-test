@@ -15,39 +15,31 @@ export interface ConnectivityNode {
     /**
      * The ID of the node
      */
-    id: string;
+    nodeId?: string;
     /**
      * The type of the node
      */
-    type: ConnectivityNodeTypeEnum;
+    nodeType?: ConnectivityNodeNodeTypeEnum;
+    /**
+     * Whether the node is generated
+     */
+    generated?: boolean;
     /**
      * The name of the node
      */
-    name: string;
-    /**
-     * The tenant ID of the node
-     */
-    tenantId: string;
-    /**
-     * The metadata of the node
-     */
-    metadata: object;
+    name?: string;
 }
-export enum ConnectivityNodeTypeEnum {
+export enum ConnectivityNodeNodeTypeEnum {
+    ExternalEndpoint = 'external_endpoint',
     Endpoint = 'endpoint',
     Epg = 'epg',
     Esg = 'esg',
-    Ap = 'ap',
-    Bd = 'bd',
-    Vrf = 'vrf',
     Contract = 'contract',
     Subject = 'subject',
     Filter = 'filter',
     FilterEntry = 'filter_entry',
-    Tenant = 'tenant',
-    External = 'external',
     ServiceGraph = 'service_graph',
-    L3Out = 'l3_out'
+    Tenant = 'tenant'
 };
 
 

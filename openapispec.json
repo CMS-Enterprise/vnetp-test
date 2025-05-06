@@ -20681,7 +20681,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ConnectivityQuery"
+                "$ref": "#/components/schemas/EndpointConnectivityQuery"
               }
             }
           }
@@ -20692,7 +20692,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ConnectivityPath"
+                  "$ref": "#/components/schemas/EndpointConnectionUtilityResponse"
                 }
               }
             }
@@ -28852,7 +28852,7 @@
           "name"
         ]
       },
-      "ConnectivityQuery": {
+      "EndpointConnectivityQuery": {
         "type": "object",
         "properties": {
           "generatedConfigIdentifier": {
@@ -28887,10 +28887,6 @@
             "type": "boolean",
             "description": "Generate configuration to enable connectivity if not already possible."
           },
-          "applyConfig": {
-            "type": "boolean",
-            "description": "Apply the generated configuration to the endpoints."
-          },
           "bidirectional": {
             "type": "boolean",
             "description": "Check for bi-directional connectivity."
@@ -28908,241 +28904,265 @@
           "ipProtocol",
           "bypassServiceGraph",
           "generateConfig",
-          "applyConfig",
           "bidirectional",
           "tenantId"
         ]
       },
-      "ConnectivityNode": {
+      "SubjectToFilter": {
+        "type": "object",
+        "properties": {
+          "subjectId": {
+            "type": "string",
+            "description": "Subject ID"
+          },
+          "filterId": {
+            "type": "string",
+            "description": "Filter ID"
+          }
+        },
+        "required": [
+          "subjectId",
+          "filterId"
+        ]
+      },
+      "EndpointConnectivityGeneratedConfig": {
+        "type": "object",
+        "properties": {
+          "existingContract": {
+            "type": "boolean"
+          },
+          "Contracts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          },
+          "Subjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Subject"
+            }
+          },
+          "Filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
+          },
+          "FilterEntries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterEntry"
+            }
+          },
+          "SubjectToFilter": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubjectToFilter"
+            }
+          },
+          "FirewallRules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          }
+        },
+        "required": [
+          "existingContract",
+          "Contracts",
+          "Subjects",
+          "Filters",
+          "FilterEntries",
+          "SubjectToFilter",
+          "FirewallRules"
+        ]
+      },
+      "Endpoint": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
+            "description": "Endpoint ID",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Endpoint name",
+            "readOnly": true
+          },
+          "ipAddress": {
+            "type": "string",
+            "description": "Endpoint IP address",
+            "readOnly": true
+          },
+          "macAddress": {
+            "type": "string",
+            "description": "Endpoint MAC address",
+            "readOnly": true
+          },
+          "lastSeen": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Endpoint last seen",
+            "readOnly": true
+          },
+          "missedCount": {
+            "type": "number",
+            "description": "Endpoint missed count",
+            "readOnly": true
+          },
+          "endpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
+          "endpointGroupId": {
+            "type": "string",
+            "description": "Endpoint endpoint group ID",
+            "readOnly": true
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string",
+            "readOnly": true
+          }
+        }
+      },
+      "ConnectivityNode": {
+        "type": "object",
+        "properties": {
+          "nodeId": {
+            "type": "string",
             "description": "The ID of the node"
           },
-          "type": {
+          "nodeType": {
             "type": "string",
             "description": "The type of the node",
             "enum": [
+              "external_endpoint",
               "endpoint",
               "epg",
               "esg",
-              "ap",
-              "bd",
-              "vrf",
               "contract",
               "subject",
               "filter",
               "filter_entry",
-              "tenant",
-              "external",
               "service_graph",
-              "l3_out"
+              "tenant"
             ]
+          },
+          "generated": {
+            "type": "boolean",
+            "description": "Whether the node is generated"
           },
           "name": {
             "type": "string",
             "description": "The name of the node"
+          }
+        }
+      },
+      "ConnectionTrace": {
+        "type": "object",
+        "properties": {
+          "sourcePath": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectivityNode"
+            }
           },
-          "tenantId": {
-            "type": "string",
-            "description": "The tenant ID of the node"
+          "contractPath": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectivityNode"
+            }
           },
-          "metadata": {
-            "type": "object",
-            "description": "The metadata of the node"
+          "destinationPath": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectivityNode"
+            }
+          },
+          "fullPath": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectivityNode"
+            }
           }
         },
         "required": [
-          "id",
-          "type",
-          "name",
-          "tenantId",
-          "metadata"
+          "sourcePath",
+          "contractPath",
+          "destinationPath",
+          "fullPath"
         ]
       },
-      "ConnectivityEdge": {
+      "EndpointConnectionUtilityResponse": {
         "type": "object",
         "properties": {
-          "source": {
+          "connectivityResult": {
             "type": "string",
-            "description": "The ID of the source node"
-          },
-          "target": {
-            "type": "string",
-            "description": "The ID of the target node"
-          },
-          "sourceType": {
-            "type": "string",
-            "description": "The type of the source node",
-            "enum": [
-              "endpoint",
-              "epg",
-              "esg",
-              "ap",
-              "bd",
-              "vrf",
-              "contract",
-              "subject",
-              "filter",
-              "filter_entry",
-              "tenant",
-              "external",
-              "service_graph",
-              "l3_out"
-            ]
-          },
-          "targetType": {
-            "type": "string",
-            "description": "The type of the target node",
-            "enum": [
-              "endpoint",
-              "epg",
-              "esg",
-              "ap",
-              "bd",
-              "vrf",
-              "contract",
-              "subject",
-              "filter",
-              "filter_entry",
-              "tenant",
-              "external",
-              "service_graph",
-              "l3_out"
-            ]
-          },
-          "type": {
-            "type": "string",
-            "description": "The type of the edge",
-            "enum": [
-              "to",
-              "from"
-            ]
-          },
-          "metadata": {
-            "type": "object",
-            "description": "The metadata of the edge"
-          }
-        },
-        "required": [
-          "source",
-          "target",
-          "sourceType",
-          "targetType",
-          "type",
-          "metadata"
-        ]
-      },
-      "ConnectivityPathMetdata": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
+            "description": "The source endpoint",
             "enum": [
               "allowed",
               "denied",
-              "unknown"
+              "not-supported",
+              "denied-generated-config"
             ]
           },
-          "bypassServiceGraph": {
-            "type": "boolean"
-          },
-          "failureReason": {
-            "type": "string"
-          },
-          "failureCode": {
-            "type": "string"
-          },
-          "recommendation": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "status",
-          "bypassServiceGraph",
-          "failureReason",
-          "failureCode",
-          "recommendation"
-        ]
-      },
-      "HierarchicalNode": {
-        "type": "object",
-        "properties": {
-          "id": {
+          "connectivityResultDetail": {
             "type": "string",
-            "description": "The ID of the node",
-            "example": "123e4567-e89b-12d3-a456-426614174000"
+            "description": "The detail of the connectivity result"
           },
-          "type": {
-            "type": "string",
-            "description": "The type of the node",
-            "example": "tenant"
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the node",
-            "example": "Tenant 1"
-          },
-          "children": {
-            "description": "The children of the node",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/HierarchicalNode"
-            }
-          },
-          "metadata": {
-            "type": "object",
-            "description": "The metadata of the node"
-          }
-        },
-        "required": [
-          "id",
-          "type",
-          "name",
-          "children",
-          "metadata"
-        ]
-      },
-      "ConnectivityPath": {
-        "type": "object",
-        "properties": {
-          "nodes": {
-            "description": "The nodes in the path",
+          "generatedConfig": {
+            "description": "Generated configuration when connectivity requires new config",
             "allOf": [
               {
-                "$ref": "#/components/schemas/ConnectivityNode"
+                "$ref": "#/components/schemas/EndpointConnectivityGeneratedConfig"
               }
             ]
           },
-          "edges": {
-            "description": "The edges in the path",
+          "sourceEndpoint": {
+            "description": "The source endpoint",
             "allOf": [
               {
-                "$ref": "#/components/schemas/ConnectivityEdge"
+                "$ref": "#/components/schemas/Endpoint"
               }
             ]
           },
-          "metadata": {
-            "description": "The metadata of the path",
+          "destinationEndpoint": {
+            "description": "The destination endpoint",
             "allOf": [
               {
-                "$ref": "#/components/schemas/ConnectivityPathMetdata"
+                "$ref": "#/components/schemas/Endpoint"
               }
             ]
           },
-          "hierarchy": {
-            "description": "The hierarchical structure of the path for containment visualization",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/HierarchicalNode"
-            }
+          "connectionTrace": {
+            "description": "The connection trace",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ConnectionTrace"
+              }
+            ]
           }
         },
         "required": [
-          "nodes",
-          "edges",
-          "metadata"
+          "connectivityResult",
+          "connectivityResultDetail",
+          "sourceEndpoint",
+          "destinationEndpoint",
+          "connectionTrace"
         ]
       },
       "AciRuntimeJobCreateDto": {

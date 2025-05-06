@@ -1,42 +1,51 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilitiesService } from 'client/api/utilities.service';
-import { ConnectivityQuery } from 'client/model/models';
-import { ConnectivityPath } from 'client/model/models';
 import { Router } from '@angular/router';
 
-interface GraphNode {
+// Core interfaces for the API response
+interface EndpointConnectivityResponse {
+  connectivityResult: string;
+  connectivityResultDetail: string;
+  sourceEndpoint: Endpoint;
+  destinationEndpoint: Endpoint;
+  connectionTrace: ConnectionTrace;
+  generatedConfig?: GeneratedConfig;
+}
+
+interface Endpoint {
   id: string;
-  type: string;
   name: string | null;
-  metadata?: any;
-  tenantId?: string;
+  ipAddress: string;
+  macAddress: string | null;
+  endpointGroupId: string;
+  tenantId: string;
+  tenant?: any;
+  endpointGroup?: any;
 }
 
-interface GraphEdge {
-  source: string;
-  target: string;
-  sourceType: string;
-  targetType: string;
-  type: string;
+interface PathNode {
+  nodeId?: string;
+  nodeType: string;
+  name?: string;
+  generated?: boolean;
 }
 
-interface HierarchyNode {
-  id: string;
-  type: string;
-  name: string | null;
-  metadata?: any;
-  children: HierarchyNode[];
+interface ConnectionTrace {
+  sourcePath: PathNode[];
+  contractPath: PathNode[];
+  destinationPath: PathNode[];
+  fullPath: PathNode[];
 }
 
-interface Graph {
-  nodes: GraphNode[];
-  edges: GraphEdge[];
-  metadata: {
-    status: string;
-    bypassServiceGraph: boolean;
-  };
-  hierarchy?: HierarchyNode[];
+interface GeneratedConfig {
+  Contracts: any[];
+  Subjects: any[];
+  Filters: any[];
+  FilterEntries: any[];
+  SubjectToFilter: any[];
+  FirewallRules: any[];
+  existingContract: boolean;
 }
 
 @Component({
@@ -45,32 +54,30 @@ interface Graph {
   styleUrls: ['./endpoint-connectivity-utility.component.scss'],
 })
 export class EndpointConnectivityUtilityComponent implements OnInit {
+  // Form controls
   connectivityForm: FormGroup;
-  connectivityPath: ConnectivityPath | null = null;
-  graph: Graph | null = null;
+
+  // State management
   isLoading = false;
   error: string | null = null;
   tenantId: string;
 
-  // Track expanded/collapsed state of hierarchy nodes
-  expandedNodes: Set<string> = new Set();
+  // API response data
+  connectivityResult: EndpointConnectivityResponse | null = null;
 
-  // Track active path nodes
-  activePathNodes: Set<string> = new Set();
-  sourceEndpointId: string | null = null;
-  destEndpointId: string | null = null;
-
-  // Constants for form defaults
+  // Protocol options for the form
   protocolOptions = ['tcp', 'udp', 'icmp'];
 
   constructor(private fb: FormBuilder, private utilitiesService: UtilitiesService, private router: Router) {
+    // Extract tenant ID from the URL
     const match = this.router.routerState.snapshot.url.match(
       /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
     );
     if (match) {
-      const uuid = match[0].split('/')[2];
-      this.tenantId = uuid;
+      this.tenantId = match[0].split('/')[2];
     }
+
+    // Initialize form
     this.connectivityForm = this.fb.group({
       generatedConfigIdentifier: ['connectivity-test-' + Date.now(), Validators.required],
       sourceEndpointIp: ['', [Validators.required, Validators.pattern('^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$')]],
@@ -86,9 +93,10 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initialization logic can be added here if needed
+    // Nothing to initialize
   }
 
+  // Submit form to test connectivity
   onSubmit(): void {
     if (this.connectivityForm.invalid) {
       return;
@@ -96,28 +104,41 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
 
     this.isLoading = true;
     this.error = null;
-    this.activePathNodes.clear();
 
-    const query: ConnectivityQuery = this.connectivityForm.value;
-    query.tenantId = this.tenantId;
-    // Convert string port values to numbers
-    if (query.sourceEndpointPort) {
-      query.sourceEndpointPort = Number(query.sourceEndpointPort);
-    }
-    query.destinationEndpointPort = Number(query.destinationEndpointPort);
+    const formValue = this.connectivityForm.value;
 
-    this.utilitiesService.generateConnectivityReportUtilities({ connectivityQuery: query }).subscribe(
-      result => {
+    // Prepare the query object for the API
+    const query = {
+      generatedConfigIdentifier: formValue.generatedConfigIdentifier,
+      sourceEndpointIp: formValue.sourceEndpointIp,
+      sourceEndpointPort: formValue.sourceEndpointPort ? Number(formValue.sourceEndpointPort) : undefined,
+      destinationEndpointIp: formValue.destinationEndpointIp,
+      destinationEndpointPort: Number(formValue.destinationEndpointPort),
+      ipProtocol: formValue.ipProtocol,
+      bypassServiceGraph: formValue.bypassServiceGraph,
+      generateConfig: formValue.generateConfig,
+      applyConfig: formValue.applyConfig,
+      bidirectional: formValue.bidirectional,
+      tenantId: this.tenantId,
+    };
+
+    this.utilitiesService.generateConnectivityReportUtilities({ endpointConnectivityQuery: query }).subscribe(
+      (result: any) => {
         this.isLoading = false;
-        this.connectivityPath = result;
-        this.graph = result as unknown as Graph;
+        this.connectivityResult = result;
         console.log('Connectivity results:', result);
 
-        // Initialize all nodes as expanded
-        this.expandAllNodes();
+        // Ensure fullPath exists for denied connections
+        if (
+          this.connectivityResult.connectivityResult === 'denied' &&
+          (!this.connectivityResult.connectionTrace.fullPath || this.connectivityResult.connectionTrace.fullPath.length === 0)
+        ) {
+          // Create an empty array if it doesn't exist
+          this.connectivityResult.connectionTrace.fullPath = [];
 
-        // Identify source and destination endpoints and active path
-        this.identifyConnectivityPathNodes();
+          // For denied connectivity, we'll display source and destination paths separately
+          console.log('Handling denied connection with empty fullPath');
+        }
       },
       error => {
         this.isLoading = false;
@@ -127,302 +148,45 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
     );
   }
 
-  // Identify nodes in the connectivity path
-  identifyConnectivityPathNodes(): void {
-    if (!this.graph || !this.graph.nodes) {
-      return;
-    }
-
-    // Find source and destination endpoints based on IP addresses from the form
-    const sourceIp = this.connectivityForm.get('sourceEndpointIp')?.value;
-    const destIp = this.connectivityForm.get('destinationEndpointIp')?.value;
-
-    // Find source and destination endpoint nodes
-    const sourceEndpoint = this.graph.nodes.find(node => node.type === 'endpoint' && node.metadata?.ipAddress === sourceIp);
-
-    const destEndpoint = this.graph.nodes.find(node => node.type === 'endpoint' && node.metadata?.ipAddress === destIp);
-
-    if (sourceEndpoint) {
-      this.sourceEndpointId = sourceEndpoint.id;
-      this.activePathNodes.add(sourceEndpoint.id);
-
-      // Find parent EPG
-      const sourceEpgEdge = this.graph.edges.find(edge => edge.target === sourceEndpoint.id && edge.sourceType === 'epg');
-
-      if (sourceEpgEdge) {
-        this.activePathNodes.add(sourceEpgEdge.source);
-
-        // Find parent ESG
-        const sourceEsgEdge = this.graph.edges.find(edge => edge.target === sourceEpgEdge.source && edge.sourceType === 'esg');
-
-        if (sourceEsgEdge) {
-          this.activePathNodes.add(sourceEsgEdge.source);
-        }
-      }
-    }
-
-    if (destEndpoint) {
-      this.destEndpointId = destEndpoint.id;
-      this.activePathNodes.add(destEndpoint.id);
-
-      // Find parent EPG
-      const destEpgEdge = this.graph.edges.find(edge => edge.target === destEndpoint.id && edge.sourceType === 'epg');
-
-      if (destEpgEdge) {
-        this.activePathNodes.add(destEpgEdge.source);
-
-        // Find parent ESG
-        const destEsgEdge = this.graph.edges.find(edge => edge.target === destEpgEdge.source && edge.sourceType === 'esg');
-
-        if (destEsgEdge) {
-          this.activePathNodes.add(destEsgEdge.source);
-        }
-      }
-    }
-
-    // Add contract, subject, and filter nodes to active path
-    this.graph.edges.forEach(edge => {
-      if (edge.type === 'to' || edge.type === 'from') {
-        if (this.activePathNodes.has(edge.source) || this.activePathNodes.has(edge.target)) {
-          this.activePathNodes.add(edge.source);
-          this.activePathNodes.add(edge.target);
-        }
-      }
+  // Reset the form
+  resetForm(): void {
+    this.connectivityForm.reset({
+      generatedConfigIdentifier: 'connectivity-test-' + Date.now(),
+      ipProtocol: 'tcp',
+      bypassServiceGraph: true,
+      generateConfig: false,
+      applyConfig: false,
+      bidirectional: false,
     });
+    this.connectivityResult = null;
+    this.error = null;
   }
 
-  // Check if a node is in the active path
-  isActivePathNode(nodeId: string): boolean {
-    return this.activePathNodes.has(nodeId);
-  }
-
-  // Get the role of an ESG/EPG in the connectivity path
-  getNodeRole(nodeId: string): string | null {
-    if (!this.graph) {
-      return null;
-    }
-
-    // Check if it's a consumer (to) of any contract
-    const consumerEdge = this.graph.edges.find(edge => edge.source === nodeId && edge.type === 'to');
-
-    if (consumerEdge) {
-      return 'consumer';
-    }
-
-    // Check if it's a provider (from) of any contract
-    const providerEdge = this.graph.edges.find(edge => edge.source === nodeId && edge.type === 'from');
-
-    if (providerEdge) {
-      return 'provider';
-    }
-
-    return null;
-  }
-
-  // Get related ESG/EPG for a given node based on consumer/provider relationship
-  getRelatedNode(nodeId: string, relationType: 'consumer' | 'provider'): string | null {
-    if (!this.graph) {
-      return null;
-    }
-
-    // If node is a consumer, find the contract, then find the provider
-    if (relationType === 'provider') {
-      const consumerEdge = this.graph.edges.find(edge => edge.source === nodeId && edge.type === 'to');
-
-      if (consumerEdge) {
-        const contractId = consumerEdge.target;
-
-        // Find provider of this contract
-        const providerEdge = this.graph.edges.find(edge => edge.target === contractId && edge.type === 'from');
-
-        if (providerEdge) {
-          return providerEdge.source;
-        }
-      }
-    }
-
-    // If node is a provider, find the contract, then find the consumer
-    if (relationType === 'consumer') {
-      const providerEdge = this.graph.edges.find(edge => edge.source === nodeId && edge.type === 'from');
-
-      if (providerEdge) {
-        const contractId = providerEdge.target;
-
-        // Find consumer of this contract
-        const consumerEdge = this.graph.edges.find(edge => edge.target === contractId && edge.type === 'to');
-
-        if (consumerEdge) {
-          return consumerEdge.source;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  // Hierarchy-based methods
-  getHierarchy(): HierarchyNode[] {
-    if (!this.graph || !this.graph.hierarchy) {
-      return [];
-    }
-    return this.graph.hierarchy;
-  }
-
-  getTenants(): HierarchyNode[] {
-    return this.getHierarchy().filter(node => node.type === 'tenant');
-  }
-
-  getChildrenByType(node: HierarchyNode, type: string): HierarchyNode[] {
-    return node.children.filter(child => child.type === type);
-  }
-
-  getNodeRelationships(nodeId: string): GraphEdge[] {
-    if (!this.graph) {
-      return [];
-    }
-
-    return this.graph.edges.filter(edge => edge.source === nodeId || edge.target === nodeId);
-  }
-
-  getConsumerEdges(contractId: string): GraphEdge[] {
-    if (!this.graph) {
-      return [];
-    }
-
-    return this.graph.edges.filter(edge => edge.target === contractId && edge.type === 'to');
-  }
-
-  getProviderEdges(contractId: string): GraphEdge[] {
-    if (!this.graph) {
-      return [];
-    }
-
-    return this.graph.edges.filter(edge => edge.source === contractId && edge.type === 'from');
-  }
-
-  getConsumers(contractNode: HierarchyNode): any[] {
-    return contractNode.metadata?.consumers || [];
-  }
-
-  getProviders(contractNode: HierarchyNode): any[] {
-    return contractNode.metadata?.providers || [];
-  }
-
-  // Find node in hierarchy by ID
-  findNodeInHierarchy(id: string, nodes: HierarchyNode[] = this.getHierarchy()): HierarchyNode | null {
-    for (const node of nodes) {
-      if (node.id === id) {
-        return node;
-      }
-
-      if (node.children && node.children.length > 0) {
-        const foundNode = this.findNodeInHierarchy(id, node.children);
-        if (foundNode) {
-          return foundNode;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  // Expand/collapse functionality
-  isExpanded(nodeId: string): boolean {
-    return this.expandedNodes.has(nodeId);
-  }
-
-  toggleExpand(nodeId: string, event?: Event): void {
-    if (event) {
-      event.stopPropagation();
-    }
-
-    if (this.isExpanded(nodeId)) {
-      this.expandedNodes.delete(nodeId);
-    } else {
-      this.expandedNodes.add(nodeId);
-    }
-  }
-
-  expandAllNodes(): void {
-    if (!this.graph || !this.graph.hierarchy) {
-      return;
-    }
-
-    const expandAll = (nodes: HierarchyNode[]) => {
-      for (const node of nodes) {
-        this.expandedNodes.add(node.id);
-        if (node.children && node.children.length > 0) {
-          expandAll(node.children);
-        }
-      }
-    };
-
-    expandAll(this.graph.hierarchy);
-  }
-
-  collapseAllNodes(): void {
-    this.expandedNodes.clear();
-  }
-
-  getNodeIcon(type: string): string {
-    switch (type) {
-      case 'tenant':
-        return 'building';
-      case 'esg':
-        return 'object-group';
-      case 'epg':
-        return 'layer-group';
-      case 'endpoint':
-        return 'desktop';
-      case 'contract':
-        return 'file-contract';
-      case 'subject':
-        return 'book';
-      case 'filter':
-        return 'filter';
-      case 'filter_entry':
-        return 'list';
-      default:
-        return 'circle';
-    }
-  }
-
-  getNodeColor(type: string): string {
-    switch (type) {
-      case 'tenant':
-        return '#3498db';
-      case 'esg':
-        return '#16a085';
-      case 'epg':
-        return '#3498db';
-      case 'endpoint':
-        return '#2c3e50';
-      case 'contract':
-        return '#9b59b6';
-      case 'subject':
-        return '#8e44ad';
-      case 'filter':
-        return '#e67e22';
-      case 'filter_entry':
-        return '#d35400';
-      default:
-        return '#95a5a6';
-    }
-  }
-
+  // Helper method to get the connection status for display
   getConnectionStatus(): string {
-    if (!this.graph) {
+    if (!this.connectivityResult) {
       return 'unknown';
     }
-    return this.graph.metadata.status;
+
+    const status = this.connectivityResult.connectivityResult;
+
+    if (status.includes('allowed')) {
+      return 'allowed';
+    } else if (status.includes('denied')) {
+      return 'denied';
+    } else {
+      return status;
+    }
   }
 
-  isConnectionAllowed(): boolean {
-    return this.getConnectionStatus() === 'allowed';
-  }
-
+  // Get appropriate CSS class for status display
   getStatusClass(): string {
     const status = this.getConnectionStatus();
+
+    if (status === 'denied' && this.connectivityResult?.connectivityResult === 'denied-generated-config') {
+      return 'status-allowed';
+    }
+
     switch (status) {
       case 'allowed':
         return 'status-allowed';
@@ -433,98 +197,83 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
     }
   }
 
-  // Edge and relationship helpers
-  getRelationshipType(source: string, target: string): string {
-    if (!this.graph) {
-      return '';
-    }
-
-    const edge = this.graph.edges.find(e => (e.source === source && e.target === target) || (e.source === target && e.target === source));
-
-    if (!edge) {
-      return '';
-    }
-
-    return edge.type;
-  }
-
-  isConsumerOf(sourceId: string, targetId: string): boolean {
-    if (!this.graph) {
+  // Check if result is allowed or would be allowed with generated config
+  isConnectionAllowed(): boolean {
+    if (!this.connectivityResult) {
       return false;
     }
 
-    const edge = this.graph.edges.find(e => e.source === sourceId && e.target === targetId && e.type === 'to');
-
-    return !!edge;
+    const status = this.connectivityResult.connectivityResult;
+    return status.includes('allowed') || status === 'denied-generated-config';
   }
 
-  isProviderFor(sourceId: string, targetId: string): boolean {
-    if (!this.graph) {
+  // Check if we should show generated config details
+  shouldShowGeneratedConfig(): boolean {
+    if (!this.connectivityResult || !this.connectivityResult.generatedConfig) {
       return false;
     }
 
-    const edge = this.graph.edges.find(e => e.source === sourceId && e.target === targetId && e.type === 'from');
-
-    return !!edge;
+    return (
+      this.connectivityResult.connectivityResult === 'denied-generated-config' ||
+      (this.connectivityResult.connectivityResult === 'denied' && this.connectivityForm.value.generateConfig)
+    );
   }
 
-  getNodeMetadataDisplay(node: HierarchyNode): string[] {
-    if (!node.metadata) {
-      return [];
-    }
-
-    const result: string[] = [];
-
-    if (node.type === 'endpoint') {
-      if (node.metadata.ipAddress) {
-        result.push(`IP: ${node.metadata.ipAddress}`);
-      }
-      if (node.metadata.ipProtocol) {
-        result.push(`Protocol: ${node.metadata.ipProtocol.toUpperCase()}`);
-      }
-      if (node.metadata.sourceFromPort) {
-        result.push(`Source Port: ${node.metadata.sourceFromPort}`);
-      }
-      if (node.metadata.destinationFromPort) {
-        result.push(`Destination Port: ${node.metadata.destinationFromPort}`);
-      }
-    } else if (node.type === 'contract') {
-      const consumers = this.getConsumers(node);
-      const providers = this.getProviders(node);
-
-      if (consumers && consumers.length > 0) {
-        result.push(`Consumer: ${consumers.map(c => c.name).join(', ')}`);
-      }
-
-      if (providers && providers.length > 0) {
-        result.push(`Provider: ${providers.map(p => p.name).join(', ')}`);
-      }
-    } else if (node.type === 'filter_entry') {
-      if (node.metadata.ipProtocol) {
-        result.push(`Protocol: ${node.metadata.ipProtocol.toUpperCase()}`);
-      }
-
-      const srcPort = node.metadata.sourceFromPort || 'any';
-      const dstPort = node.metadata.destinationFromPort || 'any';
-
-      result.push(`Ports: ${srcPort} → ${dstPort}`);
-    }
-
-    return result;
+  // Get a simple description of the connection result
+  getConnectionDetail(): string {
+    return this.connectivityResult?.connectivityResultDetail || '';
   }
 
-  resetForm(): void {
-    this.connectivityForm.reset({
-      generatedConfigIdentifier: 'connectivity-test-' + Date.now(),
-      ipProtocol: 'tcp',
-      bypassServiceGraph: true,
-      generateConfig: false,
-      applyConfig: false,
-      bidirectional: false,
-    });
-    this.graph = null;
-    this.error = null;
-    this.expandedNodes.clear();
-    this.activePathNodes.clear();
+  // Helper to check if a path has nodes
+  hasPathNodes(pathType: 'source' | 'contract' | 'destination' | 'full'): boolean {
+    if (!this.connectivityResult || !this.connectivityResult.connectionTrace) {
+      return false;
+    }
+
+    switch (pathType) {
+      case 'source':
+        return this.connectivityResult.connectionTrace.sourcePath && this.connectivityResult.connectionTrace.sourcePath.length > 0;
+      case 'contract':
+        return this.connectivityResult.connectionTrace.contractPath && this.connectivityResult.connectionTrace.contractPath.length > 0;
+      case 'destination':
+        return (
+          this.connectivityResult.connectionTrace.destinationPath && this.connectivityResult.connectionTrace.destinationPath.length > 0
+        );
+      case 'full':
+        return this.connectivityResult.connectionTrace.fullPath && this.connectivityResult.connectionTrace.fullPath.length > 0;
+      default:
+        return false;
+    }
+  }
+
+  // Get an appropriate color for node types
+  getNodeColor(nodeType: string, isGenerated: boolean = false): string {
+    if (isGenerated) {
+      return '#27ae60'; // Green for generated nodes
+    }
+
+    switch (nodeType) {
+      case 'endpoint':
+        return '#2c3e50'; // Dark blue
+      case 'epg':
+        return '#3498db'; // Blue
+      case 'esg':
+        return '#16a085'; // Green
+      case 'contract':
+        return '#9b59b6'; // Purple
+      case 'subject':
+        return '#6c757d'; // Gray
+      case 'filter':
+        return '#e67e22'; // Orange
+      case 'filter_entry':
+        return '#e74c3c'; // Red
+      default:
+        return '#f8f9fa'; // Light gray
+    }
+  }
+
+  // Get text color based on background
+  getNodeTextColor(nodeType: string): string {
+    return ['endpoint', 'esg', 'epg', 'contract'].includes(nodeType) ? '#ffffff' : '#212529';
   }
 }

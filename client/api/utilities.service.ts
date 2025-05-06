@@ -17,15 +17,15 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ConnectivityPath } from '../model/models';
-import { ConnectivityQuery } from '../model/models';
+import { EndpointConnectionUtilityResponse } from '../model/models';
+import { EndpointConnectivityQuery } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
 export interface GenerateConnectivityReportUtilitiesRequestParams {
-    connectivityQuery: ConnectivityQuery;
+    endpointConnectivityQuery: EndpointConnectivityQuery;
 }
 
 
@@ -95,13 +95,13 @@ export class UtilitiesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public generateConnectivityReportUtilities(requestParameters: GenerateConnectivityReportUtilitiesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ConnectivityPath>;
-    public generateConnectivityReportUtilities(requestParameters: GenerateConnectivityReportUtilitiesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ConnectivityPath>>;
-    public generateConnectivityReportUtilities(requestParameters: GenerateConnectivityReportUtilitiesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ConnectivityPath>>;
+    public generateConnectivityReportUtilities(requestParameters: GenerateConnectivityReportUtilitiesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<EndpointConnectionUtilityResponse>;
+    public generateConnectivityReportUtilities(requestParameters: GenerateConnectivityReportUtilitiesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<EndpointConnectionUtilityResponse>>;
+    public generateConnectivityReportUtilities(requestParameters: GenerateConnectivityReportUtilitiesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<EndpointConnectionUtilityResponse>>;
     public generateConnectivityReportUtilities(requestParameters: GenerateConnectivityReportUtilitiesRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const connectivityQuery = requestParameters.connectivityQuery;
-        if (connectivityQuery === null || connectivityQuery === undefined) {
-            throw new Error('Required parameter connectivityQuery was null or undefined when calling generateConnectivityReportUtilities.');
+        const endpointConnectivityQuery = requestParameters.endpointConnectivityQuery;
+        if (endpointConnectivityQuery === null || endpointConnectivityQuery === undefined) {
+            throw new Error('Required parameter endpointConnectivityQuery was null or undefined when calling generateConnectivityReportUtilities.');
         }
 
         let headers = this.defaultHeaders;
@@ -133,8 +133,8 @@ export class UtilitiesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<ConnectivityPath>(`${this.configuration.basePath}/v2/utilities/connectivity/report`,
-            connectivityQuery,
+        return this.httpClient.post<EndpointConnectionUtilityResponse>(`${this.configuration.basePath}/v2/utilities/connectivity/report`,
+            endpointConnectivityQuery,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

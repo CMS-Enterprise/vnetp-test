@@ -64,11 +64,8 @@ model/appCentricSubnet.ts
 model/applicationProfile.ts
 model/auditLog.ts
 model/bridgeDomain.ts
-model/connectivityEdge.ts
+model/connectionTrace.ts
 model/connectivityNode.ts
-model/connectivityPath.ts
-model/connectivityPathMetdata.ts
-model/connectivityQuery.ts
 model/contract.ts
 model/createManyAppCentricSubnetDto.ts
 model/createManyApplicationProfileDto.ts
@@ -114,6 +111,10 @@ model/createManyZoneDto.ts
 model/createTenantV2Dto.ts
 model/datacenter.ts
 model/dcsPermissions.ts
+model/endpoint.ts
+model/endpointConnectionUtilityResponse.ts
+model/endpointConnectivityGeneratedConfig.ts
+model/endpointConnectivityQuery.ts
 model/endpointGroup.ts
 model/endpointSecurityGroup.ts
 model/externalRoute.ts
@@ -184,7 +185,6 @@ model/getManyVrfResponseDto.ts
 model/getManyWanFormResponseDto.ts
 model/getManyWanFormSubnetResponseDto.ts
 model/getManyZoneResponseDto.ts
-model/hierarchicalNode.ts
 model/hitcountData.ts
 model/hitcountJobCreateDto.ts
 model/hitcountJobResultDto.ts
@@ -229,6 +229,7 @@ model/serviceObjectGroupRelationBulkImportCollectionDto.ts
 model/serviceObjectGroupRelationBulkImportDto.ts
 model/staticRoute.ts
 model/subject.ts
+model/subjectToFilter.ts
 model/subnet.ts
 model/subnetImport.ts
 model/subnetImportCollectionDto.ts
