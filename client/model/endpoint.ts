@@ -11,6 +11,7 @@
  */
 import { Tenant } from './tenant';
 import { EndpointGroup } from './endpointGroup';
+import { IpAddress } from './ipAddress';
 
 
 export interface Endpoint { 
@@ -19,25 +20,17 @@ export interface Endpoint {
      */
     readonly id?: string;
     /**
-     * Endpoint name
-     */
-    readonly name?: string;
-    /**
-     * Endpoint IP address
-     */
-    readonly ipAddress?: string;
-    /**
      * Endpoint MAC address
      */
     readonly macAddress?: string;
     /**
+     * IP addresses associated with this endpoint
+     */
+    readonly ipAddresses?: Array<IpAddress>;
+    /**
      * Endpoint last seen
      */
-    readonly lastSeen?: string;
-    /**
-     * Endpoint missed count
-     */
-    readonly missedCount?: number;
+    readonly orphanedAt?: string;
     readonly endpointGroup?: EndpointGroup;
     /**
      * Endpoint endpoint group ID

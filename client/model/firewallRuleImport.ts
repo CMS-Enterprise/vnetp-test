@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { EndpointSecurityGroup } from './endpointSecurityGroup';
 import { ServiceObjectGroup } from './serviceObjectGroup';
 import { NetworkObject } from './networkObject';
 import { Zone } from './zone';
@@ -45,7 +46,9 @@ export interface FirewallRuleImport {
     serviceObjectId?: string;
     serviceObjectGroupId?: string;
     sourceEndpointGroupId?: string;
+    sourceEndpointSecurityGroupId?: string;
     destinationEndpointGroupId?: string;
+    destinationEndpointSecurityGroupId?: string;
     firewallRuleGroupId: string;
     readonly sourceNetworkObject?: NetworkObject;
     readonly sourceNetworkObjectGroup?: NetworkObjectGroup;
@@ -57,6 +60,8 @@ export interface FirewallRuleImport {
     fromZone?: Array<Zone>;
     readonly sourceEndpointGroup?: EndpointGroup;
     readonly destinationEndpointGroup?: EndpointGroup;
+    readonly sourceEndpointSecurityGroup?: EndpointSecurityGroup;
+    readonly destinationEndpointSecurityGroup?: EndpointSecurityGroup;
     hitCount?: number;
     readonly tenantVersion?: number;
     tierName: string;

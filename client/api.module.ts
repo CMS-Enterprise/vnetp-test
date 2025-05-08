@@ -45,6 +45,7 @@ import { V2AppCentricBridgeDomainsService } from './api/v2AppCentricBridgeDomain
 import { V2AppCentricContractsService } from './api/v2AppCentricContracts.service';
 import { V2AppCentricEndpointGroupsService } from './api/v2AppCentricEndpointGroups.service';
 import { V2AppCentricEndpointSecurityGroupsService } from './api/v2AppCentricEndpointSecurityGroups.service';
+import { V2AppCentricEndpointsService } from './api/v2AppCentricEndpoints.service';
 import { V2AppCentricFilterEntriesService } from './api/v2AppCentricFilterEntries.service';
 import { V2AppCentricFiltersService } from './api/v2AppCentricFilters.service';
 import { V2AppCentricL3outsService } from './api/v2AppCentricL3outs.service';

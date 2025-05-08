@@ -45,6 +45,7 @@ api/v2AppCentricBridgeDomains.service.ts
 api/v2AppCentricContracts.service.ts
 api/v2AppCentricEndpointGroups.service.ts
 api/v2AppCentricEndpointSecurityGroups.service.ts
+api/v2AppCentricEndpoints.service.ts
 api/v2AppCentricFilterEntries.service.ts
 api/v2AppCentricFilters.service.ts
 api/v2AppCentricL3outs.service.ts
@@ -117,6 +118,7 @@ model/endpointConnectivityGeneratedConfig.ts
 model/endpointConnectivityQuery.ts
 model/endpointGroup.ts
 model/endpointSecurityGroup.ts
+model/endpointSyncDto.ts
 model/externalRoute.ts
 model/externalRouteJobCreateDto.ts
 model/f5ConfigJobCreateDto.ts
@@ -188,6 +190,7 @@ model/getManyZoneResponseDto.ts
 model/hitcountData.ts
 model/hitcountJobCreateDto.ts
 model/hitcountJobResultDto.ts
+model/ipAddress.ts
 model/job.ts
 model/l3Out.ts
 model/loadBalancerHealthMonitor.ts
@@ -233,6 +236,10 @@ model/subjectToFilter.ts
 model/subnet.ts
 model/subnetImport.ts
 model/subnetImportCollectionDto.ts
+model/syncEndpoint.ts
+model/syncEndpointGroup.ts
+model/syncEndpointSecurityGroup.ts
+model/syncTenant.ts
 model/tenant.ts
 model/tier.ts
 model/tierGroup.ts

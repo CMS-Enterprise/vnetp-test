@@ -90,7 +90,10 @@
 
       <!-- Connection Status -->
       <div class="connection-status" [ngClass]="getStatusClass()">
-        <div>Connection: {{ getConnectionStatus() | uppercase }}</div>
+        <div>
+          Connection: {{ getConnectionStatus() | uppercase }}
+          <span *ngIf="connectivityResult?.connectivityResult === 'denied-generated-config'"> (WITH SOLUTION)</span>
+        </div>
         <div class="detail" *ngIf="getConnectionDetail()">{{ getConnectionDetail() }}</div>
       </div>
 

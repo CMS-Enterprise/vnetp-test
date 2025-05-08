@@ -184,7 +184,7 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
     const status = this.getConnectionStatus();
 
     if (status === 'denied' && this.connectivityResult?.connectivityResult === 'denied-generated-config') {
-      return 'status-allowed';
+      return 'status-denied-config';
     }
 
     switch (status) {

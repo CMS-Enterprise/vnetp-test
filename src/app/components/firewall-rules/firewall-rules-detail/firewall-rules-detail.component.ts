@@ -31,6 +31,10 @@ import {
   V1NetworkSecurityZonesService,
   V1RuntimeDataHitcountService,
   HitcountJobCreateDtoTypeEnum,
+  V2AppCentricEndpointGroupsService,
+  V2AppCentricEndpointSecurityGroupsService,
+  EndpointSecurityGroup,
+  EndpointGroup,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
@@ -79,6 +83,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   networkObjectGroups: NetworkObjectGroup[];
   serviceObjects: ServiceObject[];
   serviceObjectGroups: ServiceObjectGroup[];
+  endpointGroups: EndpointGroup[];
+  endpointSecurityGroups: EndpointSecurityGroup[];
   tiers: Tier[];
   packetTracerObjects = new FirewallRulePacketTracerDto();
   zones: Zone[];
@@ -151,6 +157,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private tableContextService: TableContextService,
     private hitcountService: V1RuntimeDataHitcountService,
     private runtimeDataService: RuntimeDataService,
+    private endpointGroupService: V2AppCentricEndpointGroupsService,
+    private endpointSecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<FirewallRule>();
     advancedSearchAdapterObject.setService(this.firewallRuleService);
@@ -161,6 +169,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(data => {
       this.applicationMode = data.mode;
+      console.log('this.applicationMode', this.applicationMode);
       this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
         if (cd) {
           this.tiers = cd.tiers;
@@ -311,7 +320,20 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       page: 1,
       perPage: 50000,
     });
-
+    const endpointGroupRequest = this.endpointGroupService.getManyEndpointGroup({
+      filter: [`tenantId||eq||${this.datacenterService.currentDatacenterValue.appCentricTenantId}`, 'deletedAt||isnull'],
+      fields: ['id,name'],
+      sort: ['updatedAt,ASC'],
+      page: 1,
+      perPage: 50000,
+    });
+    const endpointSecurityGroupRequest = this.endpointSecurityGroupService.getManyEndpointSecurityGroup({
+      filter: [`tenantId||eq||${this.datacenterService.currentDatacenterValue.appCentricTenantId}`, 'deletedAt||isnull'],
+      fields: ['id,name'],
+      sort: ['updatedAt,ASC'],
+      page: 1,
+      perPage: 50000,
+    });
     forkJoin([
       tierRequest,
       networkObjectRequest,
@@ -319,6 +341,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       serviceObjectRequest,
       serviceObjectGroupRequest,
       zoneRequest,
+      endpointGroupRequest,
+      endpointSecurityGroupRequest,
     ]).subscribe(result => {
       this.TierName = result[0].name;
       this.networkObjects = result[1].data;
@@ -326,7 +350,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       this.serviceObjects = result[3].data;
       this.serviceObjectGroups = result[4].data;
       this.zones = result[5].data;
-
+      this.endpointGroups = result[6].data;
+      this.endpointSecurityGroups = result[7].data;
       this.getFirewallRules();
     });
   }
@@ -348,8 +373,12 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     dto.NetworkObjectGroups = this.networkObjectGroups;
     dto.ServiceObjects = this.serviceObjects;
     dto.ServiceObjectGroups = this.serviceObjectGroups;
+    dto.EndpointGroups = this.endpointGroups;
+    dto.EndpointSecurityGroups = this.endpointSecurityGroups;
     dto.Zones = this.zones;
     dto.GroupType = this.FirewallRuleGroup.type;
+    dto.ApplicationMode = ApplicationMode.TENANTV2; // TODO: Remove once router inherits application properly.
+    console.log('this.applicationMode', this.applicationMode);
 
     if (modalMode === ModalMode.Edit) {
       dto.FirewallRule = firewallRule;
@@ -375,6 +404,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   public getServiceObjectGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.serviceObjectGroups);
   public getNetworkObjectName = (id: string): string => ObjectUtil.getObjectName(id, this.networkObjects);
   public getNetworkObjectGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.networkObjectGroups);
+  public getEndpointGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.endpointGroups);
+  public getEndpointSecurityGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.endpointSecurityGroups);
 
   public deleteFirewallRule(firewallRule: FirewallRule): void {
     this.entityService.deleteEntity(firewallRule, {
