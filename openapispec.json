@@ -29088,6 +29088,58 @@
           "filterId"
         ]
       },
+      "ContractToEpg": {
+        "type": "object",
+        "properties": {
+          "contractId": {
+            "type": "string",
+            "description": "Contract ID"
+          },
+          "epgId": {
+            "type": "string",
+            "description": "Endpoint Group ID"
+          },
+          "contractRelationType": {
+            "type": "string",
+            "description": "Contract Relation Type",
+            "enum": [
+              "Provider",
+              "Consumer"
+            ]
+          }
+        },
+        "required": [
+          "contractId",
+          "epgId",
+          "contractRelationType"
+        ]
+      },
+      "ContractToEsg": {
+        "type": "object",
+        "properties": {
+          "contractId": {
+            "type": "string",
+            "description": "Contract ID"
+          },
+          "esgId": {
+            "type": "string",
+            "description": "Endpoint Group ID"
+          },
+          "contractRelationType": {
+            "type": "string",
+            "description": "Contract Relation Type",
+            "enum": [
+              "Provider",
+              "Consumer"
+            ]
+          }
+        },
+        "required": [
+          "contractId",
+          "esgId",
+          "contractRelationType"
+        ]
+      },
       "EndpointConnectivityGeneratedConfig": {
         "type": "object",
         "properties": {
@@ -29124,6 +29176,18 @@
               "$ref": "#/components/schemas/SubjectToFilter"
             }
           },
+          "ContractToEpg": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractToEpg"
+            }
+          },
+          "ContractToEsg": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractToEsg"
+            }
+          },
           "FirewallRules": {
             "type": "array",
             "items": {
@@ -29138,6 +29202,8 @@
           "Filters",
           "FilterEntries",
           "SubjectToFilter",
+          "ContractToEpg",
+          "ContractToEsg",
           "FirewallRules"
         ]
       },
@@ -29228,6 +29294,7 @@
           },
           "generatedConfig": {
             "description": "Generated configuration when connectivity requires new config",
+            "readOnly": true,
             "allOf": [
               {
                 "$ref": "#/components/schemas/EndpointConnectivityGeneratedConfig"

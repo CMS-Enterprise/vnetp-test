@@ -2,51 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilitiesService } from 'client/api/utilities.service';
 import { Router } from '@angular/router';
-
-// Core interfaces for the API response
-interface EndpointConnectivityResponse {
-  connectivityResult: string;
-  connectivityResultDetail: string;
-  sourceEndpoint: Endpoint;
-  destinationEndpoint: Endpoint;
-  connectionTrace: ConnectionTrace;
-  generatedConfig?: GeneratedConfig;
-}
-
-interface Endpoint {
-  id: string;
-  name: string | null;
-  ipAddress: string;
-  macAddress: string | null;
-  endpointGroupId: string;
-  tenantId: string;
-  tenant?: any;
-  endpointGroup?: any;
-}
-
-interface PathNode {
-  nodeId?: string;
-  nodeType: string;
-  name?: string;
-  generated?: boolean;
-}
-
-interface ConnectionTrace {
-  sourcePath: PathNode[];
-  contractPath: PathNode[];
-  destinationPath: PathNode[];
-  fullPath: PathNode[];
-}
-
-interface GeneratedConfig {
-  Contracts: any[];
-  Subjects: any[];
-  Filters: any[];
-  FilterEntries: any[];
-  SubjectToFilter: any[];
-  FirewallRules: any[];
-  existingContract: boolean;
-}
+import {
+  EndpointConnectionUtilityResponse,
+  V1NetworkSecurityFirewallRulesService,
+  V2AppCentricFilterEntriesService,
+  V2AppCentricFiltersService,
+  V2AppCentricSubjectsService,
+  V2AppCentricContractsService,
+  Contract,
+  Subject as ApiSubject,
+  Filter,
+  FilterEntry,
+} from '../../../../../../../client';
+import { forkJoin, of, Observable } from 'rxjs';
+import { map, switchMap, catchError, defaultIfEmpty } from 'rxjs/operators';
 
 @Component({
   selector: 'app-endpoint-connectivity-utility',
@@ -63,12 +32,21 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
   tenantId: string;
 
   // API response data
-  connectivityResult: EndpointConnectivityResponse | null = null;
+  connectivityResult: EndpointConnectionUtilityResponse | null = null;
 
   // Protocol options for the form
   protocolOptions = ['tcp', 'udp', 'icmp'];
 
-  constructor(private fb: FormBuilder, private utilitiesService: UtilitiesService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private utilitiesService: UtilitiesService,
+    private router: Router,
+    private subjectsService: V2AppCentricSubjectsService,
+    private filtersService: V2AppCentricFiltersService,
+    private contractsService: V2AppCentricContractsService,
+    private filterEntriesService: V2AppCentricFilterEntriesService,
+    private firewallRulesService: V1NetworkSecurityFirewallRulesService,
+  ) {
     // Extract tenant ID from the URL
     const match = this.router.routerState.snapshot.url.match(
       /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
@@ -275,5 +253,217 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
   // Get text color based on background
   getNodeTextColor(nodeType: string): string {
     return ['endpoint', 'esg', 'epg', 'contract'].includes(nodeType) ? '#ffffff' : '#212529';
+  }
+
+  private _handleApiResponse<T>(response: any): T[] {
+    return response && response.data ? response.data : Array.isArray(response) ? response : [];
+  }
+
+  private _createContracts$(contractsToCreateInput: any[], existingContractFlag: boolean): Observable<Contract[]> {
+    if (!contractsToCreateInput || contractsToCreateInput.length === 0 || existingContractFlag) {
+      return of([]);
+    }
+    const contractsToCreateDto = contractsToCreateInput.map(contractInput => {
+      const { /* id, */ ...contractData } = contractInput; // Destructure to separate id (even if commented out, it implies separation)
+      return { ...contractData, id: undefined }; // Explicitly set id to undefined
+    });
+    return this.contractsService.createManyContract({ createManyContractDto: { bulk: contractsToCreateDto } }).pipe(
+      map(response => this._handleApiResponse<Contract>(response)),
+      catchError(err => {
+        this.error = 'Error creating contracts: ' + (err.error?.message || err.message);
+        console.error('Error creating contracts:', err);
+        return of([] as Contract[]);
+      }),
+    );
+  }
+
+  private _createFilters$(filtersToCreateInput: any[]): Observable<Filter[]> {
+    if (!filtersToCreateInput || filtersToCreateInput.length === 0) {
+      return of([]);
+    }
+    const filtersToCreateDto = filtersToCreateInput.map(filterInput => {
+      const { /* id, */ ...filterData } = filterInput; // Destructure to separate id (even if commented out, it implies separation)
+      return { ...filterData, id: undefined }; // Explicitly set id to undefined
+    });
+    return this.filtersService.createManyFilter({ createManyFilterDto: { bulk: filtersToCreateDto } }).pipe(
+      map(response => this._handleApiResponse<Filter>(response)),
+      catchError(err => {
+        this.error = 'Error creating filters: ' + (err.error?.message || err.message);
+        console.error('Error creating filters:', err);
+        return of([] as Filter[]);
+      }),
+    );
+  }
+
+  private _createSubjects$(
+    subjectsToCreateInput: any[],
+    createdContracts: Contract[],
+    existingContractFlag: boolean,
+  ): Observable<ApiSubject[]> {
+    if (!subjectsToCreateInput || subjectsToCreateInput.length === 0) {
+      return of([]);
+    }
+    const subjectsToCreate = subjectsToCreateInput
+      .map(subjectInput => {
+        const { /* id, */ ...subjectData } = subjectInput; // id is for the subject itself
+        let contractIdToUse = subjectData.contractId;
+
+        if (!existingContractFlag) {
+          const foundNewContract = createdContracts.find(c => c.name === subjectInput.contractId);
+          if (foundNewContract && foundNewContract.id) {
+            contractIdToUse = foundNewContract.id;
+          } else {
+            console.error(
+              `RESOLVE_ERROR: New contract UUID for name '${subjectInput.contractId}' not found ` +
+                `for subject '${subjectData.name || 'Unnamed Subject'}'. Subject creation may fail or be skipped.`,
+            );
+            return null;
+          }
+        }
+        // Explicitly set subject's own id to undefined for auto-generation
+        return { ...subjectData, contractId: contractIdToUse, id: undefined };
+      })
+      .filter(s => s !== null) as unknown[] as ApiSubject[]; // Adjusted type assertion for now
+
+    if (subjectsToCreate.length === 0 && subjectsToCreateInput.length > 0) {
+      console.warn('All subjects were filtered out due to missing contract ID references. No subjects will be created.');
+      return of([]);
+    }
+    if (subjectsToCreate.length === 0) {
+      return of([]);
+    }
+
+    return this.subjectsService.createManySubject({ createManySubjectDto: { bulk: subjectsToCreate as any } }).pipe(
+      map(response => this._handleApiResponse<ApiSubject>(response)),
+      catchError(err => {
+        this.error = 'Error creating subjects: ' + (err.error?.message || err.message);
+        console.error('Error creating subjects:', err);
+        return of([] as ApiSubject[]);
+      }),
+    );
+  }
+
+  private _createFilterEntries$(filterEntriesToCreateInput: any[], createdFilters: Filter[]): Observable<FilterEntry[]> {
+    if (!filterEntriesToCreateInput || filterEntriesToCreateInput.length === 0) {
+      return of([]);
+    }
+    const filterEntriesToCreate = filterEntriesToCreateInput
+      .map(feInput => {
+        const { /* id, */ filterId, ...feData } = feInput; // id is for the filter entry
+        let actualFilterId: string | undefined;
+        const originalFilterIdName = filterId;
+
+        const foundFilter = createdFilters.find(f => f.name === originalFilterIdName);
+        if (foundFilter && foundFilter.id) {
+          actualFilterId = foundFilter.id;
+        } else {
+          console.error(
+            `RESOLVE_ERROR: Filter UUID for name '${originalFilterIdName}' not found ` +
+              `for filter entry '${feData.name || 'Unnamed FilterEntry'}'. Filter Entry creation may fail or be skipped.`,
+          );
+          return null;
+        }
+        // Explicitly set filter entry's own id to undefined for auto-generation
+        return { ...feData, filterId: actualFilterId, id: undefined };
+      })
+      .filter(fe => fe !== null) as unknown[] as FilterEntry[]; // Adjusted type assertion for now
+
+    if (filterEntriesToCreate.length === 0 && filterEntriesToCreateInput.length > 0) {
+      console.warn('All filter entries were filtered out due to missing filter ID references. No filter entries will be created.');
+      return of([]);
+    }
+    if (filterEntriesToCreate.length === 0) {
+      return of([]);
+    }
+
+    return this.filterEntriesService.createManyFilterEntry({ createManyFilterEntryDto: { bulk: filterEntriesToCreate as any } }).pipe(
+      map(response => this._handleApiResponse<FilterEntry>(response)),
+      catchError(err => {
+        this.error = 'Error creating filter entries: ' + (err.error?.message || err.message);
+        console.error('Error creating filter entries:', err);
+        return of([] as FilterEntry[]);
+      }),
+    );
+  }
+
+  private _linkSubjectsToFilters$(
+    subjectToFilterLinkInputs: any[],
+    createdSubjects: ApiSubject[],
+    createdFilters: Filter[],
+  ): Observable<any> {
+    if (!subjectToFilterLinkInputs || subjectToFilterLinkInputs.length === 0) {
+      return of(null);
+    }
+
+    const subjectToFilterObservables = subjectToFilterLinkInputs
+      .map(stf => {
+        const subject = createdSubjects.find(s => s.name === stf.subjectId);
+        const filter = createdFilters.find(f => f.name === stf.filterId);
+
+        if (subject && filter && subject.id && filter.id) {
+          return this.subjectsService.addFilterToSubjectSubject({ subjectId: subject.id, filterId: filter.id }).pipe(
+            catchError(err => {
+              console.error(`Error adding filter ${filter.name} to subject ${subject.name}:`, err);
+              const linkError = `Error linking ${subject.name} to ${filter.name}`;
+              this.error = (this.error ? this.error + '; ' : '') + linkError;
+              return of(null);
+            }),
+          );
+        }
+        console.warn(`Could not find subject ${stf.subjectId} or filter ${stf.filterId} for relationship. Skipping.`);
+        return of(null);
+      })
+      .filter(obs => obs !== null) as Observable<any>[];
+
+    return subjectToFilterObservables.length > 0 ? forkJoin(subjectToFilterObservables).pipe(defaultIfEmpty(null)) : of(null);
+  }
+
+  applyGeneratedConfig(): void {
+    if (!this.connectivityResult || !this.connectivityResult.generatedConfig) {
+      return;
+    }
+    this.isLoading = true;
+    this.error = null;
+
+    const generatedConfig = this.connectivityResult.generatedConfig;
+
+    this._createContracts$(generatedConfig.Contracts || [], !!generatedConfig.existingContract)
+      .pipe(
+        switchMap(createdContracts =>
+          this._createFilters$(generatedConfig.Filters || []).pipe(
+            switchMap(createdFilters =>
+              this._createSubjects$(generatedConfig.Subjects || [], createdContracts, !!generatedConfig.existingContract).pipe(
+                switchMap(createdSubjects =>
+                  this._createFilterEntries$(generatedConfig.FilterEntries || [], createdFilters).pipe(
+                    switchMap(() => this._linkSubjectsToFilters$(generatedConfig.SubjectToFilter || [], createdSubjects, createdFilters)),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        catchError(err => {
+          this.isLoading = false;
+          this.error =
+            this.error || 'An unexpected error occurred during configuration application: ' + (err.error?.message || err.message);
+          console.error('Overall error in applyGeneratedConfig:', err);
+          return of(null);
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.isLoading = false;
+          if (!this.error) {
+            console.log('Generated configuration applied successfully.');
+          } else {
+            console.log('Generated configuration applied with some errors.');
+          }
+        },
+        error: err => {
+          this.isLoading = false;
+          this.error = this.error || 'Failed to apply generated configuration: ' + (err.error?.message || err.message);
+          console.error('Critical error in applyGeneratedConfig subscription:', err);
+        },
+      });
   }
 }

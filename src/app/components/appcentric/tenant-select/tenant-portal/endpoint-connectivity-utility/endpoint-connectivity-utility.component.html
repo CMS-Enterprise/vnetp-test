@@ -100,13 +100,15 @@
       <!-- Endpoints Information -->
       <div class="endpoints-info">
         <div class="source-endpoint">
-          <strong>Source:</strong> {{ connectivityResult.sourceEndpoint.ipAddress }}
+          <!-- TODO: Add support for multiple source endpoints -->
+          <strong>Source:</strong> {{ connectivityResult.sourceEndpoint.ipAddresses[0].address }}
           <span *ngIf="connectivityResult.sourceEndpoint.endpointGroup?.name">
             ({{ connectivityResult.sourceEndpoint.endpointGroup.name }})
           </span>
         </div>
         <div class="destination-endpoint">
-          <strong>Destination:</strong> {{ connectivityResult.destinationEndpoint.ipAddress }}
+          <!-- TODO: Add support for multiple destination endpoints -->
+          <strong>Destination:</strong> {{ connectivityResult.destinationEndpoint.ipAddresses[0].address }}
           <span *ngIf="connectivityResult.destinationEndpoint.endpointGroup?.name">
             ({{ connectivityResult.destinationEndpoint.endpointGroup.name }})
           </span>
@@ -239,6 +241,12 @@
               }}
             </div>
           </div>
+        </div>
+
+        <div *ngIf="shouldShowGeneratedConfig()" class="mt-3">
+          <h5>Generated Configuration to Allow Traffic</h5>
+          <pre>{{ connectivityResult.generatedConfig | json }}</pre>
+          <button (click)="applyGeneratedConfig()" [disabled]="isLoading" class="btn btn-success m-2">Apply Generated Config</button>
         </div>
       </div>
 
