@@ -26,7 +26,7 @@ export interface EndpointConnectionUtilityResponse {
     /**
      * Generated configuration when connectivity requires new config
      */
-    generatedConfig?: EndpointConnectivityGeneratedConfig;
+    readonly generatedConfig?: EndpointConnectivityGeneratedConfig;
     /**
      * The source endpoint
      */

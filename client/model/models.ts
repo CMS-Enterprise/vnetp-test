@@ -7,6 +7,8 @@ export * from './bridgeDomain';
 export * from './connectionTrace';
 export * from './connectivityNode';
 export * from './contract';
+export * from './contractToEpg';
+export * from './contractToEsg';
 export * from './createManyAppCentricSubnetDto';
 export * from './createManyApplicationProfileDto';
 export * from './createManyBridgeDomainDto';

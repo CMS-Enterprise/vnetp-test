@@ -68,6 +68,8 @@ model/bridgeDomain.ts
 model/connectionTrace.ts
 model/connectivityNode.ts
 model/contract.ts
+model/contractToEpg.ts
+model/contractToEsg.ts
 model/createManyAppCentricSubnetDto.ts
 model/createManyApplicationProfileDto.ts
 model/createManyBridgeDomainDto.ts

@@ -12,6 +12,8 @@
 import { SubjectToFilter } from './subjectToFilter';
 import { Filter } from './filter';
 import { FilterEntry } from './filterEntry';
+import { ContractToEpg } from './contractToEpg';
+import { ContractToEsg } from './contractToEsg';
 import { Contract } from './contract';
 import { FirewallRule } from './firewallRule';
 import { Subject } from './subject';
@@ -24,6 +26,8 @@ export interface EndpointConnectivityGeneratedConfig {
     Filters: Array<Filter>;
     FilterEntries: Array<FilterEntry>;
     SubjectToFilter: Array<SubjectToFilter>;
+    ContractToEpg: Array<ContractToEpg>;
+    ContractToEsg: Array<ContractToEsg>;
     FirewallRules: Array<FirewallRule>;
 }
 

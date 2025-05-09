@@ -13,8 +13,14 @@ import {
   Subject as ApiSubject,
   Filter,
   FilterEntry,
+  ContractToEpg,
+  ContractToEsg,
+  V2AppCentricEndpointGroupsService,
+  V2AppCentricEndpointSecurityGroupsService,
+  ContractToEpgContractRelationTypeEnum,
+  ContractToEsgContractRelationTypeEnum,
 } from '../../../../../../../client';
-import { forkJoin, of, Observable } from 'rxjs';
+import { forkJoin, of, Observable, throwError } from 'rxjs';
 import { map, switchMap, catchError, defaultIfEmpty } from 'rxjs/operators';
 
 @Component({
@@ -45,6 +51,8 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
     private filtersService: V2AppCentricFiltersService,
     private contractsService: V2AppCentricContractsService,
     private filterEntriesService: V2AppCentricFilterEntriesService,
+    private endpointGroupsService: V2AppCentricEndpointGroupsService,
+    private endpointSecurityGroupsService: V2AppCentricEndpointSecurityGroupsService,
     private firewallRulesService: V1NetworkSecurityFirewallRulesService,
   ) {
     // Extract tenant ID from the URL
@@ -101,27 +109,20 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
     };
 
     this.utilitiesService.generateConnectivityReportUtilities({ endpointConnectivityQuery: query }).subscribe(
-      (result: any) => {
+      (result: EndpointConnectionUtilityResponse) => {
         this.isLoading = false;
         this.connectivityResult = result;
-        console.log('Connectivity results:', result);
 
-        // Ensure fullPath exists for denied connections
         if (
           this.connectivityResult.connectivityResult === 'denied' &&
           (!this.connectivityResult.connectionTrace.fullPath || this.connectivityResult.connectionTrace.fullPath.length === 0)
         ) {
-          // Create an empty array if it doesn't exist
           this.connectivityResult.connectionTrace.fullPath = [];
-
-          // For denied connectivity, we'll display source and destination paths separately
-          console.log('Handling denied connection with empty fullPath');
         }
       },
       error => {
         this.isLoading = false;
         this.error = error.message || 'An error occurred while testing connectivity';
-        console.error('Error testing connectivity:', error);
       },
     );
   }
@@ -264,15 +265,14 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
       return of([]);
     }
     const contractsToCreateDto = contractsToCreateInput.map(contractInput => {
-      const { /* id, */ ...contractData } = contractInput; // Destructure to separate id (even if commented out, it implies separation)
-      return { ...contractData, id: undefined }; // Explicitly set id to undefined
+      const { /* id, */ ...contractData } = contractInput;
+      return { ...contractData, id: undefined };
     });
     return this.contractsService.createManyContract({ createManyContractDto: { bulk: contractsToCreateDto } }).pipe(
       map(response => this._handleApiResponse<Contract>(response)),
       catchError(err => {
-        this.error = 'Error creating contracts: ' + (err.error?.message || err.message);
-        console.error('Error creating contracts:', err);
-        return of([] as Contract[]);
+        const errorMessage = 'Error creating contracts: ' + (err.error?.message || err.message);
+        return throwError(() => new Error(errorMessage));
       }),
     );
   }
@@ -282,15 +282,14 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
       return of([]);
     }
     const filtersToCreateDto = filtersToCreateInput.map(filterInput => {
-      const { /* id, */ ...filterData } = filterInput; // Destructure to separate id (even if commented out, it implies separation)
-      return { ...filterData, id: undefined }; // Explicitly set id to undefined
+      const { /* id, */ ...filterData } = filterInput;
+      return { ...filterData, id: undefined };
     });
     return this.filtersService.createManyFilter({ createManyFilterDto: { bulk: filtersToCreateDto } }).pipe(
       map(response => this._handleApiResponse<Filter>(response)),
       catchError(err => {
-        this.error = 'Error creating filters: ' + (err.error?.message || err.message);
-        console.error('Error creating filters:', err);
-        return of([] as Filter[]);
+        const errorMessage = 'Error creating filters: ' + (err.error?.message || err.message);
+        return throwError(() => new Error(errorMessage));
       }),
     );
   }
@@ -303,9 +302,12 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
     if (!subjectsToCreateInput || subjectsToCreateInput.length === 0) {
       return of([]);
     }
-    const subjectsToCreate = subjectsToCreateInput
-      .map(subjectInput => {
-        const { /* id, */ ...subjectData } = subjectInput; // id is for the subject itself
+
+    // Perform mapping, throw error if any ID resolution fails
+    let dtos;
+    try {
+      dtos = subjectsToCreateInput.map(subjectInput => {
+        const { /* id, */ ...subjectData } = subjectInput;
         let contractIdToUse = subjectData.contractId;
 
         if (!existingContractFlag) {
@@ -313,32 +315,34 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
           if (foundNewContract && foundNewContract.id) {
             contractIdToUse = foundNewContract.id;
           } else {
-            console.error(
-              `RESOLVE_ERROR: New contract UUID for name '${subjectInput.contractId}' not found ` +
-                `for subject '${subjectData.name || 'Unnamed Subject'}'. Subject creation may fail or be skipped.`,
+            throw new Error(
+              `ID_RESOLVE_FAIL: New contract UUID for name '${subjectInput.contractId}' not found ` +
+                `for subject '${subjectData.name || 'Unnamed Subject'}'.`,
             );
-            return null;
           }
         }
-        // Explicitly set subject's own id to undefined for auto-generation
         return { ...subjectData, contractId: contractIdToUse, id: undefined };
-      })
-      .filter(s => s !== null) as unknown[] as ApiSubject[]; // Adjusted type assertion for now
-
-    if (subjectsToCreate.length === 0 && subjectsToCreateInput.length > 0) {
-      console.warn('All subjects were filtered out due to missing contract ID references. No subjects will be created.');
-      return of([]);
-    }
-    if (subjectsToCreate.length === 0) {
-      return of([]);
+      });
+    } catch (e) {
+      return throwError(() => e); // Propagate mapping error as observable error
     }
 
-    return this.subjectsService.createManySubject({ createManySubjectDto: { bulk: subjectsToCreate as any } }).pipe(
+    if (dtos.length === 0 && subjectsToCreateInput.length > 0) {
+      // This case implies all inputs failed mapping and an error was already thrown by the first one.
+      // Or if some other logic (not present here) filtered them all out after successful mapping.
+      // For safety, if we reach here with empty dtos but had inputs, it's an issue.
+      return throwError(() => new Error('No valid subjects to process after ID resolution attempts.'));
+    }
+    if (dtos.length === 0) {
+      // No inputs originally, or all failed (error already thrown by map)
+      return of([]);
+    }
+
+    return this.subjectsService.createManySubject({ createManySubjectDto: { bulk: dtos } }).pipe(
       map(response => this._handleApiResponse<ApiSubject>(response)),
       catchError(err => {
-        this.error = 'Error creating subjects: ' + (err.error?.message || err.message);
-        console.error('Error creating subjects:', err);
-        return of([] as ApiSubject[]);
+        const errorMessage = 'Error creating subjects: ' + (err.error?.message || err.message);
+        return throwError(() => new Error(errorMessage));
       }),
     );
   }
@@ -347,9 +351,11 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
     if (!filterEntriesToCreateInput || filterEntriesToCreateInput.length === 0) {
       return of([]);
     }
-    const filterEntriesToCreate = filterEntriesToCreateInput
-      .map(feInput => {
-        const { /* id, */ filterId, ...feData } = feInput; // id is for the filter entry
+
+    let dtos;
+    try {
+      dtos = filterEntriesToCreateInput.map(feInput => {
+        const { /* id, */ filterId, ...feData } = feInput;
         let actualFilterId: string | undefined;
         const originalFilterIdName = filterId;
 
@@ -357,31 +363,29 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
         if (foundFilter && foundFilter.id) {
           actualFilterId = foundFilter.id;
         } else {
-          console.error(
-            `RESOLVE_ERROR: Filter UUID for name '${originalFilterIdName}' not found ` +
-              `for filter entry '${feData.name || 'Unnamed FilterEntry'}'. Filter Entry creation may fail or be skipped.`,
+          throw new Error(
+            `ID_RESOLVE_FAIL: Filter UUID for name '${originalFilterIdName}' not found ` +
+              `for filter entry '${feData.name || 'Unnamed FilterEntry'}'.`,
           );
-          return null;
         }
-        // Explicitly set filter entry's own id to undefined for auto-generation
         return { ...feData, filterId: actualFilterId, id: undefined };
-      })
-      .filter(fe => fe !== null) as unknown[] as FilterEntry[]; // Adjusted type assertion for now
-
-    if (filterEntriesToCreate.length === 0 && filterEntriesToCreateInput.length > 0) {
-      console.warn('All filter entries were filtered out due to missing filter ID references. No filter entries will be created.');
-      return of([]);
-    }
-    if (filterEntriesToCreate.length === 0) {
-      return of([]);
+      });
+    } catch (e) {
+      return throwError(() => e); // Propagate mapping error
     }
 
-    return this.filterEntriesService.createManyFilterEntry({ createManyFilterEntryDto: { bulk: filterEntriesToCreate as any } }).pipe(
+    if (dtos.length === 0 && filterEntriesToCreateInput.length > 0) {
+      return throwError(() => new Error('No valid filter entries to process after ID resolution attempts.'));
+    }
+    if (dtos.length === 0) {
+      return of([]);
+    }
+
+    return this.filterEntriesService.createManyFilterEntry({ createManyFilterEntryDto: { bulk: dtos } }).pipe(
       map(response => this._handleApiResponse<FilterEntry>(response)),
       catchError(err => {
-        this.error = 'Error creating filter entries: ' + (err.error?.message || err.message);
-        console.error('Error creating filter entries:', err);
-        return of([] as FilterEntry[]);
+        const errorMessage = 'Error creating filter entries: ' + (err.error?.message || err.message);
+        return throwError(() => new Error(errorMessage));
       }),
     );
   }
@@ -392,30 +396,162 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
     createdFilters: Filter[],
   ): Observable<any> {
     if (!subjectToFilterLinkInputs || subjectToFilterLinkInputs.length === 0) {
+      return of(null); // No links to process, considered success for this step
+    }
+
+    const subjectToFilterObservables = subjectToFilterLinkInputs.map(stf => {
+      const subject = createdSubjects.find(s => s.name === stf.subjectId);
+      const filter = createdFilters.find(f => f.name === stf.filterId);
+
+      if (subject && filter && subject.id && filter.id) {
+        return this.subjectsService.addFilterToSubjectSubject({ subjectId: subject.id, filterId: filter.id }).pipe(
+          catchError(err => {
+            const linkError = `Error linking subject '${subject.name}' to filter '${filter.name}': ` + (err.error?.message || err.message);
+            return throwError(() => new Error(linkError));
+          }),
+        );
+      }
+      // If subject or filter (or their IDs) not found, throw an error to fail the operation
+      const errorMessage =
+        `LINK_FAIL: Could not find subject '${stf.subjectId}' (ID: ${subject?.id}) ` +
+        `or filter '${stf.filterId}' (ID: ${filter?.id}) for relationship.`;
+      return throwError(() => new Error(errorMessage));
+    });
+    // No longer filter obs, forkJoin will fail if any observable in the array errors.
+    return subjectToFilterObservables.length > 0 ? forkJoin(subjectToFilterObservables).pipe(defaultIfEmpty(null)) : of(null);
+  }
+
+  private _linkContractToEpgs$(
+    contractToEpgLinks: ContractToEpg[],
+    createdOrExistingContracts: Contract[],
+    isExistingContractScenario: boolean,
+  ): Observable<any> {
+    if (!contractToEpgLinks || contractToEpgLinks.length === 0) {
       return of(null);
     }
 
-    const subjectToFilterObservables = subjectToFilterLinkInputs
-      .map(stf => {
-        const subject = createdSubjects.find(s => s.name === stf.subjectId);
-        const filter = createdFilters.find(f => f.name === stf.filterId);
-
-        if (subject && filter && subject.id && filter.id) {
-          return this.subjectsService.addFilterToSubjectSubject({ subjectId: subject.id, filterId: filter.id }).pipe(
-            catchError(err => {
-              console.error(`Error adding filter ${filter.name} to subject ${subject.name}:`, err);
-              const linkError = `Error linking ${subject.name} to ${filter.name}`;
-              this.error = (this.error ? this.error + '; ' : '') + linkError;
-              return of(null);
-            }),
+    const linkObservables = contractToEpgLinks.map(link => {
+      let actualContractId: string;
+      if (isExistingContractScenario) {
+        actualContractId = link.contractId;
+      } else {
+        const foundContract = createdOrExistingContracts.find(c => c.name === link.contractId);
+        if (foundContract && foundContract.id) {
+          actualContractId = foundContract.id;
+        } else {
+          return throwError(
+            () => new Error(`LINK_FAIL: Could not resolve contract name '${link.contractId}' to a contract ID for EPG linking.`),
           );
         }
-        console.warn(`Could not find subject ${stf.subjectId} or filter ${stf.filterId} for relationship. Skipping.`);
-        return of(null);
-      })
-      .filter(obs => obs !== null) as Observable<any>[];
+      }
 
-    return subjectToFilterObservables.length > 0 ? forkJoin(subjectToFilterObservables).pipe(defaultIfEmpty(null)) : of(null);
+      let serviceCall$: Observable<any>;
+      const params = { contractId: actualContractId, endpointGroupId: link.epgId };
+
+      switch (link.contractRelationType) {
+        case ContractToEpgContractRelationTypeEnum.Consumer:
+          serviceCall$ = this.endpointGroupsService.addConsumedContractToEndpointGroupEndpointGroup(params);
+          break;
+        case ContractToEpgContractRelationTypeEnum.Provider:
+          serviceCall$ = this.endpointGroupsService.addProvidedContractToEndpointGroupEndpointGroup(params);
+          break;
+        case ContractToEpgContractRelationTypeEnum.Intra:
+          serviceCall$ = this.endpointGroupsService.addIntraContractToEndpointGroupEndpointGroup(params);
+          break;
+        default:
+          return throwError(
+            () =>
+              new Error(
+                `LINK_FAIL: Unknown contractRelationType '${link.contractRelationType}' for EPG link with contract '${actualContractId}'.`,
+              ),
+          );
+      }
+
+      return serviceCall$.pipe(
+        catchError(err => {
+          const linkError =
+            `Error linking contract '${actualContractId}' (${link.contractRelationType}) to EPG '${link.epgId}': ` +
+            (err.error?.message || err.message);
+          return throwError(() => new Error(linkError));
+        }),
+      );
+    });
+
+    // Filter out any error observables that were returned directly from map (e.g., ID resolution failure)
+    // These are already throwError instances.
+    const validObservables = linkObservables.filter(obs => obs && typeof obs.subscribe === 'function');
+    const errorContainers = linkObservables.filter(obs => !(obs && typeof obs.subscribe === 'function'));
+
+    if (errorContainers.length > 0) {
+      // If ID resolution failed, errorContainers[0] is the throwError observable. Return it directly.
+      return errorContainers[0] as Observable<never>;
+    }
+
+    return validObservables.length > 0 ? forkJoin(validObservables).pipe(defaultIfEmpty(null)) : of(null);
+  }
+
+  private _linkContractToEsgs$(
+    contractToEsgLinks: ContractToEsg[],
+    createdOrExistingContracts: Contract[],
+    isExistingContractScenario: boolean,
+  ): Observable<any> {
+    if (!contractToEsgLinks || contractToEsgLinks.length === 0) {
+      return of(null);
+    }
+
+    const linkObservables = contractToEsgLinks.map(link => {
+      let actualContractId: string;
+      if (isExistingContractScenario) {
+        actualContractId = link.contractId;
+      } else {
+        const foundContract = createdOrExistingContracts.find(c => c.name === link.contractId);
+        if (foundContract && foundContract.id) {
+          actualContractId = foundContract.id;
+        } else {
+          return throwError(
+            () => new Error(`LINK_FAIL: Could not resolve contract name '${link.contractId}' to a contract ID for ESG linking.`),
+          );
+        }
+      }
+
+      let serviceCall$: Observable<any>;
+      const params = { contractId: actualContractId, endpointSecurityGroupId: link.esgId };
+      switch (link.contractRelationType) {
+        case ContractToEsgContractRelationTypeEnum.Consumer:
+          serviceCall$ = this.endpointSecurityGroupsService.addConsumedContractToEndpointSecurityGroupEndpointSecurityGroup(params);
+          break;
+        case ContractToEsgContractRelationTypeEnum.Provider:
+          serviceCall$ = this.endpointSecurityGroupsService.addProvidedContractToEndpointSecurityGroupEndpointSecurityGroup(params);
+          break;
+        case ContractToEsgContractRelationTypeEnum.Intra:
+          serviceCall$ = this.endpointSecurityGroupsService.addIntraContractToEndpointSecurityGroupEndpointSecurityGroup(params);
+          break;
+        default:
+          return throwError(
+            () =>
+              new Error(
+                `LINK_FAIL: Unknown contractRelationType '${link.contractRelationType}' for ESG link with contract '${actualContractId}'.`,
+              ),
+          );
+      }
+
+      return serviceCall$.pipe(
+        catchError(err => {
+          const linkError =
+            `Error linking contract '${actualContractId}' (${link.contractRelationType}) to ESG '${link.esgId}': ` +
+            (err.error?.message || err.message);
+          return throwError(() => new Error(linkError));
+        }),
+      );
+    });
+
+    const validObservables = linkObservables.filter(obs => obs && typeof obs.subscribe === 'function');
+    const errorContainers = linkObservables.filter(obs => !(obs && typeof obs.subscribe === 'function'));
+
+    if (errorContainers.length > 0) {
+      return errorContainers[0] as Observable<never>;
+    }
+    return validObservables.length > 0 ? forkJoin(validObservables).pipe(defaultIfEmpty(null)) : of(null);
   }
 
   applyGeneratedConfig(): void {
@@ -435,34 +571,30 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
               this._createSubjects$(generatedConfig.Subjects || [], createdContracts, !!generatedConfig.existingContract).pipe(
                 switchMap(createdSubjects =>
                   this._createFilterEntries$(generatedConfig.FilterEntries || [], createdFilters).pipe(
-                    switchMap(() => this._linkSubjectsToFilters$(generatedConfig.SubjectToFilter || [], createdSubjects, createdFilters)),
+                    switchMap((/* _createdFilterEntries */) =>
+                      this._linkSubjectsToFilters$(generatedConfig.SubjectToFilter || [], createdSubjects, createdFilters)),
+                    switchMap(() =>
+                      this._linkContractToEpgs$(generatedConfig.ContractToEpg || [], createdContracts, !!generatedConfig.existingContract),
+                    ),
+                    switchMap(() =>
+                      this._linkContractToEsgs$(generatedConfig.ContractToEsg || [], createdContracts, !!generatedConfig.existingContract),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
         ),
-        catchError(err => {
-          this.isLoading = false;
-          this.error =
-            this.error || 'An unexpected error occurred during configuration application: ' + (err.error?.message || err.message);
-          console.error('Overall error in applyGeneratedConfig:', err);
-          return of(null);
-        }),
+        catchError(err => throwError(() => err)),
       )
       .subscribe({
         next: () => {
           this.isLoading = false;
-          if (!this.error) {
-            console.log('Generated configuration applied successfully.');
-          } else {
-            console.log('Generated configuration applied with some errors.');
-          }
+          this.error = null;
         },
         error: err => {
           this.isLoading = false;
-          this.error = this.error || 'Failed to apply generated configuration: ' + (err.error?.message || err.message);
-          console.error('Critical error in applyGeneratedConfig subscription:', err);
+          this.error = err.message || 'An unexpected error occurred during configuration application.';
         },
       });
   }

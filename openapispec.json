@@ -29104,7 +29104,8 @@
             "description": "Contract Relation Type",
             "enum": [
               "Provider",
-              "Consumer"
+              "Consumer",
+              "Intra"
             ]
           }
         },
@@ -29130,7 +29131,8 @@
             "description": "Contract Relation Type",
             "enum": [
               "Provider",
-              "Consumer"
+              "Consumer",
+              "Intra"
             ]
           }
         },
