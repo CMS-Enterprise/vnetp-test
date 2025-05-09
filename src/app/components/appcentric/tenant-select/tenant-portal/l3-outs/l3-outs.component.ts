@@ -290,4 +290,8 @@ export class L3OutsComponent implements OnInit {
         },
       );
   }
+
+  public navigateToManageL3Out(l3Out: L3Out): void {
+    this.router.navigate([`/appcentric/${this.tenantId}/l3-out-management/${l3Out.id}`], { queryParamsHandling: 'merge' });
+  }
 }

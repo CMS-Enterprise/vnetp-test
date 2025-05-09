@@ -25,25 +25,15 @@ export class EntityService {
       }
     };
 
-    let dto;
+    const confirmTextEnd = name === undefined ? '?' : ` "${name}"?`;
 
-    if (name === undefined) {
-      dto = new YesNoModalDto(
-        `${deleteDescription} ${entityName}`,
-        `Do you want to ${deleteDescription.toLowerCase()} ${entityName.toLowerCase()}?`,
-        `${deleteDescription} ${entityName}`,
-        'Cancel',
-        'danger',
-      );
-    } else {
-      dto = new YesNoModalDto(
-        `${deleteDescription} ${entityName}`,
-        `Do you want to ${deleteDescription.toLowerCase()} ${entityName.toLowerCase()} "${name}"?`,
-        `${deleteDescription} ${entityName}`,
-        'Cancel',
-        'danger',
-      );
-    }
+    const dto = new YesNoModalDto(
+      `${deleteDescription} ${entityName}`,
+      `Do you want to ${deleteDescription.toLowerCase()} ${entityName.toLowerCase()}` + confirmTextEnd,
+      `${deleteDescription} ${entityName}`,
+      'Cancel',
+      'danger',
+    );
 
     return SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm);
   }

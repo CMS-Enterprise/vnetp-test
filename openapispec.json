@@ -14518,10 +14518,11 @@
         "parameters": [],
         "requestBody": {
           "required": true,
+          "description": "Create V2 Tenant",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateTenantV2Dto"
+                "$ref": "#/components/schemas/Tenant"
               }
             }
           }
@@ -17510,6 +17511,225 @@
         },
         "tags": [
           "v2/app-centric/bridge-domains"
+        ]
+      }
+    },
+    "/v2/app-centric/l3outs/{id}/endpoint-groups": {
+      "post": {
+        "operationId": "addEndpointGroupToL3OutL3Out",
+        "summary": "Add endpoint group to L3Out",
+        "description": "Add an endpoint group to an L3Out",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully added endpoint group to L3Out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/L3Out"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "L3Out not found"
+          }
+        },
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
+      }
+    },
+    "/v2/app-centric/l3outs/{id}/endpoint-groups/{epgId}/remove": {
+      "post": {
+        "operationId": "removeEpgFromL3OutL3Out",
+        "summary": "Remove endpoint group from L3Out",
+        "description": "Remove an endpoint group from an L3Out",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epgId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully removed endpoint group from L3Out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/L3Out"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "L3Out or endpoint group not found"
+          }
+        },
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
+      }
+    },
+    "/v2/app-centric/l3outs/{id}/endpoint-security-groups": {
+      "post": {
+        "operationId": "addEndpointSecurityGroupToL3OutL3Out",
+        "summary": "Add endpoint security group to L3Out",
+        "description": "Add an endpoint security group to an L3Out",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EndpointSecurityGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully added endpoint security group to L3Out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/L3Out"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "L3Out not found"
+          }
+        },
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
+      }
+    },
+    "/v2/app-centric/l3outs/{id}/endpoint-security-groups/{esgId}/remove": {
+      "post": {
+        "operationId": "removeEndpointSecurityGroupFromL3OutL3Out",
+        "summary": "Remove endpoint security group from L3Out",
+        "description": "Remove an endpoint security group from an L3Out",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "esgId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully removed endpoint security group from L3Out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/L3Out"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "L3Out or endpoint security group not found"
+          }
+        },
+        "tags": [
+          "v2/app-centric/l3outs"
+        ]
+      }
+    },
+    "/v2/app-centric/l3outs/{id}/endpoint-security-groups/{esgId}": {
+      "delete": {
+        "operationId": "deleteEndpointSecurityGroupFromL3OutL3Out",
+        "summary": "Remove endpoint security group from L3Out",
+        "description": "Remove an endpoint security group from an L3Out",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "esgId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully removed endpoint security group from L3Out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/L3Out"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "L3Out or endpoint security group not found"
+          }
+        },
+        "tags": [
+          "v2/app-centric/l3outs"
         ]
       }
     },
@@ -23003,10 +23223,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23030,6 +23246,10 @@
             "items": {
               "$ref": "#/components/schemas/TierGroup"
             }
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -23055,10 +23275,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23133,10 +23349,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23199,6 +23411,24 @@
           },
           "tenantId": {
             "type": "string"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "endpointGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/L3Out"
+            }
+          },
+          "endpointSecurityGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/L3Out"
+            }
           }
         },
         "required": [
@@ -23224,10 +23454,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23290,6 +23516,10 @@
             "items": {
               "$ref": "#/components/schemas/BridgeDomain"
             }
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -23316,10 +23546,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23434,10 +23660,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23506,10 +23728,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23662,10 +23880,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23801,10 +24015,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -23880,10 +24090,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -23982,10 +24188,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -24090,10 +24292,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -24191,6 +24389,13 @@
           },
           "applicationProfileId": {
             "type": "string"
+          },
+          "l3outs": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/L3Out"
+            }
           }
         },
         "required": [
@@ -24220,10 +24425,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -24677,10 +24878,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -24749,6 +24946,10 @@
           "appCentricTenantId": {
             "type": "string",
             "readOnly": true
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -24773,10 +24974,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -24853,10 +25050,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25009,10 +25202,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25098,10 +25287,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25240,6 +25425,11 @@
           "allowServiceGraphBypass": {
             "type": "boolean",
             "readOnly": true
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true,
+            "default": 1
           }
         },
         "required": [
@@ -25268,10 +25458,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25375,6 +25561,13 @@
                 "$ref": "#/components/schemas/Selector"
               }
             ]
+          },
+          "l3outs": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/L3Out"
+            }
           }
         },
         "required": [
@@ -25462,10 +25655,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25544,10 +25733,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25615,10 +25800,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25676,10 +25857,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25801,10 +25978,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -25871,10 +26044,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -25951,10 +26120,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26177,6 +26342,11 @@
           },
           "hitCount": {
             "type": "number"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "default": 1,
+            "readOnly": true
           }
         },
         "required": [
@@ -26213,10 +26383,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26272,6 +26438,10 @@
             "items": {
               "$ref": "#/components/schemas/NatRule"
             }
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -26297,10 +26467,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26498,6 +26664,10 @@
           },
           "hitCount": {
             "type": "number"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -26535,10 +26705,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -26565,7 +26731,8 @@
               "Intervrf",
               "External",
               "ZoneBased",
-              "OneArmServiceGraph"
+              "OneArmServiceGraph",
+              "V2ZoneBased"
             ]
           },
           "tierId": {
@@ -26610,10 +26777,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -26639,7 +26802,8 @@
               "Intravrf",
               "Intervrf",
               "External",
-              "ZoneBased"
+              "ZoneBased",
+              "V2ZoneBased"
             ]
           },
           "tierId": {
@@ -26655,6 +26819,10 @@
           "runtimeDataLastRefreshed": {
             "format": "date-time",
             "type": "string"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -26681,10 +26849,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26758,10 +26922,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26844,10 +27004,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -26951,10 +27107,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -27032,10 +27184,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -27102,10 +27250,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -27224,10 +27368,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -27292,10 +27432,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -27348,10 +27484,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -27412,10 +27544,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -27470,10 +27598,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -27678,6 +27802,15 @@
             "items": {
               "$ref": "#/components/schemas/LoadBalancerRoute"
             }
+          },
+          "appCentricTenantId": {
+            "type": "string",
+            "readOnly": true
+          },
+          "tenantVersion": {
+            "type": "number",
+            "default": 1,
+            "readOnly": true
           }
         },
         "required": [
@@ -27703,10 +27836,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -27905,6 +28034,10 @@
           "hitCount": {
             "type": "number"
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "tierName": {
             "type": "string"
           },
@@ -28094,10 +28227,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -28321,6 +28450,11 @@
           "hitCount": {
             "type": "number"
           },
+          "tenantVersion": {
+            "type": "number",
+            "default": 1,
+            "readOnly": true
+          },
           "tierName": {
             "type": "string"
           },
@@ -28407,10 +28541,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -28509,10 +28639,6 @@
             "readOnly": true
           },
           "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "tenantVersion": {
             "type": "number",
             "readOnly": true
           },
@@ -28678,10 +28804,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -28825,10 +28947,6 @@
             "type": "number",
             "readOnly": true
           },
-          "tenantVersion": {
-            "type": "number",
-            "readOnly": true
-          },
           "deletedAt": {
             "format": "date-time",
             "type": "string",
@@ -28933,20 +29051,6 @@
           "finished",
           "status",
           "failed"
-        ]
-      },
-      "CreateTenantV2Dto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name of the tenant",
-            "minLength": 3,
-            "maxLength": 100
-          }
-        },
-        "required": [
-          "name"
         ]
       },
       "SelfServiceRawConfig": {

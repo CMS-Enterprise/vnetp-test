@@ -20,7 +20,6 @@ export interface NatRuleImport {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
-    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     name: string;
     description?: string;
@@ -60,6 +59,7 @@ export interface NatRuleImport {
     readonly toZone?: Zone;
     fromZone?: Array<Zone>;
     hitCount?: number;
+    readonly tenantVersion?: number;
     tierName: string;
     natRuleGroupType: string;
 }

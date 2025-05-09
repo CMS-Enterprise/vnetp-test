@@ -17,7 +17,6 @@ export interface NatRuleGroup {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
-    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
@@ -26,12 +25,14 @@ export interface NatRuleGroup {
     tierId: string;
     readonly natRules?: Array<NatRule>;
     runtimeDataLastRefreshed?: string;
+    readonly tenantVersion?: number;
 }
 export enum NatRuleGroupTypeEnum {
     Intravrf = 'Intravrf',
     Intervrf = 'Intervrf',
     External = 'External',
-    ZoneBased = 'ZoneBased'
+    ZoneBased = 'ZoneBased',
+    V2ZoneBased = 'V2ZoneBased'
 };
 
 

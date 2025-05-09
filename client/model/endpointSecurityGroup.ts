@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { L3Out } from './l3Out';
 import { Tenant } from './tenant';
 import { Vrf } from './vrf';
 import { ApplicationProfile } from './applicationProfile';
@@ -21,7 +22,6 @@ export interface EndpointSecurityGroup {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
-    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
@@ -43,6 +43,7 @@ export interface EndpointSecurityGroup {
     vrfId: string;
     readonly applicationProfile?: ApplicationProfile;
     applicationProfileId: string;
+    readonly l3outs?: Array<L3Out>;
 }
 export enum EndpointSecurityGroupAdminStateEnum {
     AdminUp = 'AdminUp',

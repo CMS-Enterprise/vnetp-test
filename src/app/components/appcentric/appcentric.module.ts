@@ -66,6 +66,16 @@ const routes: Routes = [
         }),
         loadChildren: () => import('../network-scope-forms/wan-form/wan-form.module').then(m => m.WanFormModule),
       },
+      {
+        path: ':tenantId/l3-out-management',
+        canActivate: [AuthGuard],
+        data: mergeRouteData(APPCENTRIC_ROUTE_DATA, {
+          breadcrumb: 'L3 Out Management',
+          title: 'L3 Out Management',
+        }),
+        loadChildren: () =>
+          import('./tenant-select/tenant-portal/l3-outs/l3-out-management/l3-out-management.module').then(m => m.L3OutManagementModule),
+      },
     ],
   },
 ];

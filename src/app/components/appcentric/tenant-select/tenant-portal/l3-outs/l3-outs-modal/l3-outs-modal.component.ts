@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import {
   BridgeDomain,
   EndpointGroup,
@@ -83,7 +82,6 @@ export class L3OutsModalComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private l3OutsService: V2AppCentricL3outsService,
-    private router: Router,
     private vrfService: V2AppCentricVrfsService,
     private bridgeDomainService: V2AppCentricBridgeDomainsService,
     private epgService: V2AppCentricEndpointGroupsService,

@@ -17,7 +17,6 @@ export interface FirewallRuleGroup {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
-    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
@@ -32,7 +31,8 @@ export enum FirewallRuleGroupTypeEnum {
     Intervrf = 'Intervrf',
     External = 'External',
     ZoneBased = 'ZoneBased',
-    OneArmServiceGraph = 'OneArmServiceGraph'
+    OneArmServiceGraph = 'OneArmServiceGraph',
+    V2ZoneBased = 'V2ZoneBased'
 };
 
 

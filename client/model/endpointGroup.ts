@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { L3Out } from './l3Out';
 import { AciRuntime } from './aciRuntime';
 import { Tenant } from './tenant';
 import { BridgeDomain } from './bridgeDomain';
@@ -22,7 +23,6 @@ export interface EndpointGroup {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
-    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
@@ -44,5 +44,6 @@ export interface EndpointGroup {
     readonly intraContracts?: Array<Contract>;
     readonly aciRuntimes?: AciRuntime;
     readonly selector?: Selector;
+    readonly l3outs?: Array<L3Out>;
 }
 

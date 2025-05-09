@@ -19,7 +19,6 @@ export interface Vrf {
     readonly createdAt?: string;
     readonly updatedAt?: string;
     readonly version?: number;
-    readonly tenantVersion?: number;
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
@@ -38,5 +37,6 @@ export interface Vrf {
     tenantId: string;
     readonly l3outs?: Array<L3Out>;
     readonly bridgeDomains?: Array<BridgeDomain>;
+    readonly tenantVersion?: number;
 }
 

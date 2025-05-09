@@ -18,7 +18,6 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { CreateManyTenantDto } from '../model/models';
-import { CreateTenantV2Dto } from '../model/models';
 import { GetManyTenantResponseDto } from '../model/models';
 import { Tenant } from '../model/models';
 
@@ -39,7 +38,8 @@ export interface CreateOneTenantRequestParams {
 }
 
 export interface CreateOneV2TenantTenantRequestParams {
-    createTenantV2Dto: CreateTenantV2Dto;
+    /** Create V2 Tenant */
+    tenant: Tenant;
 }
 
 export interface DeleteOneTenantRequestParams {
@@ -333,9 +333,9 @@ export class V2AppCentricTenantsService {
     public createOneV2TenantTenant(requestParameters: CreateOneV2TenantTenantRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
     public createOneV2TenantTenant(requestParameters: CreateOneV2TenantTenantRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
     public createOneV2TenantTenant(requestParameters: CreateOneV2TenantTenantRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        const createTenantV2Dto = requestParameters.createTenantV2Dto;
-        if (createTenantV2Dto === null || createTenantV2Dto === undefined) {
-            throw new Error('Required parameter createTenantV2Dto was null or undefined when calling createOneV2TenantTenant.');
+        const tenant = requestParameters.tenant;
+        if (tenant === null || tenant === undefined) {
+            throw new Error('Required parameter tenant was null or undefined when calling createOneV2TenantTenant.');
         }
 
         let headers = this.defaultHeaders;
@@ -367,7 +367,7 @@ export class V2AppCentricTenantsService {
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/v2/app-centric/tenants/tenant-v2`,
-            createTenantV2Dto,
+            tenant,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

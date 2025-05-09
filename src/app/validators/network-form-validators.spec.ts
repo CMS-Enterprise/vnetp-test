@@ -8,6 +8,8 @@ import {
   IsIpV4NoSubnetValidator,
   ValidatePortNumber,
   IpAddressHostNetworkCidrValidator,
+  IsIpV4Any,
+  IsIpV6Any,
 } from './network-form-validators';
 import { FormControl } from '@angular/forms';
 
@@ -233,6 +235,42 @@ describe('NetworkFormValidators', () => {
       const control = { value: '10.10.10.256' } as FormControl;
       const result = IpAddressHostNetworkCidrValidator(control);
       expect(result).toEqual({ invalidHost: true });
+    });
+  });
+
+  describe('isValidIpV4Any', () => {
+    it('should return null for valid IPv4 addresses', () => {
+      const control = { value: '10.10.10.255' } as FormControl;
+      const result = IsIpV4Any(control);
+      expect(result).toBeNull();
+    });
+    it('should return null for empty control input', () => {
+      const control = { value: '' } as FormControl;
+      const result = IsIpV4Any(control);
+      expect(result).toBeNull();
+    });
+    it('should return true for invalid IPv4 addresses', () => {
+      const control = { value: '10.10.10.256' } as FormControl;
+      const result = IsIpV4Any(control);
+      expect(result).toEqual({ nonIPv4Address: true });
+    });
+  });
+
+  describe('isValidIpV6Any', () => {
+    it('should return null for valid IPv6 addresses', () => {
+      const control = { value: 'fe80::7ccc:2a54:aed2:2180' } as FormControl;
+      const result = IsIpV6Any(control);
+      expect(result).toBeNull();
+    });
+    it('should return null for empty control input', () => {
+      const control = { value: '' } as FormControl;
+      const result = IsIpV6Any(control);
+      expect(result).toBeNull();
+    });
+    it('should return true for invalid IPv6 addresses', () => {
+      const control = { value: 'fe80::7ccc:2a54:aed2:2180/128' } as FormControl;
+      const result = IsIpV6Any(control);
+      expect(result).toEqual({ nonIPv6Address: true });
     });
   });
 });

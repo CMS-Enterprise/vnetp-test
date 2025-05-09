@@ -1,0 +1,76 @@
+<button class="btn btn-link mb-3" (click)="navigateBack()">
+  <fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+  Back
+</button>
+
+<h2>Manage L3Out: {{ l3Out?.name }}</h2>
+
+<div class="text-right mb-3">
+  <button class="btn btn-primary" [disabled]="!hasChanges()" (click)="applyAllChanges()">Apply All</button>
+</div>
+
+<div *ngFor="let bd of bridgeDomains">
+  <div class="bd-header" (click)="toggleExpand(bd)">
+    <strong>{{ bd.name }}</strong>
+    <fa-icon [icon]="['fas', bd.expanded ? 'chevron-up' : 'chevron-down']"></fa-icon>
+  </div>
+
+  <div *ngIf="bd.expanded" class="bd-content">
+    <div class="data-group-wrapper">
+      <!-- Subnets -->
+      <div *ngIf="bd.subnets.length" class="data-group">
+        <h4 class="mb-3">Subnets</h4>
+        <div class="label-wrapper">
+          <span class="mr-3">Advertise</span>
+        </div>
+        <div class="data-group-items">
+          <div *ngFor="let s of bd.subnets; let i = index" class="data-group-item">
+            <mat-checkbox
+              class="mr-3"
+              [formControl]="form.get(bd.id)?.get('subnets')?.get(i.toString())?.get('advertisedExternally')"
+            ></mat-checkbox>
+          </div>
+        </div>
+      </div>
+
+      <!-- EPGs -->
+      <div *ngIf="bd.epgs.length" class="data-group">
+        <h4 class="mb-3">Endpoint Groups</h4>
+        <div class="label-wrapper">
+          <span class="mr-3">Allow Communication</span>
+        </div>
+        <div class="data-group-items">
+          <div *ngFor="let e of bd.epgs; let i = index" class="data-group-item">
+            <span class="ml-3">{{ e.name }}</span>
+            <mat-checkbox class="mr-3" [formControl]="form.get(bd.id)?.get('epgs')?.get(i.toString())?.get('allowComm')"></mat-checkbox>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESGs -->
+      <div *ngIf="bd.esgs.length" class="data-group">
+        <h4 class="mb-3">Endpoint Security Groups</h4>
+        <div class="label-wrapper">
+          <span class="mr-3">Allow Communication</span>
+        </div>
+        <div class="data-group-items">
+          <div *ngFor="let e of bd.esgs; let i = index" class="data-group-item">
+            <span class="ml-3">{{ e.name }}</span>
+            <mat-checkbox class="mr-3" [formControl]="form.get(bd.id)?.get('esgs')?.get(i.toString())?.get('allowComm')"></mat-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="hasData(bd); else noData">
+      <div class="bd-actions">
+        <button class="btn btn-primary" [disabled]="!hasBridgeDomainChanges(bd)" (click)="openChangePreview(bd)">Apply</button>
+      </div>
+    </ng-container>
+    <ng-template #noData>
+      <div class="no-data-message">No subnets, EPGs, or ESGs available for this Bridge Domain</div>
+    </ng-template>
+  </div>
+
+  <hr />
+</div>

@@ -18,6 +18,8 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { CreateManyL3OutDto } from '../model/models';
+import { EndpointGroup } from '../model/models';
+import { EndpointSecurityGroup } from '../model/models';
 import { GetManyL3OutResponseDto } from '../model/models';
 import { L3Out } from '../model/models';
 
@@ -25,12 +27,27 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface AddEndpointGroupToL3OutL3OutRequestParams {
+    id: string;
+    endpointGroup: EndpointGroup;
+}
+
+export interface AddEndpointSecurityGroupToL3OutL3OutRequestParams {
+    id: string;
+    endpointSecurityGroup: EndpointSecurityGroup;
+}
+
 export interface CreateManyL3OutRequestParams {
     createManyL3OutDto: CreateManyL3OutDto;
 }
 
 export interface CreateOneL3OutRequestParams {
     l3Out: L3Out;
+}
+
+export interface DeleteEndpointSecurityGroupFromL3OutL3OutRequestParams {
+    id: string;
+    esgId: string;
 }
 
 export interface DeleteOneL3OutRequestParams {
@@ -78,6 +95,16 @@ export interface GetOneL3OutRequestParams {
 export interface ProvisionOneL3OutRequestParams {
     /** UUID. */
     id: string;
+}
+
+export interface RemoveEndpointSecurityGroupFromL3OutL3OutRequestParams {
+    id: string;
+    esgId: string;
+}
+
+export interface RemoveEpgFromL3OutL3OutRequestParams {
+    id: string;
+    epgId: string;
 }
 
 export interface RestoreOneL3OutRequestParams {
@@ -155,6 +182,128 @@ export class V2AppCentricL3outsService {
             throw Error("key may not be null if value is not object or array");
         }
         return httpParams;
+    }
+
+    /**
+     * Add endpoint group to L3Out
+     * Add an endpoint group to an L3Out
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public addEndpointGroupToL3OutL3Out(requestParameters: AddEndpointGroupToL3OutL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
+    public addEndpointGroupToL3OutL3Out(requestParameters: AddEndpointGroupToL3OutL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
+    public addEndpointGroupToL3OutL3Out(requestParameters: AddEndpointGroupToL3OutL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
+    public addEndpointGroupToL3OutL3Out(requestParameters: AddEndpointGroupToL3OutL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling addEndpointGroupToL3OutL3Out.');
+        }
+        const endpointGroup = requestParameters.endpointGroup;
+        if (endpointGroup === null || endpointGroup === undefined) {
+            throw new Error('Required parameter endpointGroup was null or undefined when calling addEndpointGroupToL3OutL3Out.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/endpoint-groups`,
+            endpointGroup,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Add endpoint security group to L3Out
+     * Add an endpoint security group to an L3Out
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public addEndpointSecurityGroupToL3OutL3Out(requestParameters: AddEndpointSecurityGroupToL3OutL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
+    public addEndpointSecurityGroupToL3OutL3Out(requestParameters: AddEndpointSecurityGroupToL3OutL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
+    public addEndpointSecurityGroupToL3OutL3Out(requestParameters: AddEndpointSecurityGroupToL3OutL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
+    public addEndpointSecurityGroupToL3OutL3Out(requestParameters: AddEndpointSecurityGroupToL3OutL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling addEndpointSecurityGroupToL3OutL3Out.');
+        }
+        const endpointSecurityGroup = requestParameters.endpointSecurityGroup;
+        if (endpointSecurityGroup === null || endpointSecurityGroup === undefined) {
+            throw new Error('Required parameter endpointSecurityGroup was null or undefined when calling addEndpointSecurityGroupToL3OutL3Out.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/endpoint-security-groups`,
+            endpointSecurityGroup,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
     /**
@@ -259,6 +408,57 @@ export class V2AppCentricL3outsService {
 
         return this.httpClient.post<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs`,
             l3Out,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Remove endpoint security group from L3Out
+     * Remove an endpoint security group from an L3Out
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public deleteEndpointSecurityGroupFromL3OutL3Out(requestParameters: DeleteEndpointSecurityGroupFromL3OutL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
+    public deleteEndpointSecurityGroupFromL3OutL3Out(requestParameters: DeleteEndpointSecurityGroupFromL3OutL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
+    public deleteEndpointSecurityGroupFromL3OutL3Out(requestParameters: DeleteEndpointSecurityGroupFromL3OutL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
+    public deleteEndpointSecurityGroupFromL3OutL3Out(requestParameters: DeleteEndpointSecurityGroupFromL3OutL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteEndpointSecurityGroupFromL3OutL3Out.');
+        }
+        const esgId = requestParameters.esgId;
+        if (esgId === null || esgId === undefined) {
+            throw new Error('Required parameter esgId was null or undefined when calling deleteEndpointSecurityGroupFromL3OutL3Out.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/endpoint-security-groups/${encodeURIComponent(String(esgId))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -566,6 +766,110 @@ export class V2AppCentricL3outsService {
         }
 
         return this.httpClient.put<any>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/provision`,
+            null,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Remove endpoint security group from L3Out
+     * Remove an endpoint security group from an L3Out
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public removeEndpointSecurityGroupFromL3OutL3Out(requestParameters: RemoveEndpointSecurityGroupFromL3OutL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
+    public removeEndpointSecurityGroupFromL3OutL3Out(requestParameters: RemoveEndpointSecurityGroupFromL3OutL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
+    public removeEndpointSecurityGroupFromL3OutL3Out(requestParameters: RemoveEndpointSecurityGroupFromL3OutL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
+    public removeEndpointSecurityGroupFromL3OutL3Out(requestParameters: RemoveEndpointSecurityGroupFromL3OutL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling removeEndpointSecurityGroupFromL3OutL3Out.');
+        }
+        const esgId = requestParameters.esgId;
+        if (esgId === null || esgId === undefined) {
+            throw new Error('Required parameter esgId was null or undefined when calling removeEndpointSecurityGroupFromL3OutL3Out.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/endpoint-security-groups/${encodeURIComponent(String(esgId))}/remove`,
+            null,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Remove endpoint group from L3Out
+     * Remove an endpoint group from an L3Out
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public removeEpgFromL3OutL3Out(requestParameters: RemoveEpgFromL3OutL3OutRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<L3Out>;
+    public removeEpgFromL3OutL3Out(requestParameters: RemoveEpgFromL3OutL3OutRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<L3Out>>;
+    public removeEpgFromL3OutL3Out(requestParameters: RemoveEpgFromL3OutL3OutRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<L3Out>>;
+    public removeEpgFromL3OutL3Out(requestParameters: RemoveEpgFromL3OutL3OutRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling removeEpgFromL3OutL3Out.');
+        }
+        const epgId = requestParameters.epgId;
+        if (epgId === null || epgId === undefined) {
+            throw new Error('Required parameter epgId was null or undefined when calling removeEpgFromL3OutL3Out.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<L3Out>(`${this.configuration.basePath}/v2/app-centric/l3outs/${encodeURIComponent(String(id))}/endpoint-groups/${encodeURIComponent(String(epgId))}/remove`,
             null,
             {
                 responseType: <any>responseType,

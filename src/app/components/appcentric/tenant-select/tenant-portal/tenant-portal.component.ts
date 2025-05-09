@@ -249,6 +249,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit {
           if (this.mode === ApplicationMode.TENANTV2 && response.tenantVersion === 2) {
             this.getNetworkServicesContainerDatacenter(response.datacenterId);
           } else {
+            // TODO: this is getting triggered in appcentric mode
             throw new Error('Tenant is not in TenantV2 mode');
           }
         },
