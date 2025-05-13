@@ -26748,12 +26748,17 @@
           "runtimeDataLastRefreshed": {
             "format": "date-time",
             "type": "string"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
           "name",
           "type",
-          "tierId"
+          "tierId",
+          "tenantVersion"
         ]
       },
       "NatRuleGroup": {
