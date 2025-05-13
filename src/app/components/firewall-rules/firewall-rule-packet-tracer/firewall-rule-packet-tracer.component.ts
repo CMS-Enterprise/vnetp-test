@@ -114,7 +114,7 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
     this.setFormValidators();
     this.applyFilter();
 
-    this.createFormListeners();
+    // this.createFormListeners();
   }
 
   ngOnDestroy(): void {
@@ -126,19 +126,22 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
   }
 
   search() {
-    console.log('running search');
-    Object.keys(this.form.controls).forEach(field => {
-      console.log('field', field);
-      const control = this.form.get(field);
-      this.setChecklistsForRulesByField(field);
+    let totalCount = 0;
+    this.objects.firewallRules.forEach(rule => {
+      this.setChecklistsForRulesByField2(rule);
       this.applyFilter();
-      // if (control) {
-      //   const subscription = control.valueChanges.subscribe(() => {
-      //     this.setChecklistsForRulesByField(field);
-      //     this.applyFilter();
-      //   });
-      //   this.fieldSubscriptions.push(subscription);
-      // }
+      // Object.keys(this.form.controls).forEach(field => {
+      //   console.log('field', field);
+      //   const control = this.form.get(field);
+      //   if (control) {
+      //     totalCount = totalCount + 1;
+
+      //     // const subscription = control.valueChanges.subscribe(() => {
+
+      //     // });
+      //     // this.fieldSubscriptions.push(subscription);
+      //   }
+      // });
     });
   }
 
@@ -177,6 +180,7 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
     }
 
     if (this.filterExact !== null) {
+      console.log('filter exact = null');
       Object.keys(this.firewallRulesWithChecklist).forEach(ruleName => {
         const rule = this.firewallRulesWithChecklist[ruleName];
         const isExact = this.isExactMatch(rule);
@@ -235,28 +239,77 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
   }
 
   setChecklistsForRulesByField(fieldName: string): void {
-    const fieldValue = this.form.controls[fieldName].value;
-    const errors = this.form.controls[fieldName].errors;
-    if (errors || fieldValue === null || fieldValue === '' || fieldValue === undefined) {
-      Object.keys(this.firewallRulesWithChecklist).forEach(ruleName => {
-        this.clearChecklist(ruleName, fieldName);
-      });
-      return;
-    }
-    this.objects.firewallRules.forEach(rule => {
-      this.setChecklist(rule, fieldName);
+    console.trace('set checklist for rules by field func');
+    // const fieldValue = this.form.controls[fieldName].value;
+    // const errors = this.form.controls[fieldName].errors;
+    // if (errors || fieldValue === null || fieldValue === '' || fieldValue === undefined) {
+    //   Object.keys(this.firewallRulesWithChecklist).forEach(ruleName => {
+    //     this.clearChecklist(ruleName, fieldName);
+    //   });
+    //   return;
+    // }
+    let ruleCount = 0;
+    this.setChecklist(this.objects.firewallRules, fieldName);
+    // this.objects.firewallRules.forEach(rule => {
+    //   this.setChecklist(rule, fieldName);
+    //   ruleCount = ruleCount + 1;
+    // });
+    console.log('ruleCount', ruleCount);
+  }
+
+  setChecklistsForRulesByField2(rule): void {
+    this.setChecklist2(rule);
+    // this.objects.firewallRules.forEach(rule => {
+    //   this.setChecklist(rule, fieldName);
+    //   ruleCount = ruleCount + 1;
+    // });
+  }
+
+  setChecklist(firewallRules, fieldName): void {
+    console.trace('set checklist func');
+    firewallRules.forEach(firewallRule => {
+      const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRule.name];
+      if (!ruleWithChecklist) {
+        this.firewallRulesWithChecklist[firewallRule.name] = { checkList: this.createNewChecklist() };
+      }
+      this.firewallRulesWithChecklist[firewallRule.name].checkList[fieldName] = this.getCellValue(fieldName, firewallRule);
     });
   }
 
-  setChecklist(firewallRule: FirewallRule, fieldName: string): void {
-    const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRule.name];
-    if (!ruleWithChecklist) {
-      this.firewallRulesWithChecklist[firewallRule.name] = { checkList: this.createNewChecklist() };
-    }
-    this.firewallRulesWithChecklist[firewallRule.name].checkList[fieldName] = this.getCellValue(fieldName, firewallRule);
+  setChecklist2(firewallRule): void {
+    console.trace('set checklist func');
+    Object.keys(this.form.controls).forEach(field => {
+      const fieldValue = this.form.controls[field].value;
+      const errors = this.form.controls[field].errors;
+      if (errors || fieldValue === null || fieldValue === '' || fieldValue === undefined) {
+        // Object.keys(this.firewallRulesWithChecklist).forEach(ruleName => {
+        //   this.clearChecklist(ruleName, field);
+        // });
+        return;
+      }
+      const control = this.form.get(field);
+      if (control) {
+        const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRule.name];
+        if (!ruleWithChecklist) {
+          this.firewallRulesWithChecklist[firewallRule.name] = { checkList: this.createNewChecklist() };
+        }
+        this.firewallRulesWithChecklist[firewallRule.name].checkList[field] = this.getCellValue(field, firewallRule);
+      }
+    });
   }
 
+  // setChecklist(firewallRule: FirewallRule, fieldName: string): void {
+  //   console.trace('set checklist func');
+  //   const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRule.name];
+  //   if (!ruleWithChecklist) {
+  //     this.firewallRulesWithChecklist[firewallRule.name] = { checkList: this.createNewChecklist() };
+  //   }
+  //   console.trace('this.firewallRulesWithChecklist',this.firewallRulesWithChecklist);
+  //   this.firewallRulesWithChecklist[firewallRule.name].checkList[fieldName] = this.getCellValue(fieldName, firewallRule);
+  // }
+
   clearChecklist(firewallRuleName: string, fieldName: string): void {
+    console.trace('clear checklist func');
     const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRuleName];
     if (ruleWithChecklist) {
       this.firewallRulesWithChecklist[firewallRuleName].checkList[fieldName] = null;
@@ -264,6 +317,7 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
   }
 
   createNewChecklist(): FirewallRulePacketTracerChecklist {
+    console.trace('create checklist func');
     return {
       action: null,
       sourceInRange: null,
@@ -279,6 +333,8 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
   }
 
   handlePortMatch(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean | null {
+    const start = performance.now();
+
     const formPortValue = control.value;
 
     // Return null if the form control value is falsy, indicating an invalid or non-applicable condition
@@ -305,6 +361,9 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
       }
     }
 
+    const end = performance.now();
+    console.log(` HANDLE PORT MATCH Execution time: ${end - start} ms`);
+
     // Check for an exact match between the form port value and the rule's port value
     return formPortValue === rulePortValue;
   }
@@ -326,6 +385,8 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
   }
 
   networkObjectLookup(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl) {
+    const start = performance.now();
+
     const formIpValue = control.value;
     const ruleNetworkObject = location === 'source' ? rule.sourceNetworkObject : rule.destinationNetworkObject;
 
@@ -350,6 +411,9 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
         return true;
       }
     }
+
+    const end = performance.now();
+    console.log(` NET OBJ LOOKUP Execution time: ${end - start} ms`);
 
     return false;
   }
@@ -491,11 +555,13 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
   }
 
   getCellValue(column: string, rule: FirewallRule): boolean {
+    console.log('on cell value when key entry?');
     const columnFunction = this.tableConfig.columnFunctions[column];
     return columnFunction ? columnFunction(rule) : false;
   }
 
   isChecklistFieldEmpty(fieldName: string, firewallRule: FirewallRule): boolean {
+    console.log('isChecklistFieldEmpty run when');
     return this.firewallRulesWithChecklist[firewallRule.name].checkList[fieldName] === null;
   }
 

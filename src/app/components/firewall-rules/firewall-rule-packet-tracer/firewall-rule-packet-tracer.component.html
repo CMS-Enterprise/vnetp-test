@@ -68,7 +68,7 @@
                 {{ firewallrule.name }}
               </ng-container>
               <ng-template #dynamicCell>
-                <span *ngIf="isChecklistFieldEmpty(col, firewallrule); else matched"></span>
+                <span *ngIf="firewallrule.checkList[col] === null; else matched"></span>
                 <ng-template #matched>
                   <span *ngIf="firewallrule.checkList[col]; else notMatched">&#10003;</span>
                 </ng-template>
