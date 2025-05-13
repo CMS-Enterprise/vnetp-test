@@ -302,9 +302,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     // If we have an initial sub-tab to select (set during getInitialTabIndex), select it now
     if (this.initialSubTab && this.tabsComponent) {
-      setTimeout(() => {
-        this.tabsComponent.setActiveSubTab(this.initialSubTab);
-      });
+      this.tabsComponent.setActiveSubTab(this.initialSubTab);
     }
   }
 

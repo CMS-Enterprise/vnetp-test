@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockComponent } from 'src/test/mock-components';
@@ -81,6 +81,7 @@ describe('TenantPortalComponent', () => {
           get: jest.fn().mockReturnValue('test-id'),
         },
         queryParams: {},
+        data: { mode: ApplicationMode.TENANTV2 },
       },
     };
 
@@ -260,7 +261,7 @@ describe('TenantPortalComponent', () => {
 
   // Network services tests
   describe('Network services container', () => {
-    it.only('should fetch datacenter when tenant is loaded in TENANTV2 mode', () => {
+    it('should fetch datacenter when tenant is loaded in TENANTV2 mode', () => {
       component.getTenant();
 
       expect(tenantServiceMock.getOneTenant).toHaveBeenCalledWith({
@@ -413,7 +414,6 @@ describe('TenantPortalComponent', () => {
 
     // Call the method
     component.ngAfterViewInit();
-    tick();
 
     // Should call setActiveSubTab on TabsComponent
     expect(component.tabsComponent.setActiveSubTab).toHaveBeenCalledWith(component.initialSubTab);
