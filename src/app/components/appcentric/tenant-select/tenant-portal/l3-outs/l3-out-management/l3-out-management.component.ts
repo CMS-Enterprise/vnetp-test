@@ -16,7 +16,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { MatDialog } from '@angular/material/dialog';
 import { FormBuilder } from '@angular/forms';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-l3-out-management',
@@ -180,15 +181,15 @@ export class L3OutManagementComponent implements OnInit {
   }
 
   public openChangePreview(bd: BridgeDomain): void {
-    this.applyOneChange(bd);
+    this.applyOneChange(bd).subscribe();
   }
 
-  public applyOneChange(bd: BridgeDomain, bulk = false): void {
+  public applyOneChange(bd: BridgeDomain, bulk = false): Observable<any> {
     const bdForm = this.form.get(bd.id);
 
     if (!bdForm) {
       console.error('Bridge Domain form not found');
-      return;
+      return of(null);
     }
 
     const subnets = bdForm.get('subnets')?.value;
@@ -250,8 +251,8 @@ export class L3OutManagementComponent implements OnInit {
 
     // Execute all updates and then refresh the form
     if (updateObservables.length > 0) {
-      forkJoin(updateObservables).subscribe({
-        complete: () => {
+      return forkJoin(updateObservables).pipe(
+        tap(() => {
           if (!bulk) {
             // Refresh L3Out data and rebuild form
             this.l3OutsService
@@ -264,19 +265,33 @@ export class L3OutManagementComponent implements OnInit {
                 this.ngOnInit();
               });
           }
-        },
-      });
+        }),
+      );
     } else if (!bulk) {
       this.ngOnInit();
     }
+    return of(null);
   }
 
   public applyAllChanges(): void {
-    this.bridgeDomains.forEach(bd => {
-      if (this.hasBridgeDomainChanges(bd)) {
-        this.applyOneChange(bd, true);
-      }
-    });
+    const updateObservables = this.bridgeDomains.filter(bd => this.hasBridgeDomainChanges(bd)).map(bd => this.applyOneChange(bd, true));
+
+    if (updateObservables.length > 0) {
+      forkJoin(updateObservables).subscribe({
+        complete: () => {
+          // Refresh L3Out data and rebuild form
+          this.l3OutsService
+            .getOneL3Out({
+              id: this.l3Out.id,
+              relations: ['vrf', 'bridgeDomains', 'endpointGroups', 'endpointSecurityGroups'],
+            })
+            .subscribe(updatedL3Out => {
+              this.l3Out = updatedL3Out;
+              this.ngOnInit();
+            });
+        },
+      });
+    }
   }
 
   public hasChanges(): boolean {

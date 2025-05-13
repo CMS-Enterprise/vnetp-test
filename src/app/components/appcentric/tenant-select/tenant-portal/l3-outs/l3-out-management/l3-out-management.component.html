@@ -25,6 +25,7 @@
         </div>
         <div class="data-group-items">
           <div *ngFor="let s of bd.subnets; let i = index" class="data-group-item">
+            <span class="ml-3">{{ s.name }}</span>
             <mat-checkbox
               class="mr-3"
               [formControl]="form.get(bd.id)?.get('subnets')?.get(i.toString())?.get('advertisedExternally')"
