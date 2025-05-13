@@ -260,7 +260,7 @@ describe('L3OutManagementComponent', () => {
   it('should apply all changes', () => {
     component.bridgeDomains = [mockBridgeDomain];
     component.buildForm();
-    jest.spyOn(component, 'applyOneChange').mockImplementation(() => {});
+    jest.spyOn(component, 'applyOneChange').mockImplementation(() => of({}));
     jest.spyOn(component, 'hasBridgeDomainChanges').mockReturnValue(true);
     component.applyAllChanges();
     expect(component.applyOneChange).toHaveBeenCalledWith(mockBridgeDomain, true);
