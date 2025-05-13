@@ -93,7 +93,7 @@
   ></app-import-export>
 </section>
 
-<app-firewall-rule-modal></app-firewall-rule-modal>
+<app-firewall-rule-modal [appIdEnabled]="appIdEnabled"></app-firewall-rule-modal>
 <app-yes-no-modal></app-yes-no-modal>
 <app-preview-modal></app-preview-modal>
 
@@ -255,7 +255,8 @@
 </ng-template>
 
 <ng-template #paAppsTemplate let-firewallRule="datum">
-  <span class="hover-effect">{{ firewallRule.panosApplications.length }}</span>
+  <span *ngIf="appIdEnabled" class="hover-effect">{{ firewallRule.panosApplications.length }}</span>
+  <span *ngIf="!appIdEnabled">-</span>
 </ng-template>
 
 <app-app-id-runtime></app-app-id-runtime>

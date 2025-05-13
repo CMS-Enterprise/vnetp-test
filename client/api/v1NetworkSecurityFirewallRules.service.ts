@@ -22,7 +22,6 @@ import { FirewallRule } from '../model/models';
 import { FirewallRuleImportCollectionDto } from '../model/models';
 import { FirewallRulePreview } from '../model/models';
 import { GetManyFirewallRuleResponseDto } from '../model/models';
-import { PanosApplicationFirewallRuleDto } from '../model/models';
 import { RuleOperationDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -85,10 +84,6 @@ export interface GetOneFirewallRuleRequestParams {
     relations?: Array<string>;
     /** Comma-seperated array of relations to join. */
     join?: Array<string>;
-}
-
-export interface ModifyPanosApplicationsFirewallRuleRequestParams {
-    panosApplicationFirewallRuleDto: PanosApplicationFirewallRuleDto;
 }
 
 export interface RestoreOneFirewallRuleRequestParams {
@@ -645,62 +640,6 @@ export class V1NetworkSecurityFirewallRulesService {
         return this.httpClient.get<FirewallRule>(`${this.configuration.basePath}/v1/network-security/firewall-rules/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Modify Panos Applications on Firewall Rule
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public modifyPanosApplicationsFirewallRule(requestParameters: ModifyPanosApplicationsFirewallRuleRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<FirewallRule>;
-    public modifyPanosApplicationsFirewallRule(requestParameters: ModifyPanosApplicationsFirewallRuleRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<FirewallRule>>;
-    public modifyPanosApplicationsFirewallRule(requestParameters: ModifyPanosApplicationsFirewallRuleRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<FirewallRule>>;
-    public modifyPanosApplicationsFirewallRule(requestParameters: ModifyPanosApplicationsFirewallRuleRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const panosApplicationFirewallRuleDto = requestParameters.panosApplicationFirewallRuleDto;
-        if (panosApplicationFirewallRuleDto === null || panosApplicationFirewallRuleDto === undefined) {
-            throw new Error('Required parameter panosApplicationFirewallRuleDto was null or undefined when calling modifyPanosApplicationsFirewallRule.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.post<FirewallRule>(`${this.configuration.basePath}/v1/network-security/firewall-rules/panos-applications`,
-            panosApplicationFirewallRuleDto,
-            {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

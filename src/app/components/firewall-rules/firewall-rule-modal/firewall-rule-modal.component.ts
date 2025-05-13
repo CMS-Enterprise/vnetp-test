@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, Input } from '@angular/core';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -30,7 +30,6 @@ import { AppIdRuntimeService } from '../../app-id-runtime/app-id-runtime.service
 import { AppIdModalDto } from '../../../models/other/app-id-modal.dto';
 import { TierContextService } from '../../../services/tier-context.service';
 import { LiteTableConfig } from '../../../common/lite-table/lite-table.component';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -73,8 +72,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
 
   disableAppIdIcmp = false;
 
-  public environment = environment;
-  public appIdEnabled: boolean = this.environment?.dynamic?.appIdEnabled;
+  @Input() appIdEnabled: boolean;
 
   @ViewChild('appIdColumnTemplate') iconTemplate: TemplateRef<any>;
 
