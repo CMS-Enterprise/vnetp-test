@@ -35,6 +35,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApplicationMode } from '../../models/other/application-mode-enum';
+import { RouteDataUtil } from '../../utils/route-data.util';
 
 // TODO: TenantV2 - when loading audit logs for a V2 tenant we need to get data from what was traditionally in "appcentric" audit logs
 // and what was traditionally in "netcentric" audit logs. TenantV2 consists of an updated app-centric tenant and the security management
@@ -489,25 +490,19 @@ export class AuditLogComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Access route data first to determine the mode
-    this.route.data.subscribe(data => {
-      this.routeData = data;
-      console.log('Route data:', this.routeData);
+    const modeFromRoute = RouteDataUtil.getApplicationModeFromRoute(this.route);
 
-      // Set the mode from route data if it exists
-      if (this.routeData && this.routeData.mode) {
-        // Set mode explicitly from router configuration
-        this.currentMode = this.routeData.mode;
-        console.log(`Mode set from router config: ${this.currentMode}`);
-      } else {
-        // If no mode is specified in router config, use NETCENTRIC as default
-        this.currentMode = ApplicationMode.NETCENTRIC;
-        console.log(`No mode specified in route data. Using default mode: ${this.currentMode}`);
-      }
+    if (modeFromRoute) {
+      this.currentMode = modeFromRoute;
+      console.log(`Mode set via RouteDataUtil: ${this.currentMode}`);
+    } else {
+      // If no mode is specified in router config by traversal, use NETCENTRIC as default
+      this.currentMode = ApplicationMode.NETCENTRIC;
+      console.warn('Application mode not found via RouteDataUtil in AuditLogComponent, defaulting to NETCENTRIC.');
+    }
 
-      // Initialize based on the determined mode
-      this.initializeForCurrentMode();
-    });
+    // Initialize based on the determined mode
+    this.initializeForCurrentMode();
 
     // Only observe datacenter changes for netcentric mode
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {

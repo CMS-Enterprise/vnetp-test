@@ -11,6 +11,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
 import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
 import { V1NetworkScopeFormsWanFormService } from '../../../../../../client/api/v1NetworkScopeFormsWanForm.service';
 import { ActivatedRoute } from '@angular/router';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 @Component({
   selector: 'app-wan-form-modal',
@@ -46,7 +47,13 @@ export class WanFormModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.dcsMode = this.route.snapshot.data.mode;
+    this.dcsMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
+
+    if (!this.dcsMode) {
+      console.error('WanFormModalComponent: Application mode could not be determined via RouteDataUtil.');
+      // Fallback or error handling if necessary
+    }
+
     if (this.dcsMode === 'netcentric') {
       this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
         if (cd) {

@@ -82,7 +82,10 @@ const routes: Routes = [
       {
         outlet,
         path: 'north-south-firewall',
-        data: { breadcrumb: 'North-South Firewall', title: 'North-South Firewall' },
+        data: {
+          breadcrumb: 'North-South Firewall',
+          title: 'North-South Firewall',
+        },
         loadChildren: () => import('./tenant-v2-firewall/tenant-v2-firewall.module').then(m => m.TenantV2FirewallModule),
       },
       {

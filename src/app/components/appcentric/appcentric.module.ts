@@ -12,58 +12,56 @@ import { TenantSelectModule } from './tenant-select/tenant-select.module';
 import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module';
 import { TypeDeleteModalModule } from 'src/app/common/type-delete-modal/type-delete-modal.module';
 import { AuditLogModule } from '../../common/audit-log/audit-log.module';
-import { APPCENTRIC_ROUTE_DATA, mergeRouteData } from '../../common/route-utils/route-data.utils';
 
 const routes: Routes = [
   {
     path: '',
     component: AppcentricComponent,
-    data: APPCENTRIC_ROUTE_DATA,
     children: [
       {
         path: 'dashboard',
         component: AppcentricDashboardComponent,
         canActivate: [AuthGuard],
-        data: mergeRouteData(APPCENTRIC_ROUTE_DATA, {
+        data: {
           breadcrumb: 'Dashboard',
           title: 'Dashboard',
-        }),
+        },
         loadChildren: () => import('./appcentric-dashboard/appcentric-dashboard.module').then(m => m.AppcentricDashboardModule),
       },
       {
         path: 'tenant-select',
         canActivate: [AuthGuard],
-        data: mergeRouteData(APPCENTRIC_ROUTE_DATA, {
+        data: {
           breadcrumb: 'Tenant Select',
           title: 'Tenant Select',
-        }),
+        },
         loadChildren: () => import('./tenant-select/tenant-select.module').then(m => m.TenantSelectModule),
       },
       {
         path: 'environment-summary',
         canActivate: [AuthGuard],
-        data: mergeRouteData(APPCENTRIC_ROUTE_DATA, {
+        data: {
           breadcrumb: 'Environment Summary',
           title: 'Environment Summary',
-        }),
+        },
         loadChildren: () => import('../../common/environment-summary/environment-summary.module').then(m => m.EnvironmentSummaryModule),
       },
       {
         path: 'audit-log',
         canActivate: [AuthGuard],
-        data: mergeRouteData(APPCENTRIC_ROUTE_DATA, {
+        data: {
           breadcrumb: 'Audit Log',
           title: 'Audit Log',
-        }),
+        },
         loadChildren: () => import('../../common/audit-log/audit-log.module').then(m => m.AuditLogModule),
       },
       {
         path: 'wan-form',
         canActivate: [AuthGuard],
-        data: mergeRouteData(APPCENTRIC_ROUTE_DATA, {
+        data: {
           breadcrumb: 'WAN Form',
           title: 'WAN Form',
-        }),
+        },
         loadChildren: () => import('../network-scope-forms/wan-form/wan-form.module').then(m => m.WanFormModule),
       },
     ],

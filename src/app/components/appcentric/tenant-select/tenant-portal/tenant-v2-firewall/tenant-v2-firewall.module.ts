@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FirewallRulesModule } from 'src/app/components/firewall-rules/firewall-rules.module';
-import { TENANT_V2_ROUTE_DATA } from 'src/app/common/route-utils/route-data.utils';
+import { TENANT_V2_ROUTE_DATA } from 'src/app/models/route-data/route-data.types';
 const routes: Routes = [
   {
     path: '',

@@ -7,6 +7,7 @@ import { V1DatacentersService } from 'client';
 import { V1TiersService } from 'client';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { RouteDataUtil } from '../../../../utils/route-data.util';
 
 const tabs: Tab[] = [
   { name: 'Application Profile', route: ['application-profile'] },
@@ -21,25 +22,28 @@ const tabs: Tab[] = [
   {
     name: 'East/West Firewall',
     tooltip: 'These firewall rules are applied between ESGs and EPGs that have defined contracts.',
+    id: 'tv2-east-west-firewall',
     subTabs: [
-      { name: 'Firewall Rules', route: ['east-west-firewall'] },
-      // { name: 'NAT Rules'}, // TODO: Only show when east-west NAT is enabled for the tenant.
-      { name: 'Service Objects', route: ['east-west-service-objects'] },
+      { name: 'Firewall Rules', route: ['east-west-firewall'], id: 'tv2-east-west-firewall-firewall-rules' },
+      { name: 'NAT Rules', route: ['east-west-nat'], id: 'tv2-east-west-firewall-nat-rules' },
+      { name: 'Service Objects', route: ['east-west-service-objects'], id: 'tv2-east-west-firewall-service-objects' },
     ],
   },
   {
     name: 'North/South Firewall',
     tooltip: 'These firewall rules are applied between the ACI environment and external networks.',
+    id: 'tv2-north-south-firewall',
     subTabs: [
-      { name: 'Firewall Rules', route: ['north-south-firewall'] },
-      { name: 'NAT Rules', route: ['north-south-nat'] },
-      { name: 'Network Objects', route: ['north-south-network-objects'] },
-      { name: 'Service Objects', route: ['north-south-service-objects'] },
+      { name: 'Firewall Rules', route: ['north-south-firewall'], id: 'tv2-north-south-firewall-firewall-rules' },
+      { name: 'NAT Rules', route: ['north-south-nat'], id: 'tv2-north-south-firewall-nat-rules' },
+      { name: 'Network Objects', route: ['north-south-network-objects'], id: 'tv2-north-south-firewall-network-objects' },
+      { name: 'Service Objects', route: ['north-south-service-objects'], id: 'tv2-north-south-firewall-service-objects' },
     ],
   },
   {
     name: 'Endpoint Connectivity Utility',
     tooltip: 'This utility allows you to test the connectivity between endpoints.',
+    id: 'tv2-endpoint-connectivity-utility',
     route: ['endpoint-connectivity-utility'],
   },
 ];
@@ -76,31 +80,15 @@ export class TenantPortalComponent implements OnInit, AfterViewInit {
     private tierService: V1TiersService,
     private tierContextService: TierContextService,
     private datacenterContextService: DatacenterContextService,
-  ) {
-    // get tenantId in URL snapshot
-    const match = this.router.routerState.snapshot.url.match(
-      /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
-    );
-    if (match) {
-      const uuid = match[0].split('/')[2];
-      this.tenantId = uuid;
-    }
-
-    // Access the route data to get the mode
-    this.activatedRoute.data.subscribe(data => {
-      this.mode = data.mode;
-      // Initialize tabs based on mode
-      this.initializeTabs();
-    });
-  }
+  ) {}
 
   private initializeTabs(): void {
     if (this.mode === ApplicationMode.TENANTV2) {
       // Show all tabs including firewalls for V2, preserving subTabs
       this.tabs = [...tabs];
     } else {
-      // Filter out firewall tabs for non-V2, preserving subTabs structure
-      this.tabs = tabs.filter(t => t.name !== 'East/West Firewall' && t.name !== 'North/South Firewall');
+      // Filter out tenant v2 tabs
+      this.tabs = tabs.filter(t => !t?.id?.startsWith('tv2-'));
     }
     // Set a default current tab to avoid ExpressionChangedAfterItHasBeenCheckedError
     this.currentTab = this.tabs[0]?.name || 'Application Profile';
@@ -242,7 +230,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public getTenants(): void {
+  public getTenant(): void {
     this.tenantService
       .getOneTenant({
         id: this.tenantId,
@@ -253,8 +241,6 @@ export class TenantPortalComponent implements OnInit, AfterViewInit {
 
           if (this.mode === ApplicationMode.TENANTV2 && response.tenantVersion === 2) {
             this.getNetworkServicesContainerDatacenter(response.datacenterId);
-          } else {
-            throw new Error('Tenant is not in TenantV2 mode');
           }
         },
         () => {
@@ -295,12 +281,22 @@ export class TenantPortalComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    // get tenantId in URL snapshot
+    const match = this.router.routerState.snapshot.url.match(
+      /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
+    );
+    if (match) {
+      const uuid = match[0].split('/')[2];
+      this.tenantId = uuid;
+    }
+
+    this.mode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
     // Initialize tabs first so we have something to show during loading
     this.initializeTabs();
     // Get initial tab index without calling getTenants() yet
     this.initialTabIndex = this.getInitialTabIndex();
     // Get tenant data
-    this.getTenants();
+    this.getTenant();
   }
 
   ngAfterViewInit(): void {

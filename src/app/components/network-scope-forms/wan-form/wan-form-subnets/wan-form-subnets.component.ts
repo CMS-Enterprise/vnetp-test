@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ModalMode } from '../../../../models/other/modal-mode';
 import { TableComponentDto } from '../../../../models/other/table-component-dto';
@@ -19,13 +19,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TableContextService } from '../../../../services/table-context.service';
 import { WanFormSubnetModalDto } from '../../../../models/network-scope-forms/wan-form-subnet-modal.dto';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 @Component({
   selector: 'app-wan-form-subnets',
   templateUrl: './wan-form-subnets.component.html',
   styleUrl: './wan-form-subnets.component.css',
 })
-export class WanFormSubnetsComponent {
+export class WanFormSubnetsComponent implements OnInit {
   public wanForm: WanForm;
   public wanFormSubnets: GetManyWanFormSubnetResponseDto;
   public isLoading = false;
@@ -39,7 +41,7 @@ export class WanFormSubnetsComponent {
 
   private modalSubscription: Subscription;
 
-  public dcsMode: string;
+  public dcsMode: ApplicationMode;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('vrfNameTemplate') vrfNameTemplate: TemplateRef<any>;
@@ -82,7 +84,13 @@ export class WanFormSubnetsComponent {
 
   ngOnInit(): void {
     this.wanFormId = this.route.snapshot.params.id;
-    this.dcsMode = this.route.snapshot.data.mode;
+    this.dcsMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
+
+    if (!this.dcsMode) {
+      console.error('WanFormSubnetsComponent: Application mode could not be determined via RouteDataUtil.');
+      // Fallback or error handling if necessary
+    }
+
     this.getWanFormSubnets();
     if (!this.wanForm) {
       this.wanFormService.getOneWanForm({ id: this.wanFormId }).subscribe(data => {
