@@ -1,6 +1,6 @@
 /* tslint:disable */
 
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Netmask } from 'netmask';
@@ -310,7 +310,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     //   });
     //   return;
     // }
-    const ruleCount = 0;
+    // const ruleCount = 0;
     this.setChecklist(this.objects.firewallRules, fieldName);
     // this.objects.firewallRules.forEach(rule => {
     //   this.setChecklist(rule, fieldName);
@@ -391,7 +391,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   }
 
   handlePortMatch(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean | null {
-    const start = performance.now();
+    // const start = performance.now();
 
     const formPortValue = control.value;
 
@@ -419,7 +419,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       }
     }
 
-    const end = performance.now();
+    // const end = performance.now();
     // console.log(` HANDLE PORT MATCH Execution time: ${end - start} ms`);
 
     // Check for an exact match between the form port value and the rule's port value
