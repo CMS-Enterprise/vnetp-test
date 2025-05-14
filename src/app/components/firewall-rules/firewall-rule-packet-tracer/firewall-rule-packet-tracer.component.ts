@@ -174,9 +174,20 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       return null;
     }
 
+    // a form port value of "any" matches all port values
+    if (formPortValue === 'any') {
+      // so return true
+      return true;
+    }
+
     // Determine the appropriate port value from the rule based on the location
     const rulePortValue = location === 'source' ? rule.sourcePorts : rule.destinationPorts;
 
+    // a rule port value of "any" matches all port values
+    if (rulePortValue === 'any') {
+      // so return true
+      return true;
+    }
     // Delegate to specific handlers based on the service type and return their results
     if (rule.serviceType === 'ServiceObject') {
       return this.serviceObjectPortMatch(rule, location, control);
@@ -201,6 +212,12 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     const formIpValue = control.value;
     const ruleIpValue = location === 'source' ? rule.sourceIpAddress : rule.destinationIpAddress;
 
+    // if rule IP value is quad 0's, that will match every IP address
+    if (ruleIpValue === '0.0.0.0/0') {
+      // so return true
+      return true;
+    }
+
     // Using Netmask to handle subnet calculations
     try {
       const block = new Netmask(ruleIpValue);
@@ -220,6 +237,12 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     // Check if ruleNetworkObject is an IP/Subnet
     if (ruleNetworkObject.type === 'IpAddress') {
       const ruleSourceIp = ruleNetworkObject.ipAddress;
+
+      // if rule IP value is quad 0's, that will match every IP address
+      if (ruleSourceIp === '0.0.0.0/0') {
+        // so return true
+        return true;
+      }
       try {
         const block = new Netmask(ruleSourceIp);
         if (block.contains(formIpValue)) {
@@ -252,6 +275,11 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     return networkObjectMembers.some(sourceMember => {
       if (sourceMember.type === 'IpAddress') {
         const sourceMemberIp = sourceMember.ipAddress;
+        // if rule IP value is quad 0's, that will match every IP address
+        if (sourceMemberIp === '0.0.0.0/0') {
+          // so return true
+          return true;
+        }
         try {
           const block = new Netmask(sourceMemberIp);
           if (block.contains(formIpValue)) {
@@ -278,6 +306,12 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   serviceObjectPortMatch(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean {
     const serviceObjectPortValue = location === 'source' ? rule.serviceObject.sourcePorts : rule.serviceObject.destinationPorts;
 
+    // a service object port value of "any" matches all port values
+    if (serviceObjectPortValue === 'any') {
+      // so return true
+      return true;
+    }
+
     // Check if form port value falls within range of rule port value
     if (serviceObjectPortValue.includes('-')) {
       const firstNumberInPortRange = Number(serviceObjectPortValue.split('-')[0]);
@@ -294,6 +328,11 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
     return serviceObjectGroup.serviceObjects.some(svcObj => {
       const rulePortValue = location === 'source' ? svcObj.sourcePorts : svcObj.destinationPorts;
+      // a service object port value of "any" matches all port values
+      if (rulePortValue === 'any') {
+        // so return true
+        return true;
+      }
 
       if (rulePortValue.includes('-')) {
         const firstNumberInPortRange = Number(rulePortValue.split('-')[0]);

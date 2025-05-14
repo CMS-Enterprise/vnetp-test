@@ -330,6 +330,16 @@ describe('NatRulesPacketTracerComponent', () => {
         expect(result).toBe(true);
       });
 
+      it('should handle Network Object type "IpAddress" with quad zeros', () => {
+        const rule = {
+          originalDestinationNetworkObject: { type: 'IpAddress', ipAddress: '0.0.0.0/0' },
+        };
+        const control = { value: '192.168.1.100' } as AbstractControl;
+
+        const result = component.networkObjectLookup(rule as any, 'originalDestination', control);
+        expect(result).toBe(true);
+      });
+
       it('should handle Network Object type "Range"', () => {
         const rule = {
           originalSourceNetworkObject: {
@@ -527,6 +537,27 @@ describe('NatRulesPacketTracerComponent', () => {
       expect(result).toBe(true);
     });
 
+    it('should return true if a member has quad zeros', () => {
+      const rule = {
+        translatedSourceNetworkObjectGroupId: 'test-id',
+      };
+
+      const networkObjectGroup = {
+        id: 'test-id',
+        networkObjects: [{ type: 'IpAddress', ipAddress: '0.0.0.0/0' }],
+      };
+
+      component.objects = {
+        natRules: [],
+        networkObjectGroups: [networkObjectGroup as any],
+      };
+
+      const control = { value: '192.168.1.20' } as AbstractControl;
+
+      const result = component.networkObjectGroupLookup(rule as any, 'translatedSource', control);
+      expect(result).toBe(true);
+    });
+
     it('should return false if no members match', () => {
       // ... set up with a Network Object Group where no members match
       const rule = {
@@ -679,6 +710,66 @@ describe('NatRulesPacketTracerComponent', () => {
 
       const control = { value: '80' } as AbstractControl;
       const result = component.handleServiceObjectPortMatch(rule as any, 'original', 'source', control);
+      expect(result).toBe(true);
+    });
+
+    it('should return true for an "any" port match from the rule side', () => {
+      const rule = {
+        originalServiceObject: {
+          id: 'test-id',
+          protocol: 'TCP',
+          sourcePorts: 'any',
+          destinationPorts: '5',
+        },
+      };
+
+      component.objects = {
+        natRules: [],
+        networkObjectGroups: [],
+      };
+
+      const control = { value: '80' } as AbstractControl;
+      const result = component.handleServiceObjectPortMatch(rule as any, 'original', 'source', control);
+      expect(result).toBe(true);
+    });
+
+    it('should return true for an "any" port match from the form side', () => {
+      const rule = {
+        originalServiceObject: {
+          id: 'test-id',
+          protocol: 'TCP',
+          sourcePorts: '5',
+          destinationPorts: '2',
+        },
+      };
+
+      component.objects = {
+        natRules: [],
+        networkObjectGroups: [],
+      };
+
+      const control = { value: 'any' } as AbstractControl;
+      const result = component.handleServiceObjectPortMatch(rule as any, 'original', 'destination', control);
+      expect(result).toBe(true);
+    });
+
+    it('should return true if original service object destination port is "any"', () => {
+      const rule = {
+        originalServiceObject: {
+          id: 'test-id',
+          protocol: 'TCP',
+          sourcePorts: '5',
+          destinationPorts: 'any',
+        },
+      };
+
+      component.objects = {
+        natRules: [],
+        networkObjectGroups: [],
+      };
+
+      const control = { value: '80' } as AbstractControl;
+      const result = component.handleServiceObjectPortMatch(rule as any, 'original', 'destination', control);
       expect(result).toBe(true);
     });
 

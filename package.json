@@ -13,7 +13,7 @@
     "test:ci": "jest --ci --no-cache --runInBand --coverage --verbose --silent",
     "lint": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "sonar": "sonar-scanner",
-    "generate-client": "rimraf client/* && TS_POST_PROCESS_FILE=./node_modules/.bin/prettier openapi-generator-cli generate"
+    "generate-client": "rimraf client/* && JAVA_OPTS='-Xms2g -Xmx4g' openapi-generator-cli generate"
   },
   "private": true,
   "dependencies": {
@@ -81,5 +81,9 @@
     "!(client)/**/*.{js,ts,html,css,scss}": [
       "prettier --write"
     ]
+  },
+  "engines": {
+    "node": ">=20.16.0",
+    "npm": ">=10.8.0"
   }
 }

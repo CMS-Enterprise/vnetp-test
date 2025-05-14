@@ -31,7 +31,7 @@ export class SubnetsModalComponent implements OnInit {
   public subnets: GetManyAppCentricSubnetResponseDto;
   public tableComponentDto = new TableComponentDto();
   public perPage = 20;
-  private subnetsEditModalSubscription: Subscription;
+  public subnetsEditModalSubscription: Subscription;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -194,7 +194,7 @@ export class SubnetsModalComponent implements OnInit {
     this.ngx.getModal('subnetsEditModal').open();
   }
 
-  private subscribeToSubnetsEditModal(): void {
+  public subscribeToSubnetsEditModal(): void {
     this.subnetsEditModalSubscription = this.ngx.getModal('subnetsEditModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('subnetsEditModal');
       this.subnetsEditModalSubscription.unsubscribe();

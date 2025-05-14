@@ -44,10 +44,12 @@ import { V2AppCentricApplicationProfilesService } from './api/v2AppCentricApplic
 import { V2AppCentricBridgeDomainsService } from './api/v2AppCentricBridgeDomains.service';
 import { V2AppCentricContractsService } from './api/v2AppCentricContracts.service';
 import { V2AppCentricEndpointGroupsService } from './api/v2AppCentricEndpointGroups.service';
+import { V2AppCentricEndpointSecurityGroupsService } from './api/v2AppCentricEndpointSecurityGroups.service';
 import { V2AppCentricFilterEntriesService } from './api/v2AppCentricFilterEntries.service';
 import { V2AppCentricFiltersService } from './api/v2AppCentricFilters.service';
 import { V2AppCentricL3outsService } from './api/v2AppCentricL3outs.service';
 import { V2AppCentricRouteProfilesService } from './api/v2AppCentricRouteProfiles.service';
+import { V2AppCentricSelectorsService } from './api/v2AppCentricSelectors.service';
 import { V2AppCentricSubjectsService } from './api/v2AppCentricSubjects.service';
 import { V2AppCentricTenantsService } from './api/v2AppCentricTenants.service';
 import { V2AppCentricVrfsService } from './api/v2AppCentricVrfs.service';

@@ -134,14 +134,19 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     this.initForm();
   }
 
-  public save(): void {
+  public async save() {
     this.submitted = true;
+    if (Number.isNaN(this.form.controls.ruleIndex.value)) {
+      this.form.controls.ruleIndex.setValue(null);
+    }
     if (this.form.invalid) {
       console.log('form invalid');
       console.log(new FormUtils().findInvalidControlsRecursive(this.form));
       return;
     }
+    console.log('this.form.invalid', this.form.invalid);
     const modalNatRule = this.form.getRawValue();
+
     modalNatRule.originalServiceObjectId = null;
     modalNatRule.originalSourceNetworkObjectId = null;
     modalNatRule.originalSourceNetworkObjectGroupId = null;
@@ -381,8 +386,16 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   // when the translation type is updated, update the appropriate form controls
   private subscribeToTranslationTypeChanges(): Subscription {
-    const { biDirectional, originalSourceAddressType, translatedDestinationAddressType, translatedSourceAddressType, translationType } =
-      this.form.controls;
+    const {
+      originalServiceType,
+      translatedServiceType,
+      biDirectional,
+      originalSourceAddressType,
+      originalDestinationAddressType,
+      translatedDestinationAddressType,
+      translatedSourceAddressType,
+      translationType,
+    } = this.form.controls;
 
     const requireTranslatedFields = () => {
       if (translatedSourceAddressType.value === NatRuleTranslatedSourceAddressTypeEnum.NetworkObjectGroup) {
@@ -412,10 +425,34 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
       originalSourceAddressType.updateValueAndValidity();
     };
 
+    const translationTypeNat64 = () => {
+      originalServiceType.setValue(NatRuleOriginalServiceTypeEnum.None);
+      translatedServiceType.setValue(NatRuleTranslatedServiceTypeEnum.None);
+      originalServiceType.clearValidators();
+      translatedServiceType.clearValidators();
+      originalServiceType.disable();
+      translatedServiceType.disable();
+      translatedDestinationAddressType.clearValidators();
+      translatedDestinationAddressType.disable();
+      if (originalSourceAddressType.value === NatRuleOriginalSourceAddressTypeEnum.None) {
+        originalSourceAddressType.setValue(NatRuleOriginalSourceAddressTypeEnum.NetworkObject);
+        originalSourceAddressType.setValidators(Validators.required);
+      }
+      if (translatedSourceAddressType.value === NatRuleTranslatedSourceAddressTypeEnum.None) {
+        translatedSourceAddressType.setValue(NatRuleTranslatedSourceAddressTypeEnum.NetworkObject);
+        translatedSourceAddressType.setValidators(Validators.required);
+      }
+      if (originalDestinationAddressType.value === NatRuleOriginalDestinationAddressTypeEnum.None) {
+        originalDestinationAddressType.setValue(NatRuleOriginalDestinationAddressTypeEnum.NetworkObject);
+        originalDestinationAddressType.setValidators(Validators.required);
+      }
+    };
+
     const handler: Record<NatRuleTranslationTypeEnum, () => void> = {
       [NatRuleTranslationTypeEnum.Static]: requireTranslatedFields,
       [NatRuleTranslationTypeEnum.DynamicIp]: translationTypeNotStatic,
       [NatRuleTranslationTypeEnum.DynamicIpAndPort]: translationTypeNotStatic,
+      [NatRuleTranslationTypeEnum.Nat64]: translationTypeNat64,
     };
     return translationType.valueChanges.subscribe((type: NatRuleTranslationTypeEnum) => this.updateForm(type, handler));
   }
@@ -567,7 +604,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     return modalNatRule;
   }
 
-  getObjectInfo(property, objectType, objectId) {
+  getObjectInfo(property, objectType, objectId?) {
     if (objectId) {
       switch (objectType) {
         case 'NetworkObject': {
@@ -603,6 +640,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         modalTitle,
         modalBody,
       };
+
       this.subscribeToObjectInfoModal();
       this.ngx.setModalData(dto, 'natRuleObjectInfoModal');
       this.ngx.getModal('natRuleObjectInfoModal').open();

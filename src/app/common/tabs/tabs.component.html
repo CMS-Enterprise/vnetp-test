@@ -1,8 +1,49 @@
-<ul class="nav nav-tabs">
-  <li class="nav-item" *ngFor="let tab of tabs; let i = index" (click)="setActiveTab(tab)" (keyup.enter)="setActiveTab(tab)">
-    <a class="nav-link" [class.active]="activeTab?.name === tab.name">
+<ul role="tablist" aria-label="Main navigation tabs" class="nav nav-tabs">
+  <li
+    class="nav-item"
+    *ngFor="let tab of tabs; let i = index"
+    (click)="setActiveTab(tab)"
+    (keyup.enter)="setActiveTab(tab)"
+    role="presentation"
+  >
+    <a
+      class="nav-link"
+      [class.active]="activeTab?.name === tab.name"
+      role="tab"
+      [attr.aria-selected]="activeTab?.name === tab.name"
+      [attr.aria-controls]="tab.name + '-panel'"
+      [tabindex]="activeTab?.name === tab.name ? 0 : -1"
+    >
       <span>{{ tab.name }}</span>
       <tooltip *ngIf="tab.tooltip" [message]="tab.tooltip"></tooltip>
+    </a>
+  </li>
+</ul>
+
+<!-- Sub-tabs row that appears when the active tab has sub-tabs -->
+<ul
+  *ngIf="activeTab?.subTabs && activeTab.subTabs.length > 0"
+  class="nav nav-tabs sub-tabs"
+  role="tablist"
+  aria-label="Sub navigation tabs"
+>
+  <li
+    class="nav-item"
+    *ngFor="let subTab of activeTab.subTabs; let i = index"
+    (click)="setActiveSubTab(subTab)"
+    (keyup.enter)="setActiveSubTab(subTab)"
+    role="presentation"
+  >
+    <a
+      class="nav-link"
+      [class.active]="activeSubTab?.name === subTab.name"
+      role="tab"
+      [attr.aria-selected]="activeSubTab?.name === subTab.name"
+      [attr.aria-controls]="subTab.name + '-panel'"
+      [tabindex]="activeSubTab?.name === subTab.name ? 0 : -1"
+    >
+      <span>{{ subTab.name }}</span>
+      <tooltip *ngIf="subTab.tooltip" [message]="subTab.tooltip"></tooltip>
     </a>
   </li>
 </ul>

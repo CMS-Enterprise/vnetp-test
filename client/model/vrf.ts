@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { L3Out } from './l3Out';
 import { Tenant } from './tenant';
 import { BridgeDomain } from './bridgeDomain';
 
@@ -34,6 +35,8 @@ export interface Vrf {
     policyControlEnforcementIngress: boolean;
     readonly tenant?: Tenant;
     tenantId: string;
+    readonly l3outs?: Array<L3Out>;
     readonly bridgeDomains?: Array<BridgeDomain>;
+    readonly tenantVersion?: number;
 }
 

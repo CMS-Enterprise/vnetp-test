@@ -5507,6 +5507,1240 @@
         ]
       }
     },
+    "/v2/app-centric/endpoint-groups/{endpointGroupId}/consumed-contracts/{contractId}": {
+      "post": {
+        "operationId": "addConsumedContractToEndpointGroupEndpointGroup",
+        "summary": "",
+        "description": "Add Consumed Contract to Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointGroupId",
+            "required": true,
+            "in": "path",
+            "description": "Endpoint Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the Endpoint Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "removeConsumedContractToEndpointGroupEndpointGroup",
+        "summary": "",
+        "description": "Remove Consumed Contract from Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointGroupId",
+            "required": true,
+            "in": "path",
+            "description": "Endpoint Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the Endpoint Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/{endpointGroupId}/intra-contracts/{contractId}": {
+      "post": {
+        "operationId": "addIntraContractToEndpointGroupEndpointGroup",
+        "summary": "",
+        "description": "Add Intra Contract to Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointGroupId",
+            "required": true,
+            "in": "path",
+            "description": "Endpoint Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the Endpoint Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "removeIntraContractToEndpointGroupEndpointGroup",
+        "summary": "",
+        "description": "Remove Intra Contract from Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointGroupId",
+            "required": true,
+            "in": "path",
+            "description": "Endpoint Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the Endpoint Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/{endpointGroupId}/consumed-contracts": {
+      "post": {
+        "operationId": "addManyConsumedContractsToEndpointGroupEndpointGroup",
+        "summary": "",
+        "description": "Add Many Consumed Contract to Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointGroupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/{endpointGroupId}/provided-contracts/{contractId}": {
+      "post": {
+        "operationId": "addProvidedContractToEndpointGroupEndpointGroup",
+        "summary": "",
+        "description": "Add Provided Contract to Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointGroupId",
+            "required": true,
+            "in": "path",
+            "description": "Endpoint Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the Endpoint Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "removeProvidedContractToEndpointGroupEndpointGroup",
+        "summary": "",
+        "description": "Remove Provided Contract from Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointGroupId",
+            "required": true,
+            "in": "path",
+            "description": "Endpoint Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the Endpoint Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/{endpointGroupId}/provided-contracts": {
+      "post": {
+        "operationId": "addManyProvidedContractsToEndpointGroupEndpointGroup",
+        "summary": "",
+        "description": "Add Many Provided Contract to Endpoint Group",
+        "parameters": [
+          {
+            "name": "endpointGroupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups": {
+      "post": {
+        "operationId": "createOneEndpointGroup",
+        "summary": "Create one EndpointGroup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      },
+      "get": {
+        "operationId": "getManyEndpointGroup",
+        "summary": "Get many EndpointGroup",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyEndpointGroupResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EndpointGroup"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/bulk": {
+      "post": {
+        "operationId": "createManyEndpointGroup",
+        "summary": "Create many EndpointGroup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManyEndpointGroupDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/EndpointGroup"
+                    }
+                  }
+                },
+                "required": [
+                  "bulk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EndpointGroup"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/{id}": {
+      "get": {
+        "operationId": "getOneEndpointGroup",
+        "summary": "Get one EndpointGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneEndpointGroup",
+        "summary": "Update one EndpointGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneEndpointGroup",
+        "summary": "Delete one EndpointGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneEndpointGroup",
+        "summary": "Soft delete one EndpointGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneEndpointGroup",
+        "summary": "Restore one EndpointGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/{id}/provision": {
+      "put": {
+        "operationId": "provisionOneEndpointGroup",
+        "summary": "Provision one EndpointGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-groups/{id}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionOneEndpointGroup",
+        "summary": "Deprovision one EndpointGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/contracts": {
+      "post": {
+        "operationId": "createOneContract",
+        "summary": "Create one Contract",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Contract"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contract"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      },
+      "get": {
+        "operationId": "getManyContract",
+        "summary": "Get many Contract",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyContractResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Contract"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      }
+    },
+    "/v2/app-centric/contracts/bulk": {
+      "post": {
+        "operationId": "createManyContract",
+        "summary": "Create many Contract",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManyContractDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Contract"
+                    }
+                  }
+                },
+                "required": [
+                  "bulk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Contract"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      }
+    },
+    "/v2/app-centric/contracts/{id}": {
+      "get": {
+        "operationId": "getOneContract",
+        "summary": "Get one Contract",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contract"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneContract",
+        "summary": "Update one Contract",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Contract"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contract"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneContract",
+        "summary": "Delete one Contract",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contract"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      }
+    },
+    "/v2/app-centric/contracts/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneContract",
+        "summary": "Soft delete one Contract",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      }
+    },
+    "/v2/app-centric/contracts/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneContract",
+        "summary": "Restore one Contract",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      }
+    },
+    "/v2/app-centric/contracts/{id}/provision": {
+      "put": {
+        "operationId": "provisionOneContract",
+        "summary": "Provision one Contract",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      }
+    },
+    "/v2/app-centric/contracts/{id}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionOneContract",
+        "summary": "Deprovision one Contract",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/contracts"
+        ]
+      }
+    },
     "/v1/network-security/nat-rules/bulk-import": {
       "post": {
         "operationId": "bulkImportNatRulesNatRule",
@@ -13301,6 +14535,32 @@
         ]
       }
     },
+    "/v2/app-centric/tenants/tenant-v2": {
+      "post": {
+        "operationId": "createOneV2TenantTenant",
+        "summary": "",
+        "description": "Create V2 Tenant",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenantV2Dto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/tenants"
+        ]
+      }
+    },
     "/v2/app-centric/tenants/{id}/cascade": {
       "delete": {
         "operationId": "cascadeDeleteTenantTenant",
@@ -16744,472 +18004,6 @@
         ]
       }
     },
-    "/v2/app-centric/contracts": {
-      "post": {
-        "operationId": "createOneContract",
-        "summary": "Create one Contract",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Contract"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Contract"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      },
-      "get": {
-        "operationId": "getManyContract",
-        "summary": "Get many Contract",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "fields",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "s",
-            "required": false,
-            "in": "query",
-            "description": "Where object for advanced AND/OR queries.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "title": "GetManyContractResponseDto",
-                  "type": "object",
-                  "properties": {
-                    "totalPages": {
-                      "type": "number"
-                    },
-                    "count": {
-                      "type": "number"
-                    },
-                    "total": {
-                      "type": "number"
-                    },
-                    "page": {
-                      "type": "number"
-                    },
-                    "pageCount": {
-                      "type": "number"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Contract"
-                      }
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "count",
-                    "total",
-                    "page",
-                    "pageCount",
-                    "totalPages"
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      }
-    },
-    "/v2/app-centric/contracts/bulk": {
-      "post": {
-        "operationId": "createManyContract",
-        "summary": "Create many Contract",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "title": "CreateManyContractDto",
-                "type": "object",
-                "properties": {
-                  "bulk": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/Contract"
-                    }
-                  }
-                },
-                "required": [
-                  "bulk"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Contract"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      }
-    },
-    "/v2/app-centric/contracts/{id}": {
-      "get": {
-        "operationId": "getOneContract",
-        "summary": "Get one Contract",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Contract"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      },
-      "put": {
-        "operationId": "updateOneContract",
-        "summary": "Update one Contract",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Contract"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Contract"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      },
-      "delete": {
-        "operationId": "deleteOneContract",
-        "summary": "Delete one Contract",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Contract"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      }
-    },
-    "/v2/app-centric/contracts/{id}/soft": {
-      "delete": {
-        "operationId": "softDeleteOneContract",
-        "summary": "Soft delete one Contract",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      }
-    },
-    "/v2/app-centric/contracts/{id}/restore": {
-      "patch": {
-        "operationId": "restoreOneContract",
-        "summary": "Restore one Contract",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      }
-    },
-    "/v2/app-centric/contracts/{id}/provision": {
-      "put": {
-        "operationId": "provisionOneContract",
-        "summary": "Provision one Contract",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      }
-    },
-    "/v2/app-centric/contracts/{id}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionOneContract",
-        "summary": "Deprovision one Contract",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/contracts"
-        ]
-      }
-    },
     "/v2/app-centric/app-centric-subnets": {
       "post": {
         "operationId": "createOneAppCentricSubnet",
@@ -17673,629 +18467,6 @@
         },
         "tags": [
           "v2/app-centric/app-centric-subnets"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/{endpointGroupId}/consumed-contracts/{contractId}": {
-      "post": {
-        "operationId": "addConsumedContractToEndpointGroupEndpointGroup",
-        "summary": "",
-        "description": "Add Consumed Contract to Endpoint Group",
-        "parameters": [
-          {
-            "name": "endpointGroupId",
-            "required": true,
-            "in": "path",
-            "description": "Endpoint Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the Endpoint Group.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      },
-      "delete": {
-        "operationId": "removeConsumedContractToEndpointGroupEndpointGroup",
-        "summary": "",
-        "description": "Remove Consumed Contract from Endpoint Group",
-        "parameters": [
-          {
-            "name": "endpointGroupId",
-            "required": true,
-            "in": "path",
-            "description": "Endpoint Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the Endpoint Group.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/{endpointGroupId}/provided-contracts/{contractId}": {
-      "post": {
-        "operationId": "addProvidedContractToEndpointGroupEndpointGroup",
-        "summary": "",
-        "description": "Add Provided Contract to Endpoint Group",
-        "parameters": [
-          {
-            "name": "endpointGroupId",
-            "required": true,
-            "in": "path",
-            "description": "Endpoint Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the Endpoint Group.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      },
-      "delete": {
-        "operationId": "removeProvidedContractToEndpointGroupEndpointGroup",
-        "summary": "",
-        "description": "Remove Provided Contract from Endpoint Group",
-        "parameters": [
-          {
-            "name": "endpointGroupId",
-            "required": true,
-            "in": "path",
-            "description": "Endpoint Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the Endpoint Group.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups": {
-      "post": {
-        "operationId": "createOneEndpointGroup",
-        "summary": "Create one EndpointGroup",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EndpointGroup"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      },
-      "get": {
-        "operationId": "getManyEndpointGroup",
-        "summary": "Get many EndpointGroup",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "fields",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "s",
-            "required": false,
-            "in": "query",
-            "description": "Where object for advanced AND/OR queries.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "title": "GetManyEndpointGroupResponseDto",
-                  "type": "object",
-                  "properties": {
-                    "totalPages": {
-                      "type": "number"
-                    },
-                    "count": {
-                      "type": "number"
-                    },
-                    "total": {
-                      "type": "number"
-                    },
-                    "page": {
-                      "type": "number"
-                    },
-                    "pageCount": {
-                      "type": "number"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/EndpointGroup"
-                      }
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "count",
-                    "total",
-                    "page",
-                    "pageCount",
-                    "totalPages"
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/bulk": {
-      "post": {
-        "operationId": "createManyEndpointGroup",
-        "summary": "Create many EndpointGroup",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "title": "CreateManyEndpointGroupDto",
-                "type": "object",
-                "properties": {
-                  "bulk": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/EndpointGroup"
-                    }
-                  }
-                },
-                "required": [
-                  "bulk"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/EndpointGroup"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/{id}": {
-      "get": {
-        "operationId": "getOneEndpointGroup",
-        "summary": "Get one EndpointGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      },
-      "put": {
-        "operationId": "updateOneEndpointGroup",
-        "summary": "Update one EndpointGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EndpointGroup"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      },
-      "delete": {
-        "operationId": "deleteOneEndpointGroup",
-        "summary": "Delete one EndpointGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/{id}/soft": {
-      "delete": {
-        "operationId": "softDeleteOneEndpointGroup",
-        "summary": "Soft delete one EndpointGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/{id}/restore": {
-      "patch": {
-        "operationId": "restoreOneEndpointGroup",
-        "summary": "Restore one EndpointGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/{id}/provision": {
-      "put": {
-        "operationId": "provisionOneEndpointGroup",
-        "summary": "Provision one EndpointGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-groups/{id}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionOneEndpointGroup",
-        "summary": "Deprovision one EndpointGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-groups"
         ]
       }
     },
@@ -19228,6 +19399,1300 @@
         },
         "tags": [
           "v2/app-centric/route-profiles"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/consumed-contracts/{contractId}": {
+      "post": {
+        "operationId": "addConsumedContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Consumed Contract to Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "removeConsumedContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Remove Consumed Contract from Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/consumed-contracts": {
+      "post": {
+        "operationId": "addManyConsumedContractsToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Many Consumed Contract to Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/provided-contracts/{contractId}": {
+      "post": {
+        "operationId": "addProvidedContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Provided Contract to Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "removeProvidedContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Remove Provided Contract from Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/intra-contracts/{contractId}": {
+      "post": {
+        "operationId": "addIntraContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Intra Contract to Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "removeIntraContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Remove Intra Contract from Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/provided-contracts": {
+      "post": {
+        "operationId": "addManyProvidedContractsToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Many Provided Contract to Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups": {
+      "post": {
+        "operationId": "createOneEndpointSecurityGroup",
+        "summary": "Create one EndpointSecurityGroup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EndpointSecurityGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "get": {
+        "operationId": "getManyEndpointSecurityGroup",
+        "summary": "Get many EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyEndpointSecurityGroupResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EndpointSecurityGroup"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/bulk": {
+      "post": {
+        "operationId": "createManyEndpointSecurityGroup",
+        "summary": "Create many EndpointSecurityGroup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManyEndpointSecurityGroupDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/EndpointSecurityGroup"
+                    }
+                  }
+                },
+                "required": [
+                  "bulk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EndpointSecurityGroup"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{id}": {
+      "get": {
+        "operationId": "getOneEndpointSecurityGroup",
+        "summary": "Get one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneEndpointSecurityGroup",
+        "summary": "Update one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EndpointSecurityGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneEndpointSecurityGroup",
+        "summary": "Delete one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneEndpointSecurityGroup",
+        "summary": "Soft delete one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneEndpointSecurityGroup",
+        "summary": "Restore one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{id}/provision": {
+      "put": {
+        "operationId": "provisionOneEndpointSecurityGroup",
+        "summary": "Provision one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{id}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionOneEndpointSecurityGroup",
+        "summary": "Deprovision one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/selectors/selectorCheck": {
+      "post": {
+        "operationId": "createSelectorCheck",
+        "summary": "Create Selector Check",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Selector"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Selector"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      }
+    },
+    "/v2/app-centric/selectors/:/bulk": {
+      "post": {
+        "operationId": "bulkUploadSelectors",
+        "summary": "Bulk Upload Selectors",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Selector"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      }
+    },
+    "/v2/app-centric/selectors": {
+      "post": {
+        "operationId": "createOneSelector",
+        "summary": "Create one Selector",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Selector"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Selector"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      },
+      "get": {
+        "operationId": "getManySelector",
+        "summary": "Get many Selector",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManySelectorResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Selector"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      }
+    },
+    "/v2/app-centric/selectors/bulk": {
+      "post": {
+        "operationId": "createManySelector",
+        "summary": "Create many Selector",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManySelectorDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Selector"
+                    }
+                  }
+                },
+                "required": [
+                  "bulk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Selector"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      }
+    },
+    "/v2/app-centric/selectors/{id}": {
+      "get": {
+        "operationId": "getOneSelector",
+        "summary": "Get one Selector",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Selector"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneSelector",
+        "summary": "Update one Selector",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Selector"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Selector"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneSelector",
+        "summary": "Delete one Selector",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Selector"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      }
+    },
+    "/v2/app-centric/selectors/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneSelector",
+        "summary": "Soft delete one Selector",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      }
+    },
+    "/v2/app-centric/selectors/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneSelector",
+        "summary": "Restore one Selector",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      }
+    },
+    "/v2/app-centric/selectors/{id}/provision": {
+      "put": {
+        "operationId": "provisionOneSelector",
+        "summary": "Provision one Selector",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
+        ]
+      }
+    },
+    "/v2/app-centric/selectors/{id}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionOneSelector",
+        "summary": "Deprovision one Selector",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/selectors"
         ]
       }
     },
@@ -20417,6 +21882,67 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/app-id-runtime"
+        ]
+      }
+    },
+    "/v1/runtime-data/app-id-runtime/clean-applications": {
+      "post": {
+        "operationId": "cleanupUnusedPanosApplicationsAppIdRuntime",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/runtime-data/app-id-runtime"
+        ]
+      }
+    },
+    "/v1/runtime-data/app-id-runtime/auto-migrate/{tierId}": {
+      "post": {
+        "operationId": "autoMigrateAppIdRuntime",
+        "parameters": [
+          {
+            "name": "tierId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/runtime-data/app-id-runtime"
+        ]
+      }
+    },
+    "/v1/runtime-data/app-id-runtime/update-tiers": {
+      "post": {
+        "operationId": "updateTierAppVersionsAppIdRuntime",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTierAppVersionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
           }
         },
         "tags": [
@@ -21753,6 +23279,10 @@
             "items": {
               "$ref": "#/components/schemas/TierGroup"
             }
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -21831,6 +23361,100 @@
           "tenantId"
         ]
       },
+      "L3Out": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "bridgeDomains": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BridgeDomain"
+            }
+          },
+          "bridgeDomainsForRouteProfile": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BridgeDomain"
+            }
+          },
+          "vrf": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Vrf"
+              }
+            ]
+          },
+          "vrfId": {
+            "type": "string"
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "vrfId",
+          "tenantId"
+        ]
+      },
       "Vrf": {
         "type": "object",
         "properties": {
@@ -21898,12 +23522,23 @@
           "tenantId": {
             "type": "string"
           },
+          "l3outs": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/L3Out"
+            }
+          },
           "bridgeDomains": {
             "readOnly": true,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/BridgeDomain"
             }
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -22021,96 +23656,6 @@
           "ipDataPlaneLearning",
           "tenantId",
           "bridgeDomainId"
-        ]
-      },
-      "L3Out": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "readOnly": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "version": {
-            "type": "number",
-            "readOnly": true
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedAt": {
-            "format": "date-time",
-            "type": "string",
-            "readOnly": true
-          },
-          "provisionedVersion": {
-            "type": "number",
-            "readOnly": true
-          },
-          "name": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          },
-          "alias": {
-            "type": "string",
-            "maxLength": 100
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 500
-          },
-          "bridgeDomains": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
-          },
-          "bridgeDomainsForRouteProfile": {
-            "readOnly": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BridgeDomain"
-            }
-          },
-          "vrf": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Vrf"
-              }
-            ]
-          },
-          "vrfId": {
-            "type": "string"
-          },
-          "tenant": {
-            "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Tenant"
-              }
-            ]
-          },
-          "tenantId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "vrfId",
-          "tenantId"
         ]
       },
       "RouteProfile": {
@@ -22240,6 +23785,10 @@
             "type": "boolean",
             "description": "ARP Flooding enabled, default: true."
           },
+          "hostBasedRouting": {
+            "type": "boolean",
+            "description": "Host Based Routing enabled, default: false."
+          },
           "bdMacAddress": {
             "type": "string",
             "description": "Bridge Domain MAC address, default: null."
@@ -22321,6 +23870,7 @@
         "required": [
           "unicastRouting",
           "arpFlooding",
+          "hostBasedRouting",
           "bdMacAddress",
           "limitLocalIpLearning",
           "epMoveDetectionModeGarp",
@@ -22639,6 +24189,236 @@
           "contractId"
         ]
       },
+      "Selector": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "selectorType": {
+            "type": "string",
+            "enum": [
+              "Tag",
+              "EPG",
+              "IpSubnet"
+            ]
+          },
+          "IpSubnet": {
+            "type": "string"
+          },
+          "tagKey": {
+            "type": "string"
+          },
+          "valueOperator": {
+            "type": "string"
+          },
+          "tagValue": {
+            "type": "string"
+          },
+          "endpointGroupName": {
+            "type": "string"
+          },
+          "endpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
+          "endpointGroupId": {
+            "type": "string"
+          },
+          "endpointSecurityGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointSecurityGroup"
+              }
+            ]
+          },
+          "endpointSecurityGroupId": {
+            "type": "string"
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "endpointSecurityGroupId",
+          "tenantId"
+        ]
+      },
+      "EndpointSecurityGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "provisionedVersion": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "adminState": {
+            "type": "string",
+            "enum": [
+              "AdminUp",
+              "AdminShut"
+            ]
+          },
+          "intraEsgIsolation": {
+            "type": "boolean",
+            "description": "Intra-ESG isolation policies provide full isolation for virtual or physical endpoints;no communication is allowed between endpoints in an ESG that is operating with isolation enforced."
+          },
+          "preferredGroupMember": {
+            "type": "boolean"
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "consumedContracts": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          },
+          "providedContracts": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          },
+          "intraContracts": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          },
+          "selectors": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Selector"
+            }
+          },
+          "vrf": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Vrf"
+              }
+            ]
+          },
+          "vrfId": {
+            "type": "string"
+          },
+          "applicationProfile": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ApplicationProfile"
+              }
+            ]
+          },
+          "applicationProfileId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "intraEsgIsolation",
+          "preferredGroupMember",
+          "tenantId",
+          "vrfId",
+          "applicationProfileId"
+        ]
+      },
       "Contract": {
         "type": "object",
         "properties": {
@@ -22712,11 +24492,39 @@
               "$ref": "#/components/schemas/EndpointGroup"
             }
           },
+          "intraEndpointGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointGroup"
+            }
+          },
           "subjects": {
             "readOnly": true,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Subject"
+            }
+          },
+          "consumingEndpointSecurityGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointSecurityGroup"
+            }
+          },
+          "providingEndpointSecurityGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointSecurityGroup"
+            }
+          },
+          "intraEndpointSecurityGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointSecurityGroup"
             }
           }
         },
@@ -22782,11 +24590,13 @@
               "BridgeDomain",
               "Contract",
               "EndpointGroup",
+              "EndpointSecurityGroup",
               "Filter",
               "FilterEntry",
               "Subject",
               "Vrf",
               "RouteProfile",
+              "Selector",
               "WanForm",
               "ExternalRoute",
               "WanFormSubnet"
@@ -23136,6 +24946,22 @@
             "items": {
               "$ref": "#/components/schemas/WanForm"
             }
+          },
+          "appCentricTenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "appCentricTenantId": {
+            "type": "string",
+            "readOnly": true
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -23566,6 +25392,13 @@
               "$ref": "#/components/schemas/FilterEntry"
             }
           },
+          "l3outs": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/L3Out"
+            }
+          },
           "auditLogs": {
             "readOnly": true,
             "type": "array",
@@ -23580,8 +25413,43 @@
                 "$ref": "#/components/schemas/WanForm"
               }
             ]
+          },
+          "datacenterId": {
+            "type": "string",
+            "readOnly": true
+          },
+          "datacenter": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Datacenter"
+              }
+            ]
+          },
+          "multiVrf": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "multiL3out": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "allowServiceGraphBypass": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
-        }
+        },
+        "required": [
+          "datacenterId",
+          "datacenter",
+          "multiVrf",
+          "multiL3out",
+          "allowServiceGraphBypass"
+        ]
       },
       "EndpointGroup": {
         "type": "object",
@@ -23682,11 +25550,26 @@
               "$ref": "#/components/schemas/Contract"
             }
           },
+          "intraContracts": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          },
           "aciRuntimes": {
             "readOnly": true,
             "allOf": [
               {
                 "$ref": "#/components/schemas/AciRuntime"
+              }
+            ]
+          },
+          "selector": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Selector"
               }
             ]
           }
@@ -23803,6 +25686,9 @@
             "type": "number",
             "minimum": 1,
             "maximum": 4094
+          },
+          "hostBasedRouting": {
+            "type": "boolean"
           },
           "vcdVlanType": {
             "type": "string",
@@ -24267,7 +26153,8 @@
             "enum": [
               "Static",
               "DynamicIp",
-              "DynamicIpAndPort"
+              "DynamicIpAndPort",
+              "Nat64"
             ]
           },
           "direction": {
@@ -24550,6 +26437,10 @@
             "items": {
               "$ref": "#/components/schemas/NatRule"
             }
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -24730,7 +26621,9 @@
             "enum": [
               "IpAddress",
               "NetworkObject",
-              "NetworkObjectGroup"
+              "NetworkObjectGroup",
+              "EndpointGroup",
+              "EndpointSecurityGroup"
             ]
           },
           "destinationAddressType": {
@@ -24738,7 +26631,9 @@
             "enum": [
               "IpAddress",
               "NetworkObject",
-              "NetworkObjectGroup"
+              "NetworkObjectGroup",
+              "EndpointGroup",
+              "EndpointSecurityGroup"
             ]
           },
           "serviceType": {
@@ -24777,6 +26672,12 @@
             "type": "string"
           },
           "serviceObjectGroupId": {
+            "type": "string"
+          },
+          "sourceEndpointGroupId": {
+            "type": "string"
+          },
+          "destinationEndpointGroupId": {
             "type": "string"
           },
           "firewallRuleGroupId": {
@@ -24844,8 +26745,28 @@
               "$ref": "#/components/schemas/Zone"
             }
           },
+          "sourceEndpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
+          "destinationEndpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
           "hitCount": {
             "type": "number"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           },
           "panosApplications": {
             "readOnly": false,
@@ -24915,7 +26836,8 @@
               "Intravrf",
               "Intervrf",
               "External",
-              "ZoneBased"
+              "ZoneBased",
+              "OneArmServiceGraph"
             ]
           },
           "tierId": {
@@ -24931,12 +26853,17 @@
           "runtimeDataLastRefreshed": {
             "format": "date-time",
             "type": "string"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
           "name",
           "type",
-          "tierId"
+          "tierId",
+          "tenantVersion"
         ]
       },
       "NatRuleGroup": {
@@ -25001,6 +26928,10 @@
           "runtimeDataLastRefreshed": {
             "format": "date-time",
             "type": "string"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           }
         },
         "required": [
@@ -25981,6 +27912,10 @@
               "$ref": "#/components/schemas/LoadBalancerRoute"
             }
           },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
+          },
           "appVersion": {
             "type": "string",
             "readOnly": true
@@ -26072,7 +28007,9 @@
             "enum": [
               "IpAddress",
               "NetworkObject",
-              "NetworkObjectGroup"
+              "NetworkObjectGroup",
+              "EndpointGroup",
+              "EndpointSecurityGroup"
             ]
           },
           "destinationAddressType": {
@@ -26080,7 +28017,9 @@
             "enum": [
               "IpAddress",
               "NetworkObject",
-              "NetworkObjectGroup"
+              "NetworkObjectGroup",
+              "EndpointGroup",
+              "EndpointSecurityGroup"
             ]
           },
           "serviceType": {
@@ -26119,6 +28058,12 @@
             "type": "string"
           },
           "serviceObjectGroupId": {
+            "type": "string"
+          },
+          "sourceEndpointGroupId": {
+            "type": "string"
+          },
+          "destinationEndpointGroupId": {
             "type": "string"
           },
           "firewallRuleGroupId": {
@@ -26186,8 +28131,28 @@
               "$ref": "#/components/schemas/Zone"
             }
           },
+          "sourceEndpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
+          "destinationEndpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
           "hitCount": {
             "type": "number"
+          },
+          "tenantVersion": {
+            "type": "number",
+            "readOnly": true
           },
           "panosApplications": {
             "readOnly": false,
@@ -26414,7 +28379,8 @@
             "enum": [
               "Static",
               "DynamicIp",
-              "DynamicIpAndPort"
+              "DynamicIpAndPort",
+              "Nat64"
             ]
           },
           "direction": {
@@ -27205,6 +29171,20 @@
           "failed"
         ]
       },
+      "CreateTenantV2Dto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the tenant",
+            "minLength": 3,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
       "SelfServiceRawConfig": {
         "type": "object",
         "properties": {
@@ -27891,14 +29871,22 @@
           "datacenterId": {
             "type": "string"
           },
+          "appIdVersion": {
+            "type": "string"
+          },
           "tierId": {
             "type": "string"
           }
         },
         "required": [
           "type",
+          "appIdVersion",
           "tierId"
         ]
+      },
+      "UpdateTierAppVersionDto": {
+        "type": "object",
+        "properties": {}
       },
       "PaginationDTO": {
         "type": "object",

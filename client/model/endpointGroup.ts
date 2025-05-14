@@ -14,6 +14,7 @@ import { Tenant } from './tenant';
 import { BridgeDomain } from './bridgeDomain';
 import { ApplicationProfile } from './applicationProfile';
 import { Contract } from './contract';
+import { Selector } from './selector';
 
 
 export interface EndpointGroup { 
@@ -39,6 +40,8 @@ export interface EndpointGroup {
     applicationProfileId: string;
     readonly consumedContracts?: Array<Contract>;
     readonly providedContracts?: Array<Contract>;
+    readonly intraContracts?: Array<Contract>;
     readonly aciRuntimes?: AciRuntime;
+    readonly selector?: Selector;
 }
 

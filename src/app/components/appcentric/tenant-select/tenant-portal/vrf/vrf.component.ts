@@ -24,7 +24,7 @@ export class VrfComponent implements OnInit {
   public perPage = 20;
   public vrfs = {} as GetManyVrfResponseDto;
   public tableComponentDto = new TableComponentDto();
-  private vrfModalSubscription: Subscription;
+  public vrfModalSubscription: Subscription;
   public tenantId: string;
 
   public isLoading = false;
@@ -181,7 +181,7 @@ export class VrfComponent implements OnInit {
     this.ngx.getModal('vrfModal').open();
   }
 
-  private subscribeToVrfModal(): void {
+  public subscribeToVrfModal(): void {
     this.vrfModalSubscription = this.ngx.getModal('vrfModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('vrfModal');
       this.vrfModalSubscription.unsubscribe();

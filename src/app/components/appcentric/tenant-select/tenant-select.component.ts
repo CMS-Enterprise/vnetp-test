@@ -1,10 +1,12 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Tenant, GetManyTenantResponseDto, V2AppCentricTenantsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
@@ -19,9 +21,12 @@ export class TenantSelectComponent implements OnInit {
   public perPage = 20;
   public tenants = {} as GetManyTenantResponseDto;
   public tableComponentDto = new TableComponentDto();
-  private tenantModalSubscription: Subscription;
+  public tenantModalSubscription: Subscription;
   selectedTenantToDelete: Tenant;
   objectType = 'tenant';
+  public isAdminPortalMode = false;
+  public isTenantV2Mode = false;
+  public currentMode: ApplicationMode;
 
   public isLoading = false;
 
@@ -42,13 +47,31 @@ export class TenantSelectComponent implements OnInit {
   typeDeletemodalSubscription: Subscription;
 
   constructor(
+    private router: Router,
+    private route: ActivatedRoute,
     private tenantService: V2AppCentricTenantsService,
     private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
   ) {}
 
   ngOnInit(): void {
+    this.determineApplicationMode();
     this.getTenants();
+  }
+
+  private determineApplicationMode(): void {
+    // Check route data for application mode
+    this.route.data.subscribe(data => {
+      if (data && data.mode) {
+        this.currentMode = data.mode;
+        this.isAdminPortalMode = this.currentMode === ApplicationMode.ADMINPORTAL;
+        this.isTenantV2Mode = this.currentMode === ApplicationMode.TENANTV2;
+      } else {
+        // Fallback to checking URL path
+        this.isAdminPortalMode = this.router.url.includes('adminportal');
+        this.isTenantV2Mode = this.router.url.includes('tenant-v2');
+      }
+    });
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -57,7 +80,12 @@ export class TenantSelectComponent implements OnInit {
   }
 
   public getTenants(): void {
+    let eventParams;
+    if (this.isAdminPortalMode) {
+      eventParams = 'tenantVersion||eq||2';
+    }
     this.isLoading = true;
+    console.log('eventParams', eventParams);
     // let eventParams;
     // if (event) {
     //   this.tableComponentDto.page = event.page ? event.page : 1;
@@ -68,22 +96,42 @@ export class TenantSelectComponent implements OnInit {
     //     eventParams = `${propertyName}||cont||${searchText}`;
     //   }
     // }
-    this.tenantService
-      .getManyTenant({
-        page: this.tableComponentDto.page,
-        perPage: this.tableComponentDto.perPage,
-      })
-      .subscribe(
-        data => {
-          this.tenants = data;
-        },
-        () => {
-          this.tenants = null;
-        },
-        () => {
-          this.isLoading = false;
-        },
-      );
+    if (eventParams === undefined) {
+      this.tenantService
+        .getManyTenant({
+          page: this.tableComponentDto.page,
+          perPage: this.tableComponentDto.perPage,
+        })
+        .subscribe(
+          data => {
+            this.tenants = data;
+          },
+          () => {
+            this.tenants = null;
+          },
+          () => {
+            this.isLoading = false;
+          },
+        );
+    } else {
+      this.tenantService
+        .getManyTenant({
+          filter: [`${eventParams}`],
+          page: this.tableComponentDto.page,
+          perPage: this.tableComponentDto.perPage,
+        })
+        .subscribe(
+          data => {
+            this.tenants = data;
+          },
+          () => {
+            this.tenants = null;
+          },
+          () => {
+            this.isLoading = false;
+          },
+        );
+    }
   }
 
   public openTenantModal(modalMode: ModalMode, tenant?: Tenant): void {
@@ -93,6 +141,36 @@ export class TenantSelectComponent implements OnInit {
 
     if (modalMode === ModalMode.Edit) {
       dto.Tenant = tenant;
+    }
+
+    // Set mode flags
+    dto.isAdminPortalMode = this.isAdminPortalMode;
+    dto.isTenantV2Mode = this.isTenantV2Mode;
+
+    // Initialize AdminPortal specific properties when in admin portal mode
+    if (this.isAdminPortalMode) {
+      // Set default values for AdminPortal specific properties
+      dto.northSouthFirewallVendor = 'PANOS';
+      dto.northSouthFirewallArchitecture = 'Virtual';
+      dto.northSouthHa = true;
+      dto.eastWestFirewallVendor = 'PANOS';
+      dto.eastWestFirewallArchitecture = 'Virtual';
+      dto.eastWestHa = true;
+
+      // Initialize feature flags
+      dto.featureFlags = {
+        northSouthAppId: true,
+        eastWestAppId: true,
+        nat64NorthSouth: false,
+        eastWestAllowSgBypass: false,
+        eastWestNat: false,
+      };
+
+      // If editing, populate with existing tenant data if available
+      if (modalMode === ModalMode.Edit && tenant) {
+        // Here you would normally populate with existing data from the tenant
+        // For now, we're just using defaults since we don't have the actual properties
+      }
     }
 
     this.subscribeToTenantModal();
@@ -166,7 +244,7 @@ export class TenantSelectComponent implements OnInit {
     // SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  private subscribeToTenantModal(): void {
+  public subscribeToTenantModal(): void {
     this.tenantModalSubscription = this.ngx.getModal('tenantModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('tenantModal');
       this.tenantModalSubscription.unsubscribe();

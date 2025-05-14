@@ -1,10 +1,10 @@
-<app-tier-select></app-tier-select>
+<app-tier-select *ngIf="applicationMode === ApplicationMode.NETCENTRIC"></app-tier-select>
 
 <tooltip *ngIf="navIndex === 0 && filteredResults" [message]="filteredHelpText?.FilteredResults"></tooltip>
 
-<h1 *ngIf="navIndex === 0">Service Objects</h1>
+<h1 *ngIf="navIndex === 0 && applicationMode === ApplicationMode.NETCENTRIC">Service Objects</h1>
 
-<h1 *ngIf="navIndex === 1">Service Object Groups</h1>
+<h1 *ngIf="navIndex === 1 && applicationMode === ApplicationMode.NETCENTRIC">Service Object Groups</h1>
 
 <ng-container *ngIf="currentTier; else warningMessage">
   <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>

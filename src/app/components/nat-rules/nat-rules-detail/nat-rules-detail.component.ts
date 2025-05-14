@@ -39,6 +39,7 @@ import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-s
 import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';
 import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
 import { RuntimeDataService } from '../../../services/runtime-data.service';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 
 @Component({
   selector: 'app-nat-rules-detail',
@@ -90,6 +91,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   isRefreshingRuntimeData = false;
   jobStatus: string;
 
+  applicationMode: ApplicationMode;
+  ApplicationMode = ApplicationMode;
+
   // Templates
   @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
   @ViewChild('originalServiceType') originalServiceTemplate: TemplateRef<any>;
@@ -135,6 +139,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
     private tableContextService: TableContextService,
     private hitcountService: V1RuntimeDataHitcountService,
     private runtimeDataService: RuntimeDataService,
+    private activatedRoute: ActivatedRoute,
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<NatRule>();
     advancedSearchAdapterObject.setService(this.natRuleService);
@@ -143,14 +148,17 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
-      if (cd) {
-        this.tiers = cd.tiers;
-        this.datacenterService.lockDatacenter();
-        this.Id += this.route.snapshot.paramMap.get('id');
-        this.currentTierIds = this.datacenterService.currentTiersValue;
-        this.getNatRuleGroup();
-      }
+    this.activatedRoute.data.subscribe(data => {
+      this.applicationMode = data.mode;
+      this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+        if (cd) {
+          this.tiers = cd.tiers;
+          this.datacenterService.lockDatacenter();
+          this.Id += this.route.snapshot.paramMap.get('id');
+          this.currentTierIds = this.datacenterService.currentTiersValue;
+          this.getNatRuleGroup();
+        }
+      });
     });
   }
 
@@ -612,8 +620,8 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   checkUndeployedChanges(rule: NatRule): boolean {
-    console.log('rule', rule);
-    console.log('this.NatRuleGroup', this.NatRuleGroup);
+    // console.log('rule', rule);
+    // console.log('this.NatRuleGroup', this.NatRuleGroup);
     if (!this.NatRuleGroup.provisionedAt || !rule.updatedAt) {
       return false;
     }

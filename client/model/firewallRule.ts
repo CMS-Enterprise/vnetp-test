@@ -13,6 +13,7 @@ import { ServiceObjectGroup } from './serviceObjectGroup';
 import { NetworkObject } from './networkObject';
 import { Zone } from './zone';
 import { ServiceObject } from './serviceObject';
+import { EndpointGroup } from './endpointGroup';
 import { NetworkObjectGroup } from './networkObjectGroup';
 import { PanosApplication } from './panosApplication';
 
@@ -44,6 +45,8 @@ export interface FirewallRule {
     destinationPorts?: string;
     serviceObjectId?: string;
     serviceObjectGroupId?: string;
+    sourceEndpointGroupId?: string;
+    destinationEndpointGroupId?: string;
     firewallRuleGroupId: string;
     readonly sourceNetworkObject?: NetworkObject;
     readonly sourceNetworkObjectGroup?: NetworkObjectGroup;
@@ -53,7 +56,10 @@ export interface FirewallRule {
     readonly serviceObjectGroup?: ServiceObjectGroup;
     toZone?: Array<Zone>;
     fromZone?: Array<Zone>;
+    readonly sourceEndpointGroup?: EndpointGroup;
+    readonly destinationEndpointGroup?: EndpointGroup;
     hitCount?: number;
+    readonly tenantVersion?: number;
     panosApplications?: Array<PanosApplication>;
 }
 export enum FirewallRuleDirectionEnum {
@@ -73,12 +79,16 @@ export enum FirewallRuleProtocolEnum {
 export enum FirewallRuleSourceAddressTypeEnum {
     IpAddress = 'IpAddress',
     NetworkObject = 'NetworkObject',
-    NetworkObjectGroup = 'NetworkObjectGroup'
+    NetworkObjectGroup = 'NetworkObjectGroup',
+    EndpointGroup = 'EndpointGroup',
+    EndpointSecurityGroup = 'EndpointSecurityGroup'
 };
 export enum FirewallRuleDestinationAddressTypeEnum {
     IpAddress = 'IpAddress',
     NetworkObject = 'NetworkObject',
-    NetworkObjectGroup = 'NetworkObjectGroup'
+    NetworkObjectGroup = 'NetworkObjectGroup',
+    EndpointGroup = 'EndpointGroup',
+    EndpointSecurityGroup = 'EndpointSecurityGroup'
 };
 export enum FirewallRuleServiceTypeEnum {
     Port = 'Port',

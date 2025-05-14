@@ -65,13 +65,13 @@
           required
         />
 
-        <div class="form-group col-md-3">
-          <button id="getAccountsButton" *ngIf="!showTenantButton" class="btn btn-primary btn-lg" type="submit">Get Accounts</button>
-        </div>
-
         <div *ngIf="form.submitted && password.invalid" class="invalid-feedback">
           <div *ngIf="password.errors.required">Password is required</div>
         </div>
+      </div>
+
+      <div class="button-container">
+        <button id="getAccountsButton" *ngIf="!showTenantButton" class="btn btn-primary btn-lg" type="submit">Get Accounts</button>
       </div>
 
       <div *ngIf="errorMessage" class="alert alert-danger mt-3">
@@ -118,13 +118,22 @@
         >
           <option value="netcentric">Netcentric (Default)</option>
           <option value="appcentric">Appcentric</option>
+          <option value="TenantV2">TenantV2</option>
         </select>
       </div>
 
-      <button *ngIf="!globalOnlyUser" class="btn btn-primary btn-lg" (click)="setTenantAndNavigate(selectedTenant, selectedMode)">
-        Select Account
-      </button>
-      <button *ngIf="showAdminPortalButton" class="btn btn-primary btn-lg" (click)="navToAdminPortal(selectedTenant)">Admin Portal</button>
+      <div class="login-buttons">
+        <button
+          *ngIf="showAccountSelectionButton"
+          class="btn btn-primary btn-lg"
+          (click)="setTenantAndNavigate(selectedTenant, selectedMode)"
+        >
+          Select Account
+        </button>
+        <button *ngIf="showAdminPortalButton" class="btn btn-primary btn-lg" (click)="navToAdminPortal(selectedTenant)">
+          Admin Portal
+        </button>
+      </div>
     </form>
   </div>
 </div>

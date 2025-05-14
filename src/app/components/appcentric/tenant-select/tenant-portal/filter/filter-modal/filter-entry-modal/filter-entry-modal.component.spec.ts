@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -8,6 +9,9 @@ import { MockFontAwesomeComponent, MockIconButtonComponent, MockNgxSmartModalCom
 import { MockProvider } from 'src/test/mock-providers';
 
 import { FilterEntryModalComponent } from './filter-entry-modal.component';
+import { V2AppCentricFilterEntriesService } from 'client';
+import { By } from '@angular/platform-browser';
+import { ModalMode } from 'src/app/models/other/modal-mode';
 
 describe('FilterEntryModalComponent', () => {
   let component: FilterEntryModalComponent;
@@ -36,6 +40,18 @@ describe('FilterEntryModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have correct required and optional fields by default', () => {
+    const requiredFields = ['name'];
+    const optionalFields = ['alias', 'description'];
+
+    requiredFields.forEach(r => {
+      expect(isRequired(r)).toBe(true);
+    });
+    optionalFields.forEach(r => {
+      expect(isRequired(r)).toBe(false);
+    });
   });
 
   describe('etherType', () => {
@@ -199,6 +215,67 @@ describe('FilterEntryModalComponent', () => {
 
       destinationToPort.setValue(1234);
       expect(destinationToPort.valid).toBeTruthy();
+    });
+  });
+
+  it('should call to create a Filter Entry', () => {
+    const service = TestBed.inject(V2AppCentricFilterEntriesService);
+    const createFilterEntrySpy = jest.spyOn(service, 'createOneFilterEntry');
+
+    component.modalMode = ModalMode.Create;
+    component.form.setValue({
+      name: 'filter-entry1',
+      arpFlag: null,
+      destinationFromPort: null,
+      destinationToPort: null,
+      sourceFromPort: null,
+      sourceToPort: null,
+      matchOnlyFragments: false,
+      tcpFlags: null,
+      stateful: null,
+      ipProtocol: 'eigrp',
+      etherType: 'ip',
+      alias: '',
+      description: 'description!',
+    });
+
+    const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));
+    saveButton.nativeElement.click();
+
+    expect(createFilterEntrySpy).toHaveBeenCalled();
+  });
+
+  it('should call ngx.close with the correct argument when cancelled', () => {
+    const ngx = component['ngx'];
+
+    const ngxSpy = jest.spyOn(ngx, 'close');
+
+    component['closeModal']();
+
+    expect(ngxSpy).toHaveBeenCalledWith('filterEntryModal');
+  });
+
+  it('should reset the form when closing the modal', () => {
+    component.form.controls.description.setValue('Test');
+
+    const cancelButton = fixture.debugElement.query(By.css('.btn.btn-link'));
+    cancelButton.nativeElement.click();
+
+    expect(component.form.controls.description.value).toBe('');
+  });
+
+  describe('getData', () => {
+    const createFilterEntryDto = () => ({
+      ModalMode: ModalMode.Edit,
+      filterEntryId: { id: 1 },
+    });
+    it('should run getData', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createFilterEntryDto());
+
+      component.getData();
+
+      expect(component.form.controls.description.enabled).toBe(true);
     });
   });
 });

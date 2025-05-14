@@ -27,7 +27,7 @@
     </thead>
     <tbody>
       <tr *ngIf="data && data?.data?.length === 0" class="text-center">
-        <td [attr.colspan]="config.columns.length">No Objects in this Tier</td>
+        <td [attr.colspan]="config.columns.length">No Objects in this Table</td>
       </tr>
       <ng-template
         ngFor
@@ -39,7 +39,7 @@
         "
       >
         <tr
-          [ngStyle]="config.rowStyle ? config.rowStyle(datum) : null"
+          [ngStyle]="getRowStyle(datum)"
           (click)="handleRowClick($event, datum)"
           [class.expandableRow]="expandableRows"
           [attr.aria-expanded]="datum.expanded ? 'true' : 'false'"

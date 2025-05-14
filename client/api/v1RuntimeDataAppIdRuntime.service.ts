@@ -25,6 +25,10 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface AutoMigrateAppIdRuntimeRequestParams {
+    tierId: string;
+}
+
 export interface CreateRuntimeDataJobAppIdRuntimeRequestParams {
     appIdRuntimeJobCreateDto: AppIdRuntimeJobCreateDto;
 }
@@ -50,6 +54,10 @@ export interface GetManyAppIdRuntimeRequestParams {
     fields?: Array<string>;
     /** Where object for advanced AND/OR queries. */
     s?: string;
+}
+
+export interface UpdateTierAppVersionsAppIdRuntimeRequestParams {
+    body: object;
 }
 
 
@@ -111,6 +119,91 @@ export class V1RuntimeDataAppIdRuntimeService {
             throw Error("key may not be null if value is not object or array");
         }
         return httpParams;
+    }
+
+    /**
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public autoMigrateAppIdRuntime(requestParameters: AutoMigrateAppIdRuntimeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public autoMigrateAppIdRuntime(requestParameters: AutoMigrateAppIdRuntimeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public autoMigrateAppIdRuntime(requestParameters: AutoMigrateAppIdRuntimeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public autoMigrateAppIdRuntime(requestParameters: AutoMigrateAppIdRuntimeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const tierId = requestParameters.tierId;
+        if (tierId === null || tierId === undefined) {
+            throw new Error('Required parameter tierId was null or undefined when calling autoMigrateAppIdRuntime.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/runtime-data/app-id-runtime/auto-migrate/${encodeURIComponent(String(tierId))}`,
+            null,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public cleanupUnusedPanosApplicationsAppIdRuntime(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public cleanupUnusedPanosApplicationsAppIdRuntime(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public cleanupUnusedPanosApplicationsAppIdRuntime(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public cleanupUnusedPanosApplicationsAppIdRuntime(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/runtime-data/app-id-runtime/clean-applications`,
+            null,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
     /**
@@ -267,6 +360,60 @@ export class V1RuntimeDataAppIdRuntimeService {
         return this.httpClient.get<Array<PanosApplication>>(`${this.configuration.basePath}/v1/runtime-data/app-id-runtime`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public updateTierAppVersionsAppIdRuntime(requestParameters: UpdateTierAppVersionsAppIdRuntimeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public updateTierAppVersionsAppIdRuntime(requestParameters: UpdateTierAppVersionsAppIdRuntimeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public updateTierAppVersionsAppIdRuntime(requestParameters: UpdateTierAppVersionsAppIdRuntimeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public updateTierAppVersionsAppIdRuntime(requestParameters: UpdateTierAppVersionsAppIdRuntimeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+        const body = requestParameters.body;
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling updateTierAppVersionsAppIdRuntime.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/runtime-data/app-id-runtime/update-tiers`,
+            body,
+            {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

@@ -2,7 +2,7 @@
 <ng-container>
   <section class="btn-toolbar" role="toolbar">
     <!-- Create Tenant -->
-    <button type="button" class="btn btn-success" (click)="openTenantModal(ModalMode.Create)">
+    <button type="button" class="btn btn-success" (click)="openTenantModal(ModalMode.Create)" [disabled]="isTenantV2Mode">
       <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
       <span>Create Tenant</span>
     </button>
@@ -26,7 +26,14 @@
 
 <ng-template #tenantSelectNameTemplate let-tenant="datum">
   <section>
-    <a routerLink="/appcentric/tenant-select/edit/{{ tenant.id }}/home" queryParamsHandling="merge">{{ tenant.name }}</a>
+    <!-- when in TenantV2 mode navigate to tenantv2/tenant-select/edit -->
+    <a routerLink="/appcentric/tenant-select/edit/{{ tenant.id }}/home" queryParamsHandling="merge" *ngIf="!isTenantV2Mode">{{
+      tenant.name
+    }}</a>
+    <!-- when in TenantV2 mode navigate to tenantv2/tenant-select/edit -->
+    <a routerLink="/tenantv2/tenant-select/edit/{{ tenant.id }}/home" queryParamsHandling="merge" *ngIf="isTenantV2Mode">{{
+      tenant.name
+    }}</a>
   </section>
 </ng-template>
 

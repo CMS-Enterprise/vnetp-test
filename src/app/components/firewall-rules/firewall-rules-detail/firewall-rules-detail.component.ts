@@ -5,6 +5,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { Subscription, forkJoin } from 'rxjs';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { FirewallRuleScope } from 'src/app/models/other/firewall-rule-scope';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import {
   V1NetworkSecurityFirewallRuleGroupsService,
   FirewallRule,
@@ -108,6 +109,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   isRefreshingRuntimeData = false;
   jobStatus: string;
 
+  applicationMode: ApplicationMode;
+  ApplicationMode = ApplicationMode;
+
   appIdModalSubscription: Subscription;
   panosApplications: PanosApplication[] = [];
 
@@ -193,6 +197,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private ngx: NgxSmartModalService,
     private entityService: EntityService,
+    private activatedRoute: ActivatedRoute,
     private firewallRuleService: V1NetworkSecurityFirewallRulesService,
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
     private tierService: V1TiersService,
@@ -216,26 +221,29 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.appIdEnabled = history.state.appIdEnabled;
+    this.activatedRoute.data.subscribe(data => {
+      this.applicationMode = data.mode;
+      this.appIdEnabled = history.state.appIdEnabled;
 
-    if (this.appIdEnabled === undefined) {
-      console.warn('appIdEnabled not passed. Using default value.');
-      this.appIdEnabled = false;
-    }
-
-    if (!this.appIdEnabled) {
-      this.expandableRows = () => [this.hitcountTemplate];
-    }
-
-    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
-      if (cd) {
-        this.datacenterId = cd.id;
-        this.tiers = cd.tiers;
-        this.datacenterService.lockDatacenter();
-        this.Id += this.route.snapshot.paramMap.get('id');
-        this.currentTierIds = this.datacenterService.currentTiersValue;
-        this.getFirewallRuleGroup();
+      if (this.appIdEnabled === undefined) {
+        console.warn('appIdEnabled not passed. Using default value.');
+        this.appIdEnabled = false;
       }
+
+      if (!this.appIdEnabled) {
+        this.expandableRows = () => [this.hitcountTemplate];
+      }
+
+      this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+        if (cd) {
+          this.datacenterId = cd.id;
+          this.tiers = cd.tiers;
+          this.datacenterService.lockDatacenter();
+          this.Id += this.route.snapshot.paramMap.get('id');
+          this.currentTierIds = this.datacenterService.currentTiersValue;
+          this.getFirewallRuleGroup();
+        }
+      });
     });
   }
 

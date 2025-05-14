@@ -14,6 +14,8 @@ import { TenantSelectModalComponent } from './tenant-select-modal/tenant-select-
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TypeDeleteModalModule } from 'src/app/common/type-delete-modal/type-delete-modal.module';
+import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
+import { mergeRouteData } from 'src/app/common/route-utils/route-data.utils';
 
 const routes: Routes = [
   {
@@ -23,7 +25,7 @@ const routes: Routes = [
   {
     path: 'edit/:id',
     canActivate: [AuthGuard],
-    data: { breadcrumb: 'Tenant Portal' },
+    data: mergeRouteData({}, { breadcrumb: 'Tenant Portal' }),
     component: TenantPortalComponent,
   },
 ];
@@ -42,6 +44,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     TypeDeleteModalModule,
+    TooltipModule,
   ],
   exports: [TenantSelectComponent, TenantSelectModalComponent],
 })
