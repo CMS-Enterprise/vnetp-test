@@ -29,6 +29,8 @@ import { NameValidator } from 'src/app/validators/name-validator';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import FormUtils from '../../../utils/FormUtils';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
+import { RouteDataUtil } from '../../../utils/route-data.util';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-firewall-rule-modal',
@@ -73,6 +75,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
+    private activatedRoute: ActivatedRoute,
   ) {}
 
   save() {
@@ -136,7 +139,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     } else if (this.isTenantV2Mode && sourceNetworkTypeValue === FirewallRuleSourceAddressTypeEnum.EndpointGroup) {
       modalFirewallRule.sourceAddressType = FirewallRuleSourceAddressTypeEnum.EndpointGroup;
       modalFirewallRule.sourceEndpointGroupId = this.form.controls.sourceEndpointGroup.value;
-    } else if (this.isTenantV2Mode && sourceNetworkTypeValue === 'EndpointSecurityGroup') {
+    } else if (this.isTenantV2Mode && sourceNetworkTypeValue === FirewallRuleSourceAddressTypeEnum.EndpointSecurityGroup) {
       modalFirewallRule.sourceAddressType = FirewallRuleSourceAddressTypeEnum.EndpointSecurityGroup;
       modalFirewallRule.sourceEndpointSecurityGroupId = this.form.controls.sourceEndpointSecurityGroup.value;
     }
@@ -150,10 +153,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       modalFirewallRule.destinationNetworkObjectId = this.form.controls.destinationNetworkObject.value;
     } else if (destinationNetworkTypeValue === FirewallRuleDestinationAddressTypeEnum.NetworkObjectGroup) {
       modalFirewallRule.destinationNetworkObjectGroupId = this.form.controls.destinationNetworkObjectGroup.value;
-    } else if (this.isTenantV2Mode && destinationNetworkTypeValue === 'EndpointGroup') {
+    } else if (this.isTenantV2Mode && destinationNetworkTypeValue === FirewallRuleDestinationAddressTypeEnum.EndpointGroup) {
       modalFirewallRule.destinationAddressType = FirewallRuleDestinationAddressTypeEnum.EndpointGroup;
       modalFirewallRule.destinationEndpointGroupId = this.form.controls.destinationEndpointGroup.value;
-    } else if (this.isTenantV2Mode && destinationNetworkTypeValue === 'EndpointSecurityGroup') {
+    } else if (this.isTenantV2Mode && destinationNetworkTypeValue === FirewallRuleDestinationAddressTypeEnum.EndpointSecurityGroup) {
       modalFirewallRule.destinationAddressType = FirewallRuleDestinationAddressTypeEnum.EndpointSecurityGroup;
       modalFirewallRule.destinationEndpointSecurityGroupId = this.form.controls.destinationEndpointSecurityGroup.value;
     }
@@ -215,7 +218,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   getData() {
     const dto = this.ngx.getModalData('firewallRuleModal') as FirewallRuleModalDto;
     this.ModalMode = dto.ModalMode;
-    this.applicationMode = dto.ApplicationMode;
 
     this.firewallRuleGroupType = dto.GroupType;
 
@@ -258,7 +260,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       this.form.controls.enabled.setValue(firewallRule.enabled);
 
       // Set source type and value
-      const sourceAddressType = firewallRule.sourceAddressType as string;
+      const sourceAddressType = firewallRule.sourceAddressType;
       this.form.controls.sourceNetworkType.setValue(sourceAddressType);
       if (sourceAddressType === FirewallRuleSourceAddressTypeEnum.IpAddress) {
         this.form.controls.sourceIpAddress.setValue(firewallRule.sourceIpAddress);
@@ -273,7 +275,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
       }
 
       // Set destination type and value
-      const destinationAddressType = firewallRule.destinationAddressType as string;
+      const destinationAddressType = firewallRule.destinationAddressType;
       this.form.controls.destinationNetworkType.setValue(destinationAddressType);
       if (destinationAddressType === FirewallRuleDestinationAddressTypeEnum.IpAddress) {
         this.form.controls.destinationIpAddress.setValue(firewallRule.destinationIpAddress);
@@ -281,9 +283,9 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         this.form.controls.destinationNetworkObject.setValue(firewallRule.destinationNetworkObjectId);
       } else if (destinationAddressType === FirewallRuleDestinationAddressTypeEnum.NetworkObjectGroup) {
         this.form.controls.destinationNetworkObjectGroup.setValue(firewallRule.destinationNetworkObjectGroupId);
-      } else if (this.isTenantV2Mode && FirewallRuleDestinationAddressTypeEnum.EndpointGroup) {
+      } else if (this.isTenantV2Mode && destinationAddressType === FirewallRuleDestinationAddressTypeEnum.EndpointGroup) {
         this.form.controls.destinationEndpointGroup.setValue(firewallRule.destinationEndpointGroupId);
-      } else if (this.isTenantV2Mode && FirewallRuleDestinationAddressTypeEnum.EndpointSecurityGroup) {
+      } else if (this.isTenantV2Mode && destinationAddressType === FirewallRuleDestinationAddressTypeEnum.EndpointSecurityGroup) {
         this.form.controls.destinationEndpointSecurityGroup.setValue(firewallRule.destinationEndpointSecurityGroupId);
       }
 
@@ -336,12 +338,12 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         case FirewallRuleSourceAddressTypeEnum.NetworkObjectGroup:
           sourceNetworkObjectGroup.setValidators(Validators.required);
           break;
-        case 'EndpointGroup': // String comparison for new types
+        case FirewallRuleSourceAddressTypeEnum.EndpointGroup:
           if (this.isTenantV2Mode) {
             sourceEndpointGroup.setValidators(Validators.required);
           }
           break;
-        case 'EndpointSecurityGroup': // String comparison for new types
+        case FirewallRuleSourceAddressTypeEnum.EndpointSecurityGroup:
           if (this.isTenantV2Mode) {
             sourceEndpointSecurityGroup.setValidators(Validators.required);
           }
@@ -390,12 +392,12 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         case FirewallRuleDestinationAddressTypeEnum.NetworkObjectGroup:
           destinationNetworkObjectGroup.setValidators(Validators.required);
           break;
-        case 'EndpointGroup': // String comparison for new types
+        case FirewallRuleDestinationAddressTypeEnum.EndpointGroup:
           if (this.isTenantV2Mode) {
             destinationEndpointGroup.setValidators(Validators.required);
           }
           break;
-        case 'EndpointSecurityGroup': // String comparison for new types
+        case FirewallRuleDestinationAddressTypeEnum.EndpointSecurityGroup:
           if (this.isTenantV2Mode) {
             destinationEndpointSecurityGroup.setValidators(Validators.required);
           }
@@ -684,7 +686,6 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
     this.selectedFromZones = [];
     this.selectedToZones = [];
     this.submitted = false;
-    this.applicationMode = null;
     this.endpointGroups = [];
     this.endpointSecurityGroups = [];
     this.buildForm();
@@ -692,6 +693,7 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
     this.buildForm();
     this.setFormValidators();
   }

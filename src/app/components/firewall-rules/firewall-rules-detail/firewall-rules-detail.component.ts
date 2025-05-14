@@ -382,7 +382,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     dto.EndpointSecurityGroups = this.endpointSecurityGroups;
     dto.Zones = this.zones;
     dto.GroupType = this.FirewallRuleGroup.type;
-    dto.ApplicationMode = this.applicationMode;
 
     if (modalMode === ModalMode.Edit) {
       dto.FirewallRule = firewallRule;

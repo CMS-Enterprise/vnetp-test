@@ -10,7 +10,6 @@ import {
   EndpointSecurityGroup,
 } from 'client';
 import { ModalMode } from '../other/modal-mode';
-import { ApplicationMode } from '../other/application-mode-enum';
 
 export class FirewallRuleModalDto {
   FirewallRuleGroupId: string;
@@ -25,5 +24,4 @@ export class FirewallRuleModalDto {
   GroupType: FirewallRuleGroupTypeEnum;
   EndpointGroups: EndpointGroup[];
   EndpointSecurityGroups: EndpointSecurityGroup[];
-  ApplicationMode: ApplicationMode;
 }
