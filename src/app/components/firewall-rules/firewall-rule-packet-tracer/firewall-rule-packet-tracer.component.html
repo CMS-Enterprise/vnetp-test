@@ -48,7 +48,7 @@
       </div>
 
       <div class="table-container">
-        <table style="box-shadow: none; margin: 0" mat-table [dataSource]="firewallRulesArray" class="mat-elevation-z8">
+        <table style="box-shadow: none; margin: 0" mat-table [dataSource]="tableRules" class="mat-elevation-z8">
           <ng-container *ngFor="let col of tableConfig.displayedColumns" [matColumnDef]="col">
             <th
               mat-header-cell
@@ -86,7 +86,7 @@
           ></tr>
         </table>
       </div>
-      <span *ngIf="!firewallRulesArray.length" class="empty-message">No Data</span>
+      <!-- <span *ngIf="!firewallRulesArray.length" class="empty-message">No Data</span> -->
     </mat-drawer-content>
     <mat-drawer [opened]="isDrawerOpened" mode="side" position="start">
       <div class="drawer-content">

@@ -45,14 +45,21 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
   @Input() objects: FirewallRulePacketTracerDto;
   submitted: boolean;
   firewallRulesWithChecklist: FirewallRulePacketTracerOutputMap = {};
-  filteredChecklist: FirewallRulePacketTracerOutputMap = {};
+  filteredChecklist;
   form: FormGroup;
 
   pageSize = 10;
 
-  filterExact = null;
+  // filterExact = null;
 
   serviceTypeSubscription: Subscription;
+
+  rulesHit = [];
+  filteredRules = [];
+  tableRules;
+
+  filterExact = false;
+  filterPartial = false;
 
   public environment = environment;
   public appIdEnabled = false;
@@ -119,10 +126,65 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.unsubAll();
+    this.submitted = false;
+    this.resetFilter();
+    this.filteredChecklist = [] as any;
+    this.ngx.resetModalData('firewallRulePacketTracer');
   }
 
   onOpen(): void {
     this.isDrawerOpened = true;
+  }
+
+  applyFilter2(): void {
+    if (!this.filterExact && !this.filterPartial) {
+      this.filteredRules = [...this.rulesHit];
+    } else {
+      this.filteredRules = this.rulesHit.filter(rule => {
+        const isExact = this.isExactMatch(rule);
+        const isPartial = this.isPartialMatch(rule);
+        return (this.filterExact && isExact) || (this.filterPartial && isPartial);
+      });
+    }
+    // this.currentPage = 1;
+  }
+
+  resetFilter2(): void {
+    this.filterExact = false;
+    this.filterPartial = false;
+  }
+
+  search2(): void {
+    this.rulesHit = [];
+    this.submitted = true;
+    // if (this.form.invalid) {
+    //   return;
+    // }
+
+    this.objects.firewallRules.forEach(rule => {
+      const checkList = {
+        sourceInRange: this.handleInRange(rule, 'source', this.form.controls.sourceInRange),
+        destInRange: this.handleInRange(rule, 'destination', this.form.controls.destInRange),
+        sourcePortMatch: this.handlePortMatch(rule, 'source', this.form.controls.sourcePort),
+        destPortMatch: this.handlePortMatch(rule, 'destination', this.form.controls.destPort),
+        directionMatch: this.form.controls.direction.value === rule.direction,
+        protocolMatch: this.form.controls.protocol.value === rule.protocol,
+        enabledMatch: this.form.controls.enabled.value === rule.enabled,
+        softDeleted: Boolean(rule.deletedAt),
+        actionMatch: this.form.controls.action.value === rule.action,
+      };
+
+      if (checkList.sourcePortMatch === null || checkList.destPortMatch === null) {
+        delete checkList.sourcePortMatch;
+        delete checkList.destPortMatch;
+      }
+
+      this.rulesHit.push({ checkList, name: rule.name });
+    });
+    this.resetFilter2();
+    this.applyFilter2();
+    this.toastrService.success('Packet Tracer Executed.');
+    console.log('this.rulesHit', this.rulesHit);
   }
 
   search() {
@@ -143,6 +205,11 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
       //   }
       // });
     });
+    console.log('this.filteredChecklist', this.filteredChecklist);
+    this.tableRules = Object.keys(this.filteredChecklist).map(name => ({
+      name,
+      ...this.filteredChecklist[name],
+    }));
   }
 
   createFormListeners(): void {
@@ -214,18 +281,6 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
     return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3];
   }
 
-  // handleApplication(rule: FirewallRule, applicationId: string): boolean {
-  //   if (!this.appIdEnabled) {
-  //     return true;
-  //   }
-
-  //   if (applicationId === 'any') {
-  //     return true;
-  //   }
-
-  //   return rule?.panosApplications?.some(app => app.id === this.form.controls.application.value);
-  // }
-
   handleInRange(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean {
     const lookupType = location === 'source' ? rule.sourceAddressType : rule.destinationAddressType;
 
@@ -266,7 +321,6 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
   }
 
   setChecklist(firewallRules, fieldName): void {
-    console.trace('set checklist func');
     firewallRules.forEach(firewallRule => {
       const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRule.name];
       if (!ruleWithChecklist) {
@@ -277,16 +331,15 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
   }
 
   setChecklist2(firewallRule): void {
-    console.trace('set checklist func');
     Object.keys(this.form.controls).forEach(field => {
       const fieldValue = this.form.controls[field].value;
       const errors = this.form.controls[field].errors;
-      if (errors || fieldValue === null || fieldValue === '' || fieldValue === undefined) {
-        // Object.keys(this.firewallRulesWithChecklist).forEach(ruleName => {
-        //   this.clearChecklist(ruleName, field);
-        // });
-        return;
-      }
+      // if (errors || fieldValue === null || fieldValue === '' || fieldValue === undefined) {
+      //   Object.keys(this.firewallRulesWithChecklist).forEach(ruleName => {
+      //     this.clearChecklist(ruleName, field);
+      //   });
+      //   return;
+      // }
       const control = this.form.get(field);
       if (control) {
         const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRule.name];
@@ -369,6 +422,8 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
   }
 
   ipLookup(rule: FirewallRule, location, control): boolean {
+    console.log('rule', rule);
+    console.log('control', control);
     const formIpValue = control.value;
     const ruleIpValue = location === 'source' ? rule.sourceIpAddress : rule.destinationIpAddress;
 
@@ -534,6 +589,8 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
     this.unsubAll();
     this.submitted = false;
     this.resetFilter();
+    this.filteredChecklist = [] as any;
+    this.isDrawerOpened = false;
     this.ngx.resetModalData('firewallRulePacketTracer');
   }
 
@@ -565,20 +622,26 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
     return this.firewallRulesWithChecklist[firewallRule.name].checkList[fieldName] === null;
   }
 
+  // get firewallRulesArray() {
+  //   const objectFromReduce = this.rulesHit.reduce((obj, value, index) => {
+  //     obj[index] = value;
+  //     return obj;
+  //   }, {});
+  //   console.log('objectFromReduce',objectFromReduce)
+  //   return []
+  //   // return objectFromReduce
+  //   // return Object.keys(this.rulesHit).map(name => ({
+  //   //   checkList: {...this.rulesHit[name]},
+  //   // }));
+  // }
+
   get firewallRulesArray() {
+    console.log('hit');
     return Object.keys(this.filteredChecklist).map(name => ({
       name,
       ...this.filteredChecklist[name],
     }));
   }
-
-  // onMouseMove(event: MouseEvent): void {
-  //   const tableElement = document.querySelector('.table-container');
-  //   const rect = tableElement?.getBoundingClientRect();
-  //   if (rect && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) {
-  //     this.onHover(null, null);
-  //   }
-  // }
 
   toggleSearch(): void {
     this.isSearchOpen = !this.isSearchOpen;
@@ -595,3 +658,23 @@ export class FirewallRulePacketTracerComponent implements OnInit, OnDestroy {
     this.resetFilter();
   }
 }
+
+// handleApplication(rule: FirewallRule, applicationId: string): boolean {
+//   if (!this.appIdEnabled) {
+//     return true;
+//   }
+
+//   if (applicationId === 'any') {
+//     return true;
+//   }
+
+//   return rule?.panosApplications?.some(app => app.id === this.form.controls.application.value);
+// }
+
+// onMouseMove(event: MouseEvent): void {
+//   const tableElement = document.querySelector('.table-container');
+//   const rect = tableElement?.getBoundingClientRect();
+//   if (rect && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) {
+//     this.onHover(null, null);
+//   }
+// }
