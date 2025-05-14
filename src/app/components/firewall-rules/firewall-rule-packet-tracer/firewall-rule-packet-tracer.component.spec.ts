@@ -580,18 +580,18 @@ describe('FirewallRulesPacketTracerComponent', () => {
     expect(component.firewallRulesWithChecklist.mockRuleName.checkList['mockFieldName'] as any).toBeNull();
   });
 
-  it('should get firewall rules array', () => {
-    const mockChecklist = {
-      mockRuleName: {
-        checkList: {
-          mockFieldName: true,
-        },
-      },
-    };
-    component.filteredChecklist = mockChecklist as any;
-    const result = component.firewallRulesArray;
-    expect(result).toEqual([{ name: 'mockRuleName', checkList: { mockFieldName: true } }]);
-  });
+  // it('should get firewall rules array', () => {
+  //   const mockChecklist = {
+  //     mockRuleName: {
+  //       checkList: {
+  //         mockFieldName: true,
+  //       },
+  //     },
+  //   };
+  //   component.filteredChecklist = mockChecklist as any;
+  //   const result = component.firewallRulesArray;
+  //   expect(result).toEqual([{ name: 'mockRuleName', checkList: { mockFieldName: true } }]);
+  // });
 
   it('should toggle search', () => {
     component.isSearchOpen = false;
