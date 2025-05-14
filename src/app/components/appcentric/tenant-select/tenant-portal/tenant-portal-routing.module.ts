@@ -82,7 +82,10 @@ const routes: Routes = [
       {
         outlet,
         path: 'north-south-firewall',
-        data: { breadcrumb: 'North-South Firewall', title: 'North-South Firewall' },
+        data: {
+          breadcrumb: 'North-South Firewall',
+          title: 'North-South Firewall',
+        },
         loadChildren: () => import('./tenant-v2-firewall/tenant-v2-firewall.module').then(m => m.TenantV2FirewallModule),
       },
       {
@@ -110,6 +113,13 @@ const routes: Routes = [
         path: 'endpoint-security-group',
         data: { breadcrumb: 'Endpoint Security Group', title: 'Tenant Portal - Endpoint Security Group' },
         loadChildren: () => import('./endpoint-security-group/endpoint-security-group.module').then(m => m.EndpointSecurityGroupModule),
+      },
+      {
+        outlet,
+        path: 'endpoint-connectivity-utility',
+        data: { breadcrumb: 'Endpoint Connectivity Utility', title: 'Endpoint Connectivity Utility' },
+        loadChildren: () =>
+          import('./endpoint-connectivity-utility/endpoint-connectivity-utility.module').then(m => m.EndpointConnectivityUtilityModule),
       },
     ],
   },

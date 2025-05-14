@@ -58,6 +58,22 @@
           <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
         </div>
       </div>
+
+      <!-- New Scope Dropdown -->
+      <div class="form-group">
+        <label for="scope">Scope</label>
+        <select id="scope" formControlName="scope" class="form-control" [class.is-invalid]="submitted && f.scope.errors" aria-label="Scope">
+          <!-- <option value="" disabled>Select Scope</option> -->
+          <!-- Optional: if you want a non-selected initial state -->
+          <option *ngFor="let key of objectKeys(contractScopeEnum)" [value]="contractScopeEnum[key]">
+            {{ key }}
+          </option>
+        </select>
+        <div *ngIf="submitted && f.scope.errors" class="invalid-feedback">
+          <div *ngIf="f.scope.errors.required">Scope is required.</div>
+        </div>
+      </div>
+      <!-- End New Scope Dropdown -->
     </div>
 
     <footer class="modal-footer">

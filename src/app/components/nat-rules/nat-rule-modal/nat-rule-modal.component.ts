@@ -28,6 +28,9 @@ import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { NatRuleModalDto } from '../../../models/nat/nat-rule-modal-dto';
 import FormUtils from '../../../utils/FormUtils';
 import { NatRuleModalHelpText } from '../../../helptext/help-text-networking';
+import { RouteDataUtil } from '../../../utils/route-data.util';
+import { ActivatedRoute } from '@angular/router';
+import { ApplicationMode } from '../../../models/other/application-mode-enum';
 
 @Component({
   selector: 'app-nat-rule-modal',
@@ -61,7 +64,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
   objectInfoSubscription: Subscription;
-
+  applicationMode: ApplicationMode;
   constructor(
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
@@ -71,6 +74,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
     private networkObjectGroupService: V1NetworkSecurityNetworkObjectGroupsService,
     private serviceObjectService: V1NetworkSecurityServiceObjectsService,
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
+    private activatedRoute: ActivatedRoute,
   ) {}
 
   get f() {
@@ -78,6 +82,7 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
     this.initForm();
   }
 

@@ -10,6 +10,7 @@ import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 @Component({
   selector: 'app-tenant-select',
@@ -60,18 +61,13 @@ export class TenantSelectComponent implements OnInit {
   }
 
   private determineApplicationMode(): void {
-    // Check route data for application mode
-    this.route.data.subscribe(data => {
-      if (data && data.mode) {
-        this.currentMode = data.mode;
-        this.isAdminPortalMode = this.currentMode === ApplicationMode.ADMINPORTAL;
-        this.isTenantV2Mode = this.currentMode === ApplicationMode.TENANTV2;
-      } else {
-        // Fallback to checking URL path
-        this.isAdminPortalMode = this.router.url.includes('adminportal');
-        this.isTenantV2Mode = this.router.url.includes('tenant-v2');
-      }
-    });
+    const modeFromRoute = RouteDataUtil.getApplicationModeFromRoute(this.route);
+
+    if (modeFromRoute) {
+      this.currentMode = modeFromRoute;
+      this.isAdminPortalMode = this.currentMode === ApplicationMode.ADMINPORTAL;
+      this.isTenantV2Mode = this.currentMode === ApplicationMode.TENANTV2;
+    }
   }
 
   public onTableEvent(event: TableComponentDto): void {

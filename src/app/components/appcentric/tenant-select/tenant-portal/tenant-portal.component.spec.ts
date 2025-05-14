@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockComponent } from 'src/test/mock-components';
@@ -43,6 +43,7 @@ describe('TenantPortalComponent', () => {
     id: 'test-datacenter-id',
     name: 'Test Datacenter',
     tiers: [{ id: 'ns-tier-id', name: 'ns_fw_svc_tier' } as Tier, { id: 'ew-tier-id', name: 'ew_fw_svc_tier' } as Tier],
+    tenantVersion: 2,
   };
 
   const mockTiers = {
@@ -80,11 +81,11 @@ describe('TenantPortalComponent', () => {
           get: jest.fn().mockReturnValue('test-id'),
         },
         queryParams: {},
+        data: { mode: ApplicationMode.TENANTV2 },
       },
     };
 
     tenantServiceMock = {
-      getManyTenant: jest.fn().mockReturnValue(of({})),
       getOneTenant: jest.fn().mockReturnValue(of(mockTenant)),
     };
 
@@ -143,15 +144,44 @@ describe('TenantPortalComponent', () => {
   // Mode-related tests
   describe('Mode initialization', () => {
     it('should initialize tabs with firewall options when in TENANTV2 mode', () => {
+      TestBed.resetTestingModule();
+      activatedRouteMock.snapshot.data = { mode: ApplicationMode.TENANTV2 };
+
+      TestBed.configureTestingModule({
+        declarations: [
+          TenantPortalComponent,
+          MockComponent({
+            selector: 'app-tabs',
+            inputs: ['tabs', 'initialTabIndex'],
+            outputs: ['tabChange'],
+          }),
+        ],
+        imports: [RouterModule, RouterTestingModule, HttpClientModule],
+        providers: [
+          { provide: V2AppCentricTenantsService, useValue: tenantServiceMock },
+          { provide: V1DatacentersService, useValue: datacenterServiceMock },
+          { provide: V1TiersService, useValue: tierServiceMock },
+          { provide: DatacenterContextService, useValue: datacenterContextServiceMock },
+          { provide: TierContextService, useValue: tierContextServiceMock },
+          { provide: Router, useValue: routerMock },
+          { provide: ActivatedRoute, useValue: activatedRouteMock },
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(TenantPortalComponent);
+      component = fixture.componentInstance;
+      component.tenantId = 'test-id'; // Set tenant ID directly as in other tests
+      fixture.detectChanges(); // Trigger ngOnInit
+
       // Check that tabs include firewall tabs in TenantV2 mode
+      expect(component.tabs.some(tab => tab.name === 'Application Profile')).toBeTruthy();
       expect(component.tabs.some(tab => tab.name === 'East/West Firewall')).toBeTruthy();
       expect(component.tabs.some(tab => tab.name === 'North/South Firewall')).toBeTruthy();
     });
 
     it('should not include firewall tabs when not in TENANTV2 mode', () => {
-      // Change mode and reinitialize
       TestBed.resetTestingModule();
-      activatedRouteMock.data = of({ mode: ApplicationMode.APPCENTRIC });
+      activatedRouteMock.snapshot.data = { mode: ApplicationMode.APPCENTRIC };
 
       TestBed.configureTestingModule({
         declarations: [TenantPortalComponent, MockComponent({ selector: 'app-tabs', inputs: ['tabs', 'initialTabIndex'] })],
@@ -232,14 +262,12 @@ describe('TenantPortalComponent', () => {
   // Network services tests
   describe('Network services container', () => {
     it('should fetch datacenter when tenant is loaded in TENANTV2 mode', () => {
-      component.getTenants();
+      component.getTenant();
 
-      // Verify tenant service call
       expect(tenantServiceMock.getOneTenant).toHaveBeenCalledWith({
         id: 'test-id',
       });
 
-      // Verify datacenter service call
       expect(datacenterServiceMock.getOneDatacenter).toHaveBeenCalledWith({
         id: 'test-datacenter-id',
         join: ['tiers'],
@@ -293,7 +321,7 @@ describe('TenantPortalComponent', () => {
       datacenterServiceMock.getOneDatacenter.mockClear();
 
       // Expect the subscription callback to throw
-      component.getTenants();
+      component.getTenant();
 
       // Verify datacenter service is not called since an error is thrown
       expect(datacenterServiceMock.getOneDatacenter).not.toHaveBeenCalled();
@@ -362,16 +390,16 @@ describe('TenantPortalComponent', () => {
   // ngOnInit test
   it('should run onInit and call required methods', () => {
     const getInitialTabIndexSpy = jest.spyOn(component, 'getInitialTabIndex');
-    const getTenantsSpy = jest.spyOn(component, 'getTenants');
+    const getTenantSpy = jest.spyOn(component, 'getTenant');
 
     component.ngOnInit();
 
     expect(getInitialTabIndexSpy).toHaveBeenCalled();
-    expect(getTenantsSpy).toHaveBeenCalled();
+    expect(getTenantSpy).toHaveBeenCalled();
   });
 
   // AfterViewInit test
-  it('should select initialSubTab in afterViewInit if set', fakeAsync(() => {
+  it('should select initialSubTab in afterViewInit if set', () => {
     // Create a mock TabsComponent
     component.tabsComponent = {
       setActiveSubTab: jest.fn(),
@@ -386,17 +414,16 @@ describe('TenantPortalComponent', () => {
 
     // Call the method
     component.ngAfterViewInit();
-    tick();
 
     // Should call setActiveSubTab on TabsComponent
     expect(component.tabsComponent.setActiveSubTab).toHaveBeenCalledWith(component.initialSubTab);
-  }));
+  });
 
   // Error handling
   it('should handle tenant service error', () => {
     tenantServiceMock.getOneTenant.mockReturnValue(throwError('Test error'));
 
-    component.getTenants();
+    component.getTenant();
 
     expect(component.tenants).toBeNull();
   });

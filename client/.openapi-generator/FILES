@@ -2,6 +2,7 @@
 README.md
 api.module.ts
 api/api.ts
+api/utilities.service.ts
 api/v1AuditLog.service.ts
 api/v1Auth.service.ts
 api/v1Datacenters.service.ts
@@ -44,6 +45,7 @@ api/v2AppCentricBridgeDomains.service.ts
 api/v2AppCentricContracts.service.ts
 api/v2AppCentricEndpointGroups.service.ts
 api/v2AppCentricEndpointSecurityGroups.service.ts
+api/v2AppCentricEndpoints.service.ts
 api/v2AppCentricFilterEntries.service.ts
 api/v2AppCentricFilters.service.ts
 api/v2AppCentricL3outs.service.ts
@@ -63,7 +65,11 @@ model/appCentricSubnet.ts
 model/applicationProfile.ts
 model/auditLog.ts
 model/bridgeDomain.ts
+model/connectionTrace.ts
+model/connectivityNode.ts
 model/contract.ts
+model/contractToEpg.ts
+model/contractToEsg.ts
 model/createManyAppCentricSubnetDto.ts
 model/createManyApplicationProfileDto.ts
 model/createManyBridgeDomainDto.ts
@@ -108,8 +114,13 @@ model/createManyZoneDto.ts
 model/createTenantV2Dto.ts
 model/datacenter.ts
 model/dcsPermissions.ts
+model/endpoint.ts
+model/endpointConnectionUtilityResponse.ts
+model/endpointConnectivityGeneratedConfig.ts
+model/endpointConnectivityQuery.ts
 model/endpointGroup.ts
 model/endpointSecurityGroup.ts
+model/endpointSyncDto.ts
 model/externalRoute.ts
 model/externalRouteJobCreateDto.ts
 model/f5ConfigJobCreateDto.ts
@@ -181,6 +192,7 @@ model/getManyZoneResponseDto.ts
 model/hitcountData.ts
 model/hitcountJobCreateDto.ts
 model/hitcountJobResultDto.ts
+model/ipAddress.ts
 model/job.ts
 model/l3Out.ts
 model/loadBalancerHealthMonitor.ts
@@ -222,9 +234,14 @@ model/serviceObjectGroupRelationBulkImportCollectionDto.ts
 model/serviceObjectGroupRelationBulkImportDto.ts
 model/staticRoute.ts
 model/subject.ts
+model/subjectToFilter.ts
 model/subnet.ts
 model/subnetImport.ts
 model/subnetImportCollectionDto.ts
+model/syncEndpoint.ts
+model/syncEndpointGroup.ts
+model/syncEndpointSecurityGroup.ts
+model/syncTenant.ts
 model/tenant.ts
 model/tier.ts
 model/tierGroup.ts

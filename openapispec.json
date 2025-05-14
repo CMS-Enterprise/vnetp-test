@@ -6716,6 +6716,767 @@
         ]
       }
     },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/consumed-contracts/{contractId}": {
+      "post": {
+        "operationId": "addConsumedContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Consumed Contract to Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "removeConsumedContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Remove Consumed Contract from Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/consumed-contracts": {
+      "post": {
+        "operationId": "addManyConsumedContractsToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Many Consumed Contract to Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/provided-contracts/{contractId}": {
+      "post": {
+        "operationId": "addProvidedContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Provided Contract to Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "removeProvidedContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Remove Provided Contract from Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/intra-contracts/{contractId}": {
+      "post": {
+        "operationId": "addIntraContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Intra Contract to Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "removeIntraContractToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Remove Intra Contract from Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "path",
+            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/provided-contracts": {
+      "post": {
+        "operationId": "addManyProvidedContractsToEndpointSecurityGroupEndpointSecurityGroup",
+        "summary": "",
+        "description": "Add Many Provided Contract to Endpoint Security Group",
+        "parameters": [
+          {
+            "name": "endpointSecurityGroupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups": {
+      "post": {
+        "operationId": "createOneEndpointSecurityGroup",
+        "summary": "Create one EndpointSecurityGroup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EndpointSecurityGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "get": {
+        "operationId": "getManyEndpointSecurityGroup",
+        "summary": "Get many EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyEndpointSecurityGroupResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EndpointSecurityGroup"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/bulk": {
+      "post": {
+        "operationId": "createManyEndpointSecurityGroup",
+        "summary": "Create many EndpointSecurityGroup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManyEndpointSecurityGroupDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/EndpointSecurityGroup"
+                    }
+                  }
+                },
+                "required": [
+                  "bulk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EndpointSecurityGroup"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{id}": {
+      "get": {
+        "operationId": "getOneEndpointSecurityGroup",
+        "summary": "Get one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneEndpointSecurityGroup",
+        "summary": "Update one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EndpointSecurityGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneEndpointSecurityGroup",
+        "summary": "Delete one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointSecurityGroup"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{id}/soft": {
+      "delete": {
+        "operationId": "softDeleteOneEndpointSecurityGroup",
+        "summary": "Soft delete one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{id}/restore": {
+      "patch": {
+        "operationId": "restoreOneEndpointSecurityGroup",
+        "summary": "Restore one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{id}/provision": {
+      "put": {
+        "operationId": "provisionOneEndpointSecurityGroup",
+        "summary": "Provision one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoint-security-groups/{id}/deprovision": {
+      "patch": {
+        "operationId": "deprovisionOneEndpointSecurityGroup",
+        "summary": "Deprovision one EndpointSecurityGroup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoint-security-groups"
+        ]
+      }
+    },
     "/v1/network-security/nat-rules/bulk-import": {
       "post": {
         "operationId": "bulkImportNatRulesNatRule",
@@ -19377,767 +20138,6 @@
         ]
       }
     },
-    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/consumed-contracts/{contractId}": {
-      "post": {
-        "operationId": "addConsumedContractToEndpointSecurityGroupEndpointSecurityGroup",
-        "summary": "",
-        "description": "Add Consumed Contract to Endpoint Security Group",
-        "parameters": [
-          {
-            "name": "endpointSecurityGroupId",
-            "required": true,
-            "in": "path",
-            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      },
-      "delete": {
-        "operationId": "removeConsumedContractToEndpointSecurityGroupEndpointSecurityGroup",
-        "summary": "",
-        "description": "Remove Consumed Contract from Endpoint Security Group",
-        "parameters": [
-          {
-            "name": "endpointSecurityGroupId",
-            "required": true,
-            "in": "path",
-            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointSecurityGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/consumed-contracts": {
-      "post": {
-        "operationId": "addManyConsumedContractsToEndpointSecurityGroupEndpointSecurityGroup",
-        "summary": "",
-        "description": "Add Many Consumed Contract to Endpoint Security Group",
-        "parameters": [
-          {
-            "name": "endpointSecurityGroupId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/provided-contracts/{contractId}": {
-      "post": {
-        "operationId": "addProvidedContractToEndpointSecurityGroupEndpointSecurityGroup",
-        "summary": "",
-        "description": "Add Provided Contract to Endpoint Security Group",
-        "parameters": [
-          {
-            "name": "endpointSecurityGroupId",
-            "required": true,
-            "in": "path",
-            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointSecurityGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      },
-      "delete": {
-        "operationId": "removeProvidedContractToEndpointSecurityGroupEndpointSecurityGroup",
-        "summary": "",
-        "description": "Remove Provided Contract from Endpoint Security Group",
-        "parameters": [
-          {
-            "name": "endpointSecurityGroupId",
-            "required": true,
-            "in": "path",
-            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointSecurityGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/intra-contracts/{contractId}": {
-      "post": {
-        "operationId": "addIntraContractToEndpointSecurityGroupEndpointSecurityGroup",
-        "summary": "",
-        "description": "Add Intra Contract to Endpoint Security Group",
-        "parameters": [
-          {
-            "name": "endpointSecurityGroupId",
-            "required": true,
-            "in": "path",
-            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      },
-      "delete": {
-        "operationId": "removeIntraContractToEndpointSecurityGroupEndpointSecurityGroup",
-        "summary": "",
-        "description": "Remove Intra Contract from Endpoint Security Group",
-        "parameters": [
-          {
-            "name": "endpointSecurityGroupId",
-            "required": true,
-            "in": "path",
-            "description": "EndpointSecurity Group that the Contract is being added to/removed from.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "contractId",
-            "required": true,
-            "in": "path",
-            "description": "Contract that is being added/removed from the EndpointSecurity Group.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-security-groups/{endpointSecurityGroupId}/provided-contracts": {
-      "post": {
-        "operationId": "addManyProvidedContractsToEndpointSecurityGroupEndpointSecurityGroup",
-        "summary": "",
-        "description": "Add Many Provided Contract to Endpoint Security Group",
-        "parameters": [
-          {
-            "name": "endpointSecurityGroupId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-security-groups": {
-      "post": {
-        "operationId": "createOneEndpointSecurityGroup",
-        "summary": "Create one EndpointSecurityGroup",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EndpointSecurityGroup"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointSecurityGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      },
-      "get": {
-        "operationId": "getManyEndpointSecurityGroup",
-        "summary": "Get many EndpointSecurityGroup",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "fields",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "s",
-            "required": false,
-            "in": "query",
-            "description": "Where object for advanced AND/OR queries.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "title": "GetManyEndpointSecurityGroupResponseDto",
-                  "type": "object",
-                  "properties": {
-                    "totalPages": {
-                      "type": "number"
-                    },
-                    "count": {
-                      "type": "number"
-                    },
-                    "total": {
-                      "type": "number"
-                    },
-                    "page": {
-                      "type": "number"
-                    },
-                    "pageCount": {
-                      "type": "number"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/EndpointSecurityGroup"
-                      }
-                    }
-                  },
-                  "required": [
-                    "data",
-                    "count",
-                    "total",
-                    "page",
-                    "pageCount",
-                    "totalPages"
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-security-groups/bulk": {
-      "post": {
-        "operationId": "createManyEndpointSecurityGroup",
-        "summary": "Create many EndpointSecurityGroup",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "title": "CreateManyEndpointSecurityGroupDto",
-                "type": "object",
-                "properties": {
-                  "bulk": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/EndpointSecurityGroup"
-                    }
-                  }
-                },
-                "required": [
-                  "bulk"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/EndpointSecurityGroup"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-security-groups/{id}": {
-      "get": {
-        "operationId": "getOneEndpointSecurityGroup",
-        "summary": "Get one EndpointSecurityGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointSecurityGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      },
-      "put": {
-        "operationId": "updateOneEndpointSecurityGroup",
-        "summary": "Update one EndpointSecurityGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EndpointSecurityGroup"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointSecurityGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      },
-      "delete": {
-        "operationId": "deleteOneEndpointSecurityGroup",
-        "summary": "Delete one EndpointSecurityGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EndpointSecurityGroup"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-security-groups/{id}/soft": {
-      "delete": {
-        "operationId": "softDeleteOneEndpointSecurityGroup",
-        "summary": "Soft delete one EndpointSecurityGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-security-groups/{id}/restore": {
-      "patch": {
-        "operationId": "restoreOneEndpointSecurityGroup",
-        "summary": "Restore one EndpointSecurityGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-security-groups/{id}/provision": {
-      "put": {
-        "operationId": "provisionOneEndpointSecurityGroup",
-        "summary": "Provision one EndpointSecurityGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      }
-    },
-    "/v2/app-centric/endpoint-security-groups/{id}/deprovision": {
-      "patch": {
-        "operationId": "deprovisionOneEndpointSecurityGroup",
-        "summary": "Deprovision one EndpointSecurityGroup",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "v2/app-centric/endpoint-security-groups"
-        ]
-      }
-    },
     "/v2/app-centric/selectors/selectorCheck": {
       "post": {
         "operationId": "createSelectorCheck",
@@ -20668,6 +20668,229 @@
         },
         "tags": [
           "v2/app-centric/selectors"
+        ]
+      }
+    },
+    "/v2/utilities/connectivity/report": {
+      "post": {
+        "operationId": "generateConnectivityReportUtilities",
+        "summary": "Generate connectivity report between two endpoints",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EndpointConnectivityQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Connectivity report generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointConnectionUtilityResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Utilities"
+        ]
+      }
+    },
+    "/v1/runtime-data/aci-runtime": {
+      "get": {
+        "operationId": "getManyAciRuntime",
+        "summary": "Get many Aci Runtime",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AciRuntime"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/aci-runtime"
+        ]
+      }
+    },
+    "/v1/runtime-data/aci-runtime/create-runtime-data-job": {
+      "post": {
+        "operationId": "createRuntimeDataJobAciRuntime",
+        "summary": "",
+        "description": "Create ACI Runtime Collection Job",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AciRuntimeJobCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/aci-runtime"
+        ]
+      }
+    },
+    "/v2/app-centric/endpoints/sync": {
+      "post": {
+        "operationId": "syncEndpointsEndpoint",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EndpointSyncDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/app-centric/endpoints"
         ]
       }
     },
@@ -21298,173 +21521,6 @@
         },
         "tags": [
           "v1/runtime-data/f5-config"
-        ]
-      }
-    },
-    "/v1/runtime-data/aci-runtime": {
-      "get": {
-        "operationId": "getManyAciRuntime",
-        "summary": "Get many Aci Runtime",
-        "parameters": [
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "perPage",
-            "required": false,
-            "in": "query",
-            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "description": "Filter condition to apply to the query.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "description": "Properties to sort the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "group",
-            "required": false,
-            "in": "query",
-            "description": "Properties to group the response by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "fields",
-            "required": false,
-            "in": "query",
-            "description": "Properties to select.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "s",
-            "required": false,
-            "in": "query",
-            "description": "Where object for advanced AND/OR queries.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AciRuntime"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v1/runtime-data/aci-runtime"
-        ]
-      }
-    },
-    "/v1/runtime-data/aci-runtime/create-runtime-data-job": {
-      "post": {
-        "operationId": "createRuntimeDataJobAciRuntime",
-        "summary": "",
-        "description": "Create ACI Runtime Collection Job",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AciRuntimeJobCreateDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Job"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v1/runtime-data/aci-runtime"
         ]
       }
     },
@@ -24214,6 +24270,10 @@
             "type": "string",
             "maxLength": 500
           },
+          "addDefaultServiceGraphSubject": {
+            "type": "boolean",
+            "default": false
+          },
           "tenant": {
             "readOnly": true,
             "allOf": [
@@ -24221,6 +24281,16 @@
                 "$ref": "#/components/schemas/Tenant"
               }
             ]
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "applicationProfile",
+              "vrf",
+              "tenant",
+              "global"
+            ],
+            "default": "vrf"
           },
           "tenantId": {
             "type": "string"
@@ -25198,6 +25268,94 @@
           "allowServiceGraphBypass"
         ]
       },
+      "IpAddress": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "IP Address ID",
+            "readOnly": true
+          },
+          "address": {
+            "type": "string",
+            "description": "IP address",
+            "readOnly": true
+          },
+          "endpoint": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Endpoint"
+              }
+            ]
+          },
+          "orphanedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Endpoint last seen",
+            "readOnly": true
+          },
+          "endpointId": {
+            "type": "string",
+            "description": "Endpoint ID",
+            "readOnly": true
+          }
+        }
+      },
+      "Endpoint": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Endpoint ID",
+            "readOnly": true
+          },
+          "macAddress": {
+            "type": "string",
+            "description": "Endpoint MAC address",
+            "readOnly": true
+          },
+          "ipAddresses": {
+            "description": "IP addresses associated with this endpoint",
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IpAddress"
+            }
+          },
+          "orphanedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Endpoint last seen",
+            "readOnly": true
+          },
+          "endpointGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
+          "endpointGroupId": {
+            "type": "string",
+            "description": "Endpoint endpoint group ID",
+            "readOnly": true
+          },
+          "tenant": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "tenantId": {
+            "type": "string",
+            "readOnly": true
+          }
+        }
+      },
       "EndpointGroup": {
         "type": "object",
         "properties": {
@@ -25302,6 +25460,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Contract"
+            }
+          },
+          "endpoints": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Endpoint"
             }
           },
           "aciRuntimes": {
@@ -26324,7 +26489,13 @@
           "sourceEndpointGroupId": {
             "type": "string"
           },
+          "sourceEndpointSecurityGroupId": {
+            "type": "string"
+          },
           "destinationEndpointGroupId": {
+            "type": "string"
+          },
+          "destinationEndpointSecurityGroupId": {
             "type": "string"
           },
           "firewallRuleGroupId": {
@@ -26405,6 +26576,22 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
+          "sourceEndpointSecurityGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointSecurityGroup"
+              }
+            ]
+          },
+          "destinationEndpointSecurityGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointSecurityGroup"
               }
             ]
           },
@@ -27691,7 +27878,13 @@
           "sourceEndpointGroupId": {
             "type": "string"
           },
+          "sourceEndpointSecurityGroupId": {
+            "type": "string"
+          },
           "destinationEndpointGroupId": {
+            "type": "string"
+          },
+          "destinationEndpointSecurityGroupId": {
             "type": "string"
           },
           "firewallRuleGroupId": {
@@ -27772,6 +27965,22 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/EndpointGroup"
+              }
+            ]
+          },
+          "sourceEndpointSecurityGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointSecurityGroup"
+              }
+            ]
+          },
+          "destinationEndpointSecurityGroup": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointSecurityGroup"
               }
             ]
           },
@@ -28806,6 +29015,453 @@
           "name"
         ]
       },
+      "EndpointConnectivityQuery": {
+        "type": "object",
+        "properties": {
+          "generatedConfigIdentifier": {
+            "type": "string",
+            "description": "Identifier for the generated configuration"
+          },
+          "sourceEndpointIp": {
+            "type": "string",
+            "description": "Source endpoint IP address"
+          },
+          "sourceEndpointPort": {
+            "type": "number",
+            "description": "Source endpoint port"
+          },
+          "destinationEndpointIp": {
+            "type": "string",
+            "description": "Destination endpoint IP address"
+          },
+          "destinationEndpointPort": {
+            "type": "number",
+            "description": "Destination endpoint port"
+          },
+          "ipProtocol": {
+            "type": "string",
+            "description": "IP protocol"
+          },
+          "bypassServiceGraph": {
+            "type": "boolean",
+            "description": "Does the user want to bypass the service graph?"
+          },
+          "generateConfig": {
+            "type": "boolean",
+            "description": "Generate configuration to enable connectivity if not already possible."
+          },
+          "bidirectional": {
+            "type": "boolean",
+            "description": "Check for bi-directional connectivity."
+          },
+          "tenantId": {
+            "type": "string",
+            "description": "Tenant ID"
+          }
+        },
+        "required": [
+          "generatedConfigIdentifier",
+          "sourceEndpointIp",
+          "destinationEndpointIp",
+          "destinationEndpointPort",
+          "ipProtocol",
+          "bypassServiceGraph",
+          "generateConfig",
+          "bidirectional",
+          "tenantId"
+        ]
+      },
+      "SubjectToFilter": {
+        "type": "object",
+        "properties": {
+          "subjectId": {
+            "type": "string",
+            "description": "Subject ID"
+          },
+          "filterId": {
+            "type": "string",
+            "description": "Filter ID"
+          }
+        },
+        "required": [
+          "subjectId",
+          "filterId"
+        ]
+      },
+      "ContractToEpg": {
+        "type": "object",
+        "properties": {
+          "contractId": {
+            "type": "string",
+            "description": "Contract ID"
+          },
+          "epgId": {
+            "type": "string",
+            "description": "Endpoint Group ID"
+          },
+          "contractRelationType": {
+            "type": "string",
+            "description": "Contract Relation Type",
+            "enum": [
+              "Provider",
+              "Consumer",
+              "Intra"
+            ]
+          }
+        },
+        "required": [
+          "contractId",
+          "epgId",
+          "contractRelationType"
+        ]
+      },
+      "ContractToEsg": {
+        "type": "object",
+        "properties": {
+          "contractId": {
+            "type": "string",
+            "description": "Contract ID"
+          },
+          "esgId": {
+            "type": "string",
+            "description": "Endpoint Group ID"
+          },
+          "contractRelationType": {
+            "type": "string",
+            "description": "Contract Relation Type",
+            "enum": [
+              "Provider",
+              "Consumer",
+              "Intra"
+            ]
+          }
+        },
+        "required": [
+          "contractId",
+          "esgId",
+          "contractRelationType"
+        ]
+      },
+      "EndpointConnectivityGeneratedConfig": {
+        "type": "object",
+        "properties": {
+          "existingContract": {
+            "type": "boolean"
+          },
+          "Contracts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          },
+          "Subjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Subject"
+            }
+          },
+          "Filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
+          },
+          "FilterEntries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterEntry"
+            }
+          },
+          "SubjectToFilter": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubjectToFilter"
+            }
+          },
+          "ContractToEpg": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractToEpg"
+            }
+          },
+          "ContractToEsg": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractToEsg"
+            }
+          },
+          "FirewallRules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          }
+        },
+        "required": [
+          "existingContract",
+          "Contracts",
+          "Subjects",
+          "Filters",
+          "FilterEntries",
+          "SubjectToFilter",
+          "ContractToEpg",
+          "ContractToEsg",
+          "FirewallRules"
+        ]
+      },
+      "ConnectivityNode": {
+        "type": "object",
+        "properties": {
+          "nodeId": {
+            "type": "string",
+            "description": "The ID of the node"
+          },
+          "nodeType": {
+            "type": "string",
+            "description": "The type of the node",
+            "enum": [
+              "external_endpoint",
+              "endpoint",
+              "epg",
+              "esg",
+              "contract",
+              "subject",
+              "filter",
+              "filter_entry",
+              "service_graph",
+              "tenant"
+            ]
+          },
+          "generated": {
+            "type": "boolean",
+            "description": "Whether the node is generated"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the node"
+          }
+        }
+      },
+      "ConnectionTrace": {
+        "type": "object",
+        "properties": {
+          "sourcePath": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectivityNode"
+            }
+          },
+          "contractPath": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectivityNode"
+            }
+          },
+          "destinationPath": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectivityNode"
+            }
+          },
+          "fullPath": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectivityNode"
+            }
+          }
+        },
+        "required": [
+          "sourcePath",
+          "contractPath",
+          "destinationPath",
+          "fullPath"
+        ]
+      },
+      "EndpointConnectionUtilityResponse": {
+        "type": "object",
+        "properties": {
+          "connectivityResult": {
+            "type": "string",
+            "description": "The source endpoint",
+            "enum": [
+              "allowed",
+              "denied",
+              "not-supported",
+              "denied-generated-config"
+            ]
+          },
+          "connectivityResultDetail": {
+            "type": "string",
+            "description": "The detail of the connectivity result"
+          },
+          "generatedConfig": {
+            "description": "Generated configuration when connectivity requires new config",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointConnectivityGeneratedConfig"
+              }
+            ]
+          },
+          "sourceEndpoint": {
+            "description": "The source endpoint",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Endpoint"
+              }
+            ]
+          },
+          "destinationEndpoint": {
+            "description": "The destination endpoint",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Endpoint"
+              }
+            ]
+          },
+          "connectionTrace": {
+            "description": "The connection trace",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ConnectionTrace"
+              }
+            ]
+          }
+        },
+        "required": [
+          "connectivityResult",
+          "connectivityResultDetail",
+          "sourceEndpoint",
+          "destinationEndpoint",
+          "connectionTrace"
+        ]
+      },
+      "AciRuntimeJobCreateDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "FirewallRule",
+              "NatRule",
+              "F5Config",
+              "AciRuntime",
+              "ExternalRoute"
+            ]
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "vlanId": {
+            "type": "string"
+          },
+          "endpointGroupId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "SyncEndpoint": {
+        "type": "object",
+        "properties": {
+          "mac": {
+            "type": "string"
+          },
+          "ip": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "encap": {
+            "type": "string"
+          },
+          "interface": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "mac",
+          "ip"
+        ]
+      },
+      "SyncEndpointGroup": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncEndpoint"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "endpoints"
+        ]
+      },
+      "SyncEndpointSecurityGroup": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncEndpoint"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "endpoints"
+        ]
+      },
+      "SyncTenant": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "endpointGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncEndpointGroup"
+            }
+          },
+          "endpointSecurityGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncEndpointSecurityGroup"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "endpointGroups",
+          "endpointSecurityGroups"
+        ]
+      },
+      "EndpointSyncDto": {
+        "type": "object",
+        "properties": {
+          "tenants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncTenant"
+            }
+          }
+        },
+        "required": [
+          "tenants"
+        ]
+      },
       "SelfServiceRawConfig": {
         "type": "object",
         "properties": {
@@ -29420,33 +30076,6 @@
         "required": [
           "type",
           "id"
-        ]
-      },
-      "AciRuntimeJobCreateDto": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "FirewallRule",
-              "NatRule",
-              "F5Config",
-              "AciRuntime",
-              "ExternalRoute"
-            ]
-          },
-          "datacenterId": {
-            "type": "string"
-          },
-          "vlanId": {
-            "type": "string"
-          },
-          "endpointGroupId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
         ]
       },
       "ExternalRouteJobCreateDto": {

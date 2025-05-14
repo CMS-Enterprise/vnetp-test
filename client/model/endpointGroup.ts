@@ -11,6 +11,7 @@
  */
 import { AciRuntime } from './aciRuntime';
 import { Tenant } from './tenant';
+import { Endpoint } from './endpoint';
 import { BridgeDomain } from './bridgeDomain';
 import { ApplicationProfile } from './applicationProfile';
 import { Contract } from './contract';
@@ -41,6 +42,7 @@ export interface EndpointGroup {
     readonly consumedContracts?: Array<Contract>;
     readonly providedContracts?: Array<Contract>;
     readonly intraContracts?: Array<Contract>;
+    readonly endpoints?: Array<Endpoint>;
     readonly aciRuntimes?: AciRuntime;
     readonly selector?: Selector;
 }

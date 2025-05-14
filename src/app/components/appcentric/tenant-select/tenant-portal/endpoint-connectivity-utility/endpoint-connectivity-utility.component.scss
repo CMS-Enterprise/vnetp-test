@@ -1,0 +1,369 @@
+.container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  max-width: 100%;
+}
+
+.header {
+  margin-bottom: 20px;
+
+  h1 {
+    margin: 0;
+    color: #333;
+    font-weight: 500;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  flex: 1;
+}
+
+// Form styles
+.connectivity-form {
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 14px;
+
+      &:focus {
+        outline: none;
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      }
+    }
+
+    .error {
+      color: #dc3545;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+  }
+
+  .form-options {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+
+      input[type='checkbox'] {
+        margin-right: 8px;
+        width: auto;
+      }
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+
+    button {
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &.btn-primary {
+        background-color: #007bff;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background-color: #0069d9;
+        }
+
+        &:disabled {
+          background-color: #80bdff;
+          cursor: not-allowed;
+        }
+      }
+
+      &.btn-secondary {
+        background-color: #6c757d;
+        color: white;
+
+        &:hover {
+          background-color: #5a6268;
+        }
+      }
+    }
+  }
+}
+
+// Results styles
+.connectivity-results {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  h3 {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  h4 {
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+  }
+}
+
+// Status indicator
+.connection-status {
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+
+  .detail {
+    font-weight: normal;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+  &.status-allowed {
+    background-color: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+  }
+
+  &.status-denied {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #dc3545;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+  }
+
+  &.status-denied-config {
+    background-color: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+  }
+
+  &.status-unknown {
+    background-color: rgba(108, 117, 125, 0.2);
+    color: #6c757d;
+    border: 1px solid rgba(108, 117, 125, 0.3);
+  }
+}
+
+// Endpoints information
+.endpoints-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+
+  .source-endpoint,
+  .destination-endpoint {
+    flex: 1;
+
+    strong {
+      margin-right: 5px;
+    }
+
+    span {
+      font-style: italic;
+    }
+  }
+
+  .source-endpoint {
+    padding-right: 10px;
+  }
+
+  .destination-endpoint {
+    padding-left: 10px;
+    text-align: right;
+  }
+}
+
+// Path visualization
+.path-visualization {
+  margin-bottom: 20px;
+
+  .path-section {
+    margin-bottom: 20px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .path-nodes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+
+  .path-node {
+    padding: 10px 15px;
+    border-radius: 5px;
+    min-width: 120px;
+    position: relative;
+
+    &.last-node {
+      font-weight: bold;
+    }
+
+    .node-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .node-type {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .generated-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #27ae60;
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+  }
+
+  .path-arrow {
+    font-size: 20px;
+    color: #6c757d;
+  }
+}
+
+// Generated config
+.generated-config {
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border-left: 4px solid #27ae60;
+
+  h3 {
+    margin-top: 0;
+    color: #27ae60;
+  }
+
+  .config-section {
+    margin-bottom: 15px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .config-item,
+    .filter-entry {
+      padding: 8px 12px;
+      background-color: #fff;
+      border-radius: 3px;
+      border: 1px solid #dee2e6;
+      margin-bottom: 5px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .filter-entry {
+      div {
+        margin-bottom: 3px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+// Error message
+.error-message {
+  margin-top: 20px;
+
+  .alert-danger {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #dc3545;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .endpoints-info {
+    flex-direction: column;
+
+    .source-endpoint,
+    .destination-endpoint {
+      text-align: left;
+      padding: 5px 0;
+    }
+  }
+}
