@@ -22,6 +22,7 @@ import {
 } from '../../../../../../../client';
 import { forkJoin, of, Observable, throwError } from 'rxjs';
 import { map, switchMap, catchError, defaultIfEmpty } from 'rxjs/operators';
+import { EndpointConnectionUtilityResponseConnectivityResultEnum } from '../../../../../../../client';
 
 @Component({
   selector: 'app-endpoint-connectivity-utility',
@@ -54,7 +55,9 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
     private endpointGroupsService: V2AppCentricEndpointGroupsService,
     private endpointSecurityGroupsService: V2AppCentricEndpointSecurityGroupsService,
     private firewallRulesService: V1NetworkSecurityFirewallRulesService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     // Extract tenant ID from the URL
     const match = this.router.routerState.snapshot.url.match(
       /tenant-select\/edit\/[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}/,
@@ -63,7 +66,6 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
       this.tenantId = match[0].split('/')[2];
     }
 
-    // Initialize form
     this.connectivityForm = this.fb.group({
       generatedConfigIdentifier: ['connectivity-test-' + Date.now(), Validators.required],
       sourceEndpointIp: ['', [Validators.required, Validators.pattern('^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$')]],
@@ -76,10 +78,6 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
       applyConfig: [false],
       bidirectional: [false],
     });
-  }
-
-  ngOnInit(): void {
-    // Nothing to initialize
   }
 
   // Submit form to test connectivity
@@ -162,14 +160,17 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
   getStatusClass(): string {
     const status = this.getConnectionStatus();
 
-    if (status === 'denied' && this.connectivityResult?.connectivityResult === 'denied-generated-config') {
+    if (
+      status === 'denied' &&
+      this.connectivityResult?.connectivityResult === EndpointConnectionUtilityResponseConnectivityResultEnum.DeniedGeneratedConfig
+    ) {
       return 'status-denied-config';
     }
 
     switch (status) {
-      case 'allowed':
+      case EndpointConnectionUtilityResponseConnectivityResultEnum.Allowed:
         return 'status-allowed';
-      case 'denied':
+      case EndpointConnectionUtilityResponseConnectivityResultEnum.Denied:
         return 'status-denied';
       default:
         return 'status-unknown';
@@ -183,7 +184,7 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
     }
 
     const status = this.connectivityResult.connectivityResult;
-    return status.includes('allowed') || status === 'denied-generated-config';
+    return status.includes('allowed') || status === EndpointConnectionUtilityResponseConnectivityResultEnum.DeniedGeneratedConfig;
   }
 
   // Check if we should show generated config details
@@ -193,8 +194,9 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
     }
 
     return (
-      this.connectivityResult.connectivityResult === 'denied-generated-config' ||
-      (this.connectivityResult.connectivityResult === 'denied' && this.connectivityForm.value.generateConfig)
+      this.connectivityResult.connectivityResult === EndpointConnectionUtilityResponseConnectivityResultEnum.DeniedGeneratedConfig ||
+      (this.connectivityResult.connectivityResult === EndpointConnectionUtilityResponseConnectivityResultEnum.Denied &&
+        this.connectivityForm.value.generateConfig)
     );
   }
 
@@ -265,7 +267,7 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
       return of([]);
     }
     const contractsToCreateDto = contractsToCreateInput.map(contractInput => {
-      const { /* id, */ ...contractData } = contractInput;
+      const { ...contractData } = contractInput;
       return { ...contractData, id: undefined };
     });
     return this.contractsService.createManyContract({ createManyContractDto: { bulk: contractsToCreateDto } }).pipe(
@@ -282,7 +284,7 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
       return of([]);
     }
     const filtersToCreateDto = filtersToCreateInput.map(filterInput => {
-      const { /* id, */ ...filterData } = filterInput;
+      const { ...filterData } = filterInput;
       return { ...filterData, id: undefined };
     });
     return this.filtersService.createManyFilter({ createManyFilterDto: { bulk: filtersToCreateDto } }).pipe(
@@ -307,7 +309,7 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
     let dtos;
     try {
       dtos = subjectsToCreateInput.map(subjectInput => {
-        const { /* id, */ ...subjectData } = subjectInput;
+        const { ...subjectData } = subjectInput;
         let contractIdToUse = subjectData.contractId;
 
         if (!existingContractFlag) {
@@ -355,7 +357,7 @@ export class EndpointConnectivityUtilityComponent implements OnInit {
     let dtos;
     try {
       dtos = filterEntriesToCreateInput.map(feInput => {
-        const { /* id, */ filterId, ...feData } = feInput;
+        const { filterId, ...feData } = feInput;
         let actualFilterId: string | undefined;
         const originalFilterIdName = filterId;
 
