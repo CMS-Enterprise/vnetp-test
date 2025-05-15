@@ -142,13 +142,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getDatacenters(): void {
-    this.datacenterService.getManyDatacenter({ page: 1, perPage: 1 }).subscribe(data => {
-      const paged: any = data;
-      this.datacenters = paged.total;
-      try {
-        this.status[1].status = 'green';
-      } catch {}
-    });
+    this.datacenterService
+      .getManyDatacenter({
+        page: 1,
+        perPage: 1,
+        filter: ['tenantVersion||eq||1'],
+      })
+      .subscribe(data => {
+        const paged: any = data;
+        this.datacenters = paged.total;
+        try {
+          this.status[1].status = 'green';
+        } catch {}
+      });
   }
 
   private getTiers(): void {
