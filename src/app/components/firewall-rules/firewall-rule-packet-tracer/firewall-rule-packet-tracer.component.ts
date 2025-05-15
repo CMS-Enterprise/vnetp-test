@@ -125,75 +125,15 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     // this.createFormListeners();
   }
 
-  // ngOnDestroy(): void {
-  //   this.unsubAll();
-  //   this.submitted = false;
-  //   this.resetFilter();
-  //   this.filteredChecklist = [] as any;
-  //   this.ngx.resetModalData('firewallRulePacketTracer');
-  // }
-
   onOpen(): void {
-    console.log('onOpen', this.isDrawerOpened);
     this.isDrawerOpened = true;
   }
-
-  applyFilter2(): void {
-    if (!this.filterExact && !this.filterPartial) {
-      this.filteredRules = [...this.rulesHit];
-    } else {
-      this.filteredRules = this.rulesHit.filter(rule => {
-        const isExact = this.isExactMatch(rule);
-        const isPartial = this.isPartialMatch(rule);
-        return (this.filterExact && isExact) || (this.filterPartial && isPartial);
-      });
-    }
-    // this.currentPage = 1;
-  }
-
-  resetFilter2(): void {
-    this.filterExact = false;
-    this.filterPartial = false;
-  }
-
-  // search2(): void {
-  //   this.rulesHit = [];
-  //   this.submitted = true;
-  //   // if (this.form.invalid) {
-  //   //   return;
-  //   // }
-
-  //   this.objects.firewallRules.forEach(rule => {
-  //     const checkList = {
-  //       sourceInRange: this.handleInRange(rule, 'source', this.form.controls.sourceInRange),
-  //       destInRange: this.handleInRange(rule, 'destination', this.form.controls.destInRange),
-  //       sourcePortMatch: this.handlePortMatch(rule, 'source', this.form.controls.sourcePort),
-  //       destPortMatch: this.handlePortMatch(rule, 'destination', this.form.controls.destPort),
-  //       directionMatch: this.form.controls.direction.value === rule.direction,
-  //       protocolMatch: this.form.controls.protocol.value === rule.protocol,
-  //       enabledMatch: this.form.controls.enabled.value === rule.enabled,
-  //       softDeleted: Boolean(rule.deletedAt),
-  //       actionMatch: this.form.controls.action.value === rule.action,
-  //     };
-
-  //     if (checkList.sourcePortMatch === null || checkList.destPortMatch === null) {
-  //       delete checkList.sourcePortMatch;
-  //       delete checkList.destPortMatch;
-  //     }
-
-  //     this.rulesHit.push({ checkList, name: rule.name });
-  //   });
-  //   this.resetFilter2();
-  //   this.applyFilter2();
-  //   this.toastrService.success('Packet Tracer Executed.');
-  //   console.log('this.rulesHit', this.rulesHit);
-  // }
 
   search() {
     this.isSearchingRules = true;
     const start = performance.now();
     this.objects.firewallRules.forEach(rule => {
-      this.setChecklistsForRulesByField2(rule);
+      this.setChecklist2(rule);
       // this.applyFilter();
       // Object.keys(this.form.controls).forEach(field => {
       //   console.log('field', field);
@@ -221,19 +161,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.isSearchingRules = false;
   }
 
-  createFormListeners(): void {
-    Object.keys(this.form.controls).forEach(field => {
-      const control = this.form.get(field);
-      if (control) {
-        const subscription = control.valueChanges.subscribe(() => {
-          this.setChecklistsForRulesByField(field);
-          this.applyFilter();
-        });
-        this.fieldSubscriptions.push(subscription);
-      }
-    });
-  }
-
   isExactMatch(rule: FirewallRulePacketTracerOutput): boolean {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { softDeleted, ...otherValues } = rule.checkList;
@@ -248,7 +175,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   applyFilter(): void {
     this.filteredChecklist = cloneDeep(this.firewallRulesWithChecklist);
-    // console.log(`Execution time: ${end - start} ms`);
     if (this.filterExact === null && !this.searchQuery) {
       return;
     }
@@ -300,43 +226,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     }
   }
 
-  setChecklistsForRulesByField(fieldName: string): void {
-    // console.trace('set checklist for rules by field func');
-    // const fieldValue = this.form.controls[fieldName].value;
-    // const errors = this.form.controls[fieldName].errors;
-    // if (errors || fieldValue === null || fieldValue === '' || fieldValue === undefined) {
-    //   Object.keys(this.firewallRulesWithChecklist).forEach(ruleName => {
-    //     this.clearChecklist(ruleName, fieldName);
-    //   });
-    //   return;
-    // }
-    // const ruleCount = 0;
-    this.setChecklist(this.objects.firewallRules, fieldName);
-    // this.objects.firewallRules.forEach(rule => {
-    //   this.setChecklist(rule, fieldName);
-    //   ruleCount = ruleCount + 1;
-    // });
-    // console.log('ruleCount', ruleCount);
-  }
-
-  setChecklistsForRulesByField2(rule): void {
-    this.setChecklist2(rule);
-    // this.objects.firewallRules.forEach(rule => {
-    //   this.setChecklist(rule, fieldName);
-    //   ruleCount = ruleCount + 1;
-    // });
-  }
-
-  setChecklist(firewallRules, fieldName): void {
-    firewallRules.forEach(firewallRule => {
-      const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRule.name];
-      if (!ruleWithChecklist) {
-        this.firewallRulesWithChecklist[firewallRule.name] = { checkList: this.createNewChecklist() };
-      }
-      this.firewallRulesWithChecklist[firewallRule.name].checkList[fieldName] = this.getCellValue(fieldName, firewallRule);
-    });
-  }
-
   setChecklist2(firewallRule): void {
     Object.keys(this.form.controls).forEach(field => {
       const fieldValue = this.form.controls[field].value;
@@ -357,16 +246,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       }
     });
   }
-
-  // setChecklist(firewallRule: FirewallRule, fieldName: string): void {
-  //   console.trace('set checklist func');
-  //   const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRule.name];
-  //   if (!ruleWithChecklist) {
-  //     this.firewallRulesWithChecklist[firewallRule.name] = { checkList: this.createNewChecklist() };
-  //   }
-  //   console.trace('this.firewallRulesWithChecklist',this.firewallRulesWithChecklist);
-  //   this.firewallRulesWithChecklist[firewallRule.name].checkList[fieldName] = this.getCellValue(fieldName, firewallRule);
-  // }
 
   clearChecklist(firewallRuleName: string, fieldName: string): void {
     const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRuleName];
@@ -419,16 +298,11 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       }
     }
 
-    // const end = performance.now();
-    // console.log(` HANDLE PORT MATCH Execution time: ${end - start} ms`);
-
     // Check for an exact match between the form port value and the rule's port value
     return formPortValue === rulePortValue;
   }
 
   ipLookup(rule: FirewallRule, location, control): boolean {
-    // console.log('rule', rule);
-    // console.log('control', control);
     const formIpValue = control.value;
     const ruleIpValue = location === 'source' ? rule.sourceIpAddress : rule.destinationIpAddress;
 
@@ -445,8 +319,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   }
 
   networkObjectLookup(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl) {
-    const start = performance.now();
-
     const formIpValue = control.value;
     const ruleNetworkObject = location === 'source' ? rule.sourceNetworkObject : rule.destinationNetworkObject;
 
@@ -471,9 +343,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         return true;
       }
     }
-
-    const end = performance.now();
-    console.log(` NET OBJ LOOKUP Execution time: ${end - start} ms`);
 
     return false;
   }
@@ -595,9 +464,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.submitted = false;
     this.resetFilter();
     this.tableRules = [];
-    // this.isDrawerOpened = false;
     this.form.reset();
-    // this.ngx.resetModalData('firewallRulePacketTracer');
   }
 
   close(): void {
@@ -613,41 +480,10 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     return this.objects.serviceObjectGroups.find(obj => obj.id === id);
   }
 
-  onHover(row: any, column: string | null) {
-    this.hoveredRow = row;
-    this.hoveredColumn = column;
-  }
-
   getCellValue(column: string, rule: FirewallRule): boolean {
     console.log('on cell value when key entry?');
     const columnFunction = this.tableConfig.columnFunctions[column];
     return columnFunction ? columnFunction(rule) : false;
-  }
-
-  isChecklistFieldEmpty(fieldName: string, firewallRule: FirewallRule): boolean {
-    console.log('isChecklistFieldEmpty run when');
-    return this.firewallRulesWithChecklist[firewallRule.name].checkList[fieldName] === null;
-  }
-
-  // get firewallRulesArray() {
-  //   const objectFromReduce = this.rulesHit.reduce((obj, value, index) => {
-  //     obj[index] = value;
-  //     return obj;
-  //   }, {});
-  //   console.log('objectFromReduce',objectFromReduce)
-  //   return []
-  //   // return objectFromReduce
-  //   // return Object.keys(this.rulesHit).map(name => ({
-  //   //   checkList: {...this.rulesHit[name]},
-  //   // }));
-  // }
-
-  get firewallRulesArray() {
-    console.log('hit');
-    return Object.keys(this.filteredChecklist).map(name => ({
-      name,
-      ...this.filteredChecklist[name],
-    }));
   }
 
   toggleSearch(): void {
@@ -665,6 +501,14 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.resetFilter();
   }
 }
+
+// ngOnDestroy(): void {
+//   this.unsubAll();
+//   this.submitted = false;
+//   this.resetFilter();
+//   this.filteredChecklist = [] as any;
+//   this.ngx.resetModalData('firewallRulePacketTracer');
+// }
 
 // handleApplication(rule: FirewallRule, applicationId: string): boolean {
 //   if (!this.appIdEnabled) {
@@ -684,4 +528,113 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 //   if (rect && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) {
 //     this.onHover(null, null);
 //   }
+// }
+
+// applyFilter2(): void {
+//   if (!this.filterExact && !this.filterPartial) {
+//     this.filteredRules = [...this.rulesHit];
+//   } else {
+//     this.filteredRules = this.rulesHit.filter(rule => {
+//       const isExact = this.isExactMatch(rule);
+//       const isPartial = this.isPartialMatch(rule);
+//       return (this.filterExact && isExact) || (this.filterPartial && isPartial);
+//     });
+//   }
+//   // this.currentPage = 1;
+// }
+
+// resetFilter2(): void {
+//   this.filterExact = false;
+//   this.filterPartial = false;
+// }
+
+// createFormListeners(): void {
+//   Object.keys(this.form.controls).forEach(field => {
+//     const control = this.form.get(field);
+//     if (control) {
+//       const subscription = control.valueChanges.subscribe(() => {
+//         this.setChecklistsForRulesByField(field);
+//         this.applyFilter();
+//       });
+//       this.fieldSubscriptions.push(subscription);
+//     }
+//   });
+// }
+
+// get firewallRulesArray() {
+//   const objectFromReduce = this.rulesHit.reduce((obj, value, index) => {
+//     obj[index] = value;
+//     return obj;
+//   }, {});
+//   console.log('objectFromReduce',objectFromReduce)
+//   return []
+//   // return objectFromReduce
+//   // return Object.keys(this.rulesHit).map(name => ({
+//   //   checkList: {...this.rulesHit[name]},
+//   // }));
+// }
+
+// setChecklist(firewallRule: FirewallRule, fieldName: string): void {
+//   console.trace('set checklist func');
+//   const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRule.name];
+//   if (!ruleWithChecklist) {
+//     this.firewallRulesWithChecklist[firewallRule.name] = { checkList: this.createNewChecklist() };
+//   }
+//   console.trace('this.firewallRulesWithChecklist',this.firewallRulesWithChecklist);
+//   this.firewallRulesWithChecklist[firewallRule.name].checkList[fieldName] = this.getCellValue(fieldName, firewallRule);
+// }
+
+// setChecklistsForRulesByField(fieldName: string): void {
+//   console.trace('set checklist for rules by field func');
+//   const fieldValue = this.form.controls[fieldName].value;
+//   const errors = this.form.controls[fieldName].errors;
+//   if (errors || fieldValue === null || fieldValue === '' || fieldValue === undefined) {
+//     Object.keys(this.firewallRulesWithChecklist).forEach(ruleName => {
+//       this.clearChecklist(ruleName, fieldName);
+//     });
+//     return;
+//   }
+//   const ruleCount = 0;
+//   this.setChecklist(this.objects.firewallRules, fieldName);
+//   this.objects.firewallRules.forEach(rule => {
+//     this.setChecklist(rule, fieldName);
+//     ruleCount = ruleCount + 1;
+//   });
+//   console.log('ruleCount', ruleCount);
+// }
+
+// setChecklistsForRulesByField2(rule): void {
+//   this.setChecklist2(rule);
+//   // this.objects.firewallRules.forEach(rule => {
+//   //   this.setChecklist(rule, fieldName);
+//   //   ruleCount = ruleCount + 1;
+//   // });
+// }
+
+// setChecklist(firewallRules, fieldName): void {
+//   firewallRules.forEach(firewallRule => {
+//     const ruleWithChecklist = this.firewallRulesWithChecklist[firewallRule.name];
+//     if (!ruleWithChecklist) {
+//       this.firewallRulesWithChecklist[firewallRule.name] = { checkList: this.createNewChecklist() };
+//     }
+//     this.firewallRulesWithChecklist[firewallRule.name].checkList[fieldName] = this.getCellValue(fieldName, firewallRule);
+//   });
+// }
+
+// isChecklistFieldEmpty(fieldName: string, firewallRule: FirewallRule): boolean {
+//   console.log('isChecklistFieldEmpty run when');
+//   return this.firewallRulesWithChecklist[firewallRule.name].checkList[fieldName] === null;
+// }
+
+// get firewallRulesArray() {
+//   console.log('hit');
+//   return Object.keys(this.filteredChecklist).map(name => ({
+//     name,
+//     ...this.filteredChecklist[name],
+//   }));
+// }
+
+// onHover(row: any, column: string | null) {
+//   this.hoveredRow = row;
+//   this.hoveredColumn = column;
 // }
