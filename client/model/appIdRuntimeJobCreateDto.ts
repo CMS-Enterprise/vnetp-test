@@ -14,7 +14,7 @@
 export interface AppIdRuntimeJobCreateDto { 
     type: AppIdRuntimeJobCreateDtoTypeEnum;
     datacenterId?: string;
-    appIdVersion: string;
+    appIdVersion?: string;
     tierId: string;
 }
 export enum AppIdRuntimeJobCreateDtoTypeEnum {

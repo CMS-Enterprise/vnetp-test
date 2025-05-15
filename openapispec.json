@@ -29880,7 +29880,6 @@
         },
         "required": [
           "type",
-          "appIdVersion",
           "tierId"
         ]
       },

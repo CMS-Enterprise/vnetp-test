@@ -30,7 +30,7 @@ export class AppIdRuntimeService {
     if (!this.appIdEnabled) {
       return;
     }
-
+    console.log('loadPanosApplications', appVersion, forceReload);
     const currentData = this.panosApplicationsSubject.getValue();
 
     // Check if data for this version already exists and is not forced to reload
