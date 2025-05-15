@@ -164,7 +164,7 @@ describe('DeployComponent', () => {
     });
 
     it('should call to deploys tiers after confirming', () => {
-      const launchTierProvisioningJobsSpy = jest.spyOn(component, 'launchTierProvisioningJobs');
+      jest.spyOn(component, 'launchTierProvisioningJobs');
       jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn) => {
         confirmFn();
         return of().subscribe();
