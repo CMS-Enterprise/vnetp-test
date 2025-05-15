@@ -6,7 +6,7 @@
   [dismissable]="false"
   customClass="xxlarge-modal"
 >
-  <mat-drawer-container *ngIf="!isSearchingRules; else loading" style="position: absolute; top: 0; bottom: 0; right: 0; left: 0">
+  <mat-drawer-container style="position: absolute; top: 0; bottom: 0; right: 0; left: 0">
     <mat-drawer-content>
       <div class="toolbar">
         <div class="search-container">
@@ -47,7 +47,7 @@
         <app-icon-button icon="times" label="close" type="times" (handleClick)="close()"></app-icon-button>
       </div>
 
-      <div class="table-container">
+      <div *ngIf="!isSearchingRules; else loading" class="table-container">
         <table style="box-shadow: none; margin: 0" mat-table [dataSource]="tableRules" class="mat-elevation-z8">
           <ng-container>
             <ng-container *ngFor="let col of tableConfig.displayedColumns" [matColumnDef]="col">

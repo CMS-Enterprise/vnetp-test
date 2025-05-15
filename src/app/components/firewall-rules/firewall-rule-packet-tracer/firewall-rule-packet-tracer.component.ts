@@ -50,8 +50,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   pageSize = 10;
 
-  filterExact = null;
-
   serviceTypeSubscription: Subscription;
 
   rulesHit = [];
@@ -59,7 +57,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   tableRules;
   isSearchingRules = false;
 
-  // filterExact = false;
+  filterExact = null;
   filterPartial = false;
 
   public environment = environment;
@@ -134,19 +132,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     const start = performance.now();
     this.objects.firewallRules.forEach(rule => {
       this.setChecklist2(rule);
-      // this.applyFilter();
-      // Object.keys(this.form.controls).forEach(field => {
-      //   console.log('field', field);
-      //   const control = this.form.get(field);
-      //   if (control) {
-      //     totalCount = totalCount + 1;
-
-      //     // const subscription = control.valueChanges.subscribe(() => {
-
-      //     // });
-      //     // this.fieldSubscriptions.push(subscription);
-      //   }
-      // });
     });
     this.applyFilter();
     console.log('is searching', this.isSearchingRules);
@@ -158,7 +143,10 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     }));
     const end = performance.now();
     console.log(end - start);
-    this.isSearchingRules = false;
+
+    setTimeout(() => {
+      this.isSearchingRules = false;
+    }, 1000);
   }
 
   isExactMatch(rule: FirewallRulePacketTracerOutput): boolean {
@@ -174,6 +162,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   }
 
   applyFilter(): void {
+    console.log('running apply filter');
     this.filteredChecklist = cloneDeep(this.firewallRulesWithChecklist);
     if (this.filterExact === null && !this.searchQuery) {
       return;

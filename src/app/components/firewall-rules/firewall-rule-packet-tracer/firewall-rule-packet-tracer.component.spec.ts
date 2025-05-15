@@ -128,12 +128,6 @@ describe('FirewallRulesPacketTracerComponent', () => {
       expect(result).toBeTruthy();
     });
 
-    // it('should return the correct value for application', () => {
-    //   jest.spyOn(component, 'handleApplication').mockReturnValue(true);
-    //   const result = component.getCellValue('application', 'application' as any);
-    //   expect(result).toBeTruthy();
-    // });
-
     it('should return the correct value for softDeleted', () => {
       const result = component.getCellValue('softDeleted', { deletedAt: new Date() } as any);
       expect(result).toBeTruthy();
@@ -222,52 +216,16 @@ describe('FirewallRulesPacketTracerComponent', () => {
       component.searchQuery = 'mockRuleName2';
       component.firewallRulesWithChecklist = mockChecklist as any;
       component.applyFilter();
-      // expect(component.filteredChecklist).toEqual({
-      //   mockRuleName2: {
-      //     checkList: {
-      //       mockFieldName: 'test',
-      //       mockFieldName2: 'not test',
-      //     },
-      //   },
-      // });
+      expect(component.filteredChecklist).toEqual({
+        mockRuleName2: {
+          checkList: {
+            mockFieldName: 'test',
+            mockFieldName2: 'not test',
+          },
+        },
+      });
     });
   });
-
-  // describe('handleApplication', () => {
-  //   it('should return true if app id is not enabled', () => {
-  //     component.appIdEnabled = false;
-  //     const result = component.handleApplication('test' as any, 'test');
-  //     expect(result).toBeTruthy();
-  //   });
-
-  //   it('should return true if app id is enabled and applicationId is any', () => {
-  //     component.appIdEnabled = true;
-  //     const result = component.handleApplication('test' as any, 'any');
-  //     expect(result).toBeTruthy();
-  //   });
-
-  //   it('should return true if applicationId is present', () => {
-  //     const mockRule = { panosApplications: [{ id: 'test' }] } as any;
-  //     component.appIdEnabled = true;
-  //     component.form.controls.application.setValue('test');
-  //     const result = component.handleApplication(mockRule, 'test');
-  //     expect(result).toBeTruthy();
-  //   });
-
-  //   it('should return false if applicationId is not present', () => {
-  //     const mockRule = { panosApplications: [{ id: 'test' }] } as any;
-  //     component.appIdEnabled = true;
-  //     component.form.controls.application.setValue('not present');
-  //     const result = component.handleApplication(mockRule, 'test');
-  //     expect(result).toBeFalsy();
-  //   });
-  // });
-
-  // it('should set hovered row and col', () => {
-  //   component.onHover('row', 'col');
-  //   expect(component.hoveredRow).toBe('row');
-  //   expect(component.hoveredColumn).toBe('col');
-  // });
 
   it('should reset form', () => {
     component.form.controls.sourcePort.setValue('80');
@@ -598,55 +556,6 @@ describe('FirewallRulesPacketTracerComponent', () => {
     expect(component.isSearchOpen).toBeTruthy();
   });
 
-  // it('should return if checklist field is empty', () => {
-  //   const mockChecklist = {
-  //     mockRuleName: {
-  //       checkList: {
-  //         mockFieldName: true,
-  //       },
-  //     },
-  //   };
-  //   component.firewallRulesWithChecklist = mockChecklist as any;
-  //   const result = component.isChecklistFieldEmpty('mockFieldName', { name: 'mockRuleName' } as any);
-  //   expect(result).toBeFalsy();
-  // });
-  // describe('onMouseMove', () => {
-  //   it('should call on hover on mouse event outside left of rect', () => {
-  //     const mockEvent = { clientX: 0, clientY: 0 } as MouseEvent;
-  //     const mockRect = { left: 1, top: 0, bottom: 0, right: 0 } as DOMRect;
-  //     jest.spyOn(document, 'querySelector').mockReturnValueOnce({ getBoundingClientRect: () => mockRect } as any);
-  //     const onHoverSpy = jest.spyOn(component, 'onHover').mockImplementation();
-  //     component.onMouseMove(mockEvent);
-  //     expect(onHoverSpy).toHaveBeenCalled();
-  //   });
-
-  //   it('should call on hover on mouse event outside right of rect', () => {
-  //     const mockEvent = { clientX: 1, clientY: 0 } as MouseEvent;
-  //     const mockRect = { left: 0, top: 0, bottom: 0, right: 0 } as DOMRect;
-  //     jest.spyOn(document, 'querySelector').mockReturnValueOnce({ getBoundingClientRect: () => mockRect } as any);
-  //     const onHoverSpy = jest.spyOn(component, 'onHover').mockImplementation();
-  //     component.onMouseMove(mockEvent);
-  //     expect(onHoverSpy).toHaveBeenCalled();
-  //   });
-
-  //   it('should call on hover on mouse event outside bottom of rect', () => {
-  //     const mockEvent = { clientX: 0, clientY: 1 } as MouseEvent;
-  //     const mockRect = { left: 0, top: 0, bottom: 0, right: 0 } as DOMRect;
-  //     jest.spyOn(document, 'querySelector').mockReturnValueOnce({ getBoundingClientRect: () => mockRect } as any);
-  //     const onHoverSpy = jest.spyOn(component, 'onHover').mockImplementation();
-  //     component.onMouseMove(mockEvent);
-  //     expect(onHoverSpy).toHaveBeenCalled();
-  //   });
-
-  //   it('should call on hover on mouse event outside top of rect', () => {
-  //     const mockEvent = { clientX: 0, clientY: 0 } as MouseEvent;
-  //     const mockRect = { left: 0, top: 1, bottom: 0, right: 0 } as DOMRect;
-  //     jest.spyOn(document, 'querySelector').mockReturnValueOnce({ getBoundingClientRect: () => mockRect } as any);
-  //     const onHoverSpy = jest.spyOn(component, 'onHover').mockImplementation();
-  //     component.onMouseMove(mockEvent);
-  //     expect(onHoverSpy).toHaveBeenCalled();
-  //   });
-  // });
   describe('networkObjectGroupLookup', () => {
     let mockNetmask: any;
 
@@ -907,3 +816,108 @@ describe('FirewallRulesPacketTracerComponent', () => {
     });
   });
 });
+
+// it('should return the correct value for application', () => {
+//   jest.spyOn(component, 'handleApplication').mockReturnValue(true);
+//   const result = component.getCellValue('application', 'application' as any);
+//   expect(result).toBeTruthy();
+// });
+
+// it('should get firewall rules array', () => {
+//   const mockChecklist = {
+//     mockRuleName: {
+//       checkList: {
+//         mockFieldName: true,
+//       },
+//     },
+//   };
+//   component.filteredChecklist = mockChecklist as any;
+//   const result = component.firewallRulesArray;
+//   expect(result).toEqual([{ name: 'mockRuleName', checkList: { mockFieldName: true } }]);
+// });
+
+// it('should return if checklist field is empty', () => {
+//   const mockChecklist = {
+//     mockRuleName: {
+//       checkList: {
+//         mockFieldName: true,
+//       },
+//     },
+//   };
+//   component.firewallRulesWithChecklist = mockChecklist as any;
+//   const result = component.isChecklistFieldEmpty('mockFieldName', { name: 'mockRuleName' } as any);
+//   expect(result).toBeFalsy();
+// });
+// describe('onMouseMove', () => {
+//   it('should call on hover on mouse event outside left of rect', () => {
+//     const mockEvent = { clientX: 0, clientY: 0 } as MouseEvent;
+//     const mockRect = { left: 1, top: 0, bottom: 0, right: 0 } as DOMRect;
+//     jest.spyOn(document, 'querySelector').mockReturnValueOnce({ getBoundingClientRect: () => mockRect } as any);
+//     const onHoverSpy = jest.spyOn(component, 'onHover').mockImplementation();
+//     component.onMouseMove(mockEvent);
+//     expect(onHoverSpy).toHaveBeenCalled();
+//   });
+
+//   it('should call on hover on mouse event outside right of rect', () => {
+//     const mockEvent = { clientX: 1, clientY: 0 } as MouseEvent;
+//     const mockRect = { left: 0, top: 0, bottom: 0, right: 0 } as DOMRect;
+//     jest.spyOn(document, 'querySelector').mockReturnValueOnce({ getBoundingClientRect: () => mockRect } as any);
+//     const onHoverSpy = jest.spyOn(component, 'onHover').mockImplementation();
+//     component.onMouseMove(mockEvent);
+//     expect(onHoverSpy).toHaveBeenCalled();
+//   });
+
+//   it('should call on hover on mouse event outside bottom of rect', () => {
+//     const mockEvent = { clientX: 0, clientY: 1 } as MouseEvent;
+//     const mockRect = { left: 0, top: 0, bottom: 0, right: 0 } as DOMRect;
+//     jest.spyOn(document, 'querySelector').mockReturnValueOnce({ getBoundingClientRect: () => mockRect } as any);
+//     const onHoverSpy = jest.spyOn(component, 'onHover').mockImplementation();
+//     component.onMouseMove(mockEvent);
+//     expect(onHoverSpy).toHaveBeenCalled();
+//   });
+
+//   it('should call on hover on mouse event outside top of rect', () => {
+//     const mockEvent = { clientX: 0, clientY: 0 } as MouseEvent;
+//     const mockRect = { left: 0, top: 1, bottom: 0, right: 0 } as DOMRect;
+//     jest.spyOn(document, 'querySelector').mockReturnValueOnce({ getBoundingClientRect: () => mockRect } as any);
+//     const onHoverSpy = jest.spyOn(component, 'onHover').mockImplementation();
+//     component.onMouseMove(mockEvent);
+//     expect(onHoverSpy).toHaveBeenCalled();
+//   });
+// });
+
+// describe('handleApplication', () => {
+//   it('should return true if app id is not enabled', () => {
+//     component.appIdEnabled = false;
+//     const result = component.handleApplication('test' as any, 'test');
+//     expect(result).toBeTruthy();
+//   });
+
+//   it('should return true if app id is enabled and applicationId is any', () => {
+//     component.appIdEnabled = true;
+//     const result = component.handleApplication('test' as any, 'any');
+//     expect(result).toBeTruthy();
+//   });
+
+//   it('should return true if applicationId is present', () => {
+//     const mockRule = { panosApplications: [{ id: 'test' }] } as any;
+//     component.appIdEnabled = true;
+//     component.form.controls.application.setValue('test');
+//     const result = component.handleApplication(mockRule, 'test');
+//     expect(result).toBeTruthy();
+//   });
+
+//   it('should return false if applicationId is not present', () => {
+//     const mockRule = { panosApplications: [{ id: 'test' }] } as any;
+//     component.appIdEnabled = true;
+//     component.form.controls.application.setValue('not present');
+//     const result = component.handleApplication(mockRule, 'test');
+//     expect(result).toBeFalsy();
+//   });
+// });
+
+// it('should set hovered row and col', () => {
+//   component.onHover('row', 'col');
+//   expect(component.hoveredRow).toBe('row');
+//   expect(component.hoveredColumn).toBe('col');
+// });
