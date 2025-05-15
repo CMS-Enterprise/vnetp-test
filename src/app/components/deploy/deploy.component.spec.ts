@@ -172,15 +172,15 @@ describe('DeployComponent', () => {
         return of().subscribe();
       });
 
-      // component.tiers = [testData.tier];
+      component.tiers = [testData.tier];
 
       const jobService = TestBed.inject(V1JobsService);
       const deploySpy = jest.spyOn(jobService, 'createOneJob');
 
       const deployButton = fixture.debugElement.query(By.css('.btn.btn-danger'));
       deployButton.nativeElement.click();
-      // expect(deploySpy).toHaveBeenCalled();
-      // expect(launchTierProvisioningJobsSpy).toHaveBeenCalled();
+      expect(deploySpy).toHaveBeenCalled();
+      expect(launchTierProvisioningJobsSpy).toHaveBeenCalled();
     });
   });
 
