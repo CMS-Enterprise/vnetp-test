@@ -54,7 +54,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   rulesHit = [];
   filteredRules = [];
-  tableRules;
+  tableRules = [];
   isSearchingRules = false;
 
   filterExact = null;
@@ -119,8 +119,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.buildForm();
     this.setFormValidators();
     this.applyFilter();
-
-    // this.createFormListeners();
   }
 
   onOpen(): void {
@@ -131,7 +129,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.isSearchingRules = true;
     const start = performance.now();
     this.objects.firewallRules.forEach(rule => {
-      this.setChecklist2(rule);
+      this.setChecklist(rule);
     });
     this.applyFilter();
     console.log('is searching', this.isSearchingRules);
@@ -215,7 +213,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     }
   }
 
-  setChecklist2(firewallRule): void {
+  setChecklist(firewallRule): void {
     Object.keys(this.form.controls).forEach(field => {
       const fieldValue = this.form.controls[field].value;
       const errors = this.form.controls[field].errors;
@@ -483,12 +481,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
       });
     }
   }
-
-  resetForm(): void {
-    this.form.reset();
-    this.tableRules = {};
-    this.resetFilter();
-  }
 }
 
 // ngOnDestroy(): void {
@@ -626,4 +618,10 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 // onHover(row: any, column: string | null) {
 //   this.hoveredRow = row;
 //   this.hoveredColumn = column;
+// }
+
+// resetForm(): void {
+//   this.form.reset();
+//   this.tableRules = [];
+//   this.resetFilter();
 // }

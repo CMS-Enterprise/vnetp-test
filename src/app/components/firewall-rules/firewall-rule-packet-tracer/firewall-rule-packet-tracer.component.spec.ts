@@ -234,9 +234,8 @@ describe('FirewallRulesPacketTracerComponent', () => {
     component.form.controls.protocol.setValue('tcp');
     component.form.controls.action.setValue('allow');
     component.form.controls.enabled.setValue(true);
-    // component.form.controls.application.setValue('test');
-    const resetFilterSpy = jest.spyOn(component, 'resetFilter').mockImplementation();
-    component.resetForm();
+    const resetFilterAndFormSpy = jest.spyOn(component, 'resetFilter').mockImplementation();
+    component.reset();
     expect(component.form.value).toEqual({
       sourceInRange: null,
       destInRange: null,
@@ -247,7 +246,7 @@ describe('FirewallRulesPacketTracerComponent', () => {
       action: null,
       enabled: null,
     });
-    expect(resetFilterSpy).toHaveBeenCalled();
+    expect(resetFilterAndFormSpy).toHaveBeenCalled();
   });
 
   describe('isExactMatch', () => {
@@ -292,37 +291,15 @@ describe('FirewallRulesPacketTracerComponent', () => {
   });
 
   describe('setChecklistsForRulesByField', () => {
-    it('should set fields to null if field is null', () => {
-      // const mockChecklist = {
-      //   mockRuleName: {
-      //     checkList: {
-      //       action: true,
-      //     },
-      //   },
-      // };
-      // component.form.controls.action.setValue(null);
-      // component.firewallRulesWithChecklist = mockChecklist as any;
-      // component.setChecklistsForRulesByField('action');
-      // expect(component.firewallRulesWithChecklist.mockRuleName.checkList.action).toBeNull();
-    });
-
     it('should call set checklist if there are no issues', () => {
       const mockFwrs = { firewallRules: [{ name: 'mockRuleName' }] } as any;
-      jest.spyOn(component, 'setChecklist2').mockImplementation();
+      jest.spyOn(component, 'setChecklist').mockImplementation();
       component.form.controls.action.setValue(true);
       component.objects = mockFwrs;
-      component.setChecklist2(mockFwrs.firewallRules[0]);
-      expect(component.setChecklist2).toHaveBeenCalled();
+      component.setChecklist(mockFwrs.firewallRules[0]);
+      expect(component.setChecklist).toHaveBeenCalled();
     });
   });
-
-  // describe('setChecklist', () => {
-  //   it('should create rule with checklist if it doesnt exist', () => {
-  //     const mockRule = { name: 'mockRuleName' } as any;
-  //     component.setChecklist2(mockRule);
-  //     expect(component.firewallRulesWithChecklist[mockRule.name]).toBeTruthy();
-  //   });
-  // });
 
   describe('handleInRange', () => {
     it('should call ip lookup', () => {
@@ -920,4 +897,12 @@ describe('FirewallRulesPacketTracerComponent', () => {
 //   component.onHover('row', 'col');
 //   expect(component.hoveredRow).toBe('row');
 //   expect(component.hoveredColumn).toBe('col');
+// });
+
+// describe('setChecklist', () => {
+//   it('should create rule with checklist if it doesnt exist', () => {
+//     const mockRule = { name: 'mockRuleName' } as any;
+//     component.setChecklist2(mockRule);
+//     expect(component.firewallRulesWithChecklist[mockRule.name]).toBeTruthy();
+//   });
 // });
