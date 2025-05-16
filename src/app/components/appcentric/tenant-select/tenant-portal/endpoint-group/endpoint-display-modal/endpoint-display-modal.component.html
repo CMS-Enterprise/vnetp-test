@@ -1,0 +1,57 @@
+<ngx-smart-modal #endpointDisplayModal [identifier]="modalId" customClass="modal-lg">
+  <div class="modal-header">
+    <h5 class="modal-title">Endpoints</h5>
+    <button type="button" class="close" (click)="endpointDisplayModal.close()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p *ngIf="!displayData || displayData.length === 0">No endpoints to display.</p>
+    <table class="table table-hover" *ngIf="displayData && displayData.length > 0">
+      <thead>
+        <tr>
+          <th>MAC Address</th>
+          <th *ngIf="displayData[0]?.epgName !== undefined">EPG Name</th>
+          <th>IP Addresses</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let endpoint of displayData; let i = index">
+          <tr>
+            <td>{{ endpoint.macAddress }}</td>
+            <td *ngIf="endpoint.epgName !== undefined">{{ endpoint.epgName }}</td>
+            <td>
+              <button
+                class="btn btn-link btn-sm p-0"
+                (click)="toggleIpAddresses(endpoint)"
+                [attr.aria-expanded]="endpoint.isExpanded"
+                [attr.aria-controls]="'ipDetails-' + i"
+              >
+                {{ endpoint.isExpanded ? 'Hide' : 'Show' }} IPs ({{ endpoint.ipAddresses?.length || 0 }})
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="endpoint.isExpanded" [id]="'ipDetails-' + i">
+            <td colspan="3">
+              <div>
+                <table class="table table-sm table-borderless mb-0">
+                  <tbody>
+                    <tr *ngFor="let ip of endpoint.ipAddresses">
+                      <td>{{ ip.ipAddress }}</td>
+                    </tr>
+                    <tr *ngIf="!endpoint.ipAddresses || endpoint.ipAddresses.length === 0">
+                      <td>No IP addresses associated.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="endpointDisplayModal.close()">Close</button>
+  </div>
+</ngx-smart-modal>

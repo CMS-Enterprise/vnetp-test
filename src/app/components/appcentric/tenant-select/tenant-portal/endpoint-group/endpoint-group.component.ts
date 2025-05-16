@@ -3,6 +3,7 @@ import { TableConfig } from '../../../../../common/table/table.component';
 import { TableComponentDto } from '../../../../../models/other/table-component-dto';
 import { SearchColumnConfig } from '../../../../../common/search-bar/search-bar.component';
 import {
+  Endpoint,
   EndpointGroup,
   GetManyEndpointGroupResponseDto,
   V2AppCentricApplicationProfilesService,
@@ -20,6 +21,7 @@ import { ModalMode } from '../../../../../models/other/modal-mode';
 import { EndpointGroupModalDto } from '../../../../../models/appcentric/endpoint-group-modal-dto';
 import { Subscription } from 'rxjs';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
+import { ExtendedEndpoint } from './endpoint-display-modal/endpoint-display-modal.component';
 
 @Component({
   selector: 'app-endpoint-group',
@@ -42,16 +44,20 @@ export class EndpointGroupComponent implements OnInit {
   public endpointGroupModalSubscription: Subscription;
   bridgeDomains;
   applicationProfiles;
+  public readonly endpointDisplayModalId = 'endpointDisplayModal';
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('expandedRows') expandedRows: TemplateRef<any>;
   @ViewChild('applicationProfileTemplate') applicationProfileTemplate: TemplateRef<any>;
   @ViewChild('bridgeDomainTemplate') bridgeDomainTemplate: TemplateRef<any>;
   @ViewChild('selectorTemplate') selectorTemplate: TemplateRef<any>;
+  @ViewChild('endpointsTemplate') endpointsTemplate: TemplateRef<any>;
+
   public config: TableConfig<any> = {
     description: 'Endpoint Groups',
     columns: [
       { name: 'Name', property: 'name' },
+      { name: 'Endpoints', template: () => this.endpointsTemplate },
       { name: 'Alias', property: 'alias' },
       { name: 'Description', property: 'description' },
       { name: 'Intra Epg Isolation', property: 'intraEpgIsolation' },
@@ -60,8 +66,6 @@ export class EndpointGroupComponent implements OnInit {
       { name: 'ESG Matched', template: () => this.selectorTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
-    // TODO: Implement appcentric aci runtime
-    // expandableRows: () => this.expandedRows,
   };
   constructor(
     private endpointGroupService: V2AppCentricEndpointGroupsService,
@@ -111,7 +115,7 @@ export class EndpointGroupComponent implements OnInit {
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        relations: ['applicationProfile', 'bridgeDomain', 'selector'],
+        relations: ['applicationProfile', 'bridgeDomain', 'selector', 'endpoints', 'endpoints.ipAddresses'],
       })
       .subscribe(
         data => {
@@ -316,5 +320,19 @@ export class EndpointGroupComponent implements OnInit {
         //   this.isLoading = false;
         // },
       );
+  }
+
+  public openEndpointsModal(endpointGroup: EndpointGroup): void {
+    if (!endpointGroup.endpoints || endpointGroup.endpoints.length === 0) {
+      return;
+    }
+
+    const extendedEndpoints: ExtendedEndpoint[] = endpointGroup.endpoints.map((ep: Endpoint) => ({
+      ...ep,
+      epgName: endpointGroup.name,
+    }));
+
+    this.ngx.setModalData(extendedEndpoints, this.endpointDisplayModalId, true);
+    this.ngx.getModal(this.endpointDisplayModalId).open();
   }
 }

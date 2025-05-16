@@ -14,6 +14,7 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { AciRuntimeModule } from '../../../../aci-runtime/aci-runtime.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { ContractAssociationModule } from '../contract-association/contract-association.module';
+import { EndpointDisplayModalModule } from './endpoint-display-modal/endpoint-display-modal.module';
 
 const routes: Routes = [
   {
@@ -41,6 +42,7 @@ const routes: Routes = [
     AciRuntimeModule,
     YesNoModalModule,
     ContractAssociationModule,
+    EndpointDisplayModalModule,
   ],
   exports: [EndpointGroupComponent],
 })
