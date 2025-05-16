@@ -61,7 +61,8 @@ export class TenantPortalComponent implements OnInit, AfterViewInit {
   public tenants: GetManyTenantResponseDto;
   public currentTenantName: string;
   public tenantId: string;
-  public mode: ApplicationMode;
+  public applicationMode: ApplicationMode;
+  public ApplicationMode = ApplicationMode;
   public networkServicesContainerDatacenter: Datacenter;
   public networkServicesContainerNsTier: Tier;
   public networkServicesContainerEwTier: Tier;
@@ -83,7 +84,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit {
   ) {}
 
   private initializeTabs(): void {
-    if (this.mode === ApplicationMode.TENANTV2) {
+    if (this.applicationMode === ApplicationMode.TENANTV2) {
       // Show all tabs including firewalls for V2, preserving subTabs
       this.tabs = [...tabs];
     } else {
@@ -239,7 +240,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit {
         response => {
           this.currentTenantName = response.name;
 
-          if (this.mode === ApplicationMode.TENANTV2 && response.tenantVersion === 2) {
+          if (this.applicationMode === ApplicationMode.TENANTV2 && response.tenantVersion === 2) {
             this.getNetworkServicesContainerDatacenter(response.datacenterId);
           }
         },
@@ -290,7 +291,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit {
       this.tenantId = uuid;
     }
 
-    this.mode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
     // Initialize tabs first so we have something to show during loading
     this.initializeTabs();
     // Get initial tab index without calling getTenants() yet

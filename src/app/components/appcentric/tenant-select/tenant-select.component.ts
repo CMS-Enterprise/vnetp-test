@@ -25,9 +25,8 @@ export class TenantSelectComponent implements OnInit {
   public tenantModalSubscription: Subscription;
   selectedTenantToDelete: Tenant;
   objectType = 'tenant';
-  public isAdminPortalMode = false;
-  public isTenantV2Mode = false;
-  public currentMode: ApplicationMode;
+  ApplicationMode = ApplicationMode;
+  applicationMode: ApplicationMode;
 
   public isLoading = false;
 
@@ -61,13 +60,7 @@ export class TenantSelectComponent implements OnInit {
   }
 
   private determineApplicationMode(): void {
-    const modeFromRoute = RouteDataUtil.getApplicationModeFromRoute(this.route);
-
-    if (modeFromRoute) {
-      this.currentMode = modeFromRoute;
-      this.isAdminPortalMode = this.currentMode === ApplicationMode.ADMINPORTAL;
-      this.isTenantV2Mode = this.currentMode === ApplicationMode.TENANTV2;
-    }
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -76,58 +69,25 @@ export class TenantSelectComponent implements OnInit {
   }
 
   public getTenants(): void {
-    let eventParams;
-    if (this.isAdminPortalMode) {
-      eventParams = 'tenantVersion||eq||2';
-    }
-    this.isLoading = true;
-    console.log('eventParams', eventParams);
-    // let eventParams;
-    // if (event) {
-    //   this.tableComponentDto.page = event.page ? event.page : 1;
-    //   this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
-    //   const { searchText } = event;
-    //   const propertyName = event.searchColumn ? event.searchColumn : null;
-    //   if (propertyName) {
-    //     eventParams = `${propertyName}||cont||${searchText}`;
-    //   }
-    // }
-    if (eventParams === undefined) {
-      this.tenantService
-        .getManyTenant({
-          page: this.tableComponentDto.page,
-          perPage: this.tableComponentDto.perPage,
-        })
-        .subscribe(
-          data => {
-            this.tenants = data;
-          },
-          () => {
-            this.tenants = null;
-          },
-          () => {
-            this.isLoading = false;
-          },
-        );
-    } else {
-      this.tenantService
-        .getManyTenant({
-          filter: [`${eventParams}`],
-          page: this.tableComponentDto.page,
-          perPage: this.tableComponentDto.perPage,
-        })
-        .subscribe(
-          data => {
-            this.tenants = data;
-          },
-          () => {
-            this.tenants = null;
-          },
-          () => {
-            this.isLoading = false;
-          },
-        );
-    }
+    const filter = this.applicationMode === ApplicationMode.TENANTV2 ? 'tenantVersion||eq||2' : 'tenantVersion||eq||1';
+
+    this.tenantService
+      .getManyTenant({
+        page: this.tableComponentDto.page,
+        perPage: this.tableComponentDto.perPage,
+        filter: [filter],
+      })
+      .subscribe({
+        next: data => {
+          this.tenants = data;
+        },
+        error: () => {
+          this.tenants = null;
+        },
+        complete: () => {
+          this.isLoading = false;
+        },
+      });
   }
 
   public openTenantModal(modalMode: ModalMode, tenant?: Tenant): void {
@@ -139,12 +99,8 @@ export class TenantSelectComponent implements OnInit {
       dto.Tenant = tenant;
     }
 
-    // Set mode flags
-    dto.isAdminPortalMode = this.isAdminPortalMode;
-    dto.isTenantV2Mode = this.isTenantV2Mode;
-
     // Initialize AdminPortal specific properties when in admin portal mode
-    if (this.isAdminPortalMode) {
+    if (this.applicationMode === ApplicationMode.ADMINPORTAL) {
       // Set default values for AdminPortal specific properties
       dto.northSouthFirewallVendor = 'PANOS';
       dto.northSouthFirewallArchitecture = 'Virtual';
