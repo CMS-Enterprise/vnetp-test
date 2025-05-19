@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { GetManyVrfResponseDto, V2AppCentricVrfsService, Vrf } from 'client';
+import { GetManyVrfResponseDto, V2AppCentricTenantsService, V2AppCentricVrfsService, Vrf } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
@@ -11,6 +11,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
@@ -26,6 +27,7 @@ export class VrfComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
   public vrfModalSubscription: Subscription;
   public tenantId: string;
+  public tenantName;
 
   public isLoading = false;
 
@@ -55,6 +57,7 @@ export class VrfComponent implements OnInit {
     private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
     private router: Router,
+    private tenantService: V2AppCentricTenantsService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<Vrf>();
     advancedSearchAdapter.setService(this.vrfService);
@@ -67,12 +70,25 @@ export class VrfComponent implements OnInit {
     if (match) {
       const uuid = match[0].split('/')[2];
       this.tenantId = uuid;
+      console.log('run??');
+      this.tenantService.getManyTenant({ page: 1, perPage: 10000 }).subscribe(data => {
+        console.log('not hit');
+        this.tenantName = ObjectUtil.getObjectName(this.tenantId, data.data);
+      });
     }
   }
 
   ngOnInit(): void {
+    // this.getTenantName();
     this.getVrfs();
+    console.log('this.tenantName onInit', this.tenantName);
   }
+
+  // public getTenantName() {
+  //   this.tenantService.getManyTenant({page: 1, perPage: 10000}).subscribe(data => {
+  //     this.tenantName = ObjectUtil.getObjectName(this.tenantId,data.data);
+  //   })
+  // }
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
@@ -220,6 +236,8 @@ export class VrfComponent implements OnInit {
       if (key === 'ipAddress' && val !== '') {
         obj[key] = String(val).trim();
       }
+
+      // should we ever allow this to be dynamic (cross-tenant)??
       if (key === 'tenantName') {
         obj.tenantId = this.tenantId;
         delete obj[key];
@@ -228,20 +246,48 @@ export class VrfComponent implements OnInit {
     return obj;
   };
 
+  private warnDuringUpload(e, event) {
+    const warningModal = new YesNoModalDto(
+      'WARNING',
+      `One or more entries' Tenant value does not match the Tenant that is currently selected, we will attempt to assign the currently selected Tenant to any 
+          incorrect entries, this may cause failures in the bulk upload, would you still like to proceed?
+          "${e.tenantName}" vs "${this.tenantName}"`,
+    );
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.uploadVrfs(dto);
+    };
+    const onClose = () => {
+      return this.getVrfs();
+    };
+    SubscriptionUtil.subscribeToYesNoModal(warningModal, this.ngx, onConfirm, onClose);
+  }
+
+  private uploadVrfs(dto) {
+    this.vrfService.createManyVrf({ createManyVrfDto: { bulk: dto } }).subscribe(
+      () => {},
+      () => {},
+      () => {
+        this.getVrfs();
+      },
+    );
+  }
+
   public importVrfs(event): void {
     const modalDto = new YesNoModalDto(
       'Import Vrfs',
       `Are you sure you would like to import ${event.length} Vrf${event.length > 1 ? 's' : ''}?`,
     );
+
+    event.map(e => {
+      if (e.tenantName !== this.tenantName) {
+        return this.warnDuringUpload(e, event);
+      }
+    });
+
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.vrfService.createManyVrf({ createManyVrfDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
-          this.getVrfs();
-        },
-      );
+      this.uploadVrfs(dto);
     };
     const onClose = () => {
       this.getVrfs();

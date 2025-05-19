@@ -367,7 +367,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
-  public importVlansConfig(event: Vlan[]): void {
+  public importVlansConfig(event): void {
     const modalDto = new YesNoModalDto(
       'Import VLANs',
       `Are you sure you would like to import ${event.length} VLAN${event.length > 1 ? 's' : ''}?`,
@@ -375,17 +375,48 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     event.forEach(e => {
       e.vlanNumber = Number(e.vlanNumber);
 
+      // IF TENANTV2
+      // directly assign tierID
+      // if (this.version === 'tenantV2') {
+      //   e.tierId = this.currentTier.id
+      // } else {
+      //    e.tierId = this.getTierId(e['tierName']); // eslint-disable-line
+      // }
       e.tierId = this.getTierId(e['tierName']); // eslint-disable-line
+
+      // IF TENANT V2, this will always evaluate to true since we directly assign it above
+      if (e.tierId !== this.currentTier.id) {
+        return this.warnDuringUpload(e, event);
+      }
     });
     const onConfirm = () => {
-      this.vlanService.createManyVlan({ createManyVlanDto: { bulk: event } }).subscribe(() => {
-        this.getVlans();
-      });
+      this.uploadVlans(event);
     };
     const onClose = () => {
       this.showRadio = false;
     };
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
+
+  private warnDuringUpload(e, event): void {
+    const warningModal = new YesNoModalDto(
+      'WARNING',
+      `One or more entries' Tier value does not match the Tier that is currently selected, this may cause failures in the bulk upload, would you still like to proceed?
+      "${e.tierName}" vs "${this.currentTier.name}"`,
+    );
+    const onConfirm = () => {
+      this.uploadVlans(event);
+    };
+    const onClose = () => {
+      return this.getVlans();
+    };
+    SubscriptionUtil.subscribeToYesNoModal(warningModal, this.ngx, onConfirm, onClose);
+  }
+
+  public uploadVlans(event) {
+    this.vlanService.createManyVlan({ createManyVlanDto: { bulk: event } }).subscribe(() => {
+      this.getVlans();
+    });
   }
 
   public getTierName = (id: string) => ObjectUtil.getObjectName(id, this.tiers);
