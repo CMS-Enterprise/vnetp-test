@@ -142,6 +142,8 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     const end = performance.now();
     console.log(end - start);
 
+    // manual timeout so spinner has time to load and unload in the HTML
+    // without this setTimeout no spinner will appear in the UI when searching rules
     setTimeout(() => {
       this.isSearchingRules = false;
     }, 1000);
@@ -167,7 +169,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     }
 
     if (this.filterExact !== null) {
-      // console.log('filter exact = null');
       Object.keys(this.firewallRulesWithChecklist).forEach(ruleName => {
         const rule = this.firewallRulesWithChecklist[ruleName];
         const isExact = this.isExactMatch(rule);
