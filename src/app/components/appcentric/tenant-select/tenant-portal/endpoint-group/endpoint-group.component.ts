@@ -3,7 +3,6 @@ import { TableConfig } from '../../../../../common/table/table.component';
 import { TableComponentDto } from '../../../../../models/other/table-component-dto';
 import { SearchColumnConfig } from '../../../../../common/search-bar/search-bar.component';
 import {
-  Endpoint,
   EndpointGroup,
   GetManyEndpointGroupResponseDto,
   V2AppCentricApplicationProfilesService,
@@ -21,7 +20,6 @@ import { ModalMode } from '../../../../../models/other/modal-mode';
 import { EndpointGroupModalDto } from '../../../../../models/appcentric/endpoint-group-modal-dto';
 import { Subscription } from 'rxjs';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
-import { ExtendedEndpoint } from './endpoint-display-modal/endpoint-display-modal.component';
 
 @Component({
   selector: 'app-endpoint-group',
@@ -327,12 +325,12 @@ export class EndpointGroupComponent implements OnInit {
       return;
     }
 
-    const extendedEndpoints: ExtendedEndpoint[] = endpointGroup.endpoints.map((ep: Endpoint) => ({
-      ...ep,
-      epgName: endpointGroup.name,
-    }));
+    const modalPayload = {
+      data: endpointGroup.endpoints,
+      context: 'epg' as const,
+    };
 
-    this.ngx.setModalData(extendedEndpoints, this.endpointDisplayModalId, true);
+    this.ngx.setModalData(modalPayload, this.endpointDisplayModalId, true);
     this.ngx.getModal(this.endpointDisplayModalId).open();
   }
 }

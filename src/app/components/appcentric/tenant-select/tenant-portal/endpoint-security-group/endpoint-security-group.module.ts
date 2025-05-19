@@ -15,6 +15,7 @@ import { EndpointSecurityGroupModalComponent } from './endpoint-security-group-m
 import { EndpointSecurityGroupComponent } from './endpoint-security-group.component';
 import { ContractAssociationModule } from '../contract-association/contract-association.module';
 import { SelectorModalComponent } from './endpoint-security-group-modal/selector-modal/selector-modal.component';
+import { EndpointDisplayModalModule } from '../endpoint-group/endpoint-display-modal/endpoint-display-modal.module';
 
 const routes: Routes = [
   {
@@ -42,6 +43,7 @@ const routes: Routes = [
     AciRuntimeModule,
     YesNoModalModule,
     ContractAssociationModule,
+    EndpointDisplayModalModule,
   ],
   exports: [EndpointSecurityGroupComponent],
 })

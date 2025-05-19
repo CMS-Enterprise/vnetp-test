@@ -8,6 +8,7 @@ import {
   V2AppCentricVrfsService,
   GetManyVrfResponseDto,
   GetManyApplicationProfileResponseDto,
+  Selector,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -20,6 +21,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { EsgModalDisplayData, ModalDisplayEndpoint } from '../endpoint-group/endpoint-display-modal/endpoint-display-modal.component';
 
 @Component({
   selector: 'app-endpoint-security-group',
@@ -40,17 +42,19 @@ export class EndpointSecurityGroupComponent implements OnInit {
   public endpointSecurityGroupModalSubscription: Subscription;
   vrfs: GetManyVrfResponseDto;
   applicationProfiles: GetManyApplicationProfileResponseDto;
-  endpointGroups;
+  public readonly endpointDisplayModalId = 'endpointDisplayModal';
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('expandedRows') expandedRows: TemplateRef<any>;
   @ViewChild('applicationProfileTemplate') applicationProfileTemplate: TemplateRef<any>;
   @ViewChild('vrfTemplate') vrfTemplate: TemplateRef<any>;
+  @ViewChild('epgCountTemplate') epgCountTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
     description: 'EndpointSecurity Groups',
     columns: [
       { name: 'Name', property: 'name' },
+      { name: 'EPGs', template: () => this.epgCountTemplate },
       { name: 'Admin State', property: 'adminState' },
       { name: 'Description', property: 'description' },
       { name: 'Intra Esg Isolation', property: 'intraEsgIsolation' },
@@ -108,7 +112,14 @@ export class EndpointSecurityGroupComponent implements OnInit {
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
-        relations: ['applicationProfile', 'vrf', 'selectors'],
+        relations: [
+          'applicationProfile',
+          'vrf',
+          'selectors',
+          'selectors.endpointGroup',
+          'selectors.endpointGroup.endpoints',
+          'selectors.endpointGroup.endpoints.ipAddresses',
+        ],
       })
       .subscribe(
         data => {
@@ -310,5 +321,38 @@ export class EndpointSecurityGroupComponent implements OnInit {
           this.applicationProfiles = null;
         },
       );
+  }
+
+  public openEsgEndpointsModal(esg: EndpointSecurityGroup): void {
+    if (!esg.selectors || esg.selectors.length === 0) {
+      return;
+    }
+
+    const modalInputData: EsgModalDisplayData[] = esg.selectors
+      .map((selector: Selector) => {
+        const endpointGroup = selector.endpointGroup;
+        let endpointsForModal: ModalDisplayEndpoint[] = [];
+        if (endpointGroup && endpointGroup.endpoints) {
+          endpointsForModal = endpointGroup.endpoints.map(ep => ({
+            macAddress: ep.macAddress,
+            ipAddresses: ep.ipAddresses,
+            isIpListExpanded: true,
+          }));
+        }
+
+        return {
+          epgName: endpointGroup ? endpointGroup.name : 'Unknown EPG',
+          endpoints: endpointsForModal,
+          isEpgExpanded: true,
+        };
+      })
+      .filter(epgData => epgData.endpoints.length > 0);
+
+    if (modalInputData.length === 0) {
+      return;
+    }
+
+    this.ngx.setModalData({ data: modalInputData, context: 'esg' as const }, this.endpointDisplayModalId, true);
+    this.ngx.getModal(this.endpointDisplayModalId).open();
   }
 }
