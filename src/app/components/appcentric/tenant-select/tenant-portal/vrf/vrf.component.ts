@@ -249,17 +249,16 @@ export class VrfComponent implements OnInit {
   private warnDuringUpload(e, event) {
     const warningModal = new YesNoModalDto(
       'WARNING',
-      `One or more entries' Tenant value does not match the Tenant that is currently selected, we will attempt to assign the currently selected Tenant to any 
-          incorrect entries, this may cause failures in the bulk upload, would you still like to proceed?
+      `One or more entries' Tenant value does not match the Tenant that is currently selected, 
+       we will attempt to assign the currently selected Tenant to any 
+       incorrect entries, this may cause failures in the bulk upload, would you still like to proceed?
           "${e.tenantName}" vs "${this.tenantName}"`,
     );
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.uploadVrfs(dto);
     };
-    const onClose = () => {
-      return this.getVrfs();
-    };
+    const onClose = () => this.getVrfs();
     SubscriptionUtil.subscribeToYesNoModal(warningModal, this.ngx, onConfirm, onClose);
   }
 

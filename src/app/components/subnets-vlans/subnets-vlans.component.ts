@@ -401,15 +401,14 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   private warnDuringUpload(e, event): void {
     const warningModal = new YesNoModalDto(
       'WARNING',
-      `One or more entries' Tier value does not match the Tier that is currently selected, this may cause failures in the bulk upload, would you still like to proceed?
+      `One or more entries' Tier value does not match the Tier that is currently selected, 
+      this may cause failures in the bulk upload, would you still like to proceed?
       "${e.tierName}" vs "${this.currentTier.name}"`,
     );
     const onConfirm = () => {
       this.uploadVlans(event);
     };
-    const onClose = () => {
-      return this.getVlans();
-    };
+    const onClose = () => this.getVlans();
     SubscriptionUtil.subscribeToYesNoModal(warningModal, this.ngx, onConfirm, onClose);
   }
 
