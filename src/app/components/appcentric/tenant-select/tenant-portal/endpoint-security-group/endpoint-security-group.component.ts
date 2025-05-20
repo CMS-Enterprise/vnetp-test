@@ -21,7 +21,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { EsgModalDisplayData, ModalDisplayEndpoint } from '../endpoint-group/endpoint-display-modal/endpoint-display-modal.component';
+import { EsgModalDisplayData, ModalDisplayEndpoint } from '../endpoint/endpoint-display-modal/endpoint-display-modal.component';
 
 @Component({
   selector: 'app-endpoint-security-group',
@@ -332,7 +332,8 @@ export class EndpointSecurityGroupComponent implements OnInit {
       .map((selector: Selector) => {
         const endpointGroup = selector.endpointGroup;
         let endpointsForModal: ModalDisplayEndpoint[] = [];
-        if (endpointGroup && endpointGroup.endpoints) {
+        // Only map endpoints if they exist
+        if (endpointGroup?.endpoints?.length) {
           endpointsForModal = endpointGroup.endpoints.map(ep => ({
             macAddress: ep.macAddress,
             ipAddresses: ep.ipAddresses,
@@ -345,13 +346,9 @@ export class EndpointSecurityGroupComponent implements OnInit {
           endpoints: endpointsForModal,
           isEpgExpanded: true,
         };
-      })
-      .filter(epgData => epgData.endpoints.length > 0);
+      });
 
-    if (modalInputData.length === 0) {
-      return;
-    }
-
+    // Open modal with all EPGs, even if they have no endpoints
     this.ngx.setModalData({ data: modalInputData, context: 'esg' as const }, this.endpointDisplayModalId, true);
     this.ngx.getModal(this.endpointDisplayModalId).open();
   }
