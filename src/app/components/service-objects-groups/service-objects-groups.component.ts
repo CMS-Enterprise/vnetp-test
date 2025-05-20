@@ -458,21 +458,44 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public importServiceObjectsConfig(event: ServiceObject[]): void {
+  private warnDuringNetObjUpload(e, event): void {
+    const warningModal = new YesNoModalDto(
+      'WARNING',
+      `One or more entries' Tier value does not match the Tier that is currently selected, 
+          this may cause failures in the bulk upload, would you still like to proceed?
+          "${e.tierName}" vs "${this.currentTier.name}"`,
+    );
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.uploadServiceObjects(dto);
+    };
+    const onClose = () => this.getServiceObjects();
+    SubscriptionUtil.subscribeToYesNoModal(warningModal, this.ngx, onConfirm, onClose);
+  }
+
+  public importServiceObjectsConfig(event): void {
     const modalDto = new YesNoModalDto(
       'Import Service Objects',
       `Are you sure you would like to import ${event.length} service object${event.length > 1 ? 's' : ''}?`,
     );
 
+    event.forEach(e => {
+      // if (this.appVersion === 'tenantV2') {
+      //   e.tierId = this.tenantV2HiddenTier.id
+      // } else {
+      //    e.tierId = this.getTierId(e['tierName']); // eslint-disable-line
+      // }
+
+      // IF TENANT V2, this will always evaluate to true since we directly assign it above
+
+      // change to tierID later
+      if (e.tierName !== this.currentTier.name) {
+        return this.warnDuringNetObjUpload(e, event);
+      }
+    });
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.serviceObjectService
-        .createManyServiceObject({
-          createManyServiceObjectDto: { bulk: dto },
-        })
-        .subscribe(() => {
-          this.getServiceObjects();
-        });
+      this.uploadServiceObjects(dto);
     };
 
     const onClose = () => {
@@ -482,46 +505,62 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
-  public importServiceObjectGroupRelationsConfig(event: any): void {
-    const modalDto = new YesNoModalDto(
-      'Import Service Object Group Relations',
-      `Are you sure you would like to import ${event.length} service object group relation${event.length > 1 ? 's' : ''}?`,
+  public uploadServiceObjects(event) {
+    this.serviceObjectService
+      .createManyServiceObject({
+        createManyServiceObjectDto: { bulk: event },
+      })
+      .subscribe(() => {
+        this.getServiceObjects();
+      });
+  }
+
+  public uploadServiceObjectGroups(event) {
+    this.serviceObjectGroupService
+      .createManyServiceObjectGroup({
+        createManyServiceObjectGroupDto: { bulk: event },
+      })
+      .subscribe(() => {
+        this.getServiceObjectGroups();
+      });
+  }
+
+  private warnDuringNetObjGroupUpload(e, event): void {
+    const warningModal = new YesNoModalDto(
+      'WARNING',
+      `One or more entries' Tier value does not match the Tier that is currently selected, 
+          this may cause failures in the bulk upload, would you still like to proceed?
+          "${e.tierName}" vs "${this.currentTier.name}"`,
     );
     const onConfirm = () => {
-      const serviceObjectRelationsDto = {} as ServiceObjectGroupRelationBulkImportCollectionDto;
-      serviceObjectRelationsDto.datacenterId = this.datacenterContextService.currentDatacenterValue.id;
-      serviceObjectRelationsDto.serviceObjectRelations = event;
-
-      this.serviceObjectGroupService
-        .bulkImportRelationsServiceObjectGroup({
-          serviceObjectGroupRelationBulkImportCollectionDto: serviceObjectRelationsDto,
-        })
-        .subscribe(() => {
-          this.getServiceObjectGroups();
-        });
+      const dto = this.sanitizeData(event);
+      this.uploadServiceObjectGroups(dto);
     };
-
-    const onClose = () => {
-      this.showRadio = false;
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+    const onClose = () => this.getServiceObjectGroups();
+    SubscriptionUtil.subscribeToYesNoModal(warningModal, this.ngx, onConfirm, onClose);
   }
 
-  public importServiceObjectGroupsConfig(event: any): void {
+  public importServiceObjectGroupsConfig(event): void {
     const modalDto = new YesNoModalDto(
       'Import Service Object Groups',
-      `Are you sure you would like to import ${event.length} service object group${event.length > 1 ? 's' : ''}?`,
+      `Are you sure you would like to import ${event.length} service object${event.length > 1 ? 's' : ''}?`,
     );
+
+    event.forEach(e => {
+      // if (this.appVersion === 'tenantV2') {
+      //   e.tierId = this.tenantV2HiddenTier.id
+      // } else {
+      //    e.tierId = this.getTierId(e['tierName']); // eslint-disable-line
+      // }
+
+      // IF TENANT V2, this will always evaluate to true since we directly assign it above
+      if (e.tierName !== this.currentTier.name) {
+        return this.warnDuringNetObjGroupUpload(e, event);
+      }
+    });
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.serviceObjectGroupService
-        .createManyServiceObjectGroup({
-          createManyServiceObjectGroupDto: { bulk: dto },
-        })
-        .subscribe(() => {
-          this.getServiceObjectGroups();
-        });
+      this.uploadServiceObjectGroups(dto);
     };
 
     const onClose = () => {
@@ -575,6 +614,32 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
         this.getObjectsForNavIndex();
       }
     });
+  }
+
+  public importServiceObjectGroupRelationsConfig(event: any): void {
+    const modalDto = new YesNoModalDto(
+      'Import Service Object Group Relations',
+      `Are you sure you would like to import ${event.length} service object group relation${event.length > 1 ? 's' : ''}?`,
+    );
+    const onConfirm = () => {
+      const serviceObjectRelationsDto = {} as ServiceObjectGroupRelationBulkImportCollectionDto;
+      serviceObjectRelationsDto.datacenterId = this.datacenterContextService.currentDatacenterValue.id;
+      serviceObjectRelationsDto.serviceObjectRelations = event;
+
+      this.serviceObjectGroupService
+        .bulkImportRelationsServiceObjectGroup({
+          serviceObjectGroupRelationBulkImportCollectionDto: serviceObjectRelationsDto,
+        })
+        .subscribe(() => {
+          this.getServiceObjectGroups();
+        });
+    };
+
+    const onClose = () => {
+      this.showRadio = false;
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
   ngOnDestroy() {

@@ -72,23 +72,14 @@ export class VrfComponent implements OnInit {
       this.tenantId = uuid;
       console.log('run??');
       this.tenantService.getManyTenant({ page: 1, perPage: 10000 }).subscribe(data => {
-        console.log('not hit');
         this.tenantName = ObjectUtil.getObjectName(this.tenantId, data.data);
       });
     }
   }
 
   ngOnInit(): void {
-    // this.getTenantName();
     this.getVrfs();
-    console.log('this.tenantName onInit', this.tenantName);
   }
-
-  // public getTenantName() {
-  //   this.tenantService.getManyTenant({page: 1, perPage: 10000}).subscribe(data => {
-  //     this.tenantName = ObjectUtil.getObjectName(this.tenantId,data.data);
-  //   })
-  // }
 
   public onTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
@@ -236,8 +227,6 @@ export class VrfComponent implements OnInit {
       if (key === 'ipAddress' && val !== '') {
         obj[key] = String(val).trim();
       }
-
-      // should we ever allow this to be dynamic (cross-tenant)??
       if (key === 'tenantName') {
         obj.tenantId = this.tenantId;
         delete obj[key];

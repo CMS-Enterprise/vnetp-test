@@ -342,22 +342,29 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
   }
 
   public importSubnetConfig(event: Subnet[]): void {
+    event.forEach(e => {
+      // IF TENANTV2
+      // directly assign tierID
+      // if (this.appVersion === 'tenantV2') {
+      //   e.tierId = this.tenantV2HiddenTier.id
+      // } else {
+      //    e.tierId = this.getTierId(e['tierName']); // eslint-disable-line
+      // }
+
+      // current implementation
+      e.tierId = this.getTierId(e['tierName']); // eslint-disable-line
+
+      // IF TENANT V2, this will always evaluate to true since we directly assign it above
+      if (e.tierId !== this.currentTier.id) {
+        return this.warnDuringSubnetUpload(e, event);
+      }
+    });
     const modalDto = new YesNoModalDto(
       'Import Subnets',
       `Are you sure you would like to import ${event.length} subnet${event.length > 1 ? 's' : ''}?`,
     );
     const onConfirm = () => {
-      const subnetsDto = {} as SubnetImportCollectionDto;
-      subnetsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
-      subnetsDto.subnets = event as SubnetImport[];
-
-      this.subnetService
-        .bulkImportSubnetsSubnet({
-          subnetImportCollectionDto: subnetsDto,
-        })
-        .subscribe(() => {
-          this.getVlans(true);
-        });
+      this.uploadSubnets(event);
     };
 
     const onClose = () => {
@@ -365,6 +372,34 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
+
+  private warnDuringSubnetUpload(e, event): void {
+    const warningModal = new YesNoModalDto(
+      'WARNING',
+      `One or more entries' Tier value does not match the Tier that is currently selected, 
+      this may cause failures in the bulk upload, would you still like to proceed?
+      "${e.tierName}" vs "${this.currentTier.name}"`,
+    );
+    const onConfirm = () => {
+      this.uploadSubnets(event);
+    };
+    const onClose = () => this.getSubnets();
+    SubscriptionUtil.subscribeToYesNoModal(warningModal, this.ngx, onConfirm, onClose);
+  }
+
+  public uploadSubnets(event) {
+    const subnetsDto = {} as SubnetImportCollectionDto;
+    subnetsDto.datacenterId = this.datacenterService.currentDatacenterValue.id;
+    subnetsDto.subnets = event as SubnetImport[];
+
+    this.subnetService
+      .bulkImportSubnetsSubnet({
+        subnetImportCollectionDto: subnetsDto,
+      })
+      .subscribe(() => {
+        this.getVlans(true);
+      });
   }
 
   public importVlansConfig(event): void {
@@ -377,16 +412,18 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
 
       // IF TENANTV2
       // directly assign tierID
-      // if (this.version === 'tenantV2') {
-      //   e.tierId = this.currentTier.id
+      // if (this.appVersion === 'tenantV2') {
+      //   e.tierId = this.tenantV2HiddenTier.id
       // } else {
       //    e.tierId = this.getTierId(e['tierName']); // eslint-disable-line
       // }
+
+      // current implementation
       e.tierId = this.getTierId(e['tierName']); // eslint-disable-line
 
       // IF TENANT V2, this will always evaluate to true since we directly assign it above
       if (e.tierId !== this.currentTier.id) {
-        return this.warnDuringUpload(e, event);
+        return this.warnDuringVlanUpload(e, event);
       }
     });
     const onConfirm = () => {
@@ -398,7 +435,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
-  private warnDuringUpload(e, event): void {
+  private warnDuringVlanUpload(e, event): void {
     const warningModal = new YesNoModalDto(
       'WARNING',
       `One or more entries' Tier value does not match the Tier that is currently selected, 

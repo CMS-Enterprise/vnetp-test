@@ -483,20 +483,109 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     }
   }
 
-  importNetworkObjectsConfig(event: NetworkObject[]): void {
+  public uploadNetworkObjects(event) {
+    this.networkObjectService
+      .createManyNetworkObject({
+        createManyNetworkObjectDto: { bulk: event },
+      })
+      .subscribe(() => {
+        this.getNetworkObjects();
+      });
+  }
+
+  private warnDuringNetObjUpload(e, event): void {
+    const warningModal = new YesNoModalDto(
+      'WARNING',
+      `One or more entries' Tier value does not match the Tier that is currently selected, 
+        this may cause failures in the bulk upload, would you still like to proceed?
+        "${e.tierName}" vs "${this.currentTier.name}"`,
+    );
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.uploadNetworkObjects(dto);
+    };
+    const onClose = () => this.getNetworkObjects();
+    SubscriptionUtil.subscribeToYesNoModal(warningModal, this.ngx, onConfirm, onClose);
+  }
+
+  importNetworkObjectsConfig(event): void {
     const modalDto = new YesNoModalDto(
       'Import Network Objects',
       `Are you sure you would like to import ${event.length} network object${event.length > 1 ? 's' : ''}?`,
     );
+
+    event.forEach(e => {
+      // if (this.appVersion === 'tenantV2') {
+      //   e.tierId = this.tenantV2HiddenTier.id
+      // } else {
+      //    e.tierId = this.getTierId(e['tierName']); // eslint-disable-line
+      // }
+
+      // IF TENANT V2, this will always evaluate to true since we directly assign it above
+
+      // change to tierID later
+      if (e.tierName !== this.currentTier.name) {
+        return this.warnDuringNetObjUpload(e, event);
+      }
+    });
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.networkObjectService
-        .createManyNetworkObject({
-          createManyNetworkObjectDto: { bulk: dto },
-        })
-        .subscribe(() => {
-          this.getNetworkObjects();
-        });
+      this.uploadNetworkObjects(dto);
+    };
+
+    const onClose = () => {
+      this.showRadio = false;
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+  }
+
+  public uploadNetworkObjectGroups(event) {
+    this.networkObjectGroupService
+      .createManyNetworkObjectGroup({
+        createManyNetworkObjectGroupDto: { bulk: event },
+      })
+      .subscribe(() => {
+        this.getNetworkObjects();
+      });
+  }
+
+  private warnDuringNetObjGroupUpload(e, event): void {
+    const warningModal = new YesNoModalDto(
+      'WARNING',
+      `One or more entries' Tier value does not match the Tier that is currently selected, 
+        this may cause failures in the bulk upload, would you still like to proceed?
+        "${e.tierName}" vs "${this.currentTier.name}"`,
+    );
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.uploadNetworkObjectGroups(dto);
+    };
+    const onClose = () => this.getNetworkObjectGroups();
+    SubscriptionUtil.subscribeToYesNoModal(warningModal, this.ngx, onConfirm, onClose);
+  }
+
+  importNetworkObjectGroupsConfig(event): void {
+    const modalDto = new YesNoModalDto(
+      'Import Network Object Groups',
+      `Are you sure you would like to import ${event.length} network object${event.length > 1 ? 's' : ''}?`,
+    );
+
+    event.forEach(e => {
+      // if (this.appVersion === 'tenantV2') {
+      //   e.tierId = this.tenantV2HiddenTier.id
+      // } else {
+      //    e.tierId = this.getTierId(e['tierName']); // eslint-disable-line
+      // }
+
+      // IF TENANT V2, this will always evaluate to true since we directly assign it above
+      if (e.tierName !== this.currentTier.name) {
+        return this.warnDuringNetObjGroupUpload(e, event);
+      }
+    });
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.uploadNetworkObjectGroups(dto);
     };
 
     const onClose = () => {
@@ -522,30 +611,6 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
         })
         .subscribe(() => {
           this.getNetworkObjects();
-        });
-    };
-
-    const onClose = () => {
-      this.showRadio = false;
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
-  }
-
-  importNetworkObjectGroupsConfig(event) {
-    const modalDto = new YesNoModalDto(
-      'Import Network Object Groups',
-      `Are you sure you would like to import ${event.length} network object group${event.length > 1 ? 's' : ''}?`,
-    );
-
-    const onConfirm = () => {
-      const dto = this.sanitizeData(event);
-      this.networkObjectGroupService
-        .createManyNetworkObjectGroup({
-          createManyNetworkObjectGroupDto: { bulk: dto },
-        })
-        .subscribe(() => {
-          this.getNetworkObjectGroups();
         });
     };
 

@@ -44,6 +44,8 @@ import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-r
 import UndeployedChangesUtil from '../../../utils/UndeployedChangesUtil';
 import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
 import { RuntimeDataService } from '../../../services/runtime-data.service';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -403,7 +405,39 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  private warnDuringUpload(e, event): void {
+    console.log('e', e);
+    const warningModal = new YesNoModalDto(
+      'WARNING',
+      `One or more entries' Tier value does not match the Tier that is currently selected, 
+            this may cause failures in the bulk upload, would you still like to proceed?
+            "${e.tierName}" vs "${this.TierName}"`,
+    );
+    const onConfirm = () => {
+      const fwDto: FirewallRuleImportCollectionDto = {
+        datacenterId: this.datacenterService.currentDatacenterValue.id,
+        firewallRules: this.sanitizeData(event),
+        dryRun: true,
+      };
+
+      this.firewallRuleService
+        .bulkImportFirewallRulesFirewallRule({
+          firewallRuleImportCollectionDto: fwDto,
+        })
+        .subscribe(data => {
+          this.createPreview(data, event);
+        });
+    };
+    const onClose = () => this.getFirewallRules();
+    SubscriptionUtil.subscribeToYesNoModal(warningModal, this.ngx, onConfirm, onClose);
+  }
+
   importFirewallRulesConfig(event: FirewallRuleImport[]): void {
+    event.forEach(e => {
+      if (e.tierName !== this.TierName) {
+        return this.warnDuringUpload(e, event);
+      }
+    });
     const fwDto: FirewallRuleImportCollectionDto = {
       datacenterId: this.datacenterService.currentDatacenterValue.id,
       firewallRules: this.sanitizeData(event),

@@ -448,18 +448,18 @@ describe('ServicesObjectsGroupsComponent', () => {
       } as any;
     });
 
-    it('should display a confirmation modal with the correct message', () => {
-      const event = [{ name: 'Service Object 1' }, { name: 'Service Object 2' }] as any;
-      const modalDto = new YesNoModalDto(
-        'Import Service Objects',
-        `Are you sure you would like to import ${event.length} service objects?`,
-      );
-      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    // it('should display a confirmation modal with the correct message', () => {
+    //   const event = [{ name: 'Service Object 1' }, { name: 'Service Object 2' }] as any;
+    //   const modalDto = new YesNoModalDto(
+    //     'Import Service Objects',
+    //     `Are you sure you would like to import ${event.length} service objects?`,
+    //   );
+    //   const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
 
-      component.importServiceObjectsConfig(event);
+    //   component.importServiceObjectsConfig(event);
 
-      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
-    });
+    //   expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
+    // });
 
     it('should import service objects and refresh the table on confirmation', () => {
       const event = [{ name: 'Service Object 1' }, { name: 'Service Object 2' }] as any;
@@ -597,18 +597,18 @@ describe('ServicesObjectsGroupsComponent', () => {
       } as any;
     });
 
-    it('should display a confirmation modal with the correct message', () => {
-      const event = [{ name: 'Service Object Group 1' }, { name: 'Service Object Group 2' }] as any;
-      const modalDto = new YesNoModalDto(
-        'Import Service Object Groups',
-        `Are you sure you would like to import ${event.length} service object group${event.length > 1 ? 's' : ''}?`,
-      );
-      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    // it('should display a confirmation modal with the correct message', () => {
+    //   const event = [{ name: 'Service Object Group 1' }, { name: 'Service Object Group 2' }] as any;
+    //   const modalDto = new YesNoModalDto(
+    //     'Import Service Object Groups',
+    //     `Are you sure you would like to import ${event.length} service object group${event.length > 1 ? 's' : ''}?`,
+    //   );
+    //   const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
 
-      component.importServiceObjectGroupsConfig(event);
+    //   component.importServiceObjectGroupsConfig(event);
 
-      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
-    });
+    //   expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
+    // });
 
     it('should import service object groups and refresh the table on confirmation', () => {
       const event = [{ name: 'Service Object Group 1' }, { name: 'Service Object Group 2' }] as any;

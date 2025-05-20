@@ -6,6 +6,7 @@ import {
   GetManyEndpointGroupResponseDto,
   V2AppCentricApplicationProfilesService,
   V2AppCentricEndpointGroupsService,
+  V2AppCentricTenantsService,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -17,6 +18,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
@@ -34,6 +36,7 @@ export class ApplicationProfileComponent implements OnInit {
   private endpointGroupModalSubscription: Subscription;
 
   public tenantId: string;
+  public tenantName: string;
 
   public isLoading = false;
 
@@ -62,6 +65,7 @@ export class ApplicationProfileComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private router: Router,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
+    private tenantService: V2AppCentricTenantsService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<ApplicationProfile>();
     advancedSearchAdapter.setService(this.applicationProfileService);
@@ -74,6 +78,10 @@ export class ApplicationProfileComponent implements OnInit {
     if (match) {
       const uuid = match[0].split('/')[2];
       this.tenantId = uuid;
+      console.log('run??');
+      this.tenantService.getManyTenant({ page: 1, perPage: 10000 }).subscribe(data => {
+        this.tenantName = ObjectUtil.getObjectName(this.tenantId, data.data);
+      });
     }
   }
 
@@ -230,12 +238,43 @@ export class ApplicationProfileComponent implements OnInit {
     return obj;
   };
 
+  private warnDuringUpload(e, event) {
+    const warningModal = new YesNoModalDto(
+      'WARNING',
+      `One or more entries' Tenant value does not match the Tenant that is currently selected, 
+         we will attempt to assign the currently selected Tenant to any 
+         incorrect entries, this may cause failures in the bulk upload, would you still like to proceed?
+            "${e.tenantName}" vs "${this.tenantName}"`,
+    );
+    // const onConfirm = () => {
+    //   const dto = this.sanitizeData(event);
+    //   this.uploadAppProfiles(dto);
+    // };
+    const onClose = () => this.getApplicationProfiles();
+    SubscriptionUtil.subscribeToYesNoModal(warningModal, this.ngx, onClose);
+  }
+
+  private uploadAppProfiles(dto) {
+    this.applicationProfileService.createManyApplicationProfile({ createManyApplicationProfileDto: { bulk: dto } }).subscribe(
+      () => {},
+      () => {},
+      () => {
+        this.getApplicationProfiles();
+      },
+    );
+  }
+
   public importAppProfiles(event): void {
     const modalDto = new YesNoModalDto(
       'Import Application Profiles',
       `Are you sure you would like to import ${event.length} Application Profile${event.length > 1 ? 's' : ''}?`,
     );
 
+    event.map(e => {
+      if (e.tenantName !== this.tenantName) {
+        return this.warnDuringUpload(e, event);
+      }
+    });
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.applicationProfileService.createManyApplicationProfile({ createManyApplicationProfileDto: { bulk: dto } }).subscribe(
