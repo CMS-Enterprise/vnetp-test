@@ -33,16 +33,16 @@
   <section>
     <!-- when in TenantV2 mode navigate to tenantv2/tenant-select/edit -->
     <a
-      routerLink="/appcentric/tenant-select/edit/{{ tenant.id }}/home"
+      routerLink="/tenantv2/tenant-select/edit/{{ tenant.id }}/home"
       queryParamsHandling="merge"
-      *ngIf="applicationMode === ApplicationMode.ADMINPORTAL"
+      *ngIf="applicationMode === ApplicationMode.ADMINPORTAL || applicationMode === ApplicationMode.TENANTV2"
       >{{ tenant.name }}</a
     >
     <!-- when in TenantV2 mode navigate to tenantv2/tenant-select/edit -->
     <a
-      routerLink="/tenantv2/tenant-select/edit/{{ tenant.id }}/home"
+      routerLink="/appcentric/tenant-select/edit/{{ tenant.id }}/home"
       queryParamsHandling="merge"
-      *ngIf="applicationMode === ApplicationMode.TENANTV2"
+      *ngIf="applicationMode === ApplicationMode.APPCENTRIC"
       >{{ tenant.name }}</a
     >
   </section>

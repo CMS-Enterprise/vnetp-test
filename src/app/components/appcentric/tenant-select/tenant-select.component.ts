@@ -69,7 +69,10 @@ export class TenantSelectComponent implements OnInit {
   }
 
   public getTenants(): void {
-    const filter = this.applicationMode === ApplicationMode.TENANTV2 ? 'tenantVersion||eq||2' : 'tenantVersion||eq||1';
+    const filter =
+      this.applicationMode === ApplicationMode.TENANTV2 || this.applicationMode === ApplicationMode.ADMINPORTAL
+        ? 'tenantVersion||eq||2'
+        : 'tenantVersion||eq||1';
 
     this.tenantService
       .getManyTenant({
