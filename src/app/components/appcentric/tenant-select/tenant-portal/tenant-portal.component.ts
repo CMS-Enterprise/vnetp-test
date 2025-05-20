@@ -253,7 +253,9 @@ export class TenantPortalComponent implements OnInit, AfterViewInit {
   public getNetworkServicesContainerDatacenter(datacenterId: string): void {
     this.datacenterService.getOneDatacenter({ id: datacenterId, join: ['tiers'] }).subscribe(response => {
       this.networkServicesContainerDatacenter = response;
+      this.datacenterContextService.unlockDatacenter();
       this.datacenterContextService.switchDatacenter(response.id);
+      this.datacenterContextService.lockDatacenter();
       this.networkServicesContainerNsTier = response.tiers.find(t => t.name === 'ns_fw_svc_tier');
       this.networkServicesContainerEwTier = response.tiers.find(t => t.name === 'ew_fw_svc_tier');
 

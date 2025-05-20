@@ -107,8 +107,7 @@ export class DatacenterContextService implements OnInit {
    * array of datacenters returned from the API. If it is present then that datacenter will be selected.
    */
   private getDatacenters(datacenterParam?: string) {
-    const filter = this.applicationMode === ApplicationMode.TENANTV2 ? 'tenantVersion||eq||2' : 'tenantVersion||eq||1';
-    this.datacenterService.getManyDatacenter({ join: ['tiers'], page: 1, perPage: 1000, filter: [filter] }).subscribe(response => {
+    this.datacenterService.getManyDatacenter({ join: ['tiers'], page: 1, perPage: 1000 }).subscribe(response => {
       // Update internal datacenters array and external subject.
       this._datacenters = response.data;
       this.datacentersSubject.next(response.data);
