@@ -82,4 +82,19 @@
   </section>
 </ng-template>
 
+<ng-template #endpointsTemplate let-endpointGroup="datum">
+  <section>
+    <button
+      type="button"
+      class="btn btn-link p-0"
+      (click)="openEndpointsModal(endpointGroup)"
+      [disabled]="!endpointGroup?.endpoints?.length"
+    >
+      {{ endpointGroup?.endpoints?.length || 0 }}
+    </button>
+  </section>
+</ng-template>
+
 <app-yes-no-modal></app-yes-no-modal>
+
+<app-endpoint-display-modal [modalId]="endpointDisplayModalId"></app-endpoint-display-modal>

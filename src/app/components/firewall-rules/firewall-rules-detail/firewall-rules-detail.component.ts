@@ -610,9 +610,65 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           this.handleServiceObjectGroup(property, objectId);
           break;
         }
+        case 'EndpointGroup': {
+          this.handleEndpointGroup(property, objectId);
+          break;
+        }
+        case 'EndpointSecurityGroup': {
+          this.handleEndpointSecurityGroup(property, objectId);
+          break;
+        }
       }
     }
   }
+
+  handleEndpointGroup(property, objectId) {
+    this.endpointGroupService.getOneEndpointGroup({ id: objectId, relations: ['endpoints', 'endpoints.ipAddresses'] }).subscribe(data => {
+      const objectName = data.name;
+      const modalTitle = `${property} : ${objectName}`;
+
+      // Iterate through all endpoints and list their IP Addresses.
+      const modalBody = data.endpoints.map(endpoint => {
+        const ipAddresses = endpoint.ipAddresses.map(ip => ip.address);
+        return `${ipAddresses.join(', ')}`;
+      });
+
+      const dto = {
+        modalTitle,
+        modalBody,
+      };
+      this.subscribeToObjectInfoModal();
+      this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
+      this.ngx.getModal('firewallRuleObjectInfoModal').open();
+    });
+  }
+
+  handleEndpointSecurityGroup(property, objectId) {
+    this.endpointSecurityGroupService.getOneEndpointSecurityGroup({
+      id: objectId, relations: ['selectors',
+        'selectors.endpointGroup',
+        'selectors.endpointGroup.endpoints',
+        'selectors.endpointGroup.endpoints.ipAddresses',
+      ],
+    }).subscribe(data => {
+      const objectName = data.name;
+      const modalTitle = `${property} : ${objectName}`;
+      const modalBody = data.selectors.map(selector => {
+        const epgName = selector.endpointGroup.name;
+        const ips = selector.endpointGroup.endpoints.flatMap(endpoint => endpoint.ipAddresses.map(ip => ip.address));
+        return `${epgName}: ${ips.join(', ')}`;
+      });
+
+      const dto = {
+        modalTitle,
+        modalBody,
+      };
+      this.subscribeToObjectInfoModal();
+      this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
+      this.ngx.getModal('firewallRuleObjectInfoModal').open();
+    });
+  }
+
 
   handleNetworkObject(property, objectId) {
     this.networkObjectService.getOneNetworkObject({ id: objectId }).subscribe(data => {
