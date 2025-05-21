@@ -40,6 +40,12 @@ export class AuthService {
     this.currentTenantSubject.next(tenant);
   }
 
+  public isGlobalAdmin(): boolean {
+    return this.currentUserSubject.value.dcsPermissions.some((permission: any) =>
+      permission.roles.some((role: string) => role === 'global-admin'),
+    );
+  }
+
   getTenants(token: string) {
     return this.http
       .get<any>(environment.apiBase + '/v1/auth/tenants', {

@@ -7,10 +7,17 @@ import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
 import { UndeployedChangesService } from '../services/undeployed-changes.service';
+import { TenantStateService } from '../services/tenant-state.service';
 
 @Injectable()
 export class HttpConfigInterceptor {
-  constructor(private auth: AuthService, private injector: Injector, private toastr: ToastrService, private route: ActivatedRoute) {}
+  constructor(
+    private auth: AuthService,
+    private injector: Injector,
+    private toastr: ToastrService,
+    private route: ActivatedRoute,
+    private tenantStateService: TenantStateService,
+  ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const currentUser = this.auth.currentUserValue;
@@ -24,6 +31,10 @@ export class HttpConfigInterceptor {
       this.route.queryParams.subscribe(qp => {
         tenant = qp.tenant;
       });
+
+      if (this.tenantStateService.isTenantSet() && !this.auth.isGlobalAdmin()) {
+        tenant = this.tenantStateService.getTenant();
+      }
 
       // If no tenant is selected, log the user out and allow them to reselect a tenant.
       if (!tenant) {

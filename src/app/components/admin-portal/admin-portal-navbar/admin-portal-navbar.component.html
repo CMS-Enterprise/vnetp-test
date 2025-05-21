@@ -38,6 +38,9 @@
           <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="wan-form" queryParamsHandling="merge">
             Manage WAN
           </a>
+          <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="app-id-maintenance" queryParamsHandling="merge">
+            App ID Maintenance
+          </a>
         </div>
       </li>
     </ul>

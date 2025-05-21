@@ -1,0 +1,74 @@
+.container {
+  padding: 20px;
+}
+
+.table-container {
+  margin: 20px 0;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.tier-detail-row {
+  background-color: #fafafa;
+}
+
+.tier-detail-content {
+  padding: 16px;
+}
+
+.tier-table {
+  width: 100%;
+  margin-top: 8px;
+  box-shadow: none;
+  background-color: white;
+}
+
+.tier-table th {
+  background-color: #f5f5f5;
+}
+
+.update-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.update-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 500px;
+  margin-top: 20px;
+}
+
+.external-link {
+  color: #1976d2;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.external-link:hover {
+  text-decoration: underline;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+button {
+  align-self: flex-start;
+}
+
+.mat-column-expand {
+  width: 48px;
+  text-align: center;
+}
+
+.mat-column-select {
+  width: 48px;
+  text-align: center;
+}

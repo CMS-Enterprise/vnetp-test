@@ -15,6 +15,8 @@ import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module
 import { GlobalMessagesComponent } from './global-messages/global-messages.component';
 import { TenantSelectComponent } from '../appcentric/tenant-select/tenant-select.component';
 import { ADMINPORTAL_ROUTE_DATA, mergeRouteData } from 'src/app/common/route-utils/route-data.utils';
+import { AppIdMaintenanceModule } from './app-id-maintenance/app-id-maintenance.module';
+import { AppIdMaintenanceComponent } from './app-id-maintenance/app-id-maintenance.component';
 
 const routes: Routes = [
   {
@@ -53,6 +55,16 @@ const routes: Routes = [
         }),
         loadChildren: () => import('../appcentric/tenant-select/tenant-select.module').then(m => m.TenantSelectModule),
       },
+      {
+        path: 'app-id-maintenance',
+        component: AppIdMaintenanceComponent,
+        canActivate: [AdminAuthGuard],
+        data: mergeRouteData(ADMINPORTAL_ROUTE_DATA, {
+          breadcrumb: 'App ID Maintenance',
+          title: 'App ID Maintenance',
+        }),
+        loadChildren: () => import('./app-id-maintenance/app-id-maintenance.module').then(m => m.AppIdMaintenanceModule),
+      },
     ],
   },
 ];
@@ -69,6 +81,7 @@ const routes: Routes = [
     YesNoModalModule,
     NgxSmartModalModule,
     BreadcrumbsModule,
+    AppIdMaintenanceModule,
   ],
 })
 export class AdminPortalModule {}
