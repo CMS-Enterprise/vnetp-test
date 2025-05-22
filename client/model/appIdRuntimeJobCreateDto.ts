@@ -15,7 +15,7 @@ export interface AppIdRuntimeJobCreateDto {
     type: AppIdRuntimeJobCreateDtoTypeEnum;
     datacenterId?: string;
     appIdVersion?: string;
-    tierId: string;
+    tierId?: string;
 }
 export enum AppIdRuntimeJobCreateDtoTypeEnum {
     FirewallRule = 'FirewallRule',

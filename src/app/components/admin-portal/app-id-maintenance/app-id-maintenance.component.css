@@ -3,31 +3,12 @@
 }
 
 .table-container {
-  margin: 20px 0;
+  margin-top: 20px;
   overflow-x: auto;
 }
 
 table {
   width: 100%;
-}
-
-.tier-detail-row {
-  background-color: #fafafa;
-}
-
-.tier-detail-content {
-  padding: 16px;
-}
-
-.tier-table {
-  width: 100%;
-  margin-top: 8px;
-  box-shadow: none;
-  background-color: white;
-}
-
-.tier-table th {
-  background-color: #f5f5f5;
 }
 
 .update-section {
@@ -63,12 +44,13 @@ button {
   align-self: flex-start;
 }
 
-.mat-column-expand {
+.mat-column-select {
   width: 48px;
   text-align: center;
 }
 
-.mat-column-select {
-  width: 48px;
-  text-align: center;
+.button-container-top-right {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
 }

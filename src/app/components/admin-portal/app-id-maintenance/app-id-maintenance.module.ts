@@ -9,9 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-import { provideAnimations } from '@angular/platform-browser/animations';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { YesNoModalModule } from '../../../common/yes-no-modal/yes-no-modal.module';
 
 const routes: Routes = [
   {
@@ -32,10 +30,8 @@ const routes: Routes = [
     MatFormFieldModule,
     FormsModule,
     ReactiveFormsModule,
-    MatIconModule,
-    FontAwesomeModule,
+    YesNoModalModule,
   ],
-  providers: [provideAnimations()],
   exports: [AppIdMaintenanceComponent],
 })
 export class AppIdMaintenanceModule {}

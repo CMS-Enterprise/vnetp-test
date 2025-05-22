@@ -1,18 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from '../../../services/auth.service';
+import { TenantStateService } from '../../../services/tenant-state.service';
+import { Tier, V1RuntimeDataAppIdRuntimeService, V1TiersService } from '../../../../../client';
+import { forkJoin, of } from 'rxjs';
+import { mergeMap, finalize, tap, map, catchError } from 'rxjs/operators';
+import { YesNoModalDto } from '../../../models/other/yes-no-modal-dto';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 
-interface AppIdTier {
-  tierName: string;
+interface Tenant {
+  tenant: string;
   currentVersion: string;
   lastUpdated: string;
-}
-
-interface TenantAppId {
-  tenantName: string;
-  tiers: AppIdTier[];
-  expanded: boolean;
 }
 
 @Component({
@@ -21,93 +22,117 @@ interface TenantAppId {
   styleUrl: './app-id-maintenance.component.css',
 })
 export class AppIdMaintenanceComponent implements OnInit {
-  displayedColumns: string[] = ['select', 'tenantName', 'expand'];
-  tierColumns: string[] = ['select', 'tierName', 'currentVersion', 'lastUpdated'];
-  dataSource = new MatTableDataSource<TenantAppId>();
-  tenantSelection = new SelectionModel<TenantAppId>(true, []);
-  tierSelection = new SelectionModel<AppIdTier>(true, []);
+  displayedColumns: string[] = ['select', 'tenant', 'currentVersion', 'lastUpdated'];
+  dataSource = new MatTableDataSource<Tenant>();
+  selection = new SelectionModel<Tenant>(true, []);
   updateCode = '';
   externalSiteUrl = 'https://example.com/app-id-update';
-  faChevronDown = faChevronDown;
-  faChevronUp = faChevronUp;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+    private authService: AuthService,
+    private tenantStateService: TenantStateService,
+    private tierService: V1TiersService,
+    private ngx: NgxSmartModalService,
+    private appIdService: V1RuntimeDataAppIdRuntimeService,
+  ) {}
 
   ngOnInit() {
-    // Initialize with mock data
-    this.dataSource.data = [
-      {
-        tenantName: 'Tenant 1',
-        expanded: false,
-        tiers: [
-          { tierName: 'Tier 1', currentVersion: '1.2.3', lastUpdated: '2024-03-15' },
-          { tierName: 'Tier 2', currentVersion: '1.2.2', lastUpdated: '2024-03-10' },
-        ],
-      },
-      {
-        tenantName: 'Tenant 2',
-        expanded: false,
-        tiers: [
-          { tierName: 'Tier 1', currentVersion: '1.2.1', lastUpdated: '2024-03-12' },
-          { tierName: 'Tier 2', currentVersion: '1.2.3', lastUpdated: '2024-03-14' },
-          { tierName: 'Tier 3', currentVersion: '1.2.2', lastUpdated: '2024-03-11' },
-        ],
-      },
-    ];
-    console.log('Initialized data:', this.dataSource.data);
+    this.getTenants();
   }
 
-  /** Whether the number of selected tenants matches the total number of tenants. */
-  isAllTenantsSelected() {
-    const numSelected = this.tenantSelection.selected.length;
+  getTenants() {
+    this.dataSource.data = [];
+    this.authService
+      .getTenants(this.authService.currentUserValue.token)
+      .pipe(
+        mergeMap(tenants => {
+          const tenantData: Tenant[] = [];
+          if (!tenants || tenants.length === 0) {
+            return of(null);
+          }
+          return forkJoin(
+            tenants.map(tenant =>
+              of(null).pipe(
+                tap(() => this.tenantStateService.setTenant(tenant.tenant)),
+                mergeMap(() => this.tierService.getManyTier({ filter: ['appVersion||notnull'], limit: 1 })),
+                tap(tier => {
+                  if ((tier as unknown as Tier[])?.length > 0) {
+                    const t = tier[0];
+                    tenantData.push({
+                      tenant: tenant.tenant,
+                      currentVersion: t.appVersion,
+                      lastUpdated: t.runtimeDataLastRefreshed,
+                    });
+                  }
+                }),
+                finalize(() => {
+                  this.tenantStateService.clearTenant();
+                }),
+              ),
+            ),
+          ).pipe(
+            tap(() => {
+              this.dataSource.data = tenantData;
+            }),
+          );
+        }),
+      )
+      .subscribe({
+        error: error => {
+          console.error('Error fetching tenant data:', error);
+          this.dataSource.data = [];
+        },
+      });
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
-  /** Selects all tenants if they are not all selected; otherwise clear selection. */
-  toggleAllTenants() {
-    if (this.isAllTenantsSelected()) {
-      this.tenantSelection.clear();
-      this.tierSelection.clear();
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  toggleAll() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
       return;
     }
-    this.tenantSelection.select(...this.dataSource.data);
+    this.selection.select(...this.dataSource.data);
   }
 
-  /** Whether the number of selected tiers matches the total number of tiers in the tenant. */
-  isAllTiersSelected(tenant: TenantAppId) {
-    const numSelected = this.tierSelection.selected.filter(tier => tenant.tiers.includes(tier)).length;
-    return numSelected === tenant.tiers.length;
-  }
+  update() {
+    const selectedTenants = this.selection.selected.map(tenant => tenant.tenant).join(',\n    ');
+    const message = `Are you sure you want to run an App ID Maintenance job on the following tenants: ${selectedTenants}?`;
+    const dto = new YesNoModalDto('Run App ID Maintenance?', message);
+    const onConfirm = () => {
+      const updateOperations = this.selection.selected.map(tenant =>
+        of(null).pipe(
+          tap(() => this.tenantStateService.setTenant(tenant.tenant)),
+          mergeMap(() =>
+            this.appIdService.runAppIdMaintenanceAppIdRuntime().pipe(
+              map(response => ({ tenant: tenant.tenant, success: true, response })),
+              catchError(error => of({ tenant: tenant.tenant, success: false, error })),
+            ),
+          ),
+          finalize(() => this.tenantStateService.clearTenant()),
+        ),
+      );
 
-  /** Selects all tiers in a tenant if they are not all selected; otherwise clear selection. */
-  toggleAllTiers(tenant: TenantAppId) {
-    if (this.isAllTiersSelected(tenant)) {
-      tenant.tiers.forEach(tier => this.tierSelection.deselect(tier));
-      return;
-    }
-    tenant.tiers.forEach(tier => this.tierSelection.select(tier));
-  }
+      forkJoin(updateOperations).subscribe(results => {
+        results.forEach(result => {
+          if (result.success) {
+            console.log(`App ID Maintenance job succeeded for tenant: ${result.tenant}`, (result as { response: any }).response);
+          } else {
+            console.error(`App ID Maintenance job failed for tenant: ${result.tenant}`, (result as { error: any }).error);
+          }
+        });
 
-  /** Toggle tenant expansion */
-  toggleTenant(tenant: TenantAppId) {
-    console.log('Toggling tenant:', tenant.tenantName);
-    tenant.expanded = !tenant.expanded;
-    this.dataSource.data = [...this.dataSource.data];
-    this.cdr.detectChanges();
-    console.log('New expanded state:', tenant.expanded);
-  }
+        this.selection.clear();
+        this.getTenants();
+      });
+    };
 
-  /** Get all selected tiers across all tenants */
-  getSelectedTiers(): AppIdTier[] {
-    return this.tierSelection.selected;
+    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm);
   }
-
-  /** Get all tiers from selected tenants */
-  getAllTiersFromSelectedTenants(): AppIdTier[] {
-    return this.tenantSelection.selected.flatMap(tenant => tenant.tiers);
-  }
-
-  /** Predicate function for expansion detail row */
-  isExpansionDetailRow = (index: number, row: TenantAppId) => row.expanded;
 }
