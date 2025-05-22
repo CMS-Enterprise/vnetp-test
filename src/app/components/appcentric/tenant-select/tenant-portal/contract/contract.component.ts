@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Contract, GetManyContractResponseDto, V2AppCentricContractsService } from 'client';
+import { Contract, GetManyContractResponseDto, V2AppCentricContractsService, V2AppCentricTenantsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
@@ -11,6 +11,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
@@ -26,6 +27,7 @@ export class ContractComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
   public contractModalSubscription: Subscription;
   public tenantId: string;
+  public tenantName;
 
   public isLoading = false;
 
@@ -52,6 +54,7 @@ export class ContractComponent implements OnInit {
     private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
     private router: Router,
+    private tenantService: V2AppCentricTenantsService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<Contract>();
     advancedSearchAdapter.setService(this.contractService);
@@ -64,6 +67,9 @@ export class ContractComponent implements OnInit {
     if (match) {
       const uuid = match[0].split('/')[2];
       this.tenantId = uuid;
+      this.tenantService.getManyTenant({ page: 1, perPage: 10000 }).subscribe(data => {
+        this.tenantName = ObjectUtil.getObjectName(this.tenantId, data.data);
+      });
     }
   }
 
@@ -222,25 +228,52 @@ export class ContractComponent implements OnInit {
     return obj;
   };
 
+  private warnDuringUpload(e, event) {
+    const warningModal = new YesNoModalDto(
+      'WARNING',
+      `One or more entries' Tenant value does not match the Tenant that is currently selected, 
+         we will attempt to assign the currently selected Tenant to any 
+         incorrect entries, this may cause failures in the bulk upload, would you still like to proceed?
+            "${e.tenantName}" vs "${this.tenantName}"`,
+    );
+    const onConfirm = () => {
+      const dto = this.sanitizeData(event);
+      this.uploadContracts(dto);
+    };
+    const onClose = () => this.getContracts();
+    SubscriptionUtil.subscribeToYesNoModal(warningModal, this.ngx, onConfirm, onClose);
+  }
+
+  private uploadContracts(dto) {
+    this.contractService.createManyContract({ createManyContractDto: { bulk: dto } }).subscribe(
+      () => {},
+      () => {},
+      () => {
+        this.getContracts();
+      },
+    );
+  }
+
   public importContracts(event): void {
     const modalDto = new YesNoModalDto(
       'Import Contracts',
       `Are you sure you would like to import ${event.length} Contract${event.length > 1 ? 's' : ''}?`,
     );
 
+    event.map(e => {
+      if (e.tenantName !== this.tenantName) {
+        return this.warnDuringUpload(e, event);
+      }
+    });
+
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.contractService.createManyContract({ createManyContractDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
-          this.getContracts();
-        },
-      );
+      this.uploadContracts(dto);
     };
     const onClose = () => {
       this.getContracts();
     };
+
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 }

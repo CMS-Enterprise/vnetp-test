@@ -78,7 +78,7 @@ describe('BridgeDomainComponent', () => {
 
     it('should display a confirmation modal with the correct message', () => {
       const event = [{ name: 'Bridge Domain 1' }, { name: 'Bridge Domain 2' }] as any;
-      const modalDto = new YesNoModalDto('Import Bridge Domain', `Are you sure you would like to import ${event.length} Bridge Domains?`);
+      const modalDto = new YesNoModalDto('Import Bridge Domains', `Are you sure you would like to import ${event.length} Bridge Domains?`);
       const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
 
       component.importBridgeDomains(event);

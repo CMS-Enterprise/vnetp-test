@@ -406,7 +406,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   private warnDuringUpload(e, event): void {
-    console.log('e', e);
     const warningModal = new YesNoModalDto(
       'WARNING',
       `One or more entries' Tier value does not match the Tier that is currently selected, 

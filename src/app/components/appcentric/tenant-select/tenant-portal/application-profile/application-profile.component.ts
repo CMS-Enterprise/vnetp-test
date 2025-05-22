@@ -78,7 +78,6 @@ export class ApplicationProfileComponent implements OnInit {
     if (match) {
       const uuid = match[0].split('/')[2];
       this.tenantId = uuid;
-      console.log('run??');
       this.tenantService.getManyTenant({ page: 1, perPage: 10000 }).subscribe(data => {
         this.tenantName = ObjectUtil.getObjectName(this.tenantId, data.data);
       });

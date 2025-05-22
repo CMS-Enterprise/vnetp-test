@@ -1,6 +1,13 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { V2AppCentricL3outsService, L3Out, V2AppCentricVrfsService, GetManyL3OutResponseDto, GetManyVrfResponseDto } from 'client';
+import {
+  V2AppCentricL3outsService,
+  L3Out,
+  V2AppCentricVrfsService,
+  GetManyL3OutResponseDto,
+  GetManyVrfResponseDto,
+  V2AppCentricTenantsService,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
@@ -27,6 +34,7 @@ export class L3OutsComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
   public l3OutsModalSubscription: Subscription;
   public tenantId: string;
+  public tenantName: string;
   public vrfs: GetManyVrfResponseDto;
 
   public isLoading = false;
@@ -54,6 +62,7 @@ export class L3OutsComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private router: Router,
     private vrfService: V2AppCentricVrfsService,
+    private tenantService: V2AppCentricTenantsService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<L3Out>();
     advancedSearchAdapter.setService(this.l3OutService);
@@ -66,6 +75,9 @@ export class L3OutsComponent implements OnInit {
     if (match) {
       const uuid = match[0].split('/')[2];
       this.tenantId = uuid;
+      this.tenantService.getManyTenant({ page: 1, perPage: 10000 }).subscribe(data => {
+        this.tenantName = ObjectUtil.getObjectName(this.tenantId, data.data);
+      });
     }
   }
 
@@ -235,12 +247,43 @@ export class L3OutsComponent implements OnInit {
     return obj;
   };
 
+  private warnDuringUpload(e, event) {
+    const warningModal = new YesNoModalDto(
+      'WARNING',
+      `One or more entries' Tenant value does not match the Tenant that is currently selected, 
+            we will attempt to assign the currently selected Tenant to any 
+            incorrect entries, this may cause failures in the bulk upload, would you still like to proceed?
+               "${e.tenantName}" vs "${this.tenantName}"`,
+    );
+    // const onConfirm = () => {
+    //   const dto = this.sanitizeData(event);
+    //   this.uploadL3Outs(dto);
+    // };
+    const onClose = () => this.getL3Outs();
+    SubscriptionUtil.subscribeToYesNoModal(warningModal, this.ngx, onClose);
+  }
+
+  private uploadL3Outs(dto) {
+    this.l3OutService.createManyL3Out({ createManyL3OutDto: { bulk: dto } }).subscribe(
+      () => {},
+      () => {},
+      () => {
+        this.getL3Outs();
+      },
+    );
+  }
+
   public importL3Outs(event): void {
     const modalDto = new YesNoModalDto(
       'Import L3Outs',
       `Are you sure you would like to import ${event.length} L3 Out${event.length > 1 ? 's' : ''}?`,
     );
 
+    event.map(e => {
+      if (e.tenantName !== this.tenantName) {
+        return this.warnDuringUpload(e, event);
+      }
+    });
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.l3OutService.createManyL3Out({ createManyL3OutDto: { bulk: dto } }).subscribe(
@@ -254,7 +297,6 @@ export class L3OutsComponent implements OnInit {
 
     const onClose = () => {
       this.getL3Outs();
-      this.getVrfs();
     };
 
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
