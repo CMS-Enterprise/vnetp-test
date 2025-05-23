@@ -45,7 +45,7 @@ describe('FirewallRulesDetailComponent', () => {
       declarations: [
         FirewallRulesDetailComponent,
         MockImportExportComponent,
-        MockComponent('app-firewall-rule-modal'),
+        MockComponent({ selector: 'app-firewall-rule-modal', inputs: ['appIdEnabled'] }),
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockComponent({
           selector: 'app-firewall-rules-operation-modal',

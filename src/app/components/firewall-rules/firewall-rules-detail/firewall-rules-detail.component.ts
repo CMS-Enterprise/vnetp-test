@@ -322,7 +322,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.currentDatacenterSubscription.unsubscribe();
+    if (this.currentDatacenterSubscription) {
+      this.currentDatacenterSubscription.unsubscribe();
+    }
     this.datacenterService.unlockDatacenter();
   }
 
