@@ -21,7 +21,8 @@ export interface TableConfig<T> {
   advancedSearchAdapter?: AdvancedSearchAdapter<T>;
   hideAdvancedSearch?: boolean;
   hideSearchBar?: boolean;
-  expandableRows?: (() => TemplateRef<any>[]) | (() => TemplateRef<any>);
+  expandableRows?: () => TemplateRef<any>;
+  disableDefaultRowStyle?: boolean;
 }
 
 /**
@@ -34,6 +35,7 @@ export interface TableConfig<T> {
  *     description: 'Table',
  *     columns: [{ name: 'Name', template: () => this.nameTemplate }, { name: 'Desc', property: 'description' }],
  *     rowStyle: (data: object) => ({ background: 'red' }),
+ *     disableDefaultRowStyle: true,
  *  };
  *  public data = [{ name: 'Test', description: 'my-desc' }];
  *
@@ -257,5 +259,26 @@ export class TableComponent<T> implements AfterViewInit {
   isTemplateArray(): boolean {
     const templates = this.config.expandableRows?.();
     return Array.isArray(templates);
+  }
+
+  private getDefaultRowStyle(datum: any): Partial<CSSStyleDeclaration> {
+    if (datum.deletedAt) {
+      return { background: '#ffebee', color: '#aaaaaa', textDecoration: 'line-through' };
+    }
+    if (datum.enabled === false) {
+      return { background: '#e0e0e0', color: '#aaaaaa', textDecoration: 'line-through' };
+    }
+    return {};
+  }
+
+  public getRowStyle(datum: any): Partial<CSSStyleDeclaration> {
+    if (this.config.disableDefaultRowStyle) {
+      return this.config.rowStyle ? this.config.rowStyle(datum) : {};
+    }
+    const defaultStyle = this.getDefaultRowStyle(datum);
+    if (Object.keys(defaultStyle).length > 0) {
+      return defaultStyle;
+    }
+    return this.config.rowStyle ? this.config.rowStyle(datum) : {};
   }
 }

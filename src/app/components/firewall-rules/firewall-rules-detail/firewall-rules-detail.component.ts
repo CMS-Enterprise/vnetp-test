@@ -141,7 +141,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   @ViewChild('paAppsTemplate') paAppsTemplate: TemplateRef<any>;
   @ViewChild('tooltip') matTooltip: MatTooltip;
 
-  expandableRows = this.appIdEnabled ? () => [this.appIdTemplate, this.hitcountTemplate] : () => this.hitcountTemplate;
+  // expandableRows = this.appIdEnabled ? () => [this.appIdTemplate, this.hitcountTemplate] : () => this.hitcountTemplate;
 
   public config: TableConfig<any> = {
     description: 'Firewall Rules for the currently selected Tier',
@@ -159,7 +159,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       { name: 'Rule Index', property: 'ruleIndex' },
       { name: '', template: () => this.actionsTemplate },
     ],
-    expandableRows: this.expandableRows,
+    // expandableRows: this.expandableRows,
   };
 
   public liteConfig: LiteTableConfig<PanosApplication> = {
