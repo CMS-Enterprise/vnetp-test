@@ -112,7 +112,12 @@
         <div class="form-group col-md-6">
           <label for="defaultPoolId">Pool</label>
           <tooltip [message]="helpText.Pool"></tooltip>
-          <select id="pool" class="form-control" formControlName="defaultPoolId" [class.is-invalid]="submitted && f.defaultPoolId.errors">
+          <select
+            id="defaultPoolId"
+            class="form-control"
+            formControlName="defaultPoolId"
+            [class.is-invalid]="submitted && f.defaultPoolId.errors"
+          >
             <option></option>
             <option *ngFor="let pool of pools" [ngValue]="pool.id">
               {{ pool.name }}

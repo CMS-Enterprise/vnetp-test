@@ -102,6 +102,7 @@ export class SubnetsVlansComponent implements OnInit, OnDestroy {
       { name: 'Description', property: 'description' },
       { name: 'VLAN Number', property: 'vlanNumber' },
       { name: 'VCD VLAN Type', property: 'vcdVlanType' },
+      { name: 'Host Based Routing', property: 'hostBasedRouting' },
       { name: 'State', template: () => this.vlanStateTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],

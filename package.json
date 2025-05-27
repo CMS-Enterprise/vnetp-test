@@ -80,5 +80,9 @@
     "!(client)/**/*.{js,ts,html,css,scss}": [
       "prettier --write"
     ]
+  },
+  "engines": {
+    "node": ">=20.16.0",
+    "npm": ">=10.8.0"
   }
 }
