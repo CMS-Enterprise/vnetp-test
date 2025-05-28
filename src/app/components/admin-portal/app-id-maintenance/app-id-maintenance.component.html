@@ -2,7 +2,9 @@
   <h2>App ID Version Maintenance</h2>
 
   <div class="button-container-top-right">
-    <button mat-raised-button color="primary" (click)="update()" [disabled]="!selection.hasValue()">Run App ID Maintenance</button>
+    <button mat-raised-button color="primary" (click)="update()" [disabled]="!selection.hasValue() || isAnySelectedTenantUpdateDisabled">
+      Run App ID Maintenance
+    </button>
   </div>
 
   <div class="table-container">
@@ -22,6 +24,7 @@
             (click)="$event.stopPropagation()"
             (change)="$event ? selection.toggle(tenant) : null"
             [checked]="selection.isSelected(tenant)"
+            [disabled]="tenant.isUpdateDisabled"
           >
           </mat-checkbox>
         </td>
@@ -43,6 +46,26 @@
       <ng-container matColumnDef="lastUpdated">
         <th mat-header-cell *matHeaderCellDef>Last Updated</th>
         <td mat-cell *matCellDef="let tenant">{{ tenant.lastUpdated }}</td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let tenant">
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="refreshTenant(tenant)"
+            matTooltip="Refresh tenant data"
+            [disabled]="tenant.isRefreshDisabled || tenant.isRefreshingAppIdRuntimeData"
+          >
+            <mat-icon style="transform: rotate(80deg)" [class.icon-spin]="tenant.isRefreshingAppIdRuntimeData">sync</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="openTierManagementModal(tenant)" matTooltip="Manage App ID Tiers">
+            <mat-icon>settings_applications</mat-icon>
+          </button>
+          <mat-icon *ngIf="tenant.appIdJobStatus === 'error'" color="warn" matTooltip="Refresh failed">warning</mat-icon>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -10,6 +10,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { YesNoModalModule } from '../../../common/yes-no-modal/yes-no-modal.module';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { IconButtonModule } from '../../../common/icon-button/icon-button.module';
+import { TierManagementModalModule } from './tier-management-modal/tier-management-modal.module';
 
 const routes: Routes = [
   {
@@ -31,6 +36,11 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     YesNoModalModule,
+    MatIconModule,
+    MatTooltipModule,
+    FontAwesomeModule,
+    IconButtonModule,
+    TierManagementModalModule,
   ],
   exports: [AppIdMaintenanceComponent],
 })

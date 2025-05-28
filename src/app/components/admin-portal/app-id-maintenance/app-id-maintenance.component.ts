@@ -3,17 +3,30 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AuthService } from '../../../services/auth.service';
 import { TenantStateService } from '../../../services/tenant-state.service';
-import { Tier, V1RuntimeDataAppIdRuntimeService, V1TiersService } from '../../../../../client';
+import { AppIdRuntimeJobCreateDtoTypeEnum, Tier, V1RuntimeDataAppIdRuntimeService, V1TiersService } from '../../../../../client';
 import { forkJoin, of } from 'rxjs';
 import { mergeMap, finalize, tap, map, catchError } from 'rxjs/operators';
 import { YesNoModalDto } from '../../../models/other/yes-no-modal-dto';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
+import { RuntimeDataService } from '../../../services/runtime-data.service';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  TierManagementModalComponent,
+  TierManagementModalData,
+  TierManagementSaveChanges,
+} from './tier-management-modal/tier-management-modal.component';
 
 interface Tenant {
   tenant: string;
-  currentVersion: string;
-  lastUpdated: string;
+  currentVersion: string | null;
+  lastUpdated: string | null;
+  appIdEnabled: boolean;
+  isRefreshDisabled: boolean;
+  isUpdateDisabled: boolean;
+  isRefreshingAppIdRuntimeData?: boolean;
+  appIdJobStatus?: string | null;
+  tiers?: Tier[];
 }
 
 @Component({
@@ -22,11 +35,10 @@ interface Tenant {
   styleUrl: './app-id-maintenance.component.css',
 })
 export class AppIdMaintenanceComponent implements OnInit {
-  displayedColumns: string[] = ['select', 'tenant', 'currentVersion', 'lastUpdated'];
+  displayedColumns: string[] = ['select', 'tenant', 'currentVersion', 'lastUpdated', 'actions'];
   dataSource = new MatTableDataSource<Tenant>();
   selection = new SelectionModel<Tenant>(true, []);
   updateCode = '';
-  externalSiteUrl = 'https://example.com/app-id-update';
 
   constructor(
     private authService: AuthService,
@@ -34,6 +46,8 @@ export class AppIdMaintenanceComponent implements OnInit {
     private tierService: V1TiersService,
     private ngx: NgxSmartModalService,
     private appIdService: V1RuntimeDataAppIdRuntimeService,
+    private runtimeDataService: RuntimeDataService,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit() {
@@ -53,17 +67,29 @@ export class AppIdMaintenanceComponent implements OnInit {
           return forkJoin(
             tenants.map(tenant =>
               of(null).pipe(
-                tap(() => this.tenantStateService.setTenant(tenant.tenant)),
-                mergeMap(() => this.tierService.getManyTier({ filter: ['appVersion||notnull'], limit: 1 })),
+                tap(() => this.tenantStateService.setTenant(tenant.tenantQueryParameter)),
+                mergeMap(() => this.tierService.getManyTier({})),
                 tap(tier => {
-                  if ((tier as unknown as Tier[])?.length > 0) {
-                    const t = tier[0];
-                    tenantData.push({
-                      tenant: tenant.tenant,
-                      currentVersion: t.appVersion,
-                      lastUpdated: t.runtimeDataLastRefreshed,
-                    });
-                  }
+                  const tiersForTenant = tier as unknown as Tier[];
+
+                  const appIdEnabled = tiersForTenant?.some(t => t.appIdEnabled) || false;
+                  const appVersion = tiersForTenant?.find(t => !!t.appVersion)?.appVersion || null;
+                  const lastUpdated = tiersForTenant?.find(t => !!t.runtimeDataLastRefreshed)?.runtimeDataLastRefreshed || null;
+
+                  const isRefreshDisabled = !appIdEnabled;
+                  const isUpdateDisabled = !appIdEnabled || appVersion === null;
+
+                  tenantData.push({
+                    tenant: tenant.tenant,
+                    currentVersion: appVersion,
+                    lastUpdated,
+                    appIdEnabled,
+                    isRefreshDisabled,
+                    isUpdateDisabled,
+                    isRefreshingAppIdRuntimeData: false,
+                    appIdJobStatus: null,
+                    tiers: tiersForTenant,
+                  });
                 }),
                 finalize(() => {
                   this.tenantStateService.clearTenant();
@@ -88,8 +114,8 @@ export class AppIdMaintenanceComponent implements OnInit {
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+    const numSelectableRows = this.dataSource.data.filter(row => !row.isUpdateDisabled).length;
+    return numSelected > 0 && numSelected === numSelectableRows;
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
@@ -98,7 +124,15 @@ export class AppIdMaintenanceComponent implements OnInit {
       this.selection.clear();
       return;
     }
-    this.selection.select(...this.dataSource.data);
+    const selectableRows = this.dataSource.data.filter(row => !row.isUpdateDisabled);
+    this.selection.select(...selectableRows);
+  }
+
+  get isAnySelectedTenantUpdateDisabled(): boolean {
+    if (!this.selection.hasValue()) {
+      return false; // Or true, depending on desired behavior when nothing is selected - typically false
+    }
+    return this.selection.selected.some(t => t.isUpdateDisabled);
   }
 
   update() {
@@ -134,5 +168,126 @@ export class AppIdMaintenanceComponent implements OnInit {
     };
 
     SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm);
+  }
+
+  refreshTenant(tenant: any): void {
+    const message =
+      'This will refresh Panos Applications and App ID runtime data for this tenant.\n\n' +
+      "For a full update, including other maintenance tasks, using the main 'Run App ID Maintenance' job is recommended.\n\n" +
+      'Continue with this specific refresh?';
+    const dto = new YesNoModalDto('Refresh Panos Applications?', message);
+    const onConfirm = () => {
+      this.refreshAppId(tenant);
+    };
+    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm);
+  }
+
+  refreshAppId(tenant: any): void {
+    if (tenant.isRefreshingAppIdRuntimeData) {
+      return;
+    }
+
+    tenant.isRefreshingAppIdRuntimeData = true;
+    tenant.appIdJobStatus = null;
+
+    this.tenantStateService.setTenant(tenant.tenantQueryParameter);
+
+    this.appIdService
+      .createRuntimeDataJobAppIdRuntime({
+        appIdRuntimeJobCreateDto: {
+          type: AppIdRuntimeJobCreateDtoTypeEnum.AppIdRuntime,
+        },
+      })
+      .pipe(
+        finalize(() => {
+          this.tenantStateService.clearTenant();
+          tenant.isRefreshingAppIdRuntimeData = false;
+        }),
+      )
+      .subscribe({
+        next: job => {
+          let status = '';
+          this.runtimeDataService.pollJobStatus(job.id).subscribe({
+            next: towerJobDto => {
+              status = towerJobDto.status;
+            },
+            error: pollError => {
+              console.error(`Polling error for tenant ${tenant.tenant}:`, pollError);
+              status = 'error';
+              tenant.appIdJobStatus = status;
+            },
+            complete: () => {
+              tenant.appIdJobStatus = status;
+              if (status === 'successful') {
+                // Refresh table for UI consistency after individual update.
+                this.getTenants();
+              } else if (status !== 'error') {
+                // It might be 'pending', 'running' if polling completes prematurely
+                // If polling completes but job isn't successful or error, treat as an issue.
+                console.warn(`Job for tenant ${tenant.tenant} completed polling with status: ${status}`);
+              }
+            },
+          });
+        },
+        error: creationError => {
+          console.error(`Job creation error for tenant ${tenant.tenant}:`, creationError);
+          tenant.appIdJobStatus = 'error';
+        },
+      });
+  }
+
+  openTierManagementModal(tenant: Tenant): void {
+    console.log('Opening tier management modal for:', tenant.tenant, 'with tiers:', tenant.tiers);
+    const dialogRef = this.dialog.open<TierManagementModalComponent, TierManagementModalData, TierManagementSaveChanges>(
+      TierManagementModalComponent,
+      {
+        width: '600px',
+        data: {
+          tenantName: tenant.tenant,
+          tiers: tenant.tiers || [],
+        },
+      },
+    );
+
+    dialogRef.componentInstance.saveChanges.subscribe((changes: TierManagementSaveChanges) => {
+      console.log('Changes to save from modal:', changes);
+      if (changes.tiersToUpdate && changes.tiersToUpdate.length > 0) {
+        this.handleTierUpdates(tenant, changes.tiersToUpdate);
+      }
+      dialogRef.close();
+    });
+
+    dialogRef.componentInstance.closeModal.subscribe(() => {
+      dialogRef.close();
+    });
+  }
+
+  handleTierUpdates(originalTenant: Tenant, tiersToUpdate: { id: string; appIdEnabled: boolean }[]): void {
+    console.log(`Updating tiers for tenant: ${originalTenant.tenant}`, tiersToUpdate);
+
+    const updateOperations = tiersToUpdate.map(tierUpdate => {
+      this.tenantStateService.setTenant(originalTenant.tenant);
+      return this.tierService
+        .toggleAppIdTier({
+          id: tierUpdate.id,
+        })
+        .pipe(
+          finalize(() => this.tenantStateService.clearTenant()),
+          catchError(err => {
+            console.error(`Failed to update tier ${tierUpdate.id} for tenant ${originalTenant.tenant}`, err);
+            return of(null);
+          }),
+        );
+    });
+
+    forkJoin(updateOperations).subscribe({
+      next: results => {
+        console.log('All tier updates attempted.', results);
+        this.getTenants();
+      },
+      error: batchError => {
+        console.error('Error in batch tier update process for tenant ', originalTenant.tenant, batchError);
+      },
+    });
   }
 }

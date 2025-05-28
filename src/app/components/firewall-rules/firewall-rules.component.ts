@@ -105,8 +105,6 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
       if (ct) {
         const appIdEnabledEnv = environment?.dynamic?.appIdEnabled;
         const appIdEnabledTier = ct.appIdEnabled;
-        console.log('appIdEnabledEnv', appIdEnabledEnv);
-        console.log('appIdEnabledTier', appIdEnabledTier);
         this.appIdEnabled = appIdEnabledEnv && appIdEnabledTier;
         this.currentTier = ct;
         this.getTiers();

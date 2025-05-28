@@ -1,0 +1,66 @@
+<div class="modal-header">
+  <h3 *ngIf="viewMode === 'edit'">Manage App ID Enabled for {{ tenantName }} Tiers</h3>
+  <h3 *ngIf="viewMode === 'summary'">Confirm Tier Changes for {{ tenantName }}</h3>
+  <button mat-icon-button (click)="onCancel()" class="close-button" matTooltip="Close">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<div mat-dialog-content class="modal-content">
+  <div *ngIf="viewMode === 'edit'" class="tier-section">
+    <div class="all-tiers-header">
+      <h4>All Tiers</h4>
+      <mat-slide-toggle
+        class="master-toggle"
+        [checked]="areAllTiersCurrentlyEnabled()"
+        (change)="toggleAllTiersStatus($event)"
+        matTooltip="Toggle all tiers"
+      >
+        Enable All
+      </mat-slide-toggle>
+    </div>
+    <div *ngIf="!allTiers || allTiers.length === 0" class="empty-state">No tiers found for this tenant.</div>
+    <mat-list *ngIf="allTiers && allTiers.length > 0" role="list">
+      <mat-list-item *ngFor="let tier of allTiers" role="listitem">
+        <span matListItemTitle class="tier-name">{{ tier.name }}</span>
+        <mat-slide-toggle
+          matListItemMeta
+          [checked]="currentTierStates.get(tier.id)"
+          (change)="toggleTierStatus(tier.id)"
+          [matTooltip]="(currentTierStates.get(tier.id) ? 'Disable' : 'Enable') + ' App ID for this tier'"
+        >
+        </mat-slide-toggle>
+      </mat-list-item>
+    </mat-list>
+  </div>
+
+  <div *ngIf="viewMode === 'summary'" class="summary-section">
+    <h4>Changes Summary:</h4>
+    <div *ngIf="pendingChangesToDisplay.length === 0" class="empty-state">No changes were made.</div>
+    <mat-list *ngIf="pendingChangesToDisplay.length > 0" role="list">
+      <mat-list-item *ngFor="let change of pendingChangesToDisplay" role="listitem">
+        <span matListItemTitle class="tier-name">
+          {{ change.name }}
+          <mat-icon
+            *ngIf="change.showDisableWarning"
+            class="warning-icon"
+            color="warn"
+            matTooltip="Disabling this tier is not recommended as it has existing App ID integration data (version or last refresh date)."
+            >warning</mat-icon
+          >
+        </span>
+        <span matListItemMeta class="status-change">
+          {{ change.oldStatus ? 'Enabled' : 'Disabled' }} <mat-icon>arrow_forward</mat-icon> {{ change.newStatus ? 'Enabled' : 'Disabled' }}
+        </span>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>
+
+<div mat-dialog-actions class="modal-actions">
+  <button mat-stroked-button (click)="onCancel()">Cancel</button>
+  <button mat-stroked-button (click)="onBackToEdit()" *ngIf="viewMode === 'summary'">Back</button>
+  <button mat-flat-button color="primary" (click)="onSaveOrConfirm()" [disabled]="viewMode === 'edit' && !hasChanges()">
+    {{ viewMode === 'edit' ? 'Save Changes' : 'Confirm' }}
+  </button>
+</div>

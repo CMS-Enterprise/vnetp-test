@@ -1,0 +1,115 @@
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.close-button {
+  /* Position if needed, or rely on flexbox */
+}
+
+.modal-content {
+  padding: 0 24px 24px 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.tier-section {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.tier-section h4 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.all-tiers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.all-tiers-header h4 {
+  margin-bottom: 0;
+}
+
+.master-toggle {
+  /* Specific styling for the master toggle if needed, like margins */
+  /* margin-left: auto; /* This could also work depending on flex setup */
+}
+
+.empty-state {
+  color: rgba(0, 0, 0, 0.54);
+  padding: 16px 0;
+  text-align: center;
+}
+
+.tier-name {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 16px;
+}
+
+.mat-list-item {
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.modal-actions button {
+  margin-left: 8px;
+}
+
+.summary-section {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.summary-section h4 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.status-change {
+  display: flex;
+  align-items: center;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.status-change mat-icon {
+  margin-left: 8px;
+  margin-right: 8px;
+  font-size: 18px; /* Adjust icon size if needed */
+  height: 18px;
+  width: 18px;
+}
+
+.warning-icon {
+  font-size: 16px; /* Adjust size as needed */
+  height: 16px;
+  width: 16px;
+  margin-left: 8px;
+  vertical-align: middle; /* Align with text */
+}
