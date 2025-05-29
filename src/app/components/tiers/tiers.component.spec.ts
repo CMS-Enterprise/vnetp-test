@@ -28,7 +28,6 @@ import {
 } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TierModalDto } from 'src/app/models/network/tier-modal-dto';
-import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 describe('TiersComponent', () => {
   let component: TiersComponent;
@@ -167,10 +166,10 @@ describe('TiersComponent', () => {
       } as any;
     });
     it('should open type delete modal', () => {
-      const tier = { id: '1' } as any;
+      const tier = { id: '1', deletedAt: 'now' } as any;
 
       const openDeleteSpy = jest.spyOn(component, 'subscribeToTypeDeleteModal').mockImplementation(() => {
-        mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+        mockNgxSmartModalComponent.onCloseFinished.subscribe(() => {
           expect(component.getTiers()).toHaveBeenCalled();
         });
         return new Subscription();
@@ -179,11 +178,59 @@ describe('TiersComponent', () => {
       component.currentDatacenter = { id: '1' } as any;
       jest.spyOn(component['tierService'], 'getManyTier').mockReturnValue(of({} as any));
 
-      component.openTypeDeleteModal(tier);
+      component.deleteTier(tier);
 
       expect(component['ngx'].getModal).toHaveBeenCalledWith('typeDeleteModal');
-      expect(component['subscribeToTypeDeleteModal']).toHaveBeenCalled();
       expect(openDeleteSpy).toHaveBeenCalled();
+      // expect(deleteOneTierSpy).toHaveBeenCalled();
+      // expect(softDeleteOneTierSpy).toHaveBeenCalled();
+
+      const modal = component['ngx'].getModal('typeDeleteModal');
+      expect(modal).toBeDefined();
+      // expect(component['datacenterContextService'].lockDatacenter).toHaveBeenCalled();
+
+      // expect(component['entityService'].deleteEntity).toHaveBeenCalled();
+      // expect(deleteOneTierSpy).toHaveBeenCalledWith({ id: tier.id });
+      // expect(softDeleteOneTierSpy).toHaveBeenCalledWith({ id: tier.id });
+      // expect(component['tierService'].getManyTier).toHaveBeenCalled();
+    });
+
+    it('should delete tier', () => {
+      const tier = { id: '1' } as any;
+      const deleteOneTierSpy = jest.spyOn(component['tierService'], 'deleteOneTier').mockResolvedValue({} as never);
+      const softDeleteOneTierSpy = jest.spyOn(component['tierService'], 'softDeleteOneTier').mockResolvedValue({} as never);
+
+      jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
+        options.onSuccess();
+        return new Subscription();
+      });
+
+      // const openDeleteSpy = jest.spyOn(component, 'subscribeToTypeDeleteModal').mockImplementation(() => {
+
+      //         mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
+      //           expect(component.getTiers()).toHaveBeenCalled()
+      //         });
+      //         return new Subscription();
+      //       });
+
+      component.currentDatacenter = { id: '1' } as any;
+      jest.spyOn(component['tierService'], 'getManyTier').mockReturnValue(of({} as any));
+
+      component.deleteTier(tier);
+
+      // expect(component['ngx'].getModal).toHaveBeenCalledWith('typeDeleteModal');
+      // expect(openDeleteSpy).toHaveBeenCalled();
+      expect(deleteOneTierSpy).toHaveBeenCalled();
+      expect(softDeleteOneTierSpy).toHaveBeenCalled();
+
+      // const modal = component['ngx'].getModal('typeDeleteModal');
+      // expect(modal).toBeDefined();
+      // expect(component['datacenterContextService'].lockDatacenter).toHaveBeenCalled();
+
+      expect(component['entityService'].deleteEntity).toHaveBeenCalled();
+      expect(deleteOneTierSpy).toHaveBeenCalledWith({ id: tier.id });
+      // expect(softDeleteOneTierSpy).toHaveBeenCalledWith({ id: tier.id });
+      // expect(component['tierService'].getManyTier).toHaveBeenCalled();
     });
   });
 

@@ -21,7 +21,6 @@ import {
   V1NetworkSecurityServiceObjectsService,
   V1NetworkSecurityServiceObjectGroupsService,
 } from 'client';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableConfig } from '../../common/table/table.component';
 import { TableComponentDto } from '../../models/other/table-component-dto';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -245,30 +244,30 @@ export class TiersComponent implements OnInit, OnDestroy {
     this.ngx.getModal('typeDeleteModal').open();
   }
 
-  // public deleteTier(tier: Tier): void {
-  //   if (tier.deletedAt) {
-  //     this.openTypeDeleteModal(tier);
-  //   } else {
-  //     this.entityService.deleteEntity(tier, {
-  //       entityName: 'Tier',
-  //       delete$: this.tierService.deleteOneTier({ id: tier.id }),
-  //       softDelete$: this.tierService.softDeleteOneTier({ id: tier.id }),
-  //       onSuccess: () => {
-  //         // get search params from local storage
-  //         const params = this.tableContextService.getSearchLocalStorage();
-  //         const { filteredResults } = params;
+  public deleteTier(tier: Tier): void {
+    if (tier.deletedAt) {
+      this.openTypeDeleteModal(tier);
+    } else {
+      this.entityService.deleteEntity(tier, {
+        entityName: 'Tier',
+        delete$: this.tierService.deleteOneTier({ id: tier.id }),
+        softDelete$: this.tierService.softDeleteOneTier({ id: tier.id }),
+        onSuccess: () => {
+          // get search params from local storage
+          const params = this.tableContextService.getSearchLocalStorage();
+          const { filteredResults } = params;
 
-  //         // if filtered results boolean is true, apply search params in the
-  //         // subsequent get call
-  //         if (filteredResults) {
-  //           this.getTiers(params);
-  //         } else {
-  //           this.getTiers();
-  //         }
-  //       },
-  //     });
-  //   }
-  // }
+          // if filtered results boolean is true, apply search params in the
+          // subsequent get call
+          if (filteredResults) {
+            this.getTiers(params);
+          } else {
+            this.getTiers();
+          }
+        },
+      });
+    }
+  }
 
   public restoreTier(tier: Tier): void {
     if (!tier.deletedAt) {
@@ -289,7 +288,7 @@ export class TiersComponent implements OnInit, OnDestroy {
     });
   }
 
-  public importTiersConfig(tiers: Tier[]): void {
+  public importTiersConfig(): void {
     return console.log('function not implemented');
   }
 
