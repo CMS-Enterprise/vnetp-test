@@ -94,11 +94,6 @@ describe('NatRulesPacketTracerComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  //   it('should toggle drop down', () => {
-  //     component.toggleDropdown();
-  //     expect(component.dropdownOpen).toBe(true);
-  //   });
-
   describe('isExactMatch', () => {
     it('should return true if all values are true', () => {
       const rule = {
@@ -159,83 +154,86 @@ describe('NatRulesPacketTracerComponent', () => {
   });
 
   describe('applyFilter', () => {
-    // it('should return all rules if no filters are selected', () => {
-    //   component.rulesHit = [{}, {}, {}];
-    //   component.applyFilter();
-    //   expect(component.filteredRules).toEqual(component.rulesHit);
-    // });
-    // it('should return all partial matches if partial filter is selected', () => {
-    //   component.rulesHit = [
-    //     {
-    //       checkList: {
-    //         a: true,
-    //         b: true,
-    //         c: true,
-    //       },
-    //     },
-    //     {
-    //       checkList: {
-    //         a: false,
-    //         b: false,
-    //         c: true,
-    //       },
-    //     },
-    //   ];
-    //   component.filterPartial = true;
-    //   component.applyFilter();
-    //   expect(component.filteredRules).toEqual([component.rulesHit[1]]);
-    // });
-    // it('should return all exact matches if exact filter is selected', () => {
-    //   component.rulesHit = [
-    //     {
-    //       checkList: {
-    //         a: true,
-    //         b: true,
-    //         c: true,
-    //       },
-    //     },
-    //     {
-    //       checkList: {
-    //         a: false,
-    //         b: false,
-    //         c: true,
-    //       },
-    //     },
-    //   ];
-    //   component.filterExact = true;
-    //   component.applyFilter();
-    //   expect(component.filteredRules).toEqual([component.rulesHit[0]]);
-    // });
-    // it('should return all exact and partial matches if both filters are selected', () => {
-    //   component.rulesHit = [
-    //     {
-    //       checkList: {
-    //         a: true,
-    //         b: true,
-    //         c: true,
-    //       },
-    //     },
-    //     {
-    //       checkList: {
-    //         a: false,
-    //         b: false,
-    //         c: true,
-    //       },
-    //     },
-    //   ];
-    // //   component.filterExact = true;
-    // //   component.filterPartial = true;
-    //   component.applyFilter();
-    //   expect(component.filteredRules).toEqual(component.rulesHit);
-    // });
+    it('should set filteredChecklist to natRulesWithChecklist if searchQuery and filter is empty', () => {
+      const mockChecklist = {
+        mockRuleName: {
+          checkList: {
+            mockFieldName: true,
+          },
+        },
+      };
+      component.natRulesWithChecklist = mockChecklist as any;
+      component.applyFilter();
+      expect(component.filteredChecklist).toEqual(mockChecklist);
+    });
+
+    it('should filter by exact if set', () => {
+      const mockChecklist = {
+        mockRuleName: {
+          checkList: {
+            mockFieldName: true,
+            mockFieldName2: true,
+          },
+        },
+        mockRuleName2: {
+          checkList: {
+            mockFieldName: true,
+            mockFieldName2: false,
+          },
+        },
+      };
+
+      component.filterExact = true;
+      component.natRulesWithChecklist = mockChecklist as any;
+      component.applyFilter();
+      expect(component.filteredChecklist).toEqual({
+        mockRuleName: {
+          checkList: {
+            mockFieldName: true,
+            mockFieldName2: true,
+          },
+        },
+      });
+    });
+
+    it('should filter by search query', () => {
+      const mockChecklist = {
+        mockRuleName: {
+          checkList: {
+            mockFieldName: 'test',
+            mockFieldName2: 'test',
+          },
+        },
+        mockRuleName2: {
+          checkList: {
+            mockFieldName: 'test',
+            mockFieldName2: 'not test',
+          },
+        },
+      };
+
+      component.searchQuery = 'mockRuleName2';
+      component.natRulesWithChecklist = mockChecklist as any;
+      component.applyFilter();
+      expect(component.filteredChecklist).toEqual({
+        mockRuleName2: {
+          checkList: {
+            mockFieldName: 'test',
+            mockFieldName2: 'not test',
+          },
+        },
+      });
+    });
   });
 
   it('should reset filters', () => {
     component.filterExact = true;
     component.filterPartial = true;
+    component.searchQuery = 'test';
     component.resetFilter();
     expect(component.filterExact).toBe(false);
     expect(component.filterPartial).toBe(false);
+    expect(component.searchQuery).toBe('');
   });
 
   describe('handleInRange', () => {
@@ -857,10 +855,8 @@ describe('NatRulesPacketTracerComponent', () => {
 
       // Assertions
       expect(component.submitted).toBeFalsy();
-      //   expect(component.rulesHit.length).toBe(0);
       expect(formResetSpy).toHaveBeenCalled();
       expect(component.resetFilter).toHaveBeenCalled();
-      //   expect(mockNgxSmartModalService.resetModalData).toHaveBeenCalledWith('natRulePacketTracer');
     });
   });
 
@@ -873,72 +869,64 @@ describe('NatRulesPacketTracerComponent', () => {
     expect(controls.name).toBeInstanceOf(FormControl);
   });
 
-  //   describe('search', () => {
-  //     beforeEach(() => {
-  //       jest.mock(
-  //         'netmask',
-  //         () =>
-  //           class {
-  //             contains() {
-  //               return true;
-  //             }
-  //           },
-  //       );
+  describe('search', () => {
+    beforeEach(() => {
+      jest.mock(
+        'netmask',
+        () =>
+          class {
+            contains() {
+              return true;
+            }
+          },
+      );
 
-  //       component.form.reset();
-  //       component.submitted = false;
-  //       component.rulesHit = [];
-  //     });
+      component.form.reset();
+      component.submitted = false;
+      component.rulesHit = [];
+    });
 
-  //     it('should populate rulesHit when the form is valid', () => {
-  //       const natRules = [
-  //         {
-  //           name: 'Test NAT Rule',
-  //           originalSource: '192.168.1.10',
-  //           originalDestination: '10.0.0.5',
-  //           translatedSource: '172.16.1.10',
-  //           translatedDestination: '10.1.0.5',
-  //         } as any,
-  //       ];
+    it('should populate rulesHit when the form is valid', () => {
+      const natRules = [
+        {
+          name: 'Test NAT Rule',
+          originalSource: '192.168.1.10',
+          originalDestination: '10.0.0.5',
+          translatedSource: '172.16.1.10',
+          translatedDestination: '10.1.0.5',
+        } as any,
+      ];
 
-  //       component.objects = { natRules, networkObjectGroups: [] };
+      component.objects = { natRules, networkObjectGroups: [] };
 
-  //       // Set up a valid form configuration
-  //       component.form.controls['originalSourceInRange'].setValue('192.168.1.10');
-  //       component.form.controls['originalDestInRange'].setValue('10.0.0.5');
-  //       component.form.controls['translatedSourceInRange'].setValue('172.16.1.10');
-  //       component.form.controls['translatedDestInRange'].setValue('10.1.0.5');
+      // Set up a valid form configuration
+      component.form.controls['originalSourceInRange'].setValue('192.168.1.10');
+      component.form.controls['originalDestInRange'].setValue('10.0.0.5');
+      component.form.controls['translatedSourceInRange'].setValue('172.16.1.10');
+      component.form.controls['translatedDestInRange'].setValue('10.1.0.5');
 
-  //       // Execute the search
-  //       component.search();
+      // Execute the search
+      component.search();
 
-  //       // Assertions
-  //       expect(component.rulesHit.length).toBeGreaterThan(0);
-  //     });
+      // Assertions
+      expect(component.tableRules.length).toBeGreaterThan(0);
+    });
 
-  //     it('should set submitted to true', () => {
-  //       // Execute the search
-  //       component.search();
+    it('should not populate rulesHit when the form is invalid', () => {
+      component.objects = { natRules: [{ name: 'test-1' }] as any, networkObjectGroups: [] };
+      // Set up an invalid form configuration by not setting any values
+      component.form.controls['originalSourceInRange'].setValue('');
+      component.form.controls['originalDestInRange'].setValue('');
+      component.form.controls['translatedSourceInRange'].setValue('');
+      component.form.controls['translatedDestInRange'].setValue('');
 
-  //       // Verify `submitted` is true
-  //       expect(component.submitted).toBeTruthy();
-  //     });
+      // Execute the search
+      component.search();
 
-  //     it('should not populate rulesHit when the form is invalid', () => {
-  //         component.objects.natRules = [ {name: 'nat-rule1'}] as any
-  //       // Set up an invalid form configuration by not setting any values
-  //       component.form.controls['originalSourceInRange'].setValue('');
-  //       component.form.controls['originalDestInRange'].setValue('');
-  //       component.form.controls['translatedSourceInRange'].setValue('');
-  //       component.form.controls['translatedDestInRange'].setValue('');
-
-  //       // Execute the search
-  //       component.search();
-
-  //       // Assertions
-  //       expect(component.rulesHit.length).toBe(0);
-  //     });
-  //   });
+      // Assertions
+      expect(component.tableRules.length).toBe(0);
+    });
+  });
 
   it('should getNetworkObjectGroup on matching id', () => {
     const networkObjectGroup = { id: 'testId' };

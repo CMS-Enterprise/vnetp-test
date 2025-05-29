@@ -132,13 +132,10 @@ export class NatRulePacketTracerComponent implements OnInit {
     this.isSearchingRules = true;
     const start = performance.now();
     this.objects.natRules.forEach(rule => {
-      console.log('rule', rule);
       this.setChecklist(rule);
     });
     this.applyFilter();
-    // console.log('is searching', this.isSearchingRules);
 
-    console.log('this.filteredChecklist', this.filteredChecklist);
     this.tableRules = Object.keys(this.filteredChecklist).map(name => ({
       name,
       ...this.filteredChecklist[name],
@@ -443,7 +440,6 @@ export class NatRulePacketTracerComponent implements OnInit {
   }
 
   getCellValue(column: string, rule: NatRule): boolean {
-    console.log('on cell value when key entry?');
     const columnFunction = this.tableConfig.columnFunctions[column];
     return columnFunction ? columnFunction(rule) : false;
   }
