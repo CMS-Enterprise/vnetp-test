@@ -27,12 +27,12 @@ export class AppIdTableComponent implements OnChanges {
   }
 
   public addPanosAppToFirewallRule(panosApplication: PanosApplication): void {
-    this.appIdService.addPanosAppToFirewallRule(panosApplication, this.firewallRule, panosApplication.appVersion);
+    this.appIdService.addPanosAppToFirewallRule(panosApplication, this.firewallRule);
     this.refreshData();
   }
 
   public removePanosAppFromFirewallRule(panosApplication: PanosApplication): void {
-    this.appIdService.removePanosAppFromFirewallRule(panosApplication, this.firewallRule, panosApplication.appVersion);
+    this.appIdService.removePanosAppFromFirewallRule(panosApplication, this.firewallRule);
     this.refreshData();
   }
 

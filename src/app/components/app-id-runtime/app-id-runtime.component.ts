@@ -80,7 +80,7 @@ export class AppIdRuntimeComponent implements AfterViewChecked {
     this.tier = dto.tier;
     this.firewallRule = dto.firewallRule;
     this.appIdService.dto.firewallRuleId = this.firewallRule.id;
-    this.appIdService.getPanosApplications(this.tier.appVersion).subscribe(applications => {
+    this.appIdService.getPanosApplications().subscribe(applications => {
       this.panosApplications = applications;
       this.getAssociatedApplications();
       this.getAvailableApplications();

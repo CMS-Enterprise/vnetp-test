@@ -311,7 +311,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
             if (status === 'successful') {
               this.tierService.getOneTier({ id: this.TierId }).subscribe(tier => {
                 this.tier = tier;
-                this.appIdService.loadPanosApplications(this.tier.appVersion);
+                this.appIdService.loadPanosApplications();
               });
               this.tierContextService.refreshTiers(this.TierId);
             }
@@ -506,13 +506,13 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.appIdService.loadPanosApplications(this.tier.appVersion, true);
+    this.appIdService.loadPanosApplications(true);
 
     if (!this.hasBeenRefreshedSinceDayTime(1, 7)) {
       this.refreshAppId();
     }
 
-    this.appIdService.getPanosApplications(this.tier.appVersion).subscribe(apps => {
+    this.appIdService.getPanosApplications().subscribe(apps => {
       this.packetTracerObjects.panosApplications = [...apps];
     });
   }

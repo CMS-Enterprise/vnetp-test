@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirewallRule, PanosApplication, V1RuntimeDataAppIdRuntimeService } from '../../../../client';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -11,11 +10,9 @@ export class AppIdRuntimeService {
   public environment = environment;
   public appIdEnabled: boolean = this.environment?.dynamic?.appIdEnabled;
 
-  private panosApplicationsSubject: BehaviorSubject<Map<string, PanosApplication[]>> = new BehaviorSubject<Map<string, PanosApplication[]>>(
-    new Map(),
-  );
+  private panosApplicationsSubject: BehaviorSubject<PanosApplication[]> = new BehaviorSubject<PanosApplication[]>([]);
 
-  public panosApplications$: Observable<Map<string, PanosApplication[]>> = this.panosApplicationsSubject.asObservable();
+  public panosApplications$: Observable<PanosApplication[]> = this.panosApplicationsSubject.asObservable();
 
   public dto = {
     panosApplicationsToAdd: [],
@@ -26,53 +23,43 @@ export class AppIdRuntimeService {
   constructor(private appIdService: V1RuntimeDataAppIdRuntimeService) {}
 
   // Load PanosApplications for a specific version and store in the Map
-  loadPanosApplications(appVersion: string, forceReload: boolean = false): void {
+  loadPanosApplications(forceReload: boolean = false): void {
     if (!this.appIdEnabled) {
       return;
     }
-    console.log('loadPanosApplications', appVersion, forceReload);
+    console.log('loadPanosApplications', forceReload);
     const currentData = this.panosApplicationsSubject.getValue();
 
     // Check if data for this version already exists and is not forced to reload
-    if (!forceReload && currentData.has(appVersion) && currentData.get(appVersion)?.length > 0) {
+    if (!forceReload && currentData?.length > 0) {
       return; // Data already loaded, no need to fetch again
     }
 
     // Fetch applications from the API
-    this.appIdService
-      .getManyAppIdRuntime({ filter: [`appVersion||eq||${appVersion}`], relations: ['firewallRules'], perPage: 10000 })
-      .subscribe(data => {
-        const updatedMap = new Map(currentData);
-        updatedMap.set(appVersion, data);
-        this.panosApplicationsSubject.next(updatedMap);
-      });
+    this.appIdService.getManyAppIdRuntime({ relations: ['firewallRules'], perPage: 10000 }).subscribe(data => {
+      this.panosApplicationsSubject.next(data);
+    });
   }
 
-  // Get the PanosApplications for a specific appVersion
-  getPanosApplications(appVersion: string): Observable<PanosApplication[]> {
+  getPanosApplications(): Observable<PanosApplication[]> {
     if (!this.appIdEnabled) {
       return;
     }
-    return this.panosApplications$.pipe(map(panosApplicationsMap => panosApplicationsMap.get(appVersion) || []));
+    return this.panosApplications$;
   }
 
-  // Modify the specific application data for a appVersion
-  modifyApplicationData(modifiedApp: PanosApplication, appVersion: string): void {
+  modifyApplicationData(modifiedApp: PanosApplication): void {
     if (!this.appIdEnabled) {
       return;
     }
     const currentData = this.panosApplicationsSubject.getValue();
-    const applications = currentData.get(appVersion) || [];
+    const applications = currentData || [];
 
     // Replace the modified application in the list
     const updatedApplications = applications.map(app => (app.id === modifiedApp.id ? modifiedApp : app));
 
     // Update the map with modified data
-    const updatedMap = new Map(currentData);
-    updatedMap.set(appVersion, updatedApplications);
-
-    // Push the updated map to the subject
-    this.panosApplicationsSubject.next(updatedMap);
+    this.panosApplicationsSubject.next(updatedApplications);
   }
 
   // Add PanosApplication to DTO
@@ -115,13 +102,12 @@ export class AppIdRuntimeService {
     }
 
     if (!this.isDtoEmpty()) {
-      const appIdVersion = this.dto.panosApplicationsToAdd[0]?.appVersion ?? this.dto.panosApplicationsToRemove[0]?.appVersion;
       this.dto = {
         panosApplicationsToAdd: [],
         panosApplicationsToRemove: [],
         firewallRuleId: '',
       };
-      this.loadPanosApplications(appIdVersion, true);
+      this.loadPanosApplications(true);
     }
   }
 
@@ -139,24 +125,24 @@ export class AppIdRuntimeService {
   }
 
   // Add PanosApplication to FirewallRule
-  public addPanosAppToFirewallRule(panosApplication: PanosApplication, firewallRule: FirewallRule, appVersion: string): void {
+  public addPanosAppToFirewallRule(panosApplication: PanosApplication, firewallRule: FirewallRule): void {
     if (!this.appIdEnabled) {
       return;
     }
 
     panosApplication.firewallRules.push(firewallRule);
-    this.modifyApplicationData(panosApplication, appVersion);
+    this.modifyApplicationData(panosApplication);
     this.addPanosApplicationToDto(panosApplication);
   }
 
   // Remove PanosApplication from FirewallRule
-  public removePanosAppFromFirewallRule(panosApplication: PanosApplication, firewallRule: FirewallRule, appVersion: string): void {
+  public removePanosAppFromFirewallRule(panosApplication: PanosApplication, firewallRule: FirewallRule): void {
     if (!this.appIdEnabled) {
       return;
     }
 
     (panosApplication as any).firewallRules = panosApplication.firewallRules.filter(rule => rule.id !== firewallRule.id);
-    this.modifyApplicationData(panosApplication, appVersion);
+    this.modifyApplicationData(panosApplication);
     this.removePanosApplicationFromDto(panosApplication);
   }
 }
