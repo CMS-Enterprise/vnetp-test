@@ -29,7 +29,7 @@
         exportFileName="tiers-{{ currentDatacenter?.name }}"
         [disableJson]="false"
         [disableImport]="true"
-        (import)="importTiersConfig($event)"
+        (import)="importTiersConfig()"
       ></app-import-export>
     </section>
   </ng-container>
