@@ -104,7 +104,7 @@ export class TiersComponent implements OnInit, OnDestroy {
   public getExportTiers(): void {
     if (this.tiers.data) {
       this.exportTiersLoaded = false;
-      this.tiers.data.map(tier => {
+      this.tiers.data.forEach(tier => {
         const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
           filter: [`tierId||eq||${tier.id}`],
           sort: ['updatedAt,ASC'],
@@ -245,30 +245,30 @@ export class TiersComponent implements OnInit, OnDestroy {
     this.ngx.getModal('typeDeleteModal').open();
   }
 
-  public deleteTier(tier: Tier): void {
-    if (tier.deletedAt) {
-      this.openTypeDeleteModal(tier);
-    } else {
-      this.entityService.deleteEntity(tier, {
-        entityName: 'Tier',
-        delete$: this.tierService.deleteOneTier({ id: tier.id }),
-        softDelete$: this.tierService.softDeleteOneTier({ id: tier.id }),
-        onSuccess: () => {
-          // get search params from local storage
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
+  // public deleteTier(tier: Tier): void {
+  //   if (tier.deletedAt) {
+  //     this.openTypeDeleteModal(tier);
+  //   } else {
+  //     this.entityService.deleteEntity(tier, {
+  //       entityName: 'Tier',
+  //       delete$: this.tierService.deleteOneTier({ id: tier.id }),
+  //       softDelete$: this.tierService.softDeleteOneTier({ id: tier.id }),
+  //       onSuccess: () => {
+  //         // get search params from local storage
+  //         const params = this.tableContextService.getSearchLocalStorage();
+  //         const { filteredResults } = params;
 
-          // if filtered results boolean is true, apply search params in the
-          // subsequent get call
-          if (filteredResults) {
-            this.getTiers(params);
-          } else {
-            this.getTiers();
-          }
-        },
-      });
-    }
-  }
+  //         // if filtered results boolean is true, apply search params in the
+  //         // subsequent get call
+  //         if (filteredResults) {
+  //           this.getTiers(params);
+  //         } else {
+  //           this.getTiers();
+  //         }
+  //       },
+  //     });
+  //   }
+  // }
 
   public restoreTier(tier: Tier): void {
     if (!tier.deletedAt) {
@@ -290,43 +290,7 @@ export class TiersComponent implements OnInit, OnDestroy {
   }
 
   public importTiersConfig(tiers: Tier[]): void {
-    const tierEnding = tiers.length > 1 ? 's' : '';
-    const modalDto = new YesNoModalDto(
-      `Import Tier${tierEnding}`,
-      `Would you like to import ${tiers.length} tier${tierEnding}?`,
-      `Import Tier${tierEnding}`,
-      'Cancel',
-    );
-    const onConfirm = () => {
-      this.tierService
-        .createManyTier({
-          createManyTierDto: { bulk: this.sanitizeTiers(tiers) },
-        })
-        .subscribe(() => {
-          this.getTiers();
-        });
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
-  }
-
-  private sanitizeTiers(tiers: Tier[]): Tier[] {
-    const sanitizeTier = (tier: Tier) => {
-      Object.entries(tier).forEach(([key, val]) => {
-        if (val === 'false' || val === 'f') {
-          tier[key] = false;
-        }
-        if (val === 'true' || val === 't') {
-          tier[key] = true;
-        }
-        if (val === null || val === '') {
-          delete tier[key];
-        }
-      });
-      return tier;
-    };
-
-    return tiers.map(sanitizeTier);
+    return console.log('function not implemented');
   }
 
   public getTierGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.tierGroups);
