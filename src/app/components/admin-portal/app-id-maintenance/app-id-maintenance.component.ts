@@ -68,7 +68,7 @@ export class AppIdMaintenanceComponent implements OnInit {
             tenants.map(tenant =>
               of(null).pipe(
                 tap(() => this.tenantStateService.setTenant(tenant.tenantQueryParameter)),
-                mergeMap(() => this.tierService.getManyTier({})),
+                mergeMap(() => this.tierService.getManyTier({ limit: 10000 })),
                 tap(tier => {
                   const tiersForTenant = tier as unknown as Tier[];
 
