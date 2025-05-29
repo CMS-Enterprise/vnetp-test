@@ -612,8 +612,8 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   checkUndeployedChanges(rule: NatRule): boolean {
-    console.log('rule', rule);
-    console.log('this.NatRuleGroup', this.NatRuleGroup);
+    // console.log('rule', rule);
+    // console.log('this.NatRuleGroup', this.NatRuleGroup);
     if (!this.NatRuleGroup.provisionedAt || !rule.updatedAt) {
       return false;
     }

@@ -508,7 +508,6 @@ export class FirewallRulePacketTracerComponent implements OnInit {
   }
 
   getCellValue(column: string, rule: FirewallRule): boolean {
-    console.log('on cell value when key entry?');
     const columnFunction = this.tableConfig.columnFunctions[column];
     return columnFunction ? columnFunction(rule) : false;
   }

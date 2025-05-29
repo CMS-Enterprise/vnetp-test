@@ -22,6 +22,17 @@ import { TierSelectModule } from 'src/app/common/tier-select/tier-select.module'
 import { NatRuleObjectInfoModalComponent } from './nat-rule-modal/nat-rule-object-info-modal/nat-rule-object-info-modal.component';
 import { NatRulePacketTracerComponent } from './nat-rule-packet-tracer/nat-rule-packet-tracer.component';
 import { NatRulesOperationModalComponent } from './nat-rules-operation-modal/nat-rules-operation-modal.component';
+import { LiteTableModule } from '../../common/lite-table/lite-table.module';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 
 const routes: Routes = [
   {
@@ -56,6 +67,18 @@ const routes: Routes = [
     YesNoModalModule,
     ImportExportModule,
     TierSelectModule,
+    LiteTableModule,
+    MatSidenavModule,
+    MatDialogModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatTableModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatInputModule,
+    MatMenuModule,
   ],
   declarations: [
     NatRulesComponent,

@@ -27,6 +27,17 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-modal.component';
 import { ToastrModule } from 'ngx-toastr';
 import { NatRuleObjectInfoModalComponent } from '../nat-rule-modal/nat-rule-object-info-modal/nat-rule-object-info-modal.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('NatRulesDetailComponent', () => {
   let component: NatRulesDetailComponent;
@@ -70,6 +81,18 @@ describe('NatRulesDetailComponent', () => {
         RouterTestingModule.withRoutes([]),
         HttpClientTestingModule,
         ToastrModule.forRoot(),
+        MatSidenavModule,
+        MatDialogModule,
+        MatTooltipModule,
+        MatIconModule,
+        MatTableModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatRadioModule,
+        MatInputModule,
+        MatMenuModule,
+        BrowserAnimationsModule,
       ],
       providers: [
         MockProvider(V1TiersService),

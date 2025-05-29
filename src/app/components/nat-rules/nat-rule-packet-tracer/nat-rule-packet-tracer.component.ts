@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { IsIpV4NoSubnetValidator, ValidatePortRange, ValidatePortNumber } from 'src/app/validators/network-form-validators';
@@ -7,17 +7,23 @@ import { Netmask } from 'netmask';
 import { NatRule, NetworkObject, NetworkObjectGroup } from '../../../../../client';
 import { NatRulePacketTracerDto } from '../../../models/nat/nat-rule-packet-tracer-dto';
 import { ToastrService } from 'ngx-toastr';
+import { cloneDeep } from 'lodash';
+
+type NatRulePacketTracerOutputMap = {
+  [name: string]: {
+    checkList: NatRulePacketTracerCheckList;
+  };
+};
 
 type NatRulePacketTracerOutput = {
-  checkList: NatRulePacketTracerCheckList;
-  name: string;
+  [name: string]: NatRulePacketTracerCheckList;
 };
 
 type NatRulePacketTracerCheckList = {
-  originalSourceIPInRange: boolean;
-  originalDestIPInRange: boolean;
-  translatedSourceIPInRange: boolean;
-  translatedDestIPInRange: boolean;
+  originalSourceInRange: boolean;
+  originalDestInRange: boolean;
+  translatedSourceInRange: boolean;
+  translatedDestInRange: boolean;
   originalSourcePortMatch: boolean;
   originalDestPortMatch: boolean;
   translatedSourcePortMatch: boolean;
@@ -39,34 +45,112 @@ export class NatRulePacketTracerComponent implements OnInit {
   @Input() objects: NatRulePacketTracerDto;
   form: FormGroup;
   submitted: boolean;
+  natRulesWithChecklist: NatRulePacketTracerOutputMap = {};
+  filteredChecklist;
 
   rulesHit = [];
   filteredRules = [];
+  tableRules = [];
+  isSearchingRules = false;
   currentPage = 1;
   pageSize = 10;
 
-  filterExact = false;
+  filterExact = null;
   filterPartial = false;
 
-  dropdownOpen = false;
+  // dropdownOpen = false;
+  isDrawerOpened = false;
+  hoveredRow: any = null;
+  hoveredColumn: string | null = null;
+
+  tableConfig = {
+    displayedColumns: [
+      'name',
+      'originalSourceInRange',
+      'originalDestInRange',
+      'translatedSourceInRange',
+      'translatedDestInRange',
+      'originalSourcePort',
+      'originalDestPort',
+      'translatedSourcePort',
+      'translatedDestPort',
+      'direction',
+      'biDirectional',
+      'enabled',
+    ],
+    columnLabels: {
+      name: 'Name',
+      originalSourceInRange: 'Original Source IP',
+      originalDestInRange: 'Original Destination IP',
+      translatedSourceInRange: 'Translated Source IP',
+      translatedDestInRange: 'Translated Destination IP',
+      originalSourcePort: 'Original Source Port',
+      originalDestPort: 'Original Destination Port',
+      translatedSourcePort: 'Translated Source Port',
+      translatedDestPort: 'Translated Destination Port',
+      direction: 'Direction',
+      biDirectional: 'BiDirectional',
+      enabled: 'Enabled',
+    },
+    columnFunctions: {
+      originalSourceInRange: (rule: NatRule) => this.handleInRange(rule, 'originalSource', this.form.controls.originalSourceInRange),
+      originalDestInRange: (rule: NatRule) => this.handleInRange(rule, 'originalDestination', this.form.controls.originalDestInRange),
+      translatedSourceInRange: (rule: NatRule) => this.handleInRange(rule, 'translatedSource', this.form.controls.translatedSourceInRange),
+      translatedDestInRange: (rule: NatRule) => this.handleInRange(rule, 'translatedDestination', this.form.controls.translatedDestInRange),
+      originalSourcePort: (rule: NatRule) =>
+        this.handleServiceObjectPortMatch(rule, 'original', 'source', this.form.controls.originalSourcePort),
+      originalDestPort: (rule: NatRule) =>
+        this.handleServiceObjectPortMatch(rule, 'original', 'destination', this.form.controls.originalDestPort),
+      translatedSourcePort: (rule: NatRule) =>
+        this.handleServiceObjectPortMatch(rule, 'translated', 'source', this.form.controls.translatedSourcePort),
+      translatedDestPort: (rule: NatRule) =>
+        this.handleServiceObjectPortMatch(rule, 'translated', 'destination', this.form.controls.translatedDestPort),
+      direction: (rule: NatRule) => this.form.controls.direction.value === rule.direction,
+      biDirectional: (rule: NatRule) => this.form.controls.protocol.value === rule.biDirectional,
+      enabled: (rule: NatRule) => this.form.controls.enabled.value === rule.enabled,
+      softDeleted: (rule: NatRule) => Boolean(rule.deletedAt),
+    },
+  };
+
+  isSearchOpen = false;
+  searchQuery = '';
+  @ViewChild('searchInput') searchInput!: ElementRef;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private toastrService: ToastrService) {}
 
   ngOnInit(): void {
-    this.applyFilter();
     this.buildForm();
+    this.applyFilter();
   }
 
-  toggleDropdown(): void {
-    this.dropdownOpen = !this.dropdownOpen;
+  onOpen(): void {
+    console.log('hit here on open!');
+    this.isDrawerOpened = true;
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const clickedElement = event.target as HTMLElement; // Cast to HTMLElement
-    if (!clickedElement.closest('.dropdown')) {
-      this.dropdownOpen = false;
-    }
+  search() {
+    this.isSearchingRules = true;
+    const start = performance.now();
+    this.objects.natRules.forEach(rule => {
+      console.log('rule', rule);
+      this.setChecklist(rule);
+    });
+    this.applyFilter();
+    // console.log('is searching', this.isSearchingRules);
+
+    console.log('this.filteredChecklist', this.filteredChecklist);
+    this.tableRules = Object.keys(this.filteredChecklist).map(name => ({
+      name,
+      ...this.filteredChecklist[name],
+    }));
+    const end = performance.now();
+    console.log(end - start);
+
+    // manual timeout so spinner has time to load and unload in the HTML
+    // without this setTimeout no spinner will appear in the UI when searching rules
+    setTimeout(() => {
+      this.isSearchingRules = false;
+    }, 1000);
   }
 
   isExactMatch(rule: NatRulePacketTracerOutput): boolean {
@@ -81,26 +165,91 @@ export class NatRulePacketTracerComponent implements OnInit {
     return Object.values(otherValues).some(value => value === true) && !this.isExactMatch(rule);
   }
 
+  setChecklist(natRule): void {
+    Object.keys(this.form.controls).forEach(field => {
+      const fieldValue = this.form.controls[field].value;
+      const errors = this.form.controls[field].errors;
+      if (errors || fieldValue === null || fieldValue === '' || fieldValue === undefined) {
+        Object.keys(this.natRulesWithChecklist).forEach(ruleName => {
+          this.clearChecklist(ruleName, field);
+        });
+        return;
+      }
+      const control = this.form.get(field);
+      if (control) {
+        const ruleWithChecklist = this.natRulesWithChecklist[natRule.name];
+        if (!ruleWithChecklist) {
+          this.natRulesWithChecklist[natRule.name] = { checkList: this.createNewChecklist() };
+        }
+        this.natRulesWithChecklist[natRule.name].checkList[field] = this.getCellValue(field, natRule);
+      }
+    });
+  }
+
+  clearChecklist(natRuleName: string, fieldName: string): void {
+    const ruleWithChecklist = this.natRulesWithChecklist[natRuleName];
+    if (ruleWithChecklist) {
+      this.natRulesWithChecklist[natRuleName].checkList[fieldName] = null;
+    }
+  }
+
+  createNewChecklist(): NatRulePacketTracerCheckList {
+    return {
+      originalSourceInRange: null,
+      originalDestInRange: null,
+      translatedSourceInRange: null,
+      translatedDestInRange: null,
+      originalSourcePortMatch: null,
+      originalDestPortMatch: null,
+      translatedSourcePortMatch: null,
+      translatedDestPortMatch: null,
+      directionMatch: null,
+      biDirectionalMatch: null,
+      enabledMatch: null,
+      softDeleted: null,
+    };
+  }
+
   applyFilter(): void {
-    if (!this.filterExact && !this.filterPartial) {
-      this.filteredRules = [...this.rulesHit];
-    } else {
-      this.filteredRules = this.rulesHit.filter(rule => {
+    // console.log('running apply filter');
+    this.filteredChecklist = cloneDeep(this.natRulesWithChecklist);
+    if (this.filterExact === null && !this.searchQuery) {
+      return;
+    }
+
+    if (this.filterExact !== null) {
+      Object.keys(this.natRulesWithChecklist).forEach(ruleName => {
+        const rule = this.natRulesWithChecklist[ruleName];
         const isExact = this.isExactMatch(rule);
         const isPartial = this.isPartialMatch(rule);
-        return (this.filterExact && isExact) || (this.filterPartial && isPartial);
+        if ((this.filterExact && isExact) || (this.filterExact === false && isPartial)) {
+          this.filteredChecklist[ruleName] = rule;
+        } else {
+          delete this.filteredChecklist[ruleName];
+        }
       });
     }
-    this.currentPage = 1;
+
+    if (this.searchQuery) {
+      Object.keys(this.filteredChecklist).forEach(ruleName => {
+        if (!ruleName.toLowerCase().includes(this.searchQuery.toLowerCase())) {
+          delete this.filteredChecklist[ruleName];
+        }
+      });
+    }
   }
 
   resetFilter(): void {
     this.filterExact = false;
     this.filterPartial = false;
+    this.searchQuery = '';
+    this.applyFilter();
   }
 
   handleInRange(rule: NatRule, location: NatRulePacketTracerLocation, control: AbstractControl): boolean {
     let lookupType;
+    // console.log('control',control)
+
     const formIpValue = control.value;
 
     switch (location) {
@@ -293,46 +442,56 @@ export class NatRulePacketTracerComponent implements OnInit {
     return ((+d[0] * 256 + +d[1]) * 256 + +d[2]) * 256 + +d[3];
   }
 
-  search(): void {
-    this.rulesHit = [];
-    this.submitted = true;
-    if (this.form.invalid) {
-      return;
-    }
-
-    this.objects.natRules.forEach(rule => {
-      const checkList: NatRulePacketTracerCheckList = {
-        originalSourceIPInRange: this.handleInRange(rule, 'originalSource', this.form.controls.originalSourceIp),
-        originalDestIPInRange: this.handleInRange(rule, 'originalDestination', this.form.controls.originalDestinationIp),
-        translatedSourceIPInRange: this.handleInRange(rule, 'translatedSource', this.form.controls.translatedSourceIp),
-        translatedDestIPInRange: this.handleInRange(rule, 'translatedDestination', this.form.controls.translatedDestinationIp),
-
-        originalSourcePortMatch: this.handleServiceObjectPortMatch(rule, 'original', 'source', this.form.controls.originalSourcePort),
-        originalDestPortMatch: this.handleServiceObjectPortMatch(
-          rule,
-          'original',
-          'destination',
-          this.form.controls.originalDestinationPort,
-        ),
-        translatedSourcePortMatch: this.handleServiceObjectPortMatch(rule, 'translated', 'source', this.form.controls.translatedSourcePort),
-        translatedDestPortMatch: this.handleServiceObjectPortMatch(
-          rule,
-          'translated',
-          'destination',
-          this.form.controls.translatedDestinationPort,
-        ),
-
-        directionMatch: this.form.controls.direction.value === rule.direction,
-        biDirectionalMatch: this.form.controls.biDirectional.value === rule.biDirectional,
-        enabledMatch: this.form.controls.enabled.value === rule.enabled,
-        softDeleted: Boolean(rule.deletedAt),
-      };
-      this.rulesHit.push({ checkList, name: rule.name });
-    });
-    this.resetFilter();
-    this.applyFilter();
-    this.toastrService.success('Packet Tracer Executed.');
+  getCellValue(column: string, rule: NatRule): boolean {
+    console.log('on cell value when key entry?');
+    const columnFunction = this.tableConfig.columnFunctions[column];
+    return columnFunction ? columnFunction(rule) : false;
   }
+
+  // toggleDropdown(): void {
+  //   this.dropdownOpen = !this.dropdownOpen;
+  // }
+
+  // search(): void {
+  //   this.rulesHit = [];
+  //   this.submitted = true;
+  //   if (this.form.invalid) {
+  //     return;
+  //   }
+
+  //   this.objects.natRules.forEach(rule => {
+  //     const checkList: NatRulePacketTracerCheckList = {
+  //       originalSourceIPInRange: this.handleInRange(rule, 'originalSource', this.form.controls.originalSourceIp),
+  //       originalDestIPInRange: this.handleInRange(rule, 'originalDestination', this.form.controls.originalDestinationIp),
+  //       translatedSourceIPInRange: this.handleInRange(rule, 'translatedSource', this.form.controls.translatedSourceIp),
+  //       translatedDestIPInRange: this.handleInRange(rule, 'translatedDestination', this.form.controls.translatedDestinationIp),
+
+  //       originalSourcePortMatch: this.handleServiceObjectPortMatch(rule, 'original', 'source', this.form.controls.originalSourcePort),
+  //       originalDestPortMatch: this.handleServiceObjectPortMatch(
+  //         rule,
+  //         'original',
+  //         'destination',
+  //         this.form.controls.originalDestinationPort,
+  //       ),
+  //       translatedSourcePortMatch: this.handleServiceObjectPortMatch(rule, 'translated', 'source', this.form.controls.translatedSourcePort),
+  //       translatedDestPortMatch: this.handleServiceObjectPortMatch(
+  //         rule,
+  //         'translated',
+  //         'destination',
+  //         this.form.controls.translatedDestinationPort,
+  //       ),
+
+  //       directionMatch: this.form.controls.direction.value === rule.direction,
+  //       biDirectionalMatch: this.form.controls.biDirectional.value === rule.biDirectional,
+  //       enabledMatch: this.form.controls.enabled.value === rule.enabled,
+  //       softDeleted: Boolean(rule.deletedAt),
+  //     };
+  //     this.rulesHit.push({ checkList, name: rule.name });
+  //   });
+  //   this.resetFilter();
+  //   this.applyFilter();
+  //   this.toastrService.success('Packet Tracer Executed.');
+  // }
 
   get f() {
     return this.form.controls;
@@ -340,33 +499,39 @@ export class NatRulePacketTracerComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
+      originalSourceInRange: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
+      originalDestInRange: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
+      translatedSourceInRange: ['', IsIpV4NoSubnetValidator],
+      translatedDestInRange: ['', IsIpV4NoSubnetValidator],
+      originalSourcePort: ['', ValidatePortNumber],
+      originalDestPort: ['', ValidatePortNumber],
+      translatedSourcePort: ['', ValidatePortNumber],
+      translatedDestPort: ['', ValidatePortNumber],
       direction: [''],
       biDirectional: [''],
-      enabled: [true],
-
-      originalSourceIp: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
-      originalDestinationIp: ['', Validators.compose([Validators.required, IsIpV4NoSubnetValidator])],
-      originalSourcePort: ['', ValidatePortNumber],
-      originalDestinationPort: ['', ValidatePortNumber],
-
-      translatedSourceIp: ['', IsIpV4NoSubnetValidator],
-      translatedDestinationIp: ['', IsIpV4NoSubnetValidator],
-      translatedSourcePort: ['', ValidatePortNumber],
-      translatedDestinationPort: ['', ValidatePortNumber],
+      enabled: [],
     });
   }
 
   reset(): void {
     this.submitted = false;
-    this.rulesHit = [];
-    this.form.reset();
     this.resetFilter();
-    this.ngx.resetModalData('natRulePacketTracer');
-    this.buildForm();
+    this.tableRules = [];
+    this.form.reset();
   }
 
   close(): void {
     this.reset();
+    this.isDrawerOpened = false;
     this.ngx.close('natRulePacketTracer');
+  }
+
+  toggleSearch(): void {
+    this.isSearchOpen = !this.isSearchOpen;
+    if (this.isSearchOpen) {
+      setTimeout(() => {
+        this.searchInput?.nativeElement.focus();
+      });
+    }
   }
 }
