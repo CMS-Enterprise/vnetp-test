@@ -188,6 +188,7 @@ export class AppIdMaintenanceComponent implements OnInit {
   refreshTenant(tenant: any): void {
     const message =
       'This will refresh Panos Applications and App ID runtime data for this tenant.\n\n' +
+      // eslint-disable-next-line @typescript-eslint/quotes
       "For a full update, including other maintenance tasks, using the main 'Run App ID Maintenance' job is recommended.\n\n" +
       'Continue with this specific refresh?';
     const dto = new YesNoModalDto('Refresh Panos Applications?', message);
@@ -221,7 +222,7 @@ export class AppIdMaintenanceComponent implements OnInit {
       .subscribe({
         next: job => {
           let status = '';
-          this.runtimeDataService.pollJobStatus(job.id).subscribe({
+          this.runtimeDataService.pollJobStatus(job.id, tenant.tenantQueryParameter).subscribe({
             next: towerJobDto => {
               status = towerJobDto.status;
             },
