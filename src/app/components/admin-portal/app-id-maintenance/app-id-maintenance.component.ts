@@ -28,6 +28,7 @@ interface Tenant {
   appIdJobStatus?: string | null;
   updateJobStatus?: 'success' | 'error' | null;
   tiers?: Tier[];
+  tenantQueryParameter?: string;
 }
 
 @Component({
@@ -91,6 +92,7 @@ export class AppIdMaintenanceComponent implements OnInit {
                     appIdJobStatus: null,
                     updateJobStatus: null,
                     tiers: tiersForTenant,
+                    tenantQueryParameter: tenant.tenantQueryParameter,
                   });
                 }),
                 finalize(() => {
@@ -232,12 +234,9 @@ export class AppIdMaintenanceComponent implements OnInit {
             complete: () => {
               tenant.appIdJobStatus = status;
               if (status === 'successful') {
-                // Refresh table for UI consistency after individual update.
                 this.getTenants();
               } else if (status !== 'error') {
-                // It might be 'pending', 'running' if polling completes prematurely
-                // If polling completes but job isn't successful or error, treat as an issue.
-                console.warn(`Job for tenant ${tenant.tenant} completed polling with status: ${status}`);
+                status = 'error';
               }
             },
           });
@@ -274,8 +273,6 @@ export class AppIdMaintenanceComponent implements OnInit {
   }
 
   handleTierUpdates(originalTenant: Tenant, tiersToUpdate: { id: string; appIdEnabled: boolean }[]): void {
-    console.log(`Updating tiers for tenant: ${originalTenant.tenant}`, tiersToUpdate);
-
     const updateOperations = tiersToUpdate.map(tierUpdate => {
       this.tenantStateService.setTenant(originalTenant.tenant);
       return this.tierService
