@@ -26,6 +26,7 @@ interface Tenant {
   isUpdateDisabled: boolean;
   isRefreshingAppIdRuntimeData?: boolean;
   appIdJobStatus?: string | null;
+  updateJobStatus?: 'success' | 'error' | null;
   tiers?: Tier[];
 }
 
@@ -88,6 +89,7 @@ export class AppIdMaintenanceComponent implements OnInit {
                     isUpdateDisabled,
                     isRefreshingAppIdRuntimeData: false,
                     appIdJobStatus: null,
+                    updateJobStatus: null,
                     tiers: tiersForTenant,
                   });
                 }),
@@ -140,6 +142,13 @@ export class AppIdMaintenanceComponent implements OnInit {
     const message = `Are you sure you want to run an App ID Maintenance job on the following tenants: ${selectedTenants}?`;
     const dto = new YesNoModalDto('Run App ID Maintenance?', message);
     const onConfirm = () => {
+      this.selection.selected.forEach(t => {
+        const tenantInDataSource = this.dataSource.data.find(dsTenant => dsTenant.tenant === t.tenant);
+        if (tenantInDataSource) {
+          tenantInDataSource.updateJobStatus = null;
+        }
+      });
+
       const updateOperations = this.selection.selected.map(tenant =>
         of(null).pipe(
           tap(() => this.tenantStateService.setTenant(tenant.tenant)),
@@ -155,6 +164,10 @@ export class AppIdMaintenanceComponent implements OnInit {
 
       forkJoin(updateOperations).subscribe(results => {
         results.forEach(result => {
+          const tenantInDataSource = this.dataSource.data.find(t => t.tenant === result.tenant);
+          if (tenantInDataSource) {
+            tenantInDataSource.updateJobStatus = result.success ? 'success' : 'error';
+          }
           if (result.success) {
             console.log(`App ID Maintenance job succeeded for tenant: ${result.tenant}`, (result as { response: any }).response);
           } else {
@@ -237,7 +250,6 @@ export class AppIdMaintenanceComponent implements OnInit {
   }
 
   openTierManagementModal(tenant: Tenant): void {
-    console.log('Opening tier management modal for:', tenant.tenant, 'with tiers:', tenant.tiers);
     const dialogRef = this.dialog.open<TierManagementModalComponent, TierManagementModalData, TierManagementSaveChanges>(
       TierManagementModalComponent,
       {
@@ -250,7 +262,6 @@ export class AppIdMaintenanceComponent implements OnInit {
     );
 
     dialogRef.componentInstance.saveChanges.subscribe((changes: TierManagementSaveChanges) => {
-      console.log('Changes to save from modal:', changes);
       if (changes.tiersToUpdate && changes.tiersToUpdate.length > 0) {
         this.handleTierUpdates(tenant, changes.tiersToUpdate);
       }
@@ -275,18 +286,20 @@ export class AppIdMaintenanceComponent implements OnInit {
           finalize(() => this.tenantStateService.clearTenant()),
           catchError(err => {
             console.error(`Failed to update tier ${tierUpdate.id} for tenant ${originalTenant.tenant}`, err);
-            return of(null);
+            return of(null); // Original behavior
           }),
         );
     });
 
     forkJoin(updateOperations).subscribe({
       next: results => {
-        console.log('All tier updates attempted.', results);
+        console.log('Tier update results:', results); // Keep log for lint
+        // Removed logic for setting tierUpdateStatus
         this.getTenants();
       },
       error: batchError => {
         console.error('Error in batch tier update process for tenant ', originalTenant.tenant, batchError);
+        // Removed logic for setting tierUpdateStatus
       },
     });
   }

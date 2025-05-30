@@ -40,10 +40,8 @@ export class AuthService {
     this.currentTenantSubject.next(tenant);
   }
 
-  public isGlobalAdmin(): boolean {
-    return this.currentUserSubject.value.dcsPermissions.some((permission: any) =>
-      permission.roles.some((role: string) => role === 'global-admin'),
-    );
+  public isGlobalAdmin(user: UserDto): boolean {
+    return user.dcsPermissions.some((permission: any) => permission.roles.some((role: string) => role === 'global-admin'));
   }
 
   getTenants(token: string) {

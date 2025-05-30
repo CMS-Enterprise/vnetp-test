@@ -65,6 +65,7 @@
             <mat-icon>settings_applications</mat-icon>
           </button>
           <mat-icon *ngIf="tenant.appIdJobStatus === 'error'" color="warn" matTooltip="Refresh failed">warning</mat-icon>
+          <mat-icon *ngIf="tenant.updateJobStatus === 'error'" color="warn" matTooltip="Update failed">error</mat-icon>
         </td>
       </ng-container>
 

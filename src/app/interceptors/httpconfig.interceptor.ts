@@ -32,7 +32,7 @@ export class HttpConfigInterceptor {
         tenant = qp.tenant;
       });
 
-      if (this.tenantStateService.isTenantSet() && !this.auth.isGlobalAdmin()) {
+      if (this.tenantStateService.isTenantSet() && this.auth.isGlobalAdmin(currentUser)) {
         tenant = this.tenantStateService.getTenant();
       }
 
