@@ -216,7 +216,6 @@ export class AppIdMaintenanceComponent implements OnInit {
       .pipe(
         finalize(() => {
           this.tenantStateService.clearTenant();
-          tenant.isRefreshingAppIdRuntimeData = false;
         }),
       )
       .subscribe({
@@ -230,6 +229,7 @@ export class AppIdMaintenanceComponent implements OnInit {
               console.error(`Polling error for tenant ${tenant.tenant}:`, pollError);
               status = 'error';
               tenant.appIdJobStatus = status;
+              tenant.isRefreshingAppIdRuntimeData = false;
             },
             complete: () => {
               tenant.appIdJobStatus = status;
@@ -237,6 +237,7 @@ export class AppIdMaintenanceComponent implements OnInit {
                 this.getTenants();
               } else if (status !== 'error') {
                 status = 'error';
+                tenant.isRefreshingAppIdRuntimeData = false;
               }
             },
           });
@@ -244,6 +245,7 @@ export class AppIdMaintenanceComponent implements OnInit {
         error: creationError => {
           console.error(`Job creation error for tenant ${tenant.tenant}:`, creationError);
           tenant.appIdJobStatus = 'error';
+          tenant.isRefreshingAppIdRuntimeData = false;
         },
       });
   }
@@ -283,20 +285,17 @@ export class AppIdMaintenanceComponent implements OnInit {
           finalize(() => this.tenantStateService.clearTenant()),
           catchError(err => {
             console.error(`Failed to update tier ${tierUpdate.id} for tenant ${originalTenant.tenant}`, err);
-            return of(null); // Original behavior
+            return of(null);
           }),
         );
     });
 
     forkJoin(updateOperations).subscribe({
-      next: results => {
-        console.log('Tier update results:', results); // Keep log for lint
-        // Removed logic for setting tierUpdateStatus
+      next: () => {
         this.getTenants();
       },
       error: batchError => {
         console.error('Error in batch tier update process for tenant ', originalTenant.tenant, batchError);
-        // Removed logic for setting tierUpdateStatus
       },
     });
   }
