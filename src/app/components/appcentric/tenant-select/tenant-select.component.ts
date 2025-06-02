@@ -146,26 +146,6 @@ export class TenantSelectComponent implements OnInit {
       });
   }
 
-  public importTenantsConfig(): void {
-    // const tenantEnding = tenants.length > 1 ? 's' : '';
-    // const modalDto = new YesNoModalDto(
-    //   `Import Tier${tenantEnding}`,
-    //   `Would you like to import ${tenants.length} tier${tenantEnding}?`,
-    //   `Import Tier${tenantEnding}`,
-    //   'Cancel',
-    // );
-    // const onConfirm = () => {
-    //   this.tenantService
-    //     .createManyTier({
-    //       createManyTierDto: { bulk: this.sanitizeTiers(tiers) },
-    //     })
-    //     .subscribe(() => {
-    //       this.getTiers();
-    //     });
-    // };
-    // SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
-  }
-
   public subscribeToTenantModal(): void {
     this.tenantModalSubscription = this.ngx.getModal('tenantModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('tenantModal');

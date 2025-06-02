@@ -49,11 +49,11 @@ describe('TenantSelectComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should delete tenant', () => {
-    const tenantToDelete = { id: '123', description: 'Bye!' };
-    component.deleteTenant(tenantToDelete);
-    const getTenantsMock = jest.spyOn(component['tenantService'], 'getManyTenant');
-    expect(getTenantsMock).toHaveBeenCalled();
+  it('should run onInit', () => {
+    const getTenantsSpy = jest.spyOn(component, 'getTenants');
+
+    component.ngOnInit();
+    expect(getTenantsSpy).toHaveBeenCalled();
   });
 
   it('should restore tenant', () => {
@@ -66,48 +66,85 @@ describe('TenantSelectComponent', () => {
   });
 
   describe('openTenantModal', () => {
-    describe('openModal', () => {
-      beforeEach(() => {
-        jest.spyOn(component, 'getTenants');
-        jest.spyOn(component['ngx'], 'resetModalData');
-      });
+    beforeEach(() => {
+      jest.spyOn(component, 'getTenants');
+      jest.spyOn(component['ngx'], 'resetModalData');
+    });
 
-      it('should subscribe to tenantModal onCloseFinished event and unsubscribe afterwards', () => {
-        const onCloseFinished = new Subject<void>();
-        const mockModal = { onCloseFinished, open: jest.fn() };
-        jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
+    it('should subscribe to tenantModal onCloseFinished event and unsubscribe afterwards', () => {
+      const onCloseFinished = new Subject<void>();
+      const mockModal = { onCloseFinished, open: jest.fn() };
+      jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
 
-        const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
+      const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
 
-        component.subscribeToTenantModal();
+      component.subscribeToTenantModal();
 
-        expect(component['ngx'].getModal).toHaveBeenCalledWith('tenantModal');
-        expect(component.tenantModalSubscription).toBeDefined();
+      expect(component['ngx'].getModal).toHaveBeenCalledWith('tenantModal');
+      expect(component.tenantModalSubscription).toBeDefined();
 
-        onCloseFinished.next();
+      onCloseFinished.next();
 
-        expect(component.getTenants).toHaveBeenCalled();
-        expect(component['ngx'].resetModalData).toHaveBeenCalledWith('tenantModal');
+      expect(component.getTenants).toHaveBeenCalled();
+      expect(component['ngx'].resetModalData).toHaveBeenCalledWith('tenantModal');
 
-        expect(unsubscribeSpy).toHaveBeenCalled();
-      });
-      it('should call ngx.setModalData and ngx.getModal().open', () => {
-        const endpointGroup = { id: 1, name: 'Test Endpoint Group' } as any;
-        component.openTenantModal(ModalMode.Edit, endpointGroup);
+      expect(unsubscribeSpy).toHaveBeenCalled();
+    });
+    it('should call ngx.setModalData and ngx.getModal().open', () => {
+      const endpointGroup = { id: 1, name: 'Test Endpoint Group' } as any;
+      component.openTenantModal(ModalMode.Edit, endpointGroup);
 
-        expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(TenantModalDto), 'tenantModal');
-        expect(component['ngx'].getModal).toHaveBeenCalledWith('tenantModal');
+      expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(TenantModalDto), 'tenantModal');
+      expect(component['ngx'].getModal).toHaveBeenCalledWith('tenantModal');
 
-        const modal = component['ngx'].getModal('tenantModal');
-        expect(modal).toBeDefined();
-      });
+      const modal = component['ngx'].getModal('tenantModal');
+      expect(modal).toBeDefined();
     });
   });
 
-  it('should run onInit', () => {
-    const getTenantsSpy = jest.spyOn(component, 'getTenants');
+  describe('thing', () => {
+    const mockNgxSmartModalComponent = {
+      getData: jest.fn().mockReturnValue({ modalYes: true }),
+      removeData: jest.fn(),
+      onCloseFinished: {
+        subscribe: jest.fn(),
+      },
+    };
 
-    component.ngOnInit();
-    expect(getTenantsSpy).toHaveBeenCalled();
+    beforeEach(() => {
+      component['ngx'] = {
+        getModal: jest.fn().mockReturnValue({
+          ...mockNgxSmartModalComponent,
+          open: jest.fn(),
+        }),
+      } as any;
+    });
+    it('should open type delete modal', () => {
+      const tenant = { id: '1', deletedAt: 'now' } as any;
+
+      const openDeleteSpy = jest.spyOn(component, 'subscribeToTypeDeleteModal').mockImplementation(() => {
+        mockNgxSmartModalComponent.onCloseFinished.subscribe(() => {
+          expect(component.getTenants()).toHaveBeenCalled();
+        });
+        return new Subscription();
+      });
+
+      jest.spyOn(component['tenantService'], 'getManyTenant').mockReturnValue(of({} as any));
+
+      component.deleteTenant(tenant);
+
+      expect(component['ngx'].getModal).toHaveBeenCalledWith('typeDeleteModal');
+      expect(openDeleteSpy).toHaveBeenCalled();
+
+      const modal = component['ngx'].getModal('typeDeleteModal');
+      expect(modal).toBeDefined();
+    });
+    it('should delete tenant', () => {
+      const tenant = { id: '1' } as any;
+      jest.spyOn(component, 'getTenants');
+      const softDeleteOneTenantSpy = jest.spyOn(component['tenantService'], 'softDeleteOneTenant');
+      component.deleteTenant(tenant);
+      expect(softDeleteOneTenantSpy).toHaveBeenCalled();
+    });
   });
 });

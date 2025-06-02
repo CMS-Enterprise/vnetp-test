@@ -7,6 +7,7 @@ import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { TypeDeleteModalComponent } from './type-delete-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs/internal/observable/of';
 
 describe('TypeDeleteModal', () => {
   let component: TypeDeleteModalComponent;
@@ -31,24 +32,47 @@ describe('TypeDeleteModal', () => {
   });
 
   it('should cascade delete tenant', () => {
+    const closeModalSpy = jest.spyOn(component, 'closeModal');
     component.objectType = 'tenant';
     component.objectName = 'deleteMe';
     component.objectToDelete = { name: 'deleteMe', id: '123' };
-    const deleteTenantSpy = jest.spyOn(component, 'deleteTenant');
-    const cascadeDeleteTenantSpy = jest.spyOn(component['tenantService'], 'cascadeDeleteTenantTenant');
+    const cascadeDeleteTenantSpy = jest.spyOn(component['tenantService'], 'cascadeDeleteTenantTenant').mockReturnValue(of({} as any));
     component.delete();
-    expect(deleteTenantSpy).toHaveBeenCalled();
+
     expect(cascadeDeleteTenantSpy).toHaveBeenCalled();
+    expect(closeModalSpy).toHaveBeenCalled();
   });
 
   it('should cascade delete tier', () => {
+    const closeModalSpy = jest.spyOn(component, 'closeModal');
     component.objectType = 'tier';
     component.objectName = 'deleteMe';
     component.objectToDelete = { name: 'deleteMe', id: '123' };
-    const deleteTierSpy = jest.spyOn(component, 'deleteTier');
-    const cascadeDeleteTierSpy = jest.spyOn(component['tierService'], 'cascadeDeleteTierTier');
+    const cascadeDeleteTierSpy = jest.spyOn(component['tierService'], 'cascadeDeleteTierTier').mockReturnValue(of({} as any));
     component.delete();
-    expect(deleteTierSpy).toHaveBeenCalled();
     expect(cascadeDeleteTierSpy).toHaveBeenCalled();
+    expect(closeModalSpy).toHaveBeenCalled();
+  });
+
+  it('should determine a nameMismatch when deleting tier if the objectName and objectToDelete.name do not match', () => {
+    component.objectType = 'tier';
+    component.objectName = 'deleteMe';
+    component.objectToDelete = { name: 'not-gonna-match', id: '123' };
+    component.delete();
+    expect(component.nameMismatch).toBeTruthy();
+  });
+
+  it('should determine a nameMismatch when deleting tier if the objectName and objectToDelete.name do not match', () => {
+    component.objectType = 'tenant';
+    component.objectName = 'deleteMe';
+    component.objectToDelete = { name: 'not-gonna-match', id: '123' };
+    component.delete();
+    expect(component.nameMismatch).toBeTruthy();
+  });
+
+  it('should closeModal after ', () => {
+    const closeModalSpy = jest.spyOn(component, 'closeModal');
+    component.closeModal();
+    expect(closeModalSpy).toHaveBeenCalled();
   });
 });

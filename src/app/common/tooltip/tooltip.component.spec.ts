@@ -30,7 +30,7 @@ describe('TooltipComponent', () => {
       const tooltipElement = fixture.debugElement.query(By.css('.tooltip')).nativeElement;
       jest.spyOn(tooltipElement, 'getBoundingClientRect').mockReturnValue({ left: 100, bottom: 200 });
 
-      Object.defineProperty(document.body, 'clientWidth', { value: 1200 });
+      Object.defineProperty(document.body, 'clientWidth', { value: 1200, configurable: true });
       Object.defineProperty(document.body, 'clientHeight', { value: 800 });
 
       component.showTooltip(true);
@@ -44,7 +44,7 @@ describe('TooltipComponent', () => {
       const tooltipElement = fixture.debugElement.query(By.css('.tooltip')).nativeElement;
       jest.spyOn(tooltipElement, 'getBoundingClientRect').mockReturnValue({ left: 900, bottom: 200 });
 
-      Object.defineProperty(document.body, 'clientWidth', { value: 1200 });
+      Object.defineProperty(document.body, 'clientWidth', { value: 1200, configurable: true });
       Object.defineProperty(document.body, 'clientHeight', { value: 800 });
 
       component.showTooltip(true);
@@ -70,7 +70,7 @@ describe('TooltipComponent', () => {
       const tooltipElement = fixture.debugElement.query(By.css('.tooltip')).nativeElement;
       jest.spyOn(tooltipElement, 'getBoundingClientRect').mockReturnValue({ left: 100, bottom: 200 });
 
-      Object.defineProperty(document.body, 'clientWidth', { value: 1200 });
+      Object.defineProperty(document.body, 'clientWidth', { value: 1200, configurable: true });
       Object.defineProperty(document.body, 'clientHeight', { value: 800 });
 
       component.showTooltip(true);
@@ -97,7 +97,7 @@ describe('TooltipComponent', () => {
       const tooltipElement = fixture.debugElement.query(By.css('.tooltip')).nativeElement;
       jest.spyOn(tooltipElement, 'getBoundingClientRect').mockReturnValue({ left: 100, bottom: 200 });
 
-      Object.defineProperty(document.body, 'clientWidth', { value: 1200 });
+      Object.defineProperty(document.body, 'clientWidth', { value: 1200, configurable: true });
       Object.defineProperty(document.body, 'clientHeight', { value: 800 });
 
       component.showTooltip(true);
@@ -105,6 +105,28 @@ describe('TooltipComponent', () => {
       expect(component.tooltipMsgStyle).toEqual({
         left: '0px',
       });
+    });
+  });
+
+  describe('this', () => {
+    it('should set tooltipMsgStyle based on message length and tooltip position - new test', () => {
+      component.message = 'A'.repeat(700);
+      Object.defineProperty(document.body, 'clientWidth', { value: 500, configurable: true });
+
+      jest.spyOn(component.tooltip.nativeElement, 'getBoundingClientRect').mockReturnValue({ left: 100 });
+
+      component.showTooltip(true);
+      expect(component.tooltipMsgStyle).toEqual({ left: '0px' });
+    });
+
+    it('should set tooltipMsgStyle based on message length and tooltip position - new test', () => {
+      component.message = 'A'.repeat(700);
+      Object.defineProperty(document.body, 'clientWidth', { value: 200, configurable: true });
+
+      jest.spyOn(component.tooltip.nativeElement, 'getBoundingClientRect').mockReturnValue({ left: 100 });
+
+      component.showTooltip(true);
+      expect(component.tooltipMsgStyle).toEqual({ left: '0px' });
     });
   });
 

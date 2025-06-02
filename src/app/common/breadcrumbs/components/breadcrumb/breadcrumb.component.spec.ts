@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -19,11 +20,18 @@ describe('BreadcrumbComponent', () => {
 
     fixture = TestBed.createComponent(BreadcrumbComponent);
     component = fixture.componentInstance;
-    activatedRoute = TestBed.inject(ActivatedRoute);
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('tests', () => {
+    it('should get breadcrumbs on init', () => {
+      const getBCSpy = jest.spyOn(component as any, 'getBreadcrumbs');
+      component.ngOnInit();
+      expect(getBCSpy).toHaveBeenCalledWith(component['route'].root);
+    });
   });
 });

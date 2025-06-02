@@ -126,4 +126,28 @@ describe('ImportExportComponent', () => {
 
     component.importFile(mockEvent as Event);
   });
+
+  //   it('should fail to import', fakeAsync(() => {
+  //   component.disableCsv = true;
+  //   const mockFile = new Blob(['data'], { type: 'text/csv' });
+  //   /* eslint-disable-next-line */
+  //   mockFile['name'] = 'file.csv';
+  //   const mockFileList = {
+  //     0: mockFile,
+  //     length: 1,
+  //     item: () => mockFile,
+  //   };
+  //   const mockEvent = { target: { files: mockFileList } } as unknown;
+
+  //   const importObjects = [{ key: 'value' }];
+
+  //   jest.spyOn(component, 'importCallback').mockImplementation(() => {
+  //     expect(component.importCallback).toHaveBeenCalledWith(importObjects);
+  //   });
+
+  //   const tryThis = jest.spyOn(component as any, 'importFile').mockRejectedValue({Error})
+
+  //   component.importFile(mockEvent as Event);
+  //   expect(tryThis).toHaveBeenCalled()
+  // }));
 });

@@ -44,4 +44,12 @@ describe('TenantPortalComponent', () => {
     expect(getTenantsSpy).toHaveBeenCalled();
     expect(getInitialTabIndexSpy).toHaveBeenCalled();
   });
+
+  it('should getInitialTabIndex with condition', () => {
+    Object.defineProperty(component['router'] as any, 'url', {
+      value:
+        '/appcentric/tenant-select/edit/466aeec6-afa4-4213-9512-c05782a8b2d6/home/(tenant-portal:application-profile)?tenant=dcs_sandbox1_cms-east_000000000000',
+    });
+    component.getInitialTabIndex();
+  });
 });

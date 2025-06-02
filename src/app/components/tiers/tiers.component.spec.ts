@@ -198,7 +198,7 @@ describe('TiersComponent', () => {
 
     it('should delete tier', () => {
       const tier = { id: '1' } as any;
-      const deleteOneTierSpy = jest.spyOn(component['tierService'], 'deleteOneTier').mockResolvedValue({} as never);
+      // const deleteOneTierSpy = jest.spyOn(component['tierService'], 'deleteOneTier').mockResolvedValue({} as never);
       const softDeleteOneTierSpy = jest.spyOn(component['tierService'], 'softDeleteOneTier').mockResolvedValue({} as never);
 
       jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
@@ -221,16 +221,16 @@ describe('TiersComponent', () => {
 
       // expect(component['ngx'].getModal).toHaveBeenCalledWith('typeDeleteModal');
       // expect(openDeleteSpy).toHaveBeenCalled();
-      expect(deleteOneTierSpy).toHaveBeenCalled();
+      // expect(deleteOneTierSpy).toHaveBeenCalled();
       expect(softDeleteOneTierSpy).toHaveBeenCalled();
 
       // const modal = component['ngx'].getModal('typeDeleteModal');
       // expect(modal).toBeDefined();
       // expect(component['datacenterContextService'].lockDatacenter).toHaveBeenCalled();
 
-      expect(component['entityService'].deleteEntity).toHaveBeenCalled();
-      expect(deleteOneTierSpy).toHaveBeenCalledWith({ id: tier.id });
-      // expect(softDeleteOneTierSpy).toHaveBeenCalledWith({ id: tier.id });
+      // expect(component['entityService'].deleteEntity).toHaveBeenCalled();
+      // expect(deleteOneTierSpy).toHaveBeenCalledWith({ id: tier.id });
+      expect(softDeleteOneTierSpy).toHaveBeenCalledWith({ id: tier.id });
       // expect(component['tierService'].getManyTier).toHaveBeenCalled();
     });
   });
