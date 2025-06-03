@@ -1,9 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FirewallRulesOperationModalComponent } from './firewall-rules-operation-modal.component';
-import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule, FormBuilder, Validators } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
