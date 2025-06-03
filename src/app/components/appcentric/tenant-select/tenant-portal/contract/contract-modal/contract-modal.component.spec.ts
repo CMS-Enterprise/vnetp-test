@@ -11,7 +11,7 @@ import { ContractModalComponent } from './contract-modal.component';
 import { of, Subject, Subscription } from 'rxjs';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { V2AppCentricContractsService, V2AppCentricSubjectsService } from 'client';
+import { ContractScopeEnum, V2AppCentricContractsService, V2AppCentricSubjectsService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { By } from '@angular/platform-browser';
 import { SubjectModalDto } from 'src/app/models/appcentric/subject-modal-dto';
@@ -206,6 +206,7 @@ describe('ContractModalComponent', () => {
       name: 'contract1',
       alias: '',
       description: 'description!',
+      scope: ContractScopeEnum.Vrf,
     });
 
     const saveButton = fixture.debugElement.query(By.css('.btn.btn-success'));

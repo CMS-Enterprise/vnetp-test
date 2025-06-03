@@ -13,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalMode } from '../../../../../models/other/modal-mode';
+import { ApplicationMode } from '../../../../../models/other/application-mode-enum';
 
 describe('WanFormSubnetsModalComponent', () => {
   let component: WanFormSubnetsModalComponent;
@@ -183,7 +184,7 @@ describe('WanFormSubnetsModalComponent', () => {
   describe('save', () => {
     beforeEach(() => {
       component.modalMode = ModalMode.Create;
-      component.currentDcsMode = 'netcentric';
+      component.currentDcsMode = ApplicationMode.NETCENTRIC;
       component.wanFormId = 'testWanFormId';
       (component as any).datacenterId = 'testDatacenterId';
       (component as any).buildForm();
@@ -244,7 +245,7 @@ describe('WanFormSubnetsModalComponent', () => {
     });
 
     it('should delete appcentricSubnetId if currentDcsMode is netcentric', () => {
-      component.currentDcsMode = 'netcentric';
+      component.currentDcsMode = ApplicationMode.NETCENTRIC;
       component.save();
 
       expect(mockWanFormSubnetService.createOneWanFormSubnet).toHaveBeenCalledWith({
@@ -261,7 +262,7 @@ describe('WanFormSubnetsModalComponent', () => {
     });
 
     it('should delete netcentricSubnetId if currentDcsMode is appcentric', () => {
-      component.currentDcsMode = 'appcentric';
+      component.currentDcsMode = ApplicationMode.APPCENTRIC;
       component.save();
 
       expect(mockWanFormSubnetService.createOneWanFormSubnet).toHaveBeenCalledWith({

@@ -7,14 +7,14 @@ import { IconButtonModule } from '../../../../../common/icon-button/icon-button.
 import { ImportExportModule } from '../../../../../common/import-export/import-export.module';
 import { TableModule } from '../../../../../common/table/table.module';
 import { EndpointGroupModalComponent } from './endpoint-group-modal/endpoint-group-modal.component';
-import { ProvidedContractComponent } from './endpoint-group-modal/provided-contract/provided-contract.component';
-import { ConsumedContractComponent } from './endpoint-group-modal/consumed-contract/consumed-contract.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TabsModule } from '../../../../../common/tabs/tabs.module';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { AciRuntimeModule } from '../../../../aci-runtime/aci-runtime.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
+import { ContractAssociationModule } from '../contract-association/contract-association.module';
+import { EndpointDisplayModalModule } from '../endpoint/endpoint-display-modal/endpoint-display-modal.module';
 
 const routes: Routes = [
   {
@@ -24,7 +24,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [EndpointGroupComponent, EndpointGroupModalComponent, ProvidedContractComponent, ConsumedContractComponent],
+  declarations: [EndpointGroupComponent, EndpointGroupModalComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -41,6 +41,8 @@ const routes: Routes = [
     NgxSmartModalModule,
     AciRuntimeModule,
     YesNoModalModule,
+    ContractAssociationModule,
+    EndpointDisplayModalModule,
   ],
   exports: [EndpointGroupComponent],
 })

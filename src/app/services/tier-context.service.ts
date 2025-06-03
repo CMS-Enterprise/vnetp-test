@@ -87,7 +87,6 @@ export class TierContextService {
   private getTiers(currentTierId?: string): void {
     this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (!cd) {
-        console.debug('DEBUG :: No Datacenter selected');
         return;
       }
 

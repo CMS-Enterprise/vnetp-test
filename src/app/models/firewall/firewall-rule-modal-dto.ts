@@ -6,6 +6,8 @@ import {
   ServiceObjectGroup,
   Zone,
   FirewallRuleGroupTypeEnum,
+  EndpointGroup,
+  EndpointSecurityGroup,
 } from 'client';
 import { ModalMode } from '../other/modal-mode';
 
@@ -20,4 +22,6 @@ export class FirewallRuleModalDto {
   Zones: Zone[];
   ModalMode: ModalMode;
   GroupType: FirewallRuleGroupTypeEnum;
+  EndpointGroups: EndpointGroup[];
+  EndpointSecurityGroups: EndpointSecurityGroup[];
 }

@@ -13,25 +13,44 @@ import { AdminPortalNavbarComponent } from './admin-portal-navbar/admin-portal-n
 import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module';
 import { GlobalMessagesComponent } from './global-messages/global-messages.component';
+import { TenantSelectComponent } from '../appcentric/tenant-select/tenant-select.component';
 import { WanFormRequestComponent } from './wan-form-request/wan-form-request.component';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminPortalComponent,
+    // Apply default data to the parent route
     children: [
       {
         path: 'dashboard',
         component: AdminPortalDashboardComponent,
         canActivate: [AdminAuthGuard],
+        data: {
+          breadcrumb: 'Dashboard',
+          title: 'Dashboard',
+        },
         loadChildren: () => import('./admin-portal-dashboard/admin-portal-dashboard.module').then(m => m.AdminPortalDashboardModule),
       },
       {
         path: 'global-messages',
         component: GlobalMessagesComponent,
         canActivate: [AdminAuthGuard],
-        data: { breadcrumb: 'Global Messages', title: 'Global Messages' },
+        data: {
+          breadcrumb: 'Global Messages',
+          title: 'Global Messages',
+        },
         loadChildren: () => import('./global-messages/global-messages.module').then(m => m.GlobalMessagesModule),
+      },
+      {
+        path: 'tenant-v2',
+        component: TenantSelectComponent,
+        canActivate: [AdminAuthGuard],
+        data: {
+          breadcrumb: 'Tenant V2',
+          title: 'Tenant V2',
+        },
+        loadChildren: () => import('../appcentric/tenant-select/tenant-select.module').then(m => m.TenantSelectModule),
       },
       {
         path: 'wan-form-request',

@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Tenant } from './tenant';
 import { Tier } from './tier';
 import { TierGroup } from './tierGroup';
 import { SelfService } from './selfService';
@@ -31,5 +32,8 @@ export interface Datacenter {
     readonly auditLogs?: Array<AuditLog>;
     readonly selfServices?: SelfService;
     readonly wanForms?: Array<WanForm>;
+    readonly appCentricTenant?: Tenant;
+    readonly appCentricTenantId?: string;
+    readonly tenantVersion?: number;
 }
 

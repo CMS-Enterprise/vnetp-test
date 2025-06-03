@@ -65,7 +65,8 @@ export interface NatRuleImport {
 export enum NatRuleImportTranslationTypeEnum {
     Static = 'Static',
     DynamicIp = 'DynamicIp',
-    DynamicIpAndPort = 'DynamicIpAndPort'
+    DynamicIpAndPort = 'DynamicIpAndPort',
+    Nat64 = 'Nat64'
 };
 export enum NatRuleImportDirectionEnum {
     In = 'In',

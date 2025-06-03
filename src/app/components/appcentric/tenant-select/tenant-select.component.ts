@@ -1,13 +1,16 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Tenant, GetManyTenantResponseDto, V2AppCentricTenantsService } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 @Component({
   selector: 'app-tenant-select',
@@ -22,6 +25,8 @@ export class TenantSelectComponent implements OnInit {
   public tenantModalSubscription: Subscription;
   selectedTenantToDelete: Tenant;
   objectType = 'tenant';
+  ApplicationMode = ApplicationMode;
+  applicationMode: ApplicationMode;
 
   public isLoading = false;
 
@@ -42,13 +47,20 @@ export class TenantSelectComponent implements OnInit {
   typeDeletemodalSubscription: Subscription;
 
   constructor(
+    private router: Router,
+    private route: ActivatedRoute,
     private tenantService: V2AppCentricTenantsService,
     private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
   ) {}
 
   ngOnInit(): void {
+    this.determineApplicationMode();
     this.getTenants();
+  }
+
+  private determineApplicationMode(): void {
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -57,33 +69,28 @@ export class TenantSelectComponent implements OnInit {
   }
 
   public getTenants(): void {
-    this.isLoading = true;
-    // let eventParams;
-    // if (event) {
-    //   this.tableComponentDto.page = event.page ? event.page : 1;
-    //   this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
-    //   const { searchText } = event;
-    //   const propertyName = event.searchColumn ? event.searchColumn : null;
-    //   if (propertyName) {
-    //     eventParams = `${propertyName}||cont||${searchText}`;
-    //   }
-    // }
+    const filter =
+      this.applicationMode === ApplicationMode.TENANTV2 || this.applicationMode === ApplicationMode.ADMINPORTAL
+        ? 'tenantVersion||eq||2'
+        : 'tenantVersion||eq||1';
+
     this.tenantService
       .getManyTenant({
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
+        filter: [filter],
       })
-      .subscribe(
-        data => {
+      .subscribe({
+        next: data => {
           this.tenants = data;
         },
-        () => {
+        error: () => {
           this.tenants = null;
         },
-        () => {
+        complete: () => {
           this.isLoading = false;
         },
-      );
+      });
   }
 
   public openTenantModal(modalMode: ModalMode, tenant?: Tenant): void {
@@ -93,6 +100,32 @@ export class TenantSelectComponent implements OnInit {
 
     if (modalMode === ModalMode.Edit) {
       dto.Tenant = tenant;
+    }
+
+    // Initialize AdminPortal specific properties when in admin portal mode
+    if (this.applicationMode === ApplicationMode.ADMINPORTAL) {
+      // Set default values for AdminPortal specific properties
+      dto.northSouthFirewallVendor = 'PANOS';
+      dto.northSouthFirewallArchitecture = 'Virtual';
+      dto.northSouthHa = true;
+      dto.eastWestFirewallVendor = 'PANOS';
+      dto.eastWestFirewallArchitecture = 'Virtual';
+      dto.eastWestHa = true;
+
+      // Initialize feature flags
+      dto.featureFlags = {
+        northSouthAppId: true,
+        eastWestAppId: true,
+        nat64NorthSouth: false,
+        eastWestAllowSgBypass: false,
+        eastWestNat: false,
+      };
+
+      // If editing, populate with existing tenant data if available
+      if (modalMode === ModalMode.Edit && tenant) {
+        // Here you would normally populate with existing data from the tenant
+        // For now, we're just using defaults since we don't have the actual properties
+      }
     }
 
     this.subscribeToTenantModal();

@@ -182,7 +182,9 @@
             <option *ngIf="f.translatedServiceType.value === NatRuleTranslatedServiceType.None" [value]="NatRuleOriginalServiceType.None">
               None
             </option>
-            <option [value]="NatRuleOriginalServiceType.ServiceObject">Service Object</option>
+            <option *ngIf="f.translationType.value !== NatRuleTranslationType.Nat64" [value]="NatRuleOriginalServiceType.ServiceObject">
+              Service Object
+            </option>
           </select>
           <div *ngIf="submitted && f.originalServiceType.errors" class="invalid-feedback">
             <div *ngIf="f.originalServiceType.errors.required">Original Service Type is required</div>
@@ -233,7 +235,12 @@
               None
             </option>
             <option [value]="NatRuleOriginalSourceAddressType.NetworkObject">Network Object</option>
-            <option [value]="NatRuleOriginalSourceAddressType.NetworkObjectGroup">Network Object Group</option>
+            <option
+              *ngIf="f.translationType.value !== NatRuleTranslationType.Nat64"
+              [value]="NatRuleOriginalSourceAddressType.NetworkObjectGroup"
+            >
+              Network Object Group
+            </option>
           </select>
           <div *ngIf="submitted && f.originalSourceAddressType.errors" class="invalid-feedback">
             <div *ngIf="f.originalSourceAddressType.errors.required">Original Source Address Type is required</div>
@@ -258,6 +265,9 @@
 
           <div *ngIf="submitted && f.originalSourceNetworkObject.errors" class="invalid-feedback">
             <div *ngIf="f.originalSourceNetworkObject.errors.required">Original Source Network Object is required</div>
+            <div *ngIf="f.originalSourceNetworkObject.errors.nonIPv6Address">
+              When Translation is Type NAT64, the original source network object must be an IPv6 address
+            </div>
           </div>
           <span
             *ngIf="f.originalSourceAddressType.value === NatRuleOriginalSourceAddressType.NetworkObject"
@@ -314,13 +324,21 @@
             [class.is-invalid]="submitted && f.originalDestinationAddressType.errors"
           >
             <option
-              *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.None"
+              *ngIf="
+                f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.None &&
+                f.translationType.value !== NatRuleTranslationType.Nat64
+              "
               [value]="NatRuleOriginalDestinationAddressType.None"
             >
               None
             </option>
             <option [value]="NatRuleOriginalDestinationAddressType.NetworkObject">Network Object</option>
-            <option [value]="NatRuleOriginalDestinationAddressType.NetworkObjectGroup">Network Object Group</option>
+            <option
+              *ngIf="f.translationType.value !== NatRuleTranslationType.Nat64"
+              [value]="NatRuleOriginalDestinationAddressType.NetworkObjectGroup"
+            >
+              Network Object Group
+            </option>
           </select>
 
           <div *ngIf="submitted && f.originalDestinationAddressType.errors" class="invalid-feedback">
@@ -347,6 +365,9 @@
           ></ng-select>
           <div *ngIf="submitted && f.originalDestinationNetworkObject.errors" class="invalid-feedback">
             <div *ngIf="f.originalDestinationNetworkObject.errors.required">Original Destination Network Object is required</div>
+            <div *ngIf="f.originalDestinationNetworkObject.errors.nonIPv6Address">
+              When Translation is Type NAT64, the original destination network object must be an IPv6 address
+            </div>
           </div>
           <span
             *ngIf="f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObject"
@@ -412,6 +433,7 @@
           <option [value]="NatRuleTranslationType.Static">Static</option>
           <option [value]="NatRuleTranslationType.DynamicIp">Dynamic IP</option>
           <option [value]="NatRuleTranslationType.DynamicIpAndPort">Dynamic IP and Port</option>
+          <option [value]="NatRuleTranslationType.Nat64">NAT 64</option>
         </select>
         <div *ngIf="submitted && f.translationType.errors" class="invalid-feedback">
           <div *ngIf="f.translationType.errors.required">Translation Type is required</div>
@@ -431,7 +453,9 @@
               [class.is-invalid]="submitted && f.translatedServiceType.errors"
             >
               <option [value]="NatRuleTranslatedServiceType.None">None</option>
-              <option [value]="NatRuleTranslatedServiceType.ServiceObject">Service Object</option>
+              <option *ngIf="f.translationType.value !== NatRuleTranslationType.Nat64" [value]="NatRuleTranslatedServiceType.ServiceObject">
+                Service Object
+              </option>
             </select>
             <div *ngIf="submitted && f.translatedServiceType.errors" class="invalid-feedback">
               <div *ngIf="f.translatedServiceType.errors.required">Translated Service Type is required</div>
@@ -478,7 +502,9 @@
               </option>
               <option [value]="NatRuleTranslatedSourceAddressType.NetworkObject">Network Object</option>
               <option
-                *ngIf="f.translationType.value !== NatRuleTranslationType.Static"
+                *ngIf="
+                  f.translationType.value !== NatRuleTranslationType.Static && f.translationType.value !== NatRuleTranslationType.Nat64
+                "
                 [value]="NatRuleTranslatedSourceAddressType.NetworkObjectGroup"
               >
                 Network Object Group
@@ -565,9 +591,17 @@
               [class.is-invalid]="submitted && f.translatedDestinationAddressType.errors"
             >
               <option [value]="NatRuleTranslatedDestinationAddressType.None">None</option>
-              <option [value]="NatRuleTranslatedDestinationAddressType.NetworkObject">Network Object</option>
               <option
-                *ngIf="f.translationType.value !== NatRuleTranslationType.Static"
+                *ngIf="f.translationType.value !== NatRuleTranslationType.Nat64"
+                [value]="NatRuleTranslatedDestinationAddressType.NetworkObject"
+              >
+                Network Object
+              </option>
+              <!-- <option [value]="NatRuleTranslatedDestinationAddressType.NetworkObject">Network Object</option> -->
+              <option
+                *ngIf="
+                  f.translationType.value !== NatRuleTranslationType.Static && f.translationType.value !== NatRuleTranslationType.Nat64
+                "
                 [value]="NatRuleTranslatedDestinationAddressType.NetworkObjectGroup"
               >
                 Network Object Group

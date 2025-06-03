@@ -1,6 +1,8 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { WanForm } from '../../../../../../client/model/wanForm';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 @Component({
   selector: 'app-wan-form-detail',
@@ -10,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class WanFormDetailComponent implements OnInit {
   @Input() wanForm: WanForm;
-  dcsMode: string;
+  public dcsMode: ApplicationMode;
   private _global: boolean;
 
   @Input()
@@ -25,7 +27,12 @@ export class WanFormDetailComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.dcsMode = this.route.snapshot.data.mode;
+    this.dcsMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
+
+    if (!this.dcsMode) {
+      console.error('WanFormDetailComponent: Application mode could not be determined via RouteDataUtil.');
+      // Fallback or error handling if necessary
+    }
   }
 
   navigateToWanFormSubnets(): void {

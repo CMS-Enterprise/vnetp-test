@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { EndpointSecurityGroup } from './endpointSecurityGroup';
 import { Tenant } from './tenant';
 import { EndpointGroup } from './endpointGroup';
 import { Subject } from './subject';
@@ -25,10 +26,24 @@ export interface Contract {
     name?: string;
     alias?: string;
     description?: string;
+    addDefaultServiceGraphSubject?: boolean;
     readonly tenant?: Tenant;
+    scope?: ContractScopeEnum;
     tenantId: string;
     readonly consumingEndpointGroups?: Array<EndpointGroup>;
     readonly providingEndpointGroups?: Array<EndpointGroup>;
+    readonly intraEndpointGroups?: Array<EndpointGroup>;
     readonly subjects?: Array<Subject>;
+    readonly consumingEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
+    readonly providingEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
+    readonly intraEndpointSecurityGroups?: Array<EndpointSecurityGroup>;
 }
+export enum ContractScopeEnum {
+    ApplicationProfile = 'applicationProfile',
+    Vrf = 'vrf',
+    Tenant = 'tenant',
+    Global = 'global'
+};
+
+
 

@@ -9,10 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { EndpointSecurityGroup } from './endpointSecurityGroup';
 import { ServiceObjectGroup } from './serviceObjectGroup';
 import { NetworkObject } from './networkObject';
 import { Zone } from './zone';
 import { ServiceObject } from './serviceObject';
+import { EndpointGroup } from './endpointGroup';
 import { NetworkObjectGroup } from './networkObjectGroup';
 
 
@@ -43,6 +45,10 @@ export interface FirewallRule {
     destinationPorts?: string;
     serviceObjectId?: string;
     serviceObjectGroupId?: string;
+    sourceEndpointGroupId?: string;
+    sourceEndpointSecurityGroupId?: string;
+    destinationEndpointGroupId?: string;
+    destinationEndpointSecurityGroupId?: string;
     firewallRuleGroupId: string;
     readonly sourceNetworkObject?: NetworkObject;
     readonly sourceNetworkObjectGroup?: NetworkObjectGroup;
@@ -52,7 +58,12 @@ export interface FirewallRule {
     readonly serviceObjectGroup?: ServiceObjectGroup;
     toZone?: Array<Zone>;
     fromZone?: Array<Zone>;
+    readonly sourceEndpointGroup?: EndpointGroup;
+    readonly destinationEndpointGroup?: EndpointGroup;
+    readonly sourceEndpointSecurityGroup?: EndpointSecurityGroup;
+    readonly destinationEndpointSecurityGroup?: EndpointSecurityGroup;
     hitCount?: number;
+    readonly tenantVersion?: number;
 }
 export enum FirewallRuleDirectionEnum {
     In = 'In',
@@ -71,12 +82,16 @@ export enum FirewallRuleProtocolEnum {
 export enum FirewallRuleSourceAddressTypeEnum {
     IpAddress = 'IpAddress',
     NetworkObject = 'NetworkObject',
-    NetworkObjectGroup = 'NetworkObjectGroup'
+    NetworkObjectGroup = 'NetworkObjectGroup',
+    EndpointGroup = 'EndpointGroup',
+    EndpointSecurityGroup = 'EndpointSecurityGroup'
 };
 export enum FirewallRuleDestinationAddressTypeEnum {
     IpAddress = 'IpAddress',
     NetworkObject = 'NetworkObject',
-    NetworkObjectGroup = 'NetworkObjectGroup'
+    NetworkObjectGroup = 'NetworkObjectGroup',
+    EndpointGroup = 'EndpointGroup',
+    EndpointSecurityGroup = 'EndpointSecurityGroup'
 };
 export enum FirewallRuleServiceTypeEnum {
     Port = 'Port',

@@ -30,6 +30,9 @@ import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.compone
 import { TableContextService } from 'src/app/services/table-context.service';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
+import { ActivatedRoute } from '@angular/router';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 @Component({
   selector: 'app-network-objects-groups',
@@ -65,6 +68,9 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
 
   public isLoadingObjects = false;
   public isLoadingGroups = false;
+
+  public applicationMode: ApplicationMode;
+  public ApplicationMode = ApplicationMode;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('membersTemplate') membersTemplate: TemplateRef<any>;
@@ -119,6 +125,7 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
     public helpText: NetworkObjectsGroupsHelpText,
     public filteredHelpText: FilteredCount,
     private tableContextService: TableContextService,
+    private activatedRoute: ActivatedRoute,
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<NetworkObject>();
     advancedSearchAdapterObject.setService(this.networkObjectService);
@@ -589,6 +596,8 @@ export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   /* tslint:enable */
 
   ngOnInit() {
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
+
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.tiers = cd.tiers;

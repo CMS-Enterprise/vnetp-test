@@ -118,13 +118,22 @@
         >
           <option value="netcentric">Netcentric (Default)</option>
           <option value="appcentric">Appcentric</option>
+          <option value="TenantV2">TenantV2</option>
         </select>
       </div>
 
-      <button *ngIf="!globalOnlyUser" class="btn btn-primary btn-lg" (click)="setTenantAndNavigate(selectedTenant, selectedMode)">
-        Select Account
-      </button>
-      <button *ngIf="showAdminPortalButton" class="btn btn-primary btn-lg" (click)="navToAdminPortal(selectedTenant)">Admin Portal</button>
+      <div class="login-buttons">
+        <button
+          *ngIf="showAccountSelectionButton"
+          class="btn btn-primary btn-lg"
+          (click)="setTenantAndNavigate(selectedTenant, selectedMode)"
+        >
+          Select Account
+        </button>
+        <button *ngIf="showAdminPortalButton" class="btn btn-primary btn-lg" (click)="navToAdminPortal(selectedTenant)">
+          Admin Portal
+        </button>
+      </div>
     </form>
   </div>
 </div>

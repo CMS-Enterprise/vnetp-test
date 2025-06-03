@@ -16,6 +16,7 @@ import { SearchColumnConfig } from '../../../common/search-bar/search-bar.compon
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Datacenter, Tenant, V2AppCentricTenantsService, V3GlobalWanFormRequestService, WanFormRequestDto } from '../../../../../client';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 @Component({
   selector: 'app-wan-form',
@@ -74,7 +75,12 @@ export class WanFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.dcsMode = this.route.snapshot.data.mode;
+    this.dcsMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
+
+    if (!this.dcsMode) {
+      console.error('WAN Form: Application mode could not be determined via RouteDataUtil.');
+    }
+
     if (this.dcsMode === 'netcentric') {
       this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
         if (cd) {

@@ -131,33 +131,6 @@ describe('DatacenterContextService', () => {
     });
   });
 
-  describe('refreshDatacenter', () => {
-    it('should refresh datacenters and update the current datacenter', done => {
-      const datacentersMock = [
-        { id: 'dc1', name: 'Datacenter 1' },
-        { id: 'dc2', name: 'Datacenter 2' },
-      ];
-      const currentDatacenterMock = { id: 'dc1', name: 'Datacenter 1' };
-
-      service['currentDatacenterSubject'].next(currentDatacenterMock);
-
-      const getManyDatacenterSpy = jest
-        .spyOn(service['datacenterService'], 'getManyDatacenter')
-        .mockReturnValue(of({ data: datacentersMock } as any));
-
-      service.refreshDatacenter();
-
-      setTimeout(() => {
-        expect(getManyDatacenterSpy).toHaveBeenCalled();
-        expect(service['datacentersSubject'].value).toEqual(datacentersMock);
-
-        const currentDatacenter = service['currentDatacenterSubject'].value;
-        expect(currentDatacenter).toEqual(currentDatacenterMock);
-        done();
-      }, 0);
-    });
-  });
-
   describe('switchDatacenter', () => {
     const datacenterId = 'test-datacenter-id';
 

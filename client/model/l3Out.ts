@@ -31,5 +31,6 @@ export interface L3Out {
     vrfId: string;
     readonly tenant?: Tenant;
     tenantId: string;
+    readonly tenantVersion?: number;
 }
 

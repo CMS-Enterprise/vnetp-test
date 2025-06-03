@@ -1,9 +1,14 @@
-<a routerLink="/netcentric/firewall-rules" queryParamsHandling="merge" class="btn btn-info">
+<a
+  routerLink="/netcentric/firewall-rules"
+  queryParamsHandling="merge"
+  class="btn btn-info"
+  *ngIf="applicationMode === ApplicationMode.NETCENTRIC"
+>
   <fa-icon class="icon" [icon]="['fas', 'chevron-left']"></fa-icon>
   <span>Back</span>
 </a>
 
-<h1>{{ TierName }} - {{ FirewallRuleGroup?.name }} FW Rules</h1>
+<h1 *ngIf="applicationMode === ApplicationMode.NETCENTRIC">{{ TierName }} - {{ FirewallRuleGroup?.name }} FW Rules</h1>
 
 <section class="btn-toolbar" role="toolbar">
   <!-- Add Firewall Rule -->
@@ -86,6 +91,7 @@
 
 <section class="btn-toolbar" role="toolbar">
   <app-import-export
+    *ngIf="applicationMode === ApplicationMode.NETCENTRIC"
     [exportObject]="firewallRules"
     exportFileName="firewallRules-{{ TierName }}-{{ FirewallRuleGroup?.name }}"
     (import)="importFirewallRulesConfig($event)"
@@ -122,6 +128,23 @@
     {{ firewallRule?.sourceNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
     (Object Group)
   </p>
+  <p
+    (click)="getObjectInfo('Source EndpointGroup', firewallRule.sourceAddressType, firewallRule.sourceEndpointGroupId)"
+    style="color: blue; cursor: pointer"
+    *ngIf="firewallRule.sourceAddressType === 'EndpointGroup'"
+    aria-label="Source Endpoint Group"
+  >
+    {{ firewallRule?.sourceEndpointGroupId | resolve : getEndpointGroupName }}
+    (Endpoint Group)
+  </p>
+  <p
+    (click)="getObjectInfo('Source EndpointSecurityGroup', firewallRule.sourceAddressType, firewallRule.sourceEndpointSecurityGroupId)"
+    style="color: blue; cursor: pointer"
+    *ngIf="firewallRule.sourceAddressType === 'EndpointSecurityGroup'"
+    aria-label="Source Endpoint Security Group"
+  >
+    {{ firewallRule?.sourceEndpointSecurityGroupId | resolve : getEndpointSecurityGroupName }}
+  </p>
 </ng-template>
 
 <!-- destination address template -->
@@ -148,6 +171,30 @@
   >
     {{ firewallRule?.destinationNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
     (Object Group)
+  </p>
+
+  <p
+    (click)="getObjectInfo('Destination EndpointGroup', firewallRule.destinationAddressType, firewallRule.destinationEndpointGroupId)"
+    style="color: blue; cursor: pointer"
+    *ngIf="firewallRule.destinationAddressType === 'EndpointGroup'"
+    aria-label="Destination Endpoint Group"
+  >
+    {{ firewallRule?.destinationEndpointGroupId | resolve : getEndpointGroupName }}
+    (Endpoint Group)
+  </p>
+  <p
+    (click)="
+      getObjectInfo(
+        'Destination EndpointSecurityGroup',
+        firewallRule.destinationAddressType,
+        firewallRule.destinationEndpointSecurityGroupId
+      )
+    "
+    style="color: blue; cursor: pointer"
+    *ngIf="firewallRule.destinationAddressType === 'EndpointSecurityGroup'"
+    aria-label="Destination Endpoint Security Group"
+  >
+    {{ firewallRule?.destinationEndpointSecurityGroupId | resolve : getEndpointSecurityGroupName }}
   </p>
 </ng-template>
 

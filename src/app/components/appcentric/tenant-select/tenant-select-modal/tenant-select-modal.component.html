@@ -11,58 +11,410 @@
   </header>
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          formControlName="name"
-          class="form-control"
-          [class.is-invalid]="submitted && f.name.errors"
-          aria-label="Name"
-        />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or '_'.</div>
+      <!-- Common tenant information -->
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="form-control"
+              [class.is-invalid]="submitted && f.name.errors"
+              aria-label="Name"
+            />
+            <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+              <div *ngIf="f.name.errors.required">Name is required</div>
+              <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
+              <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
+              <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or '_'.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="alias">Alias</label>
+            <input
+              type="text"
+              id="alias"
+              formControlName="alias"
+              class="form-control"
+              [class.is-invalid]="submitted && f.alias.errors"
+              aria-label="Alias"
+            />
+            <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
+              <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input
+              type="text"
+              id="description"
+              formControlName="description"
+              class="form-control"
+              [class.is-invalid]="submitted && f.description.errors"
+              aria-label="Description"
+            />
+            <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+              <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="alias">Alias</label>
-        <input
-          type="text"
-          id="alias"
-          formControlName="alias"
-          class="form-control"
-          [class.is-invalid]="submitted && f.alias.errors"
-          aria-label="Alias"
-        />
-        <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
-          <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
-        </div>
-      </div>
+      <!-- AdminPortal specific sections -->
+      <div *ngIf="isAdminPortalMode" class="admin-portal-sections mt-2">
+        <!-- Tab navigation -->
+        <ul class="nav nav-tabs mb-3" id="tenantConfigTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="base-tab" data-toggle="tab" href="#base" role="tab" aria-controls="base" aria-selected="true"
+              >Base Configuration</a
+            >
+          </li>
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link"
+              id="north-south-tab"
+              data-toggle="tab"
+              href="#north-south"
+              role="tab"
+              aria-controls="north-south"
+              aria-selected="false"
+              >North/South Firewall</a
+            >
+          </li>
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link"
+              id="east-west-tab"
+              data-toggle="tab"
+              href="#east-west"
+              role="tab"
+              aria-controls="east-west"
+              aria-selected="false"
+              >East/West Firewall</a
+            >
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="vcd-tab" data-toggle="tab" href="#vcd" role="tab" aria-controls="vcd" aria-selected="false"
+              >VCD Integration</a
+            >
+          </li>
+        </ul>
 
-      <div class="form-group">
-        <label for="description">Description</label>
-        <input
-          type="text"
-          id="description"
-          formControlName="description"
-          class="form-control"
-          [class.is-invalid]="submitted && f.description.errors"
-          aria-label="Description"
-        />
-        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+        <!-- Tab content -->
+        <div class="tab-content" id="tenantConfigTabContent">
+          <!-- Base Configuration Tab -->
+          <div class="tab-pane fade show active" id="base" role="tabpanel" aria-labelledby="base-tab">
+            <div class="row config-row">
+              <div class="col-md-6">
+                <!-- Base Tenant Options -->
+                <h5 class="section-title compact-title">Base Tenant Options</h5>
+                <div class="form-group row compact-form-group">
+                  <label class="col-sm-4 col-form-label" for="tenantSize">Tenant Size</label>
+                  <div class="col-sm-8">
+                    <div class="d-flex align-items-center">
+                      <select id="tenantSize" formControlName="tenantSize" class="form-control form-control-sm mr-2">
+                        <option value="x-small">X-Small</option>
+                        <option value="small">Small</option>
+                        <option value="medium">Medium</option>
+                        <option value="large">Large</option>
+                        <option value="x-large">X-Large</option>
+                      </select>
+                      <tooltip [message]="helpText.TenantSize"></tooltip>
+                    </div>
+                    <small class="form-text text-muted">Sizing affects virtual firewall resources and VCD parameters</small>
+                  </div>
+                </div>
+
+                <div class="form-group row compact-form-group">
+                  <div class="col-sm-4"></div>
+                  <div class="col-sm-8">
+                    <div class="feature-flag-item">
+                      <input type="checkbox" id="vendorAgnosticNat" class="form-check-input" formControlName="vendorAgnosticNat" />
+                      <label class="form-check-label" for="vendorAgnosticNat"> Vendor-Agnostic NAT </label>
+                      <tooltip [message]="helpText.VendorAgnosticNat"></tooltip>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <!-- Regional HA Configuration -->
+                <h5 class="section-title compact-title">Regional High Availability</h5>
+                <div class="form-group row compact-form-group">
+                  <div class="col-sm-4"></div>
+                  <div class="col-sm-8">
+                    <div class="feature-flag-item">
+                      <input type="checkbox" id="regionalHa" class="form-check-input" formControlName="regionalHa" />
+                      <label class="form-check-label" for="regionalHa"> Regional HA </label>
+                      <tooltip [message]="helpText.RegionalHA"></tooltip>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Regional HA Options (visible when Regional HA is selected) -->
+                <div *ngIf="f.regionalHa.value">
+                  <div class="form-group row compact-form-group">
+                    <label class="col-sm-4 col-form-label" for="primaryDatacenter">Primary Datacenter</label>
+                    <div class="col-sm-8">
+                      <select id="primaryDatacenter" formControlName="primaryDatacenter" class="form-control form-control-sm">
+                        <option *ngFor="let option of datacenterOptions" [value]="option">{{ option }}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group row compact-form-group">
+                    <label class="col-sm-4 col-form-label" for="secondaryDatacenter">Secondary Datacenter</label>
+                    <div class="col-sm-8">
+                      <select id="secondaryDatacenter" formControlName="secondaryDatacenter" class="form-control form-control-sm">
+                        <option value="">None</option>
+                        <option *ngFor="let option of datacenterOptions" [value]="option" [disabled]="option === f.primaryDatacenter.value">
+                          {{ option }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Deployment Mode (visible when both Primary and Secondary datacenters are selected) -->
+                  <div *ngIf="f.secondaryDatacenter.value" class="form-group row compact-form-group">
+                    <label class="col-sm-4 col-form-label" for="deploymentMode">Deployment Mode</label>
+                    <div class="col-sm-8">
+                      <div class="d-flex align-items-center">
+                        <select id="deploymentMode" formControlName="deploymentMode" class="form-control form-control-sm mr-2">
+                          <option *ngFor="let option of deploymentModeOptions" [value]="option">{{ option }}</option>
+                        </select>
+                        <tooltip [message]="helpText.DeploymentMode"></tooltip>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Template Upload -->
+            <div class="form-group mt-3">
+              <label for="tenantTemplateFile">Upload Tenant Template YAML</label>
+              <div class="custom-file">
+                <input
+                  type="file"
+                  id="tenantTemplateFile"
+                  class="custom-file-input"
+                  accept=".yaml,.yml"
+                  (change)="onFileSelected($event)"
+                />
+                <label class="custom-file-label" for="tenantTemplateFile">
+                  {{ selectedFile ? selectedFile.name : 'Choose file...' }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- North/South Firewall Tab -->
+          <div class="tab-pane fade" id="north-south" role="tabpanel" aria-labelledby="north-south-tab">
+            <h5 class="section-title compact-title">North/South Firewall Configuration</h5>
+            <div class="row config-row">
+              <div class="col-md-6">
+                <div class="form-group row compact-form-group">
+                  <label class="col-sm-4 col-form-label" for="northSouthFirewallVendor">Firewall Vendor</label>
+                  <div class="col-sm-8">
+                    <select id="northSouthFirewallVendor" formControlName="northSouthFirewallVendor" class="form-control form-control-sm">
+                      <option *ngFor="let option of firewallVendorOptions" [value]="option">{{ option }}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row compact-form-group">
+                  <label class="col-sm-4 col-form-label" for="northSouthFirewallArchitecture">Architecture</label>
+                  <div class="col-sm-8">
+                    <select
+                      id="northSouthFirewallArchitecture"
+                      formControlName="northSouthFirewallArchitecture"
+                      class="form-control form-control-sm"
+                    >
+                      <option *ngFor="let option of firewallArchitectureOptions" [value]="option">{{ option }}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row compact-form-group">
+                  <div class="col-sm-4"></div>
+                  <div class="col-sm-8">
+                    <div class="feature-flag-item">
+                      <input type="checkbox" id="northSouthHa" class="form-check-input" formControlName="northSouthHa" />
+                      <label class="form-check-label" for="northSouthHa"> High Availability (HA) </label>
+                      <tooltip [message]="helpText.HighAvailability"></tooltip>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- North/South HA Mode (visible when HA is enabled) -->
+                <div *ngIf="f.northSouthHa.value" class="form-group row compact-form-group">
+                  <label class="col-sm-4 col-form-label" for="northSouthHaMode">HA Mode</label>
+                  <div class="col-sm-8">
+                    <div class="d-flex align-items-center">
+                      <select id="northSouthHaMode" formControlName="northSouthHaMode" class="form-control form-control-sm mr-2">
+                        <option *ngFor="let option of haModesOptions" [value]="option">{{ option }}</option>
+                      </select>
+                      <tooltip [message]="helpText.HAMode"></tooltip>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <h6 class="feature-section-title">Feature Flags</h6>
+                <div class="feature-flags-container">
+                  <div class="feature-flag-item mb-2">
+                    <input type="checkbox" id="northSouthAppId" class="form-check-input" formControlName="northSouthAppId" />
+                    <label class="form-check-label" for="northSouthAppId"> App-ID </label>
+                    <tooltip [message]="helpText.NorthSouthAppId"></tooltip>
+                  </div>
+
+                  <div class="feature-flag-item">
+                    <input type="checkbox" id="nat64NorthSouth" class="form-check-input" formControlName="nat64NorthSouth" />
+                    <label class="form-check-label" for="nat64NorthSouth"> NAT64 North/South </label>
+                    <tooltip [message]="helpText.Nat64NorthSouth"></tooltip>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- East/West Firewall Tab -->
+          <div class="tab-pane fade" id="east-west" role="tabpanel" aria-labelledby="east-west-tab">
+            <h5 class="section-title compact-title">East/West Firewall Configuration</h5>
+            <div class="row config-row">
+              <div class="col-md-6">
+                <div class="form-group row compact-form-group">
+                  <label class="col-sm-4 col-form-label" for="eastWestFirewallVendor">Firewall Vendor</label>
+                  <div class="col-sm-8">
+                    <select id="eastWestFirewallVendor" formControlName="eastWestFirewallVendor" class="form-control form-control-sm">
+                      <option *ngFor="let option of firewallVendorOptions" [value]="option">{{ option }}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row compact-form-group">
+                  <label class="col-sm-4 col-form-label" for="eastWestFirewallArchitecture">Architecture</label>
+                  <div class="col-sm-8">
+                    <select
+                      id="eastWestFirewallArchitecture"
+                      formControlName="eastWestFirewallArchitecture"
+                      class="form-control form-control-sm"
+                    >
+                      <option *ngFor="let option of firewallArchitectureOptions" [value]="option">{{ option }}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row compact-form-group">
+                  <div class="col-sm-4"></div>
+                  <div class="col-sm-8">
+                    <div class="feature-flag-item">
+                      <input type="checkbox" id="eastWestHa" class="form-check-input" formControlName="eastWestHa" />
+                      <label class="form-check-label" for="eastWestHa"> High Availability (HA) </label>
+                      <tooltip [message]="helpText.HighAvailability"></tooltip>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- East/West HA Mode (visible when HA is enabled) -->
+                <div *ngIf="f.eastWestHa.value" class="form-group row compact-form-group">
+                  <label class="col-sm-4 col-form-label" for="eastWestHaMode">HA Mode</label>
+                  <div class="col-sm-8">
+                    <div class="d-flex align-items-center">
+                      <select id="eastWestHaMode" formControlName="eastWestHaMode" class="form-control form-control-sm mr-2">
+                        <option *ngFor="let option of haModesOptions" [value]="option">{{ option }}</option>
+                      </select>
+                      <tooltip [message]="helpText.HAMode"></tooltip>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <h6 class="feature-section-title">Feature Flags</h6>
+                <div class="feature-flags-container">
+                  <div class="feature-flag-item mb-2">
+                    <input type="checkbox" id="eastWestAppId" class="form-check-input" formControlName="eastWestAppId" />
+                    <label class="form-check-label" for="eastWestAppId"> App-ID </label>
+                    <tooltip [message]="helpText.EastWestAppId"></tooltip>
+                  </div>
+
+                  <div class="feature-flag-item mb-2">
+                    <input type="checkbox" id="eastWestAllowSgBypass" class="form-check-input" formControlName="eastWestAllowSgBypass" />
+                    <label class="form-check-label" for="eastWestAllowSgBypass"> Allow Service Graph Bypass </label>
+                    <tooltip [message]="helpText.EastWestAllowSgBypass"></tooltip>
+                  </div>
+
+                  <div class="feature-flag-item">
+                    <input type="checkbox" id="eastWestNat" class="form-check-input" formControlName="eastWestNat" />
+                    <label class="form-check-label" for="eastWestNat"> NAT </label>
+                    <tooltip [message]="helpText.EastWestNat"></tooltip>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- VCD Integration Tab -->
+          <div class="tab-pane fade" id="vcd" role="tabpanel" aria-labelledby="vcd-tab">
+            <h5 class="section-title compact-title">VMware Cloud Director Integration</h5>
+            <div class="row config-row">
+              <div class="col-md-6">
+                <div class="form-group row compact-form-group">
+                  <label class="col-sm-4 col-form-label" for="vcdLocation">VCD Location</label>
+                  <div class="col-sm-8">
+                    <select id="vcdLocation" formControlName="vcdLocation" class="form-control form-control-sm">
+                      <option value="VCD-East">VCD-East</option>
+                      <option value="VCD-West">VCD-West</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group row compact-form-group">
+                  <label class="col-sm-4 col-form-label" for="vcdTenantType">VCD Tenant Type</label>
+                  <div class="col-sm-8">
+                    <select id="vcdTenantType" formControlName="vcdTenantType" class="form-control form-control-sm">
+                      <option value="new">New VCD Tenant</option>
+                      <option value="existing">Existing VCD Tenant</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row config-row" *ngIf="f.vcdTenantType.value === 'existing'">
+              <div class="col-md-6">
+                <div class="form-group row compact-form-group">
+                  <label class="col-sm-4 col-form-label" for="vcdTenantId">VCD Tenant ID</label>
+                  <div class="col-sm-8">
+                    <input
+                      type="text"
+                      id="vcdTenantId"
+                      formControlName="vcdTenantId"
+                      class="form-control form-control-sm"
+                      placeholder="Enter existing VCD Tenant ID"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <footer class="modal-footer">
       <button type="button" class="btn btn-link" data-dismiss="modal" (click)="closeModal()">Cancel</button>
-      <button class="btn btn-success" data-dismiss="modal">
+      <button type="submit" class="btn btn-success" data-dismiss="modal">
         <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
         <span>Save</span>
       </button>

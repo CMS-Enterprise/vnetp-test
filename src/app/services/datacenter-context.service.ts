@@ -1,13 +1,21 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Datacenter, V1DatacentersService } from 'client';
+import { RouteDataUtil } from '../utils/route-data.util';
+import { ApplicationMode } from '../models/other/application-mode-enum';
 
 /** Service to store and expose the Current Datacenter Context. */
 @Injectable({
   providedIn: 'root',
 })
-export class DatacenterContextService {
+export class DatacenterContextService implements OnInit {
+  ngOnInit(): void {
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
+  }
+
+  private applicationMode: ApplicationMode;
+
   private currentDatacenterSubject: BehaviorSubject<Datacenter> = new BehaviorSubject<Datacenter>(null);
 
   private datacentersSubject: BehaviorSubject<Datacenter[]> = new BehaviorSubject<Datacenter[]>(null);
@@ -53,11 +61,8 @@ export class DatacenterContextService {
         this.ignoreNextQueryParamEvent = false;
         return;
       }
-      const isAppcentric = this.router.url.includes('appcentric');
-
       const fetch = !this.routesNotToRender.some(route => route === this.router.url);
-
-      if (fetch && !isAppcentric) {
+      if (fetch && this.applicationMode !== ApplicationMode.APPCENTRIC) {
         this.getDatacenters(queryParams.get('datacenter'));
       }
     });
@@ -118,19 +123,6 @@ export class DatacenterContextService {
       if (this._datacenters.length === 1) {
         this.switchDatacenter(this._datacenters[0].id);
       }
-    });
-  }
-
-  // Refreshes datacenters and current datacenter subject from API
-  public refreshDatacenter() {
-    const currentDatacenterId = this.currentDatacenterValue.id;
-    this.datacenterService.getManyDatacenter({ join: ['tiers'] }).subscribe(response => {
-      // Update internal datacenters array and external subject.
-      this._datacenters = response.data;
-      this.datacentersSubject.next(response.data);
-
-      const datacenter = this._datacenters.find(dc => dc.id === currentDatacenterId);
-      this.currentDatacenterSubject.next(datacenter);
     });
   }
 

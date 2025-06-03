@@ -1,0 +1,39 @@
+.modal-lg {
+  max-width: 80%; // Or your preferred size
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}
+
+.table .table-sm th,
+.table .table-sm td {
+  padding: 0.3rem;
+}
+
+.collapse.show {
+  // Ensures the content within the collapsible row is visible when expanded
+  visibility: visible;
+}
+
+// Optional: style for the IP address list to make it more compact
+.ip-address-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0;
+
+  li {
+    padding: 2px 0;
+  }
+}
+
+// Style for the nested IP address table for better alignment and less padding
+.table td .table-sm {
+  margin-top: 0.5rem;
+}
+
+.table-borderless tbody tr td,
+.table-borderless tbody tr th {
+  border: 0;
+}

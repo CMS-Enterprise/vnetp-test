@@ -25,12 +25,14 @@ export interface FirewallRuleGroup {
     tierId: string;
     readonly firewallRules?: Array<FirewallRule>;
     runtimeDataLastRefreshed?: string;
+    readonly tenantVersion: number;
 }
 export enum FirewallRuleGroupTypeEnum {
     Intravrf = 'Intravrf',
     Intervrf = 'Intervrf',
     External = 'External',
-    ZoneBased = 'ZoneBased'
+    ZoneBased = 'ZoneBased',
+    OneArmServiceGraph = 'OneArmServiceGraph'
 };
 
 

@@ -30,6 +30,9 @@ import { TableContextService } from 'src/app/services/table-context.service';
 import { FilteredCount } from 'src/app/helptext/help-text-networking';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
+import { ActivatedRoute } from '@angular/router';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -79,6 +82,9 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   public isLoadingObjects = false;
   public isLoadingGroups = false;
 
+  public applicationMode: ApplicationMode;
+  public ApplicationMode = ApplicationMode;
+
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('membersTemplate') membersTemplate: TemplateRef<any>;
   @ViewChild('objStateTemplate') objStateTemplate: TemplateRef<any>;
@@ -116,6 +122,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
     private tierContextService: TierContextService,
     private tableContextService: TableContextService,
     public filteredHelpText: FilteredCount,
+    private activatedRoute: ActivatedRoute,
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<ServiceObject>();
     advancedSearchAdapterObject.setService(this.serviceObjectService);
@@ -557,6 +564,8 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
+
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.tiers = cd.tiers;

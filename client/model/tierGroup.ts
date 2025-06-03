@@ -21,5 +21,6 @@ export interface TierGroup {
     description?: string;
     datacenterId: string;
     readonly tiers?: Array<TierGroup>;
+    readonly tenantVersion?: number;
 }
 

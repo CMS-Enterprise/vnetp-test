@@ -33,7 +33,15 @@ import { TableConfig } from 'src/app/common/table/table.component';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import { TableComponentDto } from '../../models/other/table-component-dto';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ApplicationMode } from '../../models/other/application-mode-enum';
+import { RouteDataUtil } from '../../utils/route-data.util';
+
+// TODO: TenantV2 - when loading audit logs for a V2 tenant we need to get data from what was traditionally in "appcentric" audit logs
+// and what was traditionally in "netcentric" audit logs. TenantV2 consists of an updated app-centric tenant and the security management
+// components of a netcentric datacenter.
+//
+//  This will be done by using the relationship between the app-centric tenant and the netcentric datacenter to get all of those specific audit logs.
 
 @Component({
   selector: 'app-audit-log',
@@ -47,8 +55,16 @@ export class AuditLogComponent implements OnInit {
 
   private dataChanges: Subscription;
 
+  // Property to store route data
+  public routeData: any;
+
   public perPage = 10;
   public tableComponentDto = new TableComponentDto();
+
+  // Expose the enum to the template
+  public auditLogMode = ApplicationMode;
+
+  public currentMode: ApplicationMode;
 
   public appCentricConfig: TableConfig<any> = {
     description: 'Audit Log',
@@ -61,6 +77,7 @@ export class AuditLogComponent implements OnInit {
       { name: 'Timestamp', property: 'timestamp' },
     ],
   };
+
   public config: TableConfig<any> = {
     description: 'Audit Log',
     columns: [
@@ -72,6 +89,19 @@ export class AuditLogComponent implements OnInit {
       { name: 'Timestamp', property: 'timestamp' },
     ],
   };
+
+  public tenantV2Config: TableConfig<any> = {
+    description: 'Audit Log',
+    columns: [
+      { name: 'Action', property: 'actionType' },
+      { name: 'Object Type', property: 'entityType' },
+      { name: 'Tenant Name', property: 'tenantName' },
+      { name: 'Object Name', template: () => this.entityAfterTemplate },
+      { name: 'User', property: 'changedBy' },
+      { name: 'Timestamp', property: 'timestamp' },
+    ],
+  };
+
   public auditLogs;
   public tiers: Tier[] = [];
   public networkObjects: NetworkObject[] = [];
@@ -79,6 +109,7 @@ export class AuditLogComponent implements OnInit {
   public serviceObjects: ServiceObject[] = [];
   public serviceObjectGroups: ServiceObjectGroup[] = [];
   public isLoading = false;
+  public showingAppCentricLogs = true;
   selectedAuditLog;
 
   routeProfiles: RouteProfile[];
@@ -90,7 +121,6 @@ export class AuditLogComponent implements OnInit {
   consumedContracts: Contract[];
   vrfs: Vrf[];
 
-  showingAppCentricLogs = false;
   appCentricTenants: GetManyTenantResponseDto;
 
   constructor(
@@ -103,15 +133,14 @@ export class AuditLogComponent implements OnInit {
     private serviceObjectGroupService: V1NetworkSecurityServiceObjectGroupsService,
     private ngx: NgxSmartModalService,
     private router: Router,
+    private route: ActivatedRoute,
     private appCentricTenantService: V2AppCentricTenantsService,
     private appProfileService: V2AppCentricApplicationProfilesService,
     private routeProfileService: V2AppCentricRouteProfilesService,
     private l3OutService: V2AppCentricL3outsService,
   ) {
-    const match = this.router.routerState.snapshot.url.includes('appcentric');
-    if (match) {
-      this.showingAppCentricLogs = true;
-    }
+    // We'll determine the mode in ngOnInit after we have access to route data
+    this.currentMode = ApplicationMode.NETCENTRIC; // Default mode
   }
 
   getAppCentricObjects(): void {
@@ -149,7 +178,6 @@ export class AuditLogComponent implements OnInit {
         perPage: this.tableComponentDto.perPage,
       })
       .subscribe(data => {
-        this.showingAppCentricLogs = true;
         this.auditLogs = data;
         this.auditLogs.data.map(log => {
           log.tenantName = ObjectUtil.getObjectName(log.tenantId, this.appCentricTenants.data);
@@ -254,7 +282,6 @@ export class AuditLogComponent implements OnInit {
   }
 
   public getAuditLogs(event?): void {
-    this.showingAppCentricLogs = false;
     this.isLoading = true;
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
@@ -463,17 +490,55 @@ export class AuditLogComponent implements OnInit {
   }
 
   ngOnInit() {
+    const modeFromRoute = RouteDataUtil.getApplicationModeFromRoute(this.route);
+
+    if (modeFromRoute) {
+      this.currentMode = modeFromRoute;
+      console.log(`Mode set via RouteDataUtil: ${this.currentMode}`);
+    } else {
+      // If no mode is specified in router config by traversal, use NETCENTRIC as default
+      this.currentMode = ApplicationMode.NETCENTRIC;
+      console.warn('Application mode not found via RouteDataUtil in AuditLogComponent, defaulting to NETCENTRIC.');
+    }
+
+    // Initialize based on the determined mode
+    this.initializeForCurrentMode();
+
+    // Only observe datacenter changes for netcentric mode
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {
         this.currentDatacenter = cd;
-        if (this.showingAppCentricLogs) {
-          this.getAppCentricTenants();
-          this.getAppCentricObjects();
-        } else {
+
+        // Only the netcentric mode needs to respond to datacenter changes
+        if (this.currentMode === ApplicationMode.NETCENTRIC) {
           this.getTiers();
         }
+      } else if (this.showingAppCentricLogs) {
+        this.getAppCentricTenants();
+        this.getAppCentricObjects();
       }
     });
+  }
+
+  /**
+   * Initialize the component based on the current mode
+   */
+  private initializeForCurrentMode(): void {
+    switch (this.currentMode) {
+      case ApplicationMode.APPCENTRIC:
+        this.getAppCentricTenants();
+        this.getAppCentricObjects();
+        break;
+
+      case ApplicationMode.TENANTV2:
+        this.getAppCentricTenants();
+        this.getAppCentricObjects();
+        break;
+
+      case ApplicationMode.NETCENTRIC:
+        // For netcentric mode, initialization will happen through the datacenter subscription
+        break;
+    }
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -484,5 +549,16 @@ export class AuditLogComponent implements OnInit {
   public onAppCentricTableEvent(event: TableComponentDto): void {
     this.tableComponentDto = event;
     this.getAppCentricAuditLogs(event);
+  }
+
+  public getTenantV2AuditLogs(event?): void {
+    // Implementation for TenantV2 audit logs will go here
+    // For now, it can be similar to AppCentric but with potentially different data handling
+    this.getAppCentricAuditLogs(event);
+  }
+
+  public onTenantV2TableEvent(event: TableComponentDto): void {
+    this.tableComponentDto = event;
+    this.getTenantV2AuditLogs(event);
   }
 }

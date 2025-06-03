@@ -1,0 +1,125 @@
+<ngx-smart-modal
+  #selectorModal
+  identifier="selectorModal"
+  customClass="large-modal"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+  [dismissable]="false"
+  customClass="large-modal"
+>
+  <app-tabs #tabsRef [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
+
+  <header class="modal-header">
+    <h4 class="modal-title">Selector</h4>
+  </header>
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="modal-body">
+      <div *ngIf="navIndex === 0">
+        <div class="form-group">
+          <label for="tagKey">Tag key</label>
+          <input
+            type="text"
+            id="tagKey"
+            formControlName="tagKey"
+            class="form-control"
+            [class.is-invalid]="submitted && f.tagKey.errors"
+            aria-label="Name"
+          />
+          <div *ngIf="submitted && f.tagKey.errors" class="invalid-feedback">
+            <div *ngIf="f.tagKey.errors.required">Tag key is required</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="valueOperator">Value Operator</label>
+          <select
+            id="valueOperator"
+            formControlName="valueOperator"
+            class="form-control"
+            [class.is-invalid]="submitted && f.valueOperator.errors"
+            aria-label="Value Operator"
+          >
+            <option></option>
+            <option value="contains">Contains</option>
+            <option value="equals">Equals</option>
+            <option value="Regex">Regex</option>
+          </select>
+          <div *ngIf="submitted && f.valueOperator.errors" class="invalid-feedback">
+            <div *ngIf="f.valueOperator.errors.required">Value Operator is required</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="tagValue">Tag Value</label>
+          <input
+            type="text"
+            id="tagValue"
+            formControlName="tagValue"
+            class="form-control"
+            [class.is-invalid]="submitted && f.tagValue.errors"
+            aria-label="Name"
+          />
+          <div *ngIf="submitted && f.tagValue.errors" class="invalid-feedback">
+            <div *ngIf="f.tagValue.errors.required">Tag Value is required</div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="navIndex === 1" class="form-group">
+        <label for="epgId">EPGs in VRF</label>
+        <ng-select
+          [ngClass]="{
+            'is-invalid': submitted && f.epgId.errors
+          }"
+          formControlName="epgId"
+          [items]="endpointGroups"
+          id="epgId"
+          bindLabel="name"
+          bindValue="id"
+        ></ng-select>
+        <div *ngIf="submitted && f.epgId.errors" class="invalid-feedback">
+          <div *ngIf="f.epgId.errors.required">Epg is required</div>
+        </div>
+      </div>
+
+      <div *ngIf="navIndex === 2" class="form-group">
+        <label for="IpSubnet">Ip Subnet</label>
+        <input
+          type="text"
+          id="IpSubnet"
+          formControlName="IpSubnet"
+          class="form-control"
+          [class.is-invalid]="submitted && f.IpSubnet.errors"
+          aria-label="Name"
+        />
+        <div *ngIf="submitted && f.IpSubnet.errors" class="invalid-feedback">
+          <div *ngIf="f.IpSubnet.errors.required">IP Subnet is required</div>
+          <div *ngIf="f.IpSubnet.errors.invalidIpAny">IP Subnet is invalid, must be a valid IPv4 address or CIDR</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input
+          type="text"
+          id="description"
+          formControlName="description"
+          class="form-control"
+          [class.is-invalid]="submitted && f.description.errors"
+          aria-label="Description"
+        />
+        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+          <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-link" data-dismiss="modal" (click)="reset()">Cancel</button>
+      <button class="btn btn-success" data-dismiss="modal">
+        <fa-icon class="icon" [icon]="['fas', 'save']"></fa-icon>
+        <span>Save</span>
+      </button>
+    </footer>
+  </form>
+</ngx-smart-modal>

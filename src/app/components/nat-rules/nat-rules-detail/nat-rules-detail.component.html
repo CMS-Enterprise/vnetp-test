@@ -1,9 +1,16 @@
-<a routerLink="/netcentric/nat-rules" queryParamsHandling="merge" class="btn btn-info">
+<app-preview-modal></app-preview-modal>
+
+<a
+  routerLink="/netcentric/nat-rules"
+  queryParamsHandling="merge"
+  class="btn btn-info"
+  *ngIf="applicationMode === ApplicationMode.NETCENTRIC"
+>
   <fa-icon class="icon" [icon]="['fas', 'chevron-left']"></fa-icon>
   <span>Back</span>
 </a>
 
-<h1>{{ TierName }} - {{ NatRuleGroup?.name }} Nat Rules</h1>
+<h1 *ngIf="applicationMode === ApplicationMode.NETCENTRIC">{{ TierName }} - {{ NatRuleGroup?.name }} Nat Rules</h1>
 
 <section class="btn-toolbar" role="toolbar">
   <!-- Add Nat Rule -->
@@ -85,7 +92,6 @@
 
 <app-nat-rule-modal></app-nat-rule-modal>
 <app-yes-no-modal></app-yes-no-modal>
-<app-preview-modal></app-preview-modal>
 
 <!-- original service type template -->
 <ng-template #originalServiceType let-natRule="datum">
