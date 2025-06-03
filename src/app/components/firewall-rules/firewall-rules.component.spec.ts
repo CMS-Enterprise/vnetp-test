@@ -58,4 +58,13 @@ describe('FirewallRulesComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('tests', () => {
+    it('should run getTiers', () => {
+      component.currentTier = { name: 'tier1', id: 'id123', datacenterId: 'dc-123' };
+      const getTiersSpy = jest.spyOn(component, 'getTiers');
+      component.ngOnInit();
+      expect(getTiersSpy).toHaveBeenCalled();
+    });
+  });
 });

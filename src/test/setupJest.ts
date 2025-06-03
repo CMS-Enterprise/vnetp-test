@@ -12,7 +12,7 @@ const mock = () => {
     clear: () => (storage = {}),
   };
 };
-const envMock = { environment: { ldap: {} } };
+const envMock = { environment: { dcsLocations: [{ name: 'East - Ashburn', url: 'url1' }] } };
 
 Object.defineProperty(window, 'config', { get: () => envMock });
 Object.defineProperty(window, 'setInterval', { value: () => {} });
