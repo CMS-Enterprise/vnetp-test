@@ -134,7 +134,7 @@ describe('RuntimeDataService', () => {
       });
 
       const emittedStatuses = [];
-      service.pollJobStatus(jobId, 10, 3).subscribe(status => {
+      service.pollJobStatus(jobId, null, 10, 3).subscribe(status => {
         emittedStatuses.push(status);
       });
 

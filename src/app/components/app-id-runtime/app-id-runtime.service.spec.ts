@@ -40,17 +40,16 @@ describe('AppIdRuntimeService', () => {
 
   describe('loadPanosApplications', () => {
     it('should do nothing if applications are loaded', () => {
-      (service as any).panosApplicationsSubject = { getValue: jest.fn().mockReturnValue(new Map([['1', [1]]])) };
-      service.loadPanosApplications('1');
+      (service as any).panosApplicationsSubject = { getValue: jest.fn().mockReturnValue([1]) };
+      service.loadPanosApplications();
       expect(mockAppIdService.getManyAppIdRuntime).not.toHaveBeenCalled();
     });
 
     it('should fetch applications if not loaded', () => {
-      (service as any).panosApplicationsSubject = { getValue: jest.fn().mockReturnValue(new Map()) };
+      (service as any).panosApplicationsSubject = { getValue: jest.fn().mockReturnValue([]) };
       mockAppIdService.getManyAppIdRuntime.mockReturnValue(of({} as any));
-      service.loadPanosApplications('1');
+      service.loadPanosApplications();
       expect(mockAppIdService.getManyAppIdRuntime).toHaveBeenCalledWith({
-        filter: ['appVersion||eq||1'],
         relations: ['firewallRules'],
         perPage: 10000,
       });
@@ -58,9 +57,9 @@ describe('AppIdRuntimeService', () => {
   });
 
   it('should modify application data', () => {
-    (service as any).panosApplicationsSubject = { getValue: jest.fn().mockReturnValue(new Map([['1', [1]]])), next: jest.fn() };
-    service.modifyApplicationData({ id: 1 } as any, '1');
-    expect((service as any).panosApplicationsSubject.next).toHaveBeenCalledWith(new Map([['1', [1]]]));
+    (service as any).panosApplicationsSubject = { getValue: jest.fn().mockReturnValue([1]), next: jest.fn() };
+    service.modifyApplicationData({ id: 1 } as any);
+    expect((service as any).panosApplicationsSubject.next).toHaveBeenCalledWith([1]);
   });
 
   describe('addPanosApplicationToDto', () => {
@@ -106,7 +105,7 @@ describe('AppIdRuntimeService', () => {
     const gerManyAppIdSpy = jest.spyOn(mockAppIdService, 'getManyAppIdRuntime').mockReturnValue(of({} as any));
     service.resetDto();
     expect((service as any).dto).toEqual({ panosApplicationsToAdd: [], panosApplicationsToRemove: [], firewallRuleId: '' });
-    expect(gerManyAppIdSpy).toHaveBeenCalledWith({ filter: ['appVersion||eq||1'], relations: ['firewallRules'], perPage: 10000 });
+    expect(gerManyAppIdSpy).toHaveBeenCalledWith({ relations: ['firewallRules'], perPage: 10000 });
   });
 
   it('should save dto with firewall rule id', () => {
@@ -121,8 +120,8 @@ describe('AppIdRuntimeService', () => {
     const modifySpy = jest.spyOn(service, 'modifyApplicationData');
     const addSpy = jest.spyOn(service, 'addPanosApplicationToDto');
 
-    service.addPanosAppToFirewallRule({ id: 1, firewallRules: [] } as any, { id: 2 } as any, '1');
-    expect(modifySpy).toHaveBeenCalledWith({ id: 1, firewallRules: [{ id: 2 }] }, '1');
+    service.addPanosAppToFirewallRule({ id: 1, firewallRules: [] } as any, { id: 2 } as any);
+    expect(modifySpy).toHaveBeenCalledWith({ id: 1, firewallRules: [{ id: 2 }] });
     expect(addSpy).toHaveBeenCalledWith({ id: 1, firewallRules: [{ id: 2 }] });
   });
 
@@ -130,8 +129,8 @@ describe('AppIdRuntimeService', () => {
     const modifySpy = jest.spyOn(service, 'modifyApplicationData');
     const removeSpy = jest.spyOn(service, 'removePanosApplicationFromDto');
 
-    service.removePanosAppFromFirewallRule({ id: 1, firewallRules: [{ id: 2 }] } as any, { id: 2 } as any, '1');
-    expect(modifySpy).toHaveBeenCalledWith({ id: 1, firewallRules: [] }, '1');
+    service.removePanosAppFromFirewallRule({ id: 1, firewallRules: [{ id: 2 }] } as any, { id: 2 } as any);
+    expect(modifySpy).toHaveBeenCalledWith({ id: 1, firewallRules: [] });
     expect(removeSpy).toHaveBeenCalledWith({ id: 1, firewallRules: [] });
   });
 });

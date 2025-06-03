@@ -75,13 +75,13 @@ describe('AppIdTableComponent', () => {
   it('should call addPanosAppToFirewallRule when adding an app', () => {
     const application = mockApplications[0];
     component.addPanosAppToFirewallRule(application);
-    expect(mockAppIdService.addPanosAppToFirewallRule).toHaveBeenCalledWith(application, mockFirewallRule, application.appVersion);
+    expect(mockAppIdService.addPanosAppToFirewallRule).toHaveBeenCalledWith(application, mockFirewallRule);
   });
 
   it('should call removePanosAppFromFirewallRule when removing an app', () => {
     const application = mockApplications[1];
     component.removePanosAppFromFirewallRule(application);
-    expect(mockAppIdService.removePanosAppFromFirewallRule).toHaveBeenCalledWith(application, mockFirewallRule, application.appVersion);
+    expect(mockAppIdService.removePanosAppFromFirewallRule).toHaveBeenCalledWith(application, mockFirewallRule);
   });
 
   it('should filter applications based on search query', () => {
