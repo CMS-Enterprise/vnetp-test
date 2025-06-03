@@ -99,7 +99,6 @@ describe('FirewallRulesDetailComponent', () => {
     component.getFirewallRuleGroup();
     expect(component['firewallRuleGroupService'].getOneFirewallRuleGroup).toHaveBeenCalled();
     expect(component.getObjects).toHaveBeenCalled();
-    expect(component.getFirewallRuleLastIndex).toHaveBeenCalled();
   });
 
   describe('getFirewallRules', () => {

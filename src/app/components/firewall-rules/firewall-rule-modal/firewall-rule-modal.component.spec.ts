@@ -2,6 +2,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { FirewallRuleModalComponent } from './firewall-rule-modal.component';
 import {
   MockFontAwesomeComponent,
@@ -16,19 +17,34 @@ import {
   V1NetworkSecurityNetworkObjectsService,
   V1NetworkSecurityServiceObjectGroupsService,
   V1NetworkSecurityServiceObjectsService,
+  FirewallRuleSourceAddressTypeEnum,
 } from 'client';
 import { FirewallRuleObjectInfoModalComponent } from './firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
 import { of } from 'rxjs';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { AppIdRuntimeService } from '../../app-id-runtime/app-id-runtime.service';
 import { TierContextService } from '../../../services/tier-context.service';
 
 describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
   let fixture: ComponentFixture<FirewallRuleModalComponent>;
+  let mockActivatedRoute: any;
   let mockTierContextService: jest.Mocked<TierContextService>;
   let mockAppIdRuntimeService;
 
   beforeEach(() => {
+    mockActivatedRoute = {
+      snapshot: {
+        data: {
+          // mode: ApplicationMode.TENANTV2 // Example if a default mode is needed
+        },
+        parent: null,
+        firstChild: null,
+      },
+      parent: null,
+      firstChild: null,
+    };
+
     mockAppIdRuntimeService = { resetDto: jest.fn() };
     mockTierContextService = {
       currentTierValue: {},
@@ -50,6 +66,7 @@ describe('FirewallRuleModalComponent', () => {
         MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
         MockProvider(V1NetworkSecurityServiceObjectsService),
         MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: AppIdRuntimeService, useValue: mockAppIdRuntimeService },
         { provide: TierContextService, useValue: mockTierContextService },
       ],
@@ -65,6 +82,7 @@ describe('FirewallRuleModalComponent', () => {
   const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
   const isRequired = (prop: string): boolean => {
     const fc = getFormControl(prop);
+    if (!fc) return false; // Guard against null fc if form not fully built
     fc.setValue(null);
     return !!fc.errors && !!fc.errors.required;
   };
@@ -401,6 +419,102 @@ describe('FirewallRuleModalComponent', () => {
       expect(setModalDataSpy).toHaveBeenCalled();
       expect(getSpy).toHaveBeenCalled();
     });
+  });
+
+  describe('when in TenantV2 mode', () => {
+    beforeEach(async () => {
+      mockActivatedRoute.snapshot.data.mode = ApplicationMode.TENANTV2;
+
+      // It's often better to reset and reconfigure TestBed for clarity and to avoid side effects
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [FormsModule, ReactiveFormsModule],
+        declarations: [
+          FirewallRuleModalComponent,
+          MockTooltipComponent, // Ensure all mocks and declarations are repeated
+          MockFontAwesomeComponent,
+          MockNgxSmartModalComponent,
+          MockNgSelectComponent,
+          FirewallRuleObjectInfoModalComponent,
+        ],
+        providers: [
+          MockProvider(NgxSmartModalService),
+          MockProvider(V1NetworkSecurityFirewallRulesService),
+          MockProvider(V1NetworkSecurityNetworkObjectsService),
+          MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+          MockProvider(V1NetworkSecurityServiceObjectsService),
+          MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+          { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(FirewallRuleModalComponent);
+      component = fixture.componentInstance;
+      // No detectChanges here, let individual tests call it to control ngOnInit timing if needed
+    });
+
+    it('should set isTenantV2Mode to true', () => {
+      fixture.detectChanges(); // Calls ngOnInit
+      expect(component.isTenantV2Mode).toBe(true);
+    });
+
+    it('should make sourceEndpointGroup required if sourceNetworkType is EndpointGroup', () => {
+      fixture.detectChanges(); // Calls ngOnInit, builds form
+      component.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressTypeEnum.EndpointGroup);
+      expect(isRequired('sourceEndpointGroup')).toBe(true);
+    });
+
+    it('should make sourceEndpointSecurityGroup required if sourceNetworkType is EndpointSecurityGroup', () => {
+      fixture.detectChanges();
+      component.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressTypeEnum.EndpointSecurityGroup);
+      expect(isRequired('sourceEndpointSecurityGroup')).toBe(true);
+    });
+
+    // Placeholder for more TenantV2 specific tests (getData, save, etc.)
+  });
+
+  describe('when NOT in TenantV2 mode (e.g., Netcentric, Appcentric)', () => {
+    beforeEach(async () => {
+      delete mockActivatedRoute.snapshot.data.mode;
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [FormsModule, ReactiveFormsModule],
+        declarations: [
+          FirewallRuleModalComponent,
+          MockTooltipComponent,
+          MockFontAwesomeComponent,
+          MockNgxSmartModalComponent,
+          MockNgSelectComponent,
+          FirewallRuleObjectInfoModalComponent,
+        ],
+        providers: [
+          MockProvider(NgxSmartModalService),
+          MockProvider(V1NetworkSecurityFirewallRulesService),
+          MockProvider(V1NetworkSecurityNetworkObjectsService),
+          MockProvider(V1NetworkSecurityNetworkObjectGroupsService),
+          MockProvider(V1NetworkSecurityServiceObjectsService),
+          MockProvider(V1NetworkSecurityServiceObjectGroupsService),
+          { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(FirewallRuleModalComponent);
+      component = fixture.componentInstance;
+    });
+
+    it('should set isTenantV2Mode to false', () => {
+      fixture.detectChanges(); // Calls ngOnInit
+      expect(component.isTenantV2Mode).toBe(false);
+    });
+
+    it('should NOT make sourceEndpointGroup required if sourceNetworkType is EndpointGroup', () => {
+      fixture.detectChanges();
+      component.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressTypeEnum.EndpointGroup);
+      expect(isRequired('sourceEndpointGroup')).toBe(false);
+    });
+
+    // Placeholder for more non-TenantV2 specific tests
   });
 
   it('should open app id modal', () => {

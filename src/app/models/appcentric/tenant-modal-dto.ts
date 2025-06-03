@@ -4,8 +4,6 @@ import { ModalMode } from '../other/modal-mode';
 export class TenantModalDto {
   Tenant: Tenant;
   ModalMode: ModalMode;
-  isAdminPortalMode?: boolean;
-  isTenantV2Mode?: boolean;
 
   // AdminPortal specific properties
   tenantSize?: 'x-small' | 'small' | 'medium' | 'large' | 'x-large';

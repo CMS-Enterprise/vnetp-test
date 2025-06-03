@@ -37,7 +37,6 @@ const routes: Routes = [
   {
     path: 'edit/:id',
     canActivate: [AuthGuard],
-    data: { breadcrumb: 'Firewall Rule Group' },
     component: FirewallRulesDetailComponent,
   },
 ];

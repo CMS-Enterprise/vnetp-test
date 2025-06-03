@@ -15,6 +15,7 @@ import { TableContextService } from '../../../../services/table-context.service'
 import { WanFormSubnetsComponent } from './wan-form-subnets.component';
 import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent } from '../../../../../test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ApplicationMode } from '../../../../models/other/application-mode-enum';
 
 describe('WanFormSubnetsComponent', () => {
   let component: WanFormSubnetsComponent;
@@ -197,14 +198,14 @@ describe('WanFormSubnetsComponent', () => {
   describe('getChildren', () => {
     it('should call getSubnetVlans if dcsMode is netcentric', () => {
       const getSubnetVlansSpy = jest.spyOn(component, 'getSubnetVlans');
-      component.dcsMode = 'netcentric';
+      component.dcsMode = ApplicationMode.NETCENTRIC;
       component.getChildren();
       expect(getSubnetVlansSpy).toHaveBeenCalled();
     });
 
     it('should call getSubnetBridgeDomains if dcsMode is appcentric', () => {
       const getSubnetBridgeDomainsSpy = jest.spyOn(component, 'getSubnetBridgeDomains');
-      component.dcsMode = 'appcentric';
+      component.dcsMode = ApplicationMode.APPCENTRIC;
       component.getChildren();
       expect(getSubnetBridgeDomainsSpy).toHaveBeenCalled();
     });

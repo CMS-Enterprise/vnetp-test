@@ -79,4 +79,21 @@
   </section>
 </ng-template>
 
+<!-- New template for EPG Count and Modal Trigger -->
+<ng-template #epgCountTemplate let-endpointSecurityGroup="datum">
+  <section>
+    <button
+      type="button"
+      class="btn btn-link p-0"
+      (click)="openEsgEndpointsModal(endpointSecurityGroup)"
+      [disabled]="!endpointSecurityGroup?.selectors?.length"
+    >
+      {{ endpointSecurityGroup?.selectors?.length || 0 }}
+    </button>
+  </section>
+</ng-template>
+
 <app-yes-no-modal></app-yes-no-modal>
+
+<!-- Ensure the EndpointDisplayModalComponent is here -->
+<app-endpoint-display-modal [modalId]="endpointDisplayModalId"></app-endpoint-display-modal>

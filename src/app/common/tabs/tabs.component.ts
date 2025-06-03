@@ -6,6 +6,7 @@ export interface Tab {
   route?: string[];
   subTabs?: Tab[];
   isSubTab?: boolean;
+  id?: string; // Optional ID for the tab
 }
 
 @Component({

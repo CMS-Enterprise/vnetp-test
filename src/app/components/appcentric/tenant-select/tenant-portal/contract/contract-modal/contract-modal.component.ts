@@ -1,6 +1,13 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { V2AppCentricContractsService, Contract, V2AppCentricSubjectsService, Subject, GetManySubjectResponseDto } from 'client';
+import {
+  V2AppCentricContractsService,
+  Contract,
+  V2AppCentricSubjectsService,
+  Subject,
+  GetManySubjectResponseDto,
+  ContractScopeEnum,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
@@ -27,6 +34,9 @@ export class ContractModalComponent implements OnInit {
   public form: UntypedFormGroup;
   public submitted: boolean;
   @Input() tenantId;
+
+  public contractScopeEnum = ContractScopeEnum;
+  public objectKeys = Object.keys;
 
   public tableComponentDto = new TableComponentDto();
   public subjects: GetManySubjectResponseDto;
@@ -77,14 +87,21 @@ export class ContractModalComponent implements OnInit {
     const dto = Object.assign({}, this.ngx.getModalData('contractModal') as ContractModalDto);
 
     this.modalMode = dto.modalMode;
+    const contract = dto.contract;
+
     if (this.modalMode === ModalMode.Edit) {
       this.contractId = dto.contract.id;
       this.getSubjects();
+      if (contract && contract.scope) {
+        this.form.controls.scope.setValue(contract.scope);
+      } else {
+        this.form.controls.scope.setValue(ContractScopeEnum.Vrf);
+      }
     } else {
       this.form.controls.name.enable();
+      this.form.controls.scope.setValue(ContractScopeEnum.Vrf);
     }
 
-    const contract = dto.contract;
     if (contract !== undefined) {
       this.form.controls.name.setValue(contract.name);
       this.form.controls.name.disable();
@@ -105,6 +122,7 @@ export class ContractModalComponent implements OnInit {
       name: ['', NameValidator()],
       alias: ['', Validators.compose([Validators.maxLength(100)])],
       description: ['', Validators.compose([Validators.maxLength(500)])],
+      scope: [ContractScopeEnum.Vrf, Validators.required],
     });
   }
 
@@ -139,13 +157,14 @@ export class ContractModalComponent implements OnInit {
       return;
     }
 
-    const { name, description, alias } = this.form.value;
+    const { name, description, alias, scope } = this.form.value;
     const tenantId = this.tenantId;
     const contract = {
       name,
       description,
       alias,
       tenantId,
+      scope,
     } as Contract;
 
     if (this.modalMode === ModalMode.Create) {
@@ -234,8 +253,6 @@ export class ContractModalComponent implements OnInit {
         const params = this.tableContextService.getSearchLocalStorage();
         const { filteredResults } = params;
 
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
         if (filteredResults) {
           this.getSubjects(params);
         } else {
@@ -260,12 +277,9 @@ export class ContractModalComponent implements OnInit {
     this.subjectModalSubscription = this.ngx.getModal('subjectModal').onCloseFinished.subscribe(() => {
       this.ngx.resetModalData('subjectModal');
       this.subjectModalSubscription.unsubscribe();
-      // get search params from local storage
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
 
-      // if filtered results boolean is true, apply search params in the
-      // subsequent get call
       if (filteredResults) {
         this.getSubjects(params);
       } else {

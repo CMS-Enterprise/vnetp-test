@@ -8,6 +8,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { TenantSelectModalHelpText } from 'src/app/helptext/help-text-networking';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 @Component({
   selector: 'app-tenant-select-modal',
@@ -45,8 +46,8 @@ export class TenantSelectModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.buildForm();
     this.determineApplicationMode();
+    this.buildForm();
   }
 
   /**
@@ -155,18 +156,9 @@ export class TenantSelectModalComponent implements OnInit {
   }
 
   private determineApplicationMode(): void {
-    // Check route data for application mode
-    this.route.data.subscribe(data => {
-      if (data && data.mode) {
-        this.currentMode = data.mode;
-        this.isAdminPortalMode = this.currentMode === ApplicationMode.ADMINPORTAL;
-        this.isTenantV2Mode = this.currentMode === ApplicationMode.TENANTV2;
-      } else {
-        // Fallback to checking URL path
-        this.isAdminPortalMode = this.router.url.includes('adminportal');
-        this.isTenantV2Mode = this.router.url.includes('tenant-v2');
-      }
-    });
+    this.currentMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
+    this.isAdminPortalMode = this.currentMode === ApplicationMode.ADMINPORTAL;
+    this.isTenantV2Mode = this.currentMode === ApplicationMode.TENANTV2;
   }
 
   get f() {
@@ -179,12 +171,8 @@ export class TenantSelectModalComponent implements OnInit {
   }
 
   public getData(): void {
-    console.log('get data when modal is opened URL ', this.router.url);
     this.modalData = Object.assign({}, this.ngx.getModalData('tenantModal') as TenantModalDto);
-
     this.ModalMode = this.modalData.ModalMode;
-    this.isAdminPortalMode = this.modalData.isAdminPortalMode;
-    this.isTenantV2Mode = this.modalData.isTenantV2Mode;
 
     if (this.ModalMode === ModalMode.Edit) {
       this.TenantId = this.modalData.Tenant.id;

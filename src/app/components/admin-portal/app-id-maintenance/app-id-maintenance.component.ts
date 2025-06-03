@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AuthService } from '../../../services/auth.service';
 import { TenantStateService } from '../../../services/tenant-state.service';
-import { AppIdRuntimeJobCreateDtoTypeEnum, Tier, V1RuntimeDataAppIdRuntimeService, V1TiersService } from '../../../../../client';
+import { Tier, V1RuntimeDataAppIdRuntimeService, V1TiersService } from '../../../../../client';
 import { forkJoin, of } from 'rxjs';
 import { mergeMap, finalize, tap, map, catchError } from 'rxjs/operators';
 import { YesNoModalDto } from '../../../models/other/yes-no-modal-dto';
@@ -209,11 +209,7 @@ export class AppIdMaintenanceComponent implements OnInit {
     this.tenantStateService.setTenant(tenant.tenantQueryParameter);
 
     this.appIdService
-      .createRuntimeDataJobAppIdRuntime({
-        appIdRuntimeJobCreateDto: {
-          type: AppIdRuntimeJobCreateDtoTypeEnum.AppIdRuntime,
-        },
-      })
+      .createRuntimeDataJobAppIdRuntime()
       .pipe(
         finalize(() => {
           this.tenantStateService.clearTenant();

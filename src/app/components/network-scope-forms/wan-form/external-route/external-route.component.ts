@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { ModalMode } from '../../../../models/other/modal-mode';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { RuntimeDataService } from '../../../../services/runtime-data.service';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 @Component({
   selector: 'app-external-route',
@@ -42,7 +43,13 @@ export class ExternalRouteComponent implements OnInit {
 
   ngOnInit(): void {
     this.wanFormId = this.route.snapshot.params.id;
-    this.dcsMode = this.route.snapshot.data.mode;
+    this.dcsMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
+
+    if (!this.dcsMode) {
+      console.error('ExternalRouteComponent: Application mode could not be determined via RouteDataUtil.');
+      // Fallback or error handling if necessary
+    }
+
     this.getAllRoutes();
     if (!this.wanForm) {
       this.wanFormService.getOneWanForm({ id: this.wanFormId }).subscribe(data => {

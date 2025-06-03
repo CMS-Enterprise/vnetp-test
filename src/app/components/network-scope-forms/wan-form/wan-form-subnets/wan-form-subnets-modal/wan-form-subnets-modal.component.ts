@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -15,13 +15,15 @@ import { ModalMode } from '../../../../../models/other/modal-mode';
 import { DatacenterContextService } from '../../../../../services/datacenter-context.service';
 import { NameValidator } from '../../../../../validators/name-validator';
 import { ActivatedRoute } from '@angular/router';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 @Component({
   selector: 'app-wan-form-subnets-modal',
   templateUrl: './wan-form-subnets-modal.component.html',
   styleUrl: './wan-form-subnets-modal.component.css',
 })
-export class WanFormSubnetsModalComponent {
+export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
   public modalMode: ModalMode;
   public form: FormGroup;
   public wanFormSubnetId: string;
@@ -31,7 +33,7 @@ export class WanFormSubnetsModalComponent {
   private datacenterSubscription: Subscription;
   public availableNetcentricSubnets: Subnet[];
   public availableAppcentricSubnets: AppCentricSubnet[];
-  public currentDcsMode: string;
+  public currentDcsMode: ApplicationMode;
   public tenantId: string;
 
   constructor(
@@ -47,7 +49,13 @@ export class WanFormSubnetsModalComponent {
   }
 
   ngOnInit(): void {
-    this.currentDcsMode = this.route.snapshot.data.mode;
+    this.currentDcsMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
+
+    if (!this.currentDcsMode) {
+      console.error('WanFormSubnetsModalComponent: Application mode could not be determined via RouteDataUtil.');
+      // Fallback or error handling if necessary
+    }
+
     this.buildForm();
     if (this.currentDcsMode === 'netcentric') {
       this.datacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {

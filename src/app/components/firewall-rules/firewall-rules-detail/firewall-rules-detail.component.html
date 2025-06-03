@@ -128,6 +128,23 @@
     {{ firewallRule?.sourceNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
     (Object Group)
   </p>
+  <p
+    (click)="getObjectInfo('Source EndpointGroup', firewallRule.sourceAddressType, firewallRule.sourceEndpointGroupId)"
+    style="color: blue; cursor: pointer"
+    *ngIf="firewallRule.sourceAddressType === 'EndpointGroup'"
+    aria-label="Source Endpoint Group"
+  >
+    {{ firewallRule?.sourceEndpointGroupId | resolve : getEndpointGroupName }}
+    (Endpoint Group)
+  </p>
+  <p
+    (click)="getObjectInfo('Source EndpointSecurityGroup', firewallRule.sourceAddressType, firewallRule.sourceEndpointSecurityGroupId)"
+    style="color: blue; cursor: pointer"
+    *ngIf="firewallRule.sourceAddressType === 'EndpointSecurityGroup'"
+    aria-label="Source Endpoint Security Group"
+  >
+    {{ firewallRule?.sourceEndpointSecurityGroupId | resolve : getEndpointSecurityGroupName }}
+  </p>
 </ng-template>
 
 <!-- destination address template -->
@@ -154,6 +171,30 @@
   >
     {{ firewallRule?.destinationNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
     (Object Group)
+  </p>
+
+  <p
+    (click)="getObjectInfo('Destination EndpointGroup', firewallRule.destinationAddressType, firewallRule.destinationEndpointGroupId)"
+    style="color: blue; cursor: pointer"
+    *ngIf="firewallRule.destinationAddressType === 'EndpointGroup'"
+    aria-label="Destination Endpoint Group"
+  >
+    {{ firewallRule?.destinationEndpointGroupId | resolve : getEndpointGroupName }}
+    (Endpoint Group)
+  </p>
+  <p
+    (click)="
+      getObjectInfo(
+        'Destination EndpointSecurityGroup',
+        firewallRule.destinationAddressType,
+        firewallRule.destinationEndpointSecurityGroupId
+      )
+    "
+    style="color: blue; cursor: pointer"
+    *ngIf="firewallRule.destinationAddressType === 'EndpointSecurityGroup'"
+    aria-label="Destination Endpoint Security Group"
+  >
+    {{ firewallRule?.destinationEndpointSecurityGroupId | resolve : getEndpointSecurityGroupName }}
   </p>
 </ng-template>
 

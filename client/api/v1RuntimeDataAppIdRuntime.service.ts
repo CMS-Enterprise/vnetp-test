@@ -17,7 +17,6 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { AppIdRuntimeJobCreateDto } from '../model/models';
 import { Job } from '../model/models';
 import { PanosApplication } from '../model/models';
 
@@ -27,10 +26,6 @@ import { Configuration }                                     from '../configurat
 
 export interface AutoMigrateAppIdRuntimeRequestParams {
     tierId: string;
-}
-
-export interface CreateRuntimeDataJobAppIdRuntimeRequestParams {
-    appIdRuntimeJobCreateDto: AppIdRuntimeJobCreateDto;
 }
 
 export interface GetManyAppIdRuntimeRequestParams {
@@ -208,18 +203,13 @@ export class V1RuntimeDataAppIdRuntimeService {
 
     /**
      * Create App Id Runtime Collection Job
-     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createRuntimeDataJobAppIdRuntime(requestParameters: CreateRuntimeDataJobAppIdRuntimeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Job>;
-    public createRuntimeDataJobAppIdRuntime(requestParameters: CreateRuntimeDataJobAppIdRuntimeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Job>>;
-    public createRuntimeDataJobAppIdRuntime(requestParameters: CreateRuntimeDataJobAppIdRuntimeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Job>>;
-    public createRuntimeDataJobAppIdRuntime(requestParameters: CreateRuntimeDataJobAppIdRuntimeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const appIdRuntimeJobCreateDto = requestParameters.appIdRuntimeJobCreateDto;
-        if (appIdRuntimeJobCreateDto === null || appIdRuntimeJobCreateDto === undefined) {
-            throw new Error('Required parameter appIdRuntimeJobCreateDto was null or undefined when calling createRuntimeDataJobAppIdRuntime.');
-        }
+    public createRuntimeDataJobAppIdRuntime(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Job>;
+    public createRuntimeDataJobAppIdRuntime(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Job>>;
+    public createRuntimeDataJobAppIdRuntime(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Job>>;
+    public createRuntimeDataJobAppIdRuntime(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -236,22 +226,13 @@ export class V1RuntimeDataAppIdRuntimeService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
             responseType = 'text';
         }
 
         return this.httpClient.post<Job>(`${this.configuration.basePath}/v1/runtime-data/app-id-runtime/create-runtime-data-job`,
-            appIdRuntimeJobCreateDto,
+            null,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

@@ -1,4 +1,4 @@
-import { ApplicationMode } from '../../models/other/application-mode-enum';
+import { ApplicationMode } from '../other/application-mode-enum';
 
 // Common route data for TenantV2 module
 export const TENANT_V2_ROUTE_DATA = {
@@ -28,28 +28,6 @@ export const APPCENTRIC_ROUTE_DATA = {
 export const ADMINPORTAL_ROUTE_DATA = {
   // Common properties for all AdminPortal routes
   mode: ApplicationMode.ADMINPORTAL,
-  baseTitle: 'vNETP - AdminPortal',
+  baseTitle: 'vNETP - Admin Portal',
   section: 'adminportal',
 };
-
-/**
- * Helper function to merge default data with route-specific data
- * Ensures all routes have consistent mode setting and title formatting
- *
- * @param defaultData The default data for the module
- * @param routeData The route-specific data to merge
- * @returns The merged route data
- */
-export function mergeRouteData(defaultData: any, routeData: any = {}): any {
-  // Create a new object with the defaults first
-  const mergedData = { ...defaultData, ...routeData };
-
-  // Handle title formatting
-  if (routeData.title && defaultData.baseTitle) {
-    if (!routeData.title.includes(defaultData.baseTitle)) {
-      mergedData.title = `${defaultData.baseTitle} - ${routeData.title}`;
-    }
-  }
-
-  return mergedData;
-}

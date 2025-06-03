@@ -62,7 +62,7 @@
           </div>
         </div>
 
-        <div class="form-group col-md-2" *ngIf="firewallRuleGroupType !== 'ZoneBased'">
+        <div class="form-group col-md-2" *ngIf="firewallRuleGroupType !== 'ZoneBased' && firewallRuleGroupType !== 'OneArmServiceGraph'">
           <label for="direction">Direction</label>
           <tooltip [message]="helpText.Direction"></tooltip>
           <select
@@ -250,6 +250,8 @@
             <option value="IpAddress">IP</option>
             <option value="NetworkObject">Network Object</option>
             <option value="NetworkObjectGroup">Network Object Group</option>
+            <option *ngIf="isTenantV2Mode" value="EndpointGroup">Endpoint Group</option>
+            <option *ngIf="isTenantV2Mode" value="EndpointSecurityGroup">Endpoint Security Group</option>
           </select>
         </div>
 
@@ -320,6 +322,48 @@
             style="color: blue; cursor: pointer"
             >(object info)</span
           >
+
+          <label for="sourceEndpointGroup" *ngIf="isTenantV2Mode && f.sourceNetworkType.value === 'EndpointGroup'"
+            >Source Endpoint Group</label
+          >
+          <!-- <tooltip *ngIf="isTenantV2Mode && f.sourceNetworkType.value === 'EndpointGroup'" [message]="helpText.EndpointGroupType"></tooltip> -->
+          <ng-select
+            formControlName="sourceEndpointGroup"
+            id="sourceEndpointGroup"
+            [ngClass]="{
+              'is-invalid': submitted && f.sourceEndpointGroup.errors
+            }"
+            aria-label="Source Endpoint Group"
+            *ngIf="isTenantV2Mode && f.sourceNetworkType.value === 'EndpointGroup'"
+            [items]="endpointGroups"
+            bindLabel="name"
+            bindValue="id"
+          >
+          </ng-select>
+          <div *ngIf="submitted && f.sourceEndpointGroup.errors" class="invalid-feedback">
+            <div *ngIf="f.sourceEndpointGroup.errors.required">Source Endpoint Group is required</div>
+          </div>
+
+          <label for="sourceEndpointSecurityGroup" *ngIf="isTenantV2Mode && f.sourceNetworkType.value === 'EndpointSecurityGroup'"
+            >Source Endpoint Security Group</label
+          >
+          <!-- <tooltip *ngIf="isTenantV2Mode && f.sourceNetworkType.value === 'EndpointSecurityGroup'" [message]="helpText.EndpointSecurityGroupType"></tooltip> -->
+          <ng-select
+            formControlName="sourceEndpointSecurityGroup"
+            id="sourceEndpointSecurityGroup"
+            [ngClass]="{
+              'is-invalid': submitted && f.sourceEndpointSecurityGroup.errors
+            }"
+            aria-label="Source Endpoint Security Group"
+            *ngIf="isTenantV2Mode && f.sourceNetworkType.value === 'EndpointSecurityGroup'"
+            [items]="endpointSecurityGroups"
+            bindLabel="name"
+            bindValue="id"
+          >
+          </ng-select>
+          <div *ngIf="submitted && f.sourceEndpointSecurityGroup.errors" class="invalid-feedback">
+            <div *ngIf="f.sourceEndpointSecurityGroup.errors.required">Source Endpoint Security Group is required</div>
+          </div>
         </div>
       </div>
 
@@ -337,6 +381,8 @@
             <option value="IpAddress">IP</option>
             <option value="NetworkObject">Network Object</option>
             <option value="NetworkObjectGroup">Network Object Group</option>
+            <option *ngIf="isTenantV2Mode" value="EndpointGroup">Endpoint Group</option>
+            <option *ngIf="isTenantV2Mode" value="EndpointSecurityGroup">Endpoint Security Group</option>
           </select>
         </div>
 
@@ -410,6 +456,48 @@
             style="color: blue; cursor: pointer"
             >(object info)</span
           >
+
+          <label for="destinationEndpointGroup" *ngIf="isTenantV2Mode && f.destinationNetworkType.value === 'EndpointGroup'"
+            >Destination Endpoint Group</label
+          >
+          <!-- <tooltip *ngIf="isTenantV2Mode && f.destinationNetworkType.value === 'EndpointGroup'" [message]="helpText.EndpointGroupType"></tooltip> -->
+          <ng-select
+            formControlName="destinationEndpointGroup"
+            id="destinationEndpointGroup"
+            [ngClass]="{
+              'is-invalid': submitted && f.destinationEndpointGroup.errors
+            }"
+            aria-label="Destination Endpoint Group"
+            *ngIf="isTenantV2Mode && f.destinationNetworkType.value === 'EndpointGroup'"
+            [items]="endpointGroups"
+            bindLabel="name"
+            bindValue="id"
+          >
+          </ng-select>
+          <div *ngIf="submitted && f.destinationEndpointGroup.errors" class="invalid-feedback">
+            <div *ngIf="f.destinationEndpointGroup.errors.required">Destination Endpoint Group is required</div>
+          </div>
+
+          <label for="destinationEndpointSecurityGroup" *ngIf="isTenantV2Mode && f.destinationNetworkType.value === 'EndpointSecurityGroup'"
+            >Destination Endpoint Security Group</label
+          >
+          <!-- <tooltip *ngIf="isTenantV2Mode && f.destinationNetworkType.value === 'EndpointSecurityGroup'" [message]="helpText.EndpointSecurityGroupType"></tooltip> -->
+          <ng-select
+            formControlName="destinationEndpointSecurityGroup"
+            id="destinationEndpointSecurityGroup"
+            [ngClass]="{
+              'is-invalid': submitted && f.destinationEndpointSecurityGroup.errors
+            }"
+            aria-label="Destination Endpoint Security Group"
+            *ngIf="isTenantV2Mode && f.destinationNetworkType.value === 'EndpointSecurityGroup'"
+            [items]="endpointSecurityGroups"
+            bindLabel="name"
+            bindValue="id"
+          >
+          </ng-select>
+          <div *ngIf="submitted && f.destinationEndpointSecurityGroup.errors" class="invalid-feedback">
+            <div *ngIf="f.destinationEndpointSecurityGroup.errors.required">Destination Endpoint Security Group is required</div>
+          </div>
         </div>
       </div>
 

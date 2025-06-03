@@ -20,7 +20,6 @@ import { LoadBalancersModule } from '../load-balancers/load-balancers.module';
 import { TenantV2DashboardModule } from './tenant-v2-dashboard/tenant-v2-dashboard.module';
 import { TenantV2DashboardComponent } from './tenant-v2-dashboard/tenant-v2-dashboard.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TENANT_V2_ROUTE_DATA, mergeRouteData } from '../../common/route-utils/route-data.utils';
 import { TableModule } from 'src/app/common/table/table.module';
 import { IconButtonModule } from 'src/app/common/icon-button/icon-button.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
@@ -32,43 +31,42 @@ const routes: Routes = [
     path: '',
     component: TenantV2Component,
     // Apply default data to the parent route
-    data: TENANT_V2_ROUTE_DATA,
     children: [
       {
         path: 'dashboard',
         canActivate: [AuthGuard],
         component: TenantV2DashboardComponent,
-        data: mergeRouteData(TENANT_V2_ROUTE_DATA, {
+        data: {
           breadcrumb: 'Dashboard',
           title: 'Dashboard',
-        }),
+        },
         loadChildren: () => import('./tenant-v2-dashboard/tenant-v2-dashboard.module').then(m => m.TenantV2DashboardModule),
       },
       {
         path: 'tenant-select',
         canActivate: [AuthGuard],
-        data: mergeRouteData(TENANT_V2_ROUTE_DATA, {
+        data: {
           breadcrumb: 'Configuration',
           title: 'Configuration',
-        }),
+        },
         loadChildren: () => import('../../components/appcentric/tenant-select/tenant-select.module').then(m => m.TenantSelectModule),
       },
       {
         path: 'audit-log',
         canActivate: [AuthGuard],
-        data: mergeRouteData(TENANT_V2_ROUTE_DATA, {
+        data: {
           breadcrumb: 'Audit Log',
           title: 'Audit Log',
-        }),
+        },
         loadChildren: () => import('../../common/audit-log/audit-log.module').then(m => m.AuditLogModule),
       },
       {
         path: 'environment-summary',
         canActivate: [AuthGuard],
-        data: mergeRouteData(TENANT_V2_ROUTE_DATA, {
+        data: {
           breadcrumb: 'Environment Summary',
           title: 'Environment Summary',
-        }),
+        },
         loadChildren: () => import('../../common/environment-summary/environment-summary.module').then(m => m.EnvironmentSummaryModule),
       },
     ],

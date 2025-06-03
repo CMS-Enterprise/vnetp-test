@@ -1,0 +1,261 @@
+<div class="container">
+  <div class="header">
+    <h1>Endpoint Connectivity Utility</h1>
+  </div>
+
+  <div class="content">
+    <!-- Connectivity Test Form -->
+    <div class="connectivity-form">
+      <h2>Test Endpoint Connectivity</h2>
+
+      <form [formGroup]="connectivityForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="sourceEndpointIp">Source IP</label>
+          <input type="text" id="sourceEndpointIp" formControlName="sourceEndpointIp" placeholder="e.g. 10.0.0.1" />
+          <div class="error" *ngIf="connectivityForm.get('sourceEndpointIp')?.invalid && connectivityForm.get('sourceEndpointIp')?.touched">
+            Please enter a valid IP address
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="sourceEndpointPort">Source Port (Optional)</label>
+          <input type="number" id="sourceEndpointPort" formControlName="sourceEndpointPort" placeholder="e.g. 80" />
+        </div>
+
+        <div class="form-group">
+          <label for="destinationEndpointIp">Destination IP</label>
+          <input type="text" id="destinationEndpointIp" formControlName="destinationEndpointIp" placeholder="e.g. 10.0.0.2" />
+          <div
+            class="error"
+            *ngIf="connectivityForm.get('destinationEndpointIp')?.invalid && connectivityForm.get('destinationEndpointIp')?.touched"
+          >
+            Please enter a valid IP address
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="destinationEndpointPort">Destination Port</label>
+          <input type="number" id="destinationEndpointPort" formControlName="destinationEndpointPort" placeholder="e.g. 443" />
+          <div
+            class="error"
+            *ngIf="connectivityForm.get('destinationEndpointPort')?.invalid && connectivityForm.get('destinationEndpointPort')?.touched"
+          >
+            Please enter a valid port number
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="ipProtocol">Protocol</label>
+          <select id="ipProtocol" formControlName="ipProtocol">
+            <option *ngFor="let protocol of protocolOptions" [value]="protocol">
+              {{ protocol.toUpperCase() }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-options">
+          <div class="checkbox-group">
+            <input type="checkbox" id="bypassServiceGraph" formControlName="bypassServiceGraph" />
+            <label for="bypassServiceGraph">Bypass Service Graph</label>
+          </div>
+
+          <div class="checkbox-group">
+            <input type="checkbox" id="generateConfig" formControlName="generateConfig" />
+            <label for="generateConfig">Generate Configuration</label>
+          </div>
+
+          <div class="checkbox-group">
+            <input type="checkbox" id="applyConfig" formControlName="applyConfig" />
+            <label for="applyConfig">Apply Configuration</label>
+          </div>
+
+          <div class="checkbox-group">
+            <input type="checkbox" id="bidirectional" formControlName="bidirectional" />
+            <label for="bidirectional">Test Bidirectional</label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
+          <button type="submit" class="btn btn-primary" [disabled]="connectivityForm.invalid || isLoading">
+            {{ isLoading ? 'Testing...' : 'Test Connectivity' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Connectivity Results -->
+    <div class="connectivity-results" *ngIf="connectivityResult">
+      <h2>Connectivity Results</h2>
+
+      <!-- Connection Status -->
+      <div class="connection-status" [ngClass]="getStatusClass()">
+        <div>
+          Connection: {{ getConnectionStatus() | uppercase }}
+          <span *ngIf="connectivityResult?.connectivityResult === 'denied-generated-config'"> (WITH SOLUTION)</span>
+        </div>
+        <div class="detail" *ngIf="getConnectionDetail()">{{ getConnectionDetail() }}</div>
+      </div>
+
+      <!-- Endpoints Information -->
+      <div class="endpoints-info">
+        <div class="source-endpoint">
+          <!-- TODO: Add support for multiple source endpoints -->
+          <strong>Source:</strong> {{ connectivityResult.sourceEndpoint.ipAddresses[0].address }}
+          <span *ngIf="connectivityResult.sourceEndpoint.endpointGroup?.name">
+            ({{ connectivityResult.sourceEndpoint.endpointGroup.name }})
+          </span>
+        </div>
+        <div class="destination-endpoint">
+          <!-- TODO: Add support for multiple destination endpoints -->
+          <strong>Destination:</strong> {{ connectivityResult.destinationEndpoint.ipAddresses[0].address }}
+          <span *ngIf="connectivityResult.destinationEndpoint.endpointGroup?.name">
+            ({{ connectivityResult.destinationEndpoint.endpointGroup.name }})
+          </span>
+        </div>
+      </div>
+
+      <!-- Connection Path Visualization -->
+      <div class="path-visualization">
+        <h3>Connection Path</h3>
+
+        <!-- Source Path -->
+        <div class="path-section source-path" *ngIf="hasPathNodes('source')">
+          <h4>Source Path</h4>
+          <div class="path-nodes">
+            <div
+              class="path-node"
+              *ngFor="let node of connectivityResult.connectionTrace.sourcePath; let last = last"
+              [ngStyle]="{ 'background-color': getNodeColor(node.nodeType, node.generated) }"
+              [ngClass]="{ 'last-node': last }"
+            >
+              <div class="node-label" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                {{ node.name || node.nodeType }}
+              </div>
+              <div class="node-type" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                {{ node.nodeType }}
+              </div>
+              <div class="generated-badge" *ngIf="node.generated">Generated</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contract Path -->
+        <div class="path-section contract-path" *ngIf="hasPathNodes('contract')">
+          <h4>Contract Path</h4>
+          <div class="path-nodes">
+            <div
+              class="path-node"
+              *ngFor="let node of connectivityResult.connectionTrace.contractPath; let last = last"
+              [ngStyle]="{ 'background-color': getNodeColor(node.nodeType, node.generated) }"
+              [ngClass]="{ 'last-node': last }"
+            >
+              <div class="node-label" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                {{ node.name || node.nodeType }}
+              </div>
+              <div class="node-type" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                {{ node.nodeType }}
+              </div>
+              <div class="generated-badge" *ngIf="node.generated">Generated</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Destination Path -->
+        <div class="path-section destination-path" *ngIf="hasPathNodes('destination')">
+          <h4>Destination Path</h4>
+          <div class="path-nodes">
+            <div
+              class="path-node"
+              *ngFor="let node of connectivityResult.connectionTrace.destinationPath; let last = last"
+              [ngStyle]="{ 'background-color': getNodeColor(node.nodeType, node.generated) }"
+              [ngClass]="{ 'last-node': last }"
+            >
+              <div class="node-label" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                {{ node.name || node.nodeType }}
+              </div>
+              <div class="node-type" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                {{ node.nodeType }}
+              </div>
+              <div class="generated-badge" *ngIf="node.generated">Generated</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full Path -->
+        <div class="path-section full-path" *ngIf="hasPathNodes('full')">
+          <h4>Complete Path</h4>
+          <div class="path-nodes">
+            <ng-container *ngFor="let node of connectivityResult.connectionTrace.fullPath; let last = last">
+              <div
+                class="path-node"
+                [ngStyle]="{ 'background-color': getNodeColor(node.nodeType, node.generated) }"
+                [ngClass]="{ 'last-node': last }"
+              >
+                <div class="node-label" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                  {{ node.name || node.nodeType }}
+                </div>
+                <div class="node-type" [ngStyle]="{ color: getNodeTextColor(node.nodeType) }">
+                  {{ node.nodeType }}
+                </div>
+                <div class="generated-badge" *ngIf="node.generated">Generated</div>
+              </div>
+              <div class="path-arrow" *ngIf="!last">→</div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generated Configuration -->
+      <div class="generated-config" *ngIf="shouldShowGeneratedConfig()">
+        <h3>Generated Configuration</h3>
+
+        <div class="config-section" *ngIf="connectivityResult.generatedConfig.existingContract">
+          <div class="section-title">Using Existing Contract</div>
+        </div>
+
+        <div class="config-section" *ngIf="connectivityResult.generatedConfig.Subjects?.length">
+          <div class="section-title">Subjects</div>
+          <div class="config-item" *ngFor="let subject of connectivityResult.generatedConfig.Subjects">
+            <span class="item-name">{{ subject.name }}</span>
+          </div>
+        </div>
+
+        <div class="config-section" *ngIf="connectivityResult.generatedConfig.Filters?.length">
+          <div class="section-title">Filters</div>
+          <div class="config-item" *ngFor="let filter of connectivityResult.generatedConfig.Filters">
+            <span class="item-name">{{ filter.name }}</span>
+          </div>
+        </div>
+
+        <div class="config-section" *ngIf="connectivityResult.generatedConfig.FilterEntries?.length">
+          <div class="section-title">Filter Entries</div>
+          <div class="filter-entry" *ngFor="let entry of connectivityResult.generatedConfig.FilterEntries">
+            <div>Protocol: {{ entry.ipProtocol }}</div>
+            <div *ngIf="entry.destinationFromPort && entry.destinationToPort">
+              Destination Port:
+              {{
+                entry.destinationFromPort === entry.destinationToPort
+                  ? entry.destinationFromPort
+                  : entry.destinationFromPort + '-' + entry.destinationToPort
+              }}
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="shouldShowGeneratedConfig()" class="mt-3">
+          <h5>Generated Configuration to Allow Traffic</h5>
+          <pre>{{ connectivityResult.generatedConfig | json }}</pre>
+          <button (click)="applyGeneratedConfig()" [disabled]="isLoading" class="btn btn-success m-2">Apply Generated Config</button>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-message" *ngIf="error">
+        <div class="alert alert-danger">
+          {{ error }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

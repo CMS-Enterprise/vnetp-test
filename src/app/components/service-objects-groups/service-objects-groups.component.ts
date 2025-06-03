@@ -32,6 +32,7 @@ import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-s
 import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 import { ActivatedRoute } from '@angular/router';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 @Component({
   selector: 'app-service-objects-groups',
@@ -563,9 +564,7 @@ export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
-    this.activatedRoute.data.subscribe(data => {
-      this.applicationMode = data.mode;
-    });
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
 
     this.currentDatacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (cd) {

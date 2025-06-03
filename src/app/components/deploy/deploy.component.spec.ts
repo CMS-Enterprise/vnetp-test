@@ -42,11 +42,12 @@ describe('DeployComponent', () => {
         datacenterId: '1',
         name: 'Tier1',
         firewallRuleGroups: [
-          { tierId: '1', name: 'I', type: FirewallRuleGroupTypeEnum.Intervrf, id: '11' },
-          { tierId: '1', name: 'E', type: FirewallRuleGroupTypeEnum.External, id: '22' },
+          { tierId: '1', name: 'I', type: FirewallRuleGroupTypeEnum.Intervrf, id: '11', tenantVersion: null },
+          { tierId: '1', name: 'E', type: FirewallRuleGroupTypeEnum.External, id: '22', tenantVersion: null },
         ],
       },
       isSelected: true,
+      tenantVersion: '1',
     },
     getManyTierResponse: {
       data: [
@@ -54,9 +55,10 @@ describe('DeployComponent', () => {
           id: '1',
           datacenterId: '1',
           name: 'Tier1',
+          tenantVersion: '1',
           firewallRuleGroups: [
-            { tierId: '1', name: 'I', type: FirewallRuleGroupTypeEnum.Intervrf, id: '11' },
-            { tierId: '1', name: 'E', type: FirewallRuleGroupTypeEnum.External, id: '22' },
+            { tierId: '1', name: 'I', type: FirewallRuleGroupTypeEnum.Intervrf, id: '11', tenantVersion: null },
+            { tierId: '1', name: 'E', type: FirewallRuleGroupTypeEnum.External, id: '22', tenantVersion: null },
           ],
         },
       ],
@@ -170,15 +172,15 @@ describe('DeployComponent', () => {
         return of().subscribe();
       });
 
-      // component.tiers = [testData.tier];
+      component.tiers = [testData.tier];
 
       const jobService = TestBed.inject(V1JobsService);
       jest.spyOn(jobService, 'createOneJob');
 
       const deployButton = fixture.debugElement.query(By.css('.btn.btn-danger'));
       deployButton.nativeElement.click();
-      // expect(deploySpy).toHaveBeenCalled();
-      // expect(launchTierProvisioningJobsSpy).toHaveBeenCalled();
+      expect(deploySpy).toHaveBeenCalled();
+      expect(launchTierProvisioningJobsSpy).toHaveBeenCalled();
     });
   });
 

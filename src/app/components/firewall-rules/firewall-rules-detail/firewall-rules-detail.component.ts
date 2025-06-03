@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/c
 import { ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService, NgxSmartModalComponent } from 'ngx-smart-modal';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { Subscription, forkJoin } from 'rxjs';
+import { Observable, Subscription, forkJoin, of } from 'rxjs';
 import { FirewallRuleModalDto } from 'src/app/models/firewall/firewall-rule-modal-dto';
 import { FirewallRuleScope } from 'src/app/models/other/firewall-rule-scope';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
@@ -31,9 +31,12 @@ import {
   V1NetworkSecurityZonesService,
   V1RuntimeDataHitcountService,
   HitcountJobCreateDtoTypeEnum,
+  V2AppCentricEndpointGroupsService,
+  V2AppCentricEndpointSecurityGroupsService,
+  EndpointSecurityGroup,
+  EndpointGroup,
   PanosApplication,
   V1RuntimeDataAppIdRuntimeService,
-  AppIdRuntimeJobCreateDtoTypeEnum,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
@@ -48,6 +51,7 @@ import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-r
 import UndeployedChangesUtil from '../../../utils/UndeployedChangesUtil';
 import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
 import { RuntimeDataService } from '../../../services/runtime-data.service';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 import { LiteTableConfig } from '../../../common/lite-table/lite-table.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { AppIdRuntimeService } from '../../app-id-runtime/app-id-runtime.service';
@@ -88,6 +92,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   networkObjectGroups: NetworkObjectGroup[];
   serviceObjects: ServiceObject[];
   serviceObjectGroups: ServiceObjectGroup[];
+  endpointGroups: EndpointGroup[];
+  endpointSecurityGroups: EndpointSecurityGroup[];
   tiers: Tier[];
   packetTracerObjects = new FirewallRulePacketTracerDto();
   zones: Zone[];
@@ -210,6 +216,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private tableContextService: TableContextService,
     private hitcountService: V1RuntimeDataHitcountService,
     private runtimeDataService: RuntimeDataService,
+    private endpointGroupService: V2AppCentricEndpointGroupsService,
+    private endpointSecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
     private appIdService: AppIdRuntimeService,
     private appIdApiService: V1RuntimeDataAppIdRuntimeService,
     private tierContextService: TierContextService,
@@ -221,29 +229,27 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(data => {
-      this.applicationMode = data.mode;
-      this.appIdEnabled = history.state.appIdEnabled;
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
+    this.appIdEnabled = history.state.appIdEnabled;
 
-      if (this.appIdEnabled === undefined) {
-        console.warn('appIdEnabled not passed. Using default value.');
-        this.appIdEnabled = false;
+    if (this.appIdEnabled === undefined) {
+      console.warn('appIdEnabled not passed. Using default value.');
+      this.appIdEnabled = false;
+    }
+
+    if (!this.appIdEnabled) {
+      this.expandableRows = () => [this.hitcountTemplate];
+    }
+
+    this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
+      if (cd) {
+        this.datacenterId = cd.id;
+        this.tiers = cd.tiers;
+        this.datacenterService.lockDatacenter();
+        this.Id = this.route.snapshot.paramMap.get('id') || '';
+        this.currentTierIds = this.datacenterService.currentTiersValue;
+        this.getFirewallRuleGroup();
       }
-
-      if (!this.appIdEnabled) {
-        this.expandableRows = () => [this.hitcountTemplate];
-      }
-
-      this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
-        if (cd) {
-          this.datacenterId = cd.id;
-          this.tiers = cd.tiers;
-          this.datacenterService.lockDatacenter();
-          this.Id += this.route.snapshot.paramMap.get('id');
-          this.currentTierIds = this.datacenterService.currentTiersValue;
-          this.getFirewallRuleGroup();
-        }
-      });
     });
   }
 
@@ -278,47 +284,6 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   refreshAppId(): void {
     return;
-    if (this.runtimeDataService.isRecentlyRefreshed(this.tier.runtimeDataLastRefreshed) || this.isRefreshingAppIdRuntimeData) {
-      return;
-    }
-
-    this.isRefreshingAppIdRuntimeData = true;
-    this.firewallModal.handleAppIdRefresh(true);
-
-    this.appIdApiService
-      .createRuntimeDataJobAppIdRuntime({
-        appIdRuntimeJobCreateDto: {
-          type: AppIdRuntimeJobCreateDtoTypeEnum.AppIdRuntime,
-          tierId: this.TierId,
-          datacenterId: this.datacenterId,
-        },
-      })
-      .subscribe(job => {
-        let status = '';
-        this.runtimeDataService.pollJobStatus(job.id).subscribe({
-          next: towerJobDto => {
-            status = towerJobDto.status;
-          },
-          error: () => {
-            status = 'error';
-            this.isRefreshingRuntimeData = false;
-            this.firewallModal.handleAppIdRefresh(false);
-            this.appIdJobStatus = status;
-          },
-          complete: () => {
-            this.isRefreshingRuntimeData = false;
-            this.firewallModal.handleAppIdRefresh(false);
-            if (status === 'successful') {
-              this.tierService.getOneTier({ id: this.TierId }).subscribe(tier => {
-                this.tier = tier;
-                this.appIdService.loadPanosApplications();
-              });
-              this.tierContextService.refreshTiers(this.TierId);
-            }
-            this.appIdJobStatus = status;
-          },
-        });
-      });
   }
 
   ngOnDestroy(): void {
@@ -444,6 +409,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   getObjects(): void {
+    let endpointGroupRequest: Observable<any>;
+    let endpointSecurityGroupRequest: Observable<any>;
     const tierRequest = this.tierService.getOneTier({ id: this.TierId });
     const networkObjectRequest = this.networkObjectService.getManyNetworkObject({
       filter: [`tierId||eq||${this.TierId}`, 'deletedAt||isnull'],
@@ -480,7 +447,25 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       page: 1,
       perPage: 50000,
     });
-
+    if (this.applicationMode === ApplicationMode.TENANTV2) {
+      endpointGroupRequest = this.endpointGroupService.getManyEndpointGroup({
+        filter: [`tenantId||eq||${this.datacenterService.currentDatacenterValue.appCentricTenantId}`, 'deletedAt||isnull'],
+        fields: ['id,name'],
+        sort: ['updatedAt,ASC'],
+        page: 1,
+        perPage: 50000,
+      });
+      endpointSecurityGroupRequest = this.endpointSecurityGroupService.getManyEndpointSecurityGroup({
+        filter: [`tenantId||eq||${this.datacenterService.currentDatacenterValue.appCentricTenantId}`, 'deletedAt||isnull'],
+        fields: ['id,name'],
+        sort: ['updatedAt,ASC'],
+        page: 1,
+        perPage: 50000,
+      });
+    } else {
+      endpointGroupRequest = of({ data: [] });
+      endpointSecurityGroupRequest = of({ data: [] });
+    }
     forkJoin([
       tierRequest,
       networkObjectRequest,
@@ -488,6 +473,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       serviceObjectRequest,
       serviceObjectGroupRequest,
       zoneRequest,
+      endpointGroupRequest,
+      endpointSecurityGroupRequest,
     ]).subscribe(result => {
       this.tier = result[0];
       this.TierName = this.tier.name;
@@ -496,6 +483,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       this.serviceObjects = result[3].data;
       this.serviceObjectGroups = result[4].data;
       this.zones = result[5].data;
+      this.endpointGroups = result[6].data;
+      this.endpointSecurityGroups = result[7].data;
       this.getFirewallRules();
       this.getObjectsAppId();
     });
@@ -560,6 +549,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     dto.NetworkObjectGroups = this.networkObjectGroups;
     dto.ServiceObjects = this.serviceObjects;
     dto.ServiceObjectGroups = this.serviceObjectGroups;
+    dto.EndpointGroups = this.endpointGroups;
+    dto.EndpointSecurityGroups = this.endpointSecurityGroups;
     dto.Zones = this.zones;
     dto.GroupType = this.FirewallRuleGroup.type;
 
@@ -588,6 +579,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   public getServiceObjectGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.serviceObjectGroups);
   public getNetworkObjectName = (id: string): string => ObjectUtil.getObjectName(id, this.networkObjects);
   public getNetworkObjectGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.networkObjectGroups);
+  public getEndpointGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.endpointGroups);
+  public getEndpointSecurityGroupName = (id: string): string => ObjectUtil.getObjectName(id, this.endpointSecurityGroups);
 
   public deleteFirewallRule(firewallRule: FirewallRule): void {
     this.entityService.deleteEntity(firewallRule, {
@@ -790,8 +783,67 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           this.handleServiceObjectGroup(property, objectId);
           break;
         }
+        case 'EndpointGroup': {
+          this.handleEndpointGroup(property, objectId);
+          break;
+        }
+        case 'EndpointSecurityGroup': {
+          this.handleEndpointSecurityGroup(property, objectId);
+          break;
+        }
       }
     }
+  }
+
+  handleEndpointGroup(property, objectId) {
+    this.endpointGroupService.getOneEndpointGroup({ id: objectId, relations: ['endpoints', 'endpoints.ipAddresses'] }).subscribe(data => {
+      const objectName = data.name;
+      const modalTitle = `${property} : ${objectName}`;
+
+      // Iterate through all endpoints and list their IP Addresses.
+      const modalBody = data.endpoints.map(endpoint => {
+        const ipAddresses = endpoint.ipAddresses.map(ip => ip.address);
+        return `${ipAddresses.join(', ')}`;
+      });
+
+      const dto = {
+        modalTitle,
+        modalBody,
+      };
+      this.subscribeToObjectInfoModal();
+      this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
+      this.ngx.getModal('firewallRuleObjectInfoModal').open();
+    });
+  }
+
+  handleEndpointSecurityGroup(property, objectId) {
+    this.endpointSecurityGroupService
+      .getOneEndpointSecurityGroup({
+        id: objectId,
+        relations: [
+          'selectors',
+          'selectors.endpointGroup',
+          'selectors.endpointGroup.endpoints',
+          'selectors.endpointGroup.endpoints.ipAddresses',
+        ],
+      })
+      .subscribe(data => {
+        const objectName = data.name;
+        const modalTitle = `${property} : ${objectName}`;
+        const modalBody = data.selectors.map(selector => {
+          const epgName = selector.endpointGroup.name;
+          const ips = selector.endpointGroup.endpoints.flatMap(endpoint => endpoint.ipAddresses.map(ip => ip.address));
+          return `${epgName}: ${ips.join(', ')}`;
+        });
+
+        const dto = {
+          modalTitle,
+          modalBody,
+        };
+        this.subscribeToObjectInfoModal();
+        this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
+        this.ngx.getModal('firewallRuleObjectInfoModal').open();
+      });
   }
 
   handleNetworkObject(property, objectId) {
