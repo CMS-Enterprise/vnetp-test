@@ -24,6 +24,7 @@ import { of } from 'rxjs';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { AppIdRuntimeService } from '../../app-id-runtime/app-id-runtime.service';
 import { TierContextService } from '../../../services/tier-context.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('FirewallRuleModalComponent', () => {
   let component: FirewallRuleModalComponent;
@@ -31,8 +32,18 @@ describe('FirewallRuleModalComponent', () => {
   let mockActivatedRoute: any;
   let mockTierContextService: jest.Mocked<TierContextService>;
   let mockAppIdRuntimeService;
+  let getFormControl: (prop: string) => FormControl;
+  let isRequired: (prop: string) => boolean;
 
   beforeEach(() => {
+    getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
+    isRequired = (prop: string): boolean => {
+      const fc = getFormControl(prop);
+      if (!fc) return false; // Guard against null fc if form not fully built
+      fc.setValue(null);
+      return !!fc.errors && !!fc.errors.required;
+    };
+
     mockActivatedRoute = {
       snapshot: {
         data: {
@@ -45,12 +56,12 @@ describe('FirewallRuleModalComponent', () => {
       firstChild: null,
     };
 
-    mockAppIdRuntimeService = { resetDto: jest.fn() };
+    mockAppIdRuntimeService = { resetDto: jest.fn(), isDtoEmpty: jest.fn() };
     mockTierContextService = {
       currentTierValue: {},
     } as any;
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       declarations: [
         FirewallRuleModalComponent,
         MockTooltipComponent,
@@ -70,22 +81,14 @@ describe('FirewallRuleModalComponent', () => {
         { provide: AppIdRuntimeService, useValue: mockAppIdRuntimeService },
         { provide: TierContextService, useValue: mockTierContextService },
       ],
-    })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(FirewallRuleModalComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-      });
+    });
   });
 
-  const getFormControl = (prop: string): FormControl => component.form.controls[prop] as FormControl;
-  const isRequired = (prop: string): boolean => {
-    const fc = getFormControl(prop);
-    if (!fc) return false; // Guard against null fc if form not fully built
-    fc.setValue(null);
-    return !!fc.errors && !!fc.errors.required;
-  };
+  beforeEach(() => {
+    fixture = TestBed.createComponent(FirewallRuleModalComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -428,10 +431,10 @@ describe('FirewallRuleModalComponent', () => {
       // It's often better to reset and reconfigure TestBed for clarity and to avoid side effects
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [FormsModule, ReactiveFormsModule],
+        imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
         declarations: [
           FirewallRuleModalComponent,
-          MockTooltipComponent, // Ensure all mocks and declarations are repeated
+          MockTooltipComponent,
           MockFontAwesomeComponent,
           MockNgxSmartModalComponent,
           MockNgSelectComponent,
@@ -445,27 +448,26 @@ describe('FirewallRuleModalComponent', () => {
           MockProvider(V1NetworkSecurityServiceObjectsService),
           MockProvider(V1NetworkSecurityServiceObjectGroupsService),
           { provide: ActivatedRoute, useValue: mockActivatedRoute },
+          { provide: AppIdRuntimeService, useValue: mockAppIdRuntimeService },
+          { provide: TierContextService, useValue: mockTierContextService },
         ],
       }).compileComponents();
 
       fixture = TestBed.createComponent(FirewallRuleModalComponent);
       component = fixture.componentInstance;
-      // No detectChanges here, let individual tests call it to control ngOnInit timing if needed
+      fixture.detectChanges();
     });
 
     it('should set isTenantV2Mode to true', () => {
-      fixture.detectChanges(); // Calls ngOnInit
       expect(component.isTenantV2Mode).toBe(true);
     });
 
     it('should make sourceEndpointGroup required if sourceNetworkType is EndpointGroup', () => {
-      fixture.detectChanges(); // Calls ngOnInit, builds form
       component.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressTypeEnum.EndpointGroup);
       expect(isRequired('sourceEndpointGroup')).toBe(true);
     });
 
     it('should make sourceEndpointSecurityGroup required if sourceNetworkType is EndpointSecurityGroup', () => {
-      fixture.detectChanges();
       component.form.controls.sourceNetworkType.setValue(FirewallRuleSourceAddressTypeEnum.EndpointSecurityGroup);
       expect(isRequired('sourceEndpointSecurityGroup')).toBe(true);
     });
@@ -476,10 +478,11 @@ describe('FirewallRuleModalComponent', () => {
   describe('when NOT in TenantV2 mode (e.g., Netcentric, Appcentric)', () => {
     beforeEach(async () => {
       delete mockActivatedRoute.snapshot.data.mode;
+      mockActivatedRoute.queryParamMap = of(new Map());
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [FormsModule, ReactiveFormsModule],
+        imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
         declarations: [
           FirewallRuleModalComponent,
           MockTooltipComponent,
@@ -504,7 +507,6 @@ describe('FirewallRuleModalComponent', () => {
     });
 
     it('should set isTenantV2Mode to false', () => {
-      fixture.detectChanges(); // Calls ngOnInit
       expect(component.isTenantV2Mode).toBe(false);
     });
 

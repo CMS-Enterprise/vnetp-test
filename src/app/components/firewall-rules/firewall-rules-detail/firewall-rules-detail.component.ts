@@ -230,7 +230,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
-    this.appIdEnabled = history.state.appIdEnabled;
+    this.appIdEnabled = history.state?.appIdEnabled;
 
     if (this.appIdEnabled === undefined) {
       console.warn('appIdEnabled not passed. Using default value.');

@@ -172,6 +172,9 @@ describe('DeployComponent', () => {
         return of().subscribe();
       });
 
+      const launchTierProvisioningJobsSpy = jest.spyOn(component, 'launchTierProvisioningJobs');
+      const deploySpy = jest.spyOn(component, 'deployTiers');
+
       component.tiers = [testData.tier];
 
       const jobService = TestBed.inject(V1JobsService);

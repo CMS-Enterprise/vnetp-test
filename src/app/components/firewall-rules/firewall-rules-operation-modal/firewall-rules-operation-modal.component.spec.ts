@@ -15,6 +15,7 @@ import {
 import { of } from 'rxjs';
 import { V1TiersService, V1NetworkSecurityFirewallRulesService, RuleOperationDto } from '../../../../../client';
 import { DatacenterContextService } from '../../../services/datacenter-context.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 jest.mock('../../../utils/SubscriptionUtil', () => ({
   default: class {
@@ -65,7 +66,7 @@ describe('FirewallRulesOperationModalComponent', () => {
         MockTooltipComponent,
         MockYesNoModalComponent,
       ],
-      imports: [NgSelectModule, ReactiveFormsModule, HttpClientModule, FormsModule, RouterTestingModule],
+      imports: [NgSelectModule, ReactiveFormsModule, HttpClientTestingModule, FormsModule],
       providers: [
         FormBuilder,
         { provide: V1TiersService, useValue: mockTierService },
