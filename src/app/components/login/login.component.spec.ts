@@ -1,11 +1,9 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MockProvider } from 'src/test/mock-providers';
 import { ActivatedRoute, convertToParamMap, RouterModule } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/services/auth.service';
 import { of } from 'rxjs';
 
@@ -82,5 +80,29 @@ describe('LoginComponent', () => {
     const loginSpy = jest.spyOn(component, 'login');
     component.navToLocation();
     expect(loginSpy).toHaveBeenCalled();
+  });
+
+  it('should set tenant and navigate to dashboard', () => {
+    component.returnUrl = 'fake/netcentric/dashboard';
+    component.setTenantAndNavigate({ name: 'tenant1', tenantQueryParameter: 'tenantQP' }, 'netcentric');
+  });
+
+  it('should set tenant and navigate to a different return URL', () => {
+    component.oldTenant = 'tenantQP';
+    component.returnUrl = 'someother/url/to/navigate/to';
+    component.setTenantAndNavigate({ name: 'tenant1', tenantQueryParameter: 'tenantQP' }, 'netcentric');
+  });
+
+  it('should fail to set tenant and navigate', () => {
+    component.returnUrl = 'fake/netcentric/dashboard';
+    component.setTenantAndNavigate(null, 'netcentric');
+  });
+
+  it('should navigate to the admin portal', () => {
+    component.navToAdminPortal({ name: 'tenant1', tenantQueryParameter: 'tenantQP' });
+  });
+
+  it('should fail to navigate to admin portal', () => {
+    component.navToAdminPortal(null);
   });
 });

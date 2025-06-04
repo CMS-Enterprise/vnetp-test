@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private toastr: ToastrService) {}
 
   ngOnInit() {
-    console.log('environment', environment);
     environment.dynamic.dcsLocations.map(location => {
       this.availableLocations.push(location.name);
     });
