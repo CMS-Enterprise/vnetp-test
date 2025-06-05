@@ -6,6 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute, convertToParamMap, RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { of } from 'rxjs';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const mockActivatedRoute = {
   snapshot: {
@@ -29,7 +30,7 @@ describe('LoginComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ToastrModule.forRoot(), HttpClientTestingModule, RouterModule.forRoot([])],
+      imports: [RouterTestingModule.withRoutes([]), FormsModule, ToastrModule.forRoot(), HttpClientTestingModule, RouterModule.forRoot([])],
       declarations: [LoginComponent],
       providers: [
         { provide: AuthService, useValue: authService },

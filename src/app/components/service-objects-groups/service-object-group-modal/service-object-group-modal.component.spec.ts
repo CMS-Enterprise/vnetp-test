@@ -11,10 +11,11 @@ import {
 } from 'src/test/mock-components';
 import { ServiceObjectGroupModalComponent } from './service-object-group-modal.component';
 import { MockProvider } from 'src/test/mock-providers';
-import { V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'client';
+import { ServiceObjectGroupTypeEnum, V1NetworkSecurityServiceObjectGroupsService, V1TiersService } from 'client';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { of, Subscription } from 'rxjs';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { ServiceObjectGroupModalDto } from 'src/app/models/service-objects/service-object-group-modal-dto';
 
 describe('ServiceObjectGroupModalComponent', () => {
   let component: ServiceObjectGroupModalComponent;
@@ -211,5 +212,69 @@ describe('ServiceObjectGroupModalComponent', () => {
 
     component.addServiceObject();
     expect(component['serviceObjectGroupService'].addServiceObjectToGroupServiceObjectGroup).toHaveBeenCalled();
+  });
+
+  describe('service object operations', () => {
+    it('should add service object to group', () => {
+      const service = TestBed.inject(V1NetworkSecurityServiceObjectGroupsService);
+
+      const addNetObjSpy = jest.spyOn(service, 'addServiceObjectToGroupServiceObjectGroup');
+      const getGroupServiceObjectsSpy = jest.spyOn(component as any, 'getGroupServiceObjects');
+      const getTierServiceObjectsSpy = jest.spyOn(component as any, 'getTierServiceObjects');
+
+      component.ServiceObjectGroupId = 'groupId';
+      component.selectedServiceObject = { id: 'objId', name: 'netObj1' } as any;
+      component.addServiceObject();
+
+      expect(addNetObjSpy).toHaveBeenCalledWith({ serviceObjectGroupId: 'groupId', serviceObjectId: 'objId' });
+      expect(getGroupServiceObjectsSpy).toHaveBeenCalled();
+      expect(getTierServiceObjectsSpy).toHaveBeenCalled();
+    });
+
+    it('should remove service object from group', () => {
+      const service = TestBed.inject(V1NetworkSecurityServiceObjectGroupsService);
+
+      const removeNetObjSpy = jest.spyOn(service, 'removeServiceObjectFromGroupServiceObjectGroup');
+      const getGroupServiceObjectsSpy = jest.spyOn(component as any, 'getGroupServiceObjects');
+      const getTierServiceObjectsSpy = jest.spyOn(component as any, 'getTierServiceObjects');
+
+      component.ServiceObjectGroupId = 'groupId';
+      const netObj = {
+        id: 'objId',
+        name: 'netObj1',
+      } as any;
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        onConfirm();
+
+        return new Subscription();
+      });
+
+      component.removeServiceObject(netObj);
+
+      expect(removeNetObjSpy).toHaveBeenCalledWith({ serviceObjectGroupId: 'groupId', serviceObjectId: 'objId' });
+      expect(getGroupServiceObjectsSpy).toHaveBeenCalled();
+      expect(getTierServiceObjectsSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('getData', () => {
+    const createServiceObjectGroupModalDto = (): ServiceObjectGroupModalDto => ({
+      TierId: '1',
+      ServiceObjectGroup: {
+        tierId: '1',
+        id: '2',
+        name: 'ServiceObjectGroup',
+        type: ServiceObjectGroupTypeEnum.Tcpudp,
+      },
+      ModalMode: ModalMode.Edit,
+    });
+    it('should disable the name when editing a service object group', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createServiceObjectGroupModalDto());
+
+      component.getData();
+
+      expect(component.form.controls.name.disabled).toBe(true);
+    });
   });
 });

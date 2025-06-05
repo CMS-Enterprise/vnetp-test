@@ -29,9 +29,10 @@ export class AdminPortalDashboardComponent implements OnInit {
       this.currentUserSubscription = this.auth.currentUser.subscribe(user => {
         this.user = user;
         this.userRoles = this.user.dcsPermissions.map(p => p.roles).flat();
-        this.loadDashboard();
-        this.dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
       });
+      this.loadDashboard();
+      this.dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
+      console.log('this.dashboardPoller', this.dashboardPoller);
     }
   }
 

@@ -11,6 +11,10 @@ import {
 } from 'src/test/mock-components';
 import { MockProvider } from 'src/test/mock-providers';
 import { V1NetworkSecurityNetworkObjectGroupsService, V1TiersService } from 'client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { Subscription } from 'rxjs';
+import { NetworkObjectGroupModalDto } from 'src/app/models/network-objects/network-object-group-modal-dto';
 
 describe('NetworkObjectGroupModalComponent', () => {
   let component: NetworkObjectGroupModalComponent;
@@ -43,6 +47,98 @@ describe('NetworkObjectGroupModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('network object operations', () => {
+    it('should add network object to group', () => {
+      const service = TestBed.inject(V1NetworkSecurityNetworkObjectGroupsService);
+
+      const addNetObjSpy = jest.spyOn(service, 'addNetworkObjectToGroupNetworkObjectGroup');
+      const getGroupNetworkObjectsSpy = jest.spyOn(component as any, 'getGroupNetworkObjects');
+      const getTierNetworkObjectsSpy = jest.spyOn(component as any, 'getTierNetworkObjects');
+
+      component.NetworkObjectGroupId = 'groupId';
+      component.selectedNetworkObject = { id: 'objId', name: 'netObj1' } as any;
+      component.addNetworkObject();
+
+      expect(addNetObjSpy).toHaveBeenCalledWith({ networkObjectGroupId: 'groupId', networkObjectId: 'objId' });
+      expect(getGroupNetworkObjectsSpy).toHaveBeenCalled();
+      expect(getTierNetworkObjectsSpy).toHaveBeenCalled();
+    });
+
+    it('should remove network object from group', () => {
+      const service = TestBed.inject(V1NetworkSecurityNetworkObjectGroupsService);
+
+      const removeNetObjSpy = jest.spyOn(service, 'removeNetworkObjectFromGroupNetworkObjectGroup');
+      const getGroupNetworkObjectsSpy = jest.spyOn(component as any, 'getGroupNetworkObjects');
+      const getTierNetworkObjectsSpy = jest.spyOn(component as any, 'getTierNetworkObjects');
+
+      component.NetworkObjectGroupId = 'groupId';
+      const netObj = {
+        id: 'objId',
+        name: 'netObj1',
+      } as any;
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        onConfirm();
+
+        return new Subscription();
+      });
+
+      component.removeNetworkObject(netObj);
+
+      expect(removeNetObjSpy).toHaveBeenCalledWith({ networkObjectGroupId: 'groupId', networkObjectId: 'objId' });
+      expect(getGroupNetworkObjectsSpy).toHaveBeenCalled();
+      expect(getTierNetworkObjectsSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('Create', () => {
+    it('should create a networkObjectGroup when in create mode', () => {
+      const service = TestBed.inject(V1NetworkSecurityNetworkObjectGroupsService);
+
+      const createNetObjGroupSpy = jest.spyOn(service, 'createOneNetworkObjectGroup');
+
+      component.ModalMode = ModalMode.Create;
+      component.form.setValue({
+        name: 'net-obj-group1',
+        description: '',
+      });
+
+      component.TierId = 'tierId';
+
+      component.save();
+      expect(createNetObjGroupSpy).toHaveBeenCalledWith({
+        networkObjectGroup: {
+          name: 'net-obj-group1',
+          description: '',
+          tierId: 'tierId',
+        },
+      });
+    });
+
+    it('should edit a networkObjectGroup when in edit mode', () => {
+      const service = TestBed.inject(V1NetworkSecurityNetworkObjectGroupsService);
+
+      const updateNetObjGroupSpy = jest.spyOn(service, 'updateOneNetworkObjectGroup');
+
+      component.ModalMode = ModalMode.Edit;
+      component.form.setValue({
+        name: 'net-obj-group1',
+        description: '',
+      });
+
+      component.TierId = 'tierId';
+      component.NetworkObjectGroupId = 'net-obj-groupId123';
+
+      component.save();
+      expect(updateNetObjGroupSpy).toHaveBeenCalledWith({
+        networkObjectGroup: {
+          name: 'net-obj-group1',
+          description: '',
+        },
+        id: 'net-obj-groupId123',
+      });
+    });
   });
 
   describe('Name', () => {
@@ -103,5 +199,25 @@ describe('NetworkObjectGroupModalComponent', () => {
 
     // Check if ngx.close has been called with the expected argument
     expect(ngxSpy).toHaveBeenCalledWith('networkObjectGroupModal');
+  });
+
+  describe('getData', () => {
+    const createNetworkObjectGroupModalDto = (): NetworkObjectGroupModalDto => ({
+      TierId: '1',
+      NetworkObjectGroup: {
+        tierId: '1',
+        id: '2',
+        name: 'NetworkObjectGroup',
+      },
+      ModalMode: ModalMode.Edit,
+    });
+    it('should disable the name when editing a network object group', () => {
+      const ngx = TestBed.inject(NgxSmartModalService);
+      jest.spyOn(ngx, 'getModalData').mockImplementation(() => createNetworkObjectGroupModalDto());
+
+      component.getData();
+
+      expect(component.form.controls.name.disabled).toBe(true);
+    });
   });
 });

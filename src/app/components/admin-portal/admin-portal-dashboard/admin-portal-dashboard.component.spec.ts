@@ -11,6 +11,8 @@ describe('AdminPortalDashboardComponent', () => {
   beforeEach(() => {
     const authService = {
       completeAuthentication: jest.fn(),
+      subscribe: jest.fn(),
+      currentUser: { subscribe: jest.fn() },
     };
     TestBed.configureTestingModule({
       declarations: [AdminPortalDashboardComponent],
@@ -26,10 +28,16 @@ describe('AdminPortalDashboardComponent', () => {
   });
 
   it('should load data on init', () => {
+    const loadDashboardSpy = jest.spyOn(component, 'loadDashboard');
+    component.ngOnInit();
+
+    expect(loadDashboardSpy).toHaveBeenCalled();
+    // expect(component.dashboardPoller).toEqual()
+  });
+
+  it('should get global messages when loading dashboard', () => {
     const messageService = TestBed.inject(V3GlobalMessagesService);
-
-    component.getGlobalMessages();
-
+    component.loadDashboard();
     expect(messageService.getMessagesMessage).toHaveBeenCalledWith({ page: 1, perPage: 10000 });
   });
 });

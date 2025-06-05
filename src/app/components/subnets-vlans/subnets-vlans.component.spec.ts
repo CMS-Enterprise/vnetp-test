@@ -196,7 +196,6 @@ describe('SubnetsVlansComponent', () => {
     const vlanToDelete = { id: '123', description: 'Bye!' } as any;
     const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
     component.deleteVlan(vlanToDelete);
-    const getVlansMock = jest.spyOn(service, 'getManyVlan');
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
     // expect(getVlansMock).toHaveBeenCalled();
   });
