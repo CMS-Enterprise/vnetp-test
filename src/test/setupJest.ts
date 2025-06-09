@@ -1,8 +1,8 @@
 /* eslint-disable */
 import 'zone.js';
-import 'jest-preset-angular/setup-jest';
-
+import { setupZoneTestEnv } from 'jest-preset-angular/setup-env/zone';
 /* global mocks for jsdom */
+setupZoneTestEnv();
 const mock = () => {
   let storage: { [key: string]: string } = {};
   return {
