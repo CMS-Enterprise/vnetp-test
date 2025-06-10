@@ -33,9 +33,6 @@ export class AdminPortalDashboardComponent implements OnInit {
         this.user = user;
         this.userRoles = this.user.dcsPermissions.map(p => p.roles).flat();
         this.loadDashboard();
-        this.auth.getTenants(this.user.token).subscribe(data => {
-          this.availableTenants = data;
-        });
         this.dashboardPoller = setInterval(() => this.loadDashboard(), 1000 * 300);
       });
     }
@@ -47,15 +44,10 @@ export class AdminPortalDashboardComponent implements OnInit {
   }
 
   public loadDashboard(): void {
-    // this.getGlobalMessages();
+    this.auth.getTenants(this.user.token).subscribe(data => {
+      this.availableTenants = data;
+    });
   }
-
-  // public getGlobalMessages(): void {
-  //   this.globalMessagesService.getManyMessage({ page: 1, perPage: 10000 }).subscribe(data => {
-  //     this.globalMessageTotal = data.total;
-  //     this.status[1].status = 'green';
-  //   });
-  // }
 
   public setTenant(tenant): void {
     const { tenantQueryParameter } = tenant;

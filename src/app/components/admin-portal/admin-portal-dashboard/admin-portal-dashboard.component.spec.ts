@@ -33,13 +33,10 @@ describe('AdminPortalDashboardComponent', () => {
     const authService = TestBed.inject(AuthService);
     authService.currentUser = of({ user: '123', dcsPermissions: [{ roles: 'role1' }] } as any);
     component['auth'].getTenants = jest.fn().mockReturnValue(of([{ tenant: 'tenant' }]) as any);
-    const messageService = TestBed.inject(V3GlobalMessagesService);
     const loadDashboardSpy = jest.spyOn(component, 'loadDashboard');
 
     component.ngOnInit();
 
     expect(loadDashboardSpy).toHaveBeenCalled();
-
-    // expect(messageService.getManyMessage).toHaveBeenCalledWith({ page: 1, perPage: 10000 });
   });
 });
