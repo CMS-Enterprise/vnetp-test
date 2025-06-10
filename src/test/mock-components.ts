@@ -19,7 +19,7 @@ export const MockComponent = (options: Component | string): Component => {
   return Component(metadata)(Mock as any);
 };
 
-export const MockFontAwesomeComponent = MockComponent({ selector: 'fa-icon', inputs: ['icon', 'size', 'spin'] });
+export const MockFontAwesomeComponent = MockComponent({ selector: 'fa-icon', inputs: ['icon', 'size', 'animation'] });
 export const MockTooltipComponent = MockComponent({ selector: 'tooltip', inputs: ['message'] });
 export const MockImportExportComponent = MockComponent({
   selector: 'app-import-export',

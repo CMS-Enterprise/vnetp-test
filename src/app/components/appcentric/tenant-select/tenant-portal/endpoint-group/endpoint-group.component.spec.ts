@@ -6,7 +6,9 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   MockComponent,
   MockFontAwesomeComponent,
+  MockIconButtonComponent,
   MockImportExportComponent,
+  MockNgxSmartModalComponent,
   MockYesNoModalComponent,
 } from '../../../../../../test/mock-components';
 import { HttpClientModule } from '@angular/common/http';
@@ -27,9 +29,11 @@ describe('EndpointGroupComponent', () => {
       imports: [HttpClientModule, RouterTestingModule],
       declarations: [
         EndpointGroupComponent,
+        MockNgxSmartModalComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-endpoint-group-modal', inputs: ['tenantId'] }),
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+        MockIconButtonComponent,
         MockImportExportComponent,
         MockYesNoModalComponent,
       ],

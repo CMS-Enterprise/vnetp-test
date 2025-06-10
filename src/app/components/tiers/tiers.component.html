@@ -77,7 +77,7 @@
 </ng-template>
 
 <ng-template #loading>
-  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [animation]="true ? 'spin' : undefined"></fa-icon>
 </ng-template>
 
 <app-tier-modal></app-tier-modal>

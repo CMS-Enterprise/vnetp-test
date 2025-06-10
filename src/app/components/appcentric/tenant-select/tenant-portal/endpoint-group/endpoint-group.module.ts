@@ -29,7 +29,6 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     FontAwesomeModule,
-    IconButtonModule,
     ImportExportModule,
     TableModule,
     NgSelectModule,

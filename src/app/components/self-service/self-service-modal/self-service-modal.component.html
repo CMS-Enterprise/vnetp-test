@@ -170,7 +170,7 @@
     </div>
 
     <div *ngIf="showSpinner">
-      <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      <fa-icon class="icon" [icon]="['fas', 'spinner']" [animation]="true ? 'spin' : undefined"></fa-icon>
     </div>
   </main>
 

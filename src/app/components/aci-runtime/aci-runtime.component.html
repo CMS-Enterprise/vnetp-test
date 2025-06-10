@@ -20,7 +20,12 @@
       (click)="refreshRuntimeData(); $event.stopPropagation()"
       [disabled]="isRecentlyRefreshed() || isRefreshingRuntimeData"
     >
-      <fa-icon *ngIf="!isRecentlyRefreshed()" class="icon" [icon]="['fas', 'sync-alt']" [spin]="isRefreshingRuntimeData"></fa-icon>
+      <fa-icon
+        *ngIf="!isRecentlyRefreshed()"
+        class="icon"
+        [icon]="['fas', 'sync-alt']"
+        [animation]="isRefreshingRuntimeData ? 'spin' : undefined"
+      ></fa-icon>
       <fa-icon *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" class="icon" [icon]="['fas', 'check']"></fa-icon>
     </button>
   </div>
