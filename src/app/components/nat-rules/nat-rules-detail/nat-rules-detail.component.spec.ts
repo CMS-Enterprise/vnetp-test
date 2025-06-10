@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NatRulesDetailComponent } from './nat-rules-detail.component';
 import {
   MockComponent,

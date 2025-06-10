@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
@@ -19,7 +19,7 @@ describe('AppcentricDashboardComponent', () => {
   let component: AppcentricDashboardComponent;
   let fixture: ComponentFixture<AppcentricDashboardComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     const tenantsService = {
       getManyTenant: jest.fn(() => of({ total: 1 })),
     };
@@ -52,7 +52,7 @@ describe('AppcentricDashboardComponent', () => {
         MockProvider(AppcentricDashboardHelpText),
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AppcentricDashboardComponent);

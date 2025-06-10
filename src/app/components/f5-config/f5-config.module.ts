@@ -5,7 +5,7 @@ import { PartitionDetailsComponent } from './partition-details/partition-details
 import { RouterModule } from '@angular/router';
 import { F5ConfigCardComponent } from './f5-config-card/f5-config-card.component';
 import { AuthGuard } from '../../guards/auth.guard';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { VirtualServerCardComponent } from './partition-details/virtual-server-card/virtual-server-card.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ApplicationPipesModule } from '../../pipes/application-pipes.module';
@@ -46,13 +46,12 @@ const routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    HttpClientModule,
     FontAwesomeModule,
     ApplicationPipesModule,
     FormsModule,
     NgSelectModule,
     LiteTableModule,
   ],
-  exports: [],
+  providers: [provideHttpClient(withInterceptorsFromDi())],
 })
 export class F5ConfigModule {}

@@ -1,7 +1,7 @@
 // Angular Imports
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 // 3rd-Party Imports
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -62,6 +62,7 @@ export function init_app(appLoadService: AppInitService) {
 
 @NgModule({
   declarations: [AppComponent],
+  bootstrap: [AppComponent],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
     AppRoutingModule,
@@ -69,7 +70,6 @@ export function init_app(appLoadService: AppInitService) {
     BrowserModule,
     FontAwesomeModule,
     FormsModule,
-    HttpClientModule,
     NgxSmartModalModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right',
@@ -94,8 +94,8 @@ export function init_app(appLoadService: AppInitService) {
       multi: true,
     },
     Title,
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {
   constructor(iconLibary: FaIconLibrary) {

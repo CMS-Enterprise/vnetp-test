@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdvancedSearchComponent } from './advanced-search-modal.component';
 import { MockNgxSmartModalComponent } from 'src/test/mock-components';
@@ -32,7 +32,7 @@ describe('AdvancedSearchModalComponent', () => {
   let advancedSearchAdapterSubject: Subject<any>;
   let advancedSearchAdapter: any;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     tierContextService = {
       currentTier: of({ id: '' }),
     };
@@ -65,7 +65,7 @@ describe('AdvancedSearchModalComponent', () => {
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AdvancedSearchComponentDummy);
