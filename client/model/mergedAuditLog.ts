@@ -10,37 +10,30 @@
  * Do not edit the class manually.
  */
 import { JustDiffOutput } from './justDiffOutput';
+import { AuditLog } from './auditLog';
 
 
-export interface AuditLog { 
-    id: string;
-    actionType: AuditLogActionTypeEnum;
-    entityType: AuditLogEntityTypeEnum;
-    entityId?: string;
-    entityName?: string;
-    entityBefore?: object;
-    entityAfter?: object;
-    readonly diff?: Array<JustDiffOutput>;
-    changedProperties?: Array<string>;
-    readonly timestamp: string;
-    changedBy: string;
-    groupName?: string;
-    datacenterId: string;
-    tierId?: string;
-    tenantId: string;
+export interface MergedAuditLog { 
+    /**
+     * The diff of the audit logs
+     */
+    diff: Array<JustDiffOutput>;
+    /**
+     * The audit logs
+     */
+    auditLogs: Array<AuditLog>;
+    /**
+     * The ID of the entity
+     */
+    entityId: string;
+    /**
+     * The name of the entity
+     */
+    entityName: string;
+    entityType: MergedAuditLogEntityTypeEnum;
+    expectedTerraformAction: MergedAuditLogExpectedTerraformActionEnum;
 }
-export enum AuditLogActionTypeEnum {
-    BulkUpload = 'BulkUpload',
-    Create = 'Create',
-    Update = 'Update',
-    SoftDelete = 'SoftDelete',
-    Restore = 'Restore',
-    Delete = 'Delete',
-    Deploy = 'Deploy',
-    RuleMove = 'RuleMove',
-    RuleClone = 'RuleClone'
-};
-export enum AuditLogEntityTypeEnum {
+export enum MergedAuditLogEntityTypeEnum {
     Appliance = 'Appliance',
     Datacenter = 'Datacenter',
     Job = 'Job',
@@ -86,6 +79,15 @@ export enum AuditLogEntityTypeEnum {
     WanForm = 'WanForm',
     ExternalRoute = 'ExternalRoute',
     WanFormSubnet = 'WanFormSubnet'
+};
+export enum MergedAuditLogExpectedTerraformActionEnum {
+    NoOp = 'no-op',
+    Create = 'create',
+    Read = 'read',
+    Update = 'update',
+    Delete = 'delete',
+    Replace = 'replace',
+    Unknown = 'unknown'
 };
 
 

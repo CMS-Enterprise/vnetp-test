@@ -86,12 +86,12 @@ export class HttpConfigInterceptor {
               if (errorResponse?.error?.description) {
                 toastrMessage = `Bad Request - ${errorResponse?.error?.description}`;
               } else {
-                // TODO: Adding this temporarily to capture errors without description.
-                // console.log(errorResponse);
                 toastrMessage = 'Unhandled Error Response';
               }
               break;
             case 401:
+              console.log('Got 401');
+              console.log(errorResponse);
               this.auth.logout(true);
               break;
             case 403:

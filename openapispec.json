@@ -20894,6 +20894,149 @@
         ]
       }
     },
+    "/v2/workflows": {
+      "post": {
+        "operationId": "createWorkflowWorkflow",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkflowDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v2/workflows/{id}": {
+      "get": {
+        "operationId": "getWorkflowWorkflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The workflow",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workflow"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/workflows/{id}/validate": {
+      "post": {
+        "operationId": "validateWorkflowWorkflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateWorkflowDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The workflow validation result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowValidationResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/workflows/{id}/plan": {
+      "get": {
+        "operationId": "getWorkflowPlanWorkflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The workflow plan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Buffer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/workflows/{id}/apply": {
+      "get": {
+        "operationId": "applyWorkflowWorkflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workflow"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/status/tower": {
       "get": {
         "operationId": "getTowerStatusStatus",
@@ -24349,6 +24492,27 @@
           "tenantId"
         ]
       },
+      "JustDiffOutput": {
+        "type": "object",
+        "properties": {
+          "op": {
+            "type": "string",
+            "description": "The operation"
+          },
+          "path": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "value": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "op"
+        ]
+      },
       "AuditLog": {
         "type": "object",
         "properties": {
@@ -24419,11 +24583,24 @@
               "WanFormSubnet"
             ]
           },
+          "entityId": {
+            "type": "string"
+          },
+          "entityName": {
+            "type": "string"
+          },
           "entityBefore": {
             "type": "object"
           },
           "entityAfter": {
             "type": "object"
+          },
+          "diff": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JustDiffOutput"
+            }
           },
           "changedProperties": {
             "type": "array",
@@ -25098,6 +25275,392 @@
           "name"
         ]
       },
+      "Buffer": {
+        "type": "object",
+        "properties": {}
+      },
+      "TerraformPlan": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the Terraform plan"
+          },
+          "md5Hash": {
+            "type": "string",
+            "description": "The MD5 hash of the Terraform plan"
+          },
+          "plan": {
+            "description": "The Terraform plan",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Buffer"
+              }
+            ]
+          },
+          "planJson": {
+            "type": "object",
+            "description": "The Terraform plan as JSON"
+          },
+          "workflow": {
+            "description": "The workflow that the Terraform plan belongs to",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Workflow"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "md5Hash",
+          "plan",
+          "planJson",
+          "workflow"
+        ]
+      },
+      "WorkflowValidationError": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "MODULE_MISSING",
+              "MODULE_UNEXPECTED",
+              "MODULE_CONFIG_MISSING",
+              "AUDIT_LOG_RULE_MISSING",
+              "RESOURCE_MATCH_MISSING",
+              "ACTION_MISMATCH",
+              "PROPERTY_VALIDATION",
+              "PROPERTY_MAP_MISSING",
+              "ID_COMPARISON",
+              "UNMATCHED_TERRAFORM_CHANGE"
+            ]
+          },
+          "context": {
+            "type": "object",
+            "description": "The context of the error"
+          }
+        },
+        "required": [
+          "type",
+          "context"
+        ]
+      },
+      "MergedAuditLog": {
+        "type": "object",
+        "properties": {
+          "diff": {
+            "description": "The diff of the audit logs",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JustDiffOutput"
+            }
+          },
+          "auditLogs": {
+            "description": "The audit logs",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditLog"
+            }
+          },
+          "entityId": {
+            "type": "string",
+            "description": "The ID of the entity"
+          },
+          "entityName": {
+            "type": "string",
+            "description": "The name of the entity"
+          },
+          "entityType": {
+            "type": "string",
+            "enum": [
+              "Appliance",
+              "Datacenter",
+              "Job",
+              "provision-tier",
+              "provision-tier-network-security",
+              "LoadBalancerHealthMonitor",
+              "LoadBalancerIrule",
+              "LoadBalancerNode",
+              "LoadBalancerProfile",
+              "LoadBalancerPolicy",
+              "LoadBalancerRoute",
+              "LoadBalancerPool",
+              "LoadBalancerSelfIp",
+              "LoadBalancerVirtualServer",
+              "LoadBalancerVlan",
+              "PhysicalServer",
+              "NetworkObject",
+              "NetworkObjectGroup",
+              "ServiceObject",
+              "ServiceObjectGroup",
+              "StaticRoute",
+              "FirewallRule",
+              "NatRule",
+              "Subnet",
+              "Vlan",
+              "Tier",
+              "FirewallRuleGroup",
+              "NatRuleGroup",
+              "L3Out",
+              "Tenant",
+              "AppCentricSubnet",
+              "ApplicationProfile",
+              "BridgeDomain",
+              "Contract",
+              "EndpointGroup",
+              "EndpointSecurityGroup",
+              "Filter",
+              "FilterEntry",
+              "Subject",
+              "Vrf",
+              "RouteProfile",
+              "Selector",
+              "WanForm",
+              "ExternalRoute",
+              "WanFormSubnet"
+            ]
+          },
+          "expectedTerraformAction": {
+            "type": "string",
+            "enum": [
+              "no-op",
+              "create",
+              "read",
+              "update",
+              "delete",
+              "replace",
+              "unknown"
+            ]
+          }
+        },
+        "required": [
+          "diff",
+          "auditLogs",
+          "entityId",
+          "entityName",
+          "entityType",
+          "expectedTerraformAction"
+        ]
+      },
+      "TruncatedTerraformResourceChange": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "The address of the Terraform resource"
+          },
+          "module_address": {
+            "type": "string",
+            "description": "The module address of the Terraform resource"
+          },
+          "mode": {
+            "type": "string",
+            "description": "The mode of the Terraform resource",
+            "enum": [
+              "managed",
+              "data"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the Terraform resource"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the Terraform resource"
+          },
+          "index": {
+            "type": "string",
+            "description": "The index of the Terraform resource"
+          },
+          "actions": {
+            "type": "string",
+            "description": "The actions of the Terraform resource",
+            "enum": [
+              "no-op",
+              "create",
+              "read",
+              "update",
+              "delete",
+              "replace",
+              "unknown"
+            ]
+          },
+          "provider_name": {
+            "type": "string",
+            "description": "The provider name of the Terraform resource"
+          },
+          "diff": {
+            "description": "Diff between before and after state of the Terraform resource",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JustDiffOutput"
+            }
+          }
+        },
+        "required": [
+          "address",
+          "module_address",
+          "mode",
+          "type",
+          "name",
+          "index",
+          "actions",
+          "provider_name",
+          "diff"
+        ]
+      },
+      "AuditLogWithTerraformActions": {
+        "type": "object",
+        "properties": {
+          "mergedAuditLog": {
+            "description": "Merged audit logs",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MergedAuditLog"
+              }
+            ]
+          },
+          "terraformResourceChanges": {
+            "description": "Terraform resource changes",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TruncatedTerraformResourceChange"
+            }
+          }
+        },
+        "required": [
+          "mergedAuditLog",
+          "terraformResourceChanges"
+        ]
+      },
+      "WorkflowValidationResultDto": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "description": "Whether the workflow is valid"
+          },
+          "errors": {
+            "description": "Validation errors (if any)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowValidationError"
+            }
+          },
+          "auditLogWithTerraformActions": {
+            "description": "The audit log with Terraform actions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditLogWithTerraformActions"
+            }
+          },
+          "invokedTerraformModules": {
+            "description": "The invoked Terraform modules",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expectedTerraformModules": {
+            "description": "The expected Terraform modules",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "valid",
+          "errors",
+          "auditLogWithTerraformActions",
+          "invokedTerraformModules",
+          "expectedTerraformModules"
+        ]
+      },
+      "Workflow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "type": "number",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the workflow"
+          },
+          "tenantId": {
+            "type": "string",
+            "description": "The tenant ID"
+          },
+          "status": {
+            "type": "string",
+            "description": "The status of the workflow"
+          },
+          "finishedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The finished at date"
+          },
+          "terraformModule": {
+            "type": "string",
+            "description": "The Terraform module that the workflow is for",
+            "enum": [
+              "overlay",
+              "underlay"
+            ]
+          },
+          "approvalType": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "automated"
+            ]
+          },
+          "plan": {
+            "description": "The Terraform plan",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TerraformPlan"
+              }
+            ]
+          },
+          "validationResult": {
+            "description": "The validation result",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WorkflowValidationResultDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "tenantId",
+          "status",
+          "finishedAt",
+          "terraformModule",
+          "approvalType",
+          "plan",
+          "validationResult"
+        ]
+      },
       "Tenant": {
         "type": "object",
         "properties": {
@@ -25228,6 +25791,14 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/WanForm"
+              }
+            ]
+          },
+          "workflows": {
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Workflow"
               }
             ]
           },
@@ -29461,6 +30032,31 @@
         "required": [
           "tenants"
         ]
+      },
+      "CreateWorkflowDto": {
+        "type": "object",
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "description": "The ID of the tenant"
+          },
+          "workflowType": {
+            "type": "string",
+            "description": "The type of the workflow",
+            "enum": [
+              "overlay",
+              "underlay"
+            ]
+          }
+        },
+        "required": [
+          "tenantId",
+          "workflowType"
+        ]
+      },
+      "ValidateWorkflowDto": {
+        "type": "object",
+        "properties": {}
       },
       "SelfServiceRawConfig": {
         "type": "object",

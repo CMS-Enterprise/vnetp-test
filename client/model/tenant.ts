@@ -11,6 +11,7 @@
  */
 import { L3Out } from './l3Out';
 import { EndpointGroup } from './endpointGroup';
+import { Workflow } from './workflow';
 import { BridgeDomain } from './bridgeDomain';
 import { Vrf } from './vrf';
 import { AuditLog } from './auditLog';
@@ -47,6 +48,7 @@ export interface Tenant {
     readonly l3outs?: Array<L3Out>;
     readonly auditLogs?: Array<AuditLog>;
     readonly wanForms?: WanForm;
+    readonly workflows?: Workflow;
     readonly datacenterId: string;
     readonly datacenter: Datacenter;
     readonly multiVrf: boolean;
