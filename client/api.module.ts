@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
-import { DefaultService } from './api/default.service';
 import { UtilitiesService } from './api/utilities.service';
 import { V1AuditLogService } from './api/v1AuditLog.service';
 import { V1AuthService } from './api/v1Auth.service';
@@ -55,6 +54,7 @@ import { V2AppCentricSelectorsService } from './api/v2AppCentricSelectors.servic
 import { V2AppCentricSubjectsService } from './api/v2AppCentricSubjects.service';
 import { V2AppCentricTenantsService } from './api/v2AppCentricTenants.service';
 import { V2AppCentricVrfsService } from './api/v2AppCentricVrfs.service';
+import { V2WorkflowsService } from './api/v2Workflows.service';
 import { V3GlobalMessagesService } from './api/v3GlobalMessages.service';
 
 @NgModule({

@@ -1,0 +1,15 @@
+TASK: Fix pagination error in workflow component - "workflows" ID not matching registered PaginationInstance
+
+ANALYSIS COMPLETED:
+- Compared workflow.component vs l3-outs.component app-table usage
+- Root cause: Workflow component passes only data array to table, while L3-Outs passes full response object
+- Full response object contains pagination metadata needed for ngx-pagination
+- Workflow: `this.workflows = response.data` (wrong)  
+- L3-Outs: `this.l3Outs = data` (correct)
+
+PLAN:
+1. Modify workflow component getWorkflows() method to store full response object instead of just data array
+2. Update TypeScript property type from Workflow[] to response DTO type
+3. Consider adding missing searchColumns and searchParams binding like L3-Outs has
+
+STATUS: PLAN mode - Analysis complete, ready for implementation 

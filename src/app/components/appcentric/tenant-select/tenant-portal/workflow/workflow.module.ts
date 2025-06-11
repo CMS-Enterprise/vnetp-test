@@ -11,6 +11,7 @@ import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { WorkflowComponent } from './workflow.component';
+import { WorkflowViewModalComponent } from './workflow-view-modal/workflow-view-modal.component';
 
 const routes: Routes = [
   {
@@ -20,7 +21,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [WorkflowComponent],
+  declarations: [WorkflowComponent, WorkflowViewModalComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -35,6 +36,6 @@ const routes: Routes = [
     NgSelectModule,
     YesNoModalModule,
   ],
-  exports: [WorkflowComponent],
+  exports: [WorkflowComponent, WorkflowViewModalComponent],
 })
 export class WorkflowModule {}

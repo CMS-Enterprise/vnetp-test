@@ -1,0 +1,15 @@
+<ngx-smart-modal
+  #workflowViewModal
+  identifier="workflowViewModal"
+  [dismissable]="false"
+  customClass="large-modal"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+>
+  <header class="modal-header">
+    <h4 class="modal-title">Workflow View</h4>
+  </header>
+  <div class="modal-body">
+    <h1>Workflow View</h1>
+  </div>
+</ngx-smart-modal>

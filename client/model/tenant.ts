@@ -48,7 +48,7 @@ export interface Tenant {
     readonly l3outs?: Array<L3Out>;
     readonly auditLogs?: Array<AuditLog>;
     readonly wanForms?: WanForm;
-    readonly workflows?: Workflow;
+    readonly workflows?: Array<Workflow>;
     readonly datacenterId: string;
     readonly datacenter: Datacenter;
     readonly multiVrf: boolean;

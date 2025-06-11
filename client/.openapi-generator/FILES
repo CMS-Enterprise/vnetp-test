@@ -2,7 +2,6 @@
 README.md
 api.module.ts
 api/api.ts
-api/default.service.ts
 api/utilities.service.ts
 api/v1AuditLog.service.ts
 api/v1Auth.service.ts
@@ -55,6 +54,7 @@ api/v2AppCentricSelectors.service.ts
 api/v2AppCentricSubjects.service.ts
 api/v2AppCentricTenants.service.ts
 api/v2AppCentricVrfs.service.ts
+api/v2Workflows.service.ts
 api/v3GlobalMessages.service.ts
 configuration.ts
 encoder.ts
@@ -112,6 +112,7 @@ model/createManyVlanDto.ts
 model/createManyVrfDto.ts
 model/createManyWanFormDto.ts
 model/createManyWanFormSubnetDto.ts
+model/createManyWorkflowDto.ts
 model/createManyZoneDto.ts
 model/createTenantV2Dto.ts
 model/createWorkflowDto.ts
@@ -191,6 +192,7 @@ model/getManyVlanResponseDto.ts
 model/getManyVrfResponseDto.ts
 model/getManyWanFormResponseDto.ts
 model/getManyWanFormSubnetResponseDto.ts
+model/getManyWorkflowResponseDto.ts
 model/getManyZoneResponseDto.ts
 model/hitcountData.ts
 model/hitcountJobCreateDto.ts

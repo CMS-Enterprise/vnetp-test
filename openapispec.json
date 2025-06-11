@@ -20896,7 +20896,7 @@
     },
     "/v2/workflows": {
       "post": {
-        "operationId": "createWorkflowWorkflow",
+        "operationId": "createOneWorkflow",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -20912,18 +20912,119 @@
           "202": {
             "description": ""
           }
-        }
-      }
-    },
-    "/v2/workflows/{id}": {
+        },
+        "tags": [
+          "v2/workflows"
+        ]
+      },
       "get": {
-        "operationId": "getWorkflowWorkflow",
+        "operationId": "getManyWorkflow",
+        "summary": "Get many Workflow",
         "parameters": [
           {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
             "schema": {
               "type": "string"
             }
@@ -20931,16 +21032,51 @@
         ],
         "responses": {
           "200": {
-            "description": "The workflow",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Workflow"
+                  "title": "GetManyWorkflowResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Workflow"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
       }
     },
     "/v2/workflows/{id}/validate": {
@@ -20978,7 +21114,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
       }
     },
     "/v2/workflows/{id}/plan": {
@@ -21006,7 +21145,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
       }
     },
     "/v2/workflows/{id}/apply": {
@@ -21034,7 +21176,183 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
+      }
+    },
+    "/v2/workflows/bulk": {
+      "post": {
+        "operationId": "createManyWorkflow",
+        "summary": "Create many Workflow",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "CreateManyWorkflowDto",
+                "type": "object",
+                "properties": {
+                  "bulk": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Workflow"
+                    }
+                  }
+                },
+                "required": [
+                  "bulk"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Workflow"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
+      }
+    },
+    "/v2/workflows/{id}": {
+      "get": {
+        "operationId": "getOneWorkflow",
+        "summary": "Get one Workflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workflow"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneWorkflow",
+        "summary": "Update one Workflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Workflow"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workflow"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneWorkflow",
+        "summary": "Delete one Workflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workflow"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
       }
     },
     "/v1/status/tower": {
@@ -25796,11 +26114,10 @@
           },
           "workflows": {
             "readOnly": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Workflow"
-              }
-            ]
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Workflow"
+            }
           },
           "datacenterId": {
             "type": "string",
