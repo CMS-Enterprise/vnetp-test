@@ -1,0 +1,71 @@
+:host ::ng-deep .mat-mdc-tab-body-content {
+  padding: 20px;
+}
+
+.modal-dialog {
+  max-width: 80vw;
+  width: 80vw;
+}
+
+.mat-card {
+  margin-bottom: 15px;
+}
+
+.mat-expansion-panel-header-title {
+  font-weight: 500;
+}
+
+.mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.terraform-changes-table {
+  width: 100%;
+  margin-top: 15px;
+  table-layout: fixed;
+}
+
+.terraform-changes-table td,
+.terraform-changes-table th {
+  padding: 12px 8px;
+  word-wrap: break-word;
+}
+
+.mat-column-actions {
+  width: 100px;
+}
+
+.mat-column-address {
+  width: 40%;
+}
+
+.mat-column-diff {
+  width: 30%;
+}
+
+.mat-column-diff pre {
+  max-height: 150px;
+  overflow-y: auto;
+  margin: 0;
+}
+
+pre {
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.mat-chip {
+  margin-right: 5px;
+}
+
+.context-object {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+}

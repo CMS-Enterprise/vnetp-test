@@ -1,20 +1,23 @@
 import { Component } from '@angular/core';
 import { V2WorkflowsService, Workflow } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { WorkflowViewModalDto } from './workflow-view-modal-dto';
+import { WorkflowViewModalData } from './workflow-view-modal.data';
 
 @Component({
   selector: 'app-workflow-view-modal',
   templateUrl: './workflow-view-modal.component.html',
+  styleUrls: ['./workflow-view-modal.component.scss'],
 })
 export class WorkflowViewModalComponent {
   public workflow: Workflow;
   public workflowId: string;
+  public planJson: string;
+  public displayedColumns: string[] = ['actions', 'address', 'type', 'name', 'diff'];
 
   constructor(private readonly workflowService: V2WorkflowsService, private readonly ngxSmartModal: NgxSmartModalService) {}
 
   getData() {
-    const data = this.ngxSmartModal.getModalData('workflowViewModal') as WorkflowViewModalDto;
+    const data = this.ngxSmartModal.getModalData('workflowViewModal') as WorkflowViewModalData;
     this.workflowId = data.workflowId;
     this.getWorkflow();
   }
@@ -27,11 +30,29 @@ export class WorkflowViewModalComponent {
       })
       .subscribe(workflow => {
         this.workflow = workflow;
+        console.log('here');
+        if (this.workflow.plan?.planJson) {
+          const planObject = this.workflow.plan.planJson;
+          this.planJson = JSON.stringify(planObject, null, 2);
+        }
       });
+  }
+
+  approveWorkflow() {
+    this.workflowService.approveWorkflowWorkflow({ id: this.workflowId }).subscribe(() => {
+      this.getWorkflow();
+    });
+  }
+
+  applyWorkflow() {
+    this.workflowService.applyWorkflowWorkflow({ id: this.workflowId }).subscribe(() => {
+      this.getWorkflow();
+    });
   }
 
   reset() {
     this.workflow = null;
     this.workflowId = null;
+    this.planJson = null;
   }
 }

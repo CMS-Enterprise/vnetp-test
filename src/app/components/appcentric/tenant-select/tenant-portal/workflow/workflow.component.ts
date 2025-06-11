@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { TableConfig } from 'src/app/common/table/table.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
-import { WorkflowViewModalDto } from './workflow-view-modal/workflow-view-modal-dto';
+import { WorkflowViewModalData } from './workflow-view-modal/workflow-view-modal.data';
 
 @Component({
   selector: 'app-workflow',
@@ -102,11 +102,19 @@ export class WorkflowComponent implements OnInit {
       });
   }
 
+  deleteWorkflow(workflow: Workflow) {
+    this.workflowService.deleteOneWorkflow({ id: workflow.id }).subscribe(() => {
+      this.getWorkflows();
+    });
+  }
+
   openWorkflowViewModal(workflow: Workflow) {
     this.subscribeToWorkflowViewModal();
-    const dto = new WorkflowViewModalDto();
-    dto.workflowId = workflow.id;
-    this.ngxSmartModal.setModalData(dto, 'workflowViewModal');
+    const data: WorkflowViewModalData = {
+      workflowId: workflow.id,
+    };
+    data.workflowId = workflow.id;
+    this.ngxSmartModal.setModalData(data, 'workflowViewModal');
     this.ngxSmartModal.getModal('workflowViewModal').open();
   }
 

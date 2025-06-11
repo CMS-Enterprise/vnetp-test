@@ -29,11 +29,11 @@ export interface Workflow {
     /**
      * The status of the workflow
      */
-    status: string;
+    status: WorkflowStatusEnum;
     /**
      * The finished at date
      */
-    finishedAt: string;
+    readonly finishedAt: string;
     /**
      * The Terraform module that the workflow is for
      */
@@ -48,6 +48,16 @@ export interface Workflow {
      */
     validationResult: WorkflowValidationResultDto;
 }
+export enum WorkflowStatusEnum {
+    Failed = 'failed',
+    Rejected = 'rejected',
+    Pending = 'pending',
+    Validating = 'validating',
+    ValidAwaitingManualApproval = 'valid_awaiting_manual_approval',
+    Approved = 'approved',
+    Applying = 'applying',
+    Completed = 'completed'
+};
 export enum WorkflowTerraformModuleEnum {
     Overlay = 'overlay',
     Underlay = 'underlay'

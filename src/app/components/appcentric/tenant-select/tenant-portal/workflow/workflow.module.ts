@@ -12,6 +12,13 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
 import { WorkflowComponent } from './workflow.component';
 import { WorkflowViewModalComponent } from './workflow-view-modal/workflow-view-modal.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes: Routes = [
   {
@@ -35,6 +42,13 @@ const routes: Routes = [
     TooltipModule,
     NgSelectModule,
     YesNoModalModule,
+    MatTabsModule,
+    MatCardModule,
+    MatChipsModule,
+    MatExpansionModule,
+    MatTableModule,
+    MatIconModule,
+    MatButtonModule,
   ],
   exports: [WorkflowComponent, WorkflowViewModalComponent],
 })

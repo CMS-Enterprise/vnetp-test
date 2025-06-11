@@ -19,6 +19,7 @@
   <ng-template #actionsTemplate let-workflow="datum">
     <section class="table__actions">
       <app-icon-button icon="cogs" label="View Workflow" (handleClick)="openWorkflowViewModal(workflow)"></app-icon-button>
+      <app-icon-button icon="delete" label="Delete Workflow" (handleClick)="deleteWorkflow(workflow)"></app-icon-button>
     </section>
   </ng-template>
 

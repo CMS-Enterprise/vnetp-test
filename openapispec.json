@@ -21079,6 +21079,131 @@
         ]
       }
     },
+    "/v2/workflows/{id}": {
+      "get": {
+        "operationId": "getOneWorkflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The workflow",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workflow"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
+      },
+      "put": {
+        "operationId": "updateOneWorkflow",
+        "summary": "Update one Workflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Workflow"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workflow"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneWorkflow",
+        "summary": "Delete one Workflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workflow"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
+      }
+    },
     "/v2/workflows/{id}/validate": {
       "post": {
         "operationId": "validateWorkflowWorkflow",
@@ -21123,6 +21248,37 @@
     "/v2/workflows/{id}/plan": {
       "get": {
         "operationId": "getWorkflowPlanWorkflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The workflow plan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Buffer"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
+      }
+    },
+    "/v2/workflows/{id}/approve": {
+      "post": {
+        "operationId": "approveWorkflowWorkflow",
         "parameters": [
           {
             "name": "id",
@@ -21219,132 +21375,6 @@
                   "items": {
                     "$ref": "#/components/schemas/Workflow"
                   }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/workflows"
-        ]
-      }
-    },
-    "/v2/workflows/{id}": {
-      "get": {
-        "operationId": "getOneWorkflow",
-        "summary": "Get one Workflow",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "relations",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "join",
-            "required": false,
-            "in": "query",
-            "description": "Comma-seperated array of relations to join.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Workflow"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/workflows"
-        ]
-      },
-      "put": {
-        "operationId": "updateOneWorkflow",
-        "summary": "Update one Workflow",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Workflow"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Workflow"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "v2/workflows"
-        ]
-      },
-      "delete": {
-        "operationId": "deleteOneWorkflow",
-        "summary": "Delete one Workflow",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "description": "UUID.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Workflow"
                 }
               }
             }
@@ -25929,12 +25959,23 @@
           },
           "status": {
             "type": "string",
-            "description": "The status of the workflow"
+            "description": "The status of the workflow",
+            "enum": [
+              "failed",
+              "rejected",
+              "pending",
+              "validating",
+              "valid_awaiting_manual_approval",
+              "approved",
+              "applying",
+              "completed"
+            ]
           },
           "finishedAt": {
             "format": "date-time",
             "type": "string",
-            "description": "The finished at date"
+            "description": "The finished at date",
+            "readOnly": true
           },
           "terraformModule": {
             "type": "string",
