@@ -19,6 +19,18 @@ export interface WorkflowValidationResultDto {
      */
     valid: boolean;
     /**
+     * Whether the workflow is applyable
+     */
+    terraformApplyable: boolean;
+    /**
+     * Whether the workflow is errored
+     */
+    terraformErrored: boolean;
+    /**
+     * Whether the workflow is complete
+     */
+    terraformComplete: boolean;
+    /**
      * Validation errors (if any)
      */
     errors: Array<WorkflowValidationError>;

@@ -28,7 +28,8 @@ export enum WorkflowValidationErrorTypeEnum {
     PropertyValidation = 'PROPERTY_VALIDATION',
     PropertyMapMissing = 'PROPERTY_MAP_MISSING',
     IdComparison = 'ID_COMPARISON',
-    UnmatchedTerraformChange = 'UNMATCHED_TERRAFORM_CHANGE'
+    UnmatchedTerraformChange = 'UNMATCHED_TERRAFORM_CHANGE',
+    ResourceDrift = 'RESOURCE_DRIFT'
 };
 
 

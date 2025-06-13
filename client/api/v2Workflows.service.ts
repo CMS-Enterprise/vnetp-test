@@ -209,10 +209,10 @@ export class V2WorkflowsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public approveWorkflowWorkflow(requestParameters: ApproveWorkflowWorkflowRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
-    public approveWorkflowWorkflow(requestParameters: ApproveWorkflowWorkflowRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
-    public approveWorkflowWorkflow(requestParameters: ApproveWorkflowWorkflowRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
-    public approveWorkflowWorkflow(requestParameters: ApproveWorkflowWorkflowRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public approveWorkflowWorkflow(requestParameters: ApproveWorkflowWorkflowRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public approveWorkflowWorkflow(requestParameters: ApproveWorkflowWorkflowRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public approveWorkflowWorkflow(requestParameters: ApproveWorkflowWorkflowRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public approveWorkflowWorkflow(requestParameters: ApproveWorkflowWorkflowRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling approveWorkflowWorkflow.');
@@ -224,7 +224,6 @@ export class V2WorkflowsService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -238,7 +237,7 @@ export class V2WorkflowsService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<object>(`${this.configuration.basePath}/v2/workflows/${encodeURIComponent(String(id))}/approve`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v2/workflows/${encodeURIComponent(String(id))}/approve`,
             null,
             {
                 responseType: <any>responseType,
@@ -580,10 +579,10 @@ export class V2WorkflowsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWorkflowPlanWorkflow(requestParameters: GetWorkflowPlanWorkflowRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
-    public getWorkflowPlanWorkflow(requestParameters: GetWorkflowPlanWorkflowRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
-    public getWorkflowPlanWorkflow(requestParameters: GetWorkflowPlanWorkflowRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
-    public getWorkflowPlanWorkflow(requestParameters: GetWorkflowPlanWorkflowRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getWorkflowPlanWorkflow(requestParameters: GetWorkflowPlanWorkflowRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream'}): Observable<Blob>;
+    public getWorkflowPlanWorkflow(requestParameters: GetWorkflowPlanWorkflowRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream'}): Observable<HttpResponse<Blob>>;
+    public getWorkflowPlanWorkflow(requestParameters: GetWorkflowPlanWorkflowRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/octet-stream'}): Observable<HttpEvent<Blob>>;
+    public getWorkflowPlanWorkflow(requestParameters: GetWorkflowPlanWorkflowRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/octet-stream'}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getWorkflowPlanWorkflow.');
@@ -595,7 +594,7 @@ export class V2WorkflowsService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
+                'application/octet-stream'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -604,14 +603,9 @@ export class V2WorkflowsService {
         }
 
 
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<object>(`${this.configuration.basePath}/v2/workflows/${encodeURIComponent(String(id))}/plan`,
+        return this.httpClient.get(`${this.configuration.basePath}/v2/workflows/${encodeURIComponent(String(id))}/plan`,
             {
-                responseType: <any>responseType,
+                responseType: "blob",
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

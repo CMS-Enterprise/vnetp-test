@@ -49,14 +49,17 @@ export interface Workflow {
     validationResult: WorkflowValidationResultDto;
 }
 export enum WorkflowStatusEnum {
-    Failed = 'failed',
-    Rejected = 'rejected',
+    ApplyFailed = 'apply_failed',
+    PlanFailed = 'plan_failed',
+    PlanIncomplete = 'plan_incomplete',
     Pending = 'pending',
     Validating = 'validating',
     ValidAwaitingManualApproval = 'valid_awaiting_manual_approval',
+    InvalidApplyable = 'invalid_applyable',
     Approved = 'approved',
     Applying = 'applying',
-    Completed = 'completed'
+    Completed = 'completed',
+    CompletedNoChanges = 'completed_no_changes'
 };
 export enum WorkflowTerraformModuleEnum {
     Overlay = 'overlay',

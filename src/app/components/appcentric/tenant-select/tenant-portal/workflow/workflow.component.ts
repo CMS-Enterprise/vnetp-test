@@ -93,6 +93,7 @@ export class WorkflowComponent implements OnInit {
       .getManyWorkflow({
         fields: ['id', 'name', 'status', 'terraformModule', 'approvalType'],
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
+        sort: ['createdAt,DESC'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })

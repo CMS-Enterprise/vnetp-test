@@ -21119,7 +21119,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The workflow",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -21261,11 +21261,12 @@
         ],
         "responses": {
           "200": {
-            "description": "The workflow plan",
+            "description": "Binary terraform plan file",
             "content": {
-              "application/json": {
+              "application/octet-stream": {
                 "schema": {
-                  "$ref": "#/components/schemas/Buffer"
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }
@@ -21292,14 +21293,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The workflow plan",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Buffer"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -25682,7 +25676,8 @@
               "PROPERTY_VALIDATION",
               "PROPERTY_MAP_MISSING",
               "ID_COMPARISON",
-              "UNMATCHED_TERRAFORM_CHANGE"
+              "UNMATCHED_TERRAFORM_CHANGE",
+              "RESOURCE_DRIFT"
             ]
           },
           "context": {
@@ -25891,6 +25886,18 @@
             "type": "boolean",
             "description": "Whether the workflow is valid"
           },
+          "terraformApplyable": {
+            "type": "boolean",
+            "description": "Whether the workflow is applyable"
+          },
+          "terraformErrored": {
+            "type": "boolean",
+            "description": "Whether the workflow is errored"
+          },
+          "terraformComplete": {
+            "type": "boolean",
+            "description": "Whether the workflow is complete"
+          },
           "errors": {
             "description": "Validation errors (if any)",
             "type": "array",
@@ -25922,6 +25929,9 @@
         },
         "required": [
           "valid",
+          "terraformApplyable",
+          "terraformErrored",
+          "terraformComplete",
           "errors",
           "auditLogWithTerraformActions",
           "invokedTerraformModules",
@@ -25961,14 +25971,17 @@
             "type": "string",
             "description": "The status of the workflow",
             "enum": [
-              "failed",
-              "rejected",
+              "apply_failed",
+              "plan_failed",
+              "plan_incomplete",
               "pending",
               "validating",
               "valid_awaiting_manual_approval",
+              "invalid_applyable",
               "approved",
               "applying",
-              "completed"
+              "completed",
+              "completed_no_changes"
             ]
           },
           "finishedAt": {
