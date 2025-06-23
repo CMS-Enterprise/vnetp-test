@@ -7,6 +7,8 @@ import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-s
 import { TableConfig } from 'src/app/common/table/table.component';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { WorkflowViewModalData } from './workflow-view-modal/workflow-view-modal.data';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 
 @Component({
   selector: 'app-workflow',
@@ -26,6 +28,7 @@ export class WorkflowComponent implements OnInit {
     private readonly workflowService: V2WorkflowsService,
     private readonly router: Router,
     private readonly ngxSmartModal: NgxSmartModalService,
+    private readonly ngx: NgxSmartModalService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<Workflow>();
     advancedSearchAdapter.setService(this.workflowService);
@@ -64,16 +67,26 @@ export class WorkflowComponent implements OnInit {
   }
 
   createWorkflow(workflowType: CreateWorkflowDtoWorkflowTypeEnum) {
-    this.workflowService
-      .createOneWorkflow({
-        createWorkflowDto: {
-          tenantId: this.tenantId,
-          workflowType,
-        },
-      })
-      .subscribe(() => {
-        this.getWorkflows();
-      });
+    const modalDto = new YesNoModalDto('Create Workflow', `Are you sure you would like to create a ${workflowType} workflow?`);
+
+    const onConfirm = () => {
+      this.workflowService
+        .createOneWorkflow({
+          createWorkflowDto: {
+            tenantId: this.tenantId,
+            workflowType,
+          },
+        })
+        .subscribe(() => {
+          this.getWorkflows();
+        });
+    };
+
+    const onClose = () => {
+      this.getWorkflows();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
   getWorkflows(event?) {
@@ -104,9 +117,19 @@ export class WorkflowComponent implements OnInit {
   }
 
   deleteWorkflow(workflow: Workflow) {
-    this.workflowService.deleteOneWorkflow({ id: workflow.id }).subscribe(() => {
+    const modalDto = new YesNoModalDto('Delete Workflow', `Are you sure you would like to delete ${workflow.name}?`);
+
+    const onConfirm = () => {
+      this.workflowService.deleteOneWorkflow({ id: workflow.id }).subscribe(() => {
+        this.getWorkflows();
+      });
+    };
+
+    const onClose = () => {
       this.getWorkflows();
-    });
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
   }
 
   openWorkflowViewModal(workflow: Workflow) {

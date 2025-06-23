@@ -65,7 +65,7 @@ model/aciRuntimeJobCreateDto.ts
 model/appCentricSubnet.ts
 model/applicationProfile.ts
 model/auditLog.ts
-model/auditLogWithTerraformActions.ts
+model/auditLogValidationResult.ts
 model/bridgeDomain.ts
 model/connectionTrace.ts
 model/connectivityNode.ts

@@ -27,7 +27,8 @@ export class HttpConfigInterceptor {
 
       // If no tenant is selected, log the user out and allow them to reselect a tenant.
       if (!tenant) {
-        this.auth.logout();
+        console.log('Logged out due to missing tenant');
+        // this.auth.logout();
       }
 
       const headers = new HttpHeaders({
@@ -90,8 +91,6 @@ export class HttpConfigInterceptor {
               }
               break;
             case 401:
-              console.log('Got 401');
-              console.log(errorResponse);
               this.auth.logout(true);
               break;
             case 403:

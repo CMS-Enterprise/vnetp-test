@@ -25855,11 +25855,11 @@
           "diff"
         ]
       },
-      "AuditLogWithTerraformActions": {
+      "AuditLogValidationResult": {
         "type": "object",
         "properties": {
           "mergedAuditLog": {
-            "description": "Merged audit logs",
+            "description": "Merged audit log",
             "allOf": [
               {
                 "$ref": "#/components/schemas/MergedAuditLog"
@@ -25867,16 +25867,40 @@
             ]
           },
           "terraformResourceChanges": {
-            "description": "Terraform resource changes",
+            "description": "Matched terraform resource changes",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TruncatedTerraformResourceChange"
             }
+          },
+          "processingStatus": {
+            "type": "string",
+            "description": "Processing status of this audit log",
+            "enum": [
+              "success",
+              "skipped",
+              "validation_error",
+              "no_tf_match",
+              "no_rules"
+            ]
+          },
+          "validationErrors": {
+            "description": "Validation errors specific to this audit log",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowValidationError"
+            }
+          },
+          "statusReason": {
+            "type": "string",
+            "description": "Reason for the current status"
           }
         },
         "required": [
           "mergedAuditLog",
-          "terraformResourceChanges"
+          "terraformResourceChanges",
+          "processingStatus",
+          "validationErrors"
         ]
       },
       "WorkflowValidationResultDto": {
@@ -25898,18 +25922,25 @@
             "type": "boolean",
             "description": "Whether the workflow is complete"
           },
-          "errors": {
-            "description": "Validation errors (if any)",
+          "globalErrors": {
+            "description": "Global validation errors (modules, drift, etc.)",
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/WorkflowValidationError"
             }
           },
-          "auditLogWithTerraformActions": {
-            "description": "The audit log with Terraform actions",
+          "auditLogResults": {
+            "description": "Audit log validation results - includes ALL audit logs with their status",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AuditLogWithTerraformActions"
+              "$ref": "#/components/schemas/AuditLogValidationResult"
+            }
+          },
+          "unmatchedTerraformChanges": {
+            "description": "Terraform resource changes that could not be matched to any audit log",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TruncatedTerraformResourceChange"
             }
           },
           "invokedTerraformModules": {
@@ -25932,8 +25963,9 @@
           "terraformApplyable",
           "terraformErrored",
           "terraformComplete",
-          "errors",
-          "auditLogWithTerraformActions",
+          "globalErrors",
+          "auditLogResults",
+          "unmatchedTerraformChanges",
           "invokedTerraformModules",
           "expectedTerraformModules"
         ]

@@ -10,7 +10,8 @@
  * Do not edit the class manually.
  */
 import { WorkflowValidationError } from './workflowValidationError';
-import { AuditLogWithTerraformActions } from './auditLogWithTerraformActions';
+import { AuditLogValidationResult } from './auditLogValidationResult';
+import { TruncatedTerraformResourceChange } from './truncatedTerraformResourceChange';
 
 
 export interface WorkflowValidationResultDto { 
@@ -31,13 +32,17 @@ export interface WorkflowValidationResultDto {
      */
     terraformComplete: boolean;
     /**
-     * Validation errors (if any)
+     * Global validation errors (modules, drift, etc.)
      */
-    errors: Array<WorkflowValidationError>;
+    globalErrors: Array<WorkflowValidationError>;
     /**
-     * The audit log with Terraform actions
+     * Audit log validation results - includes ALL audit logs with their status
      */
-    auditLogWithTerraformActions: Array<AuditLogWithTerraformActions>;
+    auditLogResults: Array<AuditLogValidationResult>;
+    /**
+     * Terraform resource changes that could not be matched to any audit log
+     */
+    unmatchedTerraformChanges: Array<TruncatedTerraformResourceChange>;
     /**
      * The invoked Terraform modules
      */

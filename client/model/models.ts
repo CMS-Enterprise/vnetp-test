@@ -3,7 +3,7 @@ export * from './aciRuntimeJobCreateDto';
 export * from './appCentricSubnet';
 export * from './applicationProfile';
 export * from './auditLog';
-export * from './auditLogWithTerraformActions';
+export * from './auditLogValidationResult';
 export * from './bridgeDomain';
 export * from './connectionTrace';
 export * from './connectivityNode';
