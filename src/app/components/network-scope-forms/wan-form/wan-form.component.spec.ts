@@ -7,7 +7,6 @@ import { WanFormModalDto } from '../../../models/network-scope-forms/wan-form-mo
 import { ModalMode } from '../../../models/other/modal-mode';
 import { DatacenterContextService } from '../../../services/datacenter-context.service';
 import { TableContextService } from '../../../services/table-context.service';
-import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { WanFormComponent } from './wan-form.component';
 import { MockComponent, MockFontAwesomeComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
