@@ -167,10 +167,36 @@
         </ng-template>
       </mat-tab>
 
+      <mat-tab label="Events" *ngIf="workflow.events?.length > 0">
+        <ng-template matTabContent>
+          <div class="pt-3">
+            <div class="timeline">
+              <div class="timeline-item" *ngFor="let event of workflow.events; trackBy: trackByEventId">
+                <div class="timeline-content">
+                  <div class="timeline-header">
+                    <strong>{{ event.status | titlecase }}</strong>
+                    <small class="text-muted ml-2">{{ event.timestamp | date : 'medium' }}</small>
+                  </div>
+                  <div class="timeline-body">
+                    <p><strong>User:</strong> {{ event.user }}</p>
+                    <p><strong>Event ID:</strong> {{ event.id }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </mat-tab>
+
       <mat-tab label="Terraform Plan">
         <ng-template matTabContent>
           <div class="pt-3">
-            <pre><code [innerHTML]="planJson"></code></pre>
+            <button type="button" class="btn btn-outline-primary mb-3" (click)="toggleTerraformPlan()">
+              {{ showTerraformPlan ? 'Hide Plan' : 'Show Plan' }}
+            </button>
+            <div *ngIf="showTerraformPlan">
+              <pre><code [innerHTML]="planJson"></code></pre>
+            </div>
           </div>
         </ng-template>
       </mat-tab>
@@ -184,6 +210,14 @@
       (click)="approveWorkflow()"
     >
       Approve Workflow
+    </button>
+    <button
+      *ngIf="workflow?.approvalType === 'manual' && workflow?.status === 'valid_awaiting_manual_approval'"
+      type="button"
+      class="btn btn-danger mr-2"
+      (click)="disapproveWorkflow()"
+    >
+      Disapprove Workflow
     </button>
     <button *ngIf="workflow?.status === 'invalid_applyable'" type="button" class="btn btn-warning mr-2" (click)="approveWorkflow()">
       Approve Workflow (Override)

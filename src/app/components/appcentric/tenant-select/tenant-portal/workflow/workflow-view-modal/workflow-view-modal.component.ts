@@ -13,6 +13,7 @@ export class WorkflowViewModalComponent {
   public workflowId: string;
   public planJson: string;
   public displayedColumns: string[] = ['actions', 'address', 'type', 'name', 'diff'];
+  public showTerraformPlan = false;
 
   constructor(private readonly workflowService: V2WorkflowsService, private readonly ngxSmartModal: NgxSmartModalService) {}
 
@@ -26,7 +27,7 @@ export class WorkflowViewModalComponent {
     this.workflowService
       .getOneWorkflow({
         id: this.workflowId,
-        relations: ['plan'],
+        relations: ['plan', 'events'],
       })
       .subscribe(workflow => {
         this.workflow = workflow;
@@ -44,6 +45,12 @@ export class WorkflowViewModalComponent {
     });
   }
 
+  disapproveWorkflow() {
+    this.workflowService.disapproveWorkflowWorkflow({ id: this.workflowId }).subscribe(() => {
+      this.getWorkflow();
+    });
+  }
+
   applyWorkflow() {
     this.workflowService.applyWorkflowWorkflow({ id: this.workflowId }).subscribe(() => {
       this.getWorkflow();
@@ -54,5 +61,14 @@ export class WorkflowViewModalComponent {
     this.workflow = null;
     this.workflowId = null;
     this.planJson = null;
+    this.showTerraformPlan = false;
+  }
+
+  trackByEventId(index: number, event: any): string {
+    return event.id;
+  }
+
+  toggleTerraformPlan(): void {
+    this.showTerraformPlan = !this.showTerraformPlan;
   }
 }

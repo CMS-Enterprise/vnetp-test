@@ -11,6 +11,7 @@
  */
 import { TerraformPlan } from './terraformPlan';
 import { WorkflowValidationResultDto } from './workflowValidationResultDto';
+import { WorkflowEvent } from './workflowEvent';
 
 
 export interface Workflow { 
@@ -44,6 +45,10 @@ export interface Workflow {
      */
     plan: TerraformPlan;
     /**
+     * The events that have occurred on the workflow
+     */
+    events: Array<WorkflowEvent>;
+    /**
      * The validation result
      */
     validationResult: WorkflowValidationResultDto;
@@ -56,6 +61,7 @@ export enum WorkflowStatusEnum {
     Validating = 'validating',
     ValidAwaitingManualApproval = 'valid_awaiting_manual_approval',
     InvalidApplyable = 'invalid_applyable',
+    Disapproved = 'disapproved',
     Approved = 'approved',
     Applying = 'applying',
     Completed = 'completed',

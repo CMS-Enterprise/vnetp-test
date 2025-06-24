@@ -42,4 +42,66 @@
 - Added new tab for unmatched terraform changes (drift detection)
 - Updated tab labels for clarity ("Global Validation Errors", "Audit Log Results")
 
-**Current Status**: PLAN mode - Migration complete, compilation errors resolved, enhanced UI features added 
+**Current Status**: COMPLETE ✅
+
+---
+
+## Task: Add Workflow Events Display
+
+**Problem**: Need to display workflow events in chronological order in the workflow view modal.
+
+**Type Issue Identified**:
+- `workflow.ts` defines `events: WorkflowEvent` (single object)
+- JSON data shows `events` as array of WorkflowEvent objects  
+- Need to fix type to `WorkflowEvent[]`
+
+**Implementation Plan**:
+1. Fix events property type definition in workflow.ts
+2. Add new "Events" tab to workflow view modal
+3. Display events chronologically with timeline-style UI
+4. Show timestamp, user, status change, and event ID
+
+**Implementation Completed**: ✅
+- Added new "Events" tab that appears when workflow.events exists
+- Created timeline-style display with visual timeline line
+- Added status chips with dynamic styling based on event status
+- Display key information: status, timestamp, user, event ID
+- Added trackByEventId function for optimal Angular performance
+- Styled with professional timeline CSS including timeline line, markers, and cards
+
+**Features Implemented**:
+- Chronological display of all workflow events
+- Visual timeline with connecting line and status markers
+- Status badges with dynamic CSS classes for styling
+- Formatted timestamps using Angular date pipe
+- User information and event IDs
+- Clean card-based layout for each event
+
+**Current Status**: COMPLETE ✅
+
+---
+
+## Task: Add Terraform Plan Toggle Functionality
+
+**Problem**: Terraform plan content is verbose and overwhelming when displayed by default.
+
+**Implementation Plan**:
+1. Add toggle state management to component
+2. Add toggle button at top of Terraform Plan tab
+3. Make plan content start hidden by default
+4. Allow users to show/hide on demand
+
+**Implementation Completed**: ✅
+- Added `showTerraformPlan = false` property to start hidden
+- Added `toggleTerraformPlan()` method to flip visibility state
+- Added toggle button with dynamic "Show Plan" / "Hide Plan" text
+- Used `*ngIf` to conditionally render plan content
+- Reset toggle state in modal reset method
+
+**Features Implemented**:
+- Plan starts hidden for cleaner initial view
+- Toggle button with intuitive text feedback
+- Conditional rendering for better performance
+- State reset on modal close
+
+**Current Status**: COMPLETE ✅ 

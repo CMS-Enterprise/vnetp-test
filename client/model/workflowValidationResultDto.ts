@@ -20,6 +20,10 @@ export interface WorkflowValidationResultDto {
      */
     valid: boolean;
     /**
+     * Whether the workflow has changes to apply
+     */
+    hasChanges: boolean;
+    /**
      * Whether the workflow is applyable
      */
     terraformApplyable: boolean;

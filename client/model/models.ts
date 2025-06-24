@@ -201,6 +201,7 @@ export * from './vrf';
 export * from './wanForm';
 export * from './wanFormSubnet';
 export * from './workflow';
+export * from './workflowEvent';
 export * from './workflowValidationError';
 export * from './workflowValidationResultDto';
 export * from './zone';

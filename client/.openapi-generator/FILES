@@ -264,6 +264,7 @@ model/vrf.ts
 model/wanForm.ts
 model/wanFormSubnet.ts
 model/workflow.ts
+model/workflowEvent.ts
 model/workflowValidationError.ts
 model/workflowValidationResultDto.ts
 model/zone.ts

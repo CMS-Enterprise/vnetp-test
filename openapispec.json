@@ -21301,6 +21301,30 @@
         ]
       }
     },
+    "/v2/workflows/{id}/disapprove": {
+      "post": {
+        "operationId": "disapproveWorkflowWorkflow",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UUID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v2/workflows"
+        ]
+      }
+    },
     "/v2/workflows/{id}/apply": {
       "get": {
         "operationId": "applyWorkflowWorkflow",
@@ -25661,6 +25685,48 @@
           "workflow"
         ]
       },
+      "WorkflowEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the workflow event"
+          },
+          "workflowId": {
+            "type": "string",
+            "description": "The ID of the workflow that the event belongs to"
+          },
+          "timestamp": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The timestamp of the event"
+          },
+          "user": {
+            "type": "string",
+            "description": "The user that triggered the event"
+          },
+          "status": {
+            "type": "string",
+            "description": "The status of the workflow after the event"
+          },
+          "workflow": {
+            "description": "The workflow that the event belongs to",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Workflow"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "workflowId",
+          "timestamp",
+          "user",
+          "status",
+          "workflow"
+        ]
+      },
       "WorkflowValidationError": {
         "type": "object",
         "properties": {
@@ -25910,6 +25976,10 @@
             "type": "boolean",
             "description": "Whether the workflow is valid"
           },
+          "hasChanges": {
+            "type": "boolean",
+            "description": "Whether the workflow has changes to apply"
+          },
           "terraformApplyable": {
             "type": "boolean",
             "description": "Whether the workflow is applyable"
@@ -25960,6 +26030,7 @@
         },
         "required": [
           "valid",
+          "hasChanges",
           "terraformApplyable",
           "terraformErrored",
           "terraformComplete",
@@ -26010,6 +26081,7 @@
               "validating",
               "valid_awaiting_manual_approval",
               "invalid_applyable",
+              "disapproved",
               "approved",
               "applying",
               "completed",
@@ -26045,6 +26117,13 @@
               }
             ]
           },
+          "events": {
+            "description": "The events that have occurred on the workflow",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowEvent"
+            }
+          },
           "validationResult": {
             "description": "The validation result",
             "allOf": [
@@ -26062,6 +26141,7 @@
           "terraformModule",
           "approvalType",
           "plan",
+          "events",
           "validationResult"
         ]
       },

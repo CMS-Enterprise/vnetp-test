@@ -57,6 +57,8 @@ export class WorkflowComponent implements OnInit {
       { name: 'Status', property: 'status' },
       { name: 'Terraform Module', property: 'terraformModule' },
       { name: 'Approval Type', property: 'approvalType' },
+      { name: 'Created At', property: 'createdAt' },
+      { name: 'Finished At', property: 'finishedAt' },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -104,7 +106,7 @@ export class WorkflowComponent implements OnInit {
     this.isLoading = true;
     this.workflowService
       .getManyWorkflow({
-        fields: ['id', 'name', 'status', 'terraformModule', 'approvalType'],
+        fields: ['id', 'name', 'status', 'terraformModule', 'approvalType', 'createdAt', 'finishedAt'],
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         sort: ['createdAt,DESC'],
         page: this.tableComponentDto.page,
