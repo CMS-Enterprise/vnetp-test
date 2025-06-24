@@ -120,14 +120,10 @@ export class WanFormRequestComponent implements OnInit {
       'Are you sure you want to approve this WAN Form Request? It will immediately be applied to aci.',
     );
     const onConfirm = () => {
-      this.wanFormRequestService.approveOneWanFormRequest({ id }).subscribe(
-        () => {
-          this.getAllWanFormRequests();
-        },
-        error => {
-          console.error('Error approving WAN Form Request:', error);
-        },
-      );
+      this.wanFormRequestService.approveOneWanFormRequest({ id }).subscribe({
+        next: () => this.getAllWanFormRequests(),
+        error: error => console.error('Error approving WAN Form Request:', error),
+      });
     };
 
     const onClose = () => {
@@ -143,14 +139,10 @@ export class WanFormRequestComponent implements OnInit {
       'Are you sure you want to reject this WAN Form Request? It will be removed from the list.',
     );
     const onConfirm = () => {
-      this.wanFormRequestService.rejectOneWanFormRequest({ id }).subscribe(
-        () => {
-          this.getAllWanFormRequests();
-        },
-        error => {
-          console.error('Error rejecting WAN Form Request:', error);
-        },
-      );
+      this.wanFormRequestService.rejectOneWanFormRequest({ id }).subscribe({
+        next: () => this.getAllWanFormRequests(),
+        error: error => console.error('Error rejecting WAN Form Request:', error),
+      });
     };
 
     const onClose = () => {

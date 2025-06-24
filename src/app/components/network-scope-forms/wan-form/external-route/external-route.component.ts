@@ -139,9 +139,10 @@ export class ExternalRouteComponent implements OnInit {
         route.network.includes(this.searchQuery) ||
         route.vrf.includes(this.searchQuery) ||
         route.metric === Number(this.searchQuery) ||
-        route.prefixLength === Number(this.searchQuery) ||
+        route.fromPrefixLength === Number(this.searchQuery) ||
+        route.toPrefixLength === Number(this.searchQuery) ||
         route.protocol.includes(this.searchQuery) ||
-        `${route.network}/${route.prefixLength}`.includes(this.searchQuery),
+        `${route.network}/${route.fromPrefixLength}`.includes(this.searchQuery),
     );
   }
 

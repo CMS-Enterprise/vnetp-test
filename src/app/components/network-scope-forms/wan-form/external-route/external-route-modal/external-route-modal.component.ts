@@ -48,7 +48,8 @@ export class ExternalRouteModalComponent {
   private buildForm(): void {
     this.form = this.formBuilder.group({
       network: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
-      prefixLength: ['', Validators.compose([Validators.required, Validators.min(0), Validators.max(32)])],
+      fromPrefixLength: ['', Validators.compose([Validators.required, Validators.min(0), Validators.max(32)])],
+      toPrefixLength: ['', Validators.compose([Validators.required, Validators.min(0), Validators.max(32)])],
       metric: ['', Validators.required],
       vrf: ['', Validators.required],
     });
@@ -60,10 +61,11 @@ export class ExternalRouteModalComponent {
       return;
     }
 
-    const { network, prefixLength, vrf, metric } = this.form.value;
+    const { network, fromPrefixLength, toPrefixLength, vrf, metric } = this.form.value;
     const externalRoute = {
       network,
-      prefixLength,
+      fromPrefixLength,
+      toPrefixLength,
       vrf,
       metric,
     } as ExternalRoute;

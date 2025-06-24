@@ -128,6 +128,8 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
       environment: ['', Validators.required],
       netcentricSubnetId: [''],
       appcentricSubnetId: [''],
+      fromPrefixLength: ['', Validators.required],
+      toPrefixLength: ['', Validators.required],
     });
   }
 
@@ -137,7 +139,8 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const { name, description, vrf, environment, netcentricSubnetId, appcentricSubnetId } = this.form.value;
+    const { name, description, vrf, environment, netcentricSubnetId, appcentricSubnetId, fromPrefixLength, toPrefixLength } =
+      this.form.value;
     const wanFormSubnet = {
       name,
       description,
@@ -147,6 +150,8 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
       datacenterId: this.datacenterId,
       netcentricSubnetId,
       appcentricSubnetId,
+      fromPrefixLength,
+      toPrefixLength,
     } as WanFormSubnet;
 
     if (this.modalMode === ModalMode.Create) {

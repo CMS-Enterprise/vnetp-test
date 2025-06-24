@@ -24,18 +24,18 @@
 
 <ng-template #actionsTemplate let-wanFormSubnet="datum">
   <section>
-    <app-icon-button icon="edit" label="Edit External Route" (handleClick)="openModal(ModalMode.Edit, wanFormSubnet)"></app-icon-button>
+    <app-icon-button icon="edit" label="Edit Wan Form Subnet" (handleClick)="openModal(ModalMode.Edit, wanFormSubnet)"></app-icon-button>
     <app-icon-button
       *ngIf="wanFormSubnet?.deletedAt"
       icon="undo"
-      label="Restore External Route"
+      label="Restore Wan Form Subnet"
       type="success"
       (handleClick)="restoreWanFormSubnet(wanFormSubnet)"
     ></app-icon-button>
 
     <app-icon-button
       icon="delete"
-      label="Soft-Delete/Delete Extnernal Route"
+      label="Soft-Delete/Delete Wan Form Subnet"
       [type]="wanFormSubnet.deletedAt ? 'danger' : 'default'"
       (handleClick)="deleteWanFormSubnet(wanFormSubnet)"
     >

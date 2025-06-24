@@ -54,7 +54,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
       { name: 'Name', property: 'name' },
       { name: 'Description', property: 'description' },
       { name: 'Created At', property: 'createdAt' },
-      { name: 'Active', template: () => this.activeTemplate },
+      { name: 'Status', template: () => this.activeTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
     expandableRows: () => this.expandedRows,
@@ -180,6 +180,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
     const wanFormId = wanForm.id;
     const tenant = this.route.snapshot.queryParams.tenant;
     const dto = new YesNoModalDto('Request Wan Form Approval', `"Are you sure you want to request approval for ${wanForm.name}?"`);
+    const dtoPending = new YesNoModalDto('Request Wan Form Approval', `"Are you sure you want to delete request for ${wanForm.name}?"`);
 
     const wanFormRequestDto = {
       wanFormId,
@@ -198,11 +199,21 @@ export class WanFormComponent implements OnInit, OnDestroy {
       });
     };
 
+    const onConfirmPending = () => {
+      this.wanFormRequestService.deleteOneWanFormRequest({ wanFormId }).subscribe(() => {
+        this.getWanForms();
+      });
+    };
+
     const onClose = () => {
       this.getWanForms();
     };
 
-    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm, onClose);
+    if (wanForm.status === 'PENDING') {
+      SubscriptionUtil.subscribeToYesNoModal(dtoPending, this.ngx, onConfirmPending, onClose);
+    } else {
+      SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm, onClose);
+    }
   }
 
   public deleteWanFormRequest(wanFormId: string): void {

@@ -28,6 +28,7 @@ export class IconButtonComponent {
     check: ['fas', 'check'],
     times: ['fas', 'times'],
     clock: ['fas', 'clock'],
+    cog: ['fas', 'cog'],
   };
 
   public typeLookup: Record<IconType, string> = {
@@ -52,5 +53,6 @@ export type Icon =
   | 'clone'
   | 'check'
   | 'times'
-  | 'clock';
+  | 'clock'
+  | 'cog';
 export type IconType = 'default' | 'danger' | 'success' | 'info';
