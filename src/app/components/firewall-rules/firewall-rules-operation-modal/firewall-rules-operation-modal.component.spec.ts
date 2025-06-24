@@ -1,9 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FirewallRulesOperationModalComponent } from './firewall-rules-operation-modal.component';
-import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule, FormBuilder, Validators } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
@@ -15,6 +13,7 @@ import {
 import { of } from 'rxjs';
 import { V1TiersService, V1NetworkSecurityFirewallRulesService, RuleOperationDto } from '../../../../../client';
 import { DatacenterContextService } from '../../../services/datacenter-context.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 jest.mock('../../../utils/SubscriptionUtil', () => ({
   default: class {
@@ -65,7 +64,7 @@ describe('FirewallRulesOperationModalComponent', () => {
         MockTooltipComponent,
         MockYesNoModalComponent,
       ],
-      imports: [NgSelectModule, ReactiveFormsModule, HttpClientModule, FormsModule, RouterTestingModule],
+      imports: [NgSelectModule, ReactiveFormsModule, HttpClientTestingModule, FormsModule],
       providers: [
         FormBuilder,
         { provide: V1TiersService, useValue: mockTierService },

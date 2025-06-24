@@ -29,6 +29,8 @@ export class IconButtonComponent {
     times: ['fas', 'times'],
     clock: ['fas', 'clock'],
     cog: ['fas', 'cog'],
+    arrowRight: ['fas', 'arrow-right'],
+    arrowLeft: ['fas', 'arrow-left'],
   };
 
   public typeLookup: Record<IconType, string> = {
@@ -54,5 +56,7 @@ export type Icon =
   | 'check'
   | 'times'
   | 'clock'
-  | 'cog';
+  | 'cog'
+  | 'arrowRight'
+  | 'arrowLeft';
 export type IconType = 'default' | 'danger' | 'success' | 'info';

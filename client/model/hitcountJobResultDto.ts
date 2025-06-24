@@ -22,7 +22,8 @@ export enum HitcountJobResultDtoTypeEnum {
     NatRule = 'NatRule',
     F5Config = 'F5Config',
     AciRuntime = 'AciRuntime',
-    ExternalRoute = 'ExternalRoute'
+    ExternalRoute = 'ExternalRoute',
+    AppIdRuntime = 'AppIdRuntime'
 };
 
 

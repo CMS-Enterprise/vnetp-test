@@ -3,9 +3,18 @@
 @import 'ngx-smart-modal/styles';
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import '@ng-select/ng-select/themes/default.theme.css';
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 
 // custom imports
 @import 'variables', 'buttons', 'tables', 'forms', 'modals';
+
+.cdk-overlay-container {
+  z-index: 10000;
+}
+
+mat-tooltip {
+  z-index: 10001;
+}
 
 a:hover {
   color: $c-blue-400;
@@ -56,6 +65,11 @@ hr {
 .xlarge-modal {
   max-width: 1200px;
   max-height: 1200px;
+}
+
+.xxlarge-modal {
+  max-width: 1400px;
+  max-height: 1400px;
 }
 
 .large-modal {

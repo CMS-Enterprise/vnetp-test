@@ -166,16 +166,19 @@ describe('DeployComponent', () => {
     });
 
     it('should call to deploys tiers after confirming', () => {
-      const launchTierProvisioningJobsSpy = jest.spyOn(component, 'launchTierProvisioningJobs');
+      jest.spyOn(component, 'launchTierProvisioningJobs');
       jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((dto, ngx, confirmFn) => {
         confirmFn();
         return of().subscribe();
       });
 
+      const launchTierProvisioningJobsSpy = jest.spyOn(component, 'launchTierProvisioningJobs');
+      const deploySpy = jest.spyOn(component, 'deployTiers');
+
       component.tiers = [testData.tier];
 
       const jobService = TestBed.inject(V1JobsService);
-      const deploySpy = jest.spyOn(jobService, 'createOneJob');
+      jest.spyOn(jobService, 'createOneJob');
 
       const deployButton = fixture.debugElement.query(By.css('.btn.btn-danger'));
       deployButton.nativeElement.click();

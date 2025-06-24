@@ -21,7 +21,7 @@ export interface TableConfig<T> {
   advancedSearchAdapter?: AdvancedSearchAdapter<T>;
   hideAdvancedSearch?: boolean;
   hideSearchBar?: boolean;
-  expandableRows?: () => TemplateRef<any>;
+  expandableRows?: (() => TemplateRef<any>[]) | (() => TemplateRef<any>);
   disableDefaultRowStyle?: boolean;
 }
 
@@ -221,14 +221,6 @@ export class TableComponent<T> implements AfterViewInit {
     this.ngx.getModal('advancedSearch').open();
   }
 
-  handleRowClick(event: Event, datum: any): void {
-    if (!this.isEventFromButton(event)) {
-      if (this.expandableRows) {
-        datum.expanded = !datum.expanded;
-      }
-    }
-  }
-
   isEventFromButton(event: Event): boolean {
     let targetElement: HTMLElement | null = event.target as HTMLElement;
 
@@ -261,5 +253,38 @@ export class TableComponent<T> implements AfterViewInit {
       return defaultStyle;
     }
     return this.config.rowStyle ? this.config.rowStyle(datum) : {};
+  }
+
+  handleRowClick(event: Event, datum: any): void {
+    if (!this.isEventFromButton(event)) {
+      if (this.expandableRows) {
+        datum.expanded = !datum.expanded;
+
+        if (Array.isArray(this.config.expandableRows())) {
+          datum.currentTemplateIndex = 0; // Initialize on first click
+        }
+      }
+    }
+  }
+
+  previousTemplate(datum: any): void {
+    const templates = this.config.expandableRows();
+    if (Array.isArray(templates)) {
+      datum.currentTemplateIndex = (datum.currentTemplateIndex - 1 + templates.length) % templates.length;
+      this.changeRef.detectChanges(); // Manually trigger change detection
+    }
+  }
+
+  nextTemplate(datum: any): void {
+    const templates = this.config.expandableRows();
+    if (Array.isArray(templates)) {
+      datum.currentTemplateIndex = (datum.currentTemplateIndex + 1) % templates.length;
+      this.changeRef.detectChanges(); // Manually trigger change detection
+    }
+  }
+
+  isTemplateArray(): boolean {
+    const templates = this.config.expandableRows?.();
+    return Array.isArray(templates);
   }
 }

@@ -159,6 +159,8 @@ export * from './networkObjectGroupRelationBulkImportCollectionDto';
 export * from './networkObjectGroupRelationBulkImportDto';
 export * from './nodeImportCollectionDto';
 export * from './paginationDTO';
+export * from './panosApplication';
+export * from './panosApplicationReferences';
 export * from './poolImportCollectionDto';
 export * from './routeProfile';
 export * from './ruleOperationDto';

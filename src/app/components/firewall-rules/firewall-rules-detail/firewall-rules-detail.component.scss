@@ -30,3 +30,16 @@
   background-color: green;
   color: white;
 }
+
+.hover-effect {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.hover-effect:hover {
+  text-decoration: underline;
+}
+
+.mat-drawer {
+  width: 50%;
+}

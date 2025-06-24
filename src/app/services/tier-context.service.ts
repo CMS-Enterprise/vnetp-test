@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Tier, V1DatacentersService } from 'client';
 import { DatacenterContextService } from './datacenter-context.service';
+import * as _ from 'lodash';
 
 /** Service to store and expose the Current Tier Context. */
 @Injectable({
@@ -84,6 +85,10 @@ export class TierContextService {
     this.lockCurrentTierSubject.next(false);
   }
 
+  public refreshTiers(currentTierId?: string): void {
+    this.getTiers(currentTierId);
+  }
+
   private getTiers(currentTierId?: string): void {
     this.datacenterContextService.currentDatacenter.subscribe(cd => {
       if (!cd) {
@@ -117,16 +122,17 @@ export class TierContextService {
     }
 
     const tier = this._tiers.find(t => t.id === tierId);
+
     if (!tier) {
       this.clearTier();
       return false;
     }
 
     const isSameTier = this.currentTierValue && tier.id === this.currentTierValue.id;
-    if (isSameTier) {
+    const isSameValue = _.isEqual(tier, this.currentTierValue);
+    if (isSameTier && isSameValue) {
       return false;
     }
-
     this.currentTierSubject.next(tier);
     this.ignoreNextQueryParamEvent = true;
     this.router.navigate([], {

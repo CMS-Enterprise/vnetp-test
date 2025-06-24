@@ -34,6 +34,9 @@ import {
   faCog,
   faInfoCircle,
   faClock,
+  faMinus,
+  faArrowRight,
+  faArrowLeft,
 } from '@fortawesome/free-solid-svg-icons';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
@@ -111,6 +114,7 @@ export class AppModule {
       faPencilAlt,
       faPlay,
       faPlus,
+      faMinus,
       faQuestionCircle,
       faSave,
       faSearch,
@@ -132,6 +136,8 @@ export class AppModule {
       faChevronLeft,
       faInfoCircle,
       faClock,
+      faArrowRight,
+      faArrowLeft,
     );
   }
 }

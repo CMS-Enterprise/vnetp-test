@@ -7,6 +7,8 @@ import { TierContextService } from 'src/app/services/tier-context.service';
 import ObjectUtil from 'src/app/utils/ObjectUtil';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
+import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-firewall-rules',
@@ -20,12 +22,22 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
 
   private currentTierSubscription: Subscription;
 
+  private appIdEnabled: boolean;
+
   constructor(
     private ngx: NgxSmartModalService,
     private tierService: V1TiersService,
     public tierContextService: TierContextService,
     private firewallRuleGroupService: V1NetworkSecurityFirewallRuleGroupsService,
+    private router: Router,
   ) {}
+
+  navigateToEdit(firewallRuleGroup: any): void {
+    this.router.navigate(['/netcentric/firewall-rules/edit', firewallRuleGroup.id], {
+      state: { appIdEnabled: this.appIdEnabled },
+      queryParamsHandling: 'merge',
+    });
+  }
 
   public getTiers(): void {
     this.tierService
@@ -91,6 +103,9 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentTierSubscription = this.tierContextService.currentTier.subscribe(ct => {
       if (ct) {
+        const appIdEnabledEnv = environment?.dynamic?.appIdEnabled;
+        const appIdEnabledTier = ct.appIdEnabled;
+        this.appIdEnabled = appIdEnabledEnv && appIdEnabledTier;
         this.currentTier = ct;
         this.getTiers();
       }

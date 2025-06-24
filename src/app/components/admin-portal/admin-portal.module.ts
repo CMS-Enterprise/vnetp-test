@@ -15,6 +15,8 @@ import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module
 import { GlobalMessagesComponent } from './global-messages/global-messages.component';
 import { TenantSelectComponent } from '../appcentric/tenant-select/tenant-select.component';
 import { WanFormRequestComponent } from './wan-form-request/wan-form-request.component';
+import { AppIdMaintenanceModule } from './app-id-maintenance/app-id-maintenance.module';
+import { AppIdMaintenanceComponent } from './app-id-maintenance/app-id-maintenance.component';
 
 const routes: Routes = [
   {
@@ -59,6 +61,16 @@ const routes: Routes = [
         data: { breadcrumb: 'WAN Form Requests', title: 'WAN Form Requests' },
         loadChildren: () => import('./wan-form-request/wan-form-request.module').then(m => m.WanFormRequestModule),
       },
+      {
+        path: 'app-id-maintenance',
+        component: AppIdMaintenanceComponent,
+        canActivate: [AdminAuthGuard],
+        data: {
+          breadcrumb: 'App ID Maintenance',
+          title: 'App ID Maintenance',
+        },
+        loadChildren: () => import('./app-id-maintenance/app-id-maintenance.module').then(m => m.AppIdMaintenanceModule),
+      },
     ],
   },
 ];
@@ -75,6 +87,7 @@ const routes: Routes = [
     YesNoModalModule,
     NgxSmartModalModule,
     BreadcrumbsModule,
+    AppIdMaintenanceModule,
   ],
 })
 export class AdminPortalModule {}

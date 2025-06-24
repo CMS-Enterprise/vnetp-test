@@ -58,6 +58,8 @@ export * from './v1NetworkVlans.service';
 import { V1NetworkVlansService } from './v1NetworkVlans.service';
 export * from './v1RuntimeDataAciRuntime.service';
 import { V1RuntimeDataAciRuntimeService } from './v1RuntimeDataAciRuntime.service';
+export * from './v1RuntimeDataAppIdRuntime.service';
+import { V1RuntimeDataAppIdRuntimeService } from './v1RuntimeDataAppIdRuntime.service';
 export * from './v1RuntimeDataExternalRoute.service';
 import { V1RuntimeDataExternalRouteService } from './v1RuntimeDataExternalRoute.service';
 export * from './v1RuntimeDataF5Config.service';

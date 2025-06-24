@@ -10,8 +10,9 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
 
 import { UsedObjectsParentsModalComponent } from '../used-objects-parents-modal/used-objects-parents-modal.component';
 import { SearchBarModule } from '../search-bar/search-bar.module';
+import { IconButtonModule } from '../icon-button/icon-button.module';
 @NgModule({
-  imports: [SearchBarModule, CommonModule, FontAwesomeModule, NgxPaginationModule, TooltipModule, AdvancedSearchModule],
+  imports: [SearchBarModule, CommonModule, FontAwesomeModule, NgxPaginationModule, TooltipModule, AdvancedSearchModule, IconButtonModule],
 
   declarations: [TableComponent],
   exports: [TableComponent],

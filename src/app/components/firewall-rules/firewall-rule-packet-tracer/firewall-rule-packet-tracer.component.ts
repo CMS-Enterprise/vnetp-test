@@ -10,6 +10,7 @@ import { FirewallRulePacketTracerDto } from '../../../models/firewall/firewall-r
 import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 type FirewallRulePacketTracerOutput = {
   checkList: FirewallRulePacketTracerChecklist;
@@ -48,6 +49,9 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
   dropdownOpen = false;
   serviceTypeSubscription: Subscription;
+
+  public environment = environment;
+  public appIdEnabled: boolean = this.environment?.dynamic?.appIdEnabled;
 
   constructor(private ngx: NgxSmartModalService, private formBuilder: FormBuilder, private toastrService: ToastrService) {}
 
@@ -123,6 +127,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
         enabledMatch: this.form.controls.enabled.value === rule.enabled,
         softDeleted: Boolean(rule.deletedAt),
         actionMatch: this.form.controls.action.value === rule.action,
+        applicationMatch: this.handleApplication(rule, this.form.controls.application.value),
       };
 
       if (checkList.sourcePortMatch === null || checkList.destPortMatch === null) {
@@ -135,6 +140,18 @@ export class FirewallRulePacketTracerComponent implements OnInit {
     this.resetFilter();
     this.applyFilter();
     this.toastrService.success('Packet Tracer Executed.');
+  }
+
+  handleApplication(rule: FirewallRule, applicationId: string): boolean {
+    if (!this.appIdEnabled) {
+      return true;
+    }
+
+    if (applicationId === 'any') {
+      return true;
+    }
+
+    return rule?.panosApplications?.some(app => app.id === this.form.controls.application.value);
   }
 
   handleInRange(rule: FirewallRule, location: 'source' | 'destination', control: AbstractControl): boolean {
@@ -368,6 +385,7 @@ export class FirewallRulePacketTracerComponent implements OnInit {
 
       sourcePorts: ['', ValidatePortNumber],
       destinationPorts: ['', ValidatePortNumber],
+      application: ['any'],
     });
     this.setFormValidators();
   }

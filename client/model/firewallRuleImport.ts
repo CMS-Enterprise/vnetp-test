@@ -16,6 +16,7 @@ import { Zone } from './zone';
 import { ServiceObject } from './serviceObject';
 import { EndpointGroup } from './endpointGroup';
 import { NetworkObjectGroup } from './networkObjectGroup';
+import { PanosApplication } from './panosApplication';
 
 
 export interface FirewallRuleImport { 
@@ -64,6 +65,7 @@ export interface FirewallRuleImport {
     readonly destinationEndpointSecurityGroup?: EndpointSecurityGroup;
     hitCount?: number;
     readonly tenantVersion?: number;
+    panosApplications?: Array<PanosApplication>;
     tierName: string;
     firewallRuleGroupType: string;
 }
