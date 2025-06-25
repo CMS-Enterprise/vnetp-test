@@ -117,38 +117,49 @@ export class ApplicationProfileComponent implements OnInit {
       );
   }
 
-  public deleteApplicationProfile(applicationProfile: ApplicationProfile): void {
-    if (applicationProfile.deletedAt) {
-      this.applicationProfileService.deleteOneApplicationProfile({ id: applicationProfile.id }).subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+  private showConfirmationModal(title: string, message: string, onConfirm: () => void): void {
+    const modalDto = new YesNoModalDto(title, message);
 
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getApplicationProfiles(params);
-        } else {
-          this.getApplicationProfiles();
-        }
-      });
+    const onConfirmWrapper = () => {
+      onConfirm();
+    };
+
+    const onClose = () => {
+      this.refreshApplicationProfiles();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirmWrapper, onClose);
+  }
+
+  private refreshApplicationProfiles(): void {
+    const params = this.tableContextService.getSearchLocalStorage();
+    const { filteredResults } = params;
+
+    if (filteredResults) {
+      this.getApplicationProfiles(params);
     } else {
-      this.applicationProfileService
-        .softDeleteOneApplicationProfile({
-          id: applicationProfile.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-
-          // if filtered results boolean is true, apply search params in the
-          // subsequent get call
-          if (filteredResults) {
-            this.getApplicationProfiles(params);
-          } else {
-            this.getApplicationProfiles();
-          }
-        });
+      this.getApplicationProfiles();
     }
+  }
+
+  public deleteApplicationProfile(applicationProfile: ApplicationProfile): void {
+    const isHardDelete = applicationProfile.deletedAt;
+    const title = isHardDelete ? 'Delete Application Profile' : 'Soft Delete Application Profile';
+    const message = isHardDelete
+      ? `Are you sure you want to delete ${applicationProfile.name}? This cannot be undone.`
+      : `Are you sure you want to soft delete ${applicationProfile.name}? This can be undone.`;
+
+    const onConfirm = () => {
+      const deleteMethod = isHardDelete
+        ? this.applicationProfileService.deleteOneApplicationProfile({ id: applicationProfile.id })
+        : this.applicationProfileService.softDeleteOneApplicationProfile({ id: applicationProfile.id });
+
+      deleteMethod.subscribe(() => {
+        this.refreshApplicationProfiles();
+      });
+    };
+
+    this.showConfirmationModal(title, message, onConfirm);
   }
 
   public restoreApplicationProfile(applicationProfile: ApplicationProfile): void {
@@ -156,22 +167,27 @@ export class ApplicationProfileComponent implements OnInit {
       return;
     }
 
-    this.applicationProfileService
-      .restoreOneApplicationProfile({
-        id: applicationProfile.id,
-      })
-      .subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getApplicationProfiles(params);
-        } else {
-          this.getApplicationProfiles();
-        }
+    const onConfirm = () => {
+      this.applicationProfileService.restoreOneApplicationProfile({ id: applicationProfile.id }).subscribe(() => {
+        this.refreshApplicationProfiles();
       });
+    };
+
+    this.showConfirmationModal('Restore Application Profile', `Are you sure you want to restore ${applicationProfile.name}?`, onConfirm);
+  }
+
+  public deprovisionApplicationProfile(applicationProfile: ApplicationProfile): void {
+    const onConfirm = () => {
+      this.applicationProfileService.deprovisionOneApplicationProfile({ id: applicationProfile.id }).subscribe(() => {
+        this.refreshApplicationProfiles();
+      });
+    };
+
+    this.showConfirmationModal(
+      'Deprovision Application Profile',
+      `Are you sure you would like to deprovision ${applicationProfile.name}?`,
+      onConfirm,
+    );
   }
 
   public openApplicationProfileModal(modalMode: ModalMode, applicationProfile?: ApplicationProfile): void {
@@ -231,27 +247,22 @@ export class ApplicationProfileComponent implements OnInit {
   };
 
   public importAppProfiles(event): void {
-    const modalDto = new YesNoModalDto(
-      'Import Application Profiles',
-      `Are you sure you would like to import ${event.length} Application Profile${event.length > 1 ? 's' : ''}?`,
-    );
-
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.applicationProfileService.createManyApplicationProfile({ createManyApplicationProfileDto: { bulk: dto } }).subscribe(
         () => {},
         () => {},
         () => {
-          this.getApplicationProfiles();
+          this.refreshApplicationProfiles();
         },
       );
     };
 
-    const onClose = () => {
-      this.getApplicationProfiles();
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+    this.showConfirmationModal(
+      'Import Application Profiles',
+      `Are you sure you would like to import ${event.length} Application Profile${event.length > 1 ? 's' : ''}?`,
+      onConfirm,
+    );
   }
 
   // public getEndpointGroups(applicationProfileId: string) {

@@ -44,10 +44,18 @@
       (handleClick)="restoreApplicationProfile(applicationProfile)"
     ></app-icon-button>
     <app-icon-button
+      *ngIf="!applicationProfile?.provisionedAt"
       icon="delete"
       label="Soft-Delete/Delete Application Profile"
       [type]="applicationProfile?.deletedAt ? 'danger' : 'default'"
       (handleClick)="deleteApplicationProfile(applicationProfile)"
+    ></app-icon-button>
+    <app-icon-button
+      *ngIf="applicationProfile?.provisionedAt"
+      icon="download"
+      label="Deprovision Application Profile"
+      type="danger"
+      (handleClick)="deprovisionApplicationProfile(applicationProfile)"
     ></app-icon-button>
   </section>
 </ng-template>

@@ -24,6 +24,7 @@ import { ApplicationProfileModalDto } from 'src/app/models/appcentric/applicatio
 describe('ApplicationProfileComponent', () => {
   let component: ApplicationProfileComponent;
   let fixture: ComponentFixture<ApplicationProfileComponent>;
+  let applicationProfileService: V2AppCentricApplicationProfilesService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -50,6 +51,15 @@ describe('ApplicationProfileComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ApplicationProfileComponent);
     component = fixture.componentInstance;
+    applicationProfileService = TestBed.inject(V2AppCentricApplicationProfilesService);
+
+    // Mock the service methods
+    jest.spyOn(applicationProfileService, 'deleteOneApplicationProfile').mockReturnValue(of({} as any));
+    jest.spyOn(applicationProfileService, 'softDeleteOneApplicationProfile').mockReturnValue(of({} as any));
+    jest.spyOn(applicationProfileService, 'restoreOneApplicationProfile').mockReturnValue(of({} as any));
+    jest.spyOn(applicationProfileService, 'deprovisionOneApplicationProfile').mockReturnValue(of({} as any));
+    jest.spyOn(applicationProfileService, 'createManyApplicationProfile').mockReturnValue(of({} as any));
+
     fixture.detectChanges();
   });
 
@@ -57,7 +67,216 @@ describe('ApplicationProfileComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('importAppProfilesConfig', () => {
+  describe('Helper Methods', () => {
+    describe('refreshApplicationProfiles', () => {
+      beforeEach(() => {
+        jest.spyOn(component, 'getApplicationProfiles');
+      });
+
+      it('should call getApplicationProfiles without params when filteredResults is false', () => {
+        const params = { filteredResults: false, searchString: '', searchColumn: null, searchText: '' };
+        jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+
+        component['refreshApplicationProfiles']();
+
+        expect(component.getApplicationProfiles).toHaveBeenCalledWith();
+      });
+
+      it('should call getApplicationProfiles with params when filteredResults is true', () => {
+        const params = { filteredResults: true, searchColumn: 'name', searchText: 'test', searchString: '' };
+        jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+
+        component['refreshApplicationProfiles']();
+
+        expect(component.getApplicationProfiles).toHaveBeenCalledWith(params);
+      });
+    });
+
+    describe('showConfirmationModal', () => {
+      it('should create modal with correct parameters and call SubscriptionUtil', () => {
+        const title = 'Test Title';
+        const message = 'Test Message';
+        const onConfirm = jest.fn();
+        const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockReturnValue(new Subscription());
+        jest.spyOn(component, 'refreshApplicationProfiles' as any);
+
+        component['showConfirmationModal'](title, message, onConfirm);
+
+        expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            cancelText: 'No',
+            confirmButtonType: 'primary',
+            confirmText: 'Yes',
+            modalTitle: title,
+            modalBody: message,
+          }),
+          component['ngx'],
+          expect.any(Function),
+          expect.any(Function),
+        );
+      });
+    });
+  });
+
+  describe('deleteApplicationProfile', () => {
+    it('should show confirmation modal for soft delete with correct message', () => {
+      const appProfile = { id: '123', name: 'Test Profile', deletedAt: null } as ApplicationProfile;
+      const showConfirmationModalSpy = jest.spyOn(component, 'showConfirmationModal' as any);
+
+      component.deleteApplicationProfile(appProfile);
+
+      expect(showConfirmationModalSpy).toHaveBeenCalledWith(
+        'Soft Delete Application Profile',
+        'Are you sure you want to soft delete Test Profile? This can be undone.',
+        expect.any(Function),
+      );
+    });
+
+    it('should show confirmation modal for hard delete with correct message', () => {
+      const appProfile = { id: '123', name: 'Test Profile', deletedAt: new Date() } as any;
+      const showConfirmationModalSpy = jest.spyOn(component, 'showConfirmationModal' as any);
+
+      component.deleteApplicationProfile(appProfile);
+
+      expect(showConfirmationModalSpy).toHaveBeenCalledWith(
+        'Delete Application Profile',
+        'Are you sure you want to delete Test Profile? This cannot be undone.',
+        expect.any(Function),
+      );
+    });
+
+    it('should call softDeleteOneApplicationProfile for non-deleted profile', () => {
+      const appProfile = { id: '123', name: 'Test Profile', deletedAt: null } as ApplicationProfile;
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        onConfirm();
+        return new Subscription();
+      });
+
+      component.deleteApplicationProfile(appProfile);
+
+      expect(applicationProfileService.softDeleteOneApplicationProfile).toHaveBeenCalledWith({ id: '123' });
+    });
+
+    it('should call deleteOneApplicationProfile for already deleted profile', () => {
+      const appProfile = { id: '123', name: 'Test Profile', deletedAt: new Date() } as any;
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        onConfirm();
+        return new Subscription();
+      });
+
+      component.deleteApplicationProfile(appProfile);
+
+      expect(applicationProfileService.deleteOneApplicationProfile).toHaveBeenCalledWith({ id: '123' });
+    });
+  });
+
+  describe('restoreApplicationProfile', () => {
+    it('should return early if profile is not deleted', () => {
+      const appProfile = { id: '123', name: 'Test Profile', deletedAt: null } as ApplicationProfile;
+      const showConfirmationModalSpy = jest.spyOn(component, 'showConfirmationModal' as any);
+
+      component.restoreApplicationProfile(appProfile);
+
+      expect(showConfirmationModalSpy).not.toHaveBeenCalled();
+    });
+
+    it('should show confirmation modal with correct message for deleted profile', () => {
+      const appProfile = { id: '123', name: 'Test Profile', deletedAt: new Date() } as any;
+      const showConfirmationModalSpy = jest.spyOn(component, 'showConfirmationModal' as any);
+
+      component.restoreApplicationProfile(appProfile);
+
+      expect(showConfirmationModalSpy).toHaveBeenCalledWith(
+        'Restore Application Profile',
+        'Are you sure you want to restore Test Profile?',
+        expect.any(Function),
+      );
+    });
+
+    it('should call restoreOneApplicationProfile when confirmed', () => {
+      const appProfile = { id: '123', name: 'Test Profile', deletedAt: new Date() } as any;
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        onConfirm();
+        return new Subscription();
+      });
+
+      component.restoreApplicationProfile(appProfile);
+
+      expect(applicationProfileService.restoreOneApplicationProfile).toHaveBeenCalledWith({ id: '123' });
+    });
+  });
+
+  describe('deprovisionApplicationProfile', () => {
+    it('should show confirmation modal with correct message', () => {
+      const appProfile = { id: '123', name: 'Test Profile' } as ApplicationProfile;
+      const showConfirmationModalSpy = jest.spyOn(component, 'showConfirmationModal' as any);
+
+      component.deprovisionApplicationProfile(appProfile);
+
+      expect(showConfirmationModalSpy).toHaveBeenCalledWith(
+        'Deprovision Application Profile',
+        'Are you sure you would like to deprovision Test Profile?',
+        expect.any(Function),
+      );
+    });
+
+    it('should call deprovisionOneApplicationProfile when confirmed', () => {
+      const appProfile = { id: '123', name: 'Test Profile' } as ApplicationProfile;
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        onConfirm();
+        return new Subscription();
+      });
+
+      component.deprovisionApplicationProfile(appProfile);
+
+      expect(applicationProfileService.deprovisionOneApplicationProfile).toHaveBeenCalledWith({ id: '123' });
+    });
+  });
+
+  describe('importAppProfiles', () => {
+    it('should show confirmation modal with correct message for single profile', () => {
+      const event = [{ name: 'Application Profile 1' }] as any;
+      const showConfirmationModalSpy = jest.spyOn(component, 'showConfirmationModal' as any);
+
+      component.importAppProfiles(event);
+
+      expect(showConfirmationModalSpy).toHaveBeenCalledWith(
+        'Import Application Profiles',
+        'Are you sure you would like to import 1 Application Profile?',
+        expect.any(Function),
+      );
+    });
+
+    it('should show confirmation modal with correct message for multiple profiles', () => {
+      const event = [{ name: 'Application Profile 1' }, { name: 'Application Profile 2' }] as any;
+      const showConfirmationModalSpy = jest.spyOn(component, 'showConfirmationModal' as any);
+
+      component.importAppProfiles(event);
+
+      expect(showConfirmationModalSpy).toHaveBeenCalledWith(
+        'Import Application Profiles',
+        'Are you sure you would like to import 2 Application Profiles?',
+        expect.any(Function),
+      );
+    });
+
+    it('should call createManyApplicationProfile when confirmed', () => {
+      const event = [{ name: 'Application Profile 1' }, { name: 'Application Profile 2' }] as any;
+      jest.spyOn(component, 'sanitizeData').mockReturnValue(event);
+      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        onConfirm();
+        return new Subscription();
+      });
+
+      component.importAppProfiles(event);
+
+      expect(applicationProfileService.createManyApplicationProfile).toHaveBeenCalledWith({
+        createManyApplicationProfileDto: { bulk: event },
+      });
+    });
+  });
+
+  describe('openApplicationProfileModal', () => {
     const mockNgxSmartModalComponent = {
       getData: jest.fn().mockReturnValue({ modalYes: true }),
       removeData: jest.fn(),
@@ -73,90 +292,16 @@ describe('ApplicationProfileComponent', () => {
           open: jest.fn(),
         }),
         setModalData: jest.fn(),
+        resetModalData: jest.fn(),
       } as any;
     });
 
-    it('should display a confirmation modal with the correct message', () => {
-      const event = [{ name: 'Application Profile 1' }, { name: 'Application Profile 1' }] as any;
-      const modalDto = new YesNoModalDto(
-        'Import Application Profiles',
-        `Are you sure you would like to import ${event.length} Application Profiles?`,
-      );
-      const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
-
-      component.importAppProfiles(event);
-
-      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(modalDto, component['ngx'], expect.any(Function), expect.any(Function));
-    });
-
-    it('should import application profiles and refresh the table on confirmation', () => {
-      const event = [{ name: 'Application Profile 1' }, { name: 'Application Profile 1' }] as any;
-      jest.spyOn(component, 'getApplicationProfiles');
-      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
-        onConfirm();
-
-        expect(component['applicationProfileService'].createManyApplicationProfile).toHaveBeenCalledWith({
-          createManyApplicationProfileDto: { bulk: component.sanitizeData(event) },
-        });
-
-        mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
-          const data = modal.getData() as YesNoModalDto;
-          modal.removeData();
-          if (data && data.modalYes) {
-            onConfirm();
-          }
-        });
-
-        return new Subscription();
-      });
-
-      component.importAppProfiles(event);
-
-      expect(component.getApplicationProfiles).toHaveBeenCalled();
-    });
-  });
-
-  it('should delete app profile', () => {
-    const appProfileToDelete = { id: '123', description: 'Bye!' } as ApplicationProfile;
-    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
-    component.deleteApplicationProfile(appProfileToDelete);
-    const getAppProfilesMock = jest.spyOn(component['applicationProfileService'], 'getManyApplicationProfile');
-    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getAppProfilesMock).toHaveBeenCalled();
-  });
-
-  it('should restore application profile', () => {
-    const appProfile = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['applicationProfileService'], 'restoreOneApplicationProfile').mockReturnValue(of({} as any));
-    jest.spyOn(component, 'getApplicationProfiles');
-    component.restoreApplicationProfile(appProfile);
-    expect(component['applicationProfileService'].restoreOneApplicationProfile).toHaveBeenCalledWith({ id: appProfile.id });
-    expect(component.getApplicationProfiles).toHaveBeenCalled();
-  });
-
-  it('should apply search params when filtered results is true', () => {
-    const appProfile = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['applicationProfileService'], 'restoreOneApplicationProfile').mockReturnValue(of({} as any));
-
-    const getAppProfilesSpy = jest.spyOn(component, 'getApplicationProfiles');
-    const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
-    jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
-
-    component.restoreApplicationProfile(appProfile);
-    expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
-  });
-
-  describe('openApplicationProfileModal', () => {
-    describe('openModal', () => {
-      beforeEach(() => {
-        jest.spyOn(component, 'getApplicationProfiles');
-        jest.spyOn(component['ngx'], 'resetModalData');
-      });
-
+    describe('subscribeToApplicationProfileModal', () => {
       it('should subscribe to applicationProfileModal onCloseFinished event and unsubscribe afterwards', () => {
         const onCloseFinished = new Subject<void>();
         const mockModal = { onCloseFinished, open: jest.fn() };
         jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
+        jest.spyOn(component, 'getApplicationProfiles');
 
         const unsubscribeSpy = jest.spyOn(Subscription.prototype, 'unsubscribe');
 
@@ -169,20 +314,36 @@ describe('ApplicationProfileComponent', () => {
 
         expect(component.getApplicationProfiles).toHaveBeenCalled();
         expect(component['ngx'].resetModalData).toHaveBeenCalledWith('applicationProfileModal');
-
         expect(unsubscribeSpy).toHaveBeenCalled();
       });
-      it('should call ngx.setModalData and ngx.getModal().open', () => {
-        const appProfile = { id: 1, name: 'Test App Profile' } as any;
-        component.tenantId = { id: '1' } as any;
-        component.openApplicationProfileModal(ModalMode.Edit, appProfile);
 
-        expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(ApplicationProfileModalDto), 'applicationProfileModal');
-        expect(component['ngx'].getModal).toHaveBeenCalledWith('applicationProfileModal');
+      it('should apply search params when filtered results is true', () => {
+        const onCloseFinished = new Subject<void>();
+        const mockModal = { onCloseFinished, open: jest.fn() };
+        jest.spyOn(component['ngx'], 'getModal').mockReturnValue(mockModal as any);
 
-        const modal = component['ngx'].getModal('applicationProfileModal');
-        expect(modal).toBeDefined();
+        const getAppProfilesSpy = jest.spyOn(component, 'getApplicationProfiles');
+        const params = { filteredResults: true, searchColumn: 'name', searchText: 'test', searchString: '' };
+        jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+
+        component.subscribeToApplicationProfileModal();
+        onCloseFinished.next();
+
+        expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
       });
+    });
+
+    it('should call ngx.setModalData and ngx.getModal().open', () => {
+      const appProfile = { id: 1, name: 'Test App Profile' } as any;
+      component.tenantId = '1';
+
+      component.openApplicationProfileModal(ModalMode.Edit, appProfile);
+
+      expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(ApplicationProfileModalDto), 'applicationProfileModal');
+      expect(component['ngx'].getModal).toHaveBeenCalledWith('applicationProfileModal');
+
+      const modal = component['ngx'].getModal('applicationProfileModal');
+      expect(modal).toBeDefined();
     });
   });
 });
