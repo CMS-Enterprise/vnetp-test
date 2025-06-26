@@ -45,10 +45,19 @@
     ></app-icon-button>
 
     <app-icon-button
+      *ngIf="!filter?.provisionedAt"
       icon="delete"
       label="Soft-Delete/Delete Filter"
       [type]="filter?.deletedAt ? 'danger' : 'default'"
       (handleClick)="deleteFilter(filter)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="filter?.provisionedAt"
+      icon="download"
+      label="Deprovision Filter"
+      type="danger"
+      (handleClick)="deprovisionFilter(filter)"
     ></app-icon-button>
   </section>
 </ng-template>

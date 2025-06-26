@@ -110,38 +110,47 @@ export class VrfComponent implements OnInit {
       );
   }
 
-  public deleteVrf(vrf: Vrf): void {
-    if (vrf.deletedAt) {
-      this.vrfService.deleteOneVrf({ id: vrf.id }).subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+  private showConfirmationModal(title: string, message: string, onConfirm: () => void): void {
+    const modalDto = new YesNoModalDto(title, message);
 
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getVrfs(params);
-        } else {
-          this.getVrfs();
-        }
-      });
+    const onConfirmWrapper = () => {
+      onConfirm();
+    };
+
+    const onClose = () => {
+      this.refreshVrfs();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirmWrapper, onClose);
+  }
+
+  private refreshVrfs(): void {
+    const params = this.tableContextService.getSearchLocalStorage();
+    const { filteredResults } = params;
+
+    if (filteredResults) {
+      this.getVrfs(params);
     } else {
-      this.vrfService
-        .softDeleteOneVrf({
-          id: vrf.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-
-          // if filtered results boolean is true, apply search params in the
-          // subsequent get call
-          if (filteredResults) {
-            this.getVrfs(params);
-          } else {
-            this.getVrfs();
-          }
-        });
+      this.getVrfs();
     }
+  }
+
+  public deleteVrf(vrf: Vrf): void {
+    const isHardDelete = vrf.deletedAt;
+    const title = isHardDelete ? 'Delete VRF' : 'Soft Delete VRF';
+    const message = isHardDelete
+      ? `Are you sure you want to delete ${vrf.name}? This cannot be undone.`
+      : `Are you sure you want to soft delete ${vrf.name}? This can be undone.`;
+
+    const onConfirm = () => {
+      const deleteMethod = isHardDelete ? this.vrfService.deleteOneVrf({ id: vrf.id }) : this.vrfService.softDeleteOneVrf({ id: vrf.id });
+
+      deleteMethod.subscribe(() => {
+        this.refreshVrfs();
+      });
+    };
+
+    this.showConfirmationModal(title, message, onConfirm);
   }
 
   public restoreVrf(vrf: Vrf): void {
@@ -149,22 +158,23 @@ export class VrfComponent implements OnInit {
       return;
     }
 
-    this.vrfService
-      .restoreOneVrf({
-        id: vrf.id,
-      })
-      .subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getVrfs(params);
-        } else {
-          this.getVrfs();
-        }
+    const onConfirm = () => {
+      this.vrfService.restoreOneVrf({ id: vrf.id }).subscribe(() => {
+        this.refreshVrfs();
       });
+    };
+
+    this.showConfirmationModal('Restore VRF', `Are you sure you want to restore ${vrf.name}?`, onConfirm);
+  }
+
+  public deprovisionVrf(vrf: Vrf): void {
+    const onConfirm = () => {
+      this.vrfService.deprovisionOneVrf({ id: vrf.id }).subscribe(() => {
+        this.refreshVrfs();
+      });
+    };
+
+    this.showConfirmationModal('Deprovision VRF', `Are you sure you would like to deprovision ${vrf.name}?`, onConfirm);
   }
 
   public openVrfModal(modalMode: ModalMode, vrf?: Vrf): void {
@@ -229,24 +239,21 @@ export class VrfComponent implements OnInit {
   };
 
   public importVrfs(event): void {
-    const modalDto = new YesNoModalDto(
-      'Import Vrfs',
-      `Are you sure you would like to import ${event.length} Vrf${event.length > 1 ? 's' : ''}?`,
-    );
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.vrfService.createManyVrf({ createManyVrfDto: { bulk: dto } }).subscribe(
         () => {},
         () => {},
         () => {
-          this.getVrfs();
+          this.refreshVrfs();
         },
       );
     };
-    const onClose = () => {
-      this.getVrfs();
-    };
 
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+    this.showConfirmationModal(
+      'Import VRFs',
+      `Are you sure you would like to import ${event.length} VRF${event.length > 1 ? 's' : ''}?`,
+      onConfirm,
+    );
   }
 }

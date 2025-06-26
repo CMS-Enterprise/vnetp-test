@@ -109,32 +109,49 @@ describe('L3OutsComponent', () => {
   });
 
   it('should delete L3 out', () => {
-    const l3outToDelete = { id: '123', description: 'Bye!' } as L3Out;
-    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
-    component.deleteL3Out(l3outToDelete);
-    const getL3OutsSpy = jest.spyOn(component['l3OutService'], 'getManyL3Out');
+    const l3OutToDelete = { id: '123', name: 'Test L3 Out', description: 'Bye!' } as any;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
+    jest.spyOn(component['l3OutService'], 'softDeleteOneL3Out').mockReturnValue(of({} as any));
+    jest.spyOn(component as any, 'refreshL3Outs');
+
+    component.deleteL3Out(l3OutToDelete);
+
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getL3OutsSpy).toHaveBeenCalled();
+    expect(component['l3OutService'].softDeleteOneL3Out).toHaveBeenCalledWith({ id: '123' });
   });
 
   it('should restore L3 out', () => {
-    const l3out = { id: '1', deletedAt: true } as any;
+    const l3Out = { id: '1', name: 'Test L3 Out', deletedAt: true } as any;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
     jest.spyOn(component['l3OutService'], 'restoreOneL3Out').mockReturnValue(of({} as any));
-    jest.spyOn(component, 'getL3Outs');
-    component.restoreL3Out(l3out);
-    expect(component['l3OutService'].restoreOneL3Out).toHaveBeenCalledWith({ id: l3out.id });
-    expect(component.getL3Outs).toHaveBeenCalled();
+    jest.spyOn(component as any, 'refreshL3Outs');
+
+    component.restoreL3Out(l3Out);
+
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+    expect(component['l3OutService'].restoreOneL3Out).toHaveBeenCalledWith({ id: '1' });
   });
 
   it('should apply search params when filtered results is true', () => {
-    const l3out = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['l3OutService'], 'restoreOneL3Out').mockReturnValue(of({} as any));
-
     const getL3OutsSpy = jest.spyOn(component, 'getL3Outs');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
-    component.restoreL3Out(l3out);
+    // Test refreshL3Outs helper method
+    component['refreshL3Outs']();
+
     expect(getL3OutsSpy).toHaveBeenCalledWith(params);
   });
 

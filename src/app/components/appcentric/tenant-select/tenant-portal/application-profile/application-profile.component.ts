@@ -197,7 +197,6 @@ export class ApplicationProfileComponent implements OnInit {
 
     if (modalMode === ModalMode.Edit) {
       dto.ApplicationProfile = applicationProfile;
-      // this.getEndpointGroups(applicationProfile.id);
     }
 
     this.subscribeToApplicationProfileModal();
@@ -264,27 +263,4 @@ export class ApplicationProfileComponent implements OnInit {
       onConfirm,
     );
   }
-
-  // public getEndpointGroups(applicationProfileId: string) {
-  //   this.isLoading = true;
-  //   const endpointGroups = this.endpointGroupService
-  //     .getManyEndpointGroup({
-  //       filter: [`applicationProfileId||eq||${applicationProfileId}`] as Array<string>,
-  //       page: 1,
-  //       perPage: 5,
-  //     })
-  //     .subscribe(
-  //       data => {
-  //         this.endpointGroups = data;
-  //       },
-  //       () => {
-  //         this.endpointGroups = null;
-  //       },
-  //       () => {
-  //         this.isLoading = false;
-  //       },
-  //     );
-
-  //   return endpointGroups;
-  // }
 }

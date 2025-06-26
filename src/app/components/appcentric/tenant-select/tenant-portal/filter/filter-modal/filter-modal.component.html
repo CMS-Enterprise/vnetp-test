@@ -107,6 +107,7 @@
       (handleClick)="openFilterEntryModal(ModalMode.Edit, filterEntry)"
     ></app-icon-button>
     <app-icon-button
+      *ngIf="!filterEntry?.provisionedAt"
       icon="delete"
       label="Soft-Delete/Delete Filter Entry"
       [type]="filterEntry?.deletedAt ? 'danger' : 'default'"
@@ -119,6 +120,14 @@
       label="Restore Filter Entry"
       type="success"
       (handleClick)="restoreFilterEntry(filterEntry)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="filterEntry?.provisionedAt"
+      icon="download"
+      label="Deprovision Filter Entry"
+      type="danger"
+      (handleClick)="deprovisionFilterEntry(filterEntry)"
     ></app-icon-button>
   </section>
 </ng-template>

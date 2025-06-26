@@ -105,38 +105,49 @@ export class RouteProfileComponent implements OnInit {
       );
   }
 
-  public deleteRouteProfile(routeProfile: RouteProfile): void {
-    if (routeProfile.deletedAt) {
-      this.routeProfileService.deleteOneRouteProfile({ id: routeProfile.id }).subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+  private showConfirmationModal(title: string, message: string, onConfirm: () => void): void {
+    const modalDto = new YesNoModalDto(title, message);
 
-        // if routeProfileed results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getRouteProfiles(params);
-        } else {
-          this.getRouteProfiles();
-        }
-      });
+    const onConfirmWrapper = () => {
+      onConfirm();
+    };
+
+    const onClose = () => {
+      this.refreshRouteProfiles();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirmWrapper, onClose);
+  }
+
+  private refreshRouteProfiles(): void {
+    const params = this.tableContextService.getSearchLocalStorage();
+    const { filteredResults } = params;
+
+    if (filteredResults) {
+      this.getRouteProfiles(params);
     } else {
-      this.routeProfileService
-        .softDeleteOneRouteProfile({
-          id: routeProfile.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-
-          // if routeProfileed results boolean is true, apply search params in the
-          // subsequent get call
-          if (filteredResults) {
-            this.getRouteProfiles(params);
-          } else {
-            this.getRouteProfiles();
-          }
-        });
+      this.getRouteProfiles();
     }
+  }
+
+  public deleteRouteProfile(routeProfile: RouteProfile): void {
+    const isHardDelete = routeProfile.deletedAt;
+    const title = isHardDelete ? 'Delete Route Profile' : 'Soft Delete Route Profile';
+    const message = isHardDelete
+      ? `Are you sure you want to delete ${routeProfile.name}? This cannot be undone.`
+      : `Are you sure you want to soft delete ${routeProfile.name}? This can be undone.`;
+
+    const onConfirm = () => {
+      const deleteMethod = isHardDelete
+        ? this.routeProfileService.deleteOneRouteProfile({ id: routeProfile.id })
+        : this.routeProfileService.softDeleteOneRouteProfile({ id: routeProfile.id });
+
+      deleteMethod.subscribe(() => {
+        this.refreshRouteProfiles();
+      });
+    };
+
+    this.showConfirmationModal(title, message, onConfirm);
   }
 
   public restoreRouteProfile(routeProfile: RouteProfile): void {
@@ -144,22 +155,23 @@ export class RouteProfileComponent implements OnInit {
       return;
     }
 
-    this.routeProfileService
-      .restoreOneRouteProfile({
-        id: routeProfile.id,
-      })
-      .subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        // if routeProfileed results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getRouteProfiles(params);
-        } else {
-          this.getRouteProfiles();
-        }
+    const onConfirm = () => {
+      this.routeProfileService.restoreOneRouteProfile({ id: routeProfile.id }).subscribe(() => {
+        this.refreshRouteProfiles();
       });
+    };
+
+    this.showConfirmationModal('Restore Route Profile', `Are you sure you want to restore ${routeProfile.name}?`, onConfirm);
+  }
+
+  public deprovisionRouteProfile(routeProfile: RouteProfile): void {
+    const onConfirm = () => {
+      this.routeProfileService.deprovisionOneRouteProfile({ id: routeProfile.id }).subscribe(() => {
+        this.refreshRouteProfiles();
+      });
+    };
+
+    this.showConfirmationModal('Deprovision Route Profile', `Are you sure you would like to deprovision ${routeProfile.name}?`, onConfirm);
   }
 
   public openRouteProfileModal(modalMode: ModalMode, routeProfile?: RouteProfile): void {
@@ -221,25 +233,21 @@ export class RouteProfileComponent implements OnInit {
   };
 
   public importRouteProfiles(event): void {
-    const modalDto = new YesNoModalDto(
-      'Import Route Profiles',
-      `Are you sure you would like to import ${event.length} Route Profile${event.length > 1 ? 's' : ''}?`,
-    );
-
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.routeProfileService.createManyRouteProfile({ createManyRouteProfileDto: { bulk: dto } }).subscribe(
         () => {},
         () => {},
         () => {
-          this.getRouteProfiles();
+          this.refreshRouteProfiles();
         },
       );
     };
-    const onClose = () => {
-      this.getRouteProfiles();
-    };
 
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+    this.showConfirmationModal(
+      'Import Route Profiles',
+      `Are you sure you would like to import ${event.length} Route Profile${event.length > 1 ? 's' : ''}?`,
+      onConfirm,
+    );
   }
 }

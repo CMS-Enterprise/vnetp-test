@@ -109,33 +109,50 @@ describe('ContractComponent', () => {
   });
 
   it('should delete contract', () => {
-    const contractToDelete = { id: '123', description: 'Bye!' } as Contract;
-    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    const contractToDelete = { id: '123', name: 'Test Contract', description: 'Bye!' } as any;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
+    jest.spyOn(component['contractService'], 'softDeleteOneContract').mockReturnValue(of({} as any));
+    jest.spyOn(component as any, 'refreshContracts');
+
     component.deleteContract(contractToDelete);
-    const getContractsMock = jest.spyOn(component['contractService'], 'getManyContract');
+
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getContractsMock).toHaveBeenCalled();
+    expect(component['contractService'].softDeleteOneContract).toHaveBeenCalledWith({ id: '123' });
   });
 
   it('should restore contract', () => {
-    const contract = { id: '1', deletedAt: true } as any;
+    const contract = { id: '1', name: 'Test Contract', deletedAt: true } as any;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
     jest.spyOn(component['contractService'], 'restoreOneContract').mockReturnValue(of({} as any));
-    jest.spyOn(component, 'getContracts');
+    jest.spyOn(component as any, 'refreshContracts');
+
     component.restoreContract(contract);
-    expect(component['contractService'].restoreOneContract).toHaveBeenCalledWith({ id: contract.id });
-    expect(component.getContracts).toHaveBeenCalled();
+
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+    expect(component['contractService'].restoreOneContract).toHaveBeenCalledWith({ id: '1' });
   });
 
   it('should apply search params when filtered results is true', () => {
-    const contract = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['contractService'], 'restoreOneContract').mockReturnValue(of({} as any));
-
-    const getAppProfilesSpy = jest.spyOn(component, 'getContracts');
+    const getContractsSpy = jest.spyOn(component, 'getContracts');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
-    component.restoreContract(contract);
-    expect(getAppProfilesSpy).toHaveBeenCalledWith(params);
+    // Test refreshContracts helper method
+    component['refreshContracts']();
+
+    expect(getContractsSpy).toHaveBeenCalledWith(params);
   });
 
   describe('openContractModal', () => {

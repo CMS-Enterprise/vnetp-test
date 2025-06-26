@@ -134,41 +134,49 @@ export class EndpointSecurityGroupComponent implements OnInit {
       );
   }
 
-  public deleteEndpointSecurityGroup(endpointsecurityGroup: EndpointSecurityGroup): void {
-    if (endpointsecurityGroup.deletedAt) {
-      const modalDto = new YesNoModalDto(
-        'Delete EndpointSecurity Group',
-        `Are you sure you want to permanently delete Endpoint Security Group ${endpointsecurityGroup.name}?`,
-      );
-      const onConfirm = () => {
-        this.endpointSecurityGroupService.deleteOneEndpointSecurityGroup({ id: endpointsecurityGroup.id }).subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
+  private showConfirmationModal(title: string, message: string, onConfirm: () => void): void {
+    const modalDto = new YesNoModalDto(title, message);
 
-          if (filteredResults) {
-            this.getEndpointSecurityGroups(params);
-          } else {
-            this.getEndpointSecurityGroups();
-          }
-        });
-      };
-      SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+    const onConfirmWrapper = () => {
+      onConfirm();
+    };
+
+    const onClose = () => {
+      this.refreshEndpointSecurityGroups();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirmWrapper, onClose);
+  }
+
+  private refreshEndpointSecurityGroups(): void {
+    const params = this.tableContextService.getSearchLocalStorage();
+    const { filteredResults } = params;
+
+    if (filteredResults) {
+      this.getEndpointSecurityGroups(params);
     } else {
-      this.endpointSecurityGroupService
-        .softDeleteOneEndpointSecurityGroup({
-          id: endpointsecurityGroup.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-
-          if (filteredResults) {
-            this.getEndpointSecurityGroups(params);
-          } else {
-            this.getEndpointSecurityGroups();
-          }
-        });
+      this.getEndpointSecurityGroups();
     }
+  }
+
+  public deleteEndpointSecurityGroup(endpointsecurityGroup: EndpointSecurityGroup): void {
+    const isHardDelete = endpointsecurityGroup.deletedAt;
+    const title = isHardDelete ? 'Delete Endpoint Security Group' : 'Soft Delete Endpoint Security Group';
+    const message = isHardDelete
+      ? `Are you sure you want to delete ${endpointsecurityGroup.name}? This cannot be undone.`
+      : `Are you sure you want to soft delete ${endpointsecurityGroup.name}? This can be undone.`;
+
+    const onConfirm = () => {
+      const deleteMethod = isHardDelete
+        ? this.endpointSecurityGroupService.deleteOneEndpointSecurityGroup({ id: endpointsecurityGroup.id })
+        : this.endpointSecurityGroupService.softDeleteOneEndpointSecurityGroup({ id: endpointsecurityGroup.id });
+
+      deleteMethod.subscribe(() => {
+        this.refreshEndpointSecurityGroups();
+      });
+    };
+
+    this.showConfirmationModal(title, message, onConfirm);
   }
 
   public restoreEndpointSecurityGroup(endpointsecurityGroup: EndpointSecurityGroup): void {
@@ -176,20 +184,31 @@ export class EndpointSecurityGroupComponent implements OnInit {
       return;
     }
 
-    this.endpointSecurityGroupService
-      .restoreOneEndpointSecurityGroup({
-        id: endpointsecurityGroup.id,
-      })
-      .subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        if (filteredResults) {
-          this.getEndpointSecurityGroups(params);
-        } else {
-          this.getEndpointSecurityGroups();
-        }
+    const onConfirm = () => {
+      this.endpointSecurityGroupService.restoreOneEndpointSecurityGroup({ id: endpointsecurityGroup.id }).subscribe(() => {
+        this.refreshEndpointSecurityGroups();
       });
+    };
+
+    this.showConfirmationModal(
+      'Restore Endpoint Security Group',
+      `Are you sure you want to restore ${endpointsecurityGroup.name}?`,
+      onConfirm,
+    );
+  }
+
+  public deprovisionEndpointSecurityGroup(endpointSecurityGroup: EndpointSecurityGroup): void {
+    const onConfirm = () => {
+      this.endpointSecurityGroupService.deprovisionOneEndpointSecurityGroup({ id: endpointSecurityGroup.id }).subscribe(() => {
+        this.refreshEndpointSecurityGroups();
+      });
+    };
+
+    this.showConfirmationModal(
+      'Deprovision Endpoint Security Group',
+      `Are you sure you would like to deprovision ${endpointSecurityGroup.name}?`,
+      onConfirm,
+    );
   }
 
   public openEndpointSecurityGroupModal(modalMode: ModalMode, endpointSecurityGroup?: EndpointSecurityGroup): void {
@@ -261,26 +280,22 @@ export class EndpointSecurityGroupComponent implements OnInit {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public importEndpointSecurityGroups(event): void {
-    const modalDto = new YesNoModalDto(
-      'Import EndpointSecurity Groups',
-      `Are you sure you would like to import ${event.length} EndpointSecurity Group${event.length > 1 ? 's' : ''}?`,
-    );
-
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.endpointSecurityGroupService.createManyEndpointSecurityGroup({ createManyEndpointSecurityGroupDto: { bulk: dto } }).subscribe(
         () => {},
         () => {},
         () => {
-          this.getEndpointSecurityGroups();
+          this.refreshEndpointSecurityGroups();
         },
       );
     };
-    const onClose = () => {
-      this.getEndpointSecurityGroups();
-    };
 
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+    this.showConfirmationModal(
+      'Import Endpoint Security Groups',
+      `Are you sure you would like to import ${event.length} EndpointSecurity Group${event.length > 1 ? 's' : ''}?`,
+      onConfirm,
+    );
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -328,25 +343,24 @@ export class EndpointSecurityGroupComponent implements OnInit {
       return;
     }
 
-    const modalInputData: EsgModalDisplayData[] = esg.selectors
-      .map((selector: Selector) => {
-        const endpointGroup = selector.endpointGroup;
-        let endpointsForModal: ModalDisplayEndpoint[] = [];
-        // Only map endpoints if they exist
-        if (endpointGroup?.endpoints?.length) {
-          endpointsForModal = endpointGroup.endpoints.map(ep => ({
-            macAddress: ep.macAddress,
-            ipAddresses: ep.ipAddresses,
-            isIpListExpanded: true,
-          }));
-        }
+    const modalInputData: EsgModalDisplayData[] = esg.selectors.map((selector: Selector) => {
+      const endpointGroup = selector.endpointGroup;
+      let endpointsForModal: ModalDisplayEndpoint[] = [];
+      // Only map endpoints if they exist
+      if (endpointGroup?.endpoints?.length) {
+        endpointsForModal = endpointGroup.endpoints.map(ep => ({
+          macAddress: ep.macAddress,
+          ipAddresses: ep.ipAddresses,
+          isIpListExpanded: true,
+        }));
+      }
 
-        return {
-          epgName: endpointGroup ? endpointGroup.name : 'Unknown EPG',
-          endpoints: endpointsForModal,
-          isEpgExpanded: true,
-        };
-      });
+      return {
+        epgName: endpointGroup ? endpointGroup.name : 'Unknown EPG',
+        endpoints: endpointsForModal,
+        isEpgExpanded: true,
+      };
+    });
 
     // Open modal with all EPGs, even if they have no endpoints
     this.ngx.setModalData({ data: modalInputData, context: 'esg' as const }, this.endpointDisplayModalId, true);

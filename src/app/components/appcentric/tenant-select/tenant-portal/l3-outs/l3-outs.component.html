@@ -45,10 +45,19 @@
     ></app-icon-button>
 
     <app-icon-button
+      *ngIf="!l3Out?.provisionedAt"
       icon="delete"
       label="Soft-Delete/Delete L3 Out"
       [type]="l3Out?.deletedAt ? 'danger' : 'default'"
       (handleClick)="deleteL3Out(l3Out)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="l3Out?.provisionedAt"
+      icon="download"
+      label="Deprovision L3 Out"
+      type="danger"
+      (handleClick)="deprovisionL3Out(l3Out)"
     ></app-icon-button>
   </section>
 </ng-template>

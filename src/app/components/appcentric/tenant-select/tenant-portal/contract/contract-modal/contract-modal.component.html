@@ -128,10 +128,19 @@
     ></app-icon-button>
 
     <app-icon-button
+      *ngIf="!subject.provisionedAt"
       icon="delete"
-      label="Soft-Delete/Delete Bridge Domain"
+      label="Soft-Delete/Delete Subject"
       [type]="subject?.deletedAt ? 'danger' : 'default'"
       (handleClick)="removeSubject(subject)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="subject?.provisionedAt"
+      icon="download"
+      label="Deprovision Subject"
+      type="danger"
+      (handleClick)="deprovisionSubject(subject)"
     ></app-icon-button>
 
     <app-icon-button

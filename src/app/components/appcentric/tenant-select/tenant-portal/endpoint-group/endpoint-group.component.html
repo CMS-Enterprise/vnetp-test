@@ -36,20 +36,26 @@
       label="Edit Endpoint Group"
       (handleClick)="openEndpointGroupModal(ModalMode.Edit, endpointGroup)"
     ></app-icon-button>
-
-    <app-icon-button
-      icon="delete"
-      label="Soft-Delete/Delete Endpoint Group"
-      [type]="endpointGroup?.deletedAt ? 'danger' : 'default'"
-      (handleClick)="deleteEndpointGroup(endpointGroup)"
-    ></app-icon-button>
-
     <app-icon-button
       *ngIf="endpointGroup?.deletedAt"
       icon="undo"
       label="Restore Endpoint Group"
       type="success"
       (handleClick)="restoreEndpointGroup(endpointGroup)"
+    ></app-icon-button>
+    <app-icon-button
+      *ngIf="!endpointGroup?.provisionedAt"
+      icon="delete"
+      label="Soft-Delete/Delete Endpoint Group"
+      [type]="endpointGroup?.deletedAt ? 'danger' : 'default'"
+      (handleClick)="deleteEndpointGroup(endpointGroup)"
+    ></app-icon-button>
+    <app-icon-button
+      *ngIf="endpointGroup?.provisionedAt"
+      icon="download"
+      label="Deprovision Endpoint Group"
+      type="danger"
+      (handleClick)="deprovisionEndpointGroup(endpointGroup)"
     ></app-icon-button>
   </section>
 </ng-template>

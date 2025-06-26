@@ -49,10 +49,18 @@
       (handleClick)="restoreBridgeDomain(bridgeDomain)"
     ></app-icon-button>
     <app-icon-button
+      *ngIf="!bridgeDomain?.provisionedAt"
       icon="delete"
       label="Soft-Delete/Delete Bridge Domain"
       [type]="bridgeDomain?.deletedAt ? 'danger' : 'default'"
       (handleClick)="deleteBridgeDomain(bridgeDomain)"
+    ></app-icon-button>
+    <app-icon-button
+      *ngIf="bridgeDomain?.provisionedAt"
+      icon="download"
+      label="Deprovision Bridge Domain"
+      type="danger"
+      (handleClick)="deprovisionBridgeDomain(bridgeDomain)"
     ></app-icon-button>
   </section>
 </ng-template>

@@ -197,6 +197,25 @@ export class SubjectModalComponent implements OnInit {
       );
   }
 
+  private showConfirmationModal(title: string, message: string, onConfirm: () => void): void {
+    const modalDto = new YesNoModalDto(title, message);
+
+    const onConfirmWrapper = () => {
+      onConfirm();
+    };
+
+    const onClose = () => {
+      this.refreshFilters();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirmWrapper, onClose);
+  }
+
+  private refreshFilters(): void {
+    this.getFiltertableData();
+    this.getFilters();
+  }
+
   public getFiltertableData() {
     this.isLoading = true;
     this.subjectsService
@@ -243,24 +262,23 @@ export class SubjectModalComponent implements OnInit {
   }
 
   public removeFilter(filter: Filter) {
-    this.isLoading = true;
-    const modalDto = new YesNoModalDto('Remove filter', `Are you sure you want to remove filter ${filter.name}?`);
     const onConfirm = () => {
+      this.isLoading = true;
       this.subjectsService
         .removeFilterFromSubjectSubject({
           subjectId: this.subjectId,
           filterId: filter.id,
         })
         .subscribe(
-          () => this.getFiltertableData(),
+          () => this.refreshFilters(),
           () => (this.filterTableData = null),
           () => {
             this.isLoading = false;
-            this.getFilters();
           },
         );
     };
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+
+    this.showConfirmationModal('Remove Filter', `Are you sure you want to remove filter ${filter.name}?`, onConfirm);
   }
 
   public sanitizeData(entities) {
@@ -298,11 +316,6 @@ export class SubjectModalComponent implements OnInit {
   };
 
   public importSubjectFilterRelation(event): void {
-    const modalDto = new YesNoModalDto(
-      'Import Subject Filters',
-      `Are you sure you would like to import ${event.length} Subject Filter${event.length > 1 ? 's' : ''}?`,
-    );
-
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       dto.map(relation => {
@@ -310,15 +323,16 @@ export class SubjectModalComponent implements OnInit {
           () => {},
           () => {},
           () => {
-            this.getFiltertableData();
+            this.refreshFilters();
           },
         );
       });
     };
-    const onClose = () => {
-      this.getFiltertableData();
-    };
 
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+    this.showConfirmationModal(
+      'Import Subject Filters',
+      `Are you sure you would like to import ${event.length} Subject Filter${event.length > 1 ? 's' : ''}?`,
+      onConfirm,
+    );
   }
 }

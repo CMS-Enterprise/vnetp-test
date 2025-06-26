@@ -128,41 +128,49 @@ export class EndpointGroupComponent implements OnInit {
       );
   }
 
-  public deleteEndpointGroup(endpointGroup: EndpointGroup): void {
-    if (endpointGroup.deletedAt) {
-      const modalDto = new YesNoModalDto(
-        'Delete Endpoint Group',
-        `Are you sure you want to permanently delete Endpoint Group ${endpointGroup.name}?`,
-      );
-      const onConfirm = () => {
-        this.endpointGroupService.deleteOneEndpointGroup({ id: endpointGroup.id }).subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
+  private showConfirmationModal(title: string, message: string, onConfirm: () => void): void {
+    const modalDto = new YesNoModalDto(title, message);
 
-          if (filteredResults) {
-            this.getEndpointGroups(params);
-          } else {
-            this.getEndpointGroups();
-          }
-        });
-      };
-      SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+    const onConfirmWrapper = () => {
+      onConfirm();
+    };
+
+    const onClose = () => {
+      this.refreshEndpointGroups();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirmWrapper, onClose);
+  }
+
+  private refreshEndpointGroups(): void {
+    const params = this.tableContextService.getSearchLocalStorage();
+    const { filteredResults } = params;
+
+    if (filteredResults) {
+      this.getEndpointGroups(params);
     } else {
-      this.endpointGroupService
-        .softDeleteOneEndpointGroup({
-          id: endpointGroup.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-
-          if (filteredResults) {
-            this.getEndpointGroups(params);
-          } else {
-            this.getEndpointGroups();
-          }
-        });
+      this.getEndpointGroups();
     }
+  }
+
+  public deleteEndpointGroup(endpointGroup: EndpointGroup): void {
+    const isHardDelete = endpointGroup.deletedAt;
+    const title = isHardDelete ? 'Delete Endpoint Group' : 'Soft Delete Endpoint Group';
+    const message = isHardDelete
+      ? `Are you sure you want to delete ${endpointGroup.name}? This cannot be undone.`
+      : `Are you sure you want to soft delete ${endpointGroup.name}? This can be undone.`;
+
+    const onConfirm = () => {
+      const deleteMethod = isHardDelete
+        ? this.endpointGroupService.deleteOneEndpointGroup({ id: endpointGroup.id })
+        : this.endpointGroupService.softDeleteOneEndpointGroup({ id: endpointGroup.id });
+
+      deleteMethod.subscribe(() => {
+        this.refreshEndpointGroups();
+      });
+    };
+
+    this.showConfirmationModal(title, message, onConfirm);
   }
 
   public restoreEndpointGroup(endpointGroup: EndpointGroup): void {
@@ -170,20 +178,27 @@ export class EndpointGroupComponent implements OnInit {
       return;
     }
 
-    this.endpointGroupService
-      .restoreOneEndpointGroup({
-        id: endpointGroup.id,
-      })
-      .subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        if (filteredResults) {
-          this.getEndpointGroups(params);
-        } else {
-          this.getEndpointGroups();
-        }
+    const onConfirm = () => {
+      this.endpointGroupService.restoreOneEndpointGroup({ id: endpointGroup.id }).subscribe(() => {
+        this.refreshEndpointGroups();
       });
+    };
+
+    this.showConfirmationModal('Restore Endpoint Group', `Are you sure you want to restore ${endpointGroup.name}?`, onConfirm);
+  }
+
+  public deprovisionEndpointGroup(endpointGroup: EndpointGroup): void {
+    const onConfirm = () => {
+      this.endpointGroupService.deprovisionOneEndpointGroup({ id: endpointGroup.id }).subscribe(() => {
+        this.refreshEndpointGroups();
+      });
+    };
+
+    this.showConfirmationModal(
+      'Deprovision Endpoint Group',
+      `Are you sure you would like to deprovision ${endpointGroup.name}?`,
+      onConfirm,
+    );
   }
 
   public openEndpointGroupModal(modalMode: ModalMode, endpointGroup?: EndpointGroup): void {
@@ -252,26 +267,22 @@ export class EndpointGroupComponent implements OnInit {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public importEndpointGroups(event): void {
-    const modalDto = new YesNoModalDto(
-      'Import Endpoint Groups',
-      `Are you sure you would like to import ${event.length} Endpoint Group${event.length > 1 ? 's' : ''}?`,
-    );
-
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.endpointGroupService.createManyEndpointGroup({ createManyEndpointGroupDto: { bulk: dto } }).subscribe(
         () => {},
         () => {},
         () => {
-          this.getEndpointGroups();
+          this.refreshEndpointGroups();
         },
       );
     };
-    const onClose = () => {
-      this.getEndpointGroups();
-    };
 
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+    this.showConfirmationModal(
+      'Import Endpoint Groups',
+      `Are you sure you would like to import ${event.length} Endpoint Group${event.length > 1 ? 's' : ''}?`,
+      onConfirm,
+    );
   }
 
   public onTableEvent(event: TableComponentDto): void {

@@ -108,32 +108,49 @@ describe('RouteProfilesComponent', () => {
   });
 
   it('should delete route profile', () => {
-    const routeProfileToDelete = { id: '123', description: 'Bye!' } as RouteProfile;
-    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    const routeProfileToDelete = { id: '123', name: 'Test Route Profile', description: 'Bye!' } as any;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
+    jest.spyOn(component['routeProfileService'], 'softDeleteOneRouteProfile').mockReturnValue(of({} as any));
+    jest.spyOn(component as any, 'refreshRouteProfiles');
+
     component.deleteRouteProfile(routeProfileToDelete);
-    const getRouteProfilesSpy = jest.spyOn(component['routeProfileService'], 'getManyRouteProfile');
+
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getRouteProfilesSpy).toHaveBeenCalled();
+    expect(component['routeProfileService'].softDeleteOneRouteProfile).toHaveBeenCalledWith({ id: '123' });
   });
 
   it('should restore route profile', () => {
-    const routeProfile = { id: '1', deletedAt: true } as any;
+    const routeProfile = { id: '1', name: 'Test Route Profile', deletedAt: true } as any;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
     jest.spyOn(component['routeProfileService'], 'restoreOneRouteProfile').mockReturnValue(of({} as any));
-    jest.spyOn(component, 'getRouteProfiles');
+    jest.spyOn(component as any, 'refreshRouteProfiles');
+
     component.restoreRouteProfile(routeProfile);
-    expect(component['routeProfileService'].restoreOneRouteProfile).toHaveBeenCalledWith({ id: routeProfile.id });
-    expect(component.getRouteProfiles).toHaveBeenCalled();
+
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+    expect(component['routeProfileService'].restoreOneRouteProfile).toHaveBeenCalledWith({ id: '1' });
   });
 
   it('should apply search params when filtered results is true', () => {
-    const routeProfile = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['routeProfileService'], 'restoreOneRouteProfile').mockReturnValue(of({} as any));
-
     const getRouteProfilesSpy = jest.spyOn(component, 'getRouteProfiles');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
-    component.restoreRouteProfile(routeProfile);
+    // Test refreshRouteProfiles helper method
+    component['refreshRouteProfiles']();
+
     expect(getRouteProfilesSpy).toHaveBeenCalledWith(params);
   });
 
