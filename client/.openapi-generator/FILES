@@ -116,7 +116,6 @@ model/createManyWanFormDto.ts
 model/createManyWanFormSubnetDto.ts
 model/createManyWorkflowDto.ts
 model/createManyZoneDto.ts
-model/createTenantV2Dto.ts
 model/createWorkflowDto.ts
 model/datacenter.ts
 model/dcsPermissions.ts

@@ -26836,11 +26836,10 @@
             "type": "string"
           },
           "tenantVersion": {
-            "type": "number",
-            "readOnly": true
+            "type": "number"
           }
         },
-        "required": ["name", "type", "tierId", "tenantVersion"]
+        "required": ["name", "type", "tierId"]
       },
       "NatRuleGroup": {
         "type": "object",
@@ -28925,6 +28924,414 @@
           }
         },
         "required": ["finished", "status", "failed"]
+      },
+      "EndpointConnectivityQuery": {
+        "type": "object",
+        "properties": {
+          "generatedConfigIdentifier": {
+            "type": "string",
+            "description": "Identifier for the generated configuration"
+          },
+          "sourceEndpointIp": {
+            "type": "string",
+            "description": "Source endpoint IP address"
+          },
+          "sourceEndpointPort": {
+            "type": "number",
+            "description": "Source endpoint port"
+          },
+          "destinationEndpointIp": {
+            "type": "string",
+            "description": "Destination endpoint IP address"
+          },
+          "destinationEndpointPort": {
+            "type": "number",
+            "description": "Destination endpoint port"
+          },
+          "ipProtocol": {
+            "type": "string",
+            "description": "IP protocol"
+          },
+          "bypassServiceGraph": {
+            "type": "boolean",
+            "description": "Does the user want to bypass the service graph?"
+          },
+          "generateConfig": {
+            "type": "boolean",
+            "description": "Generate configuration to enable connectivity if not already possible."
+          },
+          "bidirectional": {
+            "type": "boolean",
+            "description": "Check for bi-directional connectivity."
+          },
+          "tenantId": {
+            "type": "string",
+            "description": "Tenant ID"
+          }
+        },
+        "required": [
+          "generatedConfigIdentifier",
+          "sourceEndpointIp",
+          "destinationEndpointIp",
+          "destinationEndpointPort",
+          "ipProtocol",
+          "bypassServiceGraph",
+          "generateConfig",
+          "bidirectional",
+          "tenantId"
+        ]
+      },
+      "SubjectToFilter": {
+        "type": "object",
+        "properties": {
+          "subjectId": {
+            "type": "string",
+            "description": "Subject ID"
+          },
+          "filterId": {
+            "type": "string",
+            "description": "Filter ID"
+          }
+        },
+        "required": ["subjectId", "filterId"]
+      },
+      "ContractToEpg": {
+        "type": "object",
+        "properties": {
+          "contractId": {
+            "type": "string",
+            "description": "Contract ID"
+          },
+          "epgId": {
+            "type": "string",
+            "description": "Endpoint Group ID"
+          },
+          "contractRelationType": {
+            "type": "string",
+            "description": "Contract Relation Type",
+            "enum": ["Provider", "Consumer", "Intra"]
+          }
+        },
+        "required": ["contractId", "epgId", "contractRelationType"]
+      },
+      "ContractToEsg": {
+        "type": "object",
+        "properties": {
+          "contractId": {
+            "type": "string",
+            "description": "Contract ID"
+          },
+          "esgId": {
+            "type": "string",
+            "description": "Endpoint Group ID"
+          },
+          "contractRelationType": {
+            "type": "string",
+            "description": "Contract Relation Type",
+            "enum": ["Provider", "Consumer", "Intra"]
+          }
+        },
+        "required": ["contractId", "esgId", "contractRelationType"]
+      },
+      "EndpointConnectivityGeneratedConfig": {
+        "type": "object",
+        "properties": {
+          "existingContract": {
+            "type": "boolean"
+          },
+          "Contracts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          },
+          "Subjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Subject"
+            }
+          },
+          "Filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
+          },
+          "FilterEntries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterEntry"
+            }
+          },
+          "SubjectToFilter": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubjectToFilter"
+            }
+          },
+          "ContractToEpg": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractToEpg"
+            }
+          },
+          "ContractToEsg": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractToEsg"
+            }
+          },
+          "FirewallRules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          }
+        },
+        "required": [
+          "existingContract",
+          "Contracts",
+          "Subjects",
+          "Filters",
+          "FilterEntries",
+          "SubjectToFilter",
+          "ContractToEpg",
+          "ContractToEsg",
+          "FirewallRules"
+        ]
+      },
+      "ConnectivityNode": {
+        "type": "object",
+        "properties": {
+          "nodeId": {
+            "type": "string",
+            "description": "The ID of the node"
+          },
+          "nodeType": {
+            "type": "string",
+            "description": "The type of the node",
+            "enum": [
+              "external_endpoint",
+              "endpoint",
+              "epg",
+              "esg",
+              "contract",
+              "subject",
+              "filter",
+              "filter_entry",
+              "service_graph",
+              "tenant"
+            ]
+          },
+          "generated": {
+            "type": "boolean",
+            "description": "Whether the node is generated"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the node"
+          }
+        }
+      },
+      "ConnectionTrace": {
+        "type": "object",
+        "properties": {
+          "sourcePath": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectivityNode"
+            }
+          },
+          "contractPath": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectivityNode"
+            }
+          },
+          "destinationPath": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectivityNode"
+            }
+          },
+          "fullPath": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectivityNode"
+            }
+          }
+        },
+        "required": ["sourcePath", "contractPath", "destinationPath", "fullPath"]
+      },
+      "EndpointConnectionUtilityResponse": {
+        "type": "object",
+        "properties": {
+          "connectivityResult": {
+            "type": "string",
+            "description": "The source endpoint",
+            "enum": ["allowed", "denied", "not-supported", "denied-generated-config"]
+          },
+          "connectivityResultDetail": {
+            "type": "string",
+            "description": "The detail of the connectivity result"
+          },
+          "generatedConfig": {
+            "description": "Generated configuration when connectivity requires new config",
+            "readOnly": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EndpointConnectivityGeneratedConfig"
+              }
+            ]
+          },
+          "sourceEndpoint": {
+            "description": "The source endpoint",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Endpoint"
+              }
+            ]
+          },
+          "destinationEndpoint": {
+            "description": "The destination endpoint",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Endpoint"
+              }
+            ]
+          },
+          "connectionTrace": {
+            "description": "The connection trace",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ConnectionTrace"
+              }
+            ]
+          }
+        },
+        "required": ["connectivityResult", "connectivityResultDetail", "sourceEndpoint", "destinationEndpoint", "connectionTrace"]
+      },
+      "AciRuntimeJobCreateDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["FirewallRule", "NatRule", "F5Config", "AciRuntime", "ExternalRoute", "AppIdRuntime"]
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "vlanId": {
+            "type": "string"
+          },
+          "endpointGroupId": {
+            "type": "string"
+          }
+        },
+        "required": ["type"]
+      },
+      "SyncEndpoint": {
+        "type": "object",
+        "properties": {
+          "mac": {
+            "type": "string"
+          },
+          "ip": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "encap": {
+            "type": "string"
+          },
+          "interface": {
+            "type": "string"
+          }
+        },
+        "required": ["mac", "ip"]
+      },
+      "SyncEndpointGroup": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncEndpoint"
+            }
+          }
+        },
+        "required": ["name", "endpoints"]
+      },
+      "SyncEndpointSecurityGroup": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncEndpoint"
+            }
+          }
+        },
+        "required": ["name", "endpoints"]
+      },
+      "SyncTenant": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "endpointGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncEndpointGroup"
+            }
+          },
+          "endpointSecurityGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncEndpointSecurityGroup"
+            }
+          }
+        },
+        "required": ["name", "endpointGroups", "endpointSecurityGroups"]
+      },
+      "EndpointSyncDto": {
+        "type": "object",
+        "properties": {
+          "tenants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncTenant"
+            }
+          }
+        },
+        "required": ["tenants"]
+      },
+      "CreateWorkflowDto": {
+        "type": "object",
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "description": "The ID of the tenant"
+          },
+          "workflowType": {
+            "type": "string",
+            "description": "The type of the workflow",
+            "enum": ["overlay", "underlay"]
+          }
+        },
+        "required": ["tenantId", "workflowType"]
+      },
+      "ValidateWorkflowDto": {
+        "type": "object",
+        "properties": {}
       },
       "SelfServiceRawConfig": {
         "type": "object",

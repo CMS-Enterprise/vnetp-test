@@ -25,7 +25,7 @@ export interface FirewallRuleGroup {
     tierId: string;
     readonly firewallRules?: Array<FirewallRule>;
     runtimeDataLastRefreshed?: string;
-    readonly tenantVersion: number;
+    tenantVersion?: number;
 }
 export enum FirewallRuleGroupTypeEnum {
     Intravrf = 'Intravrf',

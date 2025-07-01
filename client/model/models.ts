@@ -52,7 +52,6 @@ export * from './createManyWanFormDto';
 export * from './createManyWanFormSubnetDto';
 export * from './createManyWorkflowDto';
 export * from './createManyZoneDto';
-export * from './createTenantV2Dto';
 export * from './createWorkflowDto';
 export * from './datacenter';
 export * from './dcsPermissions';
