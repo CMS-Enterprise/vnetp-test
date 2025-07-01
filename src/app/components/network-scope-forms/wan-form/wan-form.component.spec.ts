@@ -7,10 +7,10 @@ import { WanFormModalDto } from '../../../models/network-scope-forms/wan-form-mo
 import { ModalMode } from '../../../models/other/modal-mode';
 import { DatacenterContextService } from '../../../services/datacenter-context.service';
 import { TableContextService } from '../../../services/table-context.service';
-import SubscriptionUtil from '../../../utils/SubscriptionUtil';
 import { WanFormComponent } from './wan-form.component';
 import { MockComponent, MockFontAwesomeComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('WanFormComponent', () => {
   let component: WanFormComponent;
@@ -80,7 +80,7 @@ describe('WanFormComponent', () => {
         MockYesNoModalComponent,
         MockFontAwesomeComponent,
       ],
-      imports: [FormsModule, ReactiveFormsModule],
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
         { provide: V1NetworkScopeFormsWanFormService, useValue: mockWanFormService },
@@ -183,24 +183,6 @@ describe('WanFormComponent', () => {
       const wanFormMock = { id: '1' } as any;
       component.restoreWanForm(wanFormMock);
       expect(mockWanFormService.restoreOneWanForm).toHaveBeenCalledWith({ id: '1' });
-    });
-  });
-
-  describe('activateWanForm', () => {
-    it('should call activate service and fetch WAN forms', () => {
-      const wanFormMock = { id: '1' } as any;
-      const subscribeSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
-      component.activateWanForm(wanFormMock);
-      expect(subscribeSpy).toHaveBeenCalled();
-    });
-  });
-
-  describe('deactivateWanForm', () => {
-    it('should call deactivate service and fetch WAN forms', () => {
-      const wanFormMock = { id: '1' } as any;
-      const subscribeSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
-      component.deactivateWanForm(wanFormMock);
-      expect(subscribeSpy).toHaveBeenCalled();
     });
   });
 

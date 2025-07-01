@@ -1,3 +1,10 @@
-<button type="button" class="btn btn-icon" (click)="handleClick.emit($event)" [title]="label" [attr.aria-label]="label">
+<button
+  type="button"
+  class="btn btn-icon"
+  (click)="handleClick.emit($event)"
+  [title]="label"
+  [attr.aria-label]="label"
+  [disabled]="disabled"
+>
   <fa-icon [className]="typeLookup[type]" [icon]="iconLookup[icon]"></fa-icon>
 </button>

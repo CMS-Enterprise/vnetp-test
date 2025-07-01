@@ -32,19 +32,32 @@
       </div>
 
       <div class="form-group">
-        <label for="prefixLength">Prefix Length</label>
+        <label for="fromPrefixLength">From Prefix Length</label>
         <input
           type="number"
-          id="prefixLength"
-          formControlName="prefixLength"
+          id="fromPrefixLength"
+          formControlName="fromPrefixLength"
           class="form-control"
-          [class.is-invalid]="submitted && f.prefixLength.errors"
-          aria-label="Prefix Length"
+          [class.is-invalid]="submitted && f.fromPrefixLength.errors"
+          aria-label="From Prefix Length"
         />
-        <div *ngIf="submitted && f.prefixLength.errors" class="invalid-feedback">
-          <div *ngIf="f.prefixLength.errors.required">Prefix Length is required.</div>
-          <div *ngIf="f.prefixLength.errors.min">Prefix Length must be greater than 0.</div>
-          <div *ngIf="f.prefixLength.errors.max">Prefix Length must be less than 32.</div>
+        <div *ngIf="submitted && f.fromPrefixLength.errors" class="invalid-feedback">
+          <div *ngIf="f.fromPrefixLength.errors.required">From Prefix Length is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="toPrefixLength">To Prefix Length</label>
+        <input
+          type="number"
+          id="toPrefixLength"
+          formControlName="toPrefixLength"
+          class="form-control"
+          [class.is-invalid]="submitted && f.toPrefixLength.errors"
+          aria-label="To Prefix Length"
+        />
+        <div *ngIf="submitted && f.toPrefixLength.errors" class="invalid-feedback">
+          <div *ngIf="f.toPrefixLength.errors.required">To Prefix Length is required</div>
         </div>
       </div>
 

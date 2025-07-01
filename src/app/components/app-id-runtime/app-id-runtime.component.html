@@ -1,0 +1,22 @@
+<ngx-smart-modal #appIdModal identifier="appIdModal" customClass="xxlarge-modal" (onOpen)="getData()" (onClose)="closeModal()">
+  <div class="modal-header">
+    <h3 class="modal-title">Manage App ID for: {{ firewallRule?.name }}</h3>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <app-app-id-table [applications]="associatedApplications" [type]="'assocaited'" [firewallRule]="firewallRule"></app-app-id-table>
+      </div>
+      <div class="col-md-6">
+        <app-app-id-table [applications]="availableApplications" [type]="'available'" [firewallRule]="firewallRule"></app-app-id-table>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="save()">Ok</button>
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+  </div>
+</ngx-smart-modal>
+
+<app-yes-no-modal></app-yes-no-modal>

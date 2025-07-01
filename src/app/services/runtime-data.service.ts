@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable, interval } from 'rxjs';
-import { switchMap, takeWhile } from 'rxjs/operators';
+import { switchMap, takeWhile, finalize } from 'rxjs/operators';
 import { V1JobsService } from '../../../client';
 import { TowerJobDto } from '../../../client/model/towerJobDto';
+import { TenantStateService } from './tenant-state.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RuntimeDataService {
-  constructor(private jobsService: V1JobsService) {}
+  constructor(private jobsService: V1JobsService, private tenantStateService: TenantStateService) {}
 
   calculateTimeDifference(timestamp: string): string {
     if (timestamp === null || timestamp === undefined) {
@@ -47,13 +48,22 @@ export class RuntimeDataService {
     return diffInSeconds <= thresholdInSeconds;
   }
 
-  pollJobStatus(jobId: string, timeBetweenPolls = 10000, maxPollAttempts = 30): Observable<TowerJobDto> {
+  pollJobStatus(jobId: string, tenant?: string, timeBetweenPolls = 10000, maxPollAttempts = 30): Observable<TowerJobDto> {
     let attempts = 0;
 
     return interval(timeBetweenPolls).pipe(
       switchMap(() => {
         attempts++;
-        return this.jobsService.getJobStatusJob({ id: jobId });
+        if (tenant) {
+          this.tenantStateService.setTenant(tenant);
+        }
+        return this.jobsService.getJobStatusJob({ id: jobId }).pipe(
+          finalize(() => {
+            if (tenant) {
+              this.tenantStateService.clearTenant();
+            }
+          }),
+        );
       }),
       takeWhile((status: TowerJobDto) => (status.status === 'running' || status.status === 'pending') && attempts <= maxPollAttempts, true),
     );

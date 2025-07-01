@@ -491,6 +491,31 @@
         ]
       }
     },
+    "/v1/tiers/{id}/toggleAppId": {
+      "post": {
+        "operationId": "toggleAppIdTier",
+        "summary": "",
+        "description": "Toggle App Id",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/tiers"
+        ]
+      }
+    },
     "/v1/tiers": {
       "post": {
         "operationId": "createOneTier",
@@ -22262,6 +22287,238 @@
         ]
       }
     },
+    "/v1/runtime-data/app-id-runtime": {
+      "get": {
+        "operationId": "getManyAppIdRuntime",
+        "summary": "Get many Panos Application",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PanosApplication"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/app-id-runtime"
+        ]
+      }
+    },
+    "/v1/runtime-data/app-id-runtime/create-runtime-data-job": {
+      "post": {
+        "operationId": "createRuntimeDataJobAppIdRuntime",
+        "summary": "",
+        "description": "Create App Id Runtime Collection Job",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/runtime-data/app-id-runtime"
+        ]
+      }
+    },
+    "/v1/runtime-data/app-id-runtime/clean-applications": {
+      "post": {
+        "operationId": "cleanupUnusedPanosApplicationsAppIdRuntime",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/runtime-data/app-id-runtime"
+        ]
+      }
+    },
+    "/v1/runtime-data/app-id-runtime/auto-migrate/{tierId}": {
+      "post": {
+        "operationId": "autoMigrateAppIdRuntime",
+        "parameters": [
+          {
+            "name": "tierId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/runtime-data/app-id-runtime"
+        ]
+      }
+    },
+    "/v1/runtime-data/app-id-runtime/update-tiers": {
+      "post": {
+        "operationId": "updateTierAppVersionsAppIdRuntime",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTierAppVersionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/runtime-data/app-id-runtime"
+        ]
+      }
+    },
+    "/v1/runtime-data/app-id-runtime/run-app-id-maintenance": {
+      "post": {
+        "operationId": "runAppIdMaintenanceAppIdRuntime",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "v1/runtime-data/app-id-runtime"
+        ]
+      }
+    },
     "/v3/global/messages": {
       "get": {
         "operationId": "getMessagesMessage",
@@ -22356,6 +22613,300 @@
         },
         "tags": [
           "v3/global/messages"
+        ]
+      }
+    },
+    "/v3/global/wan-form-request": {
+      "post": {
+        "operationId": "createOneWanFormRequest",
+        "summary": "Create one WAN form request",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WanFormRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WanFormRequest"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/wan-form-request"
+        ]
+      },
+      "get": {
+        "operationId": "getManyWanFormRequests",
+        "summary": "Get many WAN form requests",
+        "parameters": [
+          {
+            "name": "relations",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "join",
+            "required": false,
+            "in": "query",
+            "description": "Comma-seperated array of relations to join.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "description": "Number of entities to return per page. \n    If page is not passed, a number of entities up to this parameter will be returned. Default 20.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Alias for perPage. If perPage is also passed this parameter will be ignored.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Current page of data, if this parameter is not passed, a number of entities controlled by perPage/limit will be returned without pagination.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "Filter condition to apply to the query.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Properties to sort the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "Properties to group the response by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Properties to select.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "s",
+            "required": false,
+            "in": "query",
+            "description": "Where object for advanced AND/OR queries.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "GetManyWanFormRequestResponseDto",
+                  "type": "object",
+                  "properties": {
+                    "totalPages": {
+                      "type": "number"
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "page": {
+                      "type": "number"
+                    },
+                    "pageCount": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WanFormRequest"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "count",
+                    "total",
+                    "page",
+                    "pageCount",
+                    "totalPages"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/wan-form-request"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteOneWanFormRequest",
+        "summary": "Delete one WAN form request",
+        "parameters": [
+          {
+            "name": "wanFormId",
+            "required": false,
+            "in": "query",
+            "description": "ID of the WAN form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wanFormRequestId",
+            "required": false,
+            "in": "query",
+            "description": "ID of the WAN form request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WanFormRequest"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/wan-form-request"
+        ]
+      }
+    },
+    "/v3/global/wan-form-request/approve/{id}": {
+      "post": {
+        "operationId": "approveOneWanFormRequest",
+        "summary": "Approve one WAN form request",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WanFormRequest"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/wan-form-request"
+        ]
+      }
+    },
+    "/v3/global/wan-form-request/reject/{id}": {
+      "post": {
+        "operationId": "rejectOneWanFormRequest",
+        "summary": "Reject one WAN form request",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WanFormRequest"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/wan-form-request"
         ]
       }
     },
@@ -25500,13 +26051,21 @@
           },
           "appcentricSubnetId": {
             "type": "string"
+          },
+          "fromPrefixLength": {
+            "type": "number"
+          },
+          "toPrefixLength": {
+            "type": "number"
           }
         },
         "required": [
           "name",
           "vrf",
           "environment",
-          "wanFormId"
+          "wanFormId",
+          "fromPrefixLength",
+          "toPrefixLength"
         ]
       },
       "ExternalRoute": {
@@ -25519,7 +26078,10 @@
           "network": {
             "type": "string"
           },
-          "prefixLength": {
+          "fromPrefixLength": {
+            "type": "number"
+          },
+          "toPrefixLength": {
             "type": "number"
           },
           "protocol": {
@@ -25548,7 +26110,8 @@
         },
         "required": [
           "network",
-          "prefixLength",
+          "fromPrefixLength",
+          "toPrefixLength",
           "vrf",
           "metric"
         ]
@@ -25608,8 +26171,8 @@
               }
             ]
           },
-          "active": {
-            "type": "boolean"
+          "status": {
+            "type": "string"
           },
           "wanFormSubnets": {
             "readOnly": true,
@@ -26233,6 +26796,20 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/EndpointGroup"
+            }
+          },
+          "endpointSecurityGroups": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EndpointSecurityGroup"
+            }
+          },
+          "selectors": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Selector"
             }
           },
           "appCentricSubnets": {
@@ -27414,6 +27991,106 @@
           "tierId"
         ]
       },
+      "PanosApplication": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "panosId": {
+            "type": "string",
+            "readOnly": true
+          },
+          "appVersion": {
+            "type": "string"
+          },
+          "minver": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "oriCountry": {
+            "type": "string"
+          },
+          "oriLanguage": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "subCategory": {
+            "type": "string"
+          },
+          "technology": {
+            "type": "string"
+          },
+          "virusIdent": {
+            "type": "boolean"
+          },
+          "evasiveBehavior": {
+            "type": "boolean"
+          },
+          "consumeBigBandwidth": {
+            "type": "boolean"
+          },
+          "usedByMalware": {
+            "type": "boolean"
+          },
+          "ableToTransferFile": {
+            "type": "boolean"
+          },
+          "hasKnownVulnerability": {
+            "type": "boolean"
+          },
+          "tunnelOtherApplication": {
+            "type": "boolean"
+          },
+          "proneToMisuse": {
+            "type": "boolean"
+          },
+          "pervasiveUse": {
+            "type": "boolean"
+          },
+          "references": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "link": {
+                "type": "string"
+              }
+            }
+          },
+          "useApplicationsMembers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "defaultPortMember": {
+            "type": "string"
+          },
+          "identByIpProtocol": {
+            "type": "string"
+          },
+          "risk": {
+            "type": "string"
+          },
+          "firewallRules": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FirewallRule"
+            }
+          }
+        },
+        "required": [
+          "references"
+        ]
+      },
       "FirewallRule": {
         "type": "object",
         "properties": {
@@ -27655,6 +28332,13 @@
           "tenantVersion": {
             "type": "number",
             "readOnly": true
+          },
+          "panosApplications": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PanosApplication"
+            }
           }
         },
         "required": [
@@ -28796,6 +29480,18 @@
           "tenantVersion": {
             "type": "number",
             "readOnly": true
+          },
+          "appVersion": {
+            "type": "string",
+            "readOnly": true
+          },
+          "appIdEnabled": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "runtimeDataLastRefreshed": {
+            "format": "date-time",
+            "type": "string"
           }
         },
         "required": [
@@ -29044,6 +29740,13 @@
           "tenantVersion": {
             "type": "number",
             "readOnly": true
+          },
+          "panosApplications": {
+            "readOnly": false,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PanosApplication"
+            }
           },
           "tierName": {
             "type": "string"
@@ -30400,7 +31103,8 @@
               "NatRule",
               "F5Config",
               "AciRuntime",
-              "ExternalRoute"
+              "ExternalRoute",
+              "AppIdRuntime"
             ]
           },
           "datacenterId": {
@@ -30571,7 +31275,8 @@
               "NatRule",
               "F5Config",
               "AciRuntime",
-              "ExternalRoute"
+              "ExternalRoute",
+              "AppIdRuntime"
             ]
           },
           "datacenterId": {
@@ -30611,7 +31316,8 @@
               "NatRule",
               "F5Config",
               "AciRuntime",
-              "ExternalRoute"
+              "ExternalRoute",
+              "AppIdRuntime"
             ]
           },
           "groupId": {
@@ -31142,7 +31848,8 @@
               "NatRule",
               "F5Config",
               "AciRuntime",
-              "ExternalRoute"
+              "ExternalRoute",
+              "AppIdRuntime"
             ]
           },
           "datacenterId": {
@@ -31167,7 +31874,8 @@
               "NatRule",
               "F5Config",
               "AciRuntime",
-              "ExternalRoute"
+              "ExternalRoute",
+              "AppIdRuntime"
             ]
           },
           "datacenterId": {
@@ -31177,6 +31885,10 @@
         "required": [
           "type"
         ]
+      },
+      "UpdateTierAppVersionDto": {
+        "type": "object",
+        "properties": {}
       },
       "PaginationDTO": {
         "type": "object",
@@ -31233,6 +31945,62 @@
       "DeleteResult": {
         "type": "object",
         "properties": {}
+      },
+      "WanFormRequestDto": {
+        "type": "object",
+        "properties": {
+          "wanFormId": {
+            "type": "string"
+          },
+          "tenant": {
+            "type": "string"
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "aciTenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "wanFormId",
+          "tenant"
+        ]
+      },
+      "WanFormRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true
+          },
+          "wanFormId": {
+            "type": "string",
+            "readOnly": true
+          },
+          "tenant": {
+            "type": "string",
+            "readOnly": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "readOnly": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "datacenterId": {
+            "type": "string"
+          },
+          "aciTenantId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "wanFormId",
+          "tenant"
+        ]
       }
     }
   }

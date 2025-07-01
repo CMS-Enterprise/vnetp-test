@@ -13,6 +13,16 @@ import { RouteDataUtil } from 'src/app/utils/route-data.util';
 export class WanFormDetailComponent implements OnInit {
   @Input() wanForm: WanForm;
   public dcsMode: ApplicationMode;
+  private _global: boolean;
+
+  @Input()
+  set global(value: boolean | undefined) {
+    this._global = value ?? false;
+  }
+
+  get global(): boolean {
+    return this._global;
+  }
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 

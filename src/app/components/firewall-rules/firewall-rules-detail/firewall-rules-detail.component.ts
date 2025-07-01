@@ -35,6 +35,8 @@ import {
   V2AppCentricEndpointSecurityGroupsService,
   EndpointSecurityGroup,
   EndpointGroup,
+  PanosApplication,
+  V1RuntimeDataAppIdRuntimeService,
 } from 'client';
 import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
 import { PreviewModalDto } from 'src/app/models/other/preview-modal-dto';
@@ -50,6 +52,12 @@ import UndeployedChangesUtil from '../../../utils/UndeployedChangesUtil';
 import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto';
 import { RuntimeDataService } from '../../../services/runtime-data.service';
 import { RouteDataUtil } from 'src/app/utils/route-data.util';
+import { LiteTableConfig } from '../../../common/lite-table/lite-table.component';
+import { MatDrawer } from '@angular/material/sidenav';
+import { AppIdRuntimeService } from '../../app-id-runtime/app-id-runtime.service';
+import { TierContextService } from '../../../services/tier-context.service';
+import { FirewallRuleModalComponent } from '../firewall-rule-modal/firewall-rule-modal.component';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-firewall-rules-detail',
@@ -110,6 +118,22 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   applicationMode: ApplicationMode;
   ApplicationMode = ApplicationMode;
 
+  appIdModalSubscription: Subscription;
+  panosApplications: PanosApplication[] = [];
+
+  infoBoxVisible = false;
+
+  isRefreshingAppIdRuntimeData = false;
+  tier: Tier;
+  datacenterId: string;
+  appIdJobStatus: string;
+
+  tooltipVisible = false;
+
+  firewallRuleIdToPanosApp = new Map<string, { panosApplication: PanosApplication; open: boolean }>();
+
+  public appIdEnabled: boolean;
+
   // Templates
   @ViewChild('directionZone') directionZoneTemplate: TemplateRef<any>;
   @ViewChild('sourceAddress') sourceAddressTemplate: TemplateRef<any>;
@@ -117,7 +141,15 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   @ViewChild('serviceType') serviceTemplate: TemplateRef<any>;
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('updatedAt') updatedAtTemplate: TemplateRef<any>;
-  @ViewChild('expandableRowsTemplate') expandableRowsTemplate: TemplateRef<any>;
+  @ViewChild('hitcountTemplate') hitcountTemplate: TemplateRef<any>;
+  @ViewChild('appIdTemplate') appIdTemplate: TemplateRef<any>;
+  @ViewChild('appIdNameTemplate') appIdNameTemplate: TemplateRef<any>;
+  @ViewChild('drawer') drawer: MatDrawer;
+  @ViewChild(FirewallRuleModalComponent) firewallModal: FirewallRuleModalComponent;
+  @ViewChild('paAppsTemplate') paAppsTemplate: TemplateRef<any>;
+  @ViewChild('tooltip') matTooltip: MatTooltip;
+
+  expandableRows = () => [this.appIdTemplate, this.hitcountTemplate];
 
   public config: TableConfig<any> = {
     description: 'Firewall Rules for the currently selected Tier',
@@ -129,12 +161,38 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       { name: 'Source Address', template: () => this.sourceAddressTemplate },
       { name: 'Destination Address', template: () => this.destinationAddressTemplate },
       { name: 'Service Type', template: () => this.serviceTemplate },
+      { name: 'Applications', template: () => this.paAppsTemplate },
       { name: 'Log', property: 'logging' },
       { name: 'Enabled', property: 'enabled' },
       { name: 'Rule Index', property: 'ruleIndex' },
       { name: '', template: () => this.actionsTemplate },
     ],
-    expandableRows: () => this.expandableRowsTemplate,
+    expandableRows: this.expandableRows,
+  };
+
+  public liteConfig: LiteTableConfig<PanosApplication> = {
+    columns: [
+      {
+        name: 'Name',
+        template: () => this.appIdNameTemplate,
+      },
+      { name: 'Category', property: 'category' },
+      { name: 'Sub Category', property: 'subCategory' },
+      { name: 'Risk', property: 'risk' },
+    ],
+    context: (panosApp: PanosApplication, firewallRule: FirewallRule) => ({
+      panosApp,
+      firewallRule,
+    }),
+    afterView: () => {
+      if (this.matTooltip && !this.tooltipVisible) {
+        this.tooltipVisible = true;
+        this.matTooltip.show();
+        setTimeout(() => {
+          this.matTooltip.hide();
+        }, 2000);
+      }
+    },
   };
 
   get scopeString() {
@@ -160,6 +218,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     private runtimeDataService: RuntimeDataService,
     private endpointGroupService: V2AppCentricEndpointGroupsService,
     private endpointSecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
+    private appIdService: AppIdRuntimeService,
+    private appIdApiService: V1RuntimeDataAppIdRuntimeService,
+    private tierContextService: TierContextService,
   ) {
     const advancedSearchAdapterObject = new AdvancedSearchAdapter<FirewallRule>();
     advancedSearchAdapterObject.setService(this.firewallRuleService);
@@ -169,8 +230,20 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
+    this.appIdEnabled = history.state?.appIdEnabled;
+
+    if (this.appIdEnabled === undefined) {
+      console.warn('appIdEnabled not passed. Using default value.');
+      this.appIdEnabled = false;
+    }
+
+    if (!this.appIdEnabled) {
+      this.expandableRows = () => [this.hitcountTemplate];
+    }
+
     this.currentDatacenterSubscription = this.datacenterService.currentDatacenter.subscribe(cd => {
       if (cd) {
+        this.datacenterId = cd.id;
         this.tiers = cd.tiers;
         this.datacenterService.lockDatacenter();
         this.Id = this.route.snapshot.paramMap.get('id') || '';
@@ -180,8 +253,43 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  toggleDrawer(panosApp: PanosApplication, firewallRule: FirewallRule): void {
+    const firewallRuleId = firewallRule.id;
+
+    if (this.firewallRuleIdToPanosApp.has(firewallRuleId)) {
+      const currentEntry = this.firewallRuleIdToPanosApp.get(firewallRuleId);
+
+      if (currentEntry?.panosApplication.id === panosApp.id) {
+        this.firewallRuleIdToPanosApp.set(firewallRuleId, {
+          panosApplication: panosApp,
+          open: !currentEntry.open,
+        });
+      } else {
+        this.firewallRuleIdToPanosApp.set(firewallRuleId, {
+          panosApplication: panosApp,
+          open: true,
+        });
+      }
+    } else {
+      this.firewallRuleIdToPanosApp.set(firewallRuleId, {
+        panosApplication: panosApp,
+        open: true,
+      });
+    }
+  }
+
+  isDrawerOpened(firewallRuleId: string): boolean {
+    return this.firewallRuleIdToPanosApp.get(firewallRuleId)?.open || false;
+  }
+
+  refreshAppId(): void {
+    return;
+  }
+
   ngOnDestroy(): void {
-    this.currentDatacenterSubscription.unsubscribe();
+    if (this.currentDatacenterSubscription) {
+      this.currentDatacenterSubscription.unsubscribe();
+    }
     this.datacenterService.unlockDatacenter();
   }
 
@@ -208,6 +316,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
 
   private subscribeToFirewallRuleOperationModal(): void {
     this.firewallRuleOperationModalSubscription = this.ngx.getModal('firewallRuleOperationModal').onCloseFinished.subscribe(() => {
+      this.appIdService.resetDto();
       this.getFirewallRuleGroup();
       this.ngx.resetModalData('firewallRuleOperationModal');
       this.firewallRuleOperationModalSubscription.unsubscribe();
@@ -248,7 +357,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     this.firewallRuleService
       .getManyFirewallRule({
         filter: [`firewallRuleGroupId||eq||${this.FirewallRuleGroup.id}`, eventParams],
-        join: ['fromZone', 'toZone'],
+        join: ['fromZone', 'toZone', 'panosApplications'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
         sort: ['ruleIndex,ASC'],
@@ -264,6 +373,24 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
       );
+  }
+
+  addEmptyApplications(panosApplications: PanosApplication[]): any[] {
+    const newApplciationArray = [...panosApplications];
+    const emptyApplication = {
+      name: '',
+      category: '',
+      subCategory: '',
+      risk: '\u200B',
+    } as any;
+
+    if (newApplciationArray.length > 0 && newApplciationArray.length < 5) {
+      while (newApplciationArray.length < 4) {
+        newApplciationArray.push({ ...emptyApplication });
+      }
+    }
+
+    return newApplciationArray;
   }
 
   getFirewallRuleLastIndex(): void {
@@ -349,7 +476,8 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       endpointGroupRequest,
       endpointSecurityGroupRequest,
     ]).subscribe(result => {
-      this.TierName = result[0].name;
+      this.tier = result[0];
+      this.TierName = this.tier.name;
       this.networkObjects = result[1].data;
       this.networkObjectGroups = result[2].data;
       this.serviceObjects = result[3].data;
@@ -358,7 +486,50 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
       this.endpointGroups = result[6].data;
       this.endpointSecurityGroups = result[7].data;
       this.getFirewallRules();
+      this.getObjectsAppId();
     });
+  }
+
+  private getObjectsAppId(): void {
+    if (!this.appIdEnabled) {
+      return;
+    }
+
+    this.appIdService.loadPanosApplications(true);
+
+    if (!this.hasBeenRefreshedSinceDayTime(1, 7)) {
+      this.refreshAppId();
+    }
+
+    this.appIdService.getPanosApplications().subscribe(apps => {
+      this.packetTracerObjects.panosApplications = [...apps];
+    });
+  }
+
+  private getLastDayAtTime(targetDay: number, targetHour: number, targetMinute: number = 0): Date {
+    const now = new Date();
+    const currentDay = now.getUTCDay();
+
+    // Calculate the most recent target day at the specified time (UTC)
+    const targetDate = new Date(now);
+
+    // Find the most recent occurrence of the target day
+    const daysToTargetDay = currentDay >= targetDay ? currentDay - targetDay : 7 - (targetDay - currentDay);
+    targetDate.setUTCDate(now.getUTCDate() - daysToTargetDay);
+    targetDate.setUTCHours(targetHour, targetMinute, 0, 0); // Set to target time (UTC)
+
+    return targetDate;
+  }
+
+  // Function to check if the data has been refreshed since the specified day and time
+  private hasBeenRefreshedSinceDayTime(targetDay: number, targetHour: number, targetMinute: number = 0): boolean {
+    const lastDayAtTime = this.getLastDayAtTime(targetDay, targetHour, targetMinute);
+    if (!this.tier.runtimeDataLastRefreshed) {
+      return false;
+    }
+
+    // Compare the last refresh time to the specified day and time
+    return new Date(this.tier.runtimeDataLastRefreshed) > lastDayAtTime;
   }
 
   createFirewallRule(): void {
@@ -399,6 +570,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     this.firewallRuleModalSubscription = this.ngx.getModal('firewallRuleModal').onCloseFinished.subscribe(() => {
       this.getFirewallRuleGroup();
       this.ngx.resetModalData('firewallRuleModal');
+      this.appIdService.resetDto();
       this.firewallRuleModalSubscription.unsubscribe();
     });
   }
@@ -556,6 +728,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
           'destinationNetworkObjectGroup',
           'serviceObject',
           'serviceObjectGroup',
+          'panosApplications',
         ],
         page: 1,
         perPage: 50000,
@@ -644,31 +817,34 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   }
 
   handleEndpointSecurityGroup(property, objectId) {
-    this.endpointSecurityGroupService.getOneEndpointSecurityGroup({
-      id: objectId, relations: ['selectors',
-        'selectors.endpointGroup',
-        'selectors.endpointGroup.endpoints',
-        'selectors.endpointGroup.endpoints.ipAddresses',
-      ],
-    }).subscribe(data => {
-      const objectName = data.name;
-      const modalTitle = `${property} : ${objectName}`;
-      const modalBody = data.selectors.map(selector => {
-        const epgName = selector.endpointGroup.name;
-        const ips = selector.endpointGroup.endpoints.flatMap(endpoint => endpoint.ipAddresses.map(ip => ip.address));
-        return `${epgName}: ${ips.join(', ')}`;
+    this.endpointSecurityGroupService
+      .getOneEndpointSecurityGroup({
+        id: objectId,
+        relations: [
+          'selectors',
+          'selectors.endpointGroup',
+          'selectors.endpointGroup.endpoints',
+          'selectors.endpointGroup.endpoints.ipAddresses',
+        ],
+      })
+      .subscribe(data => {
+        const objectName = data.name;
+        const modalTitle = `${property} : ${objectName}`;
+        const modalBody = data.selectors.map(selector => {
+          const epgName = selector.endpointGroup.name;
+          const ips = selector.endpointGroup.endpoints.flatMap(endpoint => endpoint.ipAddresses.map(ip => ip.address));
+          return `${epgName}: ${ips.join(', ')}`;
+        });
+
+        const dto = {
+          modalTitle,
+          modalBody,
+        };
+        this.subscribeToObjectInfoModal();
+        this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
+        this.ngx.getModal('firewallRuleObjectInfoModal').open();
       });
-
-      const dto = {
-        modalTitle,
-        modalBody,
-      };
-      this.subscribeToObjectInfoModal();
-      this.ngx.setModalData(dto, 'firewallRuleObjectInfoModal');
-      this.ngx.getModal('firewallRuleObjectInfoModal').open();
-    });
   }
-
 
   handleNetworkObject(property, objectId) {
     this.networkObjectService.getOneNetworkObject({ id: objectId }).subscribe(data => {

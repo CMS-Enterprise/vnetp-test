@@ -32,6 +32,8 @@ export interface WanFormSubnet {
     netcentricSubnetId?: string;
     readonly appcentricSubnet?: AppCentricSubnet;
     appcentricSubnetId?: string;
+    fromPrefixLength: number;
+    toPrefixLength: number;
 }
 export enum WanFormSubnetVrfEnum {
     Appprod = 'appprod',

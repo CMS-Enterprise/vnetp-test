@@ -2,6 +2,7 @@
 //     margin-left: 237px;
 // }
 
+/* General table row styles */
 td {
   overflow-wrap: anywhere;
 }
@@ -24,9 +25,55 @@ tr.expandableContent {
   opacity: 0;
   overflow: hidden;
   transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+
+  /* For expanded row */
+  &.expanded {
+    max-height: 300px; /* Adjust max height based on content */
+    opacity: 1;
+    background-color: white;
+  }
 }
 
-tr.expanded {
-  opacity: 1;
-  background-color: white;
+/* Navigation controls for switching templates */
+.navigation-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.dots {
+  display: flex;
+  gap: 5px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background-color: #ccc;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.dot.active {
+  background-color: #007bff;
+}
+
+/* Button hover and focus states */
+button.btn-icon {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+
+  &:hover .icon,
+  &:focus .icon {
+    color: #007bff; /* Change icon color on hover/focus */
+  }
+
+  .icon {
+    font-size: 1rem;
+    transition: color 0.3s ease;
+  }
 }

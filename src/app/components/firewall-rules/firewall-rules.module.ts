@@ -22,6 +22,12 @@ import { PreviewModalModule } from 'src/app/common/preview-modal/preview-modal.m
 // eslint-disable-next-line max-len
 import { FirewallRuleObjectInfoModalComponent } from './firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
 import { FirewallRulesOperationModalComponent } from './firewall-rules-operation-modal/firewall-rules-operation-modal.component';
+import { AppIdRuntimeModule } from '../app-id-runtime/app-id-runtime.module';
+import { LiteTableModule } from '../../common/lite-table/lite-table.module';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 
 const routes: Routes = [
   {
@@ -54,6 +60,12 @@ const routes: Routes = [
     TooltipModule,
     NgSelectModule,
     PreviewModalModule,
+    AppIdRuntimeModule,
+    LiteTableModule,
+    MatSidenavModule,
+    MatDialogModule,
+    MatTooltipModule,
+    MatIconModule,
   ],
   declarations: [
     FirewallRulesComponent,

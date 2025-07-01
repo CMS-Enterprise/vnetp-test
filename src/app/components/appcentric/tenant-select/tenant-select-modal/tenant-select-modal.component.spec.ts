@@ -57,13 +57,13 @@ describe('TenantSelectModalComponent', () => {
     });
   };
 
-
   beforeEach(() => {
     // General mocks
     ngxMock = {
       close: jest.fn(),
       resetModalData: jest.fn(),
-      getModalData: jest.fn().mockImplementation(() => ({ // Default mock for getModalData
+      getModalData: jest.fn().mockImplementation(() => ({
+        // Default mock for getModalData
         ModalMode: ModalMode.Create,
         Tenant: { id: 'test-id', name: 'test-name' },
       })),
@@ -118,7 +118,7 @@ describe('TenantSelectModalComponent', () => {
         { provide: Router, useValue: routerMock },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         MockProvider(TenantSelectModalHelpText),
-        UntypedFormBuilder  // Provide UntypedFormBuilder
+        UntypedFormBuilder, // Provide UntypedFormBuilder
       ],
     }).compileComponents();
 
@@ -129,7 +129,6 @@ describe('TenantSelectModalComponent', () => {
     // For these tests, let's ensure form is built before detectChanges if it's simple.
     // Actually, ngOnInit calls buildForm, so detectChanges will handle it.
   };
-
 
   it('should create', async () => {
     await configureTestingModuleForMode(); // Default/no specific mode
@@ -189,19 +188,19 @@ describe('TenantSelectModalComponent', () => {
       expect(component.isTenantV2Mode).toBeFalsy();
       expect(component.currentMode).toEqual(ApplicationMode.ADMINPORTAL);
     });
-    
+
     it('should call createOneV2TenantTenant when saving in AdminPortal mode with Create mode', () => {
       fixture.detectChanges(); // ngOnInit and builds form
       component.ModalMode = ModalMode.Create;
       // isAdminPortalMode is true
       component.submitted = false;
       jest.spyOn(component.form, 'invalid', 'get').mockReturnValue(false);
-      
+
       component.save();
       expect(tenantServiceMock.createOneV2TenantTenant).toHaveBeenCalled();
     });
   });
-  
+
   describe('when in AppCentric mode', () => {
     beforeEach(async () => {
       await configureTestingModuleForMode(ApplicationMode.APPCENTRIC);
@@ -233,18 +232,17 @@ describe('TenantSelectModalComponent', () => {
       expect(component.form.get('description')?.value).toBe(''); // or null if buildForm resets to null
       expect(ngxMock.resetModalData).toHaveBeenCalledWith('tenantModal');
     });
-    
+
     it('should call updateOneTenant when saving in Edit mode (generic, mode might influence details later)', () => {
       // This test might need to be within a mode-specific describe if save behavior differs significantly
       // For now, assuming a generic Edit mode test:
       component.ModalMode = ModalMode.Edit;
       component.TenantId = 'test-id';
-      component.form.get('name')?.disable(); 
+      component.form.get('name')?.disable();
       jest.spyOn(component.form, 'invalid', 'get').mockReturnValue(false);
-      
+
       component.save();
       expect(tenantServiceMock.updateOneTenant).toHaveBeenCalled();
     });
   });
-
 });

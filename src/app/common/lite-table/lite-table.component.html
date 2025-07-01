@@ -9,9 +9,19 @@
       <tr *ngIf="data && data.length === 0" class="no-data-row">
         <td [attr.colspan]="config.columns.length" class="no-data-cell">No Data Present</td>
       </tr>
-      <tr *ngFor="let row of data">
+      <tr *ngFor="let row of data" [ngClass]="config.rowStyle ? config.rowStyle(row) : ''">
         <td *ngFor="let column of config.columns">
-          <ng-container *ngIf="column.property">{{ row[column.property] }}</ng-container>
+          <ng-container *ngIf="!column.property && column.template; else defaultContent">
+            <ng-container
+              *ngTemplateOutlet="
+                column.template();
+                context: config.context ? { $implicit: config.context(row, parentContext) } : { datum: row }
+              "
+            ></ng-container>
+          </ng-container>
+          <ng-template #defaultContent>
+            {{ row[column.property] }}
+          </ng-template>
         </td>
       </tr>
     </tbody>

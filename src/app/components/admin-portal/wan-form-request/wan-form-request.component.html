@@ -1,0 +1,17 @@
+<app-table
+  [config]="config"
+  [data]="wanFormRequestTableDto"
+  (clearResults)="getAllWanFormRequests($event)"
+  (searchParams)="getAllWanFormRequests($event)"
+  [searchColumns]="searchColumns"
+  [(itemsPerPage)]="perPage"
+  (tableEvent)="onTableEvent($event)"
+></app-table>
+
+<ng-template #expandedRows let-wanFormRequest="datum">
+  <section class="table__expanded-row">
+    <button class="btn btn-primary float-right" (click)="approveWanFormRequest(wanFormRequest.id)">Approve</button>
+    <button class="btn btn-danger float-right" (click)="rejectWanFormRequest(wanFormRequest.id)">Reject</button>
+    <app-wan-form-detail [global]="true" [wanForm]="wanFormRequest.wanForm"></app-wan-form-detail>
+  </section>
+</ng-template>

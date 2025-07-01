@@ -15,7 +15,7 @@ import { GetManyWanFormResponseDto } from '../../../../../client/model/getManyWa
 import { SearchColumnConfig } from '../../../common/search-bar/search-bar.component';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Datacenter, Tenant, V2AppCentricTenantsService } from '../../../../../client';
+import { Datacenter, Tenant, V2AppCentricTenantsService, V3GlobalWanFormRequestService, WanFormRequestDto } from '../../../../../client';
 import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 @Component({
@@ -54,7 +54,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
       { name: 'Name', property: 'name' },
       { name: 'Description', property: 'description' },
       { name: 'Created At', property: 'createdAt' },
-      { name: 'Active', template: () => this.activeTemplate },
+      { name: 'Status', template: () => this.activeTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
     expandableRows: () => this.expandedRows,
@@ -69,6 +69,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private tenantService: V2AppCentricTenantsService,
+    private wanFormRequestService: V3GlobalWanFormRequestService,
   ) {
     this.selectedTenant = this.route.snapshot.queryParams.tenantId;
   }
@@ -168,24 +169,66 @@ export class WanFormComponent implements OnInit, OnDestroy {
       );
   }
 
-  public activateWanForm(wanForm: WanForm): void {
-    const modalDto = new YesNoModalDto('Activate WAN Form', `Are you sure you want to activate: '${wanForm.name}'?`);
-    const onConfirm = () => {
-      this.wanFormService.activateWanFormWanForm({ id: wanForm.id }).subscribe(() => {
-        this.getWanForms();
-      });
-    };
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  public checkUndeployedChanges(wanForm: WanForm): boolean {
+    if (wanForm.provisionedVersion < wanForm.version) {
+      return true;
+    }
+    return false;
   }
 
-  public deactivateWanForm(wanForm: WanForm) {
-    const modalDto = new YesNoModalDto('Deactivate WAN Form', `Are you sure you want to deactivate: '${wanForm.name}'?`);
+  public createWanFormRequest(wanForm: WanForm): void {
+    const wanFormId = wanForm.id;
+    const tenant = this.route.snapshot.queryParams.tenant;
+    const dto = new YesNoModalDto('Request Wan Form Approval', `"Are you sure you want to request approval for ${wanForm.name}?"`);
+    const dtoPending = new YesNoModalDto('Request Wan Form Approval', `"Are you sure you want to delete request for ${wanForm.name}?"`);
+
+    const wanFormRequestDto = {
+      wanFormId,
+      tenant,
+    } as WanFormRequestDto;
+
+    if (this.selectedTenant) {
+      wanFormRequestDto.aciTenantId = this.selectedTenant;
+    } else {
+      wanFormRequestDto.datacenterId = this.datacenterId;
+    }
+
     const onConfirm = () => {
-      this.wanFormService.deactivateWanFormWanForm({ id: wanForm.id }).subscribe(() => {
+      this.wanFormRequestService.createOneWanFormRequest({ wanFormRequestDto }).subscribe(() => {
         this.getWanForms();
       });
     };
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+
+    const onConfirmPending = () => {
+      this.wanFormRequestService.deleteOneWanFormRequest({ wanFormId }).subscribe(() => {
+        this.getWanForms();
+      });
+    };
+
+    const onClose = () => {
+      this.getWanForms();
+    };
+
+    if (wanForm.status === 'PENDING') {
+      SubscriptionUtil.subscribeToYesNoModal(dtoPending, this.ngx, onConfirmPending, onClose);
+    } else {
+      SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm, onClose);
+    }
+  }
+
+  public deleteWanFormRequest(wanFormId: string): void {
+    const dto = new YesNoModalDto('Delete Wan Form Request', 'Are you sure you want to delete this wan form request?');
+    const onConfirm = () => {
+      this.wanFormRequestService.deleteOneWanFormRequest({ wanFormId }).subscribe(() => {
+        this.getWanForms();
+      });
+    };
+
+    const onClose = () => {
+      this.getWanForms();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(dto, this.ngx, onConfirm, onClose);
   }
 
   public deleteWanForm(wanForm: WanForm): void {

@@ -32,6 +32,7 @@ import { V1NetworkStaticRoutesService } from './api/v1NetworkStaticRoutes.servic
 import { V1NetworkSubnetsService } from './api/v1NetworkSubnets.service';
 import { V1NetworkVlansService } from './api/v1NetworkVlans.service';
 import { V1RuntimeDataAciRuntimeService } from './api/v1RuntimeDataAciRuntime.service';
+import { V1RuntimeDataAppIdRuntimeService } from './api/v1RuntimeDataAppIdRuntime.service';
 import { V1RuntimeDataExternalRouteService } from './api/v1RuntimeDataExternalRoute.service';
 import { V1RuntimeDataF5ConfigService } from './api/v1RuntimeDataF5Config.service';
 import { V1RuntimeDataHitcountService } from './api/v1RuntimeDataHitcount.service';
@@ -56,6 +57,7 @@ import { V2AppCentricTenantsService } from './api/v2AppCentricTenants.service';
 import { V2AppCentricVrfsService } from './api/v2AppCentricVrfs.service';
 import { V2WorkflowsService } from './api/v2Workflows.service';
 import { V3GlobalMessagesService } from './api/v3GlobalMessages.service';
+import { V3GlobalWanFormRequestService } from './api/v3GlobalWanFormRequest.service';
 
 @NgModule({
   imports:      [],

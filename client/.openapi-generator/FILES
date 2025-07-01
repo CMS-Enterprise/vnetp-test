@@ -32,6 +32,7 @@ api/v1NetworkStaticRoutes.service.ts
 api/v1NetworkSubnets.service.ts
 api/v1NetworkVlans.service.ts
 api/v1RuntimeDataAciRuntime.service.ts
+api/v1RuntimeDataAppIdRuntime.service.ts
 api/v1RuntimeDataExternalRoute.service.ts
 api/v1RuntimeDataF5Config.service.ts
 api/v1RuntimeDataHitcount.service.ts
@@ -56,6 +57,7 @@ api/v2AppCentricTenants.service.ts
 api/v2AppCentricVrfs.service.ts
 api/v2Workflows.service.ts
 api/v3GlobalMessages.service.ts
+api/v3GlobalWanFormRequest.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -190,6 +192,7 @@ model/getManyTierGroupResponseDto.ts
 model/getManyTierResponseDto.ts
 model/getManyVlanResponseDto.ts
 model/getManyVrfResponseDto.ts
+model/getManyWanFormRequestResponseDto.ts
 model/getManyWanFormResponseDto.ts
 model/getManyWanFormSubnetResponseDto.ts
 model/getManyWorkflowResponseDto.ts
@@ -227,6 +230,8 @@ model/networkObjectGroupRelationBulkImportCollectionDto.ts
 model/networkObjectGroupRelationBulkImportDto.ts
 model/nodeImportCollectionDto.ts
 model/paginationDTO.ts
+model/panosApplication.ts
+model/panosApplicationReferences.ts
 model/poolImportCollectionDto.ts
 model/routeProfile.ts
 model/ruleOperationDto.ts
@@ -262,6 +267,8 @@ model/virtualServerImportDto.ts
 model/vlan.ts
 model/vrf.ts
 model/wanForm.ts
+model/wanFormRequest.ts
+model/wanFormRequestDto.ts
 model/wanFormSubnet.ts
 model/workflow.ts
 model/workflowEvent.ts

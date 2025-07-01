@@ -1,0 +1,45 @@
+.table-wrapper-scroll-y {
+  display: block;
+  max-height: 400px; /* Adjust height to match 10 rows */
+  overflow-y: auto; /* Enables vertical scrolling */
+}
+
+/* Optional: To hide horizontal scrollbar */
+.table-wrapper-scroll-y table {
+  width: 100%;
+}
+
+/* Add scrollbar customization (optional) */
+.my-custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.my-custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.my-custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.my-custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.search-input {
+  height: 1.5rem; /* 24px / 16px */
+  padding: 0.125rem 0.625rem; /* 2px / 16px and 10px / 16px */
+  border: none;
+  border-bottom: 0.125rem solid #000; /* 2px / 16px */
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.clickable-name:hover {
+  text-decoration: none; /* Remove underline on hover */
+  cursor: pointer;
+  text-decoration: underline;
+}

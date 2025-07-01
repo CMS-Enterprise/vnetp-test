@@ -127,6 +127,29 @@
           <div *ngIf="f.appcentricSubnetId.errors.required">Subnet is required</div>
         </div>
       </div>
+
+      <div class="form-group">
+        <label for="fromPrefixLength">From Prefix Length</label>
+        <input
+          type="number"
+          id="fromPrefixLength"
+          formControlName="fromPrefixLength"
+          class="form-control"
+          [class.is-invalid]="submitted && f.fromPrefixLength.errors"
+          aria-label="From Prefix Length"
+        />
+        <div *ngIf="submitted && f.fromPrefixLength.errors" class="invalid-feedback">
+          <div *ngIf="f.fromPrefixLength.errors.required">From Prefix Length is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="toPrefixLength">To Prefix Length</label>
+        <input type="number" id="toPrefixLength" formControlName="toPrefixLength" class="form-control" />
+        <div *ngIf="submitted && f.toPrefixLength.errors" class="invalid-feedback">
+          <div *ngIf="f.toPrefixLength.errors.required">To Prefix Length is required</div>
+        </div>
+      </div>
     </div>
 
     <footer class="modal-footer">

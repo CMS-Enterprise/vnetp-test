@@ -24,6 +24,8 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 import { FirewallRuleObjectInfoModalComponent } from '../firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
+import { TierContextService } from '../../../services/tier-context.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
@@ -38,16 +40,18 @@ describe('FirewallRulesDetailComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         ToastrModule.forRoot(),
+        NgSelectModule,
       ],
       declarations: [
         FirewallRulesDetailComponent,
         MockImportExportComponent,
-        MockComponent('app-firewall-rule-modal'),
+        MockComponent({ selector: 'app-firewall-rule-modal', inputs: ['appIdEnabled'] }),
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockComponent({
           selector: 'app-firewall-rules-operation-modal',
           inputs: ['serviceObjects', 'serviceObjectGroups', 'networkObjects', 'networkObjectGroups'],
         }),
+        MockComponent('app-app-id-runtime'),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
         MockNgxSmartModalComponent,
@@ -58,7 +62,7 @@ describe('FirewallRulesDetailComponent', () => {
         FirewallRuleObjectInfoModalComponent,
         FirewallRulePacketTracerComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1TiersService)],
+      providers: [MockProvider(NgxSmartModalService), MockProvider(V1TiersService), { provide: TierContextService, useValue: jest.fn() }],
     });
   });
 
@@ -491,6 +495,52 @@ describe('FirewallRulesDetailComponent', () => {
       expect(component['serviceObjectGroupService'].getOneServiceObjectGroup).toHaveBeenCalled();
       expect(setModalDataSpy).toHaveBeenCalled();
       expect(getSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('toggleDrawer', () => {
+    it('should add a new entry and open the drawer if firewallRuleId does not exist', () => {
+      const panosApp = { id: 'panos1' } as any;
+      const firewallRule = { id: 'rule1' } as any;
+
+      component.toggleDrawer(panosApp, firewallRule);
+
+      const entry = component.firewallRuleIdToPanosApp.get(firewallRule.id);
+      expect(entry).toEqual({ panosApplication: panosApp, open: true });
+    });
+
+    it('should toggle the open state if panosApplication matches existing entry', () => {
+      const panosApp = { id: 'panos1' } as any;
+      const firewallRule = { id: 'rule1' } as any;
+
+      // Set initial state in map
+      component.firewallRuleIdToPanosApp.set(firewallRule.id, { panosApplication: panosApp, open: true });
+
+      // Call toggleDrawer
+      component.toggleDrawer(panosApp, firewallRule);
+
+      let entry = component.firewallRuleIdToPanosApp.get(firewallRule.id);
+      expect(entry?.open).toBe(false);
+
+      // Call again to toggle back
+      component.toggleDrawer(panosApp, firewallRule);
+      entry = component.firewallRuleIdToPanosApp.get(firewallRule.id);
+      expect(entry?.open).toBe(true);
+    });
+
+    it('should update panosApplication and set open to true if panosApplication does not match existing entry', () => {
+      const existingPanosApp = { id: 'panos1' } as any;
+      const newPanosApp = { id: 'panos2' } as any;
+      const firewallRule = { id: 'rule1' } as any;
+
+      // Set initial state in map with a different panosApplication
+      component.firewallRuleIdToPanosApp.set(firewallRule.id, { panosApplication: existingPanosApp, open: true });
+
+      // Call toggleDrawer with a different panosApplication
+      component.toggleDrawer(newPanosApp, firewallRule);
+
+      const entry = component.firewallRuleIdToPanosApp.get(firewallRule.id);
+      expect(entry).toEqual({ panosApplication: newPanosApp, open: true });
     });
   });
 

@@ -65,3 +65,13 @@
   display: table-cell;
   vertical-align: middle;
 }
+
+:host .row-red {
+  background-color: #ff7474;
+  color: white;
+}
+
+:host .row-green {
+  background-color: #adebb3;
+  color: white;
+}

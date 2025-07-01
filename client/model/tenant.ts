@@ -16,6 +16,7 @@ import { BridgeDomain } from './bridgeDomain';
 import { Vrf } from './vrf';
 import { AuditLog } from './auditLog';
 import { Subject } from './subject';
+import { EndpointSecurityGroup } from './endpointSecurityGroup';
 import { Filter } from './filter';
 import { FilterEntry } from './filterEntry';
 import { Datacenter } from './datacenter';
@@ -23,6 +24,7 @@ import { AppCentricSubnet } from './appCentricSubnet';
 import { WanForm } from './wanForm';
 import { ApplicationProfile } from './applicationProfile';
 import { Contract } from './contract';
+import { Selector } from './selector';
 
 
 export interface Tenant { 
@@ -42,6 +44,8 @@ export interface Tenant {
     readonly vrfs?: Array<Vrf>;
     readonly filters?: Array<Filter>;
     readonly endpointGroups?: Array<EndpointGroup>;
+    readonly endpointSecurityGroups?: Array<EndpointSecurityGroup>;
+    readonly selectors?: Array<Selector>;
     readonly appCentricSubnets?: Array<AppCentricSubnet>;
     readonly subjects?: Array<Subject>;
     readonly filterEntries?: Array<FilterEntry>;

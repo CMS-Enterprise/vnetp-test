@@ -78,6 +78,8 @@ const routes: Routes = [
     MatTableModule,
     MatToolbar,
     MatTooltip,
+    MatIconModule,
   ],
+  exports: [WanFormDetailComponent],
 })
 export class WanFormModule {}

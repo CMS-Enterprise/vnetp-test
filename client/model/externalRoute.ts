@@ -15,7 +15,8 @@ import { WanForm } from './wanForm';
 export interface ExternalRoute { 
     readonly id?: string;
     network: string;
-    prefixLength: number;
+    fromPrefixLength: number;
+    toPrefixLength: number;
     protocol?: string;
     vrf: string;
     metric: number;

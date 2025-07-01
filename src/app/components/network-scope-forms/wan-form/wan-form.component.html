@@ -35,13 +35,23 @@
 
 <ng-template #actionsTemplate let-wanForm="datum">
   <section class="table__actions">
-    <app-icon-button icon="edit" label="Edit Wan Form" (handleClick)="openModal(ModalMode.Edit, wanForm)"></app-icon-button>
+    <app-icon-button *ngIf="checkUndeployedChanges(wanForm)" icon="asterisk" label="Undeployed Changes" [type]="'info'"></app-icon-button>
+
+    <app-icon-button
+      icon="edit"
+      label="Edit Wan Form"
+      (handleClick)="openModal(ModalMode.Edit, wanForm)"
+      [disabled]="wanForm.status === 'PENDING'"
+    ></app-icon-button>
+    <app-icon-button icon="cog" label="Create WAN Form Request" (handleClick)="createWanFormRequest(wanForm)"></app-icon-button>
+
     <app-icon-button
       *ngIf="wanForm?.deletedAt"
       icon="undo"
       label="Restore Wan Form"
       type="success"
       (handleClick)="restoreWanForm(wanForm)"
+      [disabled]="wanForm.status === 'PENDING'"
     ></app-icon-button>
 
     <app-icon-button
@@ -49,27 +59,21 @@
       label="Soft-Delete/Delete Wan Form"
       [type]="wanForm.deletedAt ? 'danger' : 'default'"
       (handleClick)="deleteWanForm(wanForm)"
+      [disabled]="wanForm.status === 'PENDING'"
     >
     </app-icon-button>
   </section>
 </ng-template>
 
 <ng-template #activeTemplate let-wanForm="datum">
-  <span *ngIf="wanForm.active" class="dot-container">
-    <app-icon-button
-      icon="check"
-      label="WAN Form is active"
-      title="WAN Form is active"
-      (handleClick)="deactivateWanForm(wanForm)"
-    ></app-icon-button>
+  <span *ngIf="wanForm.status === 'ACTIVE'" class="dot-container">
+    <app-icon-button icon="check" label="Active" title="Active"></app-icon-button>
   </span>
-  <span *ngIf="!wanForm.active" class="dot-container">
-    <app-icon-button
-      icon="times"
-      label="Activate Wan Form"
-      title="Activate Wan Form"
-      (handleClick)="activateWanForm(wanForm)"
-    ></app-icon-button>
+  <span *ngIf="wanForm.status === 'INACTIVE'" class="dot-container">
+    <app-icon-button icon="times" label="Inactive" title="Inactive"></app-icon-button>
+  </span>
+  <span *ngIf="wanForm.status === 'PENDING'" class="dot-container">
+    <app-icon-button icon="clock" label="Pending Approval" title="Pending Approval"></app-icon-button>
   </span>
 </ng-template>
 
