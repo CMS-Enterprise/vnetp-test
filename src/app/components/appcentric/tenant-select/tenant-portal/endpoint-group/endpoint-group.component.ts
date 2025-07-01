@@ -259,13 +259,11 @@ export class EndpointGroupComponent implements OnInit {
 
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.endpointGroupService.createManyEndpointGroup({ createManyEndpointGroupDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.endpointGroupService.createManyEndpointGroup({ createManyEndpointGroupDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.getEndpointGroups();
         },
-      );
+      });
     };
     const onClose = () => {
       this.getEndpointGroups();

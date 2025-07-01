@@ -124,12 +124,9 @@ export class SubjectModalComponent implements OnInit {
   }
 
   private createSubjects(subject: Subject): void {
-    this.subjectsService.createOneSubject({ subject }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.subjectsService.createOneSubject({ subject }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private updateSubject(subject: Subject): void {
@@ -230,16 +227,14 @@ export class SubjectModalComponent implements OnInit {
         filterId: this.selectedFilter.id,
         subjectId: this.subjectId,
       })
-      .subscribe(
-        () => {},
-        () => {},
-        () => {
+      .subscribe({
+        complete: () => {
           this.isLoading = false;
           this.getFiltertableData();
           this.getFilters();
           this.selectedFilter = undefined;
         },
-      );
+      });
   }
 
   public removeFilter(filter: Filter) {
@@ -306,13 +301,11 @@ export class SubjectModalComponent implements OnInit {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       dto.map(relation => {
-        this.subjectsService.addFilterToSubjectSubject(relation).subscribe(
-          () => {},
-          () => {},
-          () => {
+        this.subjectsService.addFilterToSubjectSubject(relation).subscribe({
+          complete: () => {
             this.getFiltertableData();
           },
-        );
+        });
       });
     };
     const onClose = () => {

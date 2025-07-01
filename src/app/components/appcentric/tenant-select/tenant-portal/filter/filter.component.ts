@@ -229,13 +229,11 @@ export class FilterComponent implements OnInit {
 
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.filterService.createManyFilter({ createManyFilterDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.filterService.createManyFilter({ createManyFilterDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.getFilters();
         },
-      );
+      });
     };
     const onClose = () => {
       this.getFilters();

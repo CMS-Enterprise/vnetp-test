@@ -283,13 +283,11 @@ export class BridgeDomainComponent implements OnInit {
 
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.bridgeDomainService.createManyBridgeDomain({ createManyBridgeDomainDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.bridgeDomainService.createManyBridgeDomain({ createManyBridgeDomainDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.getBridgeDomains();
         },
-      );
+      });
     };
 
     const onClose = () => {

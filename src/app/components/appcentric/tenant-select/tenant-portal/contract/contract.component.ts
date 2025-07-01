@@ -230,13 +230,11 @@ export class ContractComponent implements OnInit {
 
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.contractService.createManyContract({ createManyContractDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.contractService.createManyContract({ createManyContractDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.getContracts();
         },
-      );
+      });
     };
     const onClose = () => {
       this.getContracts();

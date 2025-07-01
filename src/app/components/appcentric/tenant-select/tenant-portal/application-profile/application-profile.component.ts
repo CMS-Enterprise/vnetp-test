@@ -238,13 +238,11 @@ export class ApplicationProfileComponent implements OnInit {
 
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.applicationProfileService.createManyApplicationProfile({ createManyApplicationProfileDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.applicationProfileService.createManyApplicationProfile({ createManyApplicationProfileDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.getApplicationProfiles();
         },
-      );
+      });
     };
 
     const onClose = () => {

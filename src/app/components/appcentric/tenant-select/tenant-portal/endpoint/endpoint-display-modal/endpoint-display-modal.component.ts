@@ -32,7 +32,7 @@ interface ModalInput {
 export class EndpointDisplayModalComponent implements OnInit, AfterViewInit {
   @Input() modalId = 'endpointDisplayModal';
 
-  private rawModalInput: ModalInput | null = null;
+  public rawModalInput: ModalInput | null = null;
   public processedModalData: EsgModalDisplayData[] | ModalDisplayEndpoint[] = [];
   public displayContext: 'epg' | 'esg' = 'epg'; // Default, will be overwritten
 

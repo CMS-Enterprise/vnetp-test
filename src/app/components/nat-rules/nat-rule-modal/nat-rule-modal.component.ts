@@ -216,24 +216,18 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         .createOneNatRule({
           natRule: modalNatRule,
         })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+        .subscribe(() => {
+          this.closeModal();
+        });
     } else {
       this.natRuleService
         .updateOneNatRule({
           id: this.natRuleId,
           natRule: modalNatRule,
         })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+        .subscribe(() => {
+          this.closeModal();
+        });
     }
   }
 
@@ -292,12 +286,9 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         translationType.updateValueAndValidity();
       },
     };
-    return biDirectional.valueChanges.subscribe(
-      (type: string) => {
-        this.updateForm(type, handler);
-      },
-      () => {},
-    );
+    return biDirectional.valueChanges.subscribe((type: string) => {
+      this.updateForm(type, handler);
+    });
   }
 
   // when the original service type is updated, update the appropriate form controls
@@ -321,12 +312,9 @@ export class NatRuleModalComponent implements OnInit, OnDestroy {
         originalServiceObject.updateValueAndValidity();
       },
     };
-    return originalServiceType.valueChanges.subscribe(
-      (type: NatRuleOriginalServiceTypeEnum) => {
-        this.updateForm(type, handler);
-      },
-      () => {},
-    );
+    return originalServiceType.valueChanges.subscribe((type: NatRuleOriginalServiceTypeEnum) => {
+      this.updateForm(type, handler);
+    });
   }
 
   // when the translated service type is updated, update the appropriate form controls

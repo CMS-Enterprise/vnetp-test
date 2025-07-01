@@ -28,11 +28,6 @@ export class WanFormDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.dcsMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
-
-    if (!this.dcsMode) {
-      console.error('WanFormDetailComponent: Application mode could not be determined via RouteDataUtil.');
-      // Fallback or error handling if necessary
-    }
   }
 
   navigateToWanFormSubnets(): void {

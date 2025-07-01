@@ -39,6 +39,18 @@ describe('WanFormDetailComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('global setter', () => {
+    it('should set global to false when the value is undefined', () => {
+      component.global = undefined;
+      expect(component.global).toBe(false);
+    });
+
+    it('should set global to true when the value is true', () => {
+      component.global = true;
+      expect(component.global).toBe(true);
+    });
+  });
+
   describe('ngOnInit', () => {
     it('should set dcsMode from route snapshot data', () => {
       component.ngOnInit();

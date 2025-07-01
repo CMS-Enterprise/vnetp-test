@@ -268,13 +268,11 @@ export class EndpointSecurityGroupComponent implements OnInit {
 
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.endpointSecurityGroupService.createManyEndpointSecurityGroup({ createManyEndpointSecurityGroupDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.endpointSecurityGroupService.createManyEndpointSecurityGroup({ createManyEndpointSecurityGroupDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.getEndpointSecurityGroups();
         },
-      );
+      });
     };
     const onClose = () => {
       this.getEndpointSecurityGroups();

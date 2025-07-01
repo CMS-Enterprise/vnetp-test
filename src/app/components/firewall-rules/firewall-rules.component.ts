@@ -76,14 +76,14 @@ export class FirewallRulesComponent implements OnInit, OnDestroy {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  private sanitizeData(entities: any[]): any[] {
+  public sanitizeData(entities: any[]): any[] {
     return entities.map(entity => {
       this.mapToCsv(entity);
       return entity;
     });
   }
 
-  private mapToCsv(obj: any): any {
+  public mapToCsv(obj: any): any {
     Object.entries(obj).forEach(([key, val]) => {
       if (val === null || val === '') {
         delete obj[key];

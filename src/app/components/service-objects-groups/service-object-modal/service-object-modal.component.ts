@@ -102,12 +102,9 @@ export class ServiceObjectModalComponent implements OnInit {
 
   private createServiceObject(serviceObject: ServiceObject): void {
     serviceObject.tierId = this.TierId;
-    this.serviceObjectsService.createOneServiceObject({ serviceObject }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.serviceObjectsService.createOneServiceObject({ serviceObject }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private editServiceObject(serviceObject: ServiceObject): void {
@@ -119,13 +116,9 @@ export class ServiceObjectModalComponent implements OnInit {
         id: this.ServiceObjectId,
         serviceObject,
       })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-
-        () => {},
-      );
+      .subscribe(() => {
+        this.closeModal();
+      });
   }
 
   ngOnInit() {

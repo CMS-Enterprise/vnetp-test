@@ -274,9 +274,9 @@ describe('ExternalRouteComponent', () => {
   describe('onSearch', () => {
     beforeEach(() => {
       component.routes = [
-        { network: '192.168.1.0', vrf: 'VRF1', metric: 10, prefixLength: 24, protocol: 'manual' },
-        { network: '10.0.0.0', vrf: 'VRF2', metric: 20, prefixLength: 45, protocol: 'auto' },
-        { network: '172.16.0.0', vrf: 'VRF3', metric: 30, prefixLength: 12, protocol: 'manual' },
+        { network: '192.168.1.0', vrf: 'VRF1', metric: 10, fromPrefixLength: 24, toPrefixLength: 24, protocol: 'manual' },
+        { network: '10.0.0.0', vrf: 'VRF2', metric: 20, fromPrefixLength: 45, toPrefixLength: 45, protocol: 'auto' },
+        { network: '172.16.0.0', vrf: 'VRF3', metric: 30, fromPrefixLength: 12, toPrefixLength: 12, protocol: 'manual' },
       ];
     });
     it('should reset filteredRoutes to routes if searchQuery is empty', () => {
@@ -288,40 +288,50 @@ describe('ExternalRouteComponent', () => {
     it('should filter routes by network', () => {
       component.searchQuery = '192.168.1.0';
       component.onSearch();
-      expect(component.filteredRoutes).toEqual([{ network: '192.168.1.0', vrf: 'VRF1', metric: 10, prefixLength: 24, protocol: 'manual' }]);
+      expect(component.filteredRoutes).toEqual([
+        { network: '192.168.1.0', vrf: 'VRF1', metric: 10, fromPrefixLength: 24, toPrefixLength: 24, protocol: 'manual' },
+      ]);
     });
 
     it('should filter routes by vrf', () => {
       component.searchQuery = 'VRF2';
       component.onSearch();
-      expect(component.filteredRoutes).toEqual([{ network: '10.0.0.0', vrf: 'VRF2', metric: 20, prefixLength: 45, protocol: 'auto' }]);
+      expect(component.filteredRoutes).toEqual([
+        { network: '10.0.0.0', vrf: 'VRF2', metric: 20, fromPrefixLength: 45, toPrefixLength: 45, protocol: 'auto' },
+      ]);
     });
 
     it('should filter routes by metric', () => {
       component.searchQuery = '30';
       component.onSearch();
-      expect(component.filteredRoutes).toEqual([{ network: '172.16.0.0', vrf: 'VRF3', metric: 30, prefixLength: 12, protocol: 'manual' }]);
+      expect(component.filteredRoutes).toEqual([
+        { network: '172.16.0.0', vrf: 'VRF3', metric: 30, fromPrefixLength: 12, toPrefixLength: 12, protocol: 'manual' },
+      ]);
     });
 
     it('should filter routes by prefixLength', () => {
       component.searchQuery = '45';
       component.onSearch();
-      expect(component.filteredRoutes).toEqual([{ network: '10.0.0.0', vrf: 'VRF2', metric: 20, prefixLength: 45, protocol: 'auto' }]);
+      expect(component.filteredRoutes).toEqual([
+        { network: '10.0.0.0', vrf: 'VRF2', metric: 20, fromPrefixLength: 45, toPrefixLength: 45, protocol: 'auto' },
+      ]);
     });
 
     it('should filter routes by protocol', () => {
       component.searchQuery = 'manual';
       component.onSearch();
       expect(component.filteredRoutes).toEqual([
-        { network: '192.168.1.0', vrf: 'VRF1', metric: 10, prefixLength: 24, protocol: 'manual' },
-        { network: '172.16.0.0', vrf: 'VRF3', metric: 30, prefixLength: 12, protocol: 'manual' },
+        { network: '192.168.1.0', vrf: 'VRF1', metric: 10, fromPrefixLength: 24, toPrefixLength: 24, protocol: 'manual' },
+        { network: '172.16.0.0', vrf: 'VRF3', metric: 30, fromPrefixLength: 12, toPrefixLength: 12, protocol: 'manual' },
       ]);
     });
 
     it('should filter routes by network/prefixLength combination', () => {
       component.searchQuery = '192.168.1.0/24';
       component.onSearch();
-      expect(component.filteredRoutes).toEqual([{ network: '192.168.1.0', vrf: 'VRF1', metric: 10, prefixLength: 24, protocol: 'manual' }]);
+      expect(component.filteredRoutes).toEqual([
+        { network: '192.168.1.0', vrf: 'VRF1', metric: 10, fromPrefixLength: 24, toPrefixLength: 24, protocol: 'manual' },
+      ]);
     });
   });
 });

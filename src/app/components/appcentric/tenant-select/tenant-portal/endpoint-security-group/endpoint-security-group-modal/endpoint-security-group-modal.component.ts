@@ -104,14 +104,14 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: UntypedFormBuilder,
-    private ngx: NgxSmartModalService,
-    private endpointSecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
-    private vrfService: V2AppCentricVrfsService,
-    private applicationProfileService: V2AppCentricApplicationProfilesService,
-    private entityService: EntityService,
-    private selectorService: V2AppCentricSelectorsService,
-    private endpointGroupService: V2AppCentricEndpointGroupsService,
+    public formBuilder: UntypedFormBuilder,
+    public ngx: NgxSmartModalService,
+    public endpointSecurityGroupService: V2AppCentricEndpointSecurityGroupsService,
+    public vrfService: V2AppCentricVrfsService,
+    public applicationProfileService: V2AppCentricApplicationProfilesService,
+    public entityService: EntityService,
+    public selectorService: V2AppCentricSelectorsService,
+    public endpointGroupService: V2AppCentricEndpointGroupsService,
   ) {}
 
   ngOnInit(): void {
@@ -248,7 +248,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     this.currentTab = this.tabs[0].name;
   }
 
-  private buildForm(): void {
+  public buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
       adminState: ['', Validators.required],
@@ -260,16 +260,15 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
     });
   }
 
-  private createEndpointSecurityGroup(endpointSecurityGroup: EndpointSecurityGroup): void {
-    this.endpointSecurityGroupService.createOneEndpointSecurityGroup({ endpointSecurityGroup }).subscribe(
-      () => {
+  public createEndpointSecurityGroup(endpointSecurityGroup: EndpointSecurityGroup): void {
+    this.endpointSecurityGroupService.createOneEndpointSecurityGroup({ endpointSecurityGroup }).subscribe({
+      next: () => {
         this.closeModal();
       },
-      () => {},
-    );
+    });
   }
 
-  private editEndpointSecurityGroup(endpointSecurityGroup: EndpointSecurityGroup): void {
+  public editEndpointSecurityGroup(endpointSecurityGroup: EndpointSecurityGroup): void {
     delete endpointSecurityGroup.name;
     delete endpointSecurityGroup.tenantId;
     delete endpointSecurityGroup.applicationProfileId;
@@ -279,12 +278,11 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
         id: this.endpointSecurityGroupId,
         endpointSecurityGroup,
       })
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.closeModal();
         },
-        () => {},
-      );
+      });
   }
 
   public save(): void {
@@ -321,20 +319,21 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
         page: 1,
         perPage: 1000,
       })
-      .subscribe(
-        data => {
+      .subscribe({
+        next: data => {
           this.vrfs = data.data;
         },
-        () => {
+        error: () => {
           this.vrfs = null;
-        },
-        () => {
           this.isLoading = false;
         },
-      );
+        complete: () => {
+          this.isLoading = false;
+        },
+      });
   }
 
-  private getInitialTabIndex(): number {
+  public getInitialTabIndex(): number {
     return this.tabs.findIndex(t => t.name === this.currentTab);
   }
 
@@ -344,17 +343,18 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       .getManyApplicationProfile({
         filter: [`tenantId||eq||${this.tenantId}`, 'deletedAt||isnull'],
       })
-      .subscribe(
-        data => {
+      .subscribe({
+        next: data => {
           this.applicationProfiles = data as any;
         },
-        () => {
+        error: () => {
           this.applicationProfiles = null;
-        },
-        () => {
           this.isLoading = false;
         },
-      );
+        complete: () => {
+          this.isLoading = false;
+        },
+      });
   }
 
   public softDeleteSelector(selector: Selector): void {
@@ -387,7 +387,7 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
       });
   }
 
-  private retrieveAndUpdateEndpointGroup(epgId: string): void {
+  public retrieveAndUpdateEndpointGroup(epgId: string): void {
     this.endpointGroupService.getOneEndpointGroup({ id: epgId }).subscribe(epg => {
       delete epg.name;
       delete epg.tenantId;
@@ -404,13 +404,11 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
 
     const onConfirm = () => {
       const dto = this.sanitizeSelectorData(event);
-      this.selectorService.bulkUploadSelectors({ requestBody: dto }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.selectorService.bulkUploadSelectors({ requestBody: dto }).subscribe({
+        complete: () => {
           this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
         },
-      );
+      });
     };
     const onClose = () => {
       this.getEndpointSecurityGroup(this.endpointSecurityGroupId);
@@ -441,9 +439,14 @@ export class EndpointSecurityGroupModalComponent implements OnInit {
         if (val !== '') {
           obj.endpointGroupName = val;
         }
-        obj[key] = ObjectUtil.getObjectId(val as string, this.endpointGroups);
-        obj.endpointGroupId = obj[key];
-        delete obj[key];
+        const epgId = ObjectUtil.getObjectId(val as string, this.endpointGroups);
+        if (epgId !== val) {
+          obj.endpointGroupId = epgId;
+          delete obj[key];
+        } else {
+          obj.endpointGroupId = val;
+          delete obj[key];
+        }
       }
       if (key === 'endpointSecurityGroupName') {
         obj[key] = this.endpointSecurityGroupId;

@@ -74,12 +74,9 @@ export class VrfModalComponent implements OnInit {
   }
 
   private createVrf(vrf: Vrf): void {
-    this.vrfService.createOneVrf({ vrf }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.vrfService.createOneVrf({ vrf }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private editVrf(vrf: Vrf): void {
@@ -90,12 +87,9 @@ export class VrfModalComponent implements OnInit {
         id: this.vrfId,
         vrf,
       })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+      .subscribe(() => {
+        this.closeModal();
+      });
   }
 
   public save(): void {

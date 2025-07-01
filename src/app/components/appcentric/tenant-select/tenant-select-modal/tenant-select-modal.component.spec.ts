@@ -1,248 +1,296 @@
-/* eslint-disable */
-import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from 'src/test/mock-components';
-import { MockProvider } from 'src/test/mock-providers';
-import { of } from 'rxjs';
-
+import { of, throwError } from 'rxjs';
 import { TenantSelectModalComponent } from './tenant-select-modal.component';
 import { Tenant, V2AppCentricTenantsService } from 'client';
-import { By } from '@angular/platform-browser';
-import { ModalMode } from 'src/app/models/other/modal-mode';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
-import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TenantSelectModalHelpText } from 'src/app/helptext/help-text-networking';
+import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
+
+const MOCK_TENANT: Tenant = {
+  id: 't-1',
+  name: 'mock-tenant',
+  alias: 'Mock',
+  description: 'A mock tenant',
+  datacenterId: 'dc-1',
+  datacenter: { id: 'dc-1', name: 'Mock DC' } as any,
+  multiVrf: false,
+  multiL3out: false,
+  allowServiceGraphBypass: false,
+};
 
 describe('TenantSelectModalComponent', () => {
   let component: TenantSelectModalComponent;
   let fixture: ComponentFixture<TenantSelectModalComponent>;
-  let ngxMock: any;
-  let tenantServiceMock: any;
-  let routerMock: any;
+  let mockModalService: any;
+  let mockTenantService: any;
+  let mockRouter: any;
   let mockActivatedRoute: any;
-  let formBuilder: UntypedFormBuilder;
 
-  // Helper to build the form, as it's needed in multiple describe blocks
-  const buildForm = (fb: UntypedFormBuilder) => {
-    return fb.group({
-      name: ['test-name'],
-      alias: [''],
-      description: ['test description'],
-      tenantSize: ['medium'],
-      vendorAgnosticNat: [false],
-      northSouthFirewallVendor: ['PANOS'],
-      northSouthFirewallArchitecture: ['Virtual'],
-      northSouthHa: [true],
-      northSouthHaMode: ['Active-Passive'],
-      eastWestFirewallVendor: ['PANOS'],
-      eastWestFirewallArchitecture: ['Virtual'],
-      eastWestHa: [true],
-      eastWestHaMode: ['Active-Passive'],
-      regionalHa: [false],
-      primaryDatacenter: ['East'],
-      secondaryDatacenter: [''],
-      deploymentMode: ['Hot Site First'],
-      vcdLocation: ['VCD-East'],
-      vcdTenantType: ['new'],
-      vcdTenantId: [''],
-      northSouthAppId: [true],
-      eastWestAppId: [true],
-      nat64NorthSouth: [true],
-      eastWestAllowSgBypass: [false],
-      eastWestNat: [false],
-    });
-  };
-
-  beforeEach(() => {
-    // General mocks
-    ngxMock = {
+  beforeEach(async () => {
+    // Define the mocks
+    mockModalService = {
       close: jest.fn(),
       resetModalData: jest.fn(),
-      getModalData: jest.fn().mockImplementation(() => ({
-        // Default mock for getModalData
-        ModalMode: ModalMode.Create,
-        Tenant: { id: 'test-id', name: 'test-name' },
-      })),
-      setModalData: jest.fn(),
-      getModal: jest.fn().mockImplementation(() => ({
-        open: jest.fn(),
-        onCloseFinished: { subscribe: jest.fn() },
-      })),
+      getModalData: jest.fn(),
+      getModal: jest.fn().mockReturnValue({
+        getData: jest.fn(),
+      }),
     };
 
-    tenantServiceMock = {
+    mockTenantService = {
       createOneTenant: jest.fn().mockReturnValue(of({})),
       updateOneTenant: jest.fn().mockReturnValue(of({})),
       createOneV2TenantTenant: jest.fn().mockReturnValue(of({})),
     };
 
-    routerMock = {
-      url: '/tenant-v2/tenants', // Example URL
+    mockRouter = {
       navigate: jest.fn(),
     };
 
-    // Base mockActivatedRoute, mode will be set in specific describe blocks
     mockActivatedRoute = {
-      snapshot: {
-        data: {}, // Mode set per describe context
-        parent: null,
-        // Ensure queryParams is an object
-        queryParams: {},
-      },
-      data: of({}), // Observable part, also set per describe context
-      parent: null,
+      data: of({}),
+      snapshot: { data: {} },
     };
-    formBuilder = new UntypedFormBuilder(); // Initialize here
-  });
 
-  const configureTestingModuleForMode = async (mode?: ApplicationMode) => {
-    if (mode) {
-      mockActivatedRoute.snapshot.data.mode = mode;
-      mockActivatedRoute.data = of({ mode: mode });
-    } else {
-      delete mockActivatedRoute.snapshot.data.mode; // For non-mode specific tests or default behavior
-      mockActivatedRoute.data = of({});
-    }
-
-    TestBed.resetTestingModule();
+    // Configure TestBed once
     await TestBed.configureTestingModule({
-      declarations: [TenantSelectModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent],
-      imports: [ReactiveFormsModule, HttpClientModule, NgSelectModule],
+      declarations: [TenantSelectModalComponent],
+      imports: [ReactiveFormsModule],
       providers: [
-        { provide: NgxSmartModalService, useValue: ngxMock },
-        { provide: V2AppCentricTenantsService, useValue: tenantServiceMock },
-        { provide: Router, useValue: routerMock },
+        UntypedFormBuilder,
+        { provide: NgxSmartModalService, useValue: mockModalService },
+        { provide: V2AppCentricTenantsService, useValue: mockTenantService },
+        { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        MockProvider(TenantSelectModalHelpText),
-        UntypedFormBuilder, // Provide UntypedFormBuilder
+        { provide: TenantSelectModalHelpText, useValue: {} },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TenantSelectModalComponent);
     component = fixture.componentInstance;
-    // component.form is built in ngOnInit which is triggered by detectChanges,
-    // or we can assign it directly if ngOnInit doesn't do more complex form setup
-    // For these tests, let's ensure form is built before detectChanges if it's simple.
-    // Actually, ngOnInit calls buildForm, so detectChanges will handle it.
+  });
+
+  // Helper to set context on the existing mocks
+  const setupContext = (mode: ApplicationMode, modalDto?: Partial<TenantModalDto>) => {
+    mockActivatedRoute.data = of({ mode });
+    mockActivatedRoute.snapshot.data.mode = mode;
+    mockModalService.getModalData.mockReturnValue(modalDto || {});
+    fixture.detectChanges(); // Triggers ngOnInit and other lifecycle hooks
   };
 
-  it('should create', async () => {
-    await configureTestingModuleForMode(); // Default/no specific mode
-    fixture.detectChanges(); // ngOnInit builds the form
+  it('should create', () => {
+    setupContext(ApplicationMode.TENANTV2);
     expect(component).toBeTruthy();
   });
 
-  describe('when in TenantV2 mode', () => {
-    beforeEach(async () => {
-      await configureTestingModuleForMode(ApplicationMode.TENANTV2);
-      // Form is built in component's ngOnInit, triggered by detectChanges
+  describe('Mode Detection', () => {
+    it('should correctly identify TENANTV2 mode', () => {
+      setupContext(ApplicationMode.TENANTV2);
+      expect(component.isTenantV2Mode).toBe(true);
+      expect(component.isAdminPortalMode).toBe(false);
     });
 
-    it('should detect TenantV2 mode from URL', () => {
-      fixture.detectChanges(); // Calls ngOnInit
-      expect(component.isTenantV2Mode).toBeTruthy();
-      expect(component.isAdminPortalMode).toBeFalsy();
-      expect(component.currentMode).toEqual(ApplicationMode.TENANTV2);
+    it('should correctly identify ADMINPORTAL mode', () => {
+      setupContext(ApplicationMode.ADMINPORTAL);
+      expect(component.isAdminPortalMode).toBe(true);
+      expect(component.isTenantV2Mode).toBe(false);
+    });
+  });
+
+  describe('Form Logic', () => {
+    beforeEach(() => {
+      setupContext(ApplicationMode.ADMINPORTAL);
     });
 
-    it('should get modal data and retain TenantV2 mode', () => {
-      fixture.detectChanges(); // ngOnInit sets initial mode
-      // Ensure getModalData mock does not send mode flags to test persistence of route-derived mode
-      ngxMock.getModalData.mockImplementation(() => ({
-        ModalMode: ModalMode.Create,
-        Tenant: { id: 'test-id', name: 'test-name' },
-      }));
+    it('should update App-ID availability based on firewall vendor', fakeAsync(() => {
+      component.form.get('northSouthFirewallVendor').setValue('ASA');
+      tick();
+      expect(component.form.get('northSouthAppId').disabled).toBe(true);
+      component.form.get('northSouthFirewallVendor').setValue('PANOS');
+      tick();
+      expect(component.form.get('northSouthAppId').enabled).toBe(true);
+    }));
 
+    it('should clear secondary DC if it matches primary', fakeAsync(() => {
+      component.form.get('regionalHa').setValue(true);
+      tick();
+      component.form.get('primaryDatacenter').setValue('East');
+      tick();
+      component.form.get('secondaryDatacenter').setValue('East');
+      tick();
+      expect(component.form.get('secondaryDatacenter').value).toBe('');
+    }));
+  });
+
+  describe('Component Methods & Save Logic', () => {
+    it('should populate form when getData is called in Edit mode', () => {
+      const dto = { ModalMode: ModalMode.Edit, Tenant: MOCK_TENANT };
+      setupContext(ApplicationMode.TENANTV2, dto);
       component.getData();
-
-      expect(ngxMock.getModalData).toHaveBeenCalledWith('tenantModal');
-      expect(component.isTenantV2Mode).toBeTruthy(); // Mode from route should persist
-      expect(component.isAdminPortalMode).toBeFalsy();
-      expect(component.currentMode).toEqual(ApplicationMode.TENANTV2);
+      expect(component.ModalMode).toBe(ModalMode.Edit);
+      expect(component.form.get('name').value).toBe(MOCK_TENANT.name);
     });
 
-    it('should call createOneTenant when saving in TenantV2 mode with Create mode', () => {
-      fixture.detectChanges(); // ngOnInit and builds form
-      component.ModalMode = ModalMode.Create;
-      // isTenantV2Mode is already true from detectChanges
-      component.submitted = false; // Ensure submitted is false initially
-      jest.spyOn(component.form, 'invalid', 'get').mockReturnValue(false);
-
+    it('should call createOneTenant in TenantV2 mode', () => {
+      setupContext(ApplicationMode.TENANTV2, { ModalMode: ModalMode.Create });
+      component.getData();
+      component.form.get('name').setValue('new-tenant');
       component.save();
-      expect(tenantServiceMock.createOneTenant).toHaveBeenCalled();
+      expect(mockTenantService.createOneTenant).toHaveBeenCalled();
+      expect(mockModalService.close).toHaveBeenCalledWith('tenantModal');
+    });
+
+    it('should call updateOneTenant in Edit mode', () => {
+      setupContext(ApplicationMode.TENANTV2, { ModalMode: ModalMode.Edit, Tenant: MOCK_TENANT });
+      component.getData();
+      component.save();
+      expect(mockTenantService.updateOneTenant).toHaveBeenCalledWith(expect.objectContaining({ id: MOCK_TENANT.id }));
+    });
+
+    it('should not close modal on API failure', () => {
+      mockTenantService.updateOneTenant.mockReturnValue(throwError(() => new Error('API Error')));
+      setupContext(ApplicationMode.TENANTV2, { ModalMode: ModalMode.Edit, Tenant: MOCK_TENANT });
+      component.getData();
+      component.save();
+      expect(mockModalService.close).not.toHaveBeenCalled();
     });
   });
 
-  describe('when in AdminPortal mode', () => {
-    beforeEach(async () => {
-      await configureTestingModuleForMode(ApplicationMode.ADMINPORTAL);
+  describe('Admin Portal Save Logic', () => {
+    beforeEach(() => {
+      setupContext(ApplicationMode.ADMINPORTAL, { ModalMode: ModalMode.Create });
+      component.getData();
+      component.form.get('name').setValue('admin-tenant');
     });
 
-    it('should detect AdminPortal mode from URL', () => {
-      fixture.detectChanges();
-      expect(component.isAdminPortalMode).toBeTruthy();
-      expect(component.isTenantV2Mode).toBeFalsy();
-      expect(component.currentMode).toEqual(ApplicationMode.ADMINPORTAL);
+    it('should call createOneV2TenantTenant for AdminPortal create', () => {
+      component.save();
+      expect(mockTenantService.createOneV2TenantTenant).toHaveBeenCalledWith({
+        createTenantV2Dto: { name: 'admin-tenant' },
+      });
     });
 
-    it('should call createOneV2TenantTenant when saving in AdminPortal mode with Create mode', () => {
-      fixture.detectChanges(); // ngOnInit and builds form
-      component.ModalMode = ModalMode.Create;
-      // isAdminPortalMode is true
-      component.submitted = false;
-      jest.spyOn(component.form, 'invalid', 'get').mockReturnValue(false);
+    it('should not save if form is invalid', () => {
+      component.form.get('name').setValue(''); // make form invalid
+      component.save();
+      expect(mockTenantService.createOneV2TenantTenant).not.toHaveBeenCalled();
+    });
+
+    it('should handle onFileSelected', () => {
+      const file = new File([''], 'test-file.json', { type: 'application/json' });
+      const event = { target: { files: [file] } };
+      component.onFileSelected(event as any);
+      expect(component.selectedFile).toBe(file);
+    });
+
+    it('should correctly build payload with various options', fakeAsync(() => {
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      // Simulate various form inputs
+      component.form.get('regionalHa').setValue(true);
+      tick();
+      component.form.get('secondaryDatacenter').setValue('West');
+      tick();
+      component.form.get('vcdTenantType').setValue('existing');
+      tick();
+      component.form.get('vcdTenantId').setValue('vcd-123');
+      tick();
 
       component.save();
-      expect(tenantServiceMock.createOneV2TenantTenant).toHaveBeenCalled();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'AdminPortal Tenant Configuration:',
+        expect.objectContaining({
+          primaryDatacenter: 'East',
+          secondaryDatacenter: 'West',
+          deploymentMode: 'Hot Site First',
+          vcdTenantId: 'vcd-123',
+        }),
+      );
+      consoleSpy.mockRestore();
+    }));
+  });
+
+  describe('updateAppIdAvailability', () => {
+    it('should disable northSouthAppId if vendor is not PANOS', () => {
+      const dto = {
+        ModalMode: ModalMode.Edit,
+        Tenant: MOCK_TENANT,
+        northSouthFirewallVendor: 'ASA',
+      };
+      setupContext(ApplicationMode.ADMINPORTAL, dto as any);
+      component.getData();
+      expect(component.form.get('northSouthAppId').disabled).toBe(true);
+    });
+
+    it('should enable eastWestAppId if vendor is PANOS', () => {
+      const dto = {
+        ModalMode: ModalMode.Edit,
+        Tenant: MOCK_TENANT,
+        eastWestFirewallVendor: 'PANOS',
+      };
+      setupContext(ApplicationMode.ADMINPORTAL, dto as any);
+      component.getData();
+      expect(component.form.get('eastWestAppId').enabled).toBe(true);
+    });
+
+    it('should disable eastWestAppId if vendor is not PANOS', () => {
+      const dto = {
+        ModalMode: ModalMode.Edit,
+        Tenant: MOCK_TENANT,
+        eastWestFirewallVendor: 'ASA',
+      };
+      setupContext(ApplicationMode.ADMINPORTAL, dto as any);
+      component.getData();
+      expect(component.form.get('eastWestAppId').disabled).toBe(true);
     });
   });
 
-  describe('when in AppCentric mode', () => {
-    beforeEach(async () => {
-      await configureTestingModuleForMode(ApplicationMode.APPCENTRIC);
+  describe('updateSizeBasedOptions', () => {
+    beforeEach(() => {
+      setupContext(ApplicationMode.ADMINPORTAL);
     });
 
-    it('should detect AppCentric mode from URL and set currentMode correctly', () => {
-      fixture.detectChanges();
-      expect(component.currentMode).toEqual(ApplicationMode.APPCENTRIC);
-      expect(component.isAdminPortalMode).toBeFalsy();
-      expect(component.isTenantV2Mode).toBeFalsy();
-    });
-  });
+    it('should disable options for small tenants', fakeAsync(() => {
+      component.form.get('tenantSize').setValue('small');
+      tick();
+      expect(component.form.get('eastWestFirewallArchitecture').disabled).toBe(true);
+      expect(component.form.get('eastWestHa').disabled).toBe(true);
+      expect(component.form.get('eastWestHaMode').disabled).toBe(true);
+    }));
 
-  // General tests that might not depend on specific ApplicationMode or use a default/no mode
-  describe('General Modal Functionality', () => {
-    beforeEach(async () => {
-      await configureTestingModuleForMode(); // Default or no specific mode
-      fixture.detectChanges(); // ngOnInit and builds form
-    });
+    it('should disable options for x-small tenants', fakeAsync(() => {
+      component.form.get('tenantSize').setValue('x-small');
+      tick();
+      expect(component.form.get('eastWestFirewallArchitecture').disabled).toBe(true);
+      expect(component.form.get('eastWestHa').disabled).toBe(true);
+      expect(component.form.get('eastWestHaMode').disabled).toBe(true);
+    }));
 
-    it('should close modal when calling closeModal', () => {
-      component.closeModal();
-      expect(ngxMock.close).toHaveBeenCalledWith('tenantModal');
-    });
+    it('should enable options for medium tenants and enable HA mode when HA is checked', fakeAsync(() => {
+      component.form.get('eastWestHa').setValue(true);
+      tick();
+      component.form.get('tenantSize').setValue('medium');
+      tick();
+      expect(component.form.get('eastWestFirewallArchitecture').enabled).toBe(true);
+      expect(component.form.get('eastWestHa').enabled).toBe(true);
+      expect(component.form.get('eastWestHaMode').enabled).toBe(true);
+    }));
 
-    it('should reset form when calling reset', () => {
-      component.form.get('description')?.setValue('test value');
-      component.reset();
-      expect(component.form.get('description')?.value).toBe(''); // or null if buildForm resets to null
-      expect(ngxMock.resetModalData).toHaveBeenCalledWith('tenantModal');
-    });
-
-    it('should call updateOneTenant when saving in Edit mode (generic, mode might influence details later)', () => {
-      // This test might need to be within a mode-specific describe if save behavior differs significantly
-      // For now, assuming a generic Edit mode test:
-      component.ModalMode = ModalMode.Edit;
-      component.TenantId = 'test-id';
-      component.form.get('name')?.disable();
-      jest.spyOn(component.form, 'invalid', 'get').mockReturnValue(false);
-
-      component.save();
-      expect(tenantServiceMock.updateOneTenant).toHaveBeenCalled();
-    });
+    it('should enable options for medium tenants but disable HA mode when HA is unchecked', fakeAsync(() => {
+      component.form.get('eastWestHa').setValue(false);
+      tick();
+      component.form.get('tenantSize').setValue('medium');
+      tick();
+      expect(component.form.get('eastWestFirewallArchitecture').enabled).toBe(true);
+      expect(component.form.get('eastWestHa').enabled).toBe(true);
+      expect(component.form.get('eastWestHaMode').disabled).toBe(true);
+    }));
   });
 });

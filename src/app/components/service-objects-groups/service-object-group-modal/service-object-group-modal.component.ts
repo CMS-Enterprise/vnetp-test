@@ -52,12 +52,9 @@ export class ServiceObjectGroupModalComponent implements OnInit {
         .createOneServiceObjectGroup({
           serviceObjectGroup: modalServiceObjectGroup,
         })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+        .subscribe(() => {
+          this.closeModal();
+        });
     } else {
       delete modalServiceObjectGroup.type;
       delete modalServiceObjectGroup.name;

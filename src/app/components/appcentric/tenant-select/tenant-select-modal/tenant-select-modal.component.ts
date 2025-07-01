@@ -334,6 +334,7 @@ export class TenantSelectModalComponent implements OnInit {
     });
 
     this.form.get('secondaryDatacenter').valueChanges.subscribe(() => {
+      this.validateDatacenterSelection();
       this.updateDeploymentModeVisibility();
     });
 
@@ -353,19 +354,13 @@ export class TenantSelectModalComponent implements OnInit {
 
   private createTenant(tenant: Tenant): void {
     if (this.isAdminPortalMode) {
-      this.tenantService.createOneV2TenantTenant({ createTenantV2Dto: { name: tenant.name } }).subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+      this.tenantService.createOneV2TenantTenant({ createTenantV2Dto: { name: tenant.name } }).subscribe(() => {
+        this.closeModal();
+      });
     } else {
-      this.tenantService.createOneTenant({ tenant }).subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+      this.tenantService.createOneTenant({ tenant }).subscribe(() => {
+        this.closeModal();
+      });
     }
   }
 
@@ -376,12 +371,9 @@ export class TenantSelectModalComponent implements OnInit {
         id: this.TenantId,
         tenant,
       })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+      .subscribe(() => {
+        this.closeModal();
+      });
   }
 
   public save(): void {

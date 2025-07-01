@@ -96,15 +96,10 @@ export class WanFormRequestComponent implements OnInit {
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })
-      .subscribe(
-        response => {
-          this.wanFormRequests = response;
-          this.createWanFormTableDto();
-        },
-        error => {
-          console.error('Error fetching WAN Form Requests:', error);
-        },
-      );
+      .subscribe(response => {
+        this.wanFormRequests = response;
+        this.createWanFormTableDto();
+      });
   }
 
   public createWanFormTableDto(): void {
@@ -122,7 +117,6 @@ export class WanFormRequestComponent implements OnInit {
     const onConfirm = () => {
       this.wanFormRequestService.approveOneWanFormRequest({ id }).subscribe({
         next: () => this.getAllWanFormRequests(),
-        error: error => console.error('Error approving WAN Form Request:', error),
       });
     };
 
@@ -141,7 +135,6 @@ export class WanFormRequestComponent implements OnInit {
     const onConfirm = () => {
       this.wanFormRequestService.rejectOneWanFormRequest({ id }).subscribe({
         next: () => this.getAllWanFormRequests(),
-        error: error => console.error('Error rejecting WAN Form Request:', error),
       });
     };
 
@@ -172,10 +165,6 @@ export class WanFormRequestComponent implements OnInit {
         };
 
         this.wanFormRequestTableDto.data.push(wanFormRequestData);
-        console.log('WAN Form Request Table DTO:', this.wanFormRequestTableDto);
-      },
-      error: error => {
-        console.error('Error fetching WAN Form:', error);
       },
     });
   }

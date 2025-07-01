@@ -193,6 +193,8 @@ describe('WanFormSubnetsModalComponent', () => {
         description: 'testDescription',
         vrf: 'testVRF',
         environment: 'testEnvironment',
+        fromPrefixLength: 20,
+        toPrefixLength: 24,
         netcentricSubnetId: 'testNetcentricSubnetId',
         appcentricSubnetId: 'testAppcentricSubnetId',
       });
@@ -216,6 +218,8 @@ describe('WanFormSubnetsModalComponent', () => {
           wanFormId: 'testWanFormId',
           datacenterId: 'testDatacenterId',
           netcentricSubnetId: 'testNetcentricSubnetId',
+          fromPrefixLength: 20,
+          toPrefixLength: 24,
         },
       });
     });
@@ -239,6 +243,8 @@ describe('WanFormSubnetsModalComponent', () => {
           vrf: 'testVRF',
           environment: 'testEnvironment',
           datacenterId: 'testDatacenterId',
+          fromPrefixLength: 20,
+          toPrefixLength: 24,
         },
       });
       expect(mockWanFormSubnetService.createOneWanFormSubnet).not.toHaveBeenCalled();
@@ -257,6 +263,8 @@ describe('WanFormSubnetsModalComponent', () => {
           wanFormId: 'testWanFormId',
           datacenterId: 'testDatacenterId',
           netcentricSubnetId: 'testNetcentricSubnetId',
+          fromPrefixLength: 20,
+          toPrefixLength: 24,
         },
       });
     });
@@ -273,6 +281,8 @@ describe('WanFormSubnetsModalComponent', () => {
           environment: 'testEnvironment',
           wanFormId: 'testWanFormId',
           datacenterId: 'testDatacenterId',
+          fromPrefixLength: 20,
+          toPrefixLength: 24,
           appcentricSubnetId: 'testAppcentricSubnetId',
         },
       });

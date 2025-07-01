@@ -112,12 +112,9 @@ export class TierModalComponent implements OnInit {
   }
 
   private createTier(tier: Tier): void {
-    this.tierService.createOneTier({ tier }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.tierService.createOneTier({ tier }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private editTier(tier: Tier): void {
@@ -129,12 +126,9 @@ export class TierModalComponent implements OnInit {
         id: this.TierId,
         tier,
       })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+      .subscribe(() => {
+        this.closeModal();
+      });
   }
 
   ngOnInit() {

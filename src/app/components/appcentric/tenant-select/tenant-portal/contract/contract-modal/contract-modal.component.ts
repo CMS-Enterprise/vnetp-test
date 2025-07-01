@@ -127,12 +127,9 @@ export class ContractModalComponent implements OnInit {
   }
 
   private createContract(contract: Contract): void {
-    this.contractService.createOneContract({ contract }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.contractService.createOneContract({ contract }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private editContract(contract: Contract): void {
@@ -143,12 +140,9 @@ export class ContractModalComponent implements OnInit {
         id: this.contractId,
         contract,
       })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+      .subscribe(() => {
+        this.closeModal();
+      });
   }
 
   public save(): void {
@@ -326,13 +320,11 @@ export class ContractModalComponent implements OnInit {
 
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.subjectsService.createManySubject({ createManySubjectDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.subjectsService.createManySubject({ createManySubjectDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.getSubjects();
         },
-      );
+      });
     };
     const onClose = () => {
       this.getSubjects();

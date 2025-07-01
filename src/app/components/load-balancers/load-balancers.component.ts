@@ -82,7 +82,10 @@ export class LoadBalancersComponent implements OnInit, OnDestroy {
       return 0;
     }
 
-    const tab = tabs.find(t => t.route.join('') === page[1]);
+    const tab = tabs.find(t => t.route.join('/') === page[1]);
+    if (!tab) {
+      return 0;
+    }
     return this.tabs.findIndex(t => t.name === tab.name);
   }
 }

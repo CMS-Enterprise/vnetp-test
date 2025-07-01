@@ -83,12 +83,9 @@ export class ApplicationProfileModalComponent implements OnInit {
   }
 
   private createApplicationProfile(applicationProfile: ApplicationProfile): void {
-    this.applicationProfileService.createOneApplicationProfile({ applicationProfile }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.applicationProfileService.createOneApplicationProfile({ applicationProfile }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private editApplicationProfile(applicationProfile: ApplicationProfile): void {
@@ -100,12 +97,9 @@ export class ApplicationProfileModalComponent implements OnInit {
         id: this.applicationProfileId,
         applicationProfile,
       })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+      .subscribe(() => {
+        this.closeModal();
+      });
   }
 
   public save(): void {

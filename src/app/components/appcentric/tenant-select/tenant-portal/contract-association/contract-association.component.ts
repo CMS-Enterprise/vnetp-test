@@ -390,26 +390,22 @@ export class ContractAssociationComponent implements OnInit, OnChanges {
             endpointGroupId: `${this.endpointGroupId}`,
             body: dto,
           })
-          .subscribe(
-            () => {},
-            () => {},
-            () => {
+          .subscribe({
+            complete: () => {
               this.getEpgContracts();
             },
-          );
+          });
       } else if (this.contractType === 'provided') {
         this.endpointGroupsService
           .addManyProvidedContractsToEndpointGroupEndpointGroup({
             endpointGroupId: `${this.endpointGroupId}`,
             body: dto,
           })
-          .subscribe(
-            () => {},
-            () => {},
-            () => {
+          .subscribe({
+            complete: () => {
               this.getEpgContracts();
             },
-          );
+          });
       }
     };
 
@@ -437,26 +433,22 @@ export class ContractAssociationComponent implements OnInit, OnChanges {
             endpointSecurityGroupId: `${this.endpointSecurityGroupId}`,
             body: dto,
           })
-          .subscribe(
-            () => {},
-            () => {},
-            () => {
+          .subscribe({
+            complete: () => {
               this.getEsgContracts();
             },
-          );
+          });
       } else if (this.contractType === 'provided') {
         this.endpointSecurityGroupsService
           .addManyProvidedContractsToEndpointSecurityGroupEndpointSecurityGroup({
             endpointSecurityGroupId: `${this.endpointSecurityGroupId}`,
             body: dto,
           })
-          .subscribe(
-            () => {},
-            () => {},
-            () => {
+          .subscribe({
+            complete: () => {
               this.getEsgContracts();
             },
-          );
+          });
       }
     };
 

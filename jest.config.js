@@ -4,8 +4,6 @@ globalThis.ngJest = {
   tsconfig: 'tsconfig.spec.json',
 };
 
-
-
 module.exports = {
   preset: 'jest-preset-angular',
   testEnvironment: 'jsdom',
@@ -32,6 +30,7 @@ module.exports = {
     '!**/polyfills.ts',
     '!**/environments/**',
     '!**/src/setupJest.ts',
+    '!**/src/main.ts',
   ],
   moduleDirectories: [__dirname, 'node_modules', 'src'],
   transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],

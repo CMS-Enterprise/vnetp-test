@@ -129,12 +129,9 @@ export class EndpointGroupModalComponent implements OnInit {
   }
 
   private createEndpointGroup(endpointGroup: EndpointGroup): void {
-    this.endpointGroupService.createOneEndpointGroup({ endpointGroup }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.endpointGroupService.createOneEndpointGroup({ endpointGroup }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private editEndpointGroup(endpointGroup: EndpointGroup): void {
@@ -146,12 +143,9 @@ export class EndpointGroupModalComponent implements OnInit {
         id: this.endpointGroupId,
         endpointGroup,
       })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+      .subscribe(() => {
+        this.closeModal();
+      });
   }
 
   public save(): void {

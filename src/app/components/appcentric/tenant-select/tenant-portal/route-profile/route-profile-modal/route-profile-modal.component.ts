@@ -74,12 +74,9 @@ export class RouteProfileModalComponent implements OnInit {
   }
 
   private createRouteProfile(routeProfile: RouteProfile): void {
-    this.routeProfileService.createOneRouteProfile({ routeProfile }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.routeProfileService.createOneRouteProfile({ routeProfile }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private editRouteProfile(routeProfile: RouteProfile): void {
@@ -90,12 +87,9 @@ export class RouteProfileModalComponent implements OnInit {
         id: this.routeProfileId,
         routeProfile,
       })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+      .subscribe(() => {
+        this.closeModal();
+      });
   }
 
   public save(): void {

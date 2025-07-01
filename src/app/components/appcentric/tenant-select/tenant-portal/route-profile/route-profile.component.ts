@@ -228,13 +228,11 @@ export class RouteProfileComponent implements OnInit {
 
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.routeProfileService.createManyRouteProfile({ createManyRouteProfileDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.routeProfileService.createManyRouteProfile({ createManyRouteProfileDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.getRouteProfiles();
         },
-      );
+      });
     };
     const onClose = () => {
       this.getRouteProfiles();

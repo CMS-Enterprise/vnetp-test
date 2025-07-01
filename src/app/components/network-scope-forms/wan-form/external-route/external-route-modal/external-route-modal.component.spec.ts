@@ -78,7 +78,13 @@ describe('ExternalRouteModalComponent', () => {
     });
 
     it('should save', () => {
-      component.form.setValue({ network: '192.168.0.1', prefixLength: 20, metric: 1, vrf: 'vrf' });
+      component.form.setValue({
+        network: '192.168.0.1',
+        fromPrefixLength: 20,
+        toPrefixLength: 24,
+        metric: 1,
+        vrf: 'vrf',
+      });
       const createOneSpy = jest.spyOn(mockExternalRouteService, 'createOneExternalRoute');
       component.save();
       expect(createOneSpy).toHaveBeenCalled();

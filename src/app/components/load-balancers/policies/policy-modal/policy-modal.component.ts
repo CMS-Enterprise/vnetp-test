@@ -115,10 +115,7 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
   }
 
   private createPolicy(loadBalancerPolicy: LoadBalancerPolicy): void {
-    this.policyService.createOneLoadBalancerPolicy({ loadBalancerPolicy }).subscribe(
-      () => this.closeModal(),
-      () => {},
-    );
+    this.policyService.createOneLoadBalancerPolicy({ loadBalancerPolicy }).subscribe(() => this.closeModal());
   }
 
   private updatePolicy(loadBalancerPolicy: LoadBalancerPolicy): void {
@@ -130,10 +127,7 @@ export class PolicyModalComponent implements OnInit, OnDestroy {
         id: this.policyId,
         loadBalancerPolicy,
       })
-      .subscribe(
-        () => this.closeModal(),
-        () => {},
-      );
+      .subscribe(() => this.closeModal());
   }
 
   private getPolicyForSave(): LoadBalancerPolicy {

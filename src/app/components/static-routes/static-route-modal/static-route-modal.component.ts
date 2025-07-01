@@ -42,24 +42,18 @@ export class StaticRouteModalComponent implements OnInit {
         .createOneStaticRoute({
           staticRoute: modalStaticRoute,
         })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+        .subscribe(() => {
+          this.closeModal();
+        });
     } else {
       this.staticRouteService
         .updateOneStaticRoute({
           id: this.StaticRouteId,
           staticRoute: modalStaticRoute,
         })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+        .subscribe(() => {
+          this.closeModal();
+        });
     }
   }
 
@@ -99,7 +93,7 @@ export class StaticRouteModalComponent implements OnInit {
 
     const staticRoute = dto.StaticRoute;
 
-    if (staticRoute !== undefined) {
+    if (staticRoute) {
       this.form.controls.name.setValue(staticRoute.name);
       this.form.controls.destinationNetwork.setValue(staticRoute.destinationNetwork);
       this.form.controls.nextHop.setValue(staticRoute.nextHop);

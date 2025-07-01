@@ -307,10 +307,7 @@ export class VirtualServerModalComponent implements OnInit {
   }
 
   private createVirtualServer(loadBalancerVirtualServer: LoadBalancerVirtualServer): void {
-    this.virtualServerService.createOneLoadBalancerVirtualServer({ loadBalancerVirtualServer }).subscribe(
-      () => this.closeModal(),
-      () => {},
-    );
+    this.virtualServerService.createOneLoadBalancerVirtualServer({ loadBalancerVirtualServer }).subscribe(() => this.closeModal());
   }
 
   private updateVirtualServer(loadBalancerVirtualServer: LoadBalancerVirtualServer): void {
@@ -320,9 +317,6 @@ export class VirtualServerModalComponent implements OnInit {
         id: this.virtualServerId,
         loadBalancerVirtualServer,
       })
-      .subscribe(
-        () => this.closeModal(),
-        () => {},
-      );
+      .subscribe(() => this.closeModal());
   }
 }
