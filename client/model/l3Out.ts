@@ -32,5 +32,7 @@ export interface L3Out {
     readonly tenant?: Tenant;
     tenantId: string;
     readonly tenantVersion?: number;
+    readonly endpointGroups?: Array<L3Out>;
+    readonly endpointSecurityGroups?: Array<L3Out>;
 }
 

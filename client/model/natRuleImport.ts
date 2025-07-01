@@ -59,6 +59,7 @@ export interface NatRuleImport {
     readonly toZone?: Zone;
     fromZone?: Array<Zone>;
     hitCount?: number;
+    readonly tenantVersion?: number;
     tierName: string;
     natRuleGroupType: string;
 }

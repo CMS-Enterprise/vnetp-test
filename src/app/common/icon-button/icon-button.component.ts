@@ -32,6 +32,7 @@ export class IconButtonComponent {
     cog: ['fas', 'cog'],
     arrowRight: ['fas', 'arrow-right'],
     arrowLeft: ['fas', 'arrow-left'],
+    cog: ['fas', 'cog'],
   };
 
   public typeLookup: Record<IconType, string> = {
@@ -60,5 +61,6 @@ export type Icon =
   | 'clock'
   | 'cog'
   | 'arrowRight'
-  | 'arrowLeft';
+  | 'arrowLeft'
+  | 'cog';
 export type IconType = 'default' | 'danger' | 'success' | 'info';

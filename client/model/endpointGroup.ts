@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { L3Out } from './l3Out';
 import { AciRuntime } from './aciRuntime';
 import { Tenant } from './tenant';
 import { Endpoint } from './endpoint';
@@ -45,5 +46,6 @@ export interface EndpointGroup {
     readonly endpoints?: Array<Endpoint>;
     readonly aciRuntimes?: AciRuntime;
     readonly selector?: Selector;
+    readonly l3outs?: Array<L3Out>;
 }
 

@@ -67,6 +67,7 @@ export interface Tier {
     readonly loadBalancerVlans?: Array<LoadBalancerVlan>;
     readonly loadBalancerSelfIps?: Array<LoadBalancerSelfIp>;
     readonly loadBalancerRoutes?: Array<LoadBalancerRoute>;
+    readonly appCentricTenantId?: string;
     readonly tenantVersion?: number;
     readonly appVersion?: string;
     readonly appIdEnabled?: boolean;

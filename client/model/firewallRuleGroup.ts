@@ -32,7 +32,8 @@ export enum FirewallRuleGroupTypeEnum {
     Intervrf = 'Intervrf',
     External = 'External',
     ZoneBased = 'ZoneBased',
-    OneArmServiceGraph = 'OneArmServiceGraph'
+    OneArmServiceGraph = 'OneArmServiceGraph',
+    V2ZoneBased = 'V2ZoneBased'
 };
 
 

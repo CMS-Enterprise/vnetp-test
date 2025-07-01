@@ -38,6 +38,7 @@ import {
   faMinus,
   faArrowRight,
   faArrowLeft,
+  faChevronUp,
 } from '@fortawesome/free-solid-svg-icons';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
@@ -108,6 +109,7 @@ export class AppModule {
       faBars,
       faBolt,
       faChevronDown,
+      faChevronUp,
       faChevronLeft,
       faChevronRight,
       faDownload,

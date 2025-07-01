@@ -72,6 +72,132 @@
           <div *ngIf="f.vrfId.errors.required">Vrf is required</div>
         </div>
       </div>
+
+      <!-- Subnet-to-EPG/ESG Associations Section -->
+      <div *ngIf="modalMode === modalModeEnum.Edit" class="mt-4">
+        <h5>Subnet and EPG/ESG Associations</h5>
+        <p class="text-muted">Configure which subnets should be advertised and which EPGs/ESGs can communicate via this L3Out.</p>
+
+        <!-- No data message -->
+        <div *ngIf="!bridgeDomainsWithSubnets || bridgeDomainsWithSubnets.length === 0" class="alert alert-warning">
+          <p>No bridge domains found for this VRF. Please make sure the VRF has associated bridge domains.</p>
+        </div>
+
+        <!-- Bridge domains with subnets -->
+        <div *ngFor="let bd of bridgeDomainsWithSubnets" class="card mb-3">
+          <div class="card-header bg-light">
+            <h6 class="mb-0">Bridge Domain: {{ bd.name }}</h6>
+          </div>
+          <div class="card-body">
+            <!-- Subnets -->
+            <div *ngIf="bd.subnets.length > 0" class="mb-3">
+              <h6>Subnets</h6>
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>Subnet</th>
+                      <th>Gateway</th>
+                      <th>Advertise</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let subnet of bd.subnets">
+                      <td>{{ subnet.name }}</td>
+                      <td>{{ subnet.gateway }}</td>
+                      <td>
+                        <div class="custom-control custom-checkbox">
+                          <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            [id]="'subnet-' + subnet.id"
+                            [checked]="subnet.isAdvertised"
+                            (change)="toggleSubnetAdvertisement(bd.id, subnet.id)"
+                          />
+                          <label class="custom-control-label" [for]="'subnet-' + subnet.id"></label>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div *ngIf="bd.subnets.length === 0" class="alert alert-info">
+              <p>No subnets found for this bridge domain.</p>
+            </div>
+
+            <!-- EPGs -->
+            <div *ngIf="bd.epgs.length > 0" class="mb-3">
+              <h6>Associated EPGs</h6>
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>EPG Name</th>
+                      <th>Allow Communication via L3Out</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let epg of bd.epgs">
+                      <td>{{ epg.name }}</td>
+                      <td>
+                        <div class="custom-control custom-checkbox">
+                          <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            [id]="'epg-' + epg.id"
+                            [checked]="isEpgSelected(epg.id)"
+                            (change)="toggleEpgSelection(epg.id)"
+                          />
+                          <label class="custom-control-label" [for]="'epg-' + epg.id"></label>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div *ngIf="bd.epgs.length === 0" class="alert alert-info">
+              <p>No EPGs found for this bridge domain.</p>
+            </div>
+
+            <!-- ESGs -->
+            <div *ngIf="bd.esgs.length > 0">
+              <h6>Associated ESGs</h6>
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>ESG Name</th>
+                      <th>Allow Communication via L3Out</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let esg of bd.esgs">
+                      <td>{{ esg.name }}</td>
+                      <td>
+                        <div class="custom-control custom-checkbox">
+                          <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            [id]="'esg-' + esg.id"
+                            [checked]="isEsgSelected(esg.id)"
+                            (change)="toggleEsgSelection(esg.id)"
+                          />
+                          <label class="custom-control-label" [for]="'esg-' + esg.id"></label>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div *ngIf="bd.esgs.length === 0" class="alert alert-info">
+              <p>No ESGs found for this bridge domain.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <footer class="modal-footer">

@@ -31,7 +31,8 @@ export enum NatRuleGroupTypeEnum {
     Intravrf = 'Intravrf',
     Intervrf = 'Intervrf',
     External = 'External',
-    ZoneBased = 'ZoneBased'
+    ZoneBased = 'ZoneBased',
+    V2ZoneBased = 'V2ZoneBased'
 };
 
 
