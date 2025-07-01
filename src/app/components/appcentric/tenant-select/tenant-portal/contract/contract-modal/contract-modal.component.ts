@@ -200,6 +200,16 @@ export class ContractModalComponent implements OnInit {
       );
   }
 
+  public deprovisionSubject(subject: Subject): void {
+    const modalDto = new YesNoModalDto('Deprovision Subject', `Are you sure you want to deprovision this subject ${subject.name}?`);
+    const onConfirm = () => {
+      this.subjectsService.deprovisionOneSubject({ id: subject.id }).subscribe(() => {
+        this.getSubjects();
+      });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  }
+
   public removeSubject(subject: Subject) {
     if (subject.deletedAt) {
       const modalDto = new YesNoModalDto('Delete Subject', `Are you sure you want to permanently delete this subject ${subject.name}?`);

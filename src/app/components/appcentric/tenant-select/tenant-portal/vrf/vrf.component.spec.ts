@@ -73,7 +73,10 @@ describe('VrfComponent', () => {
 
     it('should display a confirmation modal with the correct message', () => {
       const event = [{ name: 'Vrf 1' }, { name: 'Vrf 2' }] as any;
-      const modalDto = new YesNoModalDto('Import Vrfs', `Are you sure you would like to import ${event.length} Vrfs?`);
+      const modalDto = new YesNoModalDto(
+        'Import VRFs',
+        `Are you sure you would like to import ${event.length} VRF${event.length > 1 ? 's' : ''}?`,
+      );
       const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
 
       component.importVrfs(event);
@@ -109,32 +112,49 @@ describe('VrfComponent', () => {
   });
 
   it('should delete a vrf', () => {
-    const vrfToDelete = { id: '123', description: 'Bye!' } as Vrf;
-    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    const vrfToDelete = { id: '123', name: 'Test VRF', description: 'Bye!' } as any;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
+    jest.spyOn(component['vrfService'], 'softDeleteOneVrf').mockReturnValue(of({} as any));
+    jest.spyOn(component as any, 'refreshVrfs');
+
     component.deleteVrf(vrfToDelete);
-    const getVrfsMock = jest.spyOn(component['vrfService'], 'getManyVrf');
+
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getVrfsMock).toHaveBeenCalled();
+    expect(component['vrfService'].softDeleteOneVrf).toHaveBeenCalledWith({ id: '123' });
   });
 
   it('should restore a vrf', () => {
-    const vrf = { id: '1', deletedAt: true } as any;
+    const vrf = { id: '1', name: 'Test VRF', deletedAt: true } as any;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
     jest.spyOn(component['vrfService'], 'restoreOneVrf').mockReturnValue(of({} as any));
-    jest.spyOn(component, 'getVrfs');
+    jest.spyOn(component as any, 'refreshVrfs');
+
     component.restoreVrf(vrf);
-    expect(component['vrfService'].restoreOneVrf).toHaveBeenCalledWith({ id: vrf.id });
-    expect(component.getVrfs).toHaveBeenCalled();
+
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+    expect(component['vrfService'].restoreOneVrf).toHaveBeenCalledWith({ id: '1' });
   });
 
   it('should apply search params when filtered results is true', () => {
-    const vrf = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['vrfService'], 'restoreOneVrf').mockReturnValue(of({} as any));
-
     const getVrfsMock = jest.spyOn(component, 'getVrfs');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
-    component.restoreVrf(vrf);
+    // Test refreshVrfs helper method
+    component['refreshVrfs']();
+
     expect(getVrfsMock).toHaveBeenCalledWith(params);
   });
 

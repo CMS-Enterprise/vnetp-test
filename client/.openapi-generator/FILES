@@ -55,6 +55,7 @@ api/v2AppCentricSelectors.service.ts
 api/v2AppCentricSubjects.service.ts
 api/v2AppCentricTenants.service.ts
 api/v2AppCentricVrfs.service.ts
+api/v2Workflows.service.ts
 api/v3GlobalMessages.service.ts
 api/v3GlobalWanFormRequest.service.ts
 configuration.ts
@@ -66,6 +67,7 @@ model/aciRuntimeJobCreateDto.ts
 model/appCentricSubnet.ts
 model/applicationProfile.ts
 model/auditLog.ts
+model/auditLogValidationResult.ts
 model/bridgeDomain.ts
 model/connectionTrace.ts
 model/connectivityNode.ts
@@ -112,8 +114,10 @@ model/createManyVlanDto.ts
 model/createManyVrfDto.ts
 model/createManyWanFormDto.ts
 model/createManyWanFormSubnetDto.ts
+model/createManyWorkflowDto.ts
 model/createManyZoneDto.ts
 model/createTenantV2Dto.ts
+model/createWorkflowDto.ts
 model/datacenter.ts
 model/dcsPermissions.ts
 model/endpoint.ts
@@ -191,12 +195,14 @@ model/getManyVrfResponseDto.ts
 model/getManyWanFormRequestResponseDto.ts
 model/getManyWanFormResponseDto.ts
 model/getManyWanFormSubnetResponseDto.ts
+model/getManyWorkflowResponseDto.ts
 model/getManyZoneResponseDto.ts
 model/hitcountData.ts
 model/hitcountJobCreateDto.ts
 model/hitcountJobResultDto.ts
 model/ipAddress.ts
 model/job.ts
+model/justDiffOutput.ts
 model/l3Out.ts
 model/loadBalancerHealthMonitor.ts
 model/loadBalancerIrule.ts
@@ -210,6 +216,7 @@ model/loadBalancerRoute.ts
 model/loadBalancerSelfIp.ts
 model/loadBalancerVirtualServer.ts
 model/loadBalancerVlan.ts
+model/mergedAuditLog.ts
 model/message.ts
 model/models.ts
 model/natRule.ts
@@ -248,9 +255,11 @@ model/syncEndpointGroup.ts
 model/syncEndpointSecurityGroup.ts
 model/syncTenant.ts
 model/tenant.ts
+model/terraformPlan.ts
 model/tier.ts
 model/tierGroup.ts
 model/towerJobDto.ts
+model/truncatedTerraformResourceChange.ts
 model/userDto.ts
 model/userPass.ts
 model/virtualServerImportCollectionDto.ts
@@ -261,5 +270,9 @@ model/wanForm.ts
 model/wanFormRequest.ts
 model/wanFormRequestDto.ts
 model/wanFormSubnet.ts
+model/workflow.ts
+model/workflowEvent.ts
+model/workflowValidationError.ts
+model/workflowValidationResultDto.ts
 model/zone.ts
 variables.ts

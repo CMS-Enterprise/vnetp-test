@@ -121,6 +121,12 @@ const routes: Routes = [
         loadChildren: () =>
           import('./endpoint-connectivity-utility/endpoint-connectivity-utility.module').then(m => m.EndpointConnectivityUtilityModule),
       },
+      {
+        outlet,
+        path: 'workflows',
+        data: { breadcrumb: 'Workflows', title: 'Workflows' },
+        loadChildren: () => import('./workflow/workflow.module').then(m => m.WorkflowModule),
+      },
     ],
   },
 ];

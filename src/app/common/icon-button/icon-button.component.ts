@@ -27,6 +27,7 @@ export class IconButtonComponent {
     clone: ['far', 'clone'],
     check: ['fas', 'check'],
     times: ['fas', 'times'],
+    cogs: ['fas', 'cogs'],
     clock: ['fas', 'clock'],
     cog: ['fas', 'cog'],
     arrowRight: ['fas', 'arrow-right'],
@@ -55,6 +56,7 @@ export type Icon =
   | 'clone'
   | 'check'
   | 'times'
+  | 'cogs'
   | 'clock'
   | 'cog'
   | 'arrowRight'

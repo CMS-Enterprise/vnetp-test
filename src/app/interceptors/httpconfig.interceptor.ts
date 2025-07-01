@@ -39,7 +39,8 @@ export class HttpConfigInterceptor {
 
       // If no tenant is selected, log the user out and allow them to reselect a tenant.
       if (!tenant) {
-        this.auth.logout();
+        console.log('Logged out due to missing tenant');
+        // this.auth.logout();
       }
 
       const headers = new HttpHeaders({
@@ -98,8 +99,6 @@ export class HttpConfigInterceptor {
               if (errorResponse?.error?.description) {
                 toastrMessage = `Bad Request - ${errorResponse?.error?.description}`;
               } else {
-                // TODO: Adding this temporarily to capture errors without description.
-                // console.log(errorResponse);
                 toastrMessage = 'Unhandled Error Response';
               }
               break;

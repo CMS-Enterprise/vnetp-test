@@ -85,3 +85,15 @@ export class AuthService {
     }
   }
 }
+
+// auth.service.ts:75 ERROR TypeError: Cannot read properties of null (reading 'dcsPermissions')
+// at Object.next (src_app_components_dashboard_dashboard_module_ts.js:125:36)
+// at ConsumerObserver.next (vendor.js:15976:25)
+// at SafeSubscriber._next (vendor.js:15945:22)
+// at SafeSubscriber.next (vendor.js:15918:12)
+// at vendor.js:15755:20
+// at errorContext (vendor.js:18130:5)
+// at BehaviorSubject.next (vendor.js:15748:69)
+// at BehaviorSubject.next (vendor.js:15561:11)
+// at AuthService.logout (main.js:28528:29)
+// at NavbarComponent.logout (main.js:27827:15)

@@ -45,10 +45,19 @@
     ></app-icon-button>
 
     <app-icon-button
+      *ngIf="!vrf?.provisionedAt"
       icon="delete"
       label="Soft-Delete/Delete VRF"
       [type]="vrf?.deletedAt ? 'danger' : 'default'"
       (handleClick)="deleteVrf(vrf)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="vrf?.provisionedAt"
+      icon="download"
+      label="Deprovision VRF"
+      type="danger"
+      (handleClick)="deprovisionVrf(vrf)"
     ></app-icon-button>
   </section>
 </ng-template>

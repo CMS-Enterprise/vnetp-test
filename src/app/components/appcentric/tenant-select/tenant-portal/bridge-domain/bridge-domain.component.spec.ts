@@ -78,7 +78,10 @@ describe('BridgeDomainComponent', () => {
 
     it('should display a confirmation modal with the correct message', () => {
       const event = [{ name: 'Bridge Domain 1' }, { name: 'Bridge Domain 2' }] as any;
-      const modalDto = new YesNoModalDto('Import Bridge Domain', `Are you sure you would like to import ${event.length} Bridge Domains?`);
+      const modalDto = new YesNoModalDto(
+        'Import Bridge Domains',
+        `Are you sure you would like to import ${event.length} Bridge Domain${event.length > 1 ? 's' : ''}?`,
+      );
       const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
 
       component.importBridgeDomains(event);
@@ -114,32 +117,49 @@ describe('BridgeDomainComponent', () => {
   });
 
   it('should delete bridge domain', () => {
-    const bridgeDomainToDelete = { id: '123', description: 'Bye!' } as BridgeDomain;
-    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    const bridgeDomainToDelete = { id: '123', name: 'Test Bridge Domain', description: 'Bye!' } as BridgeDomain;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
+    jest.spyOn(component['bridgeDomainService'], 'softDeleteOneBridgeDomain').mockReturnValue(of({} as any));
+    jest.spyOn(component as any, 'refreshBridgeDomains');
+
     component.deleteBridgeDomain(bridgeDomainToDelete);
-    const getBridgeDomainSpy = jest.spyOn(component['bridgeDomainService'], 'getManyBridgeDomain');
+
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getBridgeDomainSpy).toHaveBeenCalled();
+    expect(component['bridgeDomainService'].softDeleteOneBridgeDomain).toHaveBeenCalledWith({ id: '123' });
   });
 
   it('should restore bridge domain', () => {
-    const bridgeDomain = { id: '1', deletedAt: true } as any;
+    const bridgeDomain = { id: '1', name: 'Test Bridge Domain', deletedAt: true } as any;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
     jest.spyOn(component['bridgeDomainService'], 'restoreOneBridgeDomain').mockReturnValue(of({} as any));
-    jest.spyOn(component, 'getBridgeDomains');
+    jest.spyOn(component as any, 'refreshBridgeDomains');
+
     component.restoreBridgeDomain(bridgeDomain);
-    expect(component['bridgeDomainService'].restoreOneBridgeDomain).toHaveBeenCalledWith({ id: bridgeDomain.id });
-    expect(component.getBridgeDomains).toHaveBeenCalled();
+
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+    expect(component['bridgeDomainService'].restoreOneBridgeDomain).toHaveBeenCalledWith({ id: '1' });
   });
 
   it('should apply search params when filtered results is true', () => {
-    const bridgeDomain = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['bridgeDomainService'], 'restoreOneBridgeDomain').mockReturnValue(of({} as any));
-
+    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
     const getBridgeDomainSpy = jest.spyOn(component, 'getBridgeDomains');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
-    component.restoreBridgeDomain(bridgeDomain);
+    // Test refreshBridgeDomains helper method
+    component['refreshBridgeDomains']();
 
     expect(getBridgeDomainSpy).toHaveBeenCalledWith(params);
   });

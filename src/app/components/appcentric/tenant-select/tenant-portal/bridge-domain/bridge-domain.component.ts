@@ -127,38 +127,49 @@ export class BridgeDomainComponent implements OnInit {
       );
   }
 
-  public deleteBridgeDomain(bridgeDomain: BridgeDomain): void {
-    if (bridgeDomain.deletedAt) {
-      this.bridgeDomainService.deleteOneBridgeDomain({ id: bridgeDomain.id }).subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+  private showConfirmationModal(title: string, message: string, onConfirm: () => void): void {
+    const modalDto = new YesNoModalDto(title, message);
 
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getBridgeDomains(params);
-        } else {
-          this.getBridgeDomains();
-        }
-      });
+    const onConfirmWrapper = () => {
+      onConfirm();
+    };
+
+    const onClose = () => {
+      this.refreshBridgeDomains();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirmWrapper, onClose);
+  }
+
+  private refreshBridgeDomains(): void {
+    const params = this.tableContextService.getSearchLocalStorage();
+    const { filteredResults } = params;
+
+    if (filteredResults) {
+      this.getBridgeDomains(params);
     } else {
-      this.bridgeDomainService
-        .softDeleteOneBridgeDomain({
-          id: bridgeDomain.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-
-          // if filtered results boolean is true, apply search params in the
-          // subsequent get call
-          if (filteredResults) {
-            this.getBridgeDomains(params);
-          } else {
-            this.getBridgeDomains();
-          }
-        });
+      this.getBridgeDomains();
     }
+  }
+
+  public deleteBridgeDomain(bridgeDomain: BridgeDomain): void {
+    const isHardDelete = bridgeDomain.deletedAt;
+    const title = isHardDelete ? 'Delete Bridge Domain' : 'Soft Delete Bridge Domain';
+    const message = isHardDelete
+      ? `Are you sure you want to delete ${bridgeDomain.name}? This cannot be undone.`
+      : `Are you sure you want to soft delete ${bridgeDomain.name}? This can be undone.`;
+
+    const onConfirm = () => {
+      const deleteMethod = isHardDelete
+        ? this.bridgeDomainService.deleteOneBridgeDomain({ id: bridgeDomain.id })
+        : this.bridgeDomainService.softDeleteOneBridgeDomain({ id: bridgeDomain.id });
+
+      deleteMethod.subscribe(() => {
+        this.refreshBridgeDomains();
+      });
+    };
+
+    this.showConfirmationModal(title, message, onConfirm);
   }
 
   public restoreBridgeDomain(bridgeDomain: BridgeDomain): void {
@@ -166,22 +177,23 @@ export class BridgeDomainComponent implements OnInit {
       return;
     }
 
-    this.bridgeDomainService
-      .restoreOneBridgeDomain({
-        id: bridgeDomain.id,
-      })
-      .subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getBridgeDomains(params);
-        } else {
-          this.getBridgeDomains();
-        }
+    const onConfirm = () => {
+      this.bridgeDomainService.restoreOneBridgeDomain({ id: bridgeDomain.id }).subscribe(() => {
+        this.refreshBridgeDomains();
       });
+    };
+
+    this.showConfirmationModal('Restore Bridge Domain', `Are you sure you want to restore ${bridgeDomain.name}?`, onConfirm);
+  }
+
+  public deprovisionBridgeDomain(bridgeDomain: BridgeDomain): void {
+    const onConfirm = () => {
+      this.bridgeDomainService.deprovisionOneBridgeDomain({ id: bridgeDomain.id }).subscribe(() => {
+        this.refreshBridgeDomains();
+      });
+    };
+
+    this.showConfirmationModal('Deprovision Bridge Domain', `Are you sure you would like to deprovision ${bridgeDomain.name}?`, onConfirm);
   }
 
   public openBridgeDomainModal(modalMode: ModalMode, bridgeDomain?: BridgeDomain): void {
@@ -276,27 +288,22 @@ export class BridgeDomainComponent implements OnInit {
   };
 
   public importBridgeDomains(event): void {
-    const modalDto = new YesNoModalDto(
-      'Import Bridge Domain',
-      `Are you sure you would like to import ${event.length} Bridge Domain${event.length > 1 ? 's' : ''}?`,
-    );
-
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.bridgeDomainService.createManyBridgeDomain({ createManyBridgeDomainDto: { bulk: dto } }).subscribe(
         () => {},
         () => {},
         () => {
-          this.getBridgeDomains();
+          this.refreshBridgeDomains();
         },
       );
     };
 
-    const onClose = () => {
-      this.getBridgeDomains();
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+    this.showConfirmationModal(
+      'Import Bridge Domains',
+      `Are you sure you would like to import ${event.length} Bridge Domain${event.length > 1 ? 's' : ''}?`,
+      onConfirm,
+    );
   }
 
   public getVrfs(event?): void {

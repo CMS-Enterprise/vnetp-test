@@ -45,10 +45,19 @@
     ></app-icon-button>
 
     <app-icon-button
+      *ngIf="!routeProfile?.provisionedAt"
       icon="delete"
       label="Soft-Delete/Delete Route Profile"
       [type]="routeProfile?.deletedAt ? 'danger' : 'default'"
       (handleClick)="deleteRouteProfile(routeProfile)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="routeProfile?.provisionedAt"
+      icon="download"
+      label="Deprovision Route Profile"
+      type="danger"
+      (handleClick)="deprovisionRouteProfile(routeProfile)"
     ></app-icon-button>
   </section>
 </ng-template>

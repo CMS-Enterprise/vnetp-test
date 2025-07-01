@@ -9,14 +9,18 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { JustDiffOutput } from './justDiffOutput';
 
 
 export interface AuditLog { 
     id: string;
     actionType: AuditLogActionTypeEnum;
     entityType: AuditLogEntityTypeEnum;
+    entityId?: string;
+    entityName?: string;
     entityBefore?: object;
     entityAfter?: object;
+    readonly diff?: Array<JustDiffOutput>;
     changedProperties?: Array<string>;
     readonly timestamp: string;
     changedBy: string;

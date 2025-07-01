@@ -1,0 +1,235 @@
+<ngx-smart-modal
+  #workflowViewModal
+  identifier="workflowViewModal"
+  [dismissable]="false"
+  customClass="modal-dialog xxlarge-modal"
+  (onOpen)="getData()"
+  (onClose)="reset()"
+>
+  <div class="modal-header">
+    <h5 class="modal-title" *ngIf="workflow">Workflow: {{ workflow.name }}</h5>
+  </div>
+  <div class="modal-body" *ngIf="workflow">
+    <mat-tab-group animationDuration="0ms">
+      <mat-tab label="Summary">
+        <ng-template matTabContent>
+          <div class="pt-3">
+            <p><strong>ID:</strong> {{ workflow.id }}</p>
+            <p>
+              <strong>Status:</strong> <mat-chip>{{ workflow.status }}</mat-chip>
+            </p>
+            <p><strong>Terraform Module:</strong> {{ workflow.terraformModule }}</p>
+            <p><strong>Approval Type:</strong> {{ workflow.approvalType }}</p>
+            <p><strong>Created At:</strong> {{ workflow.createdAt | date : 'medium' }}</p>
+            <p><strong>Updated At:</strong> {{ workflow.updatedAt | date : 'medium' }}</p>
+            <p *ngIf="workflow.finishedAt"><strong>Finished At:</strong> {{ workflow.finishedAt | date : 'medium' }}</p>
+          </div>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Global Validation Errors" *ngIf="workflow.validationResult?.globalErrors?.length > 0">
+        <ng-template matTabContent>
+          <div class="pt-3">
+            <mat-card *ngFor="let error of workflow.validationResult.globalErrors">
+              <mat-card-header>
+                <mat-card-title>{{ error.type }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <p>Message:</p>
+                <p>{{ error.message }}</p>
+                <p>Context:</p>
+                <pre class="context-object">{{ error.context | json }}</pre>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Audit Log Results" *ngIf="workflow.validationResult?.auditLogResults?.length > 0">
+        <ng-template matTabContent>
+          <div class="pt-3">
+            <mat-accordion>
+              <mat-expansion-panel *ngFor="let item of workflow.validationResult.auditLogResults">
+                <mat-expansion-panel-header>
+                  <mat-panel-title> {{ item.mergedAuditLog.entityType }}: {{ item.mergedAuditLog.entityName }} </mat-panel-title>
+                  <mat-panel-description>
+                    <span
+                      >Status: <mat-chip [class]="'status-' + item.processingStatus">{{ item.processingStatus }}</mat-chip></span
+                    >
+                    <span *ngIf="item.mergedAuditLog.expectedTerraformAction" class="ml-2"
+                      >Expected Action: <mat-chip>{{ item.mergedAuditLog.expectedTerraformAction }}</mat-chip></span
+                    >
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div *ngIf="item.statusReason" class="mb-3"><strong>Status Reason:</strong> {{ item.statusReason }}</div>
+
+                <div *ngIf="item.validationErrors?.length > 0" class="mb-3">
+                  <h6>Validation Errors</h6>
+                  <mat-card *ngFor="let error of item.validationErrors" class="mb-2">
+                    <mat-card-header>
+                      <mat-card-title>{{ error.type }}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                      <p>{{ error.message }}</p>
+                      <pre *ngIf="error.context" class="context-object">{{ error.context | json }}</pre>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+
+                <div *ngIf="item.terraformResourceChanges?.length > 0">
+                  <h6>Terraform Resource Changes</h6>
+                  <table mat-table [dataSource]="item.terraformResourceChanges" class="mat-elevation-z2 terraform-changes-table">
+                    <ng-container matColumnDef="actions" class="mat-column-actions">
+                      <th mat-header-cell *matHeaderCellDef>Actions</th>
+                      <td mat-cell *matCellDef="let element">
+                        <mat-chip>{{ element.actions }}</mat-chip>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="address" class="mat-column-address">
+                      <th mat-header-cell *matHeaderCellDef>Address</th>
+                      <td mat-cell *matCellDef="let element">{{ element.address }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="type" class="mat-column-type">
+                      <th mat-header-cell *matHeaderCellDef>Type</th>
+                      <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name" class="mat-column-name">
+                      <th mat-header-cell *matHeaderCellDef>Name</th>
+                      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="diff" class="mat-column-diff">
+                      <th mat-header-cell *matHeaderCellDef>Property Diff</th>
+                      <td mat-cell *matCellDef="let element">
+                        <pre>{{ element.diff | json }}</pre>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                  </table>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Unmatched Terraform Changes" *ngIf="workflow.validationResult?.unmatchedTerraformChanges?.length > 0">
+        <ng-template matTabContent>
+          <div class="pt-3">
+            <div class="alert alert-warning mb-3">
+              <strong>Notice:</strong> These terraform changes could not be matched to any audit log but are not resource_drift. This
+              indicates missing audit log entries or validation rule issues.
+            </div>
+            <table
+              mat-table
+              [dataSource]="workflow.validationResult.unmatchedTerraformChanges"
+              class="mat-elevation-z2 terraform-changes-table"
+            >
+              <ng-container matColumnDef="actions" class="mat-column-actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-chip>{{ element.actions }}</mat-chip>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="address" class="mat-column-address">
+                <th mat-header-cell *matHeaderCellDef>Address</th>
+                <td mat-cell *matCellDef="let element">{{ element.address }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="type" class="mat-column-type">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="name" class="mat-column-name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="diff" class="mat-column-diff">
+                <th mat-header-cell *matHeaderCellDef>Property Diff</th>
+                <td mat-cell *matCellDef="let element">
+                  <pre>{{ element.diff | json }}</pre>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Events" *ngIf="workflow.events?.length > 0">
+        <ng-template matTabContent>
+          <div class="pt-3">
+            <div class="timeline">
+              <div class="timeline-item" *ngFor="let event of workflow.events; trackBy: trackByEventId">
+                <div class="timeline-content">
+                  <div class="timeline-header">
+                    <strong>{{ event.status | titlecase }}</strong>
+                    <small class="text-muted ml-2">{{ event.timestamp | date : 'medium' }}</small>
+                  </div>
+                  <div class="timeline-body">
+                    <p><strong>User:</strong> {{ event.user }}</p>
+                    <p><strong>Event ID:</strong> {{ event.id }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Terraform Plan">
+        <ng-template matTabContent>
+          <div class="pt-3">
+            <button type="button" class="btn btn-outline-primary mb-3" (click)="toggleTerraformPlan()">
+              {{ showTerraformPlan ? 'Hide Plan' : 'Show Plan' }}
+            </button>
+            <div *ngIf="showTerraformPlan">
+              <pre><code [innerHTML]="planJson"></code></pre>
+            </div>
+          </div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  <div class="modal-footer">
+    <button
+      *ngIf="workflow?.approvalType === 'manual' && workflow?.status === 'valid_awaiting_manual_approval'"
+      type="button"
+      class="btn btn-success mr-2"
+      (click)="approveWorkflow()"
+    >
+      Approve Workflow
+    </button>
+    <button
+      *ngIf="workflow?.approvalType === 'manual' && workflow?.status === 'valid_awaiting_manual_approval'"
+      type="button"
+      class="btn btn-danger mr-2"
+      (click)="disapproveWorkflow()"
+    >
+      Disapprove Workflow
+    </button>
+    <button *ngIf="workflow?.status === 'invalid_applyable'" type="button" class="btn btn-warning mr-2" (click)="approveWorkflow()">
+      Approve Workflow (Override)
+    </button>
+    <button
+      *ngIf="workflow?.approvalType === 'manual' && workflow?.status === 'approved'"
+      type="button"
+      class="btn btn-primary mr-2"
+      (click)="applyWorkflow()"
+    >
+      Apply Workflow Plan
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="workflowViewModal.close()">Close</button>
+  </div>
+</ngx-smart-modal>

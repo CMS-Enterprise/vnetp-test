@@ -106,38 +106,49 @@ export class FilterComponent implements OnInit {
       );
   }
 
-  public deleteFilter(filter: Filter): void {
-    if (filter.deletedAt) {
-      this.filterService.deleteOneFilter({ id: filter.id }).subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+  private showConfirmationModal(title: string, message: string, onConfirm: () => void): void {
+    const modalDto = new YesNoModalDto(title, message);
 
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getFilters(params);
-        } else {
-          this.getFilters();
-        }
-      });
+    const onConfirmWrapper = () => {
+      onConfirm();
+    };
+
+    const onClose = () => {
+      this.refreshFilters();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirmWrapper, onClose);
+  }
+
+  private refreshFilters(): void {
+    const params = this.tableContextService.getSearchLocalStorage();
+    const { filteredResults } = params;
+
+    if (filteredResults) {
+      this.getFilters(params);
     } else {
-      this.filterService
-        .softDeleteOneFilter({
-          id: filter.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-
-          // if filtered results boolean is true, apply search params in the
-          // subsequent get call
-          if (filteredResults) {
-            this.getFilters(params);
-          } else {
-            this.getFilters();
-          }
-        });
+      this.getFilters();
     }
+  }
+
+  public deleteFilter(filter: Filter): void {
+    const isHardDelete = filter.deletedAt;
+    const title = isHardDelete ? 'Delete Filter' : 'Soft Delete Filter';
+    const message = isHardDelete
+      ? `Are you sure you want to delete ${filter.name}? This cannot be undone.`
+      : `Are you sure you want to soft delete ${filter.name}? This can be undone.`;
+
+    const onConfirm = () => {
+      const deleteMethod = isHardDelete
+        ? this.filterService.deleteOneFilter({ id: filter.id })
+        : this.filterService.softDeleteOneFilter({ id: filter.id });
+
+      deleteMethod.subscribe(() => {
+        this.refreshFilters();
+      });
+    };
+
+    this.showConfirmationModal(title, message, onConfirm);
   }
 
   public restoreFilter(filter: Filter): void {
@@ -145,22 +156,23 @@ export class FilterComponent implements OnInit {
       return;
     }
 
-    this.filterService
-      .restoreOneFilter({
-        id: filter.id,
-      })
-      .subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getFilters(params);
-        } else {
-          this.getFilters();
-        }
+    const onConfirm = () => {
+      this.filterService.restoreOneFilter({ id: filter.id }).subscribe(() => {
+        this.refreshFilters();
       });
+    };
+
+    this.showConfirmationModal('Restore Filter', `Are you sure you want to restore ${filter.name}?`, onConfirm);
+  }
+
+  public deprovisionFilter(filter: Filter): void {
+    const onConfirm = () => {
+      this.filterService.deprovisionOneFilter({ id: filter.id }).subscribe(() => {
+        this.refreshFilters();
+      });
+    };
+
+    this.showConfirmationModal('Deprovision Filter', `Are you sure you would like to deprovision ${filter.name}?`, onConfirm);
   }
 
   public openFilterModal(modalMode: ModalMode, filter?: Filter): void {
@@ -222,25 +234,21 @@ export class FilterComponent implements OnInit {
   };
 
   public importFilters(event): void {
-    const modalDto = new YesNoModalDto(
-      'Import Filters',
-      `Are you sure you would like to import ${event.length} Filter${event.length > 1 ? 's' : ''}?`,
-    );
-
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.filterService.createManyFilter({ createManyFilterDto: { bulk: dto } }).subscribe(
         () => {},
         () => {},
         () => {
-          this.getFilters();
+          this.refreshFilters();
         },
       );
     };
-    const onClose = () => {
-      this.getFilters();
-    };
 
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+    this.showConfirmationModal(
+      'Import Filters',
+      `Are you sure you would like to import ${event.length} Filter${event.length > 1 ? 's' : ''}?`,
+      onConfirm,
+    );
   }
 }

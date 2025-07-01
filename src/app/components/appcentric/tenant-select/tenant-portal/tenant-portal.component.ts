@@ -46,6 +46,12 @@ const tabs: Tab[] = [
     id: 'tv2-endpoint-connectivity-utility',
     route: ['endpoint-connectivity-utility'],
   },
+  {
+    name: 'Workflows',
+    tooltip: 'This tab allows you to create and manage workflows for your tenant.',
+    id: 'tv2-workflows',
+    route: ['workflows'],
+  },
 ];
 
 @Component({

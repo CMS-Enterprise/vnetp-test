@@ -45,10 +45,19 @@
     ></app-icon-button>
 
     <app-icon-button
+      *ngIf="!contract?.provisionedAt"
       icon="delete"
       label="Soft-Delete/Delete Contract"
       [type]="contract?.deletedAt ? 'danger' : 'default'"
       (handleClick)="deleteContract(contract)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="contract?.provisionedAt"
+      icon="download"
+      label="Deprovision Contract"
+      type="danger"
+      (handleClick)="deprovisionContract(contract)"
     ></app-icon-button>
   </section>
 </ng-template>

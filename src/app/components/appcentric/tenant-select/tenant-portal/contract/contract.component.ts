@@ -107,38 +107,49 @@ export class ContractComponent implements OnInit {
       );
   }
 
-  public deleteContract(contract: Contract): void {
-    if (contract.deletedAt) {
-      this.contractService.deleteOneContract({ id: contract.id }).subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+  private showConfirmationModal(title: string, message: string, onConfirm: () => void): void {
+    const modalDto = new YesNoModalDto(title, message);
 
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getContracts(params);
-        } else {
-          this.getContracts();
-        }
-      });
+    const onConfirmWrapper = () => {
+      onConfirm();
+    };
+
+    const onClose = () => {
+      this.refreshContracts();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirmWrapper, onClose);
+  }
+
+  private refreshContracts(): void {
+    const params = this.tableContextService.getSearchLocalStorage();
+    const { filteredResults } = params;
+
+    if (filteredResults) {
+      this.getContracts(params);
     } else {
-      this.contractService
-        .softDeleteOneContract({
-          id: contract.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-
-          // if filtered results boolean is true, apply search params in the
-          // subsequent get call
-          if (filteredResults) {
-            this.getContracts(params);
-          } else {
-            this.getContracts();
-          }
-        });
+      this.getContracts();
     }
+  }
+
+  public deleteContract(contract: Contract): void {
+    const isHardDelete = contract.deletedAt;
+    const title = isHardDelete ? 'Delete Contract' : 'Soft Delete Contract';
+    const message = isHardDelete
+      ? `Are you sure you want to delete ${contract.name}? This cannot be undone.`
+      : `Are you sure you want to soft delete ${contract.name}? This can be undone.`;
+
+    const onConfirm = () => {
+      const deleteMethod = isHardDelete
+        ? this.contractService.deleteOneContract({ id: contract.id })
+        : this.contractService.softDeleteOneContract({ id: contract.id });
+
+      deleteMethod.subscribe(() => {
+        this.refreshContracts();
+      });
+    };
+
+    this.showConfirmationModal(title, message, onConfirm);
   }
 
   public restoreContract(contract: Contract): void {
@@ -146,22 +157,23 @@ export class ContractComponent implements OnInit {
       return;
     }
 
-    this.contractService
-      .restoreOneContract({
-        id: contract.id,
-      })
-      .subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        // if filtered results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getContracts(params);
-        } else {
-          this.getContracts();
-        }
+    const onConfirm = () => {
+      this.contractService.restoreOneContract({ id: contract.id }).subscribe(() => {
+        this.refreshContracts();
       });
+    };
+
+    this.showConfirmationModal('Restore Contract', `Are you sure you want to restore ${contract.name}?`, onConfirm);
+  }
+
+  public deprovisionContract(contract: Contract): void {
+    const onConfirm = () => {
+      this.contractService.deprovisionOneContract({ id: contract.id }).subscribe(() => {
+        this.refreshContracts();
+      });
+    };
+
+    this.showConfirmationModal('Deprovision Contract', `Are you sure you would like to deprovision ${contract.name}?`, onConfirm);
   }
 
   public openContractModal(modalMode: ModalMode, contract?: Contract): void {
@@ -223,24 +235,21 @@ export class ContractComponent implements OnInit {
   };
 
   public importContracts(event): void {
-    const modalDto = new YesNoModalDto(
-      'Import Contracts',
-      `Are you sure you would like to import ${event.length} Contract${event.length > 1 ? 's' : ''}?`,
-    );
-
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.contractService.createManyContract({ createManyContractDto: { bulk: dto } }).subscribe(
         () => {},
         () => {},
         () => {
-          this.getContracts();
+          this.refreshContracts();
         },
       );
     };
-    const onClose = () => {
-      this.getContracts();
-    };
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+
+    this.showConfirmationModal(
+      'Import Contracts',
+      `Are you sure you would like to import ${event.length} Contract${event.length > 1 ? 's' : ''}?`,
+      onConfirm,
+    );
   }
 }

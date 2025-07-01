@@ -148,6 +148,19 @@ export class FilterModalComponent implements OnInit {
       );
   }
 
+  public deprovisionFilterEntry(filterEntry: FilterEntry): void {
+    const modalDto = new YesNoModalDto(
+      'Deprovision Filter Entry',
+      `Are you sure you want to deprovision this filter entry ${filterEntry.name}?`,
+    );
+    const onConfirm = () => {
+      this.filterEntriesService.deprovisionOneFilterEntry({ id: filterEntry.id }).subscribe(() => {
+        this.getFilterEntries();
+      });
+    };
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
+  }
+
   public removeFilterEntry(filterEntry: FilterEntry) {
     if (filterEntry.deletedAt) {
       const modalDto = new YesNoModalDto(

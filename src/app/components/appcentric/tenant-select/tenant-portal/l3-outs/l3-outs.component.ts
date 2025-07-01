@@ -110,38 +110,49 @@ export class L3OutsComponent implements OnInit {
       );
   }
 
-  public deleteL3Out(l3Out: L3Out): void {
-    if (l3Out.deletedAt) {
-      this.l3OutService.deleteOneL3Out({ id: l3Out.id }).subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
+  private showConfirmationModal(title: string, message: string, onConfirm: () => void): void {
+    const modalDto = new YesNoModalDto(title, message);
 
-        // if l3Outed results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getL3Outs(params);
-        } else {
-          this.getL3Outs();
-        }
-      });
+    const onConfirmWrapper = () => {
+      onConfirm();
+    };
+
+    const onClose = () => {
+      this.refreshL3Outs();
+    };
+
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirmWrapper, onClose);
+  }
+
+  private refreshL3Outs(): void {
+    const params = this.tableContextService.getSearchLocalStorage();
+    const { filteredResults } = params;
+
+    if (filteredResults) {
+      this.getL3Outs(params);
     } else {
-      this.l3OutService
-        .softDeleteOneL3Out({
-          id: l3Out.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
-
-          // if l3Outed results boolean is true, apply search params in the
-          // subsequent get call
-          if (filteredResults) {
-            this.getL3Outs(params);
-          } else {
-            this.getL3Outs();
-          }
-        });
+      this.getL3Outs();
     }
+  }
+
+  public deleteL3Out(l3Out: L3Out): void {
+    const isHardDelete = l3Out.deletedAt;
+    const title = isHardDelete ? 'Delete L3Out' : 'Soft Delete L3Out';
+    const message = isHardDelete
+      ? `Are you sure you want to delete ${l3Out.name}? This cannot be undone.`
+      : `Are you sure you want to soft delete ${l3Out.name}? This can be undone.`;
+
+    const onConfirm = () => {
+      const deleteMethod = isHardDelete
+        ? this.l3OutService.deleteOneL3Out({ id: l3Out.id })
+        : this.l3OutService.softDeleteOneL3Out({ id: l3Out.id });
+
+      deleteMethod.subscribe(() => {
+        this.refreshL3Outs();
+      });
+    };
+
+    this.showConfirmationModal(title, message, onConfirm);
   }
 
   public restoreL3Out(l3Out: L3Out): void {
@@ -149,22 +160,23 @@ export class L3OutsComponent implements OnInit {
       return;
     }
 
-    this.l3OutService
-      .restoreOneL3Out({
-        id: l3Out.id,
-      })
-      .subscribe(() => {
-        const params = this.tableContextService.getSearchLocalStorage();
-        const { filteredResults } = params;
-
-        // if l3Outed results boolean is true, apply search params in the
-        // subsequent get call
-        if (filteredResults) {
-          this.getL3Outs(params);
-        } else {
-          this.getL3Outs();
-        }
+    const onConfirm = () => {
+      this.l3OutService.restoreOneL3Out({ id: l3Out.id }).subscribe(() => {
+        this.refreshL3Outs();
       });
+    };
+
+    this.showConfirmationModal('Restore L3Out', `Are you sure you want to restore ${l3Out.name}?`, onConfirm);
+  }
+
+  public deprovisionL3Out(l3Out: L3Out): void {
+    const onConfirm = () => {
+      this.l3OutService.deprovisionOneL3Out({ id: l3Out.id }).subscribe(() => {
+        this.refreshL3Outs();
+      });
+    };
+
+    this.showConfirmationModal('Deprovision L3Out', `Are you sure you would like to deprovision ${l3Out.name}?`, onConfirm);
   }
 
   public openL3OutsModal(modalMode: ModalMode, l3Out?: L3Out): void {
@@ -236,28 +248,23 @@ export class L3OutsComponent implements OnInit {
   };
 
   public importL3Outs(event): void {
-    const modalDto = new YesNoModalDto(
-      'Import L3Outs',
-      `Are you sure you would like to import ${event.length} L3 Out${event.length > 1 ? 's' : ''}?`,
-    );
-
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       this.l3OutService.createManyL3Out({ createManyL3OutDto: { bulk: dto } }).subscribe(
         () => {},
         () => {},
         () => {
-          this.getL3Outs();
+          this.refreshL3Outs();
+          this.getVrfs();
         },
       );
     };
 
-    const onClose = () => {
-      this.getL3Outs();
-      this.getVrfs();
-    };
-
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+    this.showConfirmationModal(
+      'Import L3Outs',
+      `Are you sure you would like to import ${event.length} L3 Out${event.length > 1 ? 's' : ''}?`,
+      onConfirm,
+    );
   }
 
   public getVrfs(event?): void {

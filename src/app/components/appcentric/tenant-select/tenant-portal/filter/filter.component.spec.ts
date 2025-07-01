@@ -110,32 +110,49 @@ describe('FilterComponent', () => {
   });
 
   it('should delete filter', () => {
-    const filterToDelete = { id: '123', description: 'Bye!' } as Filter;
-    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+    const filterToDelete = { id: '123', name: 'Test Filter', description: 'Bye!' } as any;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
+    jest.spyOn(component['filterService'], 'softDeleteOneFilter').mockReturnValue(of({} as any));
+    jest.spyOn(component as any, 'refreshFilters');
+
     component.deleteFilter(filterToDelete);
-    const getFiltersMock = jest.spyOn(component['filterService'], 'getManyFilter');
+
     expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getFiltersMock).toHaveBeenCalled();
+    expect(component['filterService'].softDeleteOneFilter).toHaveBeenCalledWith({ id: '123' });
   });
 
   it('should restore filter', () => {
-    const filter = { id: '1', deletedAt: true } as any;
+    const filter = { id: '1', name: 'Test Filter', deletedAt: true } as any;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
     jest.spyOn(component['filterService'], 'restoreOneFilter').mockReturnValue(of({} as any));
-    jest.spyOn(component, 'getFilters');
+    jest.spyOn(component as any, 'refreshFilters');
+
     component.restoreFilter(filter);
-    expect(component['filterService'].restoreOneFilter).toHaveBeenCalledWith({ id: filter.id });
-    expect(component.getFilters).toHaveBeenCalled();
+
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+    expect(component['filterService'].restoreOneFilter).toHaveBeenCalledWith({ id: '1' });
   });
 
-  it('should routely search params when filtered results is true', () => {
-    const filter = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['filterService'], 'restoreOneFilter').mockReturnValue(of({} as any));
-
+  it('should apply search params when filtered results is true', () => {
     const getFiltersMock = jest.spyOn(component, 'getFilters');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
-    component.restoreFilter(filter);
+    // Test refreshFilters helper method
+    component['refreshFilters']();
+
     expect(getFiltersMock).toHaveBeenCalledWith(params);
   });
 

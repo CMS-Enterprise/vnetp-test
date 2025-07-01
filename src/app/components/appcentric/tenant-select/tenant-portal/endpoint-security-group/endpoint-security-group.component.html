@@ -41,6 +41,7 @@
     ></app-icon-button>
 
     <app-icon-button
+      *ngIf="!endpointSecurityGroup?.provisionedAt"
       icon="delete"
       label="Soft-Delete/Delete EndpointSecurity Group"
       [type]="endpointSecurityGroup?.deletedAt ? 'danger' : 'default'"
@@ -53,6 +54,14 @@
       label="Restore EndpointSecurity Group"
       type="success"
       (handleClick)="restoreEndpointSecurityGroup(endpointSecurityGroup)"
+    ></app-icon-button>
+
+    <app-icon-button
+      *ngIf="endpointSecurityGroup?.provisionedAt"
+      icon="download"
+      label="Deprovision Endpoint Security Group"
+      type="danger"
+      (handleClick)="deprovisionEndpointSecurityGroup(endpointSecurityGroup)"
     ></app-icon-button>
   </section>
 </ng-template>

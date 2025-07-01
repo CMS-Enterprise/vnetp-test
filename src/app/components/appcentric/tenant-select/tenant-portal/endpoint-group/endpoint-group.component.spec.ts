@@ -107,30 +107,49 @@ describe('EndpointGroupComponent', () => {
   });
 
   it('should delete endpoint group', () => {
-    const endpointGroupToDelete = { id: '123', description: 'Bye!' } as EndpointGroup;
+    const endpointGroupToDelete = { id: '123', name: 'Test EPG', description: 'Bye!' } as EndpointGroup;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
+    jest.spyOn(component['endpointGroupService'], 'softDeleteOneEndpointGroup').mockReturnValue(of({} as any));
+    jest.spyOn(component as any, 'refreshEndpointGroups');
+
     component.deleteEndpointGroup(endpointGroupToDelete);
-    const getEndpointGroupsMock = jest.spyOn(component['endpointGroupService'], 'getManyEndpointGroup');
-    expect(getEndpointGroupsMock).toHaveBeenCalled();
+
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
+    expect(component['endpointGroupService'].softDeleteOneEndpointGroup).toHaveBeenCalledWith({ id: '123' });
   });
 
   it('should restore endpoint group', () => {
-    const endpointGroup = { id: '1', deletedAt: true } as any;
+    const endpointGroup = { id: '1', name: 'Test EPG', deletedAt: true } as any;
+    const subscribeToYesNoModalSpy = jest
+      .spyOn(SubscriptionUtil, 'subscribeToYesNoModal')
+      .mockImplementation((modalDto, ngx, onConfirm, onClose) => {
+        // Just call onConfirm immediately for testing
+        onConfirm();
+        return new Subscription();
+      });
     jest.spyOn(component['endpointGroupService'], 'restoreOneEndpointGroup').mockReturnValue(of({} as any));
-    jest.spyOn(component, 'getEndpointGroups');
+    jest.spyOn(component as any, 'refreshEndpointGroups');
+
     component.restoreEndpointGroup(endpointGroup);
+
+    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
     expect(component['endpointGroupService'].restoreOneEndpointGroup).toHaveBeenCalledWith({ id: endpointGroup.id });
-    expect(component.getEndpointGroups).toHaveBeenCalled();
   });
 
   it('should apply search params when filtered results is true', () => {
-    const endpointGroup = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['endpointGroupService'], 'restoreOneEndpointGroup').mockReturnValue(of({} as any));
-
     const getEndpointGroupsSpy = jest.spyOn(component, 'getEndpointGroups');
     const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
     jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
 
-    component.restoreEndpointGroup(endpointGroup);
+    // Test refreshEndpointGroups helper method
+    component['refreshEndpointGroups']();
+
     expect(getEndpointGroupsSpy).toHaveBeenCalledWith(params);
   });
 
