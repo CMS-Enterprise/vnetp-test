@@ -248,13 +248,11 @@ export class ApplicationProfileComponent implements OnInit {
   public importAppProfiles(event): void {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.applicationProfileService.createManyApplicationProfile({ createManyApplicationProfileDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.applicationProfileService.createManyApplicationProfile({ createManyApplicationProfileDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.refreshApplicationProfiles();
         },
-      );
+      });
     };
 
     this.showConfirmationModal(

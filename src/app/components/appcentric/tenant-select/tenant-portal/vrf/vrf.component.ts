@@ -241,13 +241,11 @@ export class VrfComponent implements OnInit {
   public importVrfs(event): void {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.vrfService.createManyVrf({ createManyVrfDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.vrfService.createManyVrf({ createManyVrfDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.refreshVrfs();
         },
-      );
+      });
     };
 
     this.showConfirmationModal(

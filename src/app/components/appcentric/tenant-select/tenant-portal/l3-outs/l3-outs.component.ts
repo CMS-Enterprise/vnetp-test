@@ -250,14 +250,12 @@ export class L3OutsComponent implements OnInit {
   public importL3Outs(event): void {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.l3OutService.createManyL3Out({ createManyL3OutDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.l3OutService.createManyL3Out({ createManyL3OutDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.refreshL3Outs();
           this.getVrfs();
         },
-      );
+      });
     };
 
     this.showConfirmationModal(

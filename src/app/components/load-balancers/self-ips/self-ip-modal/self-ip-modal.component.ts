@@ -113,10 +113,7 @@ export class SelfIpModalComponent implements OnInit {
   }
 
   private createSelfIp(loadBalancerSelfIp: LoadBalancerSelfIp): void {
-    this.selfIpService.createOneLoadBalancerSelfIp({ loadBalancerSelfIp }).subscribe(
-      () => this.closeModal(),
-      () => {},
-    );
+    this.selfIpService.createOneLoadBalancerSelfIp({ loadBalancerSelfIp }).subscribe(() => this.closeModal());
   }
 
   private updateSelfIp(loadBalancerSelfIp: LoadBalancerSelfIp): void {
@@ -126,9 +123,6 @@ export class SelfIpModalComponent implements OnInit {
         id: this.selfIpId,
         loadBalancerSelfIp,
       })
-      .subscribe(
-        () => this.closeModal(),
-        () => {},
-      );
+      .subscribe(() => this.closeModal());
   }
 }

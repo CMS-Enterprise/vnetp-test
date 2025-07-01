@@ -126,12 +126,9 @@ export class SubnetModalComponent implements OnInit {
   private createSubnet(subnet: Subnet): void {
     subnet.tierId = this.TierId;
     subnet.vlanId = this.form.value.vlan;
-    this.subnetService.createOneSubnet({ subnet }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.subnetService.createOneSubnet({ subnet }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private editSubnet(subnet: Subnet): void {
@@ -140,12 +137,9 @@ export class SubnetModalComponent implements OnInit {
     delete subnet.gateway;
     delete subnet.tierId;
     delete subnet.vlanId;
-    this.subnetService.updateOneSubnet({ id: this.SubnetId, subnet }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.subnetService.updateOneSubnet({ id: this.SubnetId, subnet }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private buildForm(): void {

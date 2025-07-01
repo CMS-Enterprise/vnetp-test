@@ -33,7 +33,6 @@ export class TierManagementModalComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: TierManagementModalData) {}
 
   ngOnInit(): void {
-    console.log('TierManagementModalComponent ngOnInit with MAT_DIALOG_DATA:', this.data);
     if (this.data) {
       this.tenantName = this.data.tenantName;
       this.initializeTierStates(this.data.tiers || []);
@@ -43,7 +42,6 @@ export class TierManagementModalComponent implements OnInit {
   }
 
   initializeTierStates(tiers: Tier[]): void {
-    console.log('Initializing tier states', tiers);
     this.allTiers = [...tiers].sort((a, b) => a.name.localeCompare(b.name));
     this.initialTierStates.clear();
     this.currentTierStates.clear();

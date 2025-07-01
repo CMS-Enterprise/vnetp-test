@@ -91,10 +91,7 @@ export class IRuleModalComponent implements OnInit {
   }
 
   private createIRule(loadBalancerIrule: LoadBalancerIrule): void {
-    this.iRuleService.createOneLoadBalancerIrule({ loadBalancerIrule }).subscribe(
-      () => this.closeModal(),
-      () => {},
-    );
+    this.iRuleService.createOneLoadBalancerIrule({ loadBalancerIrule }).subscribe(() => this.closeModal());
   }
 
   private updateIRule(loadBalancerIrule: LoadBalancerIrule): void {
@@ -105,9 +102,6 @@ export class IRuleModalComponent implements OnInit {
         id: this.iRuleId,
         loadBalancerIrule,
       })
-      .subscribe(
-        () => this.closeModal(),
-        () => {},
-      );
+      .subscribe(() => this.closeModal());
   }
 }

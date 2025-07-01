@@ -1,40 +1,120 @@
 /* eslint-disable */
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  MockFontAwesomeComponent,
-  MockTooltipComponent,
-  MockIconButtonComponent,
-  MockTabsComponent,
-  MockComponent,
-  MockNgxSmartModalComponent,
-} from 'src/test/mock-components';
-import { NgxSmartModalService } from 'ngx-smart-modal';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SubnetsVlansComponent } from './subnets-vlans.component';
+import {
+  GetManySubnetResponseDto,
+  GetManyVlanResponseDto,
+  Subnet,
+  Tier,
+  V1NetworkSubnetsService,
+  V1NetworkVlansService,
+  Vlan,
+} from 'client';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
-import { MockProvider } from 'src/test/mock-providers';
+import { BehaviorSubject, of, Subscription, throwError } from 'rxjs';
+import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
 import { ImportExportComponent } from 'src/app/common/import-export/import-export.component';
 import { YesNoModalComponent } from 'src/app/common/yes-no-modal/yes-no-modal.component';
-import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
-import { TierContextService } from 'src/app/services/tier-context.service';
 import { SubnetsVlansHelpText } from 'src/app/helptext/help-text-networking';
-import { V1TiersService, V1NetworkVlansService, V1NetworkSubnetsService } from 'client';
-import { of, Subscription, throwError } from 'rxjs';
-import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
 import { SubnetModalDto } from 'src/app/models/network/subnet-modal-dto';
+import { VlanModalDto } from 'src/app/models/network/vlan-modal-dto';
+import { ResolvePipe } from 'src/app/pipes/resolve.pipe';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { EntityService } from 'src/app/services/entity.service';
+import { TableContextService } from 'src/app/services/table-context.service';
+import { TierContextService } from 'src/app/services/tier-context.service';
+import {
+  MockComponent,
+  MockFontAwesomeComponent,
+  MockIconButtonComponent,
+  MockTabsComponent,
+  MockTooltipComponent,
+} from 'src/test/mock-components';
+import { SubnetsVlansComponent } from './subnets-vlans.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('SubnetsVlansComponent', () => {
   let component: SubnetsVlansComponent;
   let fixture: ComponentFixture<SubnetsVlansComponent>;
 
+  let mockEntityService: Partial<EntityService>;
+  let mockNgxSmartModalService: Partial<NgxSmartModalService>;
+  let mockDatacenterContextService: Partial<DatacenterContextService>;
+  let mockTierContextService: Partial<TierContextService>;
+  let mockVlanService: Partial<V1NetworkVlansService>;
+  let mockSubnetService: Partial<V1NetworkSubnetsService>;
+  let mockTableContextService: Partial<TableContextService>;
+  let mockModal;
+  let datacenterSubject: BehaviorSubject<any>;
+
+  const MOCK_TIER: Tier = { id: 'tier-1', name: 'Test Tier', datacenterId: 'dc-1' };
+  const MOCK_SUBNET: Subnet = {
+    id: 'sub-1',
+    name: 'Test Subnet',
+    network: '1.1.1.0/24',
+    gateway: '1.1.1.1',
+    vlanId: 'vlan-1',
+    tierId: 'tier-1',
+  };
+  const MOCK_VLAN: Vlan = { id: 'vlan-1', name: 'Test VLAN', vlanNumber: 123, tierId: 'tier-1' };
+
   beforeEach(() => {
+    mockModal = {
+      onCloseFinished: of(null),
+      open: jest.fn(),
+      removeData: jest.fn(),
+      getData: jest.fn(),
+    };
+
+    mockEntityService = {
+      deleteEntity: jest.fn(),
+    };
+
+    mockNgxSmartModalService = {
+      getModal: jest.fn().mockReturnValue(mockModal),
+      setModalData: jest.fn(),
+      resetModalData: jest.fn(),
+    };
+
+    datacenterSubject = new BehaviorSubject({ id: 'dc-1', name: 'Test DC', tiers: [MOCK_TIER] });
+    mockDatacenterContextService = {
+      currentDatacenter: datacenterSubject.asObservable(),
+      currentDatacenterValue: { id: 'dc-1' } as any,
+      lockDatacenter: jest.fn(),
+      unlockDatacenter: jest.fn(),
+    };
+
+    mockTierContextService = {
+      currentTier: of(MOCK_TIER),
+    };
+
+    mockVlanService = {
+      getManyVlan: jest.fn().mockReturnValue(of({ data: [MOCK_VLAN], count: 1, total: 1, page: 1, pageCount: 1 })),
+      createManyVlan: jest.fn().mockReturnValue(of(null)),
+      restoreOneVlan: jest.fn().mockReturnValue(of(null)),
+      softDeleteOneVlan: jest.fn().mockReturnValue(of(null)),
+      deleteOneVlan: jest.fn().mockReturnValue(of(null)),
+    };
+
+    mockSubnetService = {
+      getManySubnet: jest.fn().mockReturnValue(of({ data: [MOCK_SUBNET], count: 1, total: 1, page: 1, pageCount: 1 })),
+      bulkImportSubnetsSubnet: jest.fn().mockReturnValue(of(null)),
+      restoreOneSubnet: jest.fn().mockReturnValue(of(null)),
+      softDeleteOneSubnet: jest.fn().mockReturnValue(of(null)),
+      deleteOneSubnet: jest.fn().mockReturnValue(of(null)),
+    };
+
+    mockTableContextService = {
+      getSearchLocalStorage: jest.fn().mockReturnValue({}),
+      removeSearchLocalStorage: jest.fn(),
+    };
+
     TestBed.configureTestingModule({
-      imports: [NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
+      imports: [HttpClientTestingModule, NgxPaginationModule, FormsModule, ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       declarations: [
         ImportExportComponent,
         MockComponent('app-subnet-modal'),
@@ -43,7 +123,6 @@ describe('SubnetsVlansComponent', () => {
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
         MockFontAwesomeComponent,
         MockIconButtonComponent,
-        MockNgxSmartModalComponent,
         MockTabsComponent,
         MockTooltipComponent,
         ResolvePipe,
@@ -51,308 +130,524 @@ describe('SubnetsVlansComponent', () => {
         YesNoModalComponent,
       ],
       providers: [
-        MockProvider(DatacenterContextService),
-        MockProvider(NgxSmartModalService),
-        MockProvider(SubnetsVlansHelpText),
-        MockProvider(TierContextService),
-        MockProvider(V1NetworkSubnetsService),
-        MockProvider(V1NetworkVlansService),
-        MockProvider(V1TiersService),
+        { provide: EntityService, useValue: mockEntityService },
+        { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
+        { provide: DatacenterContextService, useValue: mockDatacenterContextService },
+        { provide: TierContextService, useValue: mockTierContextService },
+        { provide: V1NetworkVlansService, useValue: mockVlanService },
+        { provide: V1NetworkSubnetsService, useValue: mockSubnetService },
+        { provide: TableContextService, useValue: mockTableContextService },
+        SubnetsVlansHelpText, // This seems to be a simple class, can be provided directly
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     });
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(SubnetsVlansComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    TestBed.resetTestingModule();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call getNetworkObjects on table event', () => {
-    jest.spyOn(component, 'getVlans');
+  it('should call getVlans on vlan table event', () => {
+    const getVlansSpy = jest.spyOn(component, 'getVlans');
     component.onVlanTableEvent({} as any);
-    expect(component.getVlans).toHaveBeenCalled();
+    expect(getVlansSpy).toHaveBeenCalled();
   });
 
-  it('should call getNetworkObjectGroups on table event', () => {
-    jest.spyOn(component, 'getSubnets');
+  it('should call getSubnets on subnet table event', () => {
+    const getSubnetsSpy = jest.spyOn(component, 'getSubnets');
     component.onSubnetTableEvent({} as any);
-    expect(component.getSubnets).toHaveBeenCalled();
+    expect(getSubnetsSpy).toHaveBeenCalled();
   });
 
   describe('handleTabChange', () => {
-    it('should handle tab change when tab different', () => {
-      jest.spyOn(component['tableContextService'], 'removeSearchLocalStorage');
-      jest.spyOn(component, 'getObjectsForNavIndex');
-      component.navIndex = 0;
-      component.tabs = [{ name: 'tab1' }, { name: 'tab2' }];
-      component.handleTabChange({ name: 'tab2' });
-      expect(component['tableContextService'].removeSearchLocalStorage).toHaveBeenCalled();
-      expect(component.getObjectsForNavIndex).toHaveBeenCalled();
-      expect(component.navIndex).toEqual(1);
+    it('should change tabs and fetch data', () => {
+      const getObjectsSpy = jest.spyOn(component, 'getObjectsForNavIndex');
+      component.navIndex = 0; // Starts at Subnets
+      component.handleTabChange({ name: 'VLANs' }); // Change to VLANs
+      expect(mockTableContextService.removeSearchLocalStorage).toHaveBeenCalled();
+      expect(component.navIndex).toBe(1);
+      expect(getObjectsSpy).toHaveBeenCalled();
     });
 
-    it('should not handle tab change when tab same', () => {
-      jest.spyOn(component['tableContextService'], 'removeSearchLocalStorage');
-      jest.spyOn(component, 'getObjectsForNavIndex');
+    it('should not do anything if the tab is the same', () => {
+      const getObjectsSpy = jest.spyOn(component, 'getObjectsForNavIndex');
       component.navIndex = 0;
-      component.tabs = [{ name: 'tab1' }, { name: 'tab2' }];
-      component.handleTabChange({ name: 'tab1' });
-      expect(component['tableContextService'].removeSearchLocalStorage).not.toHaveBeenCalled();
-      expect(component.getObjectsForNavIndex).not.toHaveBeenCalled();
-      expect(component.navIndex).toEqual(0);
+      component.handleTabChange({ name: 'Subnets' });
+      expect(mockTableContextService.removeSearchLocalStorage).not.toHaveBeenCalled();
+      expect(getObjectsSpy).not.toHaveBeenCalled();
     });
   });
 
   describe('getVlans', () => {
-    it('should getVlans', () => {
-      jest.spyOn(component['vlanService'], 'getManyVlan').mockReturnValue(of({} as any));
-      component.getVlans({ searchText: 'test', searchColumn: 'name' } as any);
-      expect(component['vlanService'].getManyVlan).toHaveBeenCalled();
+    it('should fetch vlans successfully', () => {
+      component.currentTier = MOCK_TIER;
+      component.getVlans();
+      expect(mockVlanService.getManyVlan).toHaveBeenCalled();
+      expect(component.vlans.data[0]).toEqual(MOCK_VLAN);
     });
 
-    it('should handle error when getVlans fails', () => {
-      jest.spyOn(component['vlanService'], 'getManyVlan').mockReturnValue(throwError('Error'));
-      component.getVlans({ searchText: 'test', searchColumn: 'name' } as any);
-
-      const errorSubscription = component['vlanService']
-        .getManyVlan({
-          filter: [`tierId||eq||${component.currentTier.id}`],
-          page: component.vlanTableComponentDto.page,
-          perPage: component.vlanTableComponentDto.perPage,
-          sort: ['updatedAt,DESC'],
-        })
-        .subscribe(
-          () => {},
-          () => {
-            expect(component.vlans).toEqual([]);
-          },
-          () => {},
-        );
-
-      errorSubscription.unsubscribe();
+    it('should handle API errors gracefully', () => {
+      (mockVlanService.getManyVlan as jest.Mock).mockReturnValue(throwError(() => new Error('API Error')));
+      component.currentTier = MOCK_TIER;
+      component.getVlans();
+      expect(mockVlanService.getManyVlan).toHaveBeenCalled();
+      expect(component.isLoadingVlans).toBe(false);
     });
   });
 
   describe('getSubnets', () => {
-    it('should getSubnets', () => {
-      jest.spyOn(component['subnetService'], 'getManySubnet').mockReturnValue(of({} as any));
-      component.getSubnets({ searchText: 'test', searchColumn: 'name' } as any);
-      expect(component['subnetService'].getManySubnet).toHaveBeenCalled();
+    it('should fetch subnets successfully', () => {
+      component.currentTier = MOCK_TIER;
+      component.getSubnets();
+      expect(mockSubnetService.getManySubnet).toHaveBeenCalled();
+      expect(component.subnets.data[0]).toEqual(MOCK_SUBNET);
     });
 
-    it('should handle error when getSubnets fails', () => {
-      jest.spyOn(component['subnetService'], 'getManySubnet').mockReturnValue(throwError('Error'));
-      component.getSubnets({ searchText: 'test', searchColumn: 'name' } as any);
-
-      const errorSubscription = component['subnetService']
-        .getManySubnet({
-          join: ['vlan'],
-          filter: [`tierId||eq||${component.currentTier.id}`],
-          page: component.subnetTableComponentDto.page,
-          perPage: component.subnetTableComponentDto.perPage,
-          sort: ['updatedAt,DESC'],
-        })
-        .subscribe(
-          () => {},
-          () => {
-            expect(component.subnets).toEqual([]);
-          },
-          () => {},
-        );
-
-      errorSubscription.unsubscribe();
+    it('should handle API errors gracefully', () => {
+      (mockSubnetService.getManySubnet as jest.Mock).mockReturnValue(throwError(() => new Error('API Error')));
+      component.currentTier = MOCK_TIER;
+      component.getSubnets();
+      expect(mockSubnetService.getManySubnet).toHaveBeenCalled();
+      expect(component.isLoadingSubnets).toBe(false);
     });
   });
 
-  it('should delete subnet', () => {
-    const subnetToDelete = { id: '123', description: 'Bye!', vlanId: 'vlanId-123' } as any;
-    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
-    component.deleteSubnet(subnetToDelete);
-    const getSubnetsMock = jest.spyOn(component['subnetService'], 'getManySubnet');
-    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    expect(getSubnetsMock).toHaveBeenCalled();
+  describe('deleteSubnet', () => {
+    it('should call entityService.deleteEntity with correct parameters', () => {
+      component.deleteSubnet(MOCK_SUBNET);
+      expect(mockEntityService.deleteEntity).toHaveBeenCalledWith(MOCK_SUBNET, expect.objectContaining({ entityName: 'Subnet' }));
+    });
+
+    it('should refresh subnets on successful deletion', () => {
+      const getSubnetsSpy = jest.spyOn(component, 'getSubnets');
+      (mockEntityService.deleteEntity as jest.Mock).mockImplementation((entity, config) => {
+        config.onSuccess();
+      });
+      component.deleteSubnet(MOCK_SUBNET);
+      expect(getSubnetsSpy).toHaveBeenCalled();
+    });
+
+    it('should refresh with basic search on successful deletion', () => {
+      const getSubnetsSpy = jest.spyOn(component, 'getSubnets');
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({
+        filteredResults: true,
+        searchString: '',
+        searchColumn: 'name',
+        searchText: 'test-search',
+      });
+      (mockEntityService.deleteEntity as jest.Mock).mockImplementation((entity, config) => {
+        config.onSuccess();
+      });
+
+      component.deleteSubnet(MOCK_SUBNET);
+
+      expect(getSubnetsSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          searchColumn: 'name',
+          searchText: 'test-search',
+        }),
+      );
+    });
+
+    it('should refresh with advanced search on successful deletion', () => {
+      const getSubnetsSpy = jest.spyOn(component, 'getSubnets');
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({
+        filteredResults: true,
+        searchString: 'advanced-search',
+      });
+      (mockEntityService.deleteEntity as jest.Mock).mockImplementation((entity, config) => {
+        config.onSuccess();
+      });
+
+      component.deleteSubnet(MOCK_SUBNET);
+
+      expect(getSubnetsSpy).toHaveBeenCalledWith('advanced-search');
+    });
   });
 
-  it('should restore subnet', () => {
-    const subnetToRestore = { id: '123', description: 'Bye!', vlanId: 'vlanId-123', deletedAt: true } as any;
-    jest.spyOn(component['subnetService'], 'restoreOneSubnet').mockReturnValue(of({} as any));
-    jest.spyOn(component, 'getSubnets');
-    component.restoreSubnet(subnetToRestore);
-    expect(component['subnetService'].restoreOneSubnet).toHaveBeenCalledWith({ id: subnetToRestore.id });
-    expect(component.getSubnets).toHaveBeenCalled();
+  describe('deleteVlan', () => {
+    it('should call entityService.deleteEntity with correct parameters', () => {
+      component.deleteVlan(MOCK_VLAN);
+      expect(mockEntityService.deleteEntity).toHaveBeenCalledWith(MOCK_VLAN, expect.objectContaining({ entityName: 'VLAN' }));
+    });
+
+    it('should refresh vlans on successful deletion', () => {
+      const getVlansSpy = jest.spyOn(component, 'getVlans');
+      (mockEntityService.deleteEntity as jest.Mock).mockImplementation((entity, config) => {
+        config.onSuccess();
+      });
+      component.deleteVlan(MOCK_VLAN);
+      expect(getVlansSpy).toHaveBeenCalled();
+    });
+
+    it('should refresh with basic search on successful deletion', () => {
+      const getVlansSpy = jest.spyOn(component, 'getVlans');
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({
+        filteredResults: true,
+        searchString: '',
+        searchColumn: 'name',
+        searchText: 'test-search',
+      });
+      (mockEntityService.deleteEntity as jest.Mock).mockImplementation((entity, config) => {
+        config.onSuccess();
+      });
+
+      component.deleteVlan(MOCK_VLAN);
+
+      expect(getVlansSpy).toHaveBeenCalledWith(
+        false,
+        expect.objectContaining({
+          searchColumn: 'name',
+          searchText: 'test-search',
+        }),
+      );
+    });
+
+    it('should refresh with advanced search on successful deletion', () => {
+      const getVlansSpy = jest.spyOn(component, 'getVlans');
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({
+        filteredResults: true,
+        searchString: 'advanced-search',
+      });
+      (mockEntityService.deleteEntity as jest.Mock).mockImplementation((entity, config) => {
+        config.onSuccess();
+      });
+
+      component.deleteVlan(MOCK_VLAN);
+
+      expect(getVlansSpy).toHaveBeenCalledWith(false, 'advanced-search');
+    });
   });
 
-  it('should delete vlan', () => {
-    const service = TestBed.inject(V1NetworkVlansService);
-    const vlanToDelete = { id: '123', description: 'Bye!' } as any;
-    const subscribeToYesNoModalSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
-    component.deleteVlan(vlanToDelete);
-    const getVlansMock = jest.spyOn(service, 'getManyVlan');
-    expect(subscribeToYesNoModalSpy).toHaveBeenCalled();
-    // expect(getVlansMock).toHaveBeenCalled();
+  describe('restoreSubnet', () => {
+    it('should do nothing if subnet is not deleted', () => {
+      component.restoreSubnet({ ...MOCK_SUBNET, deletedAt: null });
+      expect(mockSubnetService.restoreOneSubnet).not.toHaveBeenCalled();
+    });
+
+    it('should call restore and refresh the list if subnet is deleted', fakeAsync(() => {
+      const getSubnetsSpy = jest.spyOn(component, 'getSubnets');
+      component.restoreSubnet({ ...MOCK_SUBNET, deletedAt: new Date().toISOString() });
+      tick();
+      expect(mockSubnetService.restoreOneSubnet).toHaveBeenCalledWith({ id: MOCK_SUBNET.id });
+      expect(getSubnetsSpy).toHaveBeenCalled();
+    }));
+
+    it('should restore and refresh with basic search context', fakeAsync(() => {
+      const getSubnetsSpy = jest.spyOn(component, 'getSubnets');
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({
+        filteredResults: true,
+        searchString: '',
+        searchColumn: 'name',
+        searchText: 'test',
+      });
+      component.restoreSubnet({ ...MOCK_SUBNET, deletedAt: new Date().toISOString() });
+      tick();
+      expect(getSubnetsSpy).toHaveBeenCalledWith(expect.objectContaining({ searchColumn: 'name', searchText: 'test' }));
+    }));
+
+    it('should restore and refresh with advanced search context', fakeAsync(() => {
+      const getSubnetsSpy = jest.spyOn(component, 'getSubnets');
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({
+        filteredResults: true,
+        searchString: 'advanced-search-string',
+      });
+      component.restoreSubnet({ ...MOCK_SUBNET, deletedAt: new Date().toISOString() });
+      tick();
+      expect(getSubnetsSpy).toHaveBeenCalledWith('advanced-search-string');
+    }));
   });
 
-  it('should restore vlan', () => {
-    const vlanToRestore = { id: '123', description: 'Bye!', deletedAt: true } as any;
-    jest.spyOn(component['vlanService'], 'restoreOneVlan').mockReturnValue(of({} as any));
-    const getVlansMock = jest.spyOn(component['vlanService'], 'getManyVlan');
-    component.restoreVlan(vlanToRestore);
-    expect(component['vlanService'].restoreOneVlan).toHaveBeenCalledWith({ id: vlanToRestore.id });
-    expect(getVlansMock).toHaveBeenCalled();
+  describe('restoreVlan', () => {
+    it('should do nothing if vlan is not deleted', () => {
+      component.restoreVlan({ ...MOCK_VLAN, deletedAt: null });
+      expect(mockVlanService.restoreOneVlan).not.toHaveBeenCalled();
+    });
+
+    it('should call restore and refresh the list if vlan is deleted', fakeAsync(() => {
+      const getVlansSpy = jest.spyOn(component, 'getVlans');
+      component.restoreVlan({ ...MOCK_VLAN, deletedAt: new Date().toISOString() });
+      tick();
+      expect(mockVlanService.restoreOneVlan).toHaveBeenCalledWith({ id: MOCK_VLAN.id });
+      expect(getVlansSpy).toHaveBeenCalled();
+    }));
+
+    it('should restore and refresh with basic search context', fakeAsync(() => {
+      const getVlansSpy = jest.spyOn(component, 'getVlans');
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({
+        filteredResults: true,
+        searchString: '',
+        searchColumn: 'name',
+        searchText: 'test',
+      });
+      component.restoreVlan({ ...MOCK_VLAN, deletedAt: new Date().toISOString() });
+      tick();
+      expect(getVlansSpy).toHaveBeenCalledWith(false, expect.objectContaining({ searchColumn: 'name', searchText: 'test' }));
+    }));
+
+    it('should restore and refresh with advanced search context', fakeAsync(() => {
+      const getVlansSpy = jest.spyOn(component, 'getVlans');
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({
+        filteredResults: true,
+        searchString: 'advanced-search-string',
+      });
+      component.restoreVlan({ ...MOCK_VLAN, deletedAt: new Date().toISOString() });
+      tick();
+      expect(getVlansSpy).toHaveBeenCalledWith(false, 'advanced-search-string');
+    }));
   });
 
-  it('should routely search params when filtered results is true', () => {
-    const vlan = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['vlanService'], 'restoreOneVlan').mockReturnValue(of({} as any));
-
-    const getVlansSpy = jest.spyOn(component, 'getVlans');
-    const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
-    jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
-
-    component.restoreVlan(vlan);
-
-    expect(component.vlanTableComponentDto.searchColumn).toBe(params.searchColumn);
-    expect(component.vlanTableComponentDto.searchText).toBe(params.searchText);
-    expect(getVlansSpy).toHaveBeenCalled();
-  });
-
-  it('should routely search params when filtered results is true', () => {
-    const subnet = { id: '1', deletedAt: true } as any;
-    jest.spyOn(component['subnetService'], 'restoreOneSubnet').mockReturnValue(of({} as any));
-
-    const getSubnetsSpy = jest.spyOn(component, 'getSubnets');
-    const params = { searchString: '', filteredResults: true, searchColumn: 'name', searchText: 'test' };
-    jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
-
-    component.restoreSubnet(subnet);
-
-    expect(component.subnetTableComponentDto.searchColumn).toBe(params.searchColumn);
-    expect(component.subnetTableComponentDto.searchText).toBe(params.searchText);
-    expect(getSubnetsSpy).toHaveBeenCalled();
-  });
-
-  it('should get subnets when nav index is not 0', () => {
-    component.navIndex = 1;
-    component.currentTier = { id: '1' } as any;
-    jest.spyOn(component, 'getVlans');
-    component.getObjectsForNavIndex();
-    expect(component.getVlans).toHaveBeenCalled();
-  });
-
-  describe('openVlanModal', () => {
-    it('should throw an error when in edit mode and no vlan is provided', () => {
+  describe('Modal Openers', () => {
+    it('openVlanModal should throw an error when in edit mode and no vlan is provided', () => {
       expect(() => component.openVlanModal(ModalMode.Edit)).toThrow('VLAN required');
     });
 
-    it('should call ngx.setModalData and ngx.getModal().open', () => {
-      const vlan = { id: 1, name: 'Test Vlan' } as any;
-      component.currentTier = { id: '1' } as any;
-      component.openVlanModal(ModalMode.Edit, vlan);
-
-      expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(VlanModalDto), 'vlanModal');
-      expect(component['ngx'].getModal).toHaveBeenCalledWith('vlanModal');
-
-      const modal = component['ngx'].getModal('vlanModal');
-      expect(modal).toBeDefined();
+    it('openVlanModal should set modal data and open the modal', () => {
+      component.currentTier = MOCK_TIER;
+      component.openVlanModal(ModalMode.Edit, MOCK_VLAN);
+      expect(mockNgxSmartModalService.setModalData).toHaveBeenCalledWith(expect.any(VlanModalDto), 'vlanModal');
+      expect(mockModal.open).toHaveBeenCalled();
     });
-  });
 
-  describe('openSubnetModal', () => {
-    it('should throw an error when in edit mode and no subnet is provided', () => {
+    it('openSubnetModal should throw an error when in edit mode and no subnet is provided', () => {
       expect(() => component.openSubnetModal(ModalMode.Edit)).toThrow('Subnet required');
     });
 
-    it('should call ngx.setModalData and ngx.getModal().open', () => {
-      const subnet = { id: 1, name: 'Test Subnet' } as any;
-      component.currentTier = { id: '1' } as any;
-      component.openSubnetModal(ModalMode.Edit, subnet);
-
-      expect(component['ngx'].setModalData).toHaveBeenCalledWith(expect.any(SubnetModalDto), 'subnetModal');
-      expect(component['ngx'].getModal).toHaveBeenCalledWith('subnetModal');
-
-      const modal = component['ngx'].getModal('subnetModal');
-      expect(modal).toBeDefined();
+    it('openSubnetModal should set modal data and open the modal', () => {
+      component.currentTier = MOCK_TIER;
+      component.openSubnetModal(ModalMode.Edit, MOCK_SUBNET);
+      expect(mockNgxSmartModalService.setModalData).toHaveBeenCalledWith(expect.any(SubnetModalDto), 'subnetModal');
+      expect(mockModal.open).toHaveBeenCalled();
     });
   });
 
-  describe('importVlansConfig', () => {
-    const mockNgxSmartModalComponent = {
-      getData: jest.fn().mockReturnValue({ modalYes: true }),
-      removeData: jest.fn(),
-      onCloseFinished: {
-        subscribe: jest.fn(),
-      },
-    };
+  describe('getObjectsForNavIndex', () => {
+    it('should get subnets when nav index is 0', () => {
+      component.navIndex = 0;
+      component.currentTier = MOCK_TIER;
+      const getSubnetsSpy = jest.spyOn(component, 'getSubnets');
+      component.getObjectsForNavIndex();
+      expect(getSubnetsSpy).toHaveBeenCalled();
+    });
 
-    beforeEach(() => {
-      component['ngx'] = {
-        getModal: jest.fn().mockReturnValue({
-          ...mockNgxSmartModalComponent,
-          open: jest.fn(),
+    it('should get vlans when nav index is not 0', () => {
+      component.navIndex = 1;
+      component.currentTier = MOCK_TIER;
+      const getVlansSpy = jest.spyOn(component, 'getVlans');
+      component.getObjectsForNavIndex();
+      expect(getVlansSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('Data Fetching', () => {
+    it('getSubnets should not fetch if no tier is selected', () => {
+      (mockSubnetService.getManySubnet as jest.Mock).mockClear();
+      component.currentTier = null;
+      component.getSubnets();
+      expect(mockSubnetService.getManySubnet).not.toHaveBeenCalled();
+    });
+
+    it('getVlans should not fetch if no tier is selected', () => {
+      component.currentTier = null;
+      component.getVlans();
+      expect(mockVlanService.getManyVlan).not.toHaveBeenCalled();
+    });
+
+    it('getSubnets should handle events with partial pagination', () => {
+      component.currentTier = MOCK_TIER;
+      component.getSubnets({}); // No page or perPage
+      expect(mockSubnetService.getManySubnet).toHaveBeenCalledWith(
+        expect.objectContaining({
+          page: 1,
+          perPage: 20,
         }),
-        setModalData: jest.fn(),
-      } as any;
+      );
     });
 
-    it('should import vlans and refresh the table on confirmation', () => {
-      const event = [{ name: 'Vlan 1' }, { name: 'Vlan 2' }] as any;
-      jest.spyOn(component, 'getVlans');
-      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
-        onConfirm();
-
-        expect(component['vlanService'].createManyVlan).toHaveBeenCalledWith({
-          createManyVlanDto: { bulk: event },
-        });
-
-        mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
-          const data = modal.getData() as YesNoModalDto;
-          modal.removeData();
-          if (data && data.modalYes) {
-            onConfirm();
-          }
-        });
-
-        return new Subscription();
-      });
-
-      component.importVlansConfig(event);
-
-      expect(component.getVlans).toHaveBeenCalled();
+    it('getVlans should handle events with partial pagination', () => {
+      component.currentTier = MOCK_TIER;
+      component.getVlans(false, {}); // No page or perPage
+      expect(mockVlanService.getManyVlan).toHaveBeenCalledWith(
+        expect.objectContaining({
+          page: 1,
+          perPage: 20,
+        }),
+      );
     });
 
-    it('should import subnets and refresh the table on confirmation', () => {
-      const event = [{ name: 'Subnet 1' }, { name: 'Subnet 2' }] as any;
-      jest.spyOn(component, 'getSubnets');
-      jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((modalDto, ngx, onConfirm, onClose) => {
-        onConfirm();
+    it('getSubnets should build "eq" filter for network/gateway', () => {
+      component.currentTier = MOCK_TIER;
+      component.getSubnets({ searchColumn: 'network', searchText: '1.1.1.0' });
+      expect(mockSubnetService.getManySubnet).toHaveBeenCalledWith(
+        expect.objectContaining({
+          filter: expect.arrayContaining(['tierId||eq||tier-1', 'network||eq||1.1.1.0']),
+        }),
+      );
+    });
 
-        expect(component['subnetService'].bulkImportSubnetsSubnet).toHaveBeenCalledWith({
-          subnetImportCollectionDto: { datacenterId: '1', subnets: event },
-        });
+    it('getSubnets should build "cont" filter for other columns', () => {
+      component.currentTier = MOCK_TIER;
+      component.getSubnets({ searchColumn: 'name', searchText: 'test' });
+      expect(mockSubnetService.getManySubnet).toHaveBeenCalledWith(
+        expect.objectContaining({
+          filter: expect.arrayContaining(['tierId||eq||tier-1', 'name||cont||test']),
+        }),
+      );
+    });
 
-        mockNgxSmartModalComponent.onCloseFinished.subscribe((modal: typeof mockNgxSmartModalComponent) => {
-          const data = modal.getData() as YesNoModalDto;
-          modal.removeData();
-          if (data && data.modalYes) {
-            onConfirm();
-          }
-        });
+    it('getVlans should build "eq" filter for vlanNumber/vcdVlanType', () => {
+      component.currentTier = MOCK_TIER;
+      component.getVlans(false, { searchColumn: 'vlanNumber', searchText: '123' });
+      expect(mockVlanService.getManyVlan).toHaveBeenCalledWith(
+        expect.objectContaining({
+          filter: expect.arrayContaining(['tierId||eq||tier-1', 'vlanNumber||eq||123']),
+        }),
+      );
+    });
 
-        return new Subscription();
+    it('getVlans should build "cont" filter for other columns and trigger getSubnets', () => {
+      const getSubnetsSpy = jest.spyOn(component, 'getSubnets');
+      component.currentTier = MOCK_TIER;
+      component.getVlans(true, { searchColumn: 'name', searchText: 'test' });
+      expect(mockVlanService.getManyVlan).toHaveBeenCalledWith(
+        expect.objectContaining({
+          filter: expect.arrayContaining(['tierId||eq||tier-1', 'name||cont||test']),
+        }),
+      );
+      expect(getSubnetsSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('Modal Subscriptions', () => {
+    it('should refresh subnets with search context on modal close', () => {
+      const getSubnetsSpy = jest.spyOn(component, 'getSubnets');
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({
+        filteredResults: true,
+        searchColumn: 'name',
+        searchText: 'test',
       });
+      component.subscribeToSubnetModal();
+      expect(getSubnetsSpy).toHaveBeenCalledWith(expect.objectContaining({ searchColumn: 'name' }));
+    });
 
-      component.importSubnetConfig(event);
+    it('should refresh vlans with search context on modal close', () => {
+      const getVlansSpy = jest.spyOn(component, 'getVlans');
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({
+        filteredResults: true,
+        searchColumn: 'name',
+        searchText: 'test',
+      });
+      component.subscribeToVlanModal();
+      expect(getVlansSpy).toHaveBeenCalledWith(false, expect.objectContaining({ searchColumn: 'name' }));
+    });
 
-      expect(component.getSubnets).toHaveBeenCalled();
+    it('should refresh subnets with advanced search on modal close', () => {
+      const getSubnetsSpy = jest.spyOn(component, 'getSubnets');
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({
+        filteredResults: true,
+        searchString: 'advanced',
+      });
+      component.subscribeToSubnetModal();
+      expect(getSubnetsSpy).toHaveBeenCalledWith('advanced');
+    });
+
+    it('should refresh vlans with advanced search on modal close', () => {
+      const getVlansSpy = jest.spyOn(component, 'getVlans');
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({
+        filteredResults: true,
+        searchString: 'advanced',
+      });
+      component.subscribeToVlanModal();
+      expect(getVlansSpy).toHaveBeenCalledWith(false, 'advanced');
+    });
+  });
+
+  describe('Initialization', () => {
+    it('should not fetch objects if datacenter has no tiers', () => {
+      const getObjectsSpy = jest.spyOn(component, 'getObjectsForNavIndex');
+      getObjectsSpy.mockClear();
+      datacenterSubject.next({ id: 'dc-2', name: 'Empty DC', tiers: [] });
+      expect(getObjectsSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Import/Export', () => {
+    let subscribeToYesNoModalSpy;
+    beforeEach(() => {
+      // Mock the static SubscriptionUtil method
+      subscribeToYesNoModalSpy = jest.spyOn(require('src/app/utils/SubscriptionUtil').default, 'subscribeToYesNoModal');
+    });
+
+    it('importVlansConfig should use plural "VLANs" for multiple items', () => {
+      component.importVlansConfig([MOCK_VLAN, MOCK_VLAN]);
+      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ modalBody: 'Are you sure you would like to import 2 VLANs?' }),
+        expect.any(Object),
+        expect.any(Function),
+        expect.any(Function),
+      );
+    });
+
+    it('importVlansConfig should use singular "VLAN" for a single item', () => {
+      component.importVlansConfig([MOCK_VLAN]);
+      expect(subscribeToYesNoModalSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ modalBody: 'Are you sure you would like to import 1 VLAN?' }),
+        expect.any(Object),
+        expect.any(Function),
+        expect.any(Function),
+      );
+    });
+
+    it('importSubnetConfig should call the service on confirmation', () => {
+      subscribeToYesNoModalSpy.mockImplementation((dto, ngx, onConfirm) => {
+        onConfirm(); // Simulate user clicking "Yes"
+      });
+      component.importSubnetConfig([MOCK_SUBNET]);
+      expect(mockSubnetService.bulkImportSubnetsSubnet).toHaveBeenCalled();
+    });
+
+    it('importVlansConfig should reset radio button on close', () => {
+      subscribeToYesNoModalSpy.mockImplementation((dto, ngx, onConfirm, onClose) => {
+        onClose(); // Simulate user clicking "No" or closing the modal
+      });
+      component.showRadio = true;
+      component.importVlansConfig([MOCK_VLAN]);
+      expect(component.showRadio).toBe(false);
+    });
+
+    it('should transform VLANs before creating them', () => {
+      subscribeToYesNoModalSpy.mockImplementation((dto, ngx, onConfirm) => {
+        onConfirm(); // Simulate user clicking "Yes"
+      });
+      const getTierIdSpy = jest.spyOn(component, 'getTierId').mockReturnValue('tier-1');
+      const vlanToImport = { vlanNumber: '123', tierName: 'Test Tier' };
+      component.importVlansConfig([vlanToImport as any]);
+
+      expect(getTierIdSpy).toHaveBeenCalledWith('Test Tier');
+      expect(mockVlanService.createManyVlan).toHaveBeenCalledWith({
+        createManyVlanDto: { bulk: [{ ...vlanToImport, vlanNumber: 123, tierId: 'tier-1' }] },
+      });
+    });
+  });
+
+  describe('Undeployed Changes', () => {
+    it('should call the UndeployedChangesUtil', () => {
+      const utilSpy = jest.spyOn(require('src/app/utils/UndeployedChangesUtil').default, 'hasUndeployedChanges');
+      component.checkUndeployedChanges(MOCK_SUBNET);
+      expect(utilSpy).toHaveBeenCalledWith(MOCK_SUBNET);
+    });
+  });
+
+  describe('Lifecycle Hooks', () => {
+    it('ngOnDestroy should unsubscribe from all subscriptions', () => {
+      const unsubscribeSpy = jest.spyOn(require('src/app/utils/SubscriptionUtil').default, 'unsubscribe');
+      component.ngOnDestroy();
+      // Check that it's called with an array of potentially 4 subscriptions
+      expect(unsubscribeSpy).toHaveBeenCalledWith(expect.any(Array));
     });
   });
 });

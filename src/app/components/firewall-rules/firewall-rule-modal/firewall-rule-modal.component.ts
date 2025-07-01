@@ -234,13 +234,10 @@ export class FirewallRuleModalComponent implements OnInit, OnDestroy {
         .createOneFirewallRule({
           firewallRule: modalFirewallRule,
         })
-        .subscribe(
-          () => {
-            this.closeModal();
-            this.appIdService.resetDto();
-          },
-          () => {},
-        );
+        .subscribe(() => {
+          this.closeModal();
+          this.appIdService.resetDto();
+        });
     } else {
       if (this.appIdEnabled === true) {
         modalFirewallRule.panosApplications = [...this.firewallRule.panosApplications];

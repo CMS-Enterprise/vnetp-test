@@ -604,24 +604,18 @@ export class SelfServiceModalComponent implements OnInit {
   private createSelfService(configDto): void {
     this.showFooter = false;
     if (this.f.deviceType.value === 'ASA') {
-      this.selfServiceService.processAsaConfigSelfService({ selfService: configDto }).subscribe(
-        () => {
-          this.showSpinner = false;
-          this.receivedConfig = true;
-          this.onClose();
-        },
-        () => {},
-      );
+      this.selfServiceService.processAsaConfigSelfService({ selfService: configDto }).subscribe(() => {
+        this.showSpinner = false;
+        this.receivedConfig = true;
+        this.onClose();
+      });
     } else if (this.f.deviceType.value === 'PA') {
       configDto.intervrfSubnets = this.f.intervrfSubnets.value;
-      this.selfServiceService.processPAConfigSelfService({ selfService: configDto }).subscribe(
-        () => {
-          this.showSpinner = false;
-          this.receivedConfig = true;
-          this.onClose();
-        },
-        () => {},
-      );
+      this.selfServiceService.processPAConfigSelfService({ selfService: configDto }).subscribe(() => {
+        this.showSpinner = false;
+        this.receivedConfig = true;
+        this.onClose();
+      });
     }
   }
 

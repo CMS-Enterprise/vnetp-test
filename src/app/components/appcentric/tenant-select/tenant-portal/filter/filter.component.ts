@@ -236,13 +236,11 @@ export class FilterComponent implements OnInit {
   public importFilters(event): void {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.filterService.createManyFilter({ createManyFilterDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.filterService.createManyFilter({ createManyFilterDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.refreshFilters();
         },
-      );
+      });
     };
 
     this.showConfirmationModal(

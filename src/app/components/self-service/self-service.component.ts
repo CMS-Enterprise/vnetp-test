@@ -59,6 +59,7 @@ export class SelfServiceComponent implements OnInit, OnDestroy {
       },
       () => {
         this.selfServices = null;
+        this.loadingSelfServices = false;
       },
       () => {
         this.loadingSelfServices = false;

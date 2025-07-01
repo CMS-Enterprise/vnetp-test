@@ -2,7 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of, Subscription } from 'rxjs';
-import { Tenant, V1NetworkScopeFormsWanFormService, V2AppCentricTenantsService } from '../../../../../client';
+import {
+  Tenant,
+  V1NetworkScopeFormsWanFormService,
+  V2AppCentricTenantsService,
+  V3GlobalWanFormRequestService,
+} from '../../../../../client';
 import { WanFormModalDto } from '../../../models/network-scope-forms/wan-form-modal.dto';
 import { ModalMode } from '../../../models/other/modal-mode';
 import { DatacenterContextService } from '../../../services/datacenter-context.service';
@@ -11,6 +16,8 @@ import { WanFormComponent } from './wan-form.component';
 import { MockComponent, MockFontAwesomeComponent, MockYesNoModalComponent } from 'src/test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { RouteDataUtil } from 'src/app/utils/route-data.util';
 
 describe('WanFormComponent', () => {
   let component: WanFormComponent;
@@ -22,6 +29,7 @@ describe('WanFormComponent', () => {
   let mockRoute: any;
   let mockTenantService: any;
   let mockTableContextService: any;
+  let mockWanFormRequestService: any;
 
   beforeEach(async () => {
     mockNgxSmartModalService = {
@@ -72,6 +80,11 @@ describe('WanFormComponent', () => {
       getSearchLocalStorage: jest.fn().mockReturnValue({}),
     };
 
+    mockWanFormRequestService = {
+      createOneWanFormRequest: jest.fn().mockReturnValue(of({})),
+      deleteOneWanFormRequest: jest.fn().mockReturnValue(of({})),
+    };
+
     await TestBed.configureTestingModule({
       declarations: [
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
@@ -89,6 +102,7 @@ describe('WanFormComponent', () => {
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockRoute },
         { provide: TableContextService, useValue: mockTableContextService },
+        { provide: V3GlobalWanFormRequestService, useValue: mockWanFormRequestService },
       ],
     }).compileComponents();
 
@@ -113,6 +127,35 @@ describe('WanFormComponent', () => {
       component.ngOnInit();
       expect(getWanFormsSpy).toHaveBeenCalled();
     });
+
+    it('should call getTenants when mode is appcentric and no selectedTenant', () => {
+      jest.spyOn(RouteDataUtil, 'getApplicationModeFromRoute').mockReturnValue('appcentric' as any);
+      component.selectedTenant = undefined as any;
+      const getTenantsSpy = jest.spyOn(component, 'getTenants').mockImplementation();
+
+      component.ngOnInit();
+
+      expect(getTenantsSpy).toHaveBeenCalled();
+    });
+
+    it('should call getWanForms when mode is appcentric and selectedTenant exists', () => {
+      jest.spyOn(RouteDataUtil, 'getApplicationModeFromRoute').mockReturnValue('appcentric' as any);
+      component.selectedTenant = 'existingTenant';
+      const getWanFormsSpy = jest.spyOn(component, 'getWanForms').mockImplementation();
+
+      component.ngOnInit();
+
+      expect(getWanFormsSpy).toHaveBeenCalled();
+    });
+
+    it('should log error when dcsMode cannot be determined', () => {
+      jest.spyOn(RouteDataUtil, 'getApplicationModeFromRoute').mockReturnValue(undefined as any);
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+
+      component.ngOnInit();
+
+      expect(consoleSpy).toHaveBeenCalledWith('WAN Form: Application mode could not be determined via RouteDataUtil.');
+    });
   });
 
   describe('ngOnDestroy', () => {
@@ -126,6 +169,9 @@ describe('WanFormComponent', () => {
 
   describe('getWanForms', () => {
     it('should set isLoading to true and fetch WAN forms', () => {
+      mockWanFormService.getManyWanForm.mockClear();
+      component.dcsMode = 'netcentric';
+      component.datacenterId = 'testDatacenterId';
       component.getWanForms();
       expect(component.isLoading).toBe(false);
       const filterParam = 'datacenterId||eq||testDatacenterId';
@@ -155,12 +201,71 @@ describe('WanFormComponent', () => {
       expect(mockNgxSmartModalService.setModalData).toHaveBeenCalledWith(dto, 'wanFormModal');
       expect(mockNgxSmartModalService.getModal('wanFormModal').open).toHaveBeenCalled();
     });
+
+    it('should include wanForm details when opening in Edit mode', () => {
+      const wanFormMock = { id: 'wf1', name: 'WF1' } as any;
+      const setDataSpy = mockNgxSmartModalService.setModalData;
+
+      jest.spyOn(component as any, 'subscribeToModal').mockImplementation();
+
+      component.openModal(ModalMode.Edit, wanFormMock);
+
+      const dtoArg = setDataSpy.mock.calls[0][0] as WanFormModalDto;
+      expect(dtoArg.modalMode).toBe(ModalMode.Edit);
+      expect(dtoArg.wanForm).toBe(wanFormMock);
+    });
   });
 
   describe('subscribeToModal', () => {
     it('should reset modal data and fetch WAN forms on modal close', () => {
       (component as any).subscribeToModal();
       expect((component as any).wanFormModalSubscription).not.toBeNull();
+    });
+
+    it('should fetch filtered results when filteredResults is true', () => {
+      let capturedCb: () => void;
+      const subscribeMock = jest.fn(cb => {
+        capturedCb = cb;
+        return { unsubscribe: jest.fn() } as any;
+      });
+      mockNgxSmartModalService.getModal.mockReturnValue({
+        onCloseFinished: { subscribe: subscribeMock },
+      });
+
+      mockTableContextService.getSearchLocalStorage.mockReturnValue({ filteredResults: true });
+      const resetSpy = jest.spyOn(mockNgxSmartModalService, 'resetModalData');
+      const getWanFormsSpy = jest.spyOn(component, 'getWanForms').mockImplementation();
+
+      (component as any).subscribeToModal();
+
+      if (capturedCb) {
+        capturedCb();
+      }
+
+      expect(resetSpy).toHaveBeenCalledWith('wanFormModal');
+      expect(getWanFormsSpy).toHaveBeenCalledWith({ filteredResults: true });
+    });
+
+    it('should fetch all results when filteredResults is false', () => {
+      let capturedCb: () => void;
+      const subscribeMock = jest.fn(cb => {
+        capturedCb = cb;
+        return { unsubscribe: jest.fn() } as any;
+      });
+      mockNgxSmartModalService.getModal.mockReturnValue({
+        onCloseFinished: { subscribe: subscribeMock },
+      });
+
+      mockTableContextService.getSearchLocalStorage.mockReturnValue({ filteredResults: false });
+      const getWanFormsSpy = jest.spyOn(component, 'getWanForms').mockImplementation();
+
+      (component as any).subscribeToModal();
+
+      if (capturedCb) {
+        capturedCb();
+      }
+
+      expect(getWanFormsSpy).toHaveBeenCalledWith();
     });
   });
 
@@ -201,6 +306,80 @@ describe('WanFormComponent', () => {
       const queryParams = { ...mockRoute.snapshot.queryParams, tenantId: tenantMock.id };
       component.onTenantSelect(tenantMock);
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/appcentric/wan-form'], { queryParams });
+    });
+  });
+
+  describe('getWanForms with event param', () => {
+    beforeEach(() => mockWanFormService.getManyWanForm.mockClear());
+
+    it('should build eventParams and use provided pagination', () => {
+      component.dcsMode = 'netcentric';
+      component.datacenterId = 'dc1';
+      const eventObj = { page: 2, perPage: 50, searchColumn: 'name', searchText: 'alpha' } as any;
+
+      component.getWanForms(eventObj);
+
+      expect(mockWanFormService.getManyWanForm).toHaveBeenCalledWith({
+        filter: ['datacenterId||eq||dc1', 'name||cont||alpha'],
+        join: ['wanFormSubnets', 'externalRoutes'],
+        page: 2,
+        perPage: 50,
+      });
+    });
+
+    it('should default pagination and omit eventParams when props missing', () => {
+      component.dcsMode = 'appcentric' as any;
+      component.selectedTenant = 'tenant123';
+      const eventObj = { searchText: '' } as any;
+
+      component.getWanForms(eventObj);
+
+      expect(mockWanFormService.getManyWanForm).toHaveBeenCalledWith({
+        filter: ['tenantId||eq||tenant123', undefined],
+        join: ['wanFormSubnets', 'externalRoutes'],
+        page: 1,
+        perPage: 20,
+      });
+    });
+  });
+
+  describe('checkUndeployedChanges', () => {
+    it('should return true when version greater than provisionedVersion', () => {
+      const result = component.checkUndeployedChanges({ version: 2, provisionedVersion: 1 } as any);
+      expect(result).toBe(true);
+    });
+
+    it('should return false when version not greater', () => {
+      const result = component.checkUndeployedChanges({ version: 1, provisionedVersion: 1 } as any);
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('createWanFormRequest branches', () => {
+    beforeEach(() => jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation());
+
+    it('should use aciTenantId when selectedTenant exists and status not PENDING', () => {
+      component.selectedTenant = 'tenantX';
+      component.datacenterId = undefined as any;
+      const spy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+
+      component.createWanFormRequest({ id: 'wf1', name: 'WF', status: 'ACTIVE' } as any);
+
+      expect(spy).toHaveBeenCalled();
+      const dtoArg = spy.mock.calls[0][0] as any;
+      expect(dtoArg).toBeDefined();
+    });
+
+    it('should use datacenterId when no selectedTenant and status PENDING', () => {
+      component.selectedTenant = undefined as any;
+      component.datacenterId = 'dc1';
+      const spy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal');
+
+      component.createWanFormRequest({ id: 'wf2', name: 'WF2', status: 'PENDING' } as any);
+
+      expect(spy).toHaveBeenCalled();
+      const dtoArg = spy.mock.calls[spy.mock.calls.length - 1][0] as any;
+      expect(dtoArg).toBeDefined();
     });
   });
 });

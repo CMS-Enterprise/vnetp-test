@@ -93,10 +93,7 @@ export class RouteModalComponent implements OnInit {
   }
 
   private createRoute(loadBalancerRoute: LoadBalancerRoute): void {
-    this.routeService.createOneLoadBalancerRoute({ loadBalancerRoute }).subscribe(
-      () => this.closeModal(),
-      () => {},
-    );
+    this.routeService.createOneLoadBalancerRoute({ loadBalancerRoute }).subscribe(() => this.closeModal());
   }
 
   private updateRoute(loadBalancerRoute: LoadBalancerRoute): void {
@@ -106,9 +103,6 @@ export class RouteModalComponent implements OnInit {
         id: this.routeId,
         loadBalancerRoute,
       })
-      .subscribe(
-        () => this.closeModal(),
-        () => {},
-      );
+      .subscribe(() => this.closeModal());
   }
 }

@@ -239,12 +239,9 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
   private createFilterEntry(filterEntry: FilterEntry): void {
     filterEntry.filterId = this.filterId;
     filterEntry.tenantId = this.tenantId;
-    this.filterEntriesService.createOneFilterEntry({ filterEntry }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.filterEntriesService.createOneFilterEntry({ filterEntry }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private editFilterEntry(filterEntry: FilterEntry): void {
@@ -256,11 +253,7 @@ export class FilterEntryModalComponent implements OnInit, OnDestroy {
         id: this.filterEntryId,
         filterEntry,
       })
-      .subscribe(
-        () => {},
-        () => {},
-        () => this.closeModal(),
-      );
+      .subscribe({ complete: () => this.closeModal() });
   }
 
   public save(): void {

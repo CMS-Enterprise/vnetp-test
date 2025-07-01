@@ -91,10 +91,7 @@ export class VlanModalComponent implements OnInit {
   }
 
   private createVlan(loadBalancerVlan: LoadBalancerVlan): void {
-    this.vlansService.createOneLoadBalancerVlan({ loadBalancerVlan }).subscribe(
-      () => this.closeModal(),
-      () => {},
-    );
+    this.vlansService.createOneLoadBalancerVlan({ loadBalancerVlan }).subscribe(() => this.closeModal());
   }
 
   private updateVlan(loadBalancerVlan: LoadBalancerVlan): void {
@@ -104,9 +101,6 @@ export class VlanModalComponent implements OnInit {
         id: this.vlanId,
         loadBalancerVlan,
       })
-      .subscribe(
-        () => this.closeModal(),
-        () => {},
-      );
+      .subscribe(() => this.closeModal());
   }
 }

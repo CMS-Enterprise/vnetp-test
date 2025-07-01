@@ -237,13 +237,11 @@ export class ContractComponent implements OnInit {
   public importContracts(event): void {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.contractService.createManyContract({ createManyContractDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.contractService.createManyContract({ createManyContractDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.refreshContracts();
         },
-      );
+      });
     };
 
     this.showConfirmationModal(

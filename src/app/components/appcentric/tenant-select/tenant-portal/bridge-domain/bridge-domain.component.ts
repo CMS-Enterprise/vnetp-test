@@ -290,13 +290,11 @@ export class BridgeDomainComponent implements OnInit {
   public importBridgeDomains(event): void {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.bridgeDomainService.createManyBridgeDomain({ createManyBridgeDomainDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.bridgeDomainService.createManyBridgeDomain({ createManyBridgeDomainDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.refreshBridgeDomains();
         },
-      );
+      });
     };
 
     this.showConfirmationModal(

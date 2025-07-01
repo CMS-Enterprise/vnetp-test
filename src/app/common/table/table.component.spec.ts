@@ -127,4 +127,189 @@ describe('TableComponent', () => {
     expect(getAdvancedSearchLocalStorageSpy).toHaveBeenCalled();
     expect(addFilteredResultsLocalStorageSpy).toHaveBeenCalled();
   });
+
+  describe('ngAfterViewInit', () => {
+    it('should hide search bar and pagination for descriptions in lists', () => {
+      // Provide empty search params so hasSearchResults stays false initially
+      jest
+        .spyOn(component['tableContextService'], 'getSearchLocalStorage')
+        .mockReturnValue({ searchText: '', searchColumn: '', filteredResults: false, searchString: '' } as any);
+      jest.spyOn(component['tableContextService'], 'getAdvancedSearchLocalStorage').mockReturnValue(null);
+
+      component.config.description = 'Import Preview'; // becomes "import-preview"
+      const detectSpy = jest.spyOn(component['changeRef'], 'detectChanges');
+
+      component.ngAfterViewInit();
+
+      expect(component.showSearchBar).toBe(false); // in badList
+      expect(component.paginationControlsOn).toBe(false); // in hidePagination
+      expect(component.hasSearchResults).toBe(false);
+      expect(detectSpy).toHaveBeenCalled();
+    });
+
+    it('should forward advancedSearchAdapter and mark hasSearchResults true when search text present', () => {
+      const nextSpy = jest.spyOn(component.advancedSearchAdapterSubject, 'next');
+      jest
+        .spyOn(component['tableContextService'], 'getSearchLocalStorage')
+        .mockReturnValue({ searchText: 'abc', searchColumn: 'name', filteredResults: true, searchString: '' } as any);
+      jest.spyOn(component['tableContextService'], 'getAdvancedSearchLocalStorage').mockReturnValue(null);
+
+      component.config.description = 'Custom Description';
+      component.config.advancedSearchAdapter = { adapter: true } as any;
+
+      component.ngAfterViewInit();
+
+      expect(nextSpy).toHaveBeenCalledWith(component.config.advancedSearchAdapter);
+      expect(component.hasSearchResults).toBe(true);
+      expect(component.showSearchBar).toBe(true);
+      expect(component.paginationControlsOn).toBe(true);
+    });
+  });
+
+  describe('onTableEvent – advanced search branch', () => {
+    it('should call searchThis and skip table emission when advancedSearchParams exist', () => {
+      const advParams = { searchOperator: 'AND', searchString: 'query' } as any;
+      jest.spyOn(component['tableContextService'], 'getAdvancedSearchLocalStorage').mockReturnValue(advParams);
+      jest
+        .spyOn(component['tableContextService'], 'getSearchLocalStorage')
+        .mockReturnValue({ searchText: '', searchColumn: '', filteredResults: false, searchString: '' } as any);
+
+      // Stub the advancedSearchComponent to avoid template dependency
+      component.advancedSearchComponent = { searchThis: jest.fn() } as any;
+      const searchSpy = jest.spyOn(component.advancedSearchComponent, 'searchThis');
+      const tableEmitSpy = jest.spyOn(component.tableEvent, 'emit');
+      const itemsPerPageEmitSpy = jest.spyOn(component.itemsPerPageChange, 'emit');
+
+      component.currentPage = 2;
+      component.itemsPerPage = 50;
+
+      component.onTableEvent();
+
+      expect(searchSpy).toHaveBeenCalledWith(2, 50, advParams.searchOperator, advParams.searchString);
+      expect(tableEmitSpy).not.toHaveBeenCalled();
+      expect(itemsPerPageEmitSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('onTableEvent – default branch', () => {
+    it('should set hasSearchResults false and emit table events when no search criteria', () => {
+      jest
+        .spyOn(component['tableContextService'], 'getSearchLocalStorage')
+        .mockReturnValue({ searchText: '', searchColumn: '', filteredResults: false, searchString: '' } as any);
+      jest.spyOn(component['tableContextService'], 'getAdvancedSearchLocalStorage').mockReturnValue(null);
+
+      const addFilteredSpy = jest.spyOn(component['tableContextService'], 'addFilteredResultsLocalStorage').mockReturnValue(null);
+      const tableEmitSpy = jest.spyOn(component.tableEvent, 'emit');
+      const itemsPerPageEmitSpy = jest.spyOn(component.itemsPerPageChange, 'emit');
+
+      component.onTableEvent();
+
+      expect(component.hasSearchResults).toBe(false);
+      expect(addFilteredSpy).toHaveBeenCalled();
+      expect(tableEmitSpy).toHaveBeenCalledWith(expect.any(Object));
+      expect(itemsPerPageEmitSpy).toHaveBeenCalledWith(component.itemsPerPage);
+    });
+  });
+
+  describe('getRowStyle', () => {
+    it('should return default deleted style when datum.deletedAt present', () => {
+      component.config.disableDefaultRowStyle = false;
+      const style = component.getRowStyle({ deletedAt: 'yesterday' });
+      expect(style.textDecoration).toBe('line-through');
+    });
+
+    it('should return default disabled style when datum.enabled is false', () => {
+      component.config.disableDefaultRowStyle = false;
+      const style = component.getRowStyle({ enabled: false });
+      expect(style.textDecoration).toBe('line-through');
+    });
+
+    it('should apply custom rowStyle when disableDefaultRowStyle is true', () => {
+      component.config.disableDefaultRowStyle = true;
+      component.config.rowStyle = () => ({ background: 'blue' });
+      const style = component.getRowStyle({});
+      expect(style.background).toBe('blue');
+    });
+
+    it('should apply rowStyle when no default style matches', () => {
+      component.config.disableDefaultRowStyle = false;
+      component.config.rowStyle = () => ({ background: 'green' });
+      const style = component.getRowStyle({});
+      expect(style.background).toBe('green');
+    });
+
+    it('should return empty style when disableDefaultRowStyle is true and no custom rowStyle', () => {
+      component.config.disableDefaultRowStyle = true;
+      component.config.rowStyle = undefined as any;
+      const style = component.getRowStyle({});
+      expect(style).toEqual({});
+    });
+
+    it('should return empty style when no default or custom style matches', () => {
+      component.config.disableDefaultRowStyle = false;
+      component.config.rowStyle = undefined as any;
+      const style = component.getRowStyle({});
+      expect(style).toEqual({});
+    });
+  });
+
+  describe('handleRowClick & template navigation', () => {
+    it('should toggle expansion and initialize template index when not from button', () => {
+      const datum: any = {};
+      component.config.expandableRows = () => [jest.fn() as any, jest.fn() as any];
+      component.expandableRows = true;
+      const event = { target: document.createElement('div') } as any;
+
+      component.handleRowClick(event as any, datum);
+
+      expect(datum.expanded).toBe(true);
+      expect(datum.currentTemplateIndex).toBe(0);
+    });
+
+    it('should not toggle when event originates from button element', () => {
+      const datum: any = {};
+      component.config.expandableRows = () => [jest.fn() as any];
+      component.expandableRows = true;
+      const button = document.createElement('button');
+      const event = { target: button } as any;
+
+      component.handleRowClick(event as any, datum);
+      expect(datum.expanded).toBeUndefined();
+    });
+
+    it('previousTemplate and nextTemplate should cycle templates and call detectChanges', () => {
+      const templates = [jest.fn() as any, jest.fn() as any];
+      component.config.expandableRows = () => templates;
+      const datum: any = { currentTemplateIndex: 0 };
+      const detectSpy = jest.spyOn(component['changeRef'], 'detectChanges');
+
+      component.previousTemplate(datum);
+      expect(datum.currentTemplateIndex).toBe(1);
+      expect(detectSpy).toHaveBeenCalled();
+
+      component.nextTemplate(datum);
+      expect(datum.currentTemplateIndex).toBe(0);
+    });
+
+    it('isTemplateArray should correctly identify an array of templates', () => {
+      component.config.expandableRows = () => [jest.fn() as any];
+      expect(component.isTemplateArray()).toBe(true);
+      component.config.expandableRows = () => jest.fn() as any;
+      expect(component.isTemplateArray()).toBe(false);
+    });
+  });
+
+  describe('setAdvancedSearchData', () => {
+    it('should update component data, mark results and call searchBar.setFilteredResults', () => {
+      const mockEvent = { data: ['row1'] } as any;
+      // stub the searchBarComponent with required method
+      component.searchBarComponent = { setFilteredResults: jest.fn() } as any;
+
+      component.setAdvancedSearchData(mockEvent);
+
+      expect(component.data).toBe(mockEvent);
+      expect(component.searchBarComponent.setFilteredResults).toHaveBeenCalled();
+      expect(component.hasSearchResults).toBe(true);
+    });
+  });
 });

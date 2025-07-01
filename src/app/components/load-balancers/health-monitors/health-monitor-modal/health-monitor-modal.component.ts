@@ -108,10 +108,7 @@ export class HealthMonitorModalComponent implements OnInit {
   }
 
   private createHealthMonitor(loadBalancerHealthMonitor: LoadBalancerHealthMonitor): void {
-    this.healthMonitorService.createOneLoadBalancerHealthMonitor({ loadBalancerHealthMonitor }).subscribe(
-      () => this.closeModal(),
-      () => {},
-    );
+    this.healthMonitorService.createOneLoadBalancerHealthMonitor({ loadBalancerHealthMonitor }).subscribe(() => this.closeModal());
   }
 
   private updateHealthMonitor(loadBalancerHealthMonitor: LoadBalancerHealthMonitor): void {
@@ -122,9 +119,6 @@ export class HealthMonitorModalComponent implements OnInit {
         id: this.healthMonitorId,
         loadBalancerHealthMonitor,
       })
-      .subscribe(
-        () => this.closeModal(),
-        () => {},
-      );
+      .subscribe(() => this.closeModal());
   }
 }

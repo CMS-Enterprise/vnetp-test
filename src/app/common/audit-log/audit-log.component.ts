@@ -240,6 +240,8 @@ export class AuditLogComponent implements OnInit {
               }
 
               if (entityBefore[key] !== entityAfter[key]) {
+                let beforeValue = entityBefore[key];
+                let afterValue = entityAfter[key];
                 if (key.includes('Id')) {
                   let beforeMatch;
                   let afterMatch;
@@ -247,29 +249,29 @@ export class AuditLogComponent implements OnInit {
                   if (lowerCaseKey === 'routeprofileid') {
                     beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.routeProfiles);
                     beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
-                    entityBefore[key] = beforeMatch;
+                    beforeValue = beforeMatch;
                     afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.routeProfiles);
                     afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
-                    entityAfter[key] = afterMatch;
+                    afterValue = afterMatch;
                   }
                   if (lowerCaseKey.includes('consumedcontractid')) {
                     beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.consumedContracts);
                     beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
-                    entityBefore[key] = beforeMatch;
+                    beforeValue = beforeMatch;
                     afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.consumedContracts);
                     afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
-                    entityAfter[key] = afterMatch;
+                    afterValue = afterMatch;
                   }
                   if (lowerCaseKey === 'l3outforrouteprofileid') {
                     beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.l3Outs);
                     beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
-                    entityBefore[key] = beforeMatch;
+                    beforeValue = beforeMatch;
                     afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.l3Outs);
                     afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
-                    entityAfter[key] = afterMatch;
+                    afterValue = afterMatch;
                   }
                 }
-                const message = { propertyName: key, before: entityBefore[key], after: entityAfter[key] };
+                const message = { propertyName: key, before: beforeValue, after: afterValue };
                 messageArray.push(message);
               }
             });
@@ -364,6 +366,8 @@ export class AuditLogComponent implements OnInit {
                   // if a property on the "before" entity does not match a property on the "after" entity, we know
                   // that the value of that property has changed
                   if (entityBefore[key] !== entityAfter[key]) {
+                    let beforeValue = entityBefore[key];
+                    let afterValue = entityAfter[key];
                     if (key.includes('Id')) {
                       let beforeMatch;
                       let afterMatch;
@@ -372,36 +376,36 @@ export class AuditLogComponent implements OnInit {
                       if (lowerCaseKey.includes('networkobjectid')) {
                         beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.networkObjects);
                         beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
-                        entityBefore[key] = beforeMatch;
+                        beforeValue = beforeMatch;
                         afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.networkObjects);
                         afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
-                        entityAfter[key] = afterMatch;
+                        afterValue = afterMatch;
                       } else if (lowerCaseKey.includes('networkobjectgroupid')) {
                         beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.networkObjectGroups);
                         beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
-                        entityBefore[key] = beforeMatch;
+                        beforeValue = beforeMatch;
                         afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.networkObjectGroups);
                         afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
-                        entityAfter[key] = afterMatch;
+                        afterValue = afterMatch;
                       } else if (lowerCaseKey.includes('serviceobjectid')) {
                         beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.serviceObjects);
                         beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
-                        entityBefore[key] = beforeMatch;
+                        beforeValue = beforeMatch;
                         afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.serviceObjects);
                         afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
-                        entityAfter[key] = afterMatch;
+                        afterValue = afterMatch;
                       } else if (lowerCaseKey.includes('serviceobjectgroupid')) {
                         beforeMatch = ObjectUtil.getObjectName(entityBefore[key], this.serviceObjectGroups);
                         beforeMatch === 'N/A' ? (beforeMatch = '-') : beforeMatch;
-                        entityBefore[key] = beforeMatch;
+                        beforeValue = beforeMatch;
                         afterMatch = ObjectUtil.getObjectName(entityAfter[key], this.serviceObjectGroups);
                         afterMatch === 'N/A' ? (afterMatch = '-') : afterMatch;
-                        entityAfter[key] = afterMatch;
+                        afterValue = afterMatch;
                       }
                       /* tslint:enable */
                     }
                     // so we create a string message listing the property that was changed and its "before" and "after" values
-                    const message = { propertyName: key, before: entityBefore[key], after: entityAfter[key] };
+                    const message = { propertyName: key, before: beforeValue, after: afterValue };
                     messageArray.push(message);
                   }
                 });
@@ -441,11 +445,11 @@ export class AuditLogComponent implements OnInit {
       perPage: 50000,
     });
     forkJoin([networkObjectRequest, networkObjectGroupRequest, serviceObjectRequest, serviceObjectGroupRequest]).subscribe(
-      (result: unknown) => {
-        this.networkObjects = (result as NetworkObject)[0];
-        this.networkObjectGroups = (result as NetworkObjectGroup)[1];
-        this.serviceObjects = (result as ServiceObject)[2];
-        this.serviceObjectGroups = (result as ServiceObjectGroup)[3];
+      (result: any[]) => {
+        this.networkObjects = result[0].data;
+        this.networkObjectGroups = result[1].data;
+        this.serviceObjects = result[2].data;
+        this.serviceObjectGroups = result[3].data;
         this.getAuditLogs();
       },
     );

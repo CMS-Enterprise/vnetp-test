@@ -50,24 +50,18 @@ export class NetworkObjectGroupModalComponent implements OnInit {
         .createOneNetworkObjectGroup({
           networkObjectGroup: modalNetworkObjectGroup,
         })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+        .subscribe(() => {
+          this.closeModal();
+        });
     } else {
       this.networkObjectGroupService
         .updateOneNetworkObjectGroup({
           id: this.NetworkObjectGroupId,
           networkObjectGroup: modalNetworkObjectGroup,
         })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+        .subscribe(() => {
+          this.closeModal();
+        });
     }
   }
 
@@ -129,7 +123,7 @@ export class NetworkObjectGroupModalComponent implements OnInit {
 
     const networkObjectGroup = dto.NetworkObjectGroup;
 
-    if (networkObjectGroup !== undefined) {
+    if (networkObjectGroup) {
       this.form.controls.name.setValue(networkObjectGroup.name);
       this.form.controls.name.disable();
       this.form.controls.description.setValue(networkObjectGroup.description);

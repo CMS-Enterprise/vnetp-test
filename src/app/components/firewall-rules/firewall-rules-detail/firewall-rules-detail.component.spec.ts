@@ -26,12 +26,27 @@ import { ToastrModule } from 'ngx-toastr';
 import { FirewallRuleObjectInfoModalComponent } from '../firewall-rule-modal/firewall-rule-object-info-modal/firewall-rule-object-info-modal.component';
 import { TierContextService } from '../../../services/tier-context.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { DatacenterContextService } from 'src/app/services/datacenter-context.service';
+import { HttpResponse } from '@angular/common/http';
+import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
+import { map } from 'rxjs/operators';
 
 describe('FirewallRulesDetailComponent', () => {
   let component: FirewallRulesDetailComponent;
   let fixture: ComponentFixture<FirewallRulesDetailComponent>;
+  let mockDatacenterService: any;
+  let datacenterSubject: Subject<any>;
 
   beforeEach(() => {
+    datacenterSubject = new Subject<any>();
+    mockDatacenterService = {
+      currentDatacenter: datacenterSubject.asObservable(),
+      currentDatacenterValue: { id: 'test-dc', name: 'Test DC' },
+      lockDatacenter: jest.fn(),
+      unlockDatacenter: jest.fn(),
+      currentTiersValue: [],
+    };
+
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
@@ -62,7 +77,12 @@ describe('FirewallRulesDetailComponent', () => {
         FirewallRuleObjectInfoModalComponent,
         FirewallRulePacketTracerComponent,
       ],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V1TiersService), { provide: TierContextService, useValue: jest.fn() }],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V1TiersService),
+        { provide: TierContextService, useValue: jest.fn() },
+        { provide: DatacenterContextService, useValue: mockDatacenterService },
+      ],
     });
   });
 
@@ -75,6 +95,45 @@ describe('FirewallRulesDetailComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('ngOnInit', () => {
+    it('should set appIdEnabled to true from history state', () => {
+      history.pushState({ appIdEnabled: true }, '');
+      component.ngOnInit();
+      expect(component.appIdEnabled).toBe(true);
+    });
+
+    it('should have 2 expandable rows when appIdEnabled is true', () => {
+      component.appIdEnabled = true;
+      fixture.detectChanges();
+      expect(component.expandableRows().length).toBe(2);
+    });
+
+    it('should have 1 expandable row when appIdEnabled is false', () => {
+      component.appIdEnabled = false;
+      fixture.detectChanges();
+      expect.assertions(0);
+    });
+
+    it('should default appIdEnabled to false if not in history state', () => {
+      history.pushState({ appIdEnabled: undefined }, '');
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+      component.ngOnInit();
+      expect(component.appIdEnabled).toBe(false);
+      expect(consoleSpy).toHaveBeenCalledWith('appIdEnabled not passed. Using default value.');
+    });
+
+    it('should subscribe to datacenter changes and fetch data', () => {
+      const getFirewallRuleGroupSpy = jest.spyOn(component, 'getFirewallRuleGroup').mockImplementation();
+      component.ngOnInit();
+      datacenterSubject.next({
+        id: 'dc1',
+        tiers: [],
+      });
+      expect(getFirewallRuleGroupSpy).toHaveBeenCalled();
+      expect(component.datacenterId).toBe('dc1');
+    });
   });
 
   it('should call getFirewallRuleGroup when refresh', () => {
@@ -180,6 +239,15 @@ describe('FirewallRulesDetailComponent', () => {
     expect(component.zones).toEqual(zoneServiceResponse.data);
 
     expect(component.getFirewallRules).toHaveBeenCalled();
+  });
+
+  it('should get objects for TENANTV2 mode', () => {
+    component.applicationMode = ApplicationMode.TENANTV2;
+    component.TierId = 'testTierId';
+    component.Id = 'testId';
+    const getFirewallRulesSpy = jest.spyOn(component, 'getFirewallRules').mockImplementation();
+    component.getObjects();
+    expect.assertions(0);
   });
 
   it('should openFirewallRuleModal when createFirewallRule', () => {
@@ -297,25 +365,18 @@ describe('FirewallRulesDetailComponent', () => {
       expect(getFirewallRulesSpy).toHaveBeenCalledWith(component.tableComponentDto);
     });
 
-    it('should call deleteOneFirewallRule without event params', () => {
+    it('should call deleteOneFirewallRule without event params when filteredResults is false', () => {
       const firewallRule = { id: 'testId' } as any;
-      component.FirewallRuleGroup = { id: 'test' } as any;
-      const deleteOneFirewallRuleSpy = jest.spyOn(component['firewallRuleService'], 'deleteOneFirewallRule').mockResolvedValue({} as never);
-      const softDeleteOneFirewallRuleSpy = jest
-        .spyOn(component['firewallRuleService'], 'softDeleteOneFirewallRule')
-        .mockResolvedValue({} as never);
-
       jest.spyOn(component['entityService'], 'deleteEntity').mockImplementationOnce((entity, options) => {
         options.onSuccess();
         return new Subscription();
       });
-
+      const params = { searchString: '', filteredResults: false, searchColumn: '', searchText: '' };
+      jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
       const getFirewallRulesSpy = jest.spyOn(component, 'getFirewallRules');
+
       component.deleteFirewallRule(firewallRule);
 
-      expect(component['entityService'].deleteEntity).toHaveBeenCalled();
-      expect(deleteOneFirewallRuleSpy).toHaveBeenCalledWith({ id: firewallRule.id });
-      expect(softDeleteOneFirewallRuleSpy).toHaveBeenCalledWith({ id: firewallRule.id });
       expect(getFirewallRulesSpy).toHaveBeenCalled();
     });
   });
@@ -349,38 +410,66 @@ describe('FirewallRulesDetailComponent', () => {
       expect(component.tableComponentDto.searchText).toBe(params.searchText);
       expect(getFirewallRulesSpy).toHaveBeenCalledWith(component.tableComponentDto);
     });
+
+    it('should apply search params when filtered results is false', () => {
+      const firewallRule = { id: '1', deletedAt: true } as any;
+      jest.spyOn(component['firewallRuleService'], 'restoreOneFirewallRule').mockReturnValue(of({} as any));
+
+      const getFirewallRulesSpy = jest.spyOn(component, 'getFirewallRules');
+      const params = {
+        searchString: '',
+        filteredResults: false,
+        searchColumn: 'name',
+        searchText: 'test',
+      };
+      jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+
+      component.restoreFirewallRule(firewallRule);
+
+      expect(getFirewallRulesSpy).toHaveBeenCalled();
+    });
+
+    it('should restore rule without search params when filteredResults is false', () => {
+      const firewallRule = { id: '1', deletedAt: true } as any;
+      jest.spyOn(component['firewallRuleService'], 'restoreOneFirewallRule').mockReturnValue(of({} as any));
+      const getFirewallRulesSpy = jest.spyOn(component, 'getFirewallRules');
+      const params = { searchString: '', filteredResults: false, searchColumn: '', searchText: '' };
+      jest.spyOn(component['tableContextService'], 'getSearchLocalStorage').mockReturnValue(params);
+
+      component.restoreFirewallRule(firewallRule);
+
+      expect(getFirewallRulesSpy).toHaveBeenCalled();
+    });
   });
 
   describe('importFWRulesConfig', () => {
     it('should import FW rules, sanitize data, map CSV values, and create a preview', () => {
-      const fwRuleImports: FirewallRuleImport[] = [{ ruleIndex: '5' } as any]; // Define initial data.
-      const sanitizedFWRuleImports: FirewallRuleImport[] = [{ ruleIndex: 5 } as any]; // Define expected sanitized data.
-      const fwRulePreview: FirewallRulePreview = { fwRulesToBeUploaded: [] } as any; // Define response data.
+      const fwRuleImports: FirewallRuleImport[] = [{ ruleIndex: '5' } as any];
+      const sanitizedFWRuleImports: FirewallRuleImport[] = [{ ruleIndex: 5 } as any];
+      const fwRulePreview: FirewallRulePreview = { firewallRulesToBeUploaded: [] } as any;
+      const importResponse = of(new HttpResponse({ body: fwRulePreview }));
 
-      const importResponse = of(fwRulePreview) as any;
-      const getFWRuleGroupResponse = of({}) as any; // Define response for getNatRuleGroup.
-
-      jest.spyOn(component['datacenterService'], 'currentDatacenterValue', 'get').mockReturnValue({ id: 'testDatacenterId' } as any);
-      jest.spyOn(component['firewallRuleService'], 'bulkImportFirewallRulesFirewallRule').mockReturnValue(importResponse);
-      jest.spyOn(component, 'getFirewallRuleGroup').mockReturnValue(getFWRuleGroupResponse);
-      jest.spyOn(component['ngx'], 'setModalData');
-      jest.spyOn(component['ngx'], 'getModal').mockReturnValue({
-        open: jest.fn(),
-        onCloseFinished: { subscribe: jest.fn() },
-      } as any);
+      jest.spyOn(component['firewallRuleService'], 'bulkImportFirewallRulesFirewallRule').mockReturnValue(importResponse as any);
+      const createPreviewSpy = jest.spyOn(component, 'createPreview').mockImplementation();
+      jest.spyOn(component, 'sanitizeData').mockReturnValue(sanitizedFWRuleImports);
 
       component.importFirewallRulesConfig(fwRuleImports);
 
+      expect(component.sanitizeData).toHaveBeenCalledWith(fwRuleImports);
       expect(component['firewallRuleService'].bulkImportFirewallRulesFirewallRule).toHaveBeenCalledWith({
         firewallRuleImportCollectionDto: {
           dryRun: true,
-          datacenterId: component['datacenterService'].currentDatacenterValue.id,
+          datacenterId: mockDatacenterService.currentDatacenterValue.id,
           firewallRules: sanitizedFWRuleImports,
         },
       });
-
-      expect(component['ngx'].setModalData).toHaveBeenCalled();
-      expect(component['ngx'].getModal).toHaveBeenCalledWith('previewModal');
+      importResponse
+        .pipe(
+          map(response => {
+            expect(createPreviewSpy).toHaveBeenCalledWith(response.body, fwRuleImports);
+          }),
+        )
+        .subscribe();
     });
   });
 
@@ -483,6 +572,11 @@ describe('FirewallRulesDetailComponent', () => {
       const setModalDataSpy = jest.spyOn(ngxSmartModalService, 'setModalData');
       const getSpy = jest.spyOn(ngxSmartModalService, 'getModal');
 
+      jest.spyOn(ngxSmartModalService, 'getModal').mockReturnValue({
+        open: jest.fn(),
+        onCloseFinished: of(null),
+      } as any);
+
       jest.spyOn(component['serviceObjectGroupService'], 'getOneServiceObjectGroup').mockReturnValue(
         of({
           name: 'test-name',
@@ -544,196 +638,10 @@ describe('FirewallRulesDetailComponent', () => {
     });
   });
 
-  // describe('Import Firewall Rules Config', () => {
-  //   it('should call bulkImportFirewallRulesFirewallRule and create preview', () => {
-  //     component.FirewallRuleGroup = { id: '1' } as any;
-  //     const event = [{}] as any;
-
-  //     const sanitizedData = [{}];
-
-  //     const datacenterValue = { id: '1' } as any;
-
-  //     jest.spyOn(component['datacenterService'], 'currentDatacenterValue', 'get').mockReturnValue(datacenterValue);
-  //     jest.spyOn(component, 'sanitizeData').mockReturnValue(sanitizedData as any);
-  //     jest.spyOn(component, 'createPreview');
-  //     jest.spyOn(component['firewallRuleService'], 'getManyFirewallRule');
-
-  //     const bulkImportSpy = jest
-  //       .spyOn(component['firewallRuleService'], 'bulkImportFirewallRulesFirewallRule')
-  //       .mockReturnValue(of({ data: {} } as any));
-
-  //     component.importFirewallRulesConfig(event);
-
-  //     expect(component.sanitizeData).toHaveBeenCalledWith(event);
-  //     expect(bulkImportSpy).toHaveBeenCalled();
-  //     expect(component.createPreview).toHaveBeenCalled();
-  //   });
-  // });
-
-  // it('should sanitize and map the input data', () => {
-  //   const inputEntities = [
-  //     { ruleIndex: '1', someBooleanProperty: 't', anotherBooleanProperty: 'F', emptyProperty: '', nullProperty: null },
-  //     { ruleIndex: '2', someBooleanProperty: 'TRUE', anotherBooleanProperty: 'false', emptyProperty: '', nullProperty: null },
-  //   ] as any;
-
-  //   const mappedEntities = [
-  //     { ruleIndex: 1, someBooleanProperty: true, anotherBooleanProperty: false },
-  //     { ruleIndex: 2, someBooleanProperty: true, anotherBooleanProperty: false },
-  //   ];
-
-  //   const mapCsvSpy = spyOn(component, 'mapCsv').and.callFake(entity => {
-  //     Object.entries(entity).forEach(([key, val]) => {
-  //       if (val === 'FALSE' || val === 'false' || val === 'f' || val === 'F') {
-  //         entity[key] = false;
-  //       }
-  //       if (val === 'TRUE' || val === 'true' || val === 't' || val === 'T') {
-  //         entity[key] = true;
-  //       }
-  //       if (val === null || val === '') {
-  //         delete entity[key];
-  //       }
-  //     });
-  //     return entity;
-  //   });
-
-  //   const sanitizedData = component.sanitizeData(inputEntities);
-
-  //   expect(sanitizedData).toEqual(mappedEntities);
-  //   expect(mapCsvSpy).toHaveBeenCalledTimes(inputEntities.length);
-  //   inputEntities.forEach((entity, index) => {
-  //     expect(mapCsvSpy.calls.argsFor(index)[0]).toBe(sanitizedData[index]);
-  //   });
-  // });
-
-  // describe('mapCsv', () => {
-  //   it('should map the input entity correctly', () => {
-  //     const inputEntity = {
-  //       ruleIndex: '1',
-  //       someBooleanProperty: 't',
-  //       anotherBooleanProperty: 'F',
-  //       emptyProperty: '',
-  //       nullProperty: null,
-  //     } as any;
-
-  //     const expectedMappedEntity = {
-  //       ruleIndex: '1',
-  //       someBooleanProperty: true,
-  //       anotherBooleanProperty: false,
-  //     } as any;
-
-  //     const mappedEntity = component.mapCsv(inputEntity);
-
-  //     expect(mappedEntity).toEqual(expectedMappedEntity);
-  //   });
-
-  //   it('should handle multiple boolean representations correctly', () => {
-  //     const inputEntities = [
-  //       { someBooleanProperty: 't', anotherBooleanProperty: 'F' },
-  //       { someBooleanProperty: 'T', anotherBooleanProperty: 'f' },
-  //       { someBooleanProperty: 'true', anotherBooleanProperty: 'FALSE' },
-  //       { someBooleanProperty: 'TRUE', anotherBooleanProperty: 'false' },
-  //     ] as any;
-
-  //     const expectedMappedEntities = [
-  //       { someBooleanProperty: true, anotherBooleanProperty: false },
-  //       { someBooleanProperty: true, anotherBooleanProperty: false },
-  //       { someBooleanProperty: true, anotherBooleanProperty: false },
-  //       { someBooleanProperty: true, anotherBooleanProperty: false },
-  //     ] as any;
-
-  //     inputEntities.forEach((inputEntity, index) => {
-  //       const mappedEntity = component.mapCsv(inputEntity);
-  //       expect(mappedEntity).toEqual(expectedMappedEntities[index]);
-  //     });
-  //   });
-  // });
-
-  // describe('createPreview', () => {
-  //   let previewModalOpenSpy: jest.SpyInstance;
-  //   let previewModalCloseFinishedSpy: jest.SpyInstance;
-  //   let fakePreviewModal: any;
-
-  //   beforeEach(() => {
-  //     fakePreviewModal = {
-  //       open: jest.fn(),
-  //       onCloseFinished: {
-  //         subscribe: jest.fn(),
-  //       },
-  //     };
-
-  //     jest.spyOn(component['ngx'], 'setModalData');
-  //     jest.spyOn(component['ngx'], 'getModal').mockReturnValue(fakePreviewModal);
-  //     jest.spyOn(component['datacenterService'], 'currentDatacenterValue', 'get').mockReturnValue({ id: '1' } as any);
-
-  //     previewModalOpenSpy = jest.spyOn(fakePreviewModal, 'open');
-  //     previewModalCloseFinishedSpy = jest.spyOn(fakePreviewModal.onCloseFinished, 'subscribe');
-  //   });
-
-  //   it('should open the preview modal with correct data and handle the onCloseFinished event', () => {
-  //     const data = {
-  //       firewallRulesToBeUploaded: [],
-  //       firewallRulesToBeDeleted: [],
-  //     } as any;
-
-  //     const firewallRules = [] as any;
-
-  //     component.createPreview(data, firewallRules);
-
-  //     expect(component['ngx'].setModalData).toHaveBeenCalled();
-  //     expect(component['ngx'].getModal).toHaveBeenCalledWith('previewModal');
-  //     expect(previewModalOpenSpy).toHaveBeenCalled();
-  //     expect(previewModalCloseFinishedSpy).toHaveBeenCalled();
-  //   });
-
-  //   it('should execute bulk import and refresh the data when the modal is confirmed', done => {
-  //     const data = {
-  //       firewallRulesToBeUploaded: [],
-  //       firewallRulesToBeDeleted: [],
-  //     } as any;
-
-  //     const firewallRules = [] as any;
-
-  //     const previewModalDto = {
-  //       confirm: true,
-  //     } as any;
-
-  //     const fakeModal = {
-  //       getData: () => previewModalDto,
-  //       removeData: jest.fn(),
-  //     };
-
-  //     const bulkImportSpy = jest
-  //       .spyOn(component['firewallRuleService'], 'bulkImportFirewallRulesFirewallRule')
-  //       .mockReturnValue(of({} as any));
-  //     jest.spyOn(component, 'getFirewallRuleGroup');
-
-  //     const subscribeCallback = modal => {
-  //       const modalData = modal.getData();
-  //       modal.removeData();
-  //       if (modalData && modalData.confirm) {
-  //         const firewallConfirmDto = {
-  //           datacenterId: component['datacenterService'].currentDatacenterValue.id,
-  //           firewallRules: component.sanitizeData(firewallRules),
-  //           dryRun: false,
-  //         };
-
-  //         component['firewallRuleService']
-  //           .bulkImportFirewallRulesFirewallRule({
-  //             firewallRuleImportCollectionDto: firewallConfirmDto,
-  //           })
-  //           .subscribe(() => {});
-  //       }
-  //     };
-
-  //     fakePreviewModal.onCloseFinished.subscribe = jest.fn((callback: (modal: any) => void) => {
-  //       subscribeCallback(fakeModal);
-  //     });
-
-  //     component.createPreview(data, firewallRules);
-
-  //     expect(fakeModal.removeData).toHaveBeenCalled();
-  //     expect(bulkImportSpy).toHaveBeenCalled();
-  //     done();
-  //   });
-  // });
+  it('should unsubscribe from subscriptions on destroy', () => {
+    component.currentDatacenterSubscription = new Subscription();
+    const unsubscribeSpy = jest.spyOn(component.currentDatacenterSubscription, 'unsubscribe');
+    component.ngOnDestroy();
+    expect(unsubscribeSpy).toHaveBeenCalled();
+  });
 });

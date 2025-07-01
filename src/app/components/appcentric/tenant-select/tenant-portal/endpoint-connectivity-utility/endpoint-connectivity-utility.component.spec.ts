@@ -363,6 +363,13 @@ describe('EndpointConnectivityUtilityComponent', () => {
         };
         expect(component.getStatusClass()).toBe('status-denied-config');
       });
+      it('should return status-unknown for other statuses', () => {
+        component.connectivityResult = {
+          ...baseResponse,
+          connectivityResult: EndpointConnectionUtilityResponseConnectivityResultEnum.NotSupported,
+        };
+        expect(component.getStatusClass()).toBe('status-unknown');
+      });
     });
 
     describe('isConnectionAllowed', () => {
@@ -525,5 +532,278 @@ describe('EndpointConnectivityUtilityComponent', () => {
     });
   });
 
-  // More test suites will follow here for applyGeneratedConfig
+  describe('resetForm', () => {
+    it('should reset the form to its default state and clear results/errors', () => {
+      // Dirty the form and state
+      component.connectivityForm.get('sourceEndpointIp')?.setValue('1.2.3.4');
+      component.connectivityResult = { connectivityResult: 'allowed' } as any;
+      component.error = 'An old error';
+      const initialIdentifier = component.connectivityForm.get('generatedConfigIdentifier')?.value;
+
+      component.resetForm();
+
+      expect(component.connectivityForm.get('sourceEndpointIp')?.value).toBeNull();
+      expect(component.connectivityForm.get('ipProtocol')?.value).toBe('tcp');
+      expect(component.connectivityForm.get('generatedConfigIdentifier')?.value).not.toBe(initialIdentifier);
+      expect(component.connectivityResult).toBeNull();
+      expect(component.error).toBeNull();
+    });
+  });
+
+  describe('applyGeneratedConfig', () => {
+    let mockGeneratedConfig;
+
+    beforeEach(() => {
+      mockGeneratedConfig = {
+        existingContract: false,
+        Contracts: [{ name: 'new-contract', tenantId: mockTenantId }],
+        Filters: [{ name: 'new-filter', tenantId: mockTenantId }],
+        Subjects: [{ name: 'new-subject', contractId: 'new-contract' }],
+        FilterEntries: [{ name: 'new-fe', filterId: 'new-filter' }],
+        SubjectToFilter: [{ subjectId: 'new-subject', filterId: 'new-filter' }],
+        ContractToEpg: [
+          { contractId: 'new-contract', epgId: 'epg-1', contractRelationType: 'Consumer' },
+          { contractId: 'new-contract', epgId: 'epg-2', contractRelationType: 'Provider' },
+          { contractId: 'new-contract', epgId: 'epg-3', contractRelationType: 'Intra' },
+        ],
+        ContractToEsg: [
+          { contractId: 'new-contract', esgId: 'esg-1', contractRelationType: 'Consumer' },
+          { contractId: 'new-contract', esgId: 'esg-2', contractRelationType: 'Provider' },
+          { contractId: 'new-contract', esgId: 'esg-3', contractRelationType: 'Intra' },
+        ],
+      };
+      component.connectivityResult = {
+        generatedConfig: mockGeneratedConfig,
+      } as any;
+      component.error = null;
+      component.isLoading = false;
+
+      // Mock successful service calls by default
+      (mockContractsService.createManyContract as jest.Mock).mockReturnValue(of({ data: [{ id: 'contract-uuid', name: 'new-contract' }] }));
+      (mockFiltersService.createManyFilter as jest.Mock).mockReturnValue(of({ data: [{ id: 'filter-uuid', name: 'new-filter' }] }));
+      (mockSubjectsService.createManySubject as jest.Mock).mockReturnValue(of({ data: [{ id: 'subject-uuid', name: 'new-subject' }] }));
+      (mockFilterEntriesService.createManyFilterEntry as jest.Mock).mockReturnValue(of({ data: [{ id: 'fe-uuid', name: 'new-fe' }] }));
+      (mockSubjectsService.addFilterToSubjectSubject as jest.Mock).mockReturnValue(of(null));
+      (mockEndpointGroupsService.addConsumedContractToEndpointGroupEndpointGroup as jest.Mock).mockReturnValue(of(null));
+      (mockEndpointGroupsService.addProvidedContractToEndpointGroupEndpointGroup as jest.Mock).mockReturnValue(of(null));
+      (mockEndpointGroupsService.addIntraContractToEndpointGroupEndpointGroup as jest.Mock).mockReturnValue(of(null));
+      (mockEndpointSecurityGroupsService.addConsumedContractToEndpointSecurityGroupEndpointSecurityGroup as jest.Mock).mockReturnValue(
+        of(null),
+      );
+      (mockEndpointSecurityGroupsService.addProvidedContractToEndpointSecurityGroupEndpointSecurityGroup as jest.Mock).mockReturnValue(
+        of(null),
+      );
+      (mockEndpointSecurityGroupsService.addIntraContractToEndpointSecurityGroupEndpointSecurityGroup as jest.Mock).mockReturnValue(
+        of(null),
+      );
+    });
+
+    it('should not run if there is no generated config', () => {
+      component.connectivityResult = null;
+      component.applyGeneratedConfig();
+      expect(component.isLoading).toBeFalsy();
+      expect(mockContractsService.createManyContract).not.toHaveBeenCalled();
+    });
+
+    it('should execute full success path for new contract scenario', () => {
+      component.applyGeneratedConfig();
+
+      expect(mockContractsService.createManyContract).toHaveBeenCalled();
+      expect(mockFiltersService.createManyFilter).toHaveBeenCalled();
+      expect(mockSubjectsService.createManySubject).toHaveBeenCalledWith({
+        createManySubjectDto: { bulk: [{ name: 'new-subject', contractId: 'contract-uuid', id: undefined }] },
+      });
+      expect(mockFilterEntriesService.createManyFilterEntry).toHaveBeenCalledWith({
+        createManyFilterEntryDto: { bulk: [{ name: 'new-fe', filterId: 'filter-uuid', id: undefined }] },
+      });
+      expect(mockSubjectsService.addFilterToSubjectSubject).toHaveBeenCalledWith({ subjectId: 'subject-uuid', filterId: 'filter-uuid' });
+
+      // EPG Links
+      expect(mockEndpointGroupsService.addConsumedContractToEndpointGroupEndpointGroup).toHaveBeenCalledWith({
+        contractId: 'contract-uuid',
+        endpointGroupId: 'epg-1',
+      });
+      expect(mockEndpointGroupsService.addProvidedContractToEndpointGroupEndpointGroup).toHaveBeenCalledWith({
+        contractId: 'contract-uuid',
+        endpointGroupId: 'epg-2',
+      });
+      expect(mockEndpointGroupsService.addIntraContractToEndpointGroupEndpointGroup).toHaveBeenCalledWith({
+        contractId: 'contract-uuid',
+        endpointGroupId: 'epg-3',
+      });
+
+      // ESG Links
+      expect(mockEndpointSecurityGroupsService.addConsumedContractToEndpointSecurityGroupEndpointSecurityGroup).toHaveBeenCalledWith({
+        contractId: 'contract-uuid',
+        endpointSecurityGroupId: 'esg-1',
+      });
+      expect(mockEndpointSecurityGroupsService.addProvidedContractToEndpointSecurityGroupEndpointSecurityGroup).toHaveBeenCalledWith({
+        contractId: 'contract-uuid',
+        endpointSecurityGroupId: 'esg-2',
+      });
+      expect(mockEndpointSecurityGroupsService.addIntraContractToEndpointSecurityGroupEndpointSecurityGroup).toHaveBeenCalledWith({
+        contractId: 'contract-uuid',
+        endpointSecurityGroupId: 'esg-3',
+      });
+
+      expect(component.isLoading).toBe(false);
+      expect(component.error).toBe(null);
+    });
+
+    it('should handle existing contract scenario', () => {
+      mockGeneratedConfig.existingContract = true;
+      mockGeneratedConfig.Contracts[0].id = 'existing-contract-uuid'; // For linking
+      component.connectivityResult = { generatedConfig: mockGeneratedConfig } as any;
+
+      component.applyGeneratedConfig();
+
+      expect(mockContractsService.createManyContract).not.toHaveBeenCalled();
+      // Subject should be created with the existing contract id
+      expect(mockSubjectsService.createManySubject).toHaveBeenCalledWith({
+        createManySubjectDto: { bulk: [{ name: 'new-subject', contractId: 'new-contract', id: undefined }] },
+      });
+      // Linking should use the correct id
+      expect(mockEndpointGroupsService.addConsumedContractToEndpointGroupEndpointGroup).toHaveBeenCalledWith({
+        contractId: 'new-contract',
+        endpointGroupId: 'epg-1',
+      });
+    });
+
+    it('should handle API error during contract creation', () => {
+      const error = new Error('Contract creation failed');
+      (mockContractsService.createManyContract as jest.Mock).mockReturnValue(throwError(() => error));
+      component.applyGeneratedConfig();
+      expect(component.isLoading).toBe(false);
+      expect(component.error).toBe('Error creating contracts: Contract creation failed');
+    });
+
+    it('should handle API error during subject-to-filter linking', () => {
+      const error = new Error('Linking failed');
+      (mockSubjectsService.addFilterToSubjectSubject as jest.Mock).mockReturnValue(throwError(() => error));
+      component.applyGeneratedConfig();
+      expect(component.isLoading).toBe(false);
+      expect(component.error).toContain('Error linking subject');
+    });
+
+    it('should handle ID resolution failure for subjects', () => {
+      // Simulate createManyContract returning a contract with a different name
+      (mockContractsService.createManyContract as jest.Mock).mockReturnValue(of({ data: [{ id: 'contract-uuid', name: 'other-name' }] }));
+      component.applyGeneratedConfig();
+      expect(component.isLoading).toBe(false);
+      expect(component.error).toContain('ID_RESOLVE_FAIL');
+    });
+
+    it('should handle ID resolution failure for filter entries', () => {
+      (mockFiltersService.createManyFilter as jest.Mock).mockReturnValue(of({ data: [{ id: 'filter-uuid', name: 'other-name' }] }));
+      component.applyGeneratedConfig();
+      expect(component.isLoading).toBe(false);
+      expect(component.error).toContain('ID_RESOLVE_FAIL');
+    });
+
+    it('should handle partial config (no filters/subjects)', () => {
+      mockGeneratedConfig.Filters = [];
+      mockGeneratedConfig.Subjects = [];
+      mockGeneratedConfig.FilterEntries = [];
+      mockGeneratedConfig.SubjectToFilter = [];
+      component.connectivityResult = { generatedConfig: mockGeneratedConfig } as any;
+
+      component.applyGeneratedConfig();
+
+      expect(mockContractsService.createManyContract).toHaveBeenCalled();
+      expect(mockFiltersService.createManyFilter).not.toHaveBeenCalled();
+      expect(mockSubjectsService.createManySubject).not.toHaveBeenCalled();
+      expect(component.isLoading).toBe(false);
+      expect(component.error).toBe(null);
+    });
+
+    it('should propagate error for unknown ContractToEpg relation type', () => {
+      mockGeneratedConfig.ContractToEpg[0].contractRelationType = 'InvalidType';
+      component.applyGeneratedConfig();
+      expect(component.isLoading).toBe(false);
+      expect(component.error).toContain("Unknown contractRelationType 'InvalidType'");
+    });
+
+    it('should propagate error for unknown ContractToEsg relation type', () => {
+      mockGeneratedConfig.ContractToEsg[0].contractRelationType = 'InvalidType';
+      component.applyGeneratedConfig();
+      expect(component.isLoading).toBe(false);
+      expect(component.error).toContain("Unknown contractRelationType 'InvalidType'");
+    });
+
+    describe('Error Scenarios', () => {
+      it('should handle API error during filter creation', () => {
+        const error = new Error('Filter creation failed');
+        (mockFiltersService.createManyFilter as jest.Mock).mockReturnValue(throwError(() => error));
+        component.applyGeneratedConfig();
+        expect(component.isLoading).toBe(false);
+        expect(component.error).toContain('Error creating filters:');
+      });
+
+      it('should handle API error during subject creation', () => {
+        const error = new Error('Subject creation failed');
+        (mockSubjectsService.createManySubject as jest.Mock).mockReturnValue(throwError(() => error));
+        component.applyGeneratedConfig();
+        expect(component.isLoading).toBe(false);
+        expect(component.error).toContain('Error creating subjects:');
+      });
+
+      it('should handle API error during filter entry creation', () => {
+        const error = new Error('Filter entry creation failed');
+        (mockFilterEntriesService.createManyFilterEntry as jest.Mock).mockReturnValue(throwError(() => error));
+        component.applyGeneratedConfig();
+        expect(component.isLoading).toBe(false);
+        expect(component.error).toContain('Error creating filter entries:');
+      });
+
+      it('should handle link failure when subject or filter not found', () => {
+        (mockSubjectsService.createManySubject as jest.Mock).mockReturnValue(
+          of({ data: [{ id: 'subject-uuid', name: 'a-different-subject' }] }),
+        );
+        component.applyGeneratedConfig();
+        expect(component.isLoading).toBe(false);
+        expect(component.error).toContain('LINK_FAIL: Could not find subject');
+      });
+
+      it('should handle EPG link failure for new contract when contract not found', () => {
+        (mockContractsService.createManyContract as jest.Mock).mockReturnValue(
+          of({ data: [{ id: 'contract-uuid', name: 'a-different-contract' }] }),
+        );
+        mockGeneratedConfig.Subjects = [];
+        mockGeneratedConfig.SubjectToFilter = [];
+        component.applyGeneratedConfig();
+        expect(component.isLoading).toBe(false);
+        expect(component.error).toContain('LINK_FAIL: Could not resolve contract name');
+      });
+
+      it('should handle EPG link API error', () => {
+        const error = new Error('EPG linking failed');
+        (mockEndpointGroupsService.addConsumedContractToEndpointGroupEndpointGroup as jest.Mock).mockReturnValue(throwError(() => error));
+        component.applyGeneratedConfig();
+        expect(component.isLoading).toBe(false);
+        expect(component.error).toContain('Error linking contract');
+      });
+
+      it('should handle ESG link failure for new contract when contract not found', () => {
+        (mockContractsService.createManyContract as jest.Mock).mockReturnValue(
+          of({ data: [{ id: 'contract-uuid', name: 'a-different-contract' }] }),
+        );
+        mockGeneratedConfig.ContractToEpg = [];
+        mockGeneratedConfig.Subjects = [];
+        mockGeneratedConfig.SubjectToFilter = [];
+        component.applyGeneratedConfig();
+        expect(component.isLoading).toBe(false);
+        expect(component.error).toContain('LINK_FAIL: Could not resolve contract name');
+      });
+
+      it('should handle ESG link API error', () => {
+        const error = new Error('ESG linking failed');
+        (mockEndpointSecurityGroupsService.addConsumedContractToEndpointSecurityGroupEndpointSecurityGroup as jest.Mock).mockReturnValue(
+          throwError(() => error),
+        );
+        component.applyGeneratedConfig();
+        expect(component.isLoading).toBe(false);
+        expect(component.error).toContain('Error linking contract');
+      });
+    });
+  });
 });

@@ -138,10 +138,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
   }
 
   private createProfile(loadBalancerProfile: LoadBalancerProfile): void {
-    this.profileService.createOneLoadBalancerProfile({ loadBalancerProfile }).subscribe(
-      () => this.closeModal(),
-      () => {},
-    );
+    this.profileService.createOneLoadBalancerProfile({ loadBalancerProfile }).subscribe(() => this.closeModal());
   }
 
   private updateProfile(loadBalancerProfile: LoadBalancerProfile): void {
@@ -152,10 +149,7 @@ export class ProfileModalComponent implements OnInit, OnDestroy {
         id: this.profileId,
         loadBalancerProfile,
       })
-      .subscribe(
-        () => this.closeModal(),
-        () => {},
-      );
+      .subscribe(() => this.closeModal());
   }
 
   private getProfileForSave(): LoadBalancerProfile {

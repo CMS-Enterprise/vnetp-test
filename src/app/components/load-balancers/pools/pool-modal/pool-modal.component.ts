@@ -260,10 +260,7 @@ export class PoolModalComponent implements OnInit {
   }
 
   private createPool(loadBalancerPool: LoadBalancerPool): void {
-    this.poolService.createOneLoadBalancerPool({ loadBalancerPool }).subscribe(
-      () => this.closeModal(),
-      () => {},
-    );
+    this.poolService.createOneLoadBalancerPool({ loadBalancerPool }).subscribe(() => this.closeModal());
   }
 
   private updatePool(loadBalancerPool: LoadBalancerPool): void {
@@ -273,10 +270,7 @@ export class PoolModalComponent implements OnInit {
         id: this.poolId,
         loadBalancerPool,
       })
-      .subscribe(
-        () => this.closeModal(),
-        () => {},
-      );
+      .subscribe(() => this.closeModal());
   }
 
   private loadPoolResources(): void {

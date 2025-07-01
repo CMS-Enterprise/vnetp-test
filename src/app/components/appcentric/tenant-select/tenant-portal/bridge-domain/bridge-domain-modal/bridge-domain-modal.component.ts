@@ -181,12 +181,9 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   }
 
   private createBridgeDomain(bridgeDomain: BridgeDomain): void {
-    this.bridgeDomainService.createOneBridgeDomain({ bridgeDomain }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.bridgeDomainService.createOneBridgeDomain({ bridgeDomain }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private editBridgeDomain(bridgeDomain: BridgeDomain): void {
@@ -198,12 +195,9 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
         id: this.bridgeDomainId,
         bridgeDomain,
       })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+      .subscribe(() => {
+        this.closeModal();
+      });
   }
 
   public save(): void {
@@ -367,8 +361,8 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
           bridgeDomainId: this.bridgeDomainId,
           l3OutId: l3Out.id,
         })
-        .subscribe(
-          () => {
+        .subscribe({
+          next: () => {
             const params = this.tableContextService.getSearchLocalStorage();
             const { filteredResults } = params;
 
@@ -380,9 +374,8 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
               this.getL3OutsTableData();
             }
           },
-          () => {},
-          () => this.getL3Outs(),
-        );
+          complete: () => this.getL3Outs(),
+        });
     };
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
@@ -435,13 +428,11 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
       dto.map(relation => {
-        this.bridgeDomainService.addL3OutToBridgeDomainBridgeDomain(relation).subscribe(
-          () => {},
-          () => {},
-          () => {
+        this.bridgeDomainService.addL3OutToBridgeDomainBridgeDomain(relation).subscribe({
+          complete: () => {
             this.getL3OutsTableData();
           },
-        );
+        });
       });
     };
 

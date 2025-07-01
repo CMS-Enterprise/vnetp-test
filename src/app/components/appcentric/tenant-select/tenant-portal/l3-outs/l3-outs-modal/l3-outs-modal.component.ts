@@ -110,12 +110,9 @@ export class L3OutsModalComponent implements OnInit {
   }
 
   private createL3Out(l3Out: L3Out): void {
-    this.l3OutsService.createOneL3Out({ l3Out }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.l3OutsService.createOneL3Out({ l3Out }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private editL3Out(l3Out: L3Out): void {
@@ -127,12 +124,9 @@ export class L3OutsModalComponent implements OnInit {
         id: this.l3OutId,
         l3Out,
       })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+      .subscribe(() => {
+        this.closeModal();
+      });
   }
 
   public save(): void {

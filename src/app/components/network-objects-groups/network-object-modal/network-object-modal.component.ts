@@ -84,24 +84,18 @@ export class NetworkObjectModalComponent implements OnInit, OnDestroy {
         .createOneNetworkObject({
           networkObject: modalNetworkObject,
         })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+        .subscribe(() => {
+          this.closeModal();
+        });
     } else {
       this.networkObjectService
         .updateOneNetworkObject({
           id: this.NetworkObjectId,
           networkObject: modalNetworkObject,
         })
-        .subscribe(
-          () => {
-            this.closeModal();
-          },
-          () => {},
-        );
+        .subscribe(() => {
+          this.closeModal();
+        });
     }
   }
 

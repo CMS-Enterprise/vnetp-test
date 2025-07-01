@@ -37,8 +37,6 @@ export class UnusedObjectsModalComponent {
       });
     };
 
-    const onClose = () => {};
-
-    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm, onClose);
+    SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 }

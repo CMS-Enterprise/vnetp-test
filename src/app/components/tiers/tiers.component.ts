@@ -202,17 +202,18 @@ export class TiersComponent implements OnInit, OnDestroy {
         perPage: this.tableComponentDto.perPage,
         sort: ['updatedAt,ASC'],
       })
-      .subscribe(
-        data => {
+      .subscribe({
+        next: data => {
           this.tiers = data;
         },
-        () => {
+        error: () => {
           this.tiers = null;
-        },
-        () => {
           this.isLoading = false;
         },
-      );
+        complete: () => {
+          this.isLoading = false;
+        },
+      });
   }
 
   public openTierModal(modalMode: ModalMode, tier?: Tier): void {

@@ -235,13 +235,11 @@ export class RouteProfileComponent implements OnInit {
   public importRouteProfiles(event): void {
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.routeProfileService.createManyRouteProfile({ createManyRouteProfileDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.routeProfileService.createManyRouteProfile({ createManyRouteProfileDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.refreshRouteProfiles();
         },
-      );
+      });
     };
 
     this.showConfirmationModal(

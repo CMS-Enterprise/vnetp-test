@@ -269,12 +269,9 @@ export class FilterModalComponent implements OnInit {
   }
 
   private createFilter(filter: Filter): void {
-    this.filterService.createOneFilter({ filter }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.filterService.createOneFilter({ filter }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private editFilter(filter: Filter): void {
@@ -285,12 +282,9 @@ export class FilterModalComponent implements OnInit {
         id: this.filterId,
         filter,
       })
-      .subscribe(
-        () => {
-          this.closeModal();
-        },
-        () => {},
-      );
+      .subscribe(() => {
+        this.closeModal();
+      });
   }
 
   public save(): void {
@@ -353,13 +347,11 @@ export class FilterModalComponent implements OnInit {
 
     const onConfirm = () => {
       const dto = this.sanitizeData(event);
-      this.filterEntriesService.createManyFilterEntry({ createManyFilterEntryDto: { bulk: dto } }).subscribe(
-        () => {},
-        () => {},
-        () => {
+      this.filterEntriesService.createManyFilterEntry({ createManyFilterEntryDto: { bulk: dto } }).subscribe({
+        complete: () => {
           this.getFilterEntries();
         },
-      );
+      });
     };
 
     const onClose = () => {

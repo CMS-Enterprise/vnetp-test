@@ -126,10 +126,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
   }
 
   private createNode(loadBalancerNode: LoadBalancerNode): void {
-    this.nodeService.createOneLoadBalancerNode({ loadBalancerNode }).subscribe(
-      () => this.closeModal(),
-      () => {},
-    );
+    this.nodeService.createOneLoadBalancerNode({ loadBalancerNode }).subscribe(() => this.closeModal());
   }
 
   private updateNode(loadBalancerNode: LoadBalancerNode): void {
@@ -140,10 +137,7 @@ export class NodeModalComponent implements OnInit, OnDestroy {
         id: this.nodeId,
         loadBalancerNode,
       })
-      .subscribe(
-        () => this.closeModal(),
-        () => {},
-      );
+      .subscribe(() => this.closeModal());
   }
 
   private getNodeForSave(): LoadBalancerNode {

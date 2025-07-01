@@ -96,23 +96,17 @@ export class VlanModalComponent implements OnInit {
     vlan.vcdVlanType = this.form.value.vcdVlanType;
     vlan.vlanNumber = this.form.value.vlanNumber;
     vlan.tierId = this.TierId;
-    this.vlanService.createOneVlan({ vlan }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.vlanService.createOneVlan({ vlan }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   private updateVlan(vlan: Vlan): void {
     delete vlan.name;
     delete vlan.vlanNumber;
-    this.vlanService.updateOneVlan({ id: this.VlanId, vlan }).subscribe(
-      () => {
-        this.closeModal();
-      },
-      () => {},
-    );
+    this.vlanService.updateOneVlan({ id: this.VlanId, vlan }).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   ngOnInit() {
