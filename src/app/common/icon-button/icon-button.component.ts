@@ -32,7 +32,6 @@ export class IconButtonComponent {
     cog: ['fas', 'cog'],
     arrowRight: ['fas', 'arrow-right'],
     arrowLeft: ['fas', 'arrow-left'],
-    cog: ['fas', 'cog'],
   };
 
   public typeLookup: Record<IconType, string> = {
