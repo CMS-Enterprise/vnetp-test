@@ -355,7 +355,7 @@ export class TenantSelectModalComponent implements OnInit {
 
   private createTenant(tenant: Tenant): void {
     if (this.isAdminPortalMode) {
-      this.tenantService.createOneV2TenantTenant({ tenant: { name: tenant.name } as any }).subscribe(() => {
+      this.tenantService.createOneV2TenantTenant({ tenant: { name: tenant.name, tenantVersion: 2 } as any }).subscribe(() => {
         this.closeModal();
       });
     } else {
