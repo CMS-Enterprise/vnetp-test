@@ -152,7 +152,7 @@ export class WanFormComponent implements OnInit, OnDestroy {
     this.wanFormService
       .getManyWanForm({
         filter: [filerParam, eventParams],
-        join: ['wanFormSubnets', 'externalRoutes'],
+        join: ['importedRoutes', 'exportedRoutes'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })

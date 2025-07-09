@@ -132,6 +132,7 @@ export class BridgeDomainModalComponent implements OnInit, OnDestroy {
       this.form.controls.limitLocalIpLearning.setValue(bridgeDomain.limitLocalIpLearning);
       this.form.controls.epMoveDetectionModeGarp.setValue(bridgeDomain.epMoveDetectionModeGarp);
       this.form.controls.vrfId.setValue(bridgeDomain.vrfId);
+      this.form.controls.vrfId.disable();
       this.form.controls.l3OutForRouteProfileId.setValue(bridgeDomain.l3OutForRouteProfileId);
       this.form.controls.routeProfileId.setValue(bridgeDomain.routeProfileId);
       this.form.controls.hostBasedRouting.setValue(bridgeDomain.hostBasedRouting);

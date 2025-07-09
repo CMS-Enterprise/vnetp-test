@@ -11,7 +11,9 @@
  */
 import { L3Out } from './l3Out';
 import { Tenant } from './tenant';
+import { Tier } from './tier';
 import { BridgeDomain } from './bridgeDomain';
+import { WanForm } from './wanForm';
 
 
 export interface Vrf { 
@@ -37,6 +39,31 @@ export interface Vrf {
     tenantId: string;
     readonly l3outs?: Array<L3Out>;
     readonly bridgeDomains?: Array<BridgeDomain>;
+    readonly tier?: Array<Tier>;
+    readonly tierId?: string;
     readonly tenantVersion?: number;
+    readonly wanForms?: Array<WanForm>;
+    transitTenantVrfs?: Array<VrfTransitTenantVrfsEnum>;
 }
+export enum VrfTransitTenantVrfsEnum {
+    CmsEntsrvInet = 'cms-entsrv-inet',
+    CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
+    CmsEntsrvMgmt = 'cms-entsrv-mgmt',
+    CmsEntsrvMon = 'cms-entsrv-mon',
+    CmsEntsrvPres = 'cms-entsrv-pres',
+    CmsEntsrvSec = 'cms-entsrv-sec',
+    CmsEntsrvVpn = 'cms-entsrv-vpn',
+    CmsnetAppdev = 'cmsnet_appdev',
+    CmsnetAppprod = 'cmsnet_appprod',
+    CmsnetDatadev = 'cmsnet_datadev',
+    CmsnetDataprod = 'cmsnet_dataprod',
+    CmsnetEdcVpn = 'cmsnet_edc_vpn',
+    CmsnetEdcmgmt = 'cmsnet_edcmgmt',
+    CmsnetPresdev = 'cmsnet_presdev',
+    CmsnetPresprod = 'cmsnet_presprod',
+    CmsnetSec = 'cmsnet_sec',
+    CmsnetTransport = 'cmsnet_transport'
+};
+
+
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Tenant, V2AppCentricTenantsService } from 'client';
+import { Tenant, V2AppCentricTenantsService, VrfTransitTenantVrfsEnum } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -9,6 +9,26 @@ import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { NameValidator } from 'src/app/validators/name-validator';
 import { TenantSelectModalHelpText } from 'src/app/helptext/help-text-networking';
 import { RouteDataUtil } from 'src/app/utils/route-data.util';
+
+// VRF Configuration interface
+interface VrfConfiguration {
+  name: string;
+  description: string;
+  externalConnectivity: string[];
+  northSouthFirewallVendor: string;
+  northSouthFirewallArchitecture: string;
+  northSouthHa: boolean;
+  northSouthHaMode: string;
+  eastWestFirewallVendor: string;
+  eastWestFirewallArchitecture: string;
+  eastWestHa: boolean;
+  eastWestHaMode: string;
+  northSouthAppId: boolean;
+  eastWestAppId: boolean;
+  nat64NorthSouth: boolean;
+  eastWestNat: boolean;
+  eastWestAllowSgBypass: boolean;
+}
 
 @Component({
   selector: 'app-tenant-select-modal',
@@ -30,6 +50,8 @@ export class TenantSelectModalComponent implements OnInit {
   public haModesOptions = ['Active-Passive', 'Active-Active'];
   public datacenterOptions = ['East', 'West'];
   public deploymentModeOptions = ['Hot Site First', 'Cold Site First', 'Scheduled Sync'];
+  public externalConnectivityOptions: string[] = [];
+  public vrfConfigurations: VrfConfiguration[] = [];
 
   // Help text for tooltips
   public helpText: TenantSelectModalHelpText;
@@ -47,29 +69,97 @@ export class TenantSelectModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.determineApplicationMode();
+    this.initializeExternalConnectivityOptions();
     this.buildForm();
+    this.initializeVrfConfigurations();
   }
 
   /**
-   * Updates App-ID checkbox values based on firewall vendor selections
+   * Initialize external connectivity options from VrfTransitTenantVrfsEnum
    */
-  private updateAppIdAvailability(): void {
-    // Handle North/South App-ID
-    const northSouthVendor = this.form.get('northSouthFirewallVendor').value;
-    if (northSouthVendor !== 'PANOS') {
-      this.form.get('northSouthAppId').setValue(false);
-      this.form.get('northSouthAppId').disable();
-    } else {
-      this.form.get('northSouthAppId').enable();
-    }
+  private initializeExternalConnectivityOptions(): void {
+    this.externalConnectivityOptions = Object.values(VrfTransitTenantVrfsEnum);
+  }
 
-    // Handle East/West App-ID
-    const eastWestVendor = this.form.get('eastWestFirewallVendor').value;
-    if (eastWestVendor !== 'PANOS') {
-      this.form.get('eastWestAppId').setValue(false);
-      this.form.get('eastWestAppId').disable();
+  /**
+   * Initialize VRF configurations with a default VRF
+   */
+  private initializeVrfConfigurations(): void {
+    this.vrfConfigurations = [this.createDefaultVrfConfiguration()];
+  }
+
+  /**
+   * Create a default VRF configuration
+   */
+  private createDefaultVrfConfiguration(): VrfConfiguration {
+    return {
+      name: 'default_vrf',
+      description: 'Default VRF configuration',
+      externalConnectivity: [VrfTransitTenantVrfsEnum.CmsnetAppprod],
+      northSouthFirewallVendor: 'PANOS',
+      northSouthFirewallArchitecture: 'Virtual',
+      northSouthHa: true,
+      northSouthHaMode: 'Active-Passive',
+      eastWestFirewallVendor: 'PANOS',
+      eastWestFirewallArchitecture: 'Virtual',
+      eastWestHa: true,
+      eastWestHaMode: 'Active-Passive',
+      northSouthAppId: true,
+      eastWestAppId: true,
+      nat64NorthSouth: true,
+      eastWestNat: false,
+      eastWestAllowSgBypass: false,
+    };
+  }
+
+  /**
+   * Add a new VRF configuration
+   */
+  public addVrf(): void {
+    const newVrf = this.createDefaultVrfConfiguration();
+    newVrf.name = ''; // Clear the name for new VRFs
+    newVrf.description = '';
+    this.vrfConfigurations.push(newVrf);
+  }
+
+  /**
+   * Remove a VRF configuration
+   */
+  public removeVrf(index: number): void {
+    const vrf = this.vrfConfigurations[index];
+
+    // Prevent deletion if it's the last VRF or if it's the default_vrf
+    if (this.vrfConfigurations.length > 1 && vrf.name !== 'default_vrf') {
+      this.vrfConfigurations.splice(index, 1);
+    }
+  }
+
+  /**
+   * Check if a VRF can be removed
+   */
+  public canRemoveVrf(index: number): boolean {
+    const vrf = this.vrfConfigurations[index];
+    return this.vrfConfigurations.length > 1 && vrf.name !== 'default_vrf';
+  }
+
+  /**
+   * Check if an external connectivity option is selected for a VRF
+   */
+  public isExternalConnectivitySelected(vrfIndex: number, option: string): boolean {
+    return this.vrfConfigurations[vrfIndex].externalConnectivity.includes(option);
+  }
+
+  /**
+   * Toggle an external connectivity option for a VRF
+   */
+  public toggleExternalConnectivity(vrfIndex: number, option: string): void {
+    const vrf = this.vrfConfigurations[vrfIndex];
+    const index = vrf.externalConnectivity.indexOf(option);
+
+    if (index > -1) {
+      vrf.externalConnectivity.splice(index, 1);
     } else {
-      this.form.get('eastWestAppId').enable();
+      vrf.externalConnectivity.push(option);
     }
   }
 
@@ -79,35 +169,12 @@ export class TenantSelectModalComponent implements OnInit {
   private updateSizeBasedOptions(): void {
     const tenantSize = this.form.get('tenantSize').value;
 
-    // For x-small or small tenants, restrict east/west firewall architecture to Virtual and disable HA
+    // For x-small or small tenants, update VRF configurations to restrict east/west firewall architecture to Virtual and disable HA
     if (tenantSize === 'x-small' || tenantSize === 'small') {
-      this.form.get('eastWestFirewallArchitecture').setValue('Virtual');
-      this.form.get('eastWestFirewallArchitecture').disable();
-
-      this.form.get('eastWestHa').setValue(false);
-      this.form.get('eastWestHa').disable();
-
-      // Since HA is disabled, also disable HA mode
-      this.form.get('eastWestHaMode').disable();
-    } else {
-      this.form.get('eastWestFirewallArchitecture').enable();
-      this.form.get('eastWestHa').enable();
-
-      // Update HA mode availability based on eastWestHa value
-      this.updateHaModeAvailability('eastWestHa', 'eastWestHaMode');
-    }
-  }
-
-  /**
-   * Updates HA mode availability based on HA checkbox state
-   */
-  private updateHaModeAvailability(haControlName: string, haModeControlName: string): void {
-    const haEnabled = this.form.get(haControlName).value;
-
-    if (haEnabled) {
-      this.form.get(haModeControlName).enable();
-    } else {
-      this.form.get(haModeControlName).disable();
+      this.vrfConfigurations.forEach(vrf => {
+        vrf.eastWestFirewallArchitecture = 'Virtual';
+        vrf.eastWestHa = false;
+      });
     }
   }
 
@@ -191,14 +258,6 @@ export class TenantSelectModalComponent implements OnInit {
     // Set AdminPortal specific form values if in admin portal mode
     if (this.isAdminPortalMode) {
       this.form.controls.tenantSize.setValue(this.modalData.tenantSize || 'medium');
-      this.form.controls.northSouthFirewallVendor.setValue(this.modalData.northSouthFirewallVendor || 'PANOS');
-      this.form.controls.northSouthFirewallArchitecture.setValue(this.modalData.northSouthFirewallArchitecture || 'Virtual');
-      this.form.controls.northSouthHa.setValue(this.modalData.northSouthHa !== false);
-      this.form.controls.northSouthHaMode.setValue(this.modalData.northSouthHaMode || 'Active-Passive');
-      this.form.controls.eastWestFirewallVendor.setValue(this.modalData.eastWestFirewallVendor || 'PANOS');
-      this.form.controls.eastWestFirewallArchitecture.setValue(this.modalData.eastWestFirewallArchitecture || 'Virtual');
-      this.form.controls.eastWestHa.setValue(this.modalData.eastWestHa !== false);
-      this.form.controls.eastWestHaMode.setValue(this.modalData.eastWestHaMode || 'Active-Passive');
       this.form.controls.vcdLocation.setValue(this.modalData.vcdLocation || 'VCD-East');
       this.form.controls.vcdTenantType.setValue(this.modalData.vcdTenantType || 'new');
 
@@ -211,24 +270,8 @@ export class TenantSelectModalComponent implements OnInit {
         this.form.controls.vcdTenantId.setValue(this.modalData.vcdTenantId);
       }
 
-      // Set feature flags
-      if (this.modalData.featureFlags) {
-        this.form.controls.northSouthAppId.setValue(this.modalData.featureFlags.northSouthAppId);
-        this.form.controls.eastWestAppId.setValue(this.modalData.featureFlags.eastWestAppId);
-        this.form.controls.nat64NorthSouth.setValue(this.modalData.featureFlags.nat64NorthSouth !== false);
-        this.form.controls.eastWestAllowSgBypass.setValue(this.modalData.featureFlags.eastWestAllowSgBypass);
-        this.form.controls.eastWestNat.setValue(this.modalData.featureFlags.eastWestNat);
-      }
-
-      // Update App-ID availability based on current firewall vendor selections
-      this.updateAppIdAvailability();
-
       // Update size-based options
       this.updateSizeBasedOptions();
-
-      // Update HA mode availability
-      this.updateHaModeAvailability('northSouthHa', 'northSouthHaMode');
-      this.updateHaModeAvailability('eastWestHa', 'eastWestHaMode');
 
       // Update regional HA options
       this.updateRegionalHaOptions();
@@ -242,6 +285,7 @@ export class TenantSelectModalComponent implements OnInit {
     this.selectedFile = null;
     this.ngx.resetModalData('tenantModal');
     this.buildForm();
+    this.initializeVrfConfigurations();
   }
 
   private buildForm(): void {
@@ -253,16 +297,8 @@ export class TenantSelectModalComponent implements OnInit {
       // Base tenant options
       tenantSize: ['medium'],
       vendorAgnosticNat: [false],
-
-      // AdminPortal specific fields
-      northSouthFirewallVendor: ['PANOS'],
-      northSouthFirewallArchitecture: ['Virtual'],
-      northSouthHa: [true],
-      northSouthHaMode: ['Active-Passive'],
-      eastWestFirewallVendor: ['PANOS'],
-      eastWestFirewallArchitecture: ['Virtual'],
-      eastWestHa: [true],
-      eastWestHaMode: ['Active-Passive'],
+      multiVrf: [false],
+      multiL3out: [false],
 
       // Regional HA options
       regionalHa: [false],
@@ -274,34 +310,9 @@ export class TenantSelectModalComponent implements OnInit {
       vcdLocation: ['VCD-East'],
       vcdTenantType: ['new'],
       vcdTenantId: [''],
-
-      // Feature flags
-      northSouthAppId: [true],
-      eastWestAppId: [true],
-      nat64NorthSouth: [true],
-      eastWestAllowSgBypass: [false],
-      eastWestNat: [false],
     });
 
     // Set up form control value change handlers
-    this.form.get('northSouthFirewallVendor').valueChanges.subscribe(value => {
-      if (value !== 'PANOS') {
-        this.form.get('northSouthAppId').setValue(false);
-        this.form.get('northSouthAppId').disable();
-      } else {
-        this.form.get('northSouthAppId').enable();
-      }
-    });
-
-    this.form.get('eastWestFirewallVendor').valueChanges.subscribe(value => {
-      if (value !== 'PANOS') {
-        this.form.get('eastWestAppId').setValue(false);
-        this.form.get('eastWestAppId').disable();
-      } else {
-        this.form.get('eastWestAppId').enable();
-      }
-    });
-
     this.form.get('vcdTenantType').valueChanges.subscribe(value => {
       if (value === 'existing') {
         this.form.get('vcdTenantId').setValidators([Validators.required]);
@@ -315,14 +326,6 @@ export class TenantSelectModalComponent implements OnInit {
     // New form control handlers
     this.form.get('tenantSize').valueChanges.subscribe(() => {
       this.updateSizeBasedOptions();
-    });
-
-    this.form.get('northSouthHa').valueChanges.subscribe(() => {
-      this.updateHaModeAvailability('northSouthHa', 'northSouthHaMode');
-    });
-
-    this.form.get('eastWestHa').valueChanges.subscribe(() => {
-      this.updateHaModeAvailability('eastWestHa', 'eastWestHaMode');
     });
 
     this.form.get('regionalHa').valueChanges.subscribe(() => {
@@ -340,8 +343,6 @@ export class TenantSelectModalComponent implements OnInit {
 
     // Initialize the form state
     this.updateSizeBasedOptions();
-    this.updateHaModeAvailability('northSouthHa', 'northSouthHaMode');
-    this.updateHaModeAvailability('eastWestHa', 'eastWestHaMode');
     this.updateRegionalHaOptions();
   }
 
@@ -388,14 +389,8 @@ export class TenantSelectModalComponent implements OnInit {
       alias,
       tenantSize,
       vendorAgnosticNat,
-      northSouthFirewallVendor,
-      northSouthFirewallArchitecture,
-      northSouthHa,
-      northSouthHaMode,
-      eastWestFirewallVendor,
-      eastWestFirewallArchitecture,
-      eastWestHa,
-      eastWestHaMode,
+      multiVrf,
+      multiL3out,
       regionalHa,
       primaryDatacenter,
       secondaryDatacenter,
@@ -403,11 +398,6 @@ export class TenantSelectModalComponent implements OnInit {
       vcdLocation,
       vcdTenantType,
       vcdTenantId,
-      northSouthAppId,
-      eastWestAppId,
-      nat64NorthSouth,
-      eastWestAllowSgBypass,
-      eastWestNat,
     } = this.form.value;
 
     const tenant = {
@@ -423,14 +413,8 @@ export class TenantSelectModalComponent implements OnInit {
       console.log('AdminPortal Tenant Configuration:', {
         tenantSize,
         vendorAgnosticNat,
-        northSouthFirewallVendor,
-        northSouthFirewallArchitecture,
-        northSouthHa,
-        northSouthHaMode: northSouthHa ? northSouthHaMode : null,
-        eastWestFirewallVendor,
-        eastWestFirewallArchitecture,
-        eastWestHa,
-        eastWestHaMode: eastWestHa ? eastWestHaMode : null,
+        multiVrf,
+        multiL3out,
         regionalHa,
         primaryDatacenter: regionalHa ? primaryDatacenter : null,
         secondaryDatacenter: regionalHa && secondaryDatacenter ? secondaryDatacenter : null,
@@ -438,13 +422,7 @@ export class TenantSelectModalComponent implements OnInit {
         vcdLocation,
         vcdTenantType,
         vcdTenantId: vcdTenantType === 'existing' ? vcdTenantId : null,
-        featureFlags: {
-          northSouthAppId,
-          eastWestAppId,
-          nat64NorthSouth,
-          eastWestAllowSgBypass,
-          eastWestNat,
-        },
+        vrfConfigurations: multiVrf ? this.vrfConfigurations : null,
         templateFile: this.selectedFile ? this.selectedFile.name : null,
       });
     }

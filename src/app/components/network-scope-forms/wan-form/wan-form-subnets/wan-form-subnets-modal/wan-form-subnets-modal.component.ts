@@ -9,6 +9,7 @@ import {
   V1NetworkSubnetsService,
   V2AppCentricAppCentricSubnetsService,
   WanFormSubnet,
+  VrfTransitTenantVrfsEnum,
 } from '../../../../../../../client';
 import { WanFormSubnetModalDto } from '../../../../../models/network-scope-forms/wan-form-subnet-modal.dto';
 import { ModalMode } from '../../../../../models/other/modal-mode';
@@ -17,6 +18,12 @@ import { NameValidator } from '../../../../../validators/name-validator';
 import { ActivatedRoute } from '@angular/router';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { RouteDataUtil } from 'src/app/utils/route-data.util';
+
+// Interface for VRF option display
+interface VrfOption {
+  value: string;
+  label: string;
+}
 
 @Component({
   selector: 'app-wan-form-subnets-modal',
@@ -35,6 +42,7 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
   public availableAppcentricSubnets: AppCentricSubnet[];
   public currentDcsMode: ApplicationMode;
   public tenantId: string;
+  public vrfOptions: VrfOption[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -56,6 +64,7 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
       // Fallback or error handling if necessary
     }
 
+    this.buildVrfOptions();
     this.buildForm();
     if (this.currentDcsMode === 'netcentric') {
       this.datacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
@@ -71,6 +80,43 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.datacenterSubscription?.unsubscribe();
+  }
+
+  /**
+   * Build VRF options from the VrfTransitTenantVrfsEnum
+   */
+  private buildVrfOptions(): void {
+    this.vrfOptions = Object.values(VrfTransitTenantVrfsEnum).map(enumValue => ({
+      value: enumValue,
+      label: this.getVrfDisplayLabel(enumValue),
+    }));
+  }
+
+  /**
+   * Convert enum values to user-friendly display labels
+   */
+  private getVrfDisplayLabel(enumValue: VrfTransitTenantVrfsEnum): string {
+    const labelMappings: Record<VrfTransitTenantVrfsEnum, string> = {
+      [VrfTransitTenantVrfsEnum.CmsEntsrvInet]: 'cms-entsrv-inet',
+      [VrfTransitTenantVrfsEnum.CmsEntsrvLdapdns]: 'cms-entsrv-ldapdns',
+      [VrfTransitTenantVrfsEnum.CmsEntsrvMgmt]: 'cms-entsrv-mgmt',
+      [VrfTransitTenantVrfsEnum.CmsEntsrvMon]: 'cms-entsrv-mon',
+      [VrfTransitTenantVrfsEnum.CmsEntsrvPres]: 'cms-entsrv-pres',
+      [VrfTransitTenantVrfsEnum.CmsEntsrvSec]: 'cms-entsrv-sec',
+      [VrfTransitTenantVrfsEnum.CmsEntsrvVpn]: 'cms-entsrv-vpn',
+      [VrfTransitTenantVrfsEnum.CmsnetAppdev]: 'cmsnet_appdev (Development)',
+      [VrfTransitTenantVrfsEnum.CmsnetAppprod]: 'cmsnet_appprod (Production)',
+      [VrfTransitTenantVrfsEnum.CmsnetDatadev]: 'cmsnet_datadev (Data Development)',
+      [VrfTransitTenantVrfsEnum.CmsnetDataprod]: 'cmsnet_dataprod (Data Production)',
+      [VrfTransitTenantVrfsEnum.CmsnetEdcVpn]: 'cmsnet_edc_vpn',
+      [VrfTransitTenantVrfsEnum.CmsnetEdcmgmt]: 'cmsnet_edcmgmt',
+      [VrfTransitTenantVrfsEnum.CmsnetPresdev]: 'cmsnet_presdev (Presentation Development)',
+      [VrfTransitTenantVrfsEnum.CmsnetPresprod]: 'cmsnet_presprod (Presentation Production)',
+      [VrfTransitTenantVrfsEnum.CmsnetSec]: 'cmsnet_sec',
+      [VrfTransitTenantVrfsEnum.CmsnetTransport]: 'cmsnet_transport',
+    };
+
+    return labelMappings[enumValue] || enumValue;
   }
 
   get f() {
@@ -102,14 +148,12 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
       this.form.controls.name.setValue(wanFormSubnet.name);
       this.form.controls.name.disable();
       this.form.controls.description.setValue(wanFormSubnet.description);
-      this.form.controls.vrf.setValue(wanFormSubnet.vrf);
-      this.form.controls.environment.setValue(wanFormSubnet.environment);
+      this.form.controls.vrf.setValue(wanFormSubnet.exportedToVrfs);
       this.form.controls.netcentricSubnetId.setValue(wanFormSubnet?.netcentricSubnetId);
       this.form.controls.appcentricSubnetId.setValue(wanFormSubnet?.appcentricSubnetId);
       this.form.controls.netcentricSubnetId.disable();
       this.form.controls.appcentricSubnetId.disable();
       this.form.controls.vrf.disable();
-      this.form.controls.environment.disable();
     }
     this.ngx.resetModalData('wanFormSubnetModal');
   }
@@ -125,7 +169,6 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
       name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.maxLength(500)])],
       vrf: ['', Validators.required],
-      environment: ['', Validators.required],
       netcentricSubnetId: [''],
       appcentricSubnetId: [''],
       fromPrefixLength: ['', Validators.required],
@@ -144,7 +187,7 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
     const wanFormSubnet = {
       name,
       description,
-      vrf,
+      exportedToVrfs: vrf,
       environment,
       wanFormId: this.wanFormId,
       datacenterId: this.datacenterId,

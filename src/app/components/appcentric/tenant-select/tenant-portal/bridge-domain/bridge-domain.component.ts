@@ -39,6 +39,7 @@ export class BridgeDomainComponent implements OnInit {
   public isLoading = false;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+  @ViewChild('vrfIdTemplate') vrfIdTemplate: TemplateRef<any>;
 
   public searchColumns: SearchColumnConfig[] = [
     { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
@@ -59,6 +60,7 @@ export class BridgeDomainComponent implements OnInit {
       { name: 'Mac Address', property: 'bdMacAddress' },
       { name: 'Limit Local IP Learning', property: 'limitLocalIpLearning' },
       { name: 'Host Based Routing', property: 'hostBasedRouting' },
+      { name: 'VRF', template: () => this.vrfIdTemplate },
       { name: '', template: () => this.actionsTemplate },
     ],
   };
@@ -111,6 +113,7 @@ export class BridgeDomainComponent implements OnInit {
     this.bridgeDomainService
       .getManyBridgeDomain({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
+        relations: ['vrf'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
       })

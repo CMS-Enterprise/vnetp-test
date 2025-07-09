@@ -11,7 +11,9 @@
  */
 import { Tenant } from './tenant';
 import { ExternalRoute } from './externalRoute';
+import { Tier } from './tier';
 import { Datacenter } from './datacenter';
+import { Vrf } from './vrf';
 import { WanFormSubnet } from './wanFormSubnet';
 
 
@@ -25,12 +27,16 @@ export interface WanForm {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    datacenterId?: string;
-    readonly datacenter?: Datacenter;
     status?: string;
-    readonly wanFormSubnets?: Array<WanFormSubnet>;
+    readonly internalRoutes?: Array<WanFormSubnet>;
+    readonly externalRoutes?: Array<ExternalRoute>;
+    vrfId?: string;
+    readonly vrf?: Vrf;
     readonly tenant?: Tenant;
     tenantId?: string;
-    readonly externalRoutes?: Array<ExternalRoute>;
+    readonly tier?: Tier;
+    tierId?: string;
+    datacenterId?: string;
+    readonly datacenter?: Datacenter;
 }
 

@@ -15,7 +15,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let subnet of wanForm?.wanFormSubnets">
+      <tr *ngFor="let subnet of wanForm?.internalRoutes">
         <td>{{ subnet.name }}</td>
         <td>{{ subnet.description || '-' }}</td>
         <td>{{ subnet.vrf }}</td>

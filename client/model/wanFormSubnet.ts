@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { L3Out } from './l3Out';
 import { AppCentricSubnet } from './appCentricSubnet';
 import { WanForm } from './wanForm';
 import { Subnet } from './subnet';
@@ -24,8 +25,7 @@ export interface WanFormSubnet {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    vrf: WanFormSubnetVrfEnum;
-    environment: WanFormSubnetEnvironmentEnum;
+    exportedToVrfs: WanFormSubnetExportedToVrfsEnum;
     wanFormId: string;
     readonly wanForm?: WanForm;
     readonly netcentricSubnet?: Subnet;
@@ -34,20 +34,26 @@ export interface WanFormSubnet {
     appcentricSubnetId?: string;
     fromPrefixLength: number;
     toPrefixLength: number;
+    readonly allowedL3Outs?: Array<L3Out>;
 }
-export enum WanFormSubnetVrfEnum {
-    Appprod = 'appprod',
-    Appdev = 'appdev',
-    Dataprod = 'dataprod',
-    Datadev = 'datadev',
-    Edcmgmt = 'edcmgmt',
-    Transport = 'transport'
-};
-export enum WanFormSubnetEnvironmentEnum {
-    Prod = 'prod',
-    Dev = 'dev',
-    Val = 'val',
-    Imp = 'imp'
+export enum WanFormSubnetExportedToVrfsEnum {
+    CmsEntsrvInet = 'cms-entsrv-inet',
+    CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
+    CmsEntsrvMgmt = 'cms-entsrv-mgmt',
+    CmsEntsrvMon = 'cms-entsrv-mon',
+    CmsEntsrvPres = 'cms-entsrv-pres',
+    CmsEntsrvSec = 'cms-entsrv-sec',
+    CmsEntsrvVpn = 'cms-entsrv-vpn',
+    CmsnetAppdev = 'cmsnet_appdev',
+    CmsnetAppprod = 'cmsnet_appprod',
+    CmsnetDatadev = 'cmsnet_datadev',
+    CmsnetDataprod = 'cmsnet_dataprod',
+    CmsnetEdcVpn = 'cmsnet_edc_vpn',
+    CmsnetEdcmgmt = 'cmsnet_edcmgmt',
+    CmsnetPresdev = 'cmsnet_presdev',
+    CmsnetPresprod = 'cmsnet_presprod',
+    CmsnetSec = 'cmsnet_sec',
+    CmsnetTransport = 'cmsnet_transport'
 };
 
 
