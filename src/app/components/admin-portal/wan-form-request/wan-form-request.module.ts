@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WanFormRequestComponent } from './wan-form-request.component';
-import { WanFormModule } from '../../network-scope-forms/wan-form/wan-form.module';
 import { TableModule } from '../../../common/table/table.module';
+import { WanFormModule } from '../../appcentric/tenant-select/tenant-portal/vrf/wan-form/wan-form.module';
 
 @NgModule({
   declarations: [WanFormRequestComponent],

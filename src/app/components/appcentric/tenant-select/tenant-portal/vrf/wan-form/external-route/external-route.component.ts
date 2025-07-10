@@ -1,27 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { NgxSmartModalService } from 'ngx-smart-modal';
+import { Subscription } from 'rxjs';
 import {
   ExternalRoute,
-  ExternalRouteJobCreateDtoTypeEnum,
   V1NetworkScopeFormsWanFormService,
   V1RuntimeDataExternalRouteService,
+  ExternalRouteJobCreateDtoTypeEnum,
   WanForm,
-} from '../../../../../../client';
-import { Subscription } from 'rxjs';
-import { ModalMode } from '../../../../models/other/modal-mode';
-import { NgxSmartModalService } from 'ngx-smart-modal';
-import { RuntimeDataService } from '../../../../services/runtime-data.service';
-import { RouteDataUtil } from 'src/app/utils/route-data.util';
+} from 'client';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { RuntimeDataService } from 'src/app/services/runtime-data.service';
 
 @Component({
   selector: 'app-external-route',
   templateUrl: './external-route.component.html',
-  styleUrl: './external-route.component.css',
+  styleUrls: ['./external-route.component.css'],
 })
 export class ExternalRouteComponent implements OnInit {
+  @Input() wanForm: WanForm;
+  @Input() vrfId: string;
+  @Output() back = new EventEmitter<void>();
   wanFormId: string;
   dcsMode: string;
-  wanForm: WanForm;
   routes: ExternalRoute[];
   filteredRoutes: ExternalRoute[];
   private modalSubscription: Subscription;
@@ -33,35 +33,20 @@ export class ExternalRouteComponent implements OnInit {
   refreshedNoData = false;
 
   constructor(
-    private route: ActivatedRoute,
     private wanFormService: V1NetworkScopeFormsWanFormService,
     private externalRouteService: V1RuntimeDataExternalRouteService,
     private ngx: NgxSmartModalService,
-    private router: Router,
     private runtimeDataService: RuntimeDataService,
   ) {}
 
   ngOnInit(): void {
-    this.wanFormId = this.route.snapshot.params.id;
-    this.dcsMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
-
-    if (!this.dcsMode) {
-      console.error('ExternalRouteComponent: Application mode could not be determined via RouteDataUtil.');
-      // Fallback or error handling if necessary
-    }
-
     this.getAllRoutes();
-    if (!this.wanForm) {
-      this.wanFormService.getOneWanForm({ id: this.wanFormId }).subscribe(data => {
-        this.wanForm = data;
-      });
-    }
   }
 
   get sortedRoutes() {
     return this.filteredRoutes?.sort((a, b) => {
-      const aHasWanForm = this.checkIfWanFormExists(a);
-      const bHasWanForm = this.checkIfWanFormExists(b);
+      const aHasWanForm = a.wanForms?.some(wanForm => wanForm?.id === this.wanForm.id);
+      const bHasWanForm = b.wanForms?.some(wanForm => wanForm?.id === this.wanForm.id);
 
       if (aHasWanForm && !bHasWanForm) {
         return -1;
@@ -144,12 +129,6 @@ export class ExternalRouteComponent implements OnInit {
         route.protocol.includes(this.searchQuery) ||
         `${route.network}/${route.fromPrefixLength}`.includes(this.searchQuery),
     );
-  }
-
-  navigateToWanForm(): void {
-    const currentQueryParams = this.route.snapshot.queryParams;
-
-    this.router.navigate([`/${this.dcsMode}/wan-form`], { queryParams: currentQueryParams });
   }
 
   refreshRuntimeData(): void {

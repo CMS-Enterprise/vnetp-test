@@ -1,23 +1,24 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import {
-  AppCentricSubnet,
   Subnet,
+  AppCentricSubnet,
   V1NetworkScopeFormsWanFormSubnetService,
   V1NetworkSubnetsService,
   V2AppCentricAppCentricSubnetsService,
-  WanFormSubnet,
   VrfTransitTenantVrfsEnum,
-} from '../../../../../../../client';
-import { WanFormSubnetModalDto } from '../../../../../models/network-scope-forms/wan-form-subnet-modal.dto';
-import { ModalMode } from '../../../../../models/other/modal-mode';
-import { DatacenterContextService } from '../../../../../services/datacenter-context.service';
-import { NameValidator } from '../../../../../validators/name-validator';
-import { ActivatedRoute } from '@angular/router';
-import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
-import { RouteDataUtil } from 'src/app/utils/route-data.util';
+  WanFormSubnet,
+  WanForm,
+} from '../../../../../../../../../../client';
+import { ApplicationMode } from '../../../../../../../../models/other/application-mode-enum';
+import { ModalMode } from '../../../../../../../../models/other/modal-mode';
+import { DatacenterContextService } from '../../../../../../../../services/datacenter-context.service';
+import { RouteDataUtil } from '../../../../../../../../utils/route-data.util';
+import { NameValidator } from '../../../../../../../../validators/name-validator';
+import { WanFormSubnetModalDto } from '../../../../../../../../models/network-scope-forms/wan-form-subnet-modal.dto';
 
 // Interface for VRF option display
 interface VrfOption {
@@ -35,13 +36,12 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public wanFormSubnetId: string;
   public submitted: boolean;
-  public wanFormId: string;
+  public wanForm: WanForm;
   private datacenterId: string;
   private datacenterSubscription: Subscription;
   public availableNetcentricSubnets: Subnet[];
   public availableAppcentricSubnets: AppCentricSubnet[];
   public currentDcsMode: ApplicationMode;
-  public tenantId: string;
   public vrfOptions: VrfOption[] = [];
 
   constructor(
@@ -52,9 +52,7 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
     private netcentricSubnetService: V1NetworkSubnetsService,
     private appcentricSubnetService: V2AppCentricAppCentricSubnetsService,
     private route: ActivatedRoute,
-  ) {
-    this.tenantId = this.route.snapshot.queryParams.tenantId;
-  }
+  ) {}
 
   ngOnInit(): void {
     this.currentDcsMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
@@ -130,7 +128,7 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
 
   public getData(): void {
     const dto = Object.assign({}, this.ngx.getModalData('wanFormSubnetModal') as WanFormSubnetModalDto);
-    this.wanFormId = dto.wanFormId;
+    this.wanForm = dto.wanForm;
     this.modalMode = dto.modalMode;
 
     if (this.modalMode === ModalMode.Edit) {
@@ -189,7 +187,7 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
       description,
       exportedToVrfs: vrf,
       environment,
-      wanFormId: this.wanFormId,
+      wanFormId: this.wanForm.id,
       datacenterId: this.datacenterId,
       netcentricSubnetId,
       appcentricSubnetId,
@@ -232,7 +230,7 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
   getAppcentricSubnets(): void {
     this.appcentricSubnetService
       .getManyAppCentricSubnet({
-        filter: [`tenantId||eq||${this.tenantId}`],
+        filter: [`tenantId||eq||${this.wanForm.tenantId}`],
         relations: ['tenant', 'bridgeDomain'],
       })
       .subscribe(data => {

@@ -1,38 +1,35 @@
-import { Component, TemplateRef, ViewChild, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, TemplateRef, Output, EventEmitter } from '@angular/core';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
-import { ModalMode } from '../../../../models/other/modal-mode';
-import { TableComponentDto } from '../../../../models/other/table-component-dto';
 import {
-  BridgeDomain,
   GetManyWanFormSubnetResponseDto,
-  V1NetworkScopeFormsWanFormService,
+  Vlan,
+  BridgeDomain,
   V1NetworkScopeFormsWanFormSubnetService,
   V1NetworkSubnetsService,
   V2AppCentricAppCentricSubnetsService,
-  Vlan,
-  WanForm,
   WanFormSubnet,
-} from '../../../../../../client';
-import { TableConfig } from '../../../../common/table/table.component';
-import { SearchColumnConfig } from '../../../../common/search-bar/search-bar.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NgxSmartModalService } from 'ngx-smart-modal';
-import { TableContextService } from '../../../../services/table-context.service';
-import { WanFormSubnetModalDto } from '../../../../models/network-scope-forms/wan-form-subnet-modal.dto';
+  WanForm,
+} from 'client';
+import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
+import { TableConfig } from 'src/app/common/table/table.component';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
-import { RouteDataUtil } from 'src/app/utils/route-data.util';
+import { ModalMode } from 'src/app/models/other/modal-mode';
+import { TableComponentDto } from 'src/app/models/other/table-component-dto';
+import { TableContextService } from 'src/app/services/table-context.service';
+import { WanFormSubnetModalDto } from 'src/app/models/network-scope-forms/wan-form-subnet-modal.dto';
 
 @Component({
   selector: 'app-wan-form-subnets',
   templateUrl: './wan-form-subnets.component.html',
-  styleUrl: './wan-form-subnets.component.css',
+  styleUrls: ['./wan-form-subnets.component.css'],
 })
 export class WanFormSubnetsComponent implements OnInit {
-  public wanForm: WanForm;
+  @Input() wanForm: WanForm;
+  @Output() back = new EventEmitter<void>();
   public wanFormSubnets: GetManyWanFormSubnetResponseDto;
   public isLoading = false;
   public tableComponentDto = new TableComponentDto();
-  public wanFormId: string;
   public ModalMode = ModalMode;
   public perPage = 20;
 
@@ -41,7 +38,7 @@ export class WanFormSubnetsComponent implements OnInit {
 
   private modalSubscription: Subscription;
 
-  public dcsMode: ApplicationMode;
+  public applicationMode: ApplicationMode;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('vrfNameTemplate') vrfNameTemplate: TemplateRef<any>;
@@ -68,38 +65,15 @@ export class WanFormSubnetsComponent implements OnInit {
 
   constructor(
     private wanFormSubnetService: V1NetworkScopeFormsWanFormSubnetService,
-    private route: ActivatedRoute,
-    private router: Router,
     private ngx: NgxSmartModalService,
     private tableContextService: TableContextService,
-    private wanFormService: V1NetworkScopeFormsWanFormService,
     private netcentricSubnetService: V1NetworkSubnetsService,
     private appcentricSubnetService: V2AppCentricAppCentricSubnetsService,
-  ) {
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state) {
-      this.wanForm = navigation.extras.state.data;
-    }
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.wanFormId = this.route.snapshot.params.id;
-    this.dcsMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
-
-    if (!this.dcsMode) {
-      console.error('WanFormSubnetsComponent: Application mode could not be determined via RouteDataUtil.');
-      // Fallback or error handling if necessary
-    }
-
     this.getWanFormSubnets();
-    if (!this.wanForm) {
-      this.wanFormService.getOneWanForm({ id: this.wanFormId }).subscribe(data => {
-        this.wanForm = data;
-        this.getChildren();
-      });
-    } else {
-      this.getChildren();
-    }
+    this.getChildren();
   }
 
   public onTableEvent(event): void {
@@ -111,7 +85,7 @@ export class WanFormSubnetsComponent implements OnInit {
     const dto = new WanFormSubnetModalDto();
 
     dto.modalMode = modalMode;
-    dto.wanFormId = this.wanFormId;
+    dto.wanForm = this.wanForm;
     dto.wanFormSubnet = wanFormSubnet;
 
     this.subscribeToModal();
@@ -148,7 +122,7 @@ export class WanFormSubnetsComponent implements OnInit {
     }
     this.wanFormSubnetService
       .getManyWanFormSubnet({
-        filter: [`wanFormId||eq||${this.wanFormId}`, eventParams],
+        filter: [`wanFormId||eq||${this.wanForm.id}`, eventParams],
         join: ['netcentricSubnet', 'appcentricSubnet'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
@@ -214,14 +188,8 @@ export class WanFormSubnetsComponent implements OnInit {
     );
   }
 
-  navigateToWanForm(): void {
-    const currentQueryParams = this.route.snapshot.queryParams;
-
-    this.router.navigate([`/${this.dcsMode}/wan-form`], { queryParams: currentQueryParams });
-  }
-
   getChildren(): void {
-    if (this.dcsMode === 'netcentric') {
+    if (this.applicationMode === 'netcentric') {
       this.getSubnetVlans();
     } else {
       this.getSubnetBridgeDomains();
@@ -230,11 +198,19 @@ export class WanFormSubnetsComponent implements OnInit {
 
   getSubnetBridgeDomains(): void {
     this.appcentricSubnetService
-      .getManyAppCentricSubnet({ filter: [`tenantId||eq||${this.wanForm.tenantId}`], join: ['bridgeDomain'] })
-      .subscribe((data: any) => {
-        data.forEach(subnet => {
-          this.subnetBridgeDomains.set(subnet.id, subnet.bridgeDomain);
-        });
+      .getManyAppCentricSubnet({
+        filter: [`tenantId||eq||${this.wanForm.tenantId}`],
+        join: ['bridgeDomain'],
+      })
+      .subscribe({
+        next: (data: any) => {
+          data.forEach(subnet => {
+            this.subnetBridgeDomains.set(subnet.id, subnet.bridgeDomain);
+          });
+        },
+        error: () => {
+          console.log(this.wanForm.tenantId);
+        },
       });
   }
 

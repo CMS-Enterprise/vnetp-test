@@ -42,7 +42,7 @@ export interface Vrf {
     readonly tier?: Array<Tier>;
     readonly tierId?: string;
     readonly tenantVersion?: number;
-    readonly wanForms?: Array<WanForm>;
+    readonly wanForm?: WanForm;
     transitTenantVrfs?: Array<VrfTransitTenantVrfsEnum>;
 }
 export enum VrfTransitTenantVrfsEnum {

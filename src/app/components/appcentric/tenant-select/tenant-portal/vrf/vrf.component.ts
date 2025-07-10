@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GetManyVrfResponseDto, V2AppCentricVrfsService, Vrf } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -12,6 +12,8 @@ import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { RouteDataUtil } from '../../../../../utils/route-data.util';
+import { ApplicationMode } from '../../../../../models/other/application-mode-enum';
 
 @Component({
   selector: 'app-vrf',
@@ -26,10 +28,15 @@ export class VrfComponent implements OnInit {
   public tableComponentDto = new TableComponentDto();
   public vrfModalSubscription: Subscription;
   public tenantId: string;
-
+  public applicationMode: ApplicationMode;
   public isLoading = false;
+  public currentView: 'vrf' | 'subnets' | 'routes' = 'vrf';
+  public selectedVrf: Vrf | null = null;
+  public expandedRow: Vrf | null = null;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
+
+  @ViewChild('expandableRows') expandableRows: TemplateRef<any>;
 
   public searchColumns: SearchColumnConfig[] = [
     { displayName: 'Alias', propertyName: 'alias', searchOperator: 'cont' },
@@ -48,6 +55,7 @@ export class VrfComponent implements OnInit {
       { name: 'Policy Control Enforcement Ingress', property: 'policyControlEnforcementIngress' },
       { name: '', template: () => this.actionsTemplate },
     ],
+    expandableRows: () => this.expandableRows,
   };
 
   constructor(
@@ -55,6 +63,7 @@ export class VrfComponent implements OnInit {
     private tableContextService: TableContextService,
     private ngx: NgxSmartModalService,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<Vrf>();
     advancedSearchAdapter.setService(this.vrfService);
@@ -71,7 +80,23 @@ export class VrfComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
     this.getVrfs();
+  }
+
+  public showVrfList(): void {
+    this.selectedVrf = null;
+    this.currentView = 'vrf';
+  }
+
+  public showSubnets(vrf: Vrf): void {
+    this.selectedVrf = vrf;
+    this.currentView = 'subnets';
+  }
+
+  public showRoutes(vrf: Vrf): void {
+    this.selectedVrf = vrf;
+    this.currentView = 'routes';
   }
 
   public onTableEvent(event: TableComponentDto): void {
@@ -91,23 +116,31 @@ export class VrfComponent implements OnInit {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
+
+    const relations =
+      this.applicationMode === ApplicationMode.APPCENTRIC ? [] : ['wanForm', 'wanForm.internalRoutes', 'wanForm.externalRoutes'];
+
+    relations.pop();
+    relations.pop();
+
     this.vrfService
       .getManyVrf({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
+        relations,
       })
-      .subscribe(
-        data => {
+      .subscribe({
+        next: data => {
           this.vrfs = data;
         },
-        () => {
+        error: () => {
           this.vrfs = null;
         },
-        () => {
+        complete: () => {
           this.isLoading = false;
         },
-      );
+      });
   }
 
   private showConfirmationModal(title: string, message: string, onConfirm: () => void): void {

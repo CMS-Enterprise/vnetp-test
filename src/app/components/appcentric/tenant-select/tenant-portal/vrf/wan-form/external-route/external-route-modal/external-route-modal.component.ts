@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { IpAddressAnyValidator } from '../../../../../validators/network-form-validators';
-import { ExternalRoute, V1RuntimeDataExternalRouteService } from '../../../../../../../client';
+import { V1RuntimeDataExternalRouteService, ExternalRoute } from '../../../../../../../../../../client';
+import { IpAddressAnyValidator } from '../../../../../../../../validators/network-form-validators';
 
 @Component({
   selector: 'app-external-route-modal',

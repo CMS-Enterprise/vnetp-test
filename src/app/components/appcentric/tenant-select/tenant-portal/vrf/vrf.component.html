@@ -1,29 +1,47 @@
-<ng-container>
-  <section class="btn-toolbar" role="toolbar">
-    <button type="button" class="btn btn-success" (click)="openVrfModal(ModalMode.Create)">
-      <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-      <span>Create VRF</span>
-    </button>
-  </section>
-
-  <ng-container *ngIf="!isLoading; else loading">
-    <app-table
-      [config]="config"
-      [data]="vrfs"
-      (clearResults)="getVrfs($event)"
-      (searchParams)="getVrfs($event)"
-      [searchColumns]="searchColumns"
-      [(itemsPerPage)]="perPage"
-      (tableEvent)="onTableEvent($event)"
-    ></app-table>
+<ng-container [ngSwitch]="currentView">
+  <ng-container *ngSwitchCase="'vrf'">
     <section class="btn-toolbar" role="toolbar">
-      <app-import-export
-        [exportObject]="vrfs"
-        exportFileName="vrfs"
-        [disableJson]="false"
-        (import)="importVrfs($event)"
-      ></app-import-export>
+      <button type="button" class="btn btn-success" (click)="openVrfModal(ModalMode.Create)">
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Create VRF</span>
+      </button>
     </section>
+
+    <ng-container *ngIf="!isLoading; else loading">
+      <app-table
+        [config]="config"
+        [data]="vrfs"
+        (clearResults)="getVrfs($event)"
+        (searchParams)="getVrfs($event)"
+        [searchColumns]="searchColumns"
+        [(itemsPerPage)]="perPage"
+        (tableEvent)="onTableEvent($event)"
+      ></app-table>
+      <section class="btn-toolbar" role="toolbar">
+        <app-import-export
+          [exportObject]="vrfs"
+          exportFileName="vrfs"
+          [disableJson]="false"
+          (import)="importVrfs($event)"
+        ></app-import-export>
+      </section>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'subnets'">
+    <button type="button" class="btn btn-secondary mb-3 mt-3" (click)="showVrfList()">
+      <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
+      <span>Back to VRF List</span>
+    </button>
+    <app-wan-form-subnets [wanForm]="selectedVrf.wanForm" (back)="showVrfList()"></app-wan-form-subnets>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'routes'">
+    <button type="button" class="btn btn-secondary mb-3 mt-3" (click)="showVrfList()">
+      <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
+      <span>Back to VRF List</span>
+    </button>
+    <app-external-route [wanForm]="selectedVrf.wanForm" [vrfId]="selectedVrf.id" (back)="showVrfList()"></app-external-route>
   </ng-container>
 </ng-container>
 
@@ -59,6 +77,8 @@
       type="danger"
       (handleClick)="deprovisionVrf(vrf)"
     ></app-icon-button>
+
+    <app-icon-button icon="expand" label="Expand Row" (click)="expandedRow = expandedRow === vrf ? null : vrf"></app-icon-button>
   </section>
 </ng-template>
 
@@ -68,3 +88,9 @@
 
 <app-vrf-modal [tenantId]="tenantId"></app-vrf-modal>
 <app-yes-no-modal></app-yes-no-modal>
+
+<ng-template #expandableRows let-vrf="datum">
+  <section class="table__expanded-row">
+    <app-wan-form-detail [wanForm]="vrf.wanForm" (manageSubnets)="showSubnets(vrf)" (manageRoutes)="showRoutes(vrf)"></app-wan-form-detail>
+  </section>
+</ng-template>

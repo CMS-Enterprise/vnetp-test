@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
+import { WanFormModule } from './wan-form/wan-form.module';
 
 const routes: Routes = [
   {
@@ -35,6 +36,7 @@ const routes: Routes = [
     TooltipModule,
     NgSelectModule,
     YesNoModalModule,
+    WanFormModule,
   ],
   exports: [VrfComponent, VrfModalComponent],
 })
