@@ -720,14 +720,14 @@ describe('EndpointConnectivityUtilityComponent', () => {
       mockGeneratedConfig.ContractToEpg[0].contractRelationType = 'InvalidType';
       component.applyGeneratedConfig();
       expect(component.isLoading).toBe(false);
-      expect(component.error).toContain("Unknown contractRelationType 'InvalidType'");
+      expect(component.error).toContain('Unknown contractRelationType \'InvalidType\'');
     });
 
     it('should propagate error for unknown ContractToEsg relation type', () => {
       mockGeneratedConfig.ContractToEsg[0].contractRelationType = 'InvalidType';
       component.applyGeneratedConfig();
       expect(component.isLoading).toBe(false);
-      expect(component.error).toContain("Unknown contractRelationType 'InvalidType'");
+      expect(component.error).toContain('Unknown contractRelationType \'InvalidType\'');
     });
 
     describe('Error Scenarios', () => {

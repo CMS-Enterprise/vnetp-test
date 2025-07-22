@@ -33,7 +33,7 @@
       <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
       <span>Back to VRF List</span>
     </button>
-    <app-internal-route [wanForm]="selectedVrf.wanForm" (back)="showVrfList()"></app-internal-route>
+    <app-internal-route [wanForm]="selectedVrf.wanForm" [vrfId]="selectedVrf.id" (back)="showVrfList()"></app-internal-route>
   </ng-container>
 
   <ng-container *ngSwitchCase="'routes'">

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { ExternalRoute, V1NetworkScopeFormsWanFormExternalRoutesService } from '../../../../../../client';
+import { ExternalRoute, V1NetworkScopeFormsExternalRoutesService } from '../../../../../../client';
 import { IpAddressAnyValidator } from '../../../../validators/network-form-validators';
 
 @Component({
@@ -17,7 +17,7 @@ export class ExternalRouteModalComponent {
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
-    private externalRouteService: V1NetworkScopeFormsWanFormExternalRoutesService,
+    private externalRouteService: V1NetworkScopeFormsExternalRoutesService,
   ) {}
 
   public ngOnInit(): void {

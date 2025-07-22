@@ -22544,7 +22544,7 @@
         "tags": ["v3/global/external-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/internal-routes": {
+    "/v1/network-scope-forms/internal-routes": {
       "post": {
         "operationId": "createOneInternalRoute",
         "summary": "Create one InternalRoute",
@@ -22571,7 +22571,7 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/internal-routes"]
+        "tags": ["v1/network-scope-forms/internal-routes"]
       },
       "get": {
         "operationId": "getManyInternalRoute",
@@ -22723,10 +22723,10 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/internal-routes"]
+        "tags": ["v1/network-scope-forms/internal-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/internal-routes/{routeId}": {
+    "/v1/network-scope-forms/internal-routes/{routeId}": {
       "delete": {
         "operationId": "removeInternalRouteFromWanForm",
         "summary": "Remove Internal Route from WAN Form",
@@ -22763,10 +22763,10 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/internal-routes"]
+        "tags": ["v1/network-scope-forms/internal-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/internal-routes/bulk": {
+    "/v1/network-scope-forms/internal-routes/bulk": {
       "post": {
         "operationId": "createManyInternalRoute",
         "summary": "Create many InternalRoute",
@@ -22806,10 +22806,10 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/internal-routes"]
+        "tags": ["v1/network-scope-forms/internal-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/internal-routes/{id}": {
+    "/v1/network-scope-forms/internal-routes/{id}": {
       "get": {
         "operationId": "getOneInternalRoute",
         "summary": "Get one InternalRoute",
@@ -22860,7 +22860,7 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/internal-routes"]
+        "tags": ["v1/network-scope-forms/internal-routes"]
       },
       "put": {
         "operationId": "updateOneInternalRoute",
@@ -22898,7 +22898,7 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/internal-routes"]
+        "tags": ["v1/network-scope-forms/internal-routes"]
       },
       "delete": {
         "operationId": "deleteOneInternalRoute",
@@ -22926,10 +22926,10 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/internal-routes"]
+        "tags": ["v1/network-scope-forms/internal-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/internal-routes/{id}/soft": {
+    "/v1/network-scope-forms/internal-routes/{id}/soft": {
       "delete": {
         "operationId": "softDeleteOneInternalRoute",
         "summary": "Soft delete one InternalRoute",
@@ -22949,10 +22949,10 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/internal-routes"]
+        "tags": ["v1/network-scope-forms/internal-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/internal-routes/{id}/restore": {
+    "/v1/network-scope-forms/internal-routes/{id}/restore": {
       "patch": {
         "operationId": "restoreOneInternalRoute",
         "summary": "Restore one InternalRoute",
@@ -22972,10 +22972,10 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/internal-routes"]
+        "tags": ["v1/network-scope-forms/internal-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/internal-routes/{id}/provision": {
+    "/v1/network-scope-forms/internal-routes/{id}/provision": {
       "put": {
         "operationId": "provisionOneInternalRoute",
         "summary": "Provision one InternalRoute",
@@ -22995,10 +22995,10 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/internal-routes"]
+        "tags": ["v1/network-scope-forms/internal-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/internal-routes/{id}/deprovision": {
+    "/v1/network-scope-forms/internal-routes/{id}/deprovision": {
       "patch": {
         "operationId": "deprovisionOneInternalRoute",
         "summary": "Deprovision one InternalRoute",
@@ -23018,10 +23018,10 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/internal-routes"]
+        "tags": ["v1/network-scope-forms/internal-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/external-routes": {
+    "/v1/network-scope-forms/external-routes": {
       "post": {
         "operationId": "createOneExternalRoute",
         "summary": "Create one ExternalRoute",
@@ -23048,7 +23048,7 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/external-routes"]
+        "tags": ["v1/network-scope-forms/external-routes"]
       },
       "get": {
         "operationId": "getManyExternalRoute",
@@ -23200,10 +23200,10 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/external-routes"]
+        "tags": ["v1/network-scope-forms/external-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/external-routes/{routeId}": {
+    "/v1/network-scope-forms/external-routes/{routeId}": {
       "delete": {
         "operationId": "removeExternalRouteFromWanForm",
         "summary": "Remove External Route from WAN Form",
@@ -23240,10 +23240,10 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/external-routes"]
+        "tags": ["v1/network-scope-forms/external-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/external-routes/bulk": {
+    "/v1/network-scope-forms/external-routes/bulk": {
       "post": {
         "operationId": "createManyExternalRoute",
         "summary": "Create many ExternalRoute",
@@ -23283,10 +23283,10 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/external-routes"]
+        "tags": ["v1/network-scope-forms/external-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/external-routes/{id}": {
+    "/v1/network-scope-forms/external-routes/{id}": {
       "get": {
         "operationId": "getOneExternalRoute",
         "summary": "Get one ExternalRoute",
@@ -23337,7 +23337,7 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/external-routes"]
+        "tags": ["v1/network-scope-forms/external-routes"]
       },
       "put": {
         "operationId": "updateOneExternalRoute",
@@ -23375,7 +23375,7 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/external-routes"]
+        "tags": ["v1/network-scope-forms/external-routes"]
       },
       "delete": {
         "operationId": "deleteOneExternalRoute",
@@ -23403,10 +23403,10 @@
             }
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/external-routes"]
+        "tags": ["v1/network-scope-forms/external-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/external-routes/{id}/soft": {
+    "/v1/network-scope-forms/external-routes/{id}/soft": {
       "delete": {
         "operationId": "softDeleteOneExternalRoute",
         "summary": "Soft delete one ExternalRoute",
@@ -23426,10 +23426,10 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/external-routes"]
+        "tags": ["v1/network-scope-forms/external-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/external-routes/{id}/restore": {
+    "/v1/network-scope-forms/external-routes/{id}/restore": {
       "patch": {
         "operationId": "restoreOneExternalRoute",
         "summary": "Restore one ExternalRoute",
@@ -23449,10 +23449,10 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/external-routes"]
+        "tags": ["v1/network-scope-forms/external-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/external-routes/{id}/provision": {
+    "/v1/network-scope-forms/external-routes/{id}/provision": {
       "put": {
         "operationId": "provisionOneExternalRoute",
         "summary": "Provision one ExternalRoute",
@@ -23472,10 +23472,10 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/external-routes"]
+        "tags": ["v1/network-scope-forms/external-routes"]
       }
     },
-    "/v1/network-scope-forms/wan-form/external-routes/{id}/deprovision": {
+    "/v1/network-scope-forms/external-routes/{id}/deprovision": {
       "patch": {
         "operationId": "deprovisionOneExternalRoute",
         "summary": "Deprovision one ExternalRoute",
@@ -23495,7 +23495,7 @@
             "description": ""
           }
         },
-        "tags": ["v1/network-scope-forms/wan-form/external-routes"]
+        "tags": ["v1/network-scope-forms/external-routes"]
       }
     }
   },

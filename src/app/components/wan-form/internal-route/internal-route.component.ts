@@ -7,7 +7,7 @@ import {
   V1NetworkSubnetsService,
   V2AppCentricAppCentricSubnetsService,
   WanForm,
-  V1NetworkScopeFormsWanFormInternalRoutesService,
+  V1NetworkScopeFormsInternalRoutesService,
   InternalRoute,
   GetManyInternalRouteResponseDto,
 } from 'client';
@@ -26,6 +26,7 @@ import { InternalRouteModalDto } from 'src/app/models/network-scope-forms/intern
 })
 export class InternalRouteComponent implements OnInit {
   @Input() wanForm: WanForm;
+  @Input() vrfId: string;
   @Output() back = new EventEmitter<void>();
   public internalRoutes: GetManyInternalRouteResponseDto;
   public isLoading = false;
@@ -62,7 +63,7 @@ export class InternalRouteComponent implements OnInit {
   ];
 
   constructor(
-    private internalRouteService: V1NetworkScopeFormsWanFormInternalRoutesService,
+    private internalRouteService: V1NetworkScopeFormsInternalRoutesService,
     private ngx: NgxSmartModalService,
     private tableContextService: TableContextService,
     private netcentricSubnetService: V1NetworkSubnetsService,
@@ -108,19 +109,21 @@ export class InternalRouteComponent implements OnInit {
 
   public getInternalRoutes(event?) {
     this.isLoading = true;
-    let eventParams;
+
+    const filter = [`wanFormId||eq||${this.wanForm.id}`];
+
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
+      if (propertyName && searchText) {
+        filter.push(`${propertyName}||cont||${searchText}`);
       }
     }
     this.internalRouteService
       .getManyInternalRoute({
-        filter: [`wanFormId||eq||${this.wanForm.id}`, eventParams],
+        filter,
         join: ['netcentricSubnet', 'appcentricSubnet'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,
