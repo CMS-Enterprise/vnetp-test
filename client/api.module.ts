@@ -2,6 +2,8 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
+import { AdminV2AppCentricTenantsService } from './api/adminV2AppCentricTenants.service';
+import { AdminV2AppCentricVrfsService } from './api/adminV2AppCentricVrfs.service';
 import { UtilitiesService } from './api/utilities.service';
 import { V1AuditLogService } from './api/v1AuditLog.service';
 import { V1AuthService } from './api/v1Auth.service';
@@ -17,9 +19,9 @@ import { V1LoadBalancerRoutesService } from './api/v1LoadBalancerRoutes.service'
 import { V1LoadBalancerSelfIpsService } from './api/v1LoadBalancerSelfIps.service';
 import { V1LoadBalancerVirtualServersService } from './api/v1LoadBalancerVirtualServers.service';
 import { V1LoadBalancerVlansService } from './api/v1LoadBalancerVlans.service';
+import { V1NetworkScopeFormsExternalRoutesService } from './api/v1NetworkScopeFormsExternalRoutes.service';
+import { V1NetworkScopeFormsInternalRoutesService } from './api/v1NetworkScopeFormsInternalRoutes.service';
 import { V1NetworkScopeFormsWanFormService } from './api/v1NetworkScopeFormsWanForm.service';
-import { V1NetworkScopeFormsWanFormExternalRoutesService } from './api/v1NetworkScopeFormsWanFormExternalRoutes.service';
-import { V1NetworkScopeFormsWanFormInternalRoutesService } from './api/v1NetworkScopeFormsWanFormInternalRoutes.service';
 import { V1NetworkSecurityFirewallRuleGroupsService } from './api/v1NetworkSecurityFirewallRuleGroups.service';
 import { V1NetworkSecurityFirewallRulesService } from './api/v1NetworkSecurityFirewallRules.service';
 import { V1NetworkSecurityNatRuleGroupsService } from './api/v1NetworkSecurityNatRuleGroups.service';

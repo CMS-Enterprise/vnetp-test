@@ -3,5 +3,66 @@
 
 <ng-container>
   <app-tabs #tabsRef [tabs]="tabs" [initialTabIndex]="initialTabIndex" (tabChange)="handleTabChange($event)"></app-tabs>
+  
+  <!-- VRF Selection for Firewall Tabs -->
+  <div *ngIf="(currentTab === 'Internal Firewall' || currentTab === 'External Firewall') && tenantVrfs.length > 1" 
+       class="vrf-selector-container mb-3 mt-3">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="vrfSelect">Select VRF:</label>
+          <select 
+            id="vrfSelect"
+            class="form-control"
+            [(ngModel)]="selectedVrf"
+            (ngModelChange)="selectVrf($event)"
+          >
+            <option *ngFor="let vrf of tenantVrfs" [ngValue]="vrf">
+              {{ vrf.name || 'Unnamed VRF' }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div *ngIf="selectedVrf" class="vrf-info">
+          <small class="text-muted">
+            <strong>{{ currentTab }}:</strong> 
+            Managing {{ currentTab === 'Internal Firewall' ? 'internal' : 'external' }} firewall for VRF "{{ selectedVrf.name }}"
+            <span *ngIf="selectedVrf.description"> - {{ selectedVrf.description }}</span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Single VRF Info Display -->
+  <div *ngIf="(currentTab === 'Internal Firewall' || currentTab === 'External Firewall') && tenantVrfs.length === 1 && selectedVrf"
+       class="single-vrf-info mb-3 mt-3">
+    <div class="alert alert-info">
+      <strong>{{ currentTab }}:</strong> 
+      Managing {{ currentTab === 'Internal Firewall' ? 'internal' : 'external' }} Firewall for VRF "{{ selectedVrf.name }}"
+      <span *ngIf="selectedVrf.description"> - {{ selectedVrf.description }}</span>
+    </div>
+  </div>
+
   <router-outlet name="tenant-portal"></router-outlet>
 </ng-container>
+
+<style>
+.vrf-selector-container {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  border-left: 4px solid #007bff;
+}
+
+.single-vrf-info {
+  margin-bottom: 15px;
+}
+
+.vrf-info {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+</style>

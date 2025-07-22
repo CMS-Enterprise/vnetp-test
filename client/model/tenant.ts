@@ -53,7 +53,7 @@ export interface Tenant {
     readonly auditLogs?: Array<AuditLog>;
     readonly wanForms?: WanForm;
     readonly workflows?: Array<Workflow>;
-    readonly datacenterId: string;
+    readonly datacenterId?: string;
     readonly datacenter: Datacenter;
     readonly multiVrf: boolean;
     readonly multiL3out: boolean;

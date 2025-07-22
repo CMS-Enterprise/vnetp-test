@@ -82,6 +82,7 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
   TierId: string;
   NatRuleGroup: NatRuleGroup;
   currentDatacenterSubscription: Subscription;
+  routeParamSubscription: Subscription;
 
   objectInfoSubscription: Subscription;
 
@@ -154,9 +155,16 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
         if (cd) {
           this.tiers = cd.tiers;
           this.datacenterService.lockDatacenter();
-          this.Id += this.route.snapshot.paramMap.get('id');
-          this.currentTierIds = this.datacenterService.currentTiersValue;
-          this.getNatRuleGroup();
+
+          // Subscribe to route parameter changes instead of using snapshot
+          this.routeParamSubscription = this.route.paramMap.subscribe(params => {
+            const newId = params.get('id') || '';
+            if (newId !== this.Id) {
+              this.Id = newId;
+              this.currentTierIds = this.datacenterService.currentTiersValue;
+              this.getNatRuleGroup();
+            }
+          });
         }
       });
     });
@@ -164,6 +172,9 @@ export class NatRulesDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.currentDatacenterSubscription.unsubscribe();
+    if (this.routeParamSubscription) {
+      this.routeParamSubscription.unsubscribe();
+    }
     this.datacenterService.unlockDatacenter();
   }
 

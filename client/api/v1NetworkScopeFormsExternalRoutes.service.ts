@@ -107,7 +107,7 @@ export interface UpdateOneExternalRouteRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V1NetworkScopeFormsWanFormExternalRoutesService {
+export class V1NetworkScopeFormsExternalRoutesService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -208,7 +208,7 @@ export class V1NetworkScopeFormsWanFormExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<ExternalRoute>>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/external-routes/bulk`,
+        return this.httpClient.post<Array<ExternalRoute>>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes/bulk`,
             createManyExternalRouteDto,
             {
                 responseType: <any>responseType,
@@ -264,7 +264,7 @@ export class V1NetworkScopeFormsWanFormExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/external-routes`,
+        return this.httpClient.post<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes`,
             externalRoute,
             {
                 responseType: <any>responseType,
@@ -311,7 +311,7 @@ export class V1NetworkScopeFormsWanFormExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/external-routes/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -356,7 +356,7 @@ export class V1NetworkScopeFormsWanFormExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/external-routes/${encodeURIComponent(String(id))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -463,7 +463,7 @@ export class V1NetworkScopeFormsWanFormExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetManyExternalRouteResponseDto>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/external-routes`,
+        return this.httpClient.get<GetManyExternalRouteResponseDto>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -526,7 +526,7 @@ export class V1NetworkScopeFormsWanFormExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/external-routes/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -572,7 +572,7 @@ export class V1NetworkScopeFormsWanFormExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/external-routes/${encodeURIComponent(String(id))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -624,7 +624,7 @@ export class V1NetworkScopeFormsWanFormExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/external-routes/${encodeURIComponent(String(routeId))}`,
+        return this.httpClient.delete<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes/${encodeURIComponent(String(routeId))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -669,7 +669,7 @@ export class V1NetworkScopeFormsWanFormExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/external-routes/${encodeURIComponent(String(id))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -715,7 +715,7 @@ export class V1NetworkScopeFormsWanFormExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/external-routes/${encodeURIComponent(String(id))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -774,7 +774,7 @@ export class V1NetworkScopeFormsWanFormExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/external-routes/${encodeURIComponent(String(id))}`,
+        return this.httpClient.put<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes/${encodeURIComponent(String(id))}`,
             externalRoute,
             {
                 responseType: <any>responseType,

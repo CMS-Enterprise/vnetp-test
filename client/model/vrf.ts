@@ -39,8 +39,8 @@ export interface Vrf {
     tenantId: string;
     readonly l3outs?: Array<L3Out>;
     readonly bridgeDomains?: Array<BridgeDomain>;
-    readonly tier?: Array<Tier>;
-    readonly tierId?: string;
+    readonly internalNetworkServicesTier?: Tier;
+    readonly externalNetworkServicesTier?: Tier;
     readonly tenantVersion?: number;
     readonly wanForm?: WanForm;
     externalVrfs?: Array<VrfExternalVrfsEnum>;

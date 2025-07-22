@@ -1,6 +1,8 @@
 .gitignore
 README.md
 api.module.ts
+api/adminV2AppCentricTenants.service.ts
+api/adminV2AppCentricVrfs.service.ts
 api/api.ts
 api/utilities.service.ts
 api/v1AuditLog.service.ts
@@ -17,9 +19,9 @@ api/v1LoadBalancerRoutes.service.ts
 api/v1LoadBalancerSelfIps.service.ts
 api/v1LoadBalancerVirtualServers.service.ts
 api/v1LoadBalancerVlans.service.ts
+api/v1NetworkScopeFormsExternalRoutes.service.ts
+api/v1NetworkScopeFormsInternalRoutes.service.ts
 api/v1NetworkScopeFormsWanForm.service.ts
-api/v1NetworkScopeFormsWanFormExternalRoutes.service.ts
-api/v1NetworkScopeFormsWanFormInternalRoutes.service.ts
 api/v1NetworkSecurityFirewallRuleGroups.service.ts
 api/v1NetworkSecurityFirewallRules.service.ts
 api/v1NetworkSecurityNatRuleGroups.service.ts
@@ -268,6 +270,9 @@ model/syncEndpointGroup.ts
 model/syncEndpointSecurityGroup.ts
 model/syncTenant.ts
 model/tenant.ts
+model/tenantAdminCreateDto.ts
+model/tenantAdminDto.ts
+model/tenantBasicUpdateDto.ts
 model/terraformPlan.ts
 model/tier.ts
 model/tierGroup.ts
@@ -279,6 +284,9 @@ model/virtualServerImportCollectionDto.ts
 model/virtualServerImportDto.ts
 model/vlan.ts
 model/vrf.ts
+model/vrfAdminDto.ts
+model/vrfAdminUpdateDto.ts
+model/vrfBasicUpdateDto.ts
 model/wanForm.ts
 model/wanFormRequest.ts
 model/wanFormRequestDto.ts

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of, throwError } from 'rxjs';
 import { TenantSelectModalComponent } from './tenant-select-modal.component';
-import { Tenant, V2AppCentricTenantsService } from 'client';
+import { Tenant, AdminV2AppCentricTenantsService } from 'client';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -43,9 +43,9 @@ describe('TenantSelectModalComponent', () => {
     };
 
     mockTenantService = {
-      createOneTenant: jest.fn().mockReturnValue(of({})),
-      updateOneTenant: jest.fn().mockReturnValue(of({})),
-      createOneV2TenantTenant: jest.fn().mockReturnValue(of({})),
+      createTenantWithVrfs: jest.fn().mockReturnValue(of({})),
+      updateTenantAdmin: jest.fn().mockReturnValue(of({})),
+      updateTenantBasic: jest.fn().mockReturnValue(of({})),
     };
 
     mockRouter = {
@@ -64,7 +64,7 @@ describe('TenantSelectModalComponent', () => {
       providers: [
         UntypedFormBuilder,
         { provide: NgxSmartModalService, useValue: mockModalService },
-        { provide: V2AppCentricTenantsService, useValue: mockTenantService },
+        { provide: AdminV2AppCentricTenantsService, useValue: mockTenantService },
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: TenantSelectModalHelpText, useValue: {} },
@@ -169,17 +169,20 @@ describe('TenantSelectModalComponent', () => {
       component.form.get('name').setValue('admin-tenant');
     });
 
-    it('should call createOneV2TenantTenant for AdminPortal create', () => {
+    it('should call createTenantWithVrfs for AdminPortal create', () => {
       component.save();
-      expect(mockTenantService.createOneV2TenantTenant).toHaveBeenCalledWith({
-        createTenantV2Dto: { name: 'admin-tenant' },
+      expect(mockTenantService.createTenantWithVrfs).toHaveBeenCalledWith({
+        tenantAdminCreateDto: expect.objectContaining({
+          name: 'admin-tenant',
+          vrfs: expect.any(Array),
+        }),
       });
     });
 
     it('should not save if form is invalid', () => {
       component.form.get('name').setValue(''); // make form invalid
       component.save();
-      expect(mockTenantService.createOneV2TenantTenant).not.toHaveBeenCalled();
+      expect(mockTenantService.createTenantWithVrfs).not.toHaveBeenCalled();
     });
 
     it('should handle onFileSelected', () => {
@@ -193,10 +196,6 @@ describe('TenantSelectModalComponent', () => {
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
 
       // Simulate various form inputs
-      component.form.get('regionalHa').setValue(true);
-      tick();
-      component.form.get('secondaryDatacenter').setValue('West');
-      tick();
       component.form.get('vcdTenantType').setValue('existing');
       tick();
       component.form.get('vcdTenantId').setValue('vcd-123');
@@ -207,10 +206,10 @@ describe('TenantSelectModalComponent', () => {
       expect(consoleSpy).toHaveBeenCalledWith(
         'AdminPortal Tenant Configuration:',
         expect.objectContaining({
-          primaryDatacenter: 'East',
-          secondaryDatacenter: 'West',
-          deploymentMode: 'Hot Site First',
           vcdTenantId: 'vcd-123',
+          tenantAdminCreateDto: expect.objectContaining({
+            name: 'admin-tenant',
+          }),
         }),
       );
       consoleSpy.mockRestore();

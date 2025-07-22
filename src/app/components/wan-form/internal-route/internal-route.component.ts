@@ -7,7 +7,7 @@ import {
   V1NetworkSubnetsService,
   V2AppCentricAppCentricSubnetsService,
   WanForm,
-  V1NetworkScopeFormsWanFormInternalRoutesService,
+  V1NetworkScopeFormsInternalRoutesService,
   InternalRoute,
   GetManyInternalRouteResponseDto,
 } from 'client';
@@ -62,7 +62,7 @@ export class InternalRouteComponent implements OnInit {
   ];
 
   constructor(
-    private internalRouteService: V1NetworkScopeFormsWanFormInternalRoutesService,
+    private internalRouteService: V1NetworkScopeFormsInternalRoutesService,
     private ngx: NgxSmartModalService,
     private tableContextService: TableContextService,
     private netcentricSubnetService: V1NetworkSubnetsService,

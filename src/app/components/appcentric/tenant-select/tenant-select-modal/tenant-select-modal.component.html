@@ -153,57 +153,7 @@
                 </div>
               </div>
 
-              <div class="col-md-6">
-                <!-- Regional HA Configuration -->
-                <h5 class="section-title compact-title">Regional High Availability</h5>
-                <div class="form-group row compact-form-group">
-                  <div class="col-sm-4"></div>
-                  <div class="col-sm-8">
-                    <div class="feature-flag-item">
-                      <input type="checkbox" id="regionalHa" class="form-check-input" formControlName="regionalHa" />
-                      <label class="form-check-label" for="regionalHa"> Regional HA </label>
-                      <tooltip [message]="helpText.RegionalHA"></tooltip>
-                    </div>
-                  </div>
-                </div>
 
-                <!-- Regional HA Options (visible when Regional HA is selected) -->
-                <div *ngIf="f.regionalHa.value">
-                  <div class="form-group row compact-form-group">
-                    <label class="col-sm-4 col-form-label" for="primaryDatacenter">Primary Datacenter</label>
-                    <div class="col-sm-8">
-                      <select id="primaryDatacenter" formControlName="primaryDatacenter" class="form-control form-control-sm">
-                        <option *ngFor="let option of datacenterOptions" [value]="option">{{ option }}</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="form-group row compact-form-group">
-                    <label class="col-sm-4 col-form-label" for="secondaryDatacenter">Secondary Datacenter</label>
-                    <div class="col-sm-8">
-                      <select id="secondaryDatacenter" formControlName="secondaryDatacenter" class="form-control form-control-sm">
-                        <option value="">None</option>
-                        <option *ngFor="let option of datacenterOptions" [value]="option" [disabled]="option === f.primaryDatacenter.value">
-                          {{ option }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <!-- Deployment Mode (visible when both Primary and Secondary datacenters are selected) -->
-                  <div *ngIf="f.secondaryDatacenter.value" class="form-group row compact-form-group">
-                    <label class="col-sm-4 col-form-label" for="deploymentMode">Deployment Mode</label>
-                    <div class="col-sm-8">
-                      <div class="d-flex align-items-center">
-                        <select id="deploymentMode" formControlName="deploymentMode" class="form-control form-control-sm mr-2">
-                          <option *ngFor="let option of deploymentModeOptions" [value]="option">{{ option }}</option>
-                        </select>
-                        <tooltip [message]="helpText.DeploymentMode"></tooltip>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
             <!-- Template Upload -->
@@ -289,205 +239,154 @@
                           />
                         </div>
                       </div>
-                      <div class="col-md-4">
+                      <div class="col-md-8">
                         <div class="form-group">
-                          <label [for]="'externalConnectivity' + i">External Connectivity</label>
-                          <div class="external-connectivity-options">
-                            <div *ngFor="let option of externalConnectivityOptions" class="form-check">
-                              <input
-                                type="checkbox"
-                                [id]="'extConn_' + option + '_' + i"
-                                [checked]="isExternalConnectivitySelected(i, option)"
-                                (change)="toggleExternalConnectivity(i, option)"
-                                class="form-check-input"
-                              />
-                              <label class="form-check-label" [for]="'extConn_' + option + '_' + i">
-                                {{ option }}
-                              </label>
+                          <label [for]="'externalConnectivity' + i">External VRF Connectivity</label>
+                          
+                          <!-- External VRF Selection -->
+                          <div class="mb-3">
+                            <div class="input-group input-group-sm">
+                              <select
+                                [id]="'externalVrfSelect' + i"
+                                [(ngModel)]="selectedExternalVrf"
+                                [ngModelOptions]="{ standalone: true }"
+                                class="form-control form-control-sm"
+                              >
+                                <option value="">Select External VRF to add...</option>
+                                <option *ngFor="let option of getAvailableExternalVrfs(i)" [value]="option">
+                                  {{ option }}
+                                </option>
+                              </select>
+                              <div class="input-group-append">
+                                <button
+                                  type="button"
+                                  class="btn btn-sm btn-primary"
+                                  (click)="addExternalVrfAndClear(i, selectedExternalVrf)"
+                                  [disabled]="!selectedExternalVrf"
+                                >
+                                  Add
+                                </button>
+                              </div>
                             </div>
+                          </div>
+
+                          <!-- Selected External VRFs Table -->
+                          <div *ngIf="vrf.externalVrfs && vrf.externalVrfs.length > 0" class="table-responsive">
+                            <table class="table table-sm table-bordered">
+                              <thead class="thead-light">
+                                <tr>
+                                  <th>External VRF</th>
+                                  <th width="80">Default</th>
+                                  <th width="60">Remove</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let extVrf of vrf.externalVrfs">
+                                  <td>{{ extVrf }}</td>
+                                  <td class="text-center">
+                                    <input
+                                      type="radio"
+                                      [name]="'defaultVrf' + i"
+                                      [checked]="isDefaultExternalVrf(i, extVrf)"
+                                      (change)="setDefaultExternalVrf(i, extVrf)"
+                                      class="form-check-input"
+                                    />
+                                  </td>
+                                  <td class="text-center">
+                                    <button
+                                      type="button"
+                                      class="btn btn-sm btn-outline-danger"
+                                      (click)="removeExternalVrf(i, extVrf)"
+                                      [disabled]="vrf.externalVrfs.length === 1"
+                                      [title]="vrf.externalVrfs.length === 1 ? 'Cannot remove the last external VRF' : 'Remove external VRF'"
+                                    >
+                                      <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                                    </button>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+
+                          <!-- Empty state -->
+                          <div *ngIf="!vrf.externalVrfs || vrf.externalVrfs.length === 0" class="alert alert-warning">
+                            No external VRFs selected. Please select at least one external VRF.
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    <!-- VRF-specific Firewall Configuration -->
+                    <!-- VRF Policy and Network Settings -->
                     <div class="row mt-3">
                       <div class="col-md-6">
-                        <h6 class="feature-section-title">North/South Firewall</h6>
-                        <div class="form-group row compact-form-group">
-                          <label class="col-sm-5 col-form-label" [for]="'nsFirewallVendor' + i">Vendor</label>
-                          <div class="col-sm-7">
-                            <select
-                              [id]="'nsFirewallVendor' + i"
-                              [(ngModel)]="vrf.northSouthFirewallVendor"
+                        <h6 class="feature-section-title">Policy Settings</h6>
+                        <div class="form-group">
+                          <div class="feature-flag-item mb-2">
+                            <input
+                              type="checkbox"
+                              [id]="'policyControlEnforced' + i"
+                              [(ngModel)]="vrf.policyControlEnforced"
                               [ngModelOptions]="{ standalone: true }"
-                              class="form-control form-control-sm"
-                            >
-                              <option *ngFor="let option of firewallVendorOptions" [value]="option">{{ option }}</option>
-                            </select>
+                              class="form-check-input"
+                            />
+                            <label class="form-check-label" [for]="'policyControlEnforced' + i"> 
+                              Policy Control Enforced 
+                            </label>
                           </div>
-                        </div>
-                        <div class="form-group row compact-form-group">
-                          <label class="col-sm-5 col-form-label" [for]="'nsFirewallArch' + i">Architecture</label>
-                          <div class="col-sm-7">
-                            <select
-                              [id]="'nsFirewallArch' + i"
-                              [(ngModel)]="vrf.northSouthFirewallArchitecture"
+                          <div class="feature-flag-item">
+                            <input
+                              type="checkbox"
+                              [id]="'policyControlEnforcementIngress' + i"
+                              [(ngModel)]="vrf.policyControlEnforcementIngress"
                               [ngModelOptions]="{ standalone: true }"
-                              class="form-control form-control-sm"
-                            >
-                              <option *ngFor="let option of firewallArchitectureOptions" [value]="option">{{ option }}</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group row compact-form-group">
-                          <div class="col-sm-5"></div>
-                          <div class="col-sm-7">
-                            <div class="feature-flag-item">
-                              <input
-                                type="checkbox"
-                                [id]="'nsHa' + i"
-                                [(ngModel)]="vrf.northSouthHa"
-                                [ngModelOptions]="{ standalone: true }"
-                                class="form-check-input"
-                              />
-                              <label class="form-check-label" [for]="'nsHa' + i"> HA </label>
-                            </div>
-                          </div>
-                        </div>
-                        <div *ngIf="vrf.northSouthHa" class="form-group row compact-form-group">
-                          <label class="col-sm-5 col-form-label" [for]="'nsHaMode' + i">HA Mode</label>
-                          <div class="col-sm-7">
-                            <select
-                              [id]="'nsHaMode' + i"
-                              [(ngModel)]="vrf.northSouthHaMode"
-                              [ngModelOptions]="{ standalone: true }"
-                              class="form-control form-control-sm"
-                            >
-                              <option *ngFor="let option of haModesOptions" [value]="option">{{ option }}</option>
-                            </select>
+                              class="form-check-input"
+                            />
+                            <label class="form-check-label" [for]="'policyControlEnforcementIngress' + i"> 
+                              Ingress Policy Enforcement 
+                            </label>
                           </div>
                         </div>
                       </div>
-
+                      
                       <div class="col-md-6">
-                        <h6 class="feature-section-title">East/West Firewall</h6>
-                        <div class="form-group row compact-form-group">
-                          <label class="col-sm-5 col-form-label" [for]="'ewFirewallVendor' + i">Vendor</label>
-                          <div class="col-sm-7">
-                            <select
-                              [id]="'ewFirewallVendor' + i"
-                              [(ngModel)]="vrf.eastWestFirewallVendor"
+                        <h6 class="feature-section-title">Routing Settings</h6>
+                        <div class="form-group">
+                          <div class="feature-flag-item mb-2">
+                            <input
+                              type="checkbox"
+                              [id]="'hostBasedRoutes' + i"
+                              [(ngModel)]="vrf.hostBasedRoutesToExternalVrfs"
                               [ngModelOptions]="{ standalone: true }"
-                              class="form-control form-control-sm"
-                            >
-                              <option *ngFor="let option of firewallVendorOptions" [value]="option">{{ option }}</option>
-                            </select>
+                              class="form-check-input"
+                            />
+                            <label class="form-check-label" [for]="'hostBasedRoutes' + i"> 
+                              Host-based Routes to External VRFs 
+                            </label>
                           </div>
-                        </div>
-                        <div class="form-group row compact-form-group">
-                          <label class="col-sm-5 col-form-label" [for]="'ewFirewallArch' + i">Architecture</label>
-                          <div class="col-sm-7">
-                            <select
-                              [id]="'ewFirewallArch' + i"
-                              [(ngModel)]="vrf.eastWestFirewallArchitecture"
-                              [ngModelOptions]="{ standalone: true }"
-                              class="form-control form-control-sm"
-                            >
-                              <option *ngFor="let option of firewallArchitectureOptions" [value]="option">{{ option }}</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group row compact-form-group">
-                          <div class="col-sm-5"></div>
-                          <div class="col-sm-7">
-                            <div class="feature-flag-item">
+                          <div class="row">
+                            <div class="col-6">
+                              <label [for]="'maxExternalRoutes' + i" class="form-label">Max External Routes</label>
                               <input
-                                type="checkbox"
-                                [id]="'ewHa' + i"
-                                [(ngModel)]="vrf.eastWestHa"
+                                type="number"
+                                [id]="'maxExternalRoutes' + i"
+                                [(ngModel)]="vrf.maxExternalRoutes"
                                 [ngModelOptions]="{ standalone: true }"
-                                class="form-check-input"
+                                class="form-control form-control-sm"
+                                min="0"
+                                max="10000"
                               />
-                              <label class="form-check-label" [for]="'ewHa' + i"> HA </label>
                             </div>
-                          </div>
-                        </div>
-                        <div *ngIf="vrf.eastWestHa" class="form-group row compact-form-group">
-                          <label class="col-sm-5 col-form-label" [for]="'ewHaMode' + i">HA Mode</label>
-                          <div class="col-sm-7">
-                            <select
-                              [id]="'ewHaMode' + i"
-                              [(ngModel)]="vrf.eastWestHaMode"
-                              [ngModelOptions]="{ standalone: true }"
-                              class="form-control form-control-sm"
-                            >
-                              <option *ngFor="let option of haModesOptions" [value]="option">{{ option }}</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- VRF Feature Flags -->
-                    <div class="row mt-3">
-                      <div class="col-md-12">
-                        <h6 class="feature-section-title">Feature Flags</h6>
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="feature-flag-item mb-2">
+                            <div class="col-6">
+                              <label [for]="'bgpASN' + i" class="form-label">BGP ASN</label>
                               <input
-                                type="checkbox"
-                                [id]="'nsAppId' + i"
-                                [(ngModel)]="vrf.northSouthAppId"
+                                type="number"
+                                [id]="'bgpASN' + i"
+                                [(ngModel)]="vrf.bgpASN"
                                 [ngModelOptions]="{ standalone: true }"
-                                class="form-check-input"
-                                [disabled]="vrf.northSouthFirewallVendor !== 'PANOS'"
+                                class="form-control form-control-sm"
+                                min="1"
+                                max="4294967295"
                               />
-                              <label class="form-check-label" [for]="'nsAppId' + i"> North/South App-ID </label>
-                            </div>
-                            <div class="feature-flag-item mb-2">
-                              <input
-                                type="checkbox"
-                                [id]="'ewAppId' + i"
-                                [(ngModel)]="vrf.eastWestAppId"
-                                [ngModelOptions]="{ standalone: true }"
-                                class="form-check-input"
-                                [disabled]="vrf.eastWestFirewallVendor !== 'PANOS'"
-                              />
-                              <label class="form-check-label" [for]="'ewAppId' + i"> East/West App-ID </label>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="feature-flag-item mb-2">
-                              <input
-                                type="checkbox"
-                                [id]="'nat64Ns' + i"
-                                [(ngModel)]="vrf.nat64NorthSouth"
-                                [ngModelOptions]="{ standalone: true }"
-                                class="form-check-input"
-                              />
-                              <label class="form-check-label" [for]="'nat64Ns' + i"> NAT64 North/South </label>
-                            </div>
-                            <div class="feature-flag-item mb-2">
-                              <input
-                                type="checkbox"
-                                [id]="'ewNat' + i"
-                                [(ngModel)]="vrf.eastWestNat"
-                                [ngModelOptions]="{ standalone: true }"
-                                class="form-check-input"
-                              />
-                              <label class="form-check-label" [for]="'ewNat' + i"> East/West NAT </label>
-                            </div>
-                            <div class="feature-flag-item">
-                              <input
-                                type="checkbox"
-                                [id]="'ewSgBypass' + i"
-                                [(ngModel)]="vrf.eastWestAllowSgBypass"
-                                [ngModelOptions]="{ standalone: true }"
-                                class="form-check-input"
-                              />
-                              <label class="form-check-label" [for]="'ewSgBypass' + i"> Allow SG Bypass </label>
                             </div>
                           </div>
                         </div>

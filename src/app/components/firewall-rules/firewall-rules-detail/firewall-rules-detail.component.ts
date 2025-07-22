@@ -105,6 +105,7 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   TierId: string;
   FirewallRuleGroup: FirewallRuleGroup;
   currentDatacenterSubscription: Subscription;
+  routeParamSubscription: Subscription;
 
   objectInfoSubscription: Subscription;
   public isLoading = false;
@@ -246,9 +247,16 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
         this.datacenterId = cd.id;
         this.tiers = cd.tiers;
         this.datacenterService.lockDatacenter();
-        this.Id = this.route.snapshot.paramMap.get('id') || '';
-        this.currentTierIds = this.datacenterService.currentTiersValue;
-        this.getFirewallRuleGroup();
+
+        // Subscribe to route parameter changes instead of using snapshot
+        this.routeParamSubscription = this.route.paramMap.subscribe(params => {
+          const newId = params.get('id') || '';
+          if (newId !== this.Id) {
+            this.Id = newId;
+            this.currentTierIds = this.datacenterService.currentTiersValue;
+            this.getFirewallRuleGroup();
+          }
+        });
       }
     });
   }
@@ -289,6 +297,9 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.currentDatacenterSubscription) {
       this.currentDatacenterSubscription.unsubscribe();
+    }
+    if (this.routeParamSubscription) {
+      this.routeParamSubscription.unsubscribe();
     }
     this.datacenterService.unlockDatacenter();
   }
@@ -449,14 +460,14 @@ export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
     });
     if (this.applicationMode === ApplicationMode.TENANTV2) {
       endpointGroupRequest = this.endpointGroupService.getManyEndpointGroup({
-        filter: [`tenantId||eq||${this.datacenterService.currentDatacenterValue.appCentricTenantId}`, 'deletedAt||isnull'],
+        filter: [`tenantId||eq||${this.datacenterService.currentDatacenterValue.appCentricTenant.id}`, 'deletedAt||isnull'],
         fields: ['id,name'],
         sort: ['updatedAt,ASC'],
         page: 1,
         perPage: 50000,
       });
       endpointSecurityGroupRequest = this.endpointSecurityGroupService.getManyEndpointSecurityGroup({
-        filter: [`tenantId||eq||${this.datacenterService.currentDatacenterValue.appCentricTenantId}`, 'deletedAt||isnull'],
+        filter: [`tenantId||eq||${this.datacenterService.currentDatacenterValue.appCentricTenant.id}`, 'deletedAt||isnull'],
         fields: ['id,name'],
         sort: ['updatedAt,ASC'],
         page: 1,

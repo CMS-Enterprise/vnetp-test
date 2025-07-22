@@ -10,7 +10,7 @@ import {
   V1NetworkSubnetsService,
   V2AppCentricAppCentricSubnetsService,
   InternalRoute,
-  V1NetworkScopeFormsWanFormInternalRoutesService,
+  V1NetworkScopeFormsInternalRoutesService,
   VrfExternalVrfsEnum,
 } from '../../../../../../client';
 import { InternalRouteModalDto } from '../../../../models/network-scope-forms/internal-route-modal.dto';
@@ -47,7 +47,7 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
-    private internalRouteService: V1NetworkScopeFormsWanFormInternalRoutesService,
+    private internalRouteService: V1NetworkScopeFormsInternalRoutesService,
     private datacenterContextService: DatacenterContextService,
     private netcentricSubnetService: V1NetworkSubnetsService,
     private appcentricSubnetService: V2AppCentricAppCentricSubnetsService,

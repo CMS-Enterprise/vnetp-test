@@ -92,7 +92,7 @@ describe('EndpointDisplayModalComponent', () => {
       component.modalId = 'nonexistentModal';
       component.ngAfterViewInit();
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Modal 'nonexistentModal' not found in ngAfterViewInit. Check ID and registration.",
+        'Modal \'nonexistentModal\' not found in ngAfterViewInit. Check ID and registration.',
         expect.any(Error),
       );
       consoleErrorSpy.mockRestore();

@@ -107,7 +107,7 @@ export interface UpdateOneInternalRouteRequestParams {
 @Injectable({
   providedIn: 'root'
 })
-export class V1NetworkScopeFormsWanFormInternalRoutesService {
+export class V1NetworkScopeFormsInternalRoutesService {
 
     protected basePath = 'http://localhost/v1';
     public defaultHeaders = new HttpHeaders();
@@ -208,7 +208,7 @@ export class V1NetworkScopeFormsWanFormInternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<Array<InternalRoute>>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/internal-routes/bulk`,
+        return this.httpClient.post<Array<InternalRoute>>(`${this.configuration.basePath}/v1/network-scope-forms/internal-routes/bulk`,
             createManyInternalRouteDto,
             {
                 responseType: <any>responseType,
@@ -264,7 +264,7 @@ export class V1NetworkScopeFormsWanFormInternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<InternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/internal-routes`,
+        return this.httpClient.post<InternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/internal-routes`,
             internalRoute,
             {
                 responseType: <any>responseType,
@@ -311,7 +311,7 @@ export class V1NetworkScopeFormsWanFormInternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<InternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/internal-routes/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<InternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/internal-routes/${encodeURIComponent(String(id))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -356,7 +356,7 @@ export class V1NetworkScopeFormsWanFormInternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/internal-routes/${encodeURIComponent(String(id))}/deprovision`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-scope-forms/internal-routes/${encodeURIComponent(String(id))}/deprovision`,
             null,
             {
                 responseType: <any>responseType,
@@ -463,7 +463,7 @@ export class V1NetworkScopeFormsWanFormInternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetManyInternalRouteResponseDto>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/internal-routes`,
+        return this.httpClient.get<GetManyInternalRouteResponseDto>(`${this.configuration.basePath}/v1/network-scope-forms/internal-routes`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -526,7 +526,7 @@ export class V1NetworkScopeFormsWanFormInternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<InternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/internal-routes/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<InternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/internal-routes/${encodeURIComponent(String(id))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -572,7 +572,7 @@ export class V1NetworkScopeFormsWanFormInternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/internal-routes/${encodeURIComponent(String(id))}/provision`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/v1/network-scope-forms/internal-routes/${encodeURIComponent(String(id))}/provision`,
             null,
             {
                 responseType: <any>responseType,
@@ -624,7 +624,7 @@ export class V1NetworkScopeFormsWanFormInternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<InternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/internal-routes/${encodeURIComponent(String(routeId))}`,
+        return this.httpClient.delete<InternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/internal-routes/${encodeURIComponent(String(routeId))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -669,7 +669,7 @@ export class V1NetworkScopeFormsWanFormInternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/internal-routes/${encodeURIComponent(String(id))}/restore`,
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/v1/network-scope-forms/internal-routes/${encodeURIComponent(String(id))}/restore`,
             null,
             {
                 responseType: <any>responseType,
@@ -715,7 +715,7 @@ export class V1NetworkScopeFormsWanFormInternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/internal-routes/${encodeURIComponent(String(id))}/soft`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/v1/network-scope-forms/internal-routes/${encodeURIComponent(String(id))}/soft`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -774,7 +774,7 @@ export class V1NetworkScopeFormsWanFormInternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<InternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/wan-form/internal-routes/${encodeURIComponent(String(id))}`,
+        return this.httpClient.put<InternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/internal-routes/${encodeURIComponent(String(id))}`,
             internalRoute,
             {
                 responseType: <any>responseType,
