@@ -9,14 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { L3Out } from './l3Out';
-import { Tenant } from './tenant';
-import { Tier } from './tier';
-import { BridgeDomain } from './bridgeDomain';
+import { AppCentricSubnet } from './appCentricSubnet';
 import { WanForm } from './wanForm';
+import { Subnet } from './subnet';
 
 
-export interface Vrf { 
+export interface InternalRoute { 
     readonly id?: string;
     readonly createdAt?: string;
     readonly updatedAt?: string;
@@ -24,31 +22,17 @@ export interface Vrf {
     readonly deletedAt?: string;
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
-    name?: string;
-    alias?: string;
+    name: string;
     description?: string;
-    /**
-     * Default True, Security rules (contracts) will be enforced.
-     */
-    policyControlEnforced: boolean;
-    /**
-     * Default True, If this is set to False, policy is enforced on egress traffic. If this is set to True, policy is enforced on ingress traffic.
-     */
-    policyControlEnforcementIngress: boolean;
-    readonly tenant?: Tenant;
-    tenantId: string;
-    readonly l3outs?: Array<L3Out>;
-    readonly bridgeDomains?: Array<BridgeDomain>;
-    readonly tier?: Array<Tier>;
-    readonly tierId?: string;
-    readonly tenantVersion?: number;
+    exportedToVrfs: InternalRouteExportedToVrfsEnum;
+    wanFormId: string;
     readonly wanForm?: WanForm;
-    externalVrfs?: Array<VrfExternalVrfsEnum>;
-    hostBasedRoutesToExternalVrfs?: boolean;
-    maxExternalRoutes?: number;
-    bgpASN?: number;
+    readonly netcentricSubnet?: Subnet;
+    netcentricSubnetId?: string;
+    readonly appcentricSubnet?: AppCentricSubnet;
+    appcentricSubnetId?: string;
 }
-export enum VrfExternalVrfsEnum {
+export enum InternalRouteExportedToVrfsEnum {
     CmsEntsrvInet = 'cms-entsrv-inet',
     CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
     CmsEntsrvMgmt = 'cms-entsrv-mgmt',

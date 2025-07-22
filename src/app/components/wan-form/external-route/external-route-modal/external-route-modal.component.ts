@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { V1RuntimeDataExternalRouteService, ExternalRoute } from '../../../../../../../../../../client';
-import { IpAddressAnyValidator } from '../../../../../../../../validators/network-form-validators';
+import { ExternalRoute, V1NetworkScopeFormsWanFormExternalRoutesService } from '../../../../../../client';
+import { IpAddressAnyValidator } from '../../../../validators/network-form-validators';
 
 @Component({
   selector: 'app-external-route-modal',
@@ -17,7 +17,7 @@ export class ExternalRouteModalComponent {
   constructor(
     private ngx: NgxSmartModalService,
     private formBuilder: FormBuilder,
-    private externalRouteService: V1RuntimeDataExternalRouteService,
+    private externalRouteService: V1NetworkScopeFormsWanFormExternalRoutesService,
   ) {}
 
   public ngOnInit(): void {
@@ -48,10 +48,7 @@ export class ExternalRouteModalComponent {
   private buildForm(): void {
     this.form = this.formBuilder.group({
       network: ['', Validators.compose([Validators.required, IpAddressAnyValidator])],
-      fromPrefixLength: ['', Validators.compose([Validators.required, Validators.min(0), Validators.max(32)])],
-      toPrefixLength: ['', Validators.compose([Validators.required, Validators.min(0), Validators.max(32)])],
-      metric: ['', Validators.required],
-      vrf: ['', Validators.required],
+      externalVrf: ['', Validators.required],
     });
   }
 
@@ -61,13 +58,11 @@ export class ExternalRouteModalComponent {
       return;
     }
 
-    const { network, fromPrefixLength, toPrefixLength, vrf, metric } = this.form.value;
+    const { network, vrf } = this.form.value;
     const externalRoute = {
       network,
-      fromPrefixLength,
-      toPrefixLength,
-      vrf,
-      metric,
+      externalVrf: vrf,
+      wanFormId: this.wanFormId,
     } as ExternalRoute;
 
     this.externalRouteService.createOneExternalRoute({ externalRoute }).subscribe(() => {

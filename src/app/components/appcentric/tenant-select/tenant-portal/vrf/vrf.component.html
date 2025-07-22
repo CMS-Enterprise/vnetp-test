@@ -33,7 +33,7 @@
       <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
       <span>Back to VRF List</span>
     </button>
-    <app-wan-form-subnets [wanForm]="selectedVrf.wanForm" (back)="showVrfList()"></app-wan-form-subnets>
+    <app-internal-route [wanForm]="selectedVrf.wanForm" (back)="showVrfList()"></app-internal-route>
   </ng-container>
 
   <ng-container *ngSwitchCase="'routes'">

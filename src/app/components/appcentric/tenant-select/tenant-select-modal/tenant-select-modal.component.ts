@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Tenant, V2AppCentricTenantsService, VrfTransitTenantVrfsEnum } from 'client';
+import { Tenant, V2AppCentricTenantsService, VrfExternalVrfsEnum } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
@@ -75,10 +75,10 @@ export class TenantSelectModalComponent implements OnInit {
   }
 
   /**
-   * Initialize external connectivity options from VrfTransitTenantVrfsEnum
+   * Initialize external connectivity options from VrfExternalVrfsEnum
    */
   private initializeExternalConnectivityOptions(): void {
-    this.externalConnectivityOptions = Object.values(VrfTransitTenantVrfsEnum);
+    this.externalConnectivityOptions = Object.values(VrfExternalVrfsEnum);
   }
 
   /**
@@ -95,7 +95,7 @@ export class TenantSelectModalComponent implements OnInit {
     return {
       name: 'default_vrf',
       description: 'Default VRF configuration',
-      externalConnectivity: [VrfTransitTenantVrfsEnum.CmsnetAppprod],
+      externalConnectivity: [VrfExternalVrfsEnum.CmsnetAppprod],
       northSouthFirewallVendor: 'PANOS',
       northSouthFirewallArchitecture: 'Virtual',
       northSouthHa: true,

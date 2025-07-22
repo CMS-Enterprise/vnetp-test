@@ -4,21 +4,21 @@ import { ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import {
+  WanForm,
   Subnet,
   AppCentricSubnet,
-  V1NetworkScopeFormsWanFormSubnetService,
   V1NetworkSubnetsService,
   V2AppCentricAppCentricSubnetsService,
-  VrfTransitTenantVrfsEnum,
-  WanFormSubnet,
-  WanForm,
-} from '../../../../../../../../../../client';
-import { ApplicationMode } from '../../../../../../../../models/other/application-mode-enum';
-import { ModalMode } from '../../../../../../../../models/other/modal-mode';
-import { DatacenterContextService } from '../../../../../../../../services/datacenter-context.service';
-import { RouteDataUtil } from '../../../../../../../../utils/route-data.util';
-import { NameValidator } from '../../../../../../../../validators/name-validator';
-import { WanFormSubnetModalDto } from '../../../../../../../../models/network-scope-forms/wan-form-subnet-modal.dto';
+  InternalRoute,
+  V1NetworkScopeFormsWanFormInternalRoutesService,
+  VrfExternalVrfsEnum,
+} from '../../../../../../client';
+import { InternalRouteModalDto } from '../../../../models/network-scope-forms/internal-route-modal.dto';
+import { ApplicationMode } from '../../../../models/other/application-mode-enum';
+import { ModalMode } from '../../../../models/other/modal-mode';
+import { DatacenterContextService } from '../../../../services/datacenter-context.service';
+import { RouteDataUtil } from '../../../../utils/route-data.util';
+import { NameValidator } from '../../../../validators/name-validator';
 
 // Interface for VRF option display
 interface VrfOption {
@@ -27,14 +27,14 @@ interface VrfOption {
 }
 
 @Component({
-  selector: 'app-wan-form-subnets-modal',
-  templateUrl: './wan-form-subnets-modal.component.html',
-  styleUrl: './wan-form-subnets-modal.component.css',
+  selector: 'app-internal-route-modal',
+  templateUrl: './internal-route-modal.component.html',
+  styleUrl: './internal-route-modal.component.css',
 })
-export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
+export class InternalRouteModalComponent implements OnInit, OnDestroy {
   public modalMode: ModalMode;
   public form: FormGroup;
-  public wanFormSubnetId: string;
+  public internalRouteId: string;
   public submitted: boolean;
   public wanForm: WanForm;
   private datacenterId: string;
@@ -47,7 +47,7 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private ngx: NgxSmartModalService,
-    private wanFormSubnetService: V1NetworkScopeFormsWanFormSubnetService,
+    private internalRouteService: V1NetworkScopeFormsWanFormInternalRoutesService,
     private datacenterContextService: DatacenterContextService,
     private netcentricSubnetService: V1NetworkSubnetsService,
     private appcentricSubnetService: V2AppCentricAppCentricSubnetsService,
@@ -58,12 +58,19 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
     this.currentDcsMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
 
     if (!this.currentDcsMode) {
-      console.error('WanFormSubnetsModalComponent: Application mode could not be determined via RouteDataUtil.');
+      console.error('InternalRouteModalComponent: Application mode could not be determined via RouteDataUtil.');
       // Fallback or error handling if necessary
     }
 
     this.buildVrfOptions();
     this.buildForm();
+  }
+
+  ngOnDestroy(): void {
+    this.datacenterSubscription?.unsubscribe();
+  }
+
+  public getSubnetsByApplicationMode(): void {
     if (this.currentDcsMode === 'netcentric') {
       this.datacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
         if (cd) {
@@ -76,15 +83,11 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.datacenterSubscription?.unsubscribe();
-  }
-
   /**
-   * Build VRF options from the VrfTransitTenantVrfsEnum
+   * Build VRF options from the VrfExternalVrfsEnum
    */
   private buildVrfOptions(): void {
-    this.vrfOptions = Object.values(VrfTransitTenantVrfsEnum).map(enumValue => ({
+    this.vrfOptions = Object.values(VrfExternalVrfsEnum).map(enumValue => ({
       value: enumValue,
       label: this.getVrfDisplayLabel(enumValue),
     }));
@@ -93,28 +96,30 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
   /**
    * Convert enum values to user-friendly display labels
    */
-  private getVrfDisplayLabel(enumValue: VrfTransitTenantVrfsEnum): string {
-    const labelMappings: Record<VrfTransitTenantVrfsEnum, string> = {
-      [VrfTransitTenantVrfsEnum.CmsEntsrvInet]: 'cms-entsrv-inet',
-      [VrfTransitTenantVrfsEnum.CmsEntsrvLdapdns]: 'cms-entsrv-ldapdns',
-      [VrfTransitTenantVrfsEnum.CmsEntsrvMgmt]: 'cms-entsrv-mgmt',
-      [VrfTransitTenantVrfsEnum.CmsEntsrvMon]: 'cms-entsrv-mon',
-      [VrfTransitTenantVrfsEnum.CmsEntsrvPres]: 'cms-entsrv-pres',
-      [VrfTransitTenantVrfsEnum.CmsEntsrvSec]: 'cms-entsrv-sec',
-      [VrfTransitTenantVrfsEnum.CmsEntsrvVpn]: 'cms-entsrv-vpn',
-      [VrfTransitTenantVrfsEnum.CmsnetAppdev]: 'cmsnet_appdev (Development)',
-      [VrfTransitTenantVrfsEnum.CmsnetAppprod]: 'cmsnet_appprod (Production)',
-      [VrfTransitTenantVrfsEnum.CmsnetDatadev]: 'cmsnet_datadev (Data Development)',
-      [VrfTransitTenantVrfsEnum.CmsnetDataprod]: 'cmsnet_dataprod (Data Production)',
-      [VrfTransitTenantVrfsEnum.CmsnetEdcVpn]: 'cmsnet_edc_vpn',
-      [VrfTransitTenantVrfsEnum.CmsnetEdcmgmt]: 'cmsnet_edcmgmt',
-      [VrfTransitTenantVrfsEnum.CmsnetPresdev]: 'cmsnet_presdev (Presentation Development)',
-      [VrfTransitTenantVrfsEnum.CmsnetPresprod]: 'cmsnet_presprod (Presentation Production)',
-      [VrfTransitTenantVrfsEnum.CmsnetSec]: 'cmsnet_sec',
-      [VrfTransitTenantVrfsEnum.CmsnetTransport]: 'cmsnet_transport',
-    };
+  private getVrfDisplayLabel(enumValue: VrfExternalVrfsEnum): string {
+    // const labelMappings: Record<VrfExternalVrfsEnum, string> = {
+    //   [VrfExternalVrfsEnum.CmsEntsrvInet]: 'cms-entsrv-inet',
+    //   [VrfExternalVrfsEnum.CmsEntsrvLdapdns]: 'cms-entsrv-ldapdns',
+    //   [VrfExternalVrfsEnum.CmsEntsrvMgmt]: 'cms-entsrv-mgmt',
+    //   [VrfExternalVrfsEnum.CmsEntsrvMon]: 'cms-entsrv-mon',
+    //   [VrfExternalVrfsEnum.CmsEntsrvPres]: 'cms-entsrv-pres',
+    //   [VrfExternalVrfsEnum.CmsEntsrvSec]: 'cms-entsrv-sec',
+    //   [VrfExternalVrfsEnum.CmsEntsrvVpn]: 'cms-entsrv-vpn',
+    //   [VrfExternalVrfsEnum.CmsnetAppdev]: 'cmsnet_appdev (Development)',
+    //   [VrfExternalVrfsEnum.CmsnetAppprod]: 'cmsnet_appprod (Production)',
+    //   [VrfExternalVrfsEnum.CmsnetDatadev]: 'cmsnet_datadev (Data Development)',
+    //   [VrfExternalVrfsEnum.CmsnetDataprod]: 'cmsnet_dataprod (Data Production)',
+    //   [VrfExternalVrfsEnum.CmsnetEdcVpn]: 'cmsnet_edc_vpn',
+    //   [VrfExternalVrfsEnum.CmsnetEdcmgmt]: 'cmsnet_edcmgmt',
+    //   [VrfExternalVrfsEnum.CmsnetPresdev]: 'cmsnet_presdev (Presentation Development)',
+    //   [VrfExternalVrfsEnum.CmsnetPresprod]: 'cmsnet_presprod (Presentation Production)',
+    //   [VrfExternalVrfsEnum.CmsnetSec]: 'cmsnet_sec',
+    //   [VrfExternalVrfsEnum.CmsnetTransport]: 'cmsnet_transport',
+    // };
 
-    return labelMappings[enumValue] || enumValue;
+    // return labelMappings[enumValue] || enumValue;
+
+    return enumValue;
   }
 
   get f() {
@@ -123,42 +128,42 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
 
   public closeModal(): void {
     this.reset();
-    this.ngx.close('wanFormSubnetModal');
+    this.ngx.close('internalRouteModal');
   }
 
   public getData(): void {
-    const dto = Object.assign({}, this.ngx.getModalData('wanFormSubnetModal') as WanFormSubnetModalDto);
+    const dto = Object.assign({}, this.ngx.getModalData('internalRouteModal') as InternalRouteModalDto);
     this.wanForm = dto.wanForm;
     this.modalMode = dto.modalMode;
+    this.getSubnetsByApplicationMode();
 
     if (this.modalMode === ModalMode.Edit) {
-      this.wanFormSubnetId = dto.wanFormSubnet.id;
+      this.internalRouteId = dto.internalRoute.id;
     } else {
       this.form.controls.name.enable();
       this.form.controls.netcentricSubnetId.enable();
       this.form.controls.appcentricSubnetId.enable();
       this.form.controls.vrf.enable();
-      this.form.controls.environment.enable();
     }
 
-    const wanFormSubnet = dto.wanFormSubnet;
-    if (wanFormSubnet !== undefined) {
-      this.form.controls.name.setValue(wanFormSubnet.name);
+    const internalRoute = dto.internalRoute;
+    if (internalRoute !== undefined) {
+      this.form.controls.name.setValue(internalRoute.name);
       this.form.controls.name.disable();
-      this.form.controls.description.setValue(wanFormSubnet.description);
-      this.form.controls.vrf.setValue(wanFormSubnet.exportedToVrfs);
-      this.form.controls.netcentricSubnetId.setValue(wanFormSubnet?.netcentricSubnetId);
-      this.form.controls.appcentricSubnetId.setValue(wanFormSubnet?.appcentricSubnetId);
+      this.form.controls.description.setValue(internalRoute.description);
+      this.form.controls.vrf.setValue(internalRoute.exportedToVrfs);
+      this.form.controls.netcentricSubnetId.setValue(internalRoute?.netcentricSubnetId);
+      this.form.controls.appcentricSubnetId.setValue(internalRoute?.appcentricSubnetId);
       this.form.controls.netcentricSubnetId.disable();
       this.form.controls.appcentricSubnetId.disable();
       this.form.controls.vrf.disable();
     }
-    this.ngx.resetModalData('wanFormSubnetModal');
+    this.ngx.resetModalData('internalRouteModal');
   }
 
   public reset(): void {
     this.submitted = false;
-    this.ngx.resetModalData('wanFormSubnetModal');
+    this.ngx.resetModalData('internalRouteModal');
     this.buildForm();
   }
 
@@ -180,40 +185,39 @@ export class WanFormSubnetsModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const { name, description, vrf, environment, netcentricSubnetId, appcentricSubnetId, fromPrefixLength, toPrefixLength } =
+    const { name, description, vrf, netcentricSubnetId, appcentricSubnetId, fromPrefixLength, toPrefixLength } =
       this.form.value;
-    const wanFormSubnet = {
+    const internalRoute = {
       name,
       description,
       exportedToVrfs: vrf,
-      environment,
       wanFormId: this.wanForm.id,
       datacenterId: this.datacenterId,
       netcentricSubnetId,
       appcentricSubnetId,
       fromPrefixLength,
       toPrefixLength,
-    } as WanFormSubnet;
+    } as InternalRoute;
 
     if (this.modalMode === ModalMode.Create) {
       if (this.currentDcsMode === 'netcentric') {
-        delete wanFormSubnet.appcentricSubnetId;
+        delete internalRoute.appcentricSubnetId;
       }
       if (this.currentDcsMode === 'appcentric') {
-        delete wanFormSubnet.netcentricSubnetId;
+        delete internalRoute.netcentricSubnetId;
       }
-      this.wanFormSubnetService.createOneWanFormSubnet({ wanFormSubnet }).subscribe(() => {
+      this.internalRouteService.createOneInternalRoute({ internalRoute }).subscribe(() => {
         this.closeModal();
       });
     } else {
-      delete wanFormSubnet.wanFormId;
-      delete wanFormSubnet.netcentricSubnetId;
-      delete wanFormSubnet.appcentricSubnetId;
+      delete internalRoute.wanFormId;
+      delete internalRoute.netcentricSubnetId;
+      delete internalRoute.appcentricSubnetId;
 
-      this.wanFormSubnetService
-        .updateOneWanFormSubnet({
-          id: this.wanFormSubnetId,
-          wanFormSubnet,
+      this.internalRouteService
+        .updateOneInternalRoute({
+          id: this.internalRouteId,
+          internalRoute,
         })
         .subscribe(() => {
           this.closeModal();

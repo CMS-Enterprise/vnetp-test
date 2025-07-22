@@ -2,14 +2,14 @@ import { Component, Input, OnInit, ViewChild, TemplateRef, Output, EventEmitter 
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import {
-  GetManyWanFormSubnetResponseDto,
   Vlan,
   BridgeDomain,
-  V1NetworkScopeFormsWanFormSubnetService,
   V1NetworkSubnetsService,
   V2AppCentricAppCentricSubnetsService,
-  WanFormSubnet,
   WanForm,
+  V1NetworkScopeFormsWanFormInternalRoutesService,
+  InternalRoute,
+  GetManyInternalRouteResponseDto,
 } from 'client';
 import { SearchColumnConfig } from 'src/app/common/search-bar/search-bar.component';
 import { TableConfig } from 'src/app/common/table/table.component';
@@ -17,17 +17,17 @@ import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
-import { WanFormSubnetModalDto } from 'src/app/models/network-scope-forms/wan-form-subnet-modal.dto';
+import { InternalRouteModalDto } from 'src/app/models/network-scope-forms/internal-route-modal.dto';
 
 @Component({
-  selector: 'app-wan-form-subnets',
-  templateUrl: './wan-form-subnets.component.html',
-  styleUrls: ['./wan-form-subnets.component.css'],
+  selector: 'app-internal-route',
+  templateUrl: './internal-route.component.html',
+  styleUrls: ['./internal-route.component.css'],
 })
-export class WanFormSubnetsComponent implements OnInit {
+export class InternalRouteComponent implements OnInit {
   @Input() wanForm: WanForm;
   @Output() back = new EventEmitter<void>();
-  public wanFormSubnets: GetManyWanFormSubnetResponseDto;
+  public internalRoutes: GetManyInternalRouteResponseDto;
   public isLoading = false;
   public tableComponentDto = new TableComponentDto();
   public ModalMode = ModalMode;
@@ -45,12 +45,10 @@ export class WanFormSubnetsComponent implements OnInit {
   @ViewChild('expandableRows') expandableRows: TemplateRef<any>;
 
   public config: TableConfig<any> = {
-    description: 'External Routes',
+    description: 'Internal Routes',
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Description', property: 'description' },
-      { name: 'VRF/Zone', template: () => this.vrfNameTemplate },
-      { name: 'Environment', property: 'environment' },
       { name: '', template: () => this.actionsTemplate },
     ],
     expandableRows: () => this.expandableRows,
@@ -64,7 +62,7 @@ export class WanFormSubnetsComponent implements OnInit {
   ];
 
   constructor(
-    private wanFormSubnetService: V1NetworkScopeFormsWanFormSubnetService,
+    private internalRouteService: V1NetworkScopeFormsWanFormInternalRoutesService,
     private ngx: NgxSmartModalService,
     private tableContextService: TableContextService,
     private netcentricSubnetService: V1NetworkSubnetsService,
@@ -72,43 +70,43 @@ export class WanFormSubnetsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getWanFormSubnets();
+    this.getInternalRoutes();
     this.getChildren();
   }
 
   public onTableEvent(event): void {
     this.tableComponentDto = event;
-    this.getWanFormSubnets(event);
+    this.getInternalRoutes(event);
   }
 
-  public openModal(modalMode: ModalMode, wanFormSubnet?: WanFormSubnet): void {
-    const dto = new WanFormSubnetModalDto();
+  public openModal(modalMode: ModalMode, internalRoute?: InternalRoute): void {
+    const dto = new InternalRouteModalDto();
 
     dto.modalMode = modalMode;
     dto.wanForm = this.wanForm;
-    dto.wanFormSubnet = wanFormSubnet;
+    dto.internalRoute = internalRoute;
 
     this.subscribeToModal();
-    this.ngx.setModalData(dto, 'wanFormSubnetModal');
-    this.ngx.getModal('wanFormSubnetModal').open();
+    this.ngx.setModalData(dto, 'internalRouteModal');
+    this.ngx.getModal('internalRouteModal').open();
   }
 
   private subscribeToModal(): void {
-    this.modalSubscription = this.ngx.getModal('wanFormSubnetModal').onCloseFinished.subscribe(() => {
-      this.ngx.resetModalData('wanFormSubnetModal');
+    this.modalSubscription = this.ngx.getModal('internalRouteModal').onCloseFinished.subscribe(() => {
+      this.ngx.resetModalData('internalRouteModal');
       this.modalSubscription.unsubscribe();
       const params = this.tableContextService.getSearchLocalStorage();
       const { filteredResults } = params;
 
       if (filteredResults) {
-        this.getWanFormSubnets(params);
+        this.getInternalRoutes(params);
       } else {
-        this.getWanFormSubnets();
+        this.getInternalRoutes();
       }
     });
   }
 
-  public getWanFormSubnets(event?) {
+  public getInternalRoutes(event?) {
     this.isLoading = true;
     let eventParams;
     if (event) {
@@ -120,8 +118,8 @@ export class WanFormSubnetsComponent implements OnInit {
         eventParams = `${propertyName}||cont||${searchText}`;
       }
     }
-    this.wanFormSubnetService
-      .getManyWanFormSubnet({
+    this.internalRouteService
+      .getManyInternalRoute({
         filter: [`wanFormId||eq||${this.wanForm.id}`, eventParams],
         join: ['netcentricSubnet', 'appcentricSubnet'],
         page: this.tableComponentDto.page,
@@ -129,10 +127,8 @@ export class WanFormSubnetsComponent implements OnInit {
       })
       .subscribe(
         data => {
-          this.wanFormSubnets = data;
-        },
-        () => {
-          this.wanFormSubnets = null;
+          this.internalRoutes = data;
+          this.isLoading = false;
         },
         () => {
           this.isLoading = false;
@@ -140,16 +136,16 @@ export class WanFormSubnetsComponent implements OnInit {
       );
   }
 
-  public deleteWanFormSubnet(wanFormSubnet: WanFormSubnet): void {
+  public deleteInternalRoute(internalRoute: InternalRoute): void {
     this.isLoading = true;
-    if (wanFormSubnet.deletedAt) {
-      this.wanFormSubnetService
-        .deleteOneWanFormSubnet({
-          id: wanFormSubnet.id,
+    if (internalRoute.deletedAt) {
+      this.internalRouteService
+        .deleteOneInternalRoute({
+          id: internalRoute.id,
         })
         .subscribe(
           () => {
-            this.getWanFormSubnets();
+            this.getInternalRoutes();
           },
           () => {
             this.isLoading = false;
@@ -159,9 +155,9 @@ export class WanFormSubnetsComponent implements OnInit {
           },
         );
     } else {
-      this.wanFormSubnetService.softDeleteOneWanFormSubnet({ id: wanFormSubnet.id }).subscribe(
+      this.internalRouteService.softDeleteOneInternalRoute({ id: internalRoute.id }).subscribe(
         () => {
-          this.getWanFormSubnets();
+          this.getInternalRoutes();
         },
         () => {
           this.isLoading = false;
@@ -173,11 +169,11 @@ export class WanFormSubnetsComponent implements OnInit {
     }
   }
 
-  public restoreWanFormSubnet(wanFormSubnet: WanFormSubnet): void {
+  public restoreInternalRoute(internalRoute: InternalRoute): void {
     this.isLoading = true;
-    this.wanFormSubnetService.restoreOneWanFormSubnet({ id: wanFormSubnet.id }).subscribe(
+    this.internalRouteService.restoreOneInternalRoute({ id: internalRoute.id }).subscribe(
       () => {
-        this.getWanFormSubnets();
+        this.getInternalRoutes();
       },
       () => {
         this.isLoading = false;

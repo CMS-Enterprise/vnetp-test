@@ -1,13 +1,13 @@
 <ngx-smart-modal
-  #wanFormSubnetModal
+  #internalRouteModal
   [dismissable]="false"
   customClass="medium-modal"
-  identifier="wanFormSubnetModal"
+  identifier="internalRouteModal"
   (onOpen)="getData()"
   (onClose)="reset()"
 >
   <header class="modal-header">
-    <h4 class="modal-title">Advertised Internal Subnets</h4>
+    <h4 class="modal-title">Internal Routes</h4>
   </header>
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="modal-body">

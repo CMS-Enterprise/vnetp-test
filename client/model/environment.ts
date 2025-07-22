@@ -9,34 +9,20 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { L3Out } from './l3Out';
-import { AppCentricSubnet } from './appCentricSubnet';
-import { WanForm } from './wanForm';
-import { Subnet } from './subnet';
+import { GlobalExternalRoute } from './globalExternalRoute';
 
 
-export interface WanFormSubnet { 
+export interface Environment { 
     readonly id?: string;
-    readonly createdAt?: string;
-    readonly updatedAt?: string;
-    readonly version?: number;
-    readonly deletedAt?: string;
-    readonly provisionedAt?: string;
-    readonly provisionedVersion?: number;
     name: string;
-    description?: string;
-    exportedToVrfs: WanFormSubnetExportedToVrfsEnum;
-    wanFormId: string;
-    readonly wanForm?: WanForm;
-    readonly netcentricSubnet?: Subnet;
-    netcentricSubnetId?: string;
-    readonly appcentricSubnet?: AppCentricSubnet;
-    appcentricSubnetId?: string;
-    fromPrefixLength: number;
-    toPrefixLength: number;
-    readonly allowedL3Outs?: Array<L3Out>;
+    description: string;
+    /**
+     * External VRFs allowed for this environment
+     */
+    allowedVrfs: Array<EnvironmentAllowedVrfsEnum> | null;
+    readonly globalExternalRoutes: Array<GlobalExternalRoute>;
 }
-export enum WanFormSubnetExportedToVrfsEnum {
+export enum EnvironmentAllowedVrfsEnum {
     CmsEntsrvInet = 'cms-entsrv-inet',
     CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
     CmsEntsrvMgmt = 'cms-entsrv-mgmt',

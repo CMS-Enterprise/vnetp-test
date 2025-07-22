@@ -8,6 +8,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSortModule } from '@angular/material/sort';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -18,19 +22,18 @@ import { TableModule } from 'src/app/common/table/table.module';
 import { TabsModule } from 'src/app/common/tabs/tabs.module';
 import { TooltipModule } from 'src/app/common/tooltip/tooltip.module';
 import { YesNoModalModule } from 'src/app/common/yes-no-modal/yes-no-modal.module';
-import { WanFormSubnetsComponent } from './wan-form-subnets/wan-form-subnets.component';
+import { InternalRouteComponent } from './internal-route/internal-route.component';
 import { WanFormDetailComponent } from './wan-form-detail/wan-form-detail.component';
 import { ExternalRouteComponent } from './external-route/external-route.component';
-import { MatTabsModule } from '@angular/material/tabs';
-import { WanFormSubnetsModalComponent } from './wan-form-subnets/wan-form-subnets-modal/wan-form-subnets-modal.component';
+import { InternalRouteModalComponent } from './internal-route/internal-route-modal/internal-route-modal.component';
 import { ExternalRouteModalComponent } from './external-route/external-route-modal/external-route-modal.component';
 
 @NgModule({
   declarations: [
     WanFormDetailComponent,
-    WanFormSubnetsComponent,
+    InternalRouteComponent,
     ExternalRouteComponent,
-    WanFormSubnetsModalComponent,
+    InternalRouteModalComponent,
     ExternalRouteModalComponent,
   ],
   imports: [
@@ -55,12 +58,15 @@ import { ExternalRouteModalComponent } from './external-route/external-route-mod
     MatToolbarModule,
     MatTooltipModule,
     MatTabsModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   exports: [
     WanFormDetailComponent,
-    WanFormSubnetsComponent,
+    InternalRouteComponent,
     ExternalRouteComponent,
-    WanFormSubnetsModalComponent,
+    InternalRouteModalComponent,
     ExternalRouteModalComponent,
   ],
 })

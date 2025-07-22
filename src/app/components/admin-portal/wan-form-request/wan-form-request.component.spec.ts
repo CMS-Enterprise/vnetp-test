@@ -170,7 +170,7 @@ describe('WanFormRequestComponent', () => {
       expect(mockTenantStateService.setTenant).toHaveBeenCalledWith(MOCK_WAN_FORM_REQUEST.tenant);
       expect(mockWanFormService.getOneWanForm).toHaveBeenCalledWith({
         id: MOCK_WAN_FORM_REQUEST.wanFormId,
-        join: ['wanFormSubnets', 'externalRoutes', 'tenant', 'datacenter'],
+        join: ['internalRoutes', 'externalRoutes', 'tenant', 'datacenter'],
       });
 
       expect(component.wanFormRequestTableDto).toBeDefined();

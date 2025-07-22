@@ -120,9 +120,9 @@ export class VrfComponent implements OnInit {
     const relations =
       this.applicationMode === ApplicationMode.APPCENTRIC ? [] : ['wanForm', 'wanForm.internalRoutes', 'wanForm.externalRoutes'];
 
+    // ! TODO: Remove this
     relations.pop();
     relations.pop();
-
     this.vrfService
       .getManyVrf({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],

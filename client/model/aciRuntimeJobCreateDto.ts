@@ -22,7 +22,6 @@ export enum AciRuntimeJobCreateDtoTypeEnum {
     NatRule = 'NatRule',
     F5Config = 'F5Config',
     AciRuntime = 'AciRuntime',
-    ExternalRoute = 'ExternalRoute',
     AppIdRuntime = 'AppIdRuntime'
 };
 

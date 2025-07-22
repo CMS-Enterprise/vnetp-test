@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WanFormSubnetsModalComponent } from './wan-form-subnets-modal.component';
+import { InternalRoutesModalComponent } from './internal-route-modal.component';
 import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from '../../../../../../test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
-  V1NetworkScopeFormsWanFormSubnetService,
+  V1NetworkScopeFormsInternalRouteService,
   V1NetworkSubnetsService,
   V2AppCentricAppCentricSubnetsService,
 } from '../../../../../../../client';
@@ -15,13 +15,13 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalMode } from '../../../../../models/other/modal-mode';
 import { ApplicationMode } from '../../../../../models/other/application-mode-enum';
 
-describe('WanFormSubnetsModalComponent', () => {
-  let component: WanFormSubnetsModalComponent;
-  let fixture: ComponentFixture<WanFormSubnetsModalComponent>;
+describe('InternalRoutesModalComponent', () => {
+  let component: InternalRoutesModalComponent;
+  let fixture: ComponentFixture<InternalRoutesModalComponent>;
   let mockRoute: any;
   let mockDatacenterContextService: any;
   let mockNgxSmartModalService: any;
-  let mockWanFormSubnetService: any;
+  let mockInternalRouteService: any;
   let mockNetcentricSubnetService: any;
   let mockAppcentricSubnetService: any;
   let formBuilder: FormBuilder;
@@ -35,8 +35,8 @@ describe('WanFormSubnetsModalComponent', () => {
       getModalData: jest.fn().mockReturnValue({
         wanFormId: 'testWanFormId',
         modalMode: 'Edit',
-        wanFormSubnet: {
-          id: 'testWanFormSubnetId',
+        internalRoute: {
+          id: 'testInternalRouteId',
           name: 'testName',
           description: 'testDescription',
           vrf: 'testVRF',
@@ -59,9 +59,9 @@ describe('WanFormSubnetsModalComponent', () => {
       currentDatacenter: of({ id: 'datacenterId' }),
     };
 
-    mockWanFormSubnetService = {
-      createOneWanFormSubnet: jest.fn().mockReturnValue(of({})),
-      updateOneWanFormSubnet: jest.fn().mockReturnValue(of({})),
+    mockInternalRouteService = {
+      createOneInternalRoute: jest.fn().mockReturnValue(of({})),
+      updateOneInternalRoute: jest.fn().mockReturnValue(of({})),
     };
 
     mockNetcentricSubnetService = {
@@ -84,10 +84,10 @@ describe('WanFormSubnetsModalComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
-      declarations: [WanFormSubnetsModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent],
+      declarations: [InternalRoutesModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
-        { provide: V1NetworkScopeFormsWanFormSubnetService, useValue: mockWanFormSubnetService },
+        { provide: V1NetworkScopeFormsInternalRouteService, useValue: mockInternalRouteService },
         { provide: DatacenterContextService, useValue: mockDatacenterContextService },
         { provide: V1NetworkSubnetsService, useValue: mockNetcentricSubnetService },
         { provide: V2AppCentricAppCentricSubnetsService, useValue: mockAppcentricSubnetService },
@@ -96,7 +96,7 @@ describe('WanFormSubnetsModalComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(WanFormSubnetsModalComponent);
+    fixture = TestBed.createComponent(InternalRoutesModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -108,7 +108,7 @@ describe('WanFormSubnetsModalComponent', () => {
   it('should close modal', () => {
     const closeSpy = jest.spyOn(mockNgxSmartModalService, 'close');
     component.closeModal();
-    expect(closeSpy).toHaveBeenCalledWith('wanFormSubnetModal');
+    expect(closeSpy).toHaveBeenCalledWith('internalRouteModal');
   });
 
   describe('getData', () => {
@@ -117,7 +117,7 @@ describe('WanFormSubnetsModalComponent', () => {
 
       expect(component.wanFormId).toBe('testWanFormId');
       expect(component.modalMode).toBe('Edit');
-      expect(component.wanFormSubnetId).toBe('testWanFormSubnetId');
+      expect(component.internalRouteId).toBe('testInternalRouteId');
     });
 
     it('should set form values and disable name control', () => {
@@ -135,14 +135,14 @@ describe('WanFormSubnetsModalComponent', () => {
     it('should reset modal data after processing', () => {
       component.getData();
 
-      expect(mockNgxSmartModalService.resetModalData).toHaveBeenCalledWith('wanFormSubnetModal');
+      expect(mockNgxSmartModalService.resetModalData).toHaveBeenCalledWith('internalRouteModal');
     });
 
-    it('should not disable name control if wanFormSubnet is undefined', () => {
+    it('should not disable name control if internalRoute is undefined', () => {
       mockNgxSmartModalService.getModalData.mockReturnValueOnce({
         wanFormId: 'testWanFormId',
         modalMode: 'Create',
-        wanFormSubnet: undefined,
+        internalRoute: undefined,
       });
 
       component.getData();
@@ -203,14 +203,14 @@ describe('WanFormSubnetsModalComponent', () => {
     it('should return early if form is invalid', () => {
       component.form.controls.name.setErrors({ incorrect: true });
       component.save();
-      expect(mockWanFormSubnetService.createOneWanFormSubnet).not.toHaveBeenCalled();
+      expect(mockInternalRouteService.createOneInternalRoute).not.toHaveBeenCalled();
     });
 
-    it('should create wanFormSubnet object with correct values', () => {
+    it('should create internalRoute object with correct values', () => {
       component.save();
 
-      expect(mockWanFormSubnetService.createOneWanFormSubnet).toHaveBeenCalledWith({
-        wanFormSubnet: {
+      expect(mockInternalRouteService.createOneInternalRoute).toHaveBeenCalledWith({
+        internalRoute: {
           name: 'testName',
           description: 'testDescription',
           vrf: 'testVRF',
@@ -226,18 +226,18 @@ describe('WanFormSubnetsModalComponent', () => {
 
     it('should call create service method if modalMode is Create', () => {
       component.save();
-      expect(mockWanFormSubnetService.createOneWanFormSubnet).toHaveBeenCalled();
-      expect(mockWanFormSubnetService.updateOneWanFormSubnet).not.toHaveBeenCalled();
+      expect(mockInternalRouteService.createOneInternalRoute).toHaveBeenCalled();
+      expect(mockInternalRouteService.updateOneInternalRoute).not.toHaveBeenCalled();
     });
 
     it('should call update service method if modalMode is Edit', () => {
       component.modalMode = ModalMode.Edit;
-      component.wanFormSubnetId = 'testWanFormSubnetId';
+      component.internalRouteId = 'testInternalRouteId';
       component.save();
 
-      expect(mockWanFormSubnetService.updateOneWanFormSubnet).toHaveBeenCalledWith({
-        id: 'testWanFormSubnetId',
-        wanFormSubnet: {
+      expect(mockInternalRouteService.updateOneInternalRoute).toHaveBeenCalledWith({
+        id: 'testInternalRouteId',
+        internalRoute: {
           name: 'testName',
           description: 'testDescription',
           vrf: 'testVRF',
@@ -247,15 +247,15 @@ describe('WanFormSubnetsModalComponent', () => {
           toPrefixLength: 24,
         },
       });
-      expect(mockWanFormSubnetService.createOneWanFormSubnet).not.toHaveBeenCalled();
+      expect(mockInternalRouteService.createOneInternalRoute).not.toHaveBeenCalled();
     });
 
     it('should delete appcentricSubnetId if currentDcsMode is netcentric', () => {
       component.currentDcsMode = ApplicationMode.NETCENTRIC;
       component.save();
 
-      expect(mockWanFormSubnetService.createOneWanFormSubnet).toHaveBeenCalledWith({
-        wanFormSubnet: {
+      expect(mockInternalRouteService.createOneInternalRoute).toHaveBeenCalledWith({
+        internalRoute: {
           name: 'testName',
           description: 'testDescription',
           vrf: 'testVRF',
@@ -273,8 +273,8 @@ describe('WanFormSubnetsModalComponent', () => {
       component.currentDcsMode = ApplicationMode.APPCENTRIC;
       component.save();
 
-      expect(mockWanFormSubnetService.createOneWanFormSubnet).toHaveBeenCalledWith({
-        wanFormSubnet: {
+      expect(mockInternalRouteService.createOneInternalRoute).toHaveBeenCalledWith({
+        internalRoute: {
           name: 'testName',
           description: 'testDescription',
           vrf: 'testVRF',

@@ -58,10 +58,10 @@ describe('WanFormDetailComponent', () => {
     });
   });
 
-  describe('navigateToWanFormSubnets', () => {
+  describe('navigateToInternalRoutes', () => {
     it('should navigate to WAN form subnets with current query params', () => {
-      component.navigateToWanFormSubnets();
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/netcentric/wan-form', 'testWanFormId', 'wan-form-subnets'], {
+      component.navigateToInternalRoutes();
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/netcentric/wan-form', 'testWanFormId', 'internal-routes'], {
         relativeTo: mockRoute,
         queryParams: mockRoute.snapshot.queryParams,
         state: { data: component.wanForm },

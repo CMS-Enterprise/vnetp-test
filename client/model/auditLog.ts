@@ -85,7 +85,7 @@ export enum AuditLogEntityTypeEnum {
     Selector = 'Selector',
     WanForm = 'WanForm',
     ExternalRoute = 'ExternalRoute',
-    WanFormSubnet = 'WanFormSubnet'
+    InternalRoute = 'InternalRoute'
 };
 
 

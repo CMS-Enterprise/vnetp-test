@@ -9,10 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { WanFormSubnet } from './wanFormSubnet';
 
 
-export interface CreateManyWanFormSubnetDto { 
-    bulk: Array<WanFormSubnet>;
+export interface SimplifiedInternalRoute { 
+    exportedToVrfs?: Array<string>;
+    network: string;
+    hostBasedRouting: boolean;
 }
 

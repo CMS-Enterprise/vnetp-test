@@ -9,15 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { WanFormSubnet } from './wanFormSubnet';
+import { InternalRoute } from './internalRoute';
 
 
-export interface GetManyWanFormSubnetResponseDto { 
-    totalPages: number;
-    count: number;
-    total: number;
-    page: number;
-    pageCount: number;
-    data: Array<WanFormSubnet>;
+export interface CreateManyInternalRouteDto { 
+    bulk: Array<InternalRoute>;
 }
 

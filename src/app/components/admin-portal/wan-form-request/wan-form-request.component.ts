@@ -147,7 +147,7 @@ export class WanFormRequestComponent implements OnInit {
 
   public setWanForm(wanFormId: string, wanFormRequest: WanFormRequest): void {
     this.tenantStateService.setTenant(wanFormRequest.tenant);
-    this.wanFormService.getOneWanForm({ id: wanFormId, join: ['wanFormSubnets', 'externalRoutes', 'tenant', 'datacenter'] }).subscribe({
+    this.wanFormService.getOneWanForm({ id: wanFormId, join: ['internalRoutes', 'externalRoutes', 'tenant', 'datacenter'] }).subscribe({
       next: response => {
         const wanFormRequestData: WanFormRequestTableData = {
           wanFormId: response.id,
