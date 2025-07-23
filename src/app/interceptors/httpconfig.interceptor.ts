@@ -73,12 +73,40 @@ export class HttpConfigInterceptor {
     }
 
     if (request.params.get('filter') && request.params.get('filter').split(',').length > 1) {
-      const queryStingReplacement = request.params.get('filter').split(',').join('&filter=');
-      const requestUrl = `${request.url}?filter=${queryStingReplacement}`;
-      request = request.clone({
-        url: requestUrl,
-        params: request.params.delete('filter'),
-      });
+      console.log('filter', request.params.get('filter'));
+      const filterParam = request.params.get('filter');
+
+      // Split on commas and reconstruct valid filter expressions
+      const parts = filterParam.split(',');
+      const validFilters: string[] = [];
+      let currentFilter = parts[0]?.trim() || '';
+
+      // Process remaining parts
+      for (let i = 1; i < parts.length; i++) {
+        const part = parts[i].trim();
+
+        if (part.includes('||')) {
+          // This is a new filter, save the previous one
+          validFilters.push(currentFilter);
+          currentFilter = part;
+        } else {
+          // This is part of the current filter's comma-separated value
+          currentFilter += ',' + part;
+        }
+      }
+
+      // Add the final filter
+      validFilters.push(currentFilter);
+
+      // Only create multiple filter params if we have multiple valid filters
+      if (validFilters.length > 1) {
+        const queryStringReplacement = validFilters.join('&filter=');
+        const requestUrl = `${request.url}?filter=${queryStringReplacement}`;
+        request = request.clone({
+          url: requestUrl,
+          params: request.params.delete('filter'),
+        });
+      }
     }
 
     return next.handle(request).pipe(

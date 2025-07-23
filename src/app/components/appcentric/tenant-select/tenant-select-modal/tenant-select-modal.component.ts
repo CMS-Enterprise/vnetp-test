@@ -32,10 +32,10 @@ export class TenantSelectModalComponent implements OnInit {
   public isTenantV2Mode = false;
   public currentMode: ApplicationMode;
   public modalData: TenantModalDto;
-  public selectedFile: File = null;
   public selectedExternalVrf = '';
   public externalConnectivityOptions: string[] = [];
   public vrfConfigurations: VrfAdminDto[] = [];
+  public vrfCollapsedStates: boolean[] = [];
 
   // Help text for tooltips
   public helpText: TenantSelectModalHelpText;
@@ -70,6 +70,7 @@ export class TenantSelectModalComponent implements OnInit {
    */
   private initializeVrfConfigurations(): void {
     this.vrfConfigurations = [this.createDefaultVrfConfiguration()];
+    this.vrfCollapsedStates = [false]; // Default VRF starts expanded
   }
 
   /**
@@ -80,8 +81,8 @@ export class TenantSelectModalComponent implements OnInit {
       name: 'default_vrf',
       alias: '',
       description: 'Default VRF configuration',
-      externalVrfs: [VrfAdminDtoExternalVrfsEnum.CmsnetAppprod],
-      defaultExternalVrf: VrfAdminDtoDefaultExternalVrfEnum.CmsnetAppprod,
+      externalVrfs: [VrfAdminDtoExternalVrfsEnum.CmsnetTransport],
+      defaultExternalVrf: VrfAdminDtoDefaultExternalVrfEnum.CmsnetTransport,
       policyControlEnforced: true,
       policyControlEnforcementIngress: true,
       hostBasedRoutesToExternalVrfs: false,
@@ -98,6 +99,7 @@ export class TenantSelectModalComponent implements OnInit {
     newVrf.name = ''; // Clear the name for new VRFs
     newVrf.description = '';
     this.vrfConfigurations.push(newVrf);
+    this.vrfCollapsedStates.push(false); // New VRFs start expanded
   }
 
   /**
@@ -109,6 +111,7 @@ export class TenantSelectModalComponent implements OnInit {
     // Prevent deletion if it's the last VRF or if it's the default_vrf
     if (this.vrfConfigurations.length > 1 && vrf.name !== 'default_vrf') {
       this.vrfConfigurations.splice(index, 1);
+      this.vrfCollapsedStates.splice(index, 1);
     }
   }
 
@@ -203,6 +206,28 @@ export class TenantSelectModalComponent implements OnInit {
   }
 
   /**
+   * Toggle the collapse state of a VRF configuration
+   */
+  public toggleVrfCollapse(index: number): void {
+    if (index >= 0 && index < this.vrfCollapsedStates.length) {
+      this.vrfCollapsedStates[index] = !this.vrfCollapsedStates[index];
+    }
+  }
+
+  /**
+   * Check if an external VRF can be removed (cannot remove if it's the default)
+   */
+  public canRemoveExternalVrf(vrfIndex: number, externalVrf: VrfAdminDtoExternalVrfsEnum): boolean {
+    const vrf = this.vrfConfigurations[vrfIndex];
+    if (!vrf.externalVrfs || vrf.externalVrfs.length <= 1) {
+      return false; // Cannot remove if it's the only external VRF
+    }
+
+    // Cannot remove if it's the current default external VRF
+    return !this.isDefaultExternalVrf(vrfIndex, externalVrf);
+  }
+
+  /**
    * Updates availability of HA options based on tenant size
    */
   private updateSizeBasedOptions(): void {
@@ -269,7 +294,6 @@ export class TenantSelectModalComponent implements OnInit {
 
   public reset(): void {
     this.submitted = false;
-    this.selectedFile = null;
     this.ngx.resetModalData('tenantModal');
     this.buildForm();
     this.initializeVrfConfigurations();
@@ -313,12 +337,7 @@ export class TenantSelectModalComponent implements OnInit {
     this.updateSizeBasedOptions();
   }
 
-  public onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      this.selectedFile = input.files[0];
-    }
-  }
+
 
   private createTenant(tenantAdminCreateDto: TenantAdminCreateDto): void {
     if (this.isAdminPortalMode) {
@@ -355,13 +374,13 @@ export class TenantSelectModalComponent implements OnInit {
       name,
       description,
       alias,
-      tenantSize,
+      // tenantSize,
       vendorAgnosticNat,
       multiVrf,
       multiL3out,
-      vcdLocation,
-      vcdTenantType,
-      vcdTenantId,
+      // vcdLocation,
+      // vcdTenantType,
+      // vcdTenantId,
     } = this.form.value;
 
     if (this.isAdminPortalMode) {
@@ -375,15 +394,6 @@ export class TenantSelectModalComponent implements OnInit {
           allowServiceGraphBypass: vendorAgnosticNat, // Map this field appropriately
           vrfs: multiVrf ? this.vrfConfigurations : [this.vrfConfigurations[0]], // Always include at least one VRF
         };
-
-        console.log('AdminPortal Tenant Configuration:', {
-          tenantSize,
-          vcdLocation,
-          vcdTenantType,
-          vcdTenantId: vcdTenantType === 'existing' ? vcdTenantId : null,
-          templateFile: this.selectedFile ? this.selectedFile.name : null,
-          tenantAdminCreateDto
-        });
 
         this.createTenant(tenantAdminCreateDto);
       } else {

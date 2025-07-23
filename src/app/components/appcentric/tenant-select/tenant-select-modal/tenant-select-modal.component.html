@@ -156,22 +156,7 @@
 
             </div>
 
-            <!-- Template Upload -->
-            <div class="form-group mt-3">
-              <label for="tenantTemplateFile">Upload Tenant Template YAML</label>
-              <div class="custom-file">
-                <input
-                  type="file"
-                  id="tenantTemplateFile"
-                  class="custom-file-input"
-                  accept=".yaml,.yml"
-                  (change)="onFileSelected($event)"
-                />
-                <label class="custom-file-label" for="tenantTemplateFile">
-                  {{ selectedFile ? selectedFile.name : 'Choose file...' }}
-                </label>
-              </div>
-            </div>
+
           </div>
 
           <!-- VRF Configuration Tab -->
@@ -197,7 +182,17 @@
                 <!-- VRF Cards -->
                 <div *ngFor="let vrf of vrfConfigurations; let i = index" class="card mb-3">
                   <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0">VRF {{ i + 1 }}: {{ vrf.name || 'Unnamed' }}</h6>
+                    <div class="d-flex align-items-center">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-link p-0 mr-2"
+                        (click)="toggleVrfCollapse(i)"
+                        [title]="vrfCollapsedStates[i] ? 'Expand VRF' : 'Collapse VRF'"
+                      >
+                        <fa-icon [icon]="['fas', vrfCollapsedStates[i] ? 'chevron-right' : 'chevron-down']"></fa-icon>
+                      </button>
+                      <h6 class="mb-0">VRF {{ i + 1 }}: {{ vrf.name || 'Unnamed' }}</h6>
+                    </div>
                     <button
                       *ngIf="f.multiVrf.value"
                       type="button"
@@ -211,7 +206,23 @@
                       <fa-icon [icon]="['fas', 'trash']"></fa-icon>
                     </button>
                   </div>
-                  <div class="card-body">
+                  
+                  <!-- Collapsed Summary View -->
+                  <div *ngIf="vrfCollapsedStates[i]" class="card-body py-2">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <small class="text-muted">
+                          <strong>External VRFs:</strong> {{ vrf.externalVrfs?.length || 0 }} | 
+                          <strong>Policy Control:</strong> {{ vrf.policyControlEnforced ? 'Yes' : 'No' }} | 
+                          <strong>Ingress Enforcement:</strong> {{ vrf.policyControlEnforcementIngress ? 'Yes' : 'No' }} | 
+                          <strong>BGP ASN:</strong> {{ vrf.bgpASN || 'Not set' }}
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Expanded Detail View -->
+                  <div *ngIf="!vrfCollapsedStates[i]" class="card-body">
                     <div class="row">
                       <div class="col-md-4">
                         <div class="form-group">
@@ -276,7 +287,7 @@
                               <thead class="thead-light">
                                 <tr>
                                   <th>External VRF</th>
-                                  <th width="80">Default</th>
+                                  <th width="80">Default<tooltip [message]="helpText.DefaultExternalVrf"></tooltip></th>
                                   <th width="60">Remove</th>
                                 </tr>
                               </thead>
@@ -297,8 +308,14 @@
                                       type="button"
                                       class="btn btn-sm btn-outline-danger"
                                       (click)="removeExternalVrf(i, extVrf)"
-                                      [disabled]="vrf.externalVrfs.length === 1"
-                                      [title]="vrf.externalVrfs.length === 1 ? 'Cannot remove the last external VRF' : 'Remove external VRF'"
+                                      [disabled]="!canRemoveExternalVrf(i, extVrf)"
+                                      [title]="
+                                        vrf.externalVrfs.length === 1 
+                                          ? 'Cannot remove the last external VRF' 
+                                          : isDefaultExternalVrf(i, extVrf) 
+                                            ? 'Cannot remove the default external VRF' 
+                                            : 'Remove external VRF'
+                                      "
                                     >
                                       <fa-icon [icon]="['fas', 'times']"></fa-icon>
                                     </button>

@@ -27,8 +27,7 @@
         <div *ngIf="selectedVrf" class="vrf-info">
           <small class="text-muted">
             <strong>{{ currentTab }}:</strong> 
-            Managing {{ currentTab === 'Internal Firewall' ? 'internal' : 'external' }} firewall for VRF "{{ selectedVrf.name }}"
-            <span *ngIf="selectedVrf.description"> - {{ selectedVrf.description }}</span>
+              {{ currentTab === 'Internal Firewall' ? 'internal' : 'external' }} firewall for VRF "{{ selectedVrf.name }}"
           </small>
         </div>
       </div>
@@ -41,7 +40,6 @@
     <div class="alert alert-info">
       <strong>{{ currentTab }}:</strong> 
       Managing {{ currentTab === 'Internal Firewall' ? 'internal' : 'external' }} Firewall for VRF "{{ selectedVrf.name }}"
-      <span *ngIf="selectedVrf.description"> - {{ selectedVrf.description }}</span>
     </div>
   </div>
 
