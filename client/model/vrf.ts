@@ -44,11 +44,31 @@ export interface Vrf {
     readonly tenantVersion?: number;
     readonly wanForm?: WanForm;
     externalVrfs?: Array<VrfExternalVrfsEnum>;
+    defaultExternalVrf?: VrfDefaultExternalVrfEnum;
     hostBasedRoutesToExternalVrfs?: boolean;
     maxExternalRoutes?: number;
     bgpASN?: number;
 }
 export enum VrfExternalVrfsEnum {
+    CmsEntsrvInet = 'cms-entsrv-inet',
+    CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
+    CmsEntsrvMgmt = 'cms-entsrv-mgmt',
+    CmsEntsrvMon = 'cms-entsrv-mon',
+    CmsEntsrvPres = 'cms-entsrv-pres',
+    CmsEntsrvSec = 'cms-entsrv-sec',
+    CmsEntsrvVpn = 'cms-entsrv-vpn',
+    CmsnetAppdev = 'cmsnet_appdev',
+    CmsnetAppprod = 'cmsnet_appprod',
+    CmsnetDatadev = 'cmsnet_datadev',
+    CmsnetDataprod = 'cmsnet_dataprod',
+    CmsnetEdcVpn = 'cmsnet_edc_vpn',
+    CmsnetEdcmgmt = 'cmsnet_edcmgmt',
+    CmsnetPresdev = 'cmsnet_presdev',
+    CmsnetPresprod = 'cmsnet_presprod',
+    CmsnetSec = 'cmsnet_sec',
+    CmsnetTransport = 'cmsnet_transport'
+};
+export enum VrfDefaultExternalVrfEnum {
     CmsEntsrvInet = 'cms-entsrv-inet',
     CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
     CmsEntsrvMgmt = 'cms-entsrv-mgmt',

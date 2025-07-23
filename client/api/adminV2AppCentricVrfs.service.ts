@@ -20,7 +20,6 @@ import { Observable }                                        from 'rxjs';
 import { Vrf } from '../model/models';
 import { VrfAdminDto } from '../model/models';
 import { VrfAdminUpdateDto } from '../model/models';
-import { VrfBasicUpdateDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -34,12 +33,6 @@ export interface UpdateVrfAdminRequestParams {
     /** VRF ID */
     id: string;
     vrfAdminUpdateDto: VrfAdminUpdateDto;
-}
-
-export interface UpdateVrfBasicRequestParams {
-    /** VRF ID */
-    id: string;
-    vrfBasicUpdateDto: VrfBasicUpdateDto;
 }
 
 
@@ -211,67 +204,6 @@ export class AdminV2AppCentricVrfsService {
 
         return this.httpClient.put<Vrf>(`${this.configuration.basePath}/admin/v2/app-centric/vrfs/${encodeURIComponent(String(id))}`,
             vrfAdminUpdateDto,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Update VRF basic properties
-     * Update only non-sensitive VRF properties (alias, description, policy settings).
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public updateVrfBasic(requestParameters: UpdateVrfBasicRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Vrf>;
-    public updateVrfBasic(requestParameters: UpdateVrfBasicRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Vrf>>;
-    public updateVrfBasic(requestParameters: UpdateVrfBasicRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Vrf>>;
-    public updateVrfBasic(requestParameters: UpdateVrfBasicRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const id = requestParameters.id;
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling updateVrfBasic.');
-        }
-        const vrfBasicUpdateDto = requestParameters.vrfBasicUpdateDto;
-        if (vrfBasicUpdateDto === null || vrfBasicUpdateDto === undefined) {
-            throw new Error('Required parameter vrfBasicUpdateDto was null or undefined when calling updateVrfBasic.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.put<Vrf>(`${this.configuration.basePath}/admin/v2/app-centric/vrfs/${encodeURIComponent(String(id))}/basic`,
-            vrfBasicUpdateDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

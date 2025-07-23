@@ -217,7 +217,6 @@ export * from './vlan';
 export * from './vrf';
 export * from './vrfAdminDto';
 export * from './vrfAdminUpdateDto';
-export * from './vrfBasicUpdateDto';
 export * from './wanForm';
 export * from './wanFormRequest';
 export * from './wanFormRequestDto';
