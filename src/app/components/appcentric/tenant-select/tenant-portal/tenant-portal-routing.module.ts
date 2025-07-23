@@ -58,53 +58,53 @@ const routes: Routes = [
       },
       {
         outlet,
-        path: 'east-west-firewall',
+        path: 'internal-firewall',
         data: {
-          breadcrumb: 'East-West Firewall',
-          title: 'East-West Firewall',
+          breadcrumb: 'Internal Firewall',
+          title: 'Internal Firewall',
         },
         loadChildren: () => import('./tenant-v2-firewall/tenant-v2-firewall.module').then(m => m.TenantV2FirewallModule),
       },
       {
         outlet,
-        path: 'east-west-nat',
-        data: { breadcrumb: 'East-West NAT', title: 'East-West NAT' },
+        path: 'internal-nat',
+        data: { breadcrumb: 'Internal NAT', title: 'Internal NAT' },
         loadChildren: () => import('./tenant-v2-nat/tenant-v2-nat.module').then(m => m.TenantV2NatModule),
       },
 
       {
         outlet,
-        path: 'east-west-service-objects',
-        data: { breadcrumb: 'East-West Service Objects', title: 'East-West Service Objects' },
+        path: 'internal-service-objects',
+        data: { breadcrumb: 'Internal Service Objects', title: 'Internal Service Objects' },
         loadChildren: () =>
           import('src/app/components/service-objects-groups/service-objects-groups.module').then(m => m.ServiceObjectsGroupsModule),
       },
       {
         outlet,
-        path: 'north-south-firewall',
+        path: 'external-firewall',
         data: {
-          breadcrumb: 'North-South Firewall',
-          title: 'North-South Firewall',
+          breadcrumb: 'External Firewall',
+          title: 'External Firewall',
         },
         loadChildren: () => import('./tenant-v2-firewall/tenant-v2-firewall.module').then(m => m.TenantV2FirewallModule),
       },
       {
         outlet,
-        path: 'north-south-nat',
-        data: { breadcrumb: 'North-South NAT', title: 'North-South NAT' },
+        path: 'external-nat',
+        data: { breadcrumb: 'External NAT', title: 'External NAT' },
         loadChildren: () => import('./tenant-v2-nat/tenant-v2-nat.module').then(m => m.TenantV2NatModule),
       },
       {
         outlet,
-        path: 'north-south-service-objects',
-        data: { breadcrumb: 'North-South Service Objects', title: 'North-South Service Objects' },
+        path: 'external-service-objects',
+        data: { breadcrumb: 'External Service Objects', title: 'External Service Objects' },
         loadChildren: () =>
           import('src/app/components/service-objects-groups/service-objects-groups.module').then(m => m.ServiceObjectsGroupsModule),
       },
       {
         outlet,
-        path: 'north-south-network-objects',
-        data: { breadcrumb: 'North-South Network Objects', title: 'North-South Network Objects' },
+        path: 'external-network-objects',
+        data: { breadcrumb: 'External Network Objects', title: 'External Network Objects' },
         loadChildren: () =>
           import('src/app/components/network-objects-groups/network-objects-groups.module').then(m => m.NetworkObjectsGroupsModule),
       },

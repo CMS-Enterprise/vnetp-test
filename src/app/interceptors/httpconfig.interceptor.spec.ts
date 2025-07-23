@@ -149,12 +149,84 @@ describe('HttpConfigInterceptor', () => {
     it('should replace filter parameter with multiple values', () => {
       mockActivatedRoute.snapshot.queryParams.tenant = 'mockTenant';
 
-      const request = new HttpRequest('GET', 'http://test-api.com/data', { params: new HttpParams().set('filter', 'abc,def') });
+      const request = new HttpRequest('GET', 'http://test-api.com/data', {
+        params: new HttpParams().set('filter', 'name||eq||test,status||eq||active')
+      });
       interceptor.intercept(request, mockHttpHandler);
       const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
 
-      expect(modifiedRequest.url).toBe('http://test-api.com/data?filter=abc&filter=def');
+      expect(modifiedRequest.url).toBe('http://test-api.com/data?filter=name||eq||test&filter=status||eq||active');
       expect(modifiedRequest.params.has('filter')).toBeFalsy();
+    });
+
+    it('should not split filter parameter when it contains comma-separated values', () => {
+      mockActivatedRoute.snapshot.queryParams.tenant = 'mockTenant';
+
+      const request = new HttpRequest('GET', 'http://test-api.com/data', {
+        params: new HttpParams().set('filter', 'id||in||31db4114-57cc-4df4-83e4-8f266e777100,5c5a3d7b-f12b-4622-afcf-eb562a2cae7a')
+      });
+      interceptor.intercept(request, mockHttpHandler);
+      const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
+
+      // Should not be modified since it's a single filter with comma-separated values
+      expect(modifiedRequest.url).toBe('http://test-api.com/data');
+      expect(modifiedRequest.params.get('filter'))
+        .toBe('id||in||31db4114-57cc-4df4-83e4-8f266e777100,5c5a3d7b-f12b-4622-afcf-eb562a2cae7a');
+    });
+
+    it('should not modify filter parameter when it contains no commas', () => {
+      mockActivatedRoute.snapshot.queryParams.tenant = 'mockTenant';
+
+      const request = new HttpRequest('GET', 'http://test-api.com/data', {
+        params: new HttpParams().set('filter', 'name||eq||test')
+      });
+      interceptor.intercept(request, mockHttpHandler);
+      const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
+
+      // Should not be modified since it's a single filter
+      expect(modifiedRequest.url).toBe('http://test-api.com/data');
+      expect(modifiedRequest.params.get('filter')).toBe('name||eq||test');
+    });
+
+    it('should handle mixed filters with comma-separated values and multiple filters', () => {
+      mockActivatedRoute.snapshot.queryParams.tenant = 'mockTenant';
+
+      const request = new HttpRequest('GET', 'http://test-api.com/data', {
+        params: new HttpParams().set('filter', 'id||in||uuid1,uuid2,uuid3,name||eq||test,status||in||active,inactive')
+      });
+      interceptor.intercept(request, mockHttpHandler);
+      const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
+
+      expect(modifiedRequest.url)
+        .toBe('http://test-api.com/data?filter=id||in||uuid1,uuid2,uuid3&filter=name||eq||test&filter=status||in||active,inactive');
+      expect(modifiedRequest.params.has('filter')).toBeFalsy();
+    });
+
+    it('should handle empty filter parts gracefully', () => {
+      mockActivatedRoute.snapshot.queryParams.tenant = 'mockTenant';
+
+      const request = new HttpRequest('GET', 'http://test-api.com/data', {
+        params: new HttpParams().set('filter', 'name||eq||test, ,status||eq||active')
+      });
+      interceptor.intercept(request, mockHttpHandler);
+      const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
+
+      expect(modifiedRequest.url).toBe('http://test-api.com/data?filter=name||eq||test,&filter=status||eq||active');
+      expect(modifiedRequest.params.has('filter')).toBeFalsy();
+    });
+
+    it('should handle filter with only comma-separated values (no multiple filters)', () => {
+      mockActivatedRoute.snapshot.queryParams.tenant = 'mockTenant';
+
+      const request = new HttpRequest('GET', 'http://test-api.com/data', {
+        params: new HttpParams().set('filter', 'simple,comma,separated,values')
+      });
+      interceptor.intercept(request, mockHttpHandler);
+      const modifiedRequest = (mockHttpHandler.handle as jest.Mock).mock.calls[0][0];
+
+      // Should not be modified since none of the parts contain ||
+      expect(modifiedRequest.url).toBe('http://test-api.com/data');
+      expect(modifiedRequest.params.get('filter')).toBe('simple,comma,separated,values');
     });
 
     it('should call processSuccessRequest when response is an HttpResponse', () => {

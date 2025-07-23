@@ -2,6 +2,8 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
+import { AdminV2AppCentricTenantsService } from './api/adminV2AppCentricTenants.service';
+import { AdminV2AppCentricVrfsService } from './api/adminV2AppCentricVrfs.service';
 import { UtilitiesService } from './api/utilities.service';
 import { V1AuditLogService } from './api/v1AuditLog.service';
 import { V1AuthService } from './api/v1Auth.service';

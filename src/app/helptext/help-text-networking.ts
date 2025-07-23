@@ -309,4 +309,5 @@ export class TenantSelectModalHelpText {
     'Hot Site First: Deploy to primary site first, then secondary\nCold Site First: Deploy to secondary site first, then primary\nScheduled Sync: Schedule regular synchronization between sites\n\nNote: A failure in the secondary deployment will halt the workflow and rollback the changes to the secondary environment.';
   MultiVrf = 'Enable multiple VRFs within tenant.';
   MultiL3out = 'Enable multiple L3Outs within tenant VRFs.';
+  DefaultExternalVrf = 'Default External VRF for this Tenant VRF. A default route will be initiated into the tenant from this External VRF.';
 }
