@@ -41,7 +41,11 @@
       <fa-icon class="icon" [icon]="['fas', 'arrow-left']"></fa-icon>
       <span>Back to VRF List</span>
     </button>
-    <app-external-route [wanForm]="selectedVrf.wanForm" [vrfId]="selectedVrf.id" (back)="showVrfList()"></app-external-route>
+    <app-external-route
+      [wanForm]="selectedVrf.wanForm"
+      [vrfId]="selectedVrf.id"
+      [environmentId]="tenant?.environmentId"
+    ></app-external-route>
   </ng-container>
 </ng-container>
 

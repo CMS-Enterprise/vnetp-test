@@ -58,10 +58,10 @@ export class ExternalRouteModalComponent {
       return;
     }
 
-    const { network, vrf } = this.form.value;
+    const { network, externalVrf } = this.form.value;
     const externalRoute = {
       network,
-      externalVrf: vrf,
+      externalVrf,
       wanFormId: this.wanFormId,
     } as ExternalRoute;
 

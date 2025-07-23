@@ -32,58 +32,13 @@
       </div>
 
       <div class="form-group">
-        <label for="fromPrefixLength">From Prefix Length</label>
-        <input
-          type="number"
-          id="fromPrefixLength"
-          formControlName="fromPrefixLength"
-          class="form-control"
-          [class.is-invalid]="submitted && f.fromPrefixLength.errors"
-          aria-label="From Prefix Length"
-        />
-        <div *ngIf="submitted && f.fromPrefixLength.errors" class="invalid-feedback">
-          <div *ngIf="f.fromPrefixLength.errors.required">From Prefix Length is required</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="toPrefixLength">To Prefix Length</label>
-        <input
-          type="number"
-          id="toPrefixLength"
-          formControlName="toPrefixLength"
-          class="form-control"
-          [class.is-invalid]="submitted && f.toPrefixLength.errors"
-          aria-label="To Prefix Length"
-        />
-        <div *ngIf="submitted && f.toPrefixLength.errors" class="invalid-feedback">
-          <div *ngIf="f.toPrefixLength.errors.required">To Prefix Length is required</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="metric">Metric</label>
-        <input
-          type="number"
-          id="metric"
-          formControlName="metric"
-          class="form-control"
-          [class.is-invalid]="submitted && f.metric.errors"
-          aria-label="Metric"
-        />
-        <div *ngIf="submitted && f.metric.errors" class="invalid-feedback">
-          <div *ngIf="f.metric.errors.required">Metric is required.</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="vrf">VRF / Zone</label>
+        <label for="externalVrf">External VRF</label>
         <select
-          id="vrf"
-          formControlName="vrf"
+          id="externalVrf"
+          formControlName="externalVrf"
           class="form-control"
-          [class.is-invalid]="submitted && f.vrf.errors"
-          aria-label="Policy Control Enforced"
+          [class.is-invalid]="submitted && f.externalVrf.errors"
+          aria-label="External VRF"
         >
           <option></option>
           <option value="appprod">appprod (vpn_app_unix)</option>
@@ -93,8 +48,8 @@
           <option value="edcmgmt">edcmgmt (vpn_edc_mgmt)</option>
           <option value="transport">Transport</option>
         </select>
-        <div *ngIf="submitted && f.vrf.errors" class="invalid-feedback">
-          <div *ngIf="f.vrf.errors.required">VRF/Zone is required</div>
+        <div *ngIf="submitted && f.externalVrf.errors" class="invalid-feedback">
+          <div *ngIf="f.externalVrf.errors.required">VRF/Zone is required</div>
         </div>
       </div>
     </div>

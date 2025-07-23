@@ -23203,46 +23203,6 @@
         "tags": ["v1/network-scope-forms/external-routes"]
       }
     },
-    "/v1/network-scope-forms/external-routes/{routeId}": {
-      "delete": {
-        "operationId": "removeExternalRouteFromWanForm",
-        "summary": "Remove External Route from WAN Form",
-        "description": "Remove an external route from the specified WAN form",
-        "parameters": [
-          {
-            "name": "wanFormId",
-            "required": true,
-            "in": "path",
-            "description": "ID of the WAN form to remove the route from",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "routeId",
-            "required": true,
-            "in": "path",
-            "description": "ID of the route to remove from the WAN form",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExternalRoute"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["v1/network-scope-forms/external-routes"]
-      }
-    },
     "/v1/network-scope-forms/external-routes/bulk": {
       "post": {
         "operationId": "createManyExternalRoute",

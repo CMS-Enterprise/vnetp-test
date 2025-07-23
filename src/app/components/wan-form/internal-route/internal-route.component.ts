@@ -44,12 +44,15 @@ export class InternalRouteComponent implements OnInit {
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('vrfNameTemplate') vrfNameTemplate: TemplateRef<any>;
   @ViewChild('expandableRows') expandableRows: TemplateRef<any>;
+  @ViewChild('subnetTemplate') subnetTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
     description: 'Internal Routes',
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Description', property: 'description' },
+      { name: 'Subnet', template: () => this.subnetTemplate },
+      { name: 'Exported To Vrfs', property: 'exportedToVrfs' },
       { name: '', template: () => this.actionsTemplate },
     ],
     expandableRows: () => this.expandableRows,

@@ -40,11 +40,12 @@
           <thead>
             <tr>
               <th mat-sort-header="network">Network</th>
-              <th mat-sort-header="prefixLength">Prefix Length</th>
+              <th mat-sort-header="externalVrf">External VRF</th>
+              <th mat-sort-header="lastSeen">Last Seen</th>
               <th mat-sort-header="protocol">Protocol</th>
               <th mat-sort-header="metric">Metric</th>
-              <th mat-sort-header="vrf">VRF</th>
               <th mat-sort-header="uptime">Uptime</th>
+              <th mat-sort-header="tag">Tag</th>
               <th></th>
             </tr>
           </thead>
@@ -55,17 +56,32 @@
                 [class.associated]="route.isAssociated"
               >
                 <td>{{ route.network }}</td>
-                <td>{{ route.prefixLength }}</td>
+                <td>{{ route.globalExternalRoute.externalVrf }}</td>
+                <td>
+                  {{ route.lastSeen }}
+                  <mat-icon matTooltip="Expired" aria-label="Expired route icon" *ngIf="route.expired">event_busy</mat-icon>
+                </td>
                 <td>{{ route.protocol }}</td>
                 <td>{{ route.metric }}</td>
-                <td>{{ route.vrf }}</td>
                 <td>{{ route.uptime || '-' }}</td>
+                <td>{{ route.tag }}</td>
                 <td>
-                  <app-icon-button
-                    icon="times"
-                    label="Remove Route from Wan Form"
-                    (handleClick)="removeRouteFromWanForm(route)"
-                  ></app-icon-button>
+                  <!-- Actions for active (not soft-deleted) routes -->
+                  <ng-container *ngIf="!route.deletedAt">
+                    <button mat-icon-button matTooltip="Remove Route from Wan Form" (click)="removeRouteFromWanForm(route)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </ng-container>
+
+                  <!-- Actions for soft-deleted routes -->
+                  <ng-container *ngIf="route.deletedAt">
+                    <button mat-icon-button matTooltip="Restore Route" color="primary" (click)="restoreRoute(route)">
+                      <mat-icon>undo</mat-icon>
+                    </button>
+                    <button mat-icon-button matTooltip="Permanently Delete Route" color="warn" (click)="removeRouteFromWanForm(route)">
+                      <mat-icon>delete_forever</mat-icon>
+                    </button>
+                  </ng-container>
                 </td>
               </tr>
             </ng-container>
@@ -92,11 +108,12 @@
           <thead>
             <tr>
               <th mat-sort-header="network">Network</th>
-              <th mat-sort-header="prefixLength">Prefix Length</th>
+              <th mat-sort-header="externalVrf">External VRF</th>
+              <th mat-sort-header="lastSeen">Last Seen</th>
               <th mat-sort-header="protocol">Protocol</th>
               <th mat-sort-header="metric">Metric</th>
-              <th mat-sort-header="vrf">VRF</th>
               <th mat-sort-header="uptime">Uptime</th>
+              <th mat-sort-header="tag">Tag</th>
               <th></th>
             </tr>
           </thead>
@@ -107,19 +124,19 @@
                 [class.associated]="route.isAssociated"
               >
                 <td>{{ route.network }}</td>
-                <td>{{ route.prefixLength }}</td>
+                <td>{{ route.externalVrf }}</td>
+                <td>
+                  {{ route.lastSeen }}
+                  <mat-icon matTooltip="Expired" aria-label="Expired route icon" *ngIf="route.expired">event_busy</mat-icon>
+                </td>
                 <td>{{ route.protocol }}</td>
                 <td>{{ route.metric }}</td>
-                <td>{{ route.vrf }}</td>
                 <td>{{ route.uptime || '-' }}</td>
+                <td>{{ route.tag }}</td>
                 <td>
-                  <app-icon-button icon="add" label="Add Route to Wan Form" (handleClick)="addRouteToWanForm(route)"></app-icon-button>
-                  <app-icon-button
-                    *ngIf="route?.protocol === 'manual'"
-                    icon="delete"
-                    label="Delete Route"
-                    (handleClick)="deleteRoute(route)"
-                  ></app-icon-button>
+                  <button mat-icon-button matTooltip="Add Route to Wan Form" (click)="addRouteToWanForm(route)">
+                    <mat-icon>playlist_add</mat-icon>
+                  </button>
                 </td>
               </tr>
             </ng-container>

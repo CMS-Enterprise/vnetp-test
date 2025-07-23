@@ -167,3 +167,12 @@
     </tr>
   </ng-container>
 </ng-template>
+
+<ng-template #subnetTemplate let-internalRoute="datum">
+  <span class="link-like" *ngIf="internalRoute.netcentricSubnetId">
+    {{ internalRoute.netcentricSubnet.name }}
+  </span>
+  <span class="link-like" *ngIf="internalRoute.appcentricSubnetId">
+    {{ internalRoute.appcentricSubnet.name }}
+  </span>
+</ng-template>
