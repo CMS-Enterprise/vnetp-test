@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GetManyVrfResponseDto, V2AppCentricVrfsService, Vrf } from 'client';
+import { GetManyVrfResponseDto, Tenant, V2AppCentricTenantsService, V2AppCentricVrfsService, Vrf } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
@@ -33,6 +33,7 @@ export class VrfComponent implements OnInit {
   public currentView: 'vrf' | 'subnets' | 'routes' = 'vrf';
   public selectedVrf: Vrf | null = null;
   public expandedRow: Vrf | null = null;
+  public tenant: Tenant;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -66,6 +67,7 @@ export class VrfComponent implements OnInit {
     private ngx: NgxSmartModalService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private tenantService: V2AppCentricTenantsService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<Vrf>();
     advancedSearchAdapter.setService(this.vrfService);
@@ -84,6 +86,13 @@ export class VrfComponent implements OnInit {
   ngOnInit(): void {
     this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.activatedRoute);
     this.getVrfs();
+    this.getTenant();
+  }
+
+  public getTenant(): void {
+    this.tenantService.getOneTenant({ id: this.tenantId }).subscribe(tenant => {
+      this.tenant = tenant;
+    });
   }
 
   public showVrfList(): void {
@@ -120,11 +129,8 @@ export class VrfComponent implements OnInit {
     }
 
     const relations =
-      this.applicationMode === ApplicationMode.APPCENTRIC ? [] : ['wanForm', 'wanForm.internalRoutes', 'wanForm.externalRoutes'];
+      this.applicationMode === ApplicationMode.NETCENTRIC ? [] : ['wanForm', 'wanForm.internalRoutes', 'wanForm.externalRoutes'];
 
-    // ! TODO: Remove this
-    relations.pop();
-    relations.pop();
     this.vrfService
       .getManyVrf({
         filter: [`tenantId||eq||${this.tenantId}`, eventParams],

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
@@ -10,8 +10,10 @@ import {
   V1NetworkSubnetsService,
   V2AppCentricAppCentricSubnetsService,
   InternalRoute,
-  V1NetworkScopeFormsInternalRoutesService,
   VrfExternalVrfsEnum,
+  V1NetworkScopeFormsInternalRoutesService,
+  V2AppCentricVrfsService,
+  Vrf,
 } from '../../../../../../client';
 import { InternalRouteModalDto } from '../../../../models/network-scope-forms/internal-route-modal.dto';
 import { ApplicationMode } from '../../../../models/other/application-mode-enum';
@@ -41,8 +43,11 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
   private datacenterSubscription: Subscription;
   public availableNetcentricSubnets: Subnet[];
   public availableAppcentricSubnets: AppCentricSubnet[];
-  public currentDcsMode: ApplicationMode;
+  public applicationMode: ApplicationMode;
   public vrfOptions: VrfOption[] = [];
+  public ApplicationMode = ApplicationMode;
+  @Input() vrfId: string;
+  public vrf: Vrf;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -52,12 +57,13 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
     private netcentricSubnetService: V1NetworkSubnetsService,
     private appcentricSubnetService: V2AppCentricAppCentricSubnetsService,
     private route: ActivatedRoute,
+    private vrfService: V2AppCentricVrfsService,
   ) {}
 
   ngOnInit(): void {
-    this.currentDcsMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
+    this.applicationMode = RouteDataUtil.getApplicationModeFromRoute(this.route);
 
-    if (!this.currentDcsMode) {
+    if (!this.applicationMode) {
       console.error('InternalRouteModalComponent: Application mode could not be determined via RouteDataUtil.');
       // Fallback or error handling if necessary
     }
@@ -71,7 +77,7 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
   }
 
   public getSubnetsByApplicationMode(): void {
-    if (this.currentDcsMode === 'netcentric') {
+    if (this.applicationMode === 'netcentric') {
       this.datacenterSubscription = this.datacenterContextService.currentDatacenter.subscribe(cd => {
         if (cd) {
           this.datacenterId = cd.id;
@@ -87,39 +93,42 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
    * Build VRF options from the VrfExternalVrfsEnum
    */
   private buildVrfOptions(): void {
-    this.vrfOptions = Object.values(VrfExternalVrfsEnum).map(enumValue => ({
-      value: enumValue,
-      label: this.getVrfDisplayLabel(enumValue),
-    }));
+    this.vrfService.getOneVrf({ id: this.vrfId }).subscribe(vrf => {
+      this.vrf = vrf;
+      this.vrfOptions = Object.values(VrfExternalVrfsEnum)
+        .filter(enumValue => vrf.externalVrfs.includes(enumValue))
+        .map(enumValue => ({
+          value: enumValue,
+          label: this.getVrfDisplayLabel(enumValue),
+        }));
+    });
   }
 
   /**
    * Convert enum values to user-friendly display labels
    */
   private getVrfDisplayLabel(enumValue: VrfExternalVrfsEnum): string {
-    // const labelMappings: Record<VrfExternalVrfsEnum, string> = {
-    //   [VrfExternalVrfsEnum.CmsEntsrvInet]: 'cms-entsrv-inet',
-    //   [VrfExternalVrfsEnum.CmsEntsrvLdapdns]: 'cms-entsrv-ldapdns',
-    //   [VrfExternalVrfsEnum.CmsEntsrvMgmt]: 'cms-entsrv-mgmt',
-    //   [VrfExternalVrfsEnum.CmsEntsrvMon]: 'cms-entsrv-mon',
-    //   [VrfExternalVrfsEnum.CmsEntsrvPres]: 'cms-entsrv-pres',
-    //   [VrfExternalVrfsEnum.CmsEntsrvSec]: 'cms-entsrv-sec',
-    //   [VrfExternalVrfsEnum.CmsEntsrvVpn]: 'cms-entsrv-vpn',
-    //   [VrfExternalVrfsEnum.CmsnetAppdev]: 'cmsnet_appdev (Development)',
-    //   [VrfExternalVrfsEnum.CmsnetAppprod]: 'cmsnet_appprod (Production)',
-    //   [VrfExternalVrfsEnum.CmsnetDatadev]: 'cmsnet_datadev (Data Development)',
-    //   [VrfExternalVrfsEnum.CmsnetDataprod]: 'cmsnet_dataprod (Data Production)',
-    //   [VrfExternalVrfsEnum.CmsnetEdcVpn]: 'cmsnet_edc_vpn',
-    //   [VrfExternalVrfsEnum.CmsnetEdcmgmt]: 'cmsnet_edcmgmt',
-    //   [VrfExternalVrfsEnum.CmsnetPresdev]: 'cmsnet_presdev (Presentation Development)',
-    //   [VrfExternalVrfsEnum.CmsnetPresprod]: 'cmsnet_presprod (Presentation Production)',
-    //   [VrfExternalVrfsEnum.CmsnetSec]: 'cmsnet_sec',
-    //   [VrfExternalVrfsEnum.CmsnetTransport]: 'cmsnet_transport',
-    // };
+    const labelMappings: Record<VrfExternalVrfsEnum, string> = {
+      [VrfExternalVrfsEnum.CmsEntsrvInet]: 'cms-entsrv-inet',
+      [VrfExternalVrfsEnum.CmsEntsrvLdapdns]: 'cms-entsrv-ldapdns',
+      [VrfExternalVrfsEnum.CmsEntsrvMgmt]: 'cms-entsrv-mgmt',
+      [VrfExternalVrfsEnum.CmsEntsrvMon]: 'cms-entsrv-mon',
+      [VrfExternalVrfsEnum.CmsEntsrvPres]: 'cms-entsrv-pres',
+      [VrfExternalVrfsEnum.CmsEntsrvSec]: 'cms-entsrv-sec',
+      [VrfExternalVrfsEnum.CmsEntsrvVpn]: 'cms-entsrv-vpn',
+      [VrfExternalVrfsEnum.CmsnetAppdev]: 'cmsnet_appdev (Development)',
+      [VrfExternalVrfsEnum.CmsnetAppprod]: 'cmsnet_appprod (Production)',
+      [VrfExternalVrfsEnum.CmsnetDatadev]: 'cmsnet_datadev (Data Development)',
+      [VrfExternalVrfsEnum.CmsnetDataprod]: 'cmsnet_dataprod (Data Production)',
+      [VrfExternalVrfsEnum.CmsnetEdcVpn]: 'cmsnet_edc_vpn',
+      [VrfExternalVrfsEnum.CmsnetEdcmgmt]: 'cmsnet_edcmgmt',
+      [VrfExternalVrfsEnum.CmsnetPresdev]: 'cmsnet_presdev (Presentation Development)',
+      [VrfExternalVrfsEnum.CmsnetPresprod]: 'cmsnet_presprod (Presentation Production)',
+      [VrfExternalVrfsEnum.CmsnetSec]: 'cmsnet_sec',
+      [VrfExternalVrfsEnum.CmsnetTransport]: 'cmsnet_transport',
+    };
 
-    // return labelMappings[enumValue] || enumValue;
-
-    return enumValue;
+    return labelMappings[enumValue] || enumValue;
   }
 
   get f() {
@@ -151,12 +160,12 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
       this.form.controls.name.setValue(internalRoute.name);
       this.form.controls.name.disable();
       this.form.controls.description.setValue(internalRoute.description);
-      this.form.controls.vrf.setValue(internalRoute.exportedToVrfs);
+      this.form.controls.exportedToVrfs.setValue(internalRoute.exportedToVrfs);
       this.form.controls.netcentricSubnetId.setValue(internalRoute?.netcentricSubnetId);
       this.form.controls.appcentricSubnetId.setValue(internalRoute?.appcentricSubnetId);
       this.form.controls.netcentricSubnetId.disable();
       this.form.controls.appcentricSubnetId.disable();
-      this.form.controls.vrf.disable();
+      this.form.controls.exportedToVrfs.disable();
     }
     this.ngx.resetModalData('internalRouteModal');
   }
@@ -171,11 +180,9 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.maxLength(500)])],
-      vrf: ['', Validators.required],
+      exportedToVrfs: [[], Validators.required],
       netcentricSubnetId: [''],
       appcentricSubnetId: [''],
-      fromPrefixLength: ['', Validators.required],
-      toPrefixLength: ['', Validators.required],
     });
   }
 
@@ -185,27 +192,18 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const { name, description, vrf, netcentricSubnetId, appcentricSubnetId, fromPrefixLength, toPrefixLength } =
-      this.form.value;
+    const { name, description, exportedToVrfs, netcentricSubnetId, appcentricSubnetId } = this.form.value;
     const internalRoute = {
       name,
       description,
-      exportedToVrfs: vrf,
+      exportedToVrfs,
       wanFormId: this.wanForm.id,
       datacenterId: this.datacenterId,
-      netcentricSubnetId,
-      appcentricSubnetId,
-      fromPrefixLength,
-      toPrefixLength,
+      netcentricSubnetId: netcentricSubnetId || null,
+      appcentricSubnetId: appcentricSubnetId || null,
     } as InternalRoute;
 
     if (this.modalMode === ModalMode.Create) {
-      if (this.currentDcsMode === 'netcentric') {
-        delete internalRoute.appcentricSubnetId;
-      }
-      if (this.currentDcsMode === 'appcentric') {
-        delete internalRoute.netcentricSubnetId;
-      }
       this.internalRouteService.createOneInternalRoute({ internalRoute }).subscribe(() => {
         this.closeModal();
       });

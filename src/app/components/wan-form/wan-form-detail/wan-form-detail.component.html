@@ -36,19 +36,25 @@
     <thead>
       <tr>
         <th>Network</th>
+        <th>External VRF</th>
+        <th>Last Seen</th>
         <th>Protocol</th>
         <th>Metric</th>
-        <th>VRF</th>
         <th>Uptime</th>
+        <th>Tag</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let route of wanForm?.externalRoutes">
-        <td>{{ route.network }}/{{ route.prefixLength }}</td>
+        <td>{{ route.network }}</td>
+        <td>{{ route.externalVrf }}</td>
+        <td>
+          {{ route.lastSeen }} <mat-icon matTooltip="Expired" aria-label="Expired route icon" *ngIf="route.expired">event_busy</mat-icon>
+        </td>
         <td>{{ route.protocol }}</td>
         <td>{{ route.metric }}</td>
-        <td>{{ route.vrf }}</td>
-        <td>{{ route.uptime }}</td>
+        <td>{{ route.uptime || '-' }}</td>
+        <td>{{ route.tag || '-' }}</td>
       </tr>
     </tbody>
   </table>

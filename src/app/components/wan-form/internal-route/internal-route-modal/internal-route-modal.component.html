@@ -45,19 +45,27 @@
       </div>
 
       <div class="form-group">
-        <label for="vrf">VRF / Zone</label>
-        <select id="vrf" formControlName="vrf" class="form-control" [class.is-invalid]="submitted && f.vrf.errors" aria-label="VRF / Zone">
-          <option value="">Select VRF</option>
-          <option *ngFor="let vrfOption of vrfOptions" [value]="vrfOption.value">
-            {{ vrfOption.label }}
-          </option>
-        </select>
-        <div *ngIf="submitted && f.vrf.errors" class="invalid-feedback">
-          <div *ngIf="f.vrf.errors.required">VRF/Zone is required</div>
+        <label for="exportedToVrfs">ExportedTo Vrfs</label>
+        <ng-select
+          [items]="vrfOptions"
+          [multiple]="true"
+          [closeOnSelect]="false"
+          bindLabel="label"
+          bindValue="value"
+          formControlName="exportedToVrfs"
+          [class.is-invalid]="submitted && f.exportedToVrfs.errors"
+        >
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input type="checkbox" [ngModel]="item$.selected" [ngModelOptions]="{ standalone: true }" />
+            {{ item.label }}
+          </ng-template>
+        </ng-select>
+        <div *ngIf="submitted && f.exportedToVrfs.errors" class="invalid-feedback">
+          <div *ngIf="f.exportedToVrfs.errors.required">Exported To Vrfs is required</div>
         </div>
       </div>
 
-      <div class="form-group" *ngIf="currentDcsMode === 'netcentric'">
+      <div class="form-group" *ngIf="applicationMode === 'netcentric'">
         <label for="netcentricSubnet">Subnet</label>
         <select
           id="netcentricSubnet"
@@ -76,7 +84,7 @@
         </div>
       </div>
 
-      <div class="form-group" *ngIf="currentDcsMode === 'appcentric'">
+      <div class="form-group" *ngIf="applicationMode === ApplicationMode.APPCENTRIC || applicationMode === ApplicationMode.TENANTV2">
         <label for="appcentricSubnet">Subnet</label>
         <select
           id="appcentricSubnet"
@@ -96,29 +104,6 @@
         </select>
         <div *ngIf="submitted && f.appcentricSubnetId.errors" class="invalid-feedback">
           <div *ngIf="f.appcentricSubnetId.errors.required">Subnet is required</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="fromPrefixLength">From Prefix Length</label>
-        <input
-          type="number"
-          id="fromPrefixLength"
-          formControlName="fromPrefixLength"
-          class="form-control"
-          [class.is-invalid]="submitted && f.fromPrefixLength.errors"
-          aria-label="From Prefix Length"
-        />
-        <div *ngIf="submitted && f.fromPrefixLength.errors" class="invalid-feedback">
-          <div *ngIf="f.fromPrefixLength.errors.required">From Prefix Length is required</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="toPrefixLength">To Prefix Length</label>
-        <input type="number" id="toPrefixLength" formControlName="toPrefixLength" class="form-control" />
-        <div *ngIf="submitted && f.toPrefixLength.errors" class="invalid-feedback">
-          <div *ngIf="f.toPrefixLength.errors.required">To Prefix Length is required</div>
         </div>
       </div>
     </div>

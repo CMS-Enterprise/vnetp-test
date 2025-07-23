@@ -11,7 +11,11 @@ export class TypeDeleteModalComponent {
   objectName: string;
   @Input() objectType: string;
   nameMismatch: boolean;
-  constructor(private ngx: NgxSmartModalService, private tierService: V1TiersService, private tenantService: AdminV2AppCentricTenantsService) {}
+  constructor(
+    private ngx: NgxSmartModalService,
+    private tierService: V1TiersService,
+    private tenantService: AdminV2AppCentricTenantsService,
+  ) {}
 
   deleteTier(): void {
     if (this.objectName === this.objectToDelete.name) {

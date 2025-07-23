@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Vrf } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { VrfModalDto } from 'src/app/models/appcentric/vrf-modal-dto';

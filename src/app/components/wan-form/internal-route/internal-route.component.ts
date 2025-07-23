@@ -26,6 +26,7 @@ import { InternalRouteModalDto } from 'src/app/models/network-scope-forms/intern
 })
 export class InternalRouteComponent implements OnInit {
   @Input() wanForm: WanForm;
+  @Input() vrfId: string;
   @Output() back = new EventEmitter<void>();
   public internalRoutes: GetManyInternalRouteResponseDto;
   public isLoading = false;
@@ -43,12 +44,15 @@ export class InternalRouteComponent implements OnInit {
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
   @ViewChild('vrfNameTemplate') vrfNameTemplate: TemplateRef<any>;
   @ViewChild('expandableRows') expandableRows: TemplateRef<any>;
+  @ViewChild('subnetTemplate') subnetTemplate: TemplateRef<any>;
 
   public config: TableConfig<any> = {
     description: 'Internal Routes',
     columns: [
       { name: 'Name', property: 'name' },
       { name: 'Description', property: 'description' },
+      { name: 'Subnet', template: () => this.subnetTemplate },
+      { name: 'Exported To Vrfs', property: 'exportedToVrfs' },
       { name: '', template: () => this.actionsTemplate },
     ],
     expandableRows: () => this.expandableRows,
@@ -108,19 +112,21 @@ export class InternalRouteComponent implements OnInit {
 
   public getInternalRoutes(event?) {
     this.isLoading = true;
-    let eventParams;
+
+    const filter = [`wanFormId||eq||${this.wanForm.id}`];
+
     if (event) {
       this.tableComponentDto.page = event.page ? event.page : 1;
       this.tableComponentDto.perPage = event.perPage ? event.perPage : 20;
       const { searchText } = event;
       const propertyName = event.searchColumn ? event.searchColumn : null;
-      if (propertyName) {
-        eventParams = `${propertyName}||cont||${searchText}`;
+      if (propertyName && searchText) {
+        filter.push(`${propertyName}||cont||${searchText}`);
       }
     }
     this.internalRouteService
       .getManyInternalRoute({
-        filter: [`wanFormId||eq||${this.wanForm.id}`, eventParams],
+        filter,
         join: ['netcentricSubnet', 'appcentricSubnet'],
         page: this.tableComponentDto.page,
         perPage: this.tableComponentDto.perPage,

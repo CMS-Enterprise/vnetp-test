@@ -80,13 +80,6 @@ export interface ProvisionOneExternalRouteRequestParams {
     id: string;
 }
 
-export interface RemoveExternalRouteFromWanFormRequestParams {
-    /** ID of the WAN form to remove the route from */
-    wanFormId: string;
-    /** ID of the route to remove from the WAN form */
-    routeId: string;
-}
-
 export interface RestoreOneExternalRouteRequestParams {
     /** UUID. */
     id: string;
@@ -585,6 +578,7 @@ export class V1NetworkScopeFormsExternalRoutesService {
     }
 
     /**
+<<<<<<< HEAD
      * Remove External Route from WAN Form
      * Remove an external route from the specified WAN form
      * @param requestParameters
@@ -636,6 +630,8 @@ export class V1NetworkScopeFormsExternalRoutesService {
     }
 
     /**
+=======
+>>>>>>> task/tenant-v2-wan
      * Restore one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.

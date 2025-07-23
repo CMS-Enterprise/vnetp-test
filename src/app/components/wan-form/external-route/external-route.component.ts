@@ -10,7 +10,13 @@ import {
   ExternalRoute,
   V1NetworkScopeFormsWanFormService,
   V3GlobalExternalRoutesService,
+  GlobalExternalRoute,
+  V1NetworkScopeFormsExternalRoutesService,
 } from '../../../../../client';
+
+interface ExternalRouteWithGlobalRoute extends ExternalRoute {
+  globalExternalRoute: GlobalExternalRoute;
+}
 
 @Component({
   selector: 'app-external-route',
@@ -20,10 +26,10 @@ import {
 export class ExternalRouteComponent implements OnInit, AfterViewInit {
   @Input() wanForm: WanForm;
   @Input() vrfId: string;
-  wanFormId: string;
+  @Input() environmentId: string;
   dcsMode: string;
-  assignedRoutesDataSource = new MatTableDataSource<ExternalRoute>();
-  availableRoutesDataSource = new MatTableDataSource<ExternalRoute>();
+  assignedRoutesDataSource = new MatTableDataSource<ExternalRouteWithGlobalRoute>();
+  availableRoutesDataSource = new MatTableDataSource<GlobalExternalRoute>();
   private modalSubscription: Subscription;
   public ModalMode = ModalMode;
   assignedRoutesSearchQuery = '';
@@ -33,6 +39,8 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
   showComponent = false;
   refreshedNoData = false;
 
+  public allGlobalRoutes: GlobalExternalRoute[];
+
   @ViewChild('assignedRoutesSort') assignedRoutesSort: MatSort;
   @ViewChild('availableRoutesSort') availableRoutesSort: MatSort;
 
@@ -41,6 +49,7 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
     private ngx: NgxSmartModalService,
     private runtimeDataService: RuntimeDataService,
     private globalExternalRouteService: V3GlobalExternalRoutesService,
+    private externalRouteService: V1NetworkScopeFormsExternalRoutesService,
   ) {}
 
   ngOnInit(): void {
@@ -52,42 +61,60 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
     this.availableRoutesDataSource.sort = this.availableRoutesSort;
   }
 
-  addRouteToWanForm(route: ExternalRoute): void {
-
+  addRouteToWanForm(route: GlobalExternalRoute): void {
+    this.externalRouteService
+      .createOneExternalRoute({
+        externalRoute: {
+          wanFormId: this.wanForm.id,
+          globalExternalRouteId: route.id,
+        } as any,
+      })
+      .subscribe(() => {
+        this.getAllRoutes();
+      });
   }
 
   removeRouteFromWanForm(route: ExternalRoute): void {
-
+    this.deleteRoute(route);
   }
 
   getAllRoutes(): void {
-    // this.externalRouteService.getManyExternalRoute({ relations: ['wanForms'], limit: 50000 }).subscribe(data => {
-    //   this.assignedRoutesDataSource.data = data.filter(route => route.wanForms?.some(wanForm => wanForm?.id === this.wanForm.id));
-    //   this.availableRoutesDataSource.data = data.filter(route => !route.wanForms?.some(wanForm => wanForm?.id === this.wanForm.id));
-
-    //   if (data.length === 0) {
-    //     this.refreshedNoData = true;
-    //     return;
-    //   }
-    //   const routeWithRuntimeData = data.find(route => route.runtimeDataLastRefreshed !== null) || null;
-
-    //   this.showComponent =
-    //     this.runtimeDataService.isRecentlyRefreshed(routeWithRuntimeData?.runtimeDataLastRefreshed, 600) || this.refreshedNoData;
-    // });
+    this.globalExternalRouteService.getManyExternalRoutes({ environmentId: this.environmentId }).subscribe(globalData => {
+      this.allGlobalRoutes = globalData as unknown as GlobalExternalRoute[];
+      this.externalRouteService.getManyExternalRoute({ filter: [`wanFormId||eq||${this.wanForm.id}`] }).subscribe(data => {
+        const localRoutes = data as unknown as ExternalRouteWithGlobalRoute[];
+        localRoutes.forEach(route => {
+          route.globalExternalRoute = this.allGlobalRoutes.find(globalRoute => globalRoute.id === route.globalExternalRouteId);
+        });
+        this.assignedRoutesDataSource.data = localRoutes;
+        this.availableRoutesDataSource.data = this.allGlobalRoutes.filter(
+          route => !localRoutes.some(localRoute => localRoute.globalExternalRouteId === route.id),
+        );
+      });
+    });
   }
 
-  // getGlobalRoutes(): void {
-  //   this.globalExternalRouteService.getManyExternalRoutes({environmentId: })
-
   deleteRoute(route: ExternalRoute): void {
-    // this.externalRouteService.deleteOneExternalRoute({ id: route.id }).subscribe(() => {
-    //   this.getAllRoutes();
-    // });
+    if (route.deletedAt) {
+      this.externalRouteService.deleteOneExternalRoute({ id: route.id }).subscribe(() => {
+        this.getAllRoutes();
+      });
+    } else {
+      this.externalRouteService.softDeleteOneExternalRoute({ id: route.id }).subscribe(() => {
+        this.getAllRoutes();
+      });
+    }
+  }
+
+  public restoreRoute(route: ExternalRoute): void {
+    this.externalRouteService.restoreOneExternalRoute({ id: route.id }).subscribe(() => {
+      this.getAllRoutes();
+    });
   }
 
   public openModal(): void {
     this.subscribeToModal();
-    this.ngx.setModalData({ wanFormId: this.wanFormId }, 'externalRouteModal');
+    this.ngx.setModalData({ wanFormId: this.wanForm.id }, 'externalRouteModal');
     this.ngx.getModal('externalRouteModal').open();
   }
 
@@ -112,9 +139,7 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
     // if (this.isRecentlyRefreshed() || this.isRefreshingRuntimeData) {
     //   return;
     // }
-
     // this.isRefreshingRuntimeData = true;
-
     // this.externalRouteService
     //   .createRuntimeDataJobExternalRoute({
     //     externalRouteJobCreateDto: {
@@ -159,10 +184,5 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
       default:
         return status;
     }
-  }
-
-  checkIfWanFormExists(route: ExternalRoute): boolean {
-    // return route.wanForms?.some(wanForm => wanForm?.id === this.wanForm.id);
-    return true;
   }
 }

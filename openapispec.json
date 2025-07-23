@@ -24237,9 +24237,13 @@
             }
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/internal-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       },
       "get": {
         "operationId": "getManyInternalRoute",
@@ -24398,9 +24402,13 @@
             }
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/internal-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/{routeId}": {
@@ -24440,9 +24448,13 @@
             }
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/internal-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/bulk": {
@@ -24487,9 +24499,13 @@
             }
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/internal-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/{id}": {
@@ -24543,9 +24559,13 @@
             }
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/internal-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       },
       "put": {
         "operationId": "updateOneInternalRoute",
@@ -24583,9 +24603,13 @@
             }
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/internal-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       },
       "delete": {
         "operationId": "deleteOneInternalRoute",
@@ -24613,9 +24637,13 @@
             }
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/internal-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/{id}/soft": {
@@ -24638,9 +24666,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/internal-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/{id}/restore": {
@@ -24663,9 +24695,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/internal-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/{id}/provision": {
@@ -24688,9 +24724,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/internal-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/{id}/deprovision": {
@@ -24713,9 +24753,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/internal-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/external-routes": {
@@ -24745,9 +24789,13 @@
             }
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/external-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       },
       "get": {
         "operationId": "getManyExternalRoute",
@@ -24906,6 +24954,7 @@
             }
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/external-routes"
         ]
@@ -24953,6 +25002,11 @@
         ]
       }
     },
+=======
+        "tags": ["v1/network-scope-forms/external-routes"]
+      }
+    },
+>>>>>>> task/tenant-v2-wan
     "/v1/network-scope-forms/external-routes/bulk": {
       "post": {
         "operationId": "createManyExternalRoute",
@@ -24995,9 +25049,13 @@
             }
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/external-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/external-routes/{id}": {
@@ -25051,9 +25109,13 @@
             }
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/external-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       },
       "put": {
         "operationId": "updateOneExternalRoute",
@@ -25091,9 +25153,13 @@
             }
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/external-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       },
       "delete": {
         "operationId": "deleteOneExternalRoute",
@@ -25121,9 +25187,13 @@
             }
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/external-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/external-routes/{id}/soft": {
@@ -25146,9 +25216,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/external-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/external-routes/{id}/restore": {
@@ -25171,9 +25245,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/external-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/external-routes/{id}/provision": {
@@ -25196,9 +25274,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/external-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/external-routes/{id}/deprovision": {
@@ -25221,9 +25303,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
         "tags": [
           "v1/network-scope-forms/external-routes"
         ]
+=======
+        "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     }
   },
