@@ -17,6 +17,7 @@ import { TenantSelectComponent } from '../appcentric/tenant-select/tenant-select
 import { WanFormRequestComponent } from './wan-form-request/wan-form-request.component';
 import { AppIdMaintenanceModule } from './app-id-maintenance/app-id-maintenance.module';
 import { AppIdMaintenanceComponent } from './app-id-maintenance/app-id-maintenance.component';
+import { EnvironmentManagementComponent } from './environment-management/environment-management.component';
 
 const routes: Routes = [
   {
@@ -70,6 +71,16 @@ const routes: Routes = [
           title: 'App ID Maintenance',
         },
         loadChildren: () => import('./app-id-maintenance/app-id-maintenance.module').then(m => m.AppIdMaintenanceModule),
+      },
+      {
+        path: 'environment-management',
+        component: EnvironmentManagementComponent,
+        canActivate: [AdminAuthGuard],
+        data: {
+          breadcrumb: 'Environment Management',
+          title: 'Environment Management',
+        },
+        loadChildren: () => import('./environment-management/environment-management.module').then(m => m.EnvironmentManagementModule),
       },
     ],
   },

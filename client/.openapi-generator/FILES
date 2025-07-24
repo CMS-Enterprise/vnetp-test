@@ -132,6 +132,7 @@ model/endpointGroup.ts
 model/endpointSecurityGroup.ts
 model/endpointSyncDto.ts
 model/environment.ts
+model/environmentSummary.ts
 model/externalRoute.ts
 model/externalRouteSyncDto.ts
 model/f5ConfigJobCreateDto.ts
@@ -205,6 +206,7 @@ model/getManyWanFormResponseDto.ts
 model/getManyWorkflowResponseDto.ts
 model/getManyZoneResponseDto.ts
 model/globalExternalRoute.ts
+model/globalExternalRouteSummary.ts
 model/hitcountData.ts
 model/hitcountJobCreateDto.ts
 model/hitcountJobResultDto.ts
