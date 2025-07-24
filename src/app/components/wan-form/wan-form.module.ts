@@ -27,6 +27,8 @@ import { WanFormDetailComponent } from './wan-form-detail/wan-form-detail.compon
 import { ExternalRouteComponent } from './external-route/external-route.component';
 import { InternalRouteModalComponent } from './internal-route/internal-route-modal/internal-route-modal.component';
 import { ExternalRouteModalComponent } from './external-route/external-route-modal/external-route-modal.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -61,6 +63,8 @@ import { ExternalRouteModalComponent } from './external-route/external-route-mod
     MatSortModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
+    MatPaginatorModule,
   ],
   exports: [
     WanFormDetailComponent,

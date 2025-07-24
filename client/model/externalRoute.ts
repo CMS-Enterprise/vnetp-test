@@ -21,7 +21,7 @@ export interface ExternalRoute {
     readonly provisionedAt?: string;
     readonly provisionedVersion?: number;
     network: string;
-    externalVrf: string;
+    externalVrf?: string;
     globalExternalRouteId?: string;
     manual?: boolean;
     readonly wanForm?: WanForm;

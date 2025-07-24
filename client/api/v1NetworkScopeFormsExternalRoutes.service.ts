@@ -214,15 +214,14 @@ export class V1NetworkScopeFormsExternalRoutesService {
     }
 
     /**
-     * Create one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
-    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
-    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
-    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         const externalRoute = requestParameters.externalRoute;
         if (externalRoute === null || externalRoute === undefined) {
             throw new Error('Required parameter externalRoute was null or undefined when calling createOneExternalRoute.');
@@ -234,7 +233,6 @@ export class V1NetworkScopeFormsExternalRoutesService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -257,7 +255,7 @@ export class V1NetworkScopeFormsExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes`,
             externalRoute,
             {
                 responseType: <any>responseType,
@@ -578,60 +576,6 @@ export class V1NetworkScopeFormsExternalRoutesService {
     }
 
     /**
-<<<<<<< HEAD
-     * Remove External Route from WAN Form
-     * Remove an external route from the specified WAN form
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public removeExternalRouteFromWanForm(requestParameters: RemoveExternalRouteFromWanFormRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
-    public removeExternalRouteFromWanForm(requestParameters: RemoveExternalRouteFromWanFormRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
-    public removeExternalRouteFromWanForm(requestParameters: RemoveExternalRouteFromWanFormRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
-    public removeExternalRouteFromWanForm(requestParameters: RemoveExternalRouteFromWanFormRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const wanFormId = requestParameters.wanFormId;
-        if (wanFormId === null || wanFormId === undefined) {
-            throw new Error('Required parameter wanFormId was null or undefined when calling removeExternalRouteFromWanForm.');
-        }
-        const routeId = requestParameters.routeId;
-        if (routeId === null || routeId === undefined) {
-            throw new Error('Required parameter routeId was null or undefined when calling removeExternalRouteFromWanForm.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes/${encodeURIComponent(String(routeId))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-=======
->>>>>>> task/tenant-v2-wan
      * Restore one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.

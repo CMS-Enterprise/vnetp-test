@@ -286,7 +286,6 @@ model/vlan.ts
 model/vrf.ts
 model/vrfAdminDto.ts
 model/vrfAdminUpdateDto.ts
-model/vrfBasicUpdateDto.ts
 model/wanForm.ts
 model/wanFormRequest.ts
 model/wanFormRequestDto.ts
