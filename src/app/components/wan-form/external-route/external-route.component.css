@@ -1,17 +1,19 @@
+.associated {
+  background-color: #e0e0e0;
+}
+
 .table-responsive {
-  max-height: 400px;
+  max-height: 500px;
   overflow-y: auto;
 }
 
-.table .associated {
-  background-color: #e0ffe0;
-}
-
 .search-input {
-  height: 1.5rem; /* 24px / 16px */
-  padding: 0.125rem 0.625rem; /* 2px / 16px and 10px / 16px */
-  border: none;
-  border-bottom: 0.125rem solid #000; /* 2px / 16px */
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 250px;
+  transition: border-color 0.2s;
 }
 
 .search-input:focus {
