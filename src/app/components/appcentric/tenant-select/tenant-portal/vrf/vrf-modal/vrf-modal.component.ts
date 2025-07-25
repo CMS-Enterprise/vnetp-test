@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Vrf } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { VrfModalHelpText } from 'src/app/helptext/help-text-networking';
 import { VrfModalDto } from 'src/app/models/appcentric/vrf-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 
@@ -16,7 +17,11 @@ export class VrfModalComponent {
 
   public currentVrf: Vrf | null = null;
 
-  constructor(private ngx: NgxSmartModalService) {}
+  public helpText: VrfModalHelpText;
+
+  constructor(private ngx: NgxSmartModalService, helpText: VrfModalHelpText) {
+    this.helpText = helpText;
+  }
 
   public closeModal(): void {
     this.ngx.close('vrfModal');
