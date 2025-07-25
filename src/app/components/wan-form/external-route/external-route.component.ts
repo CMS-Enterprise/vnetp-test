@@ -97,23 +97,23 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
   }
 
   getAllRoutes(): void {
+    const availableExternalVrfs = this.parentVrf.externalVrfs.join(',');
     forkJoin({
-      globalRoutes: this._fetchGlobalRoutes(),
+      globalRoutes: this._fetchGlobalRoutes(availableExternalVrfs),
       assignedRoutes: this._fetchAssignedRoutes(),
     }).subscribe(({ globalRoutes, assignedRoutes }) => {
       this._processRoutesData(globalRoutes, assignedRoutes);
     });
   }
 
-  private _fetchGlobalRoutes(): Observable<GlobalExternalRoute[]> {
-    const availableExternalVrfs = this.parentVrf.externalVrfs.join(',');
+  private _fetchGlobalRoutes(availableExternalVrfs: string): Observable<GlobalExternalRoute[]> {
     return this.globalExternalRouteService
       .getManyExternalRoutes({
         environmentId: this.environmentId,
         limit: 50000,
         filter: [`externalVrf||in||${availableExternalVrfs}`],
       })
-      .pipe(map(response => response.data as GlobalExternalRoute[]));
+      .pipe(map(response => (response || []) as GlobalExternalRoute[]));
   }
 
   private _fetchAssignedRoutes(): Observable<ExternalRoute[]> {
@@ -122,15 +122,15 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
         filter: [`wanFormId||eq||${this.wanForm.id}`],
         limit: 50000,
       })
-      .pipe(map(response => response.data as ExternalRoute[]));
+      .pipe(map(response => (response || []) as ExternalRoute[]));
   }
 
   private _processRoutesData(globalRoutes: GlobalExternalRoute[], assignedRoutes: ExternalRoute[]): void {
     this.allGlobalRoutes = globalRoutes;
-    this.availableVrfs = [...new Set(this.allGlobalRoutes.map(route => route.externalVrf))].sort();
-    this.availableVrfs = this.availableVrfs.filter(vrf => this.parentVrf.externalVrfs.some(parentVrf => parentVrf === vrf));
+    this.availableVrfs = [...new Set(this.parentVrf.externalVrfs)].sort();
 
     const localRoutes = assignedRoutes as ExternalRouteWithGlobalRoute[];
+    console.log(localRoutes);
     localRoutes.forEach(route => {
       route.globalExternalRoute = this.allGlobalRoutes.find(globalRoute => globalRoute.id === route.globalExternalRouteId);
     });
