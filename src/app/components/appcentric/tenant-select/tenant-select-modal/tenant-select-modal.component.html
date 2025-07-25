@@ -78,14 +78,20 @@
           <li class="nav-item" role="presentation">
             <a
               class="nav-link"
+              [class.disabled]="!form.get('environmentId')?.value"
               id="vrf-config-tab"
               data-toggle="tab"
               href="#vrf-config"
               role="tab"
               aria-controls="vrf-config"
               aria-selected="false"
-              >VRF Configuration</a
-            >
+              [attr.tabindex]="!form.get('environmentId')?.value ? -1 : null"
+              [title]="!form.get('environmentId')?.value ? 'Select an environment in Base Configuration to enable VRF configuration' : ''"
+              >VRF Configuration
+              <span *ngIf="!form.get('environmentId')?.value" class="tab-requirement-indicator">
+                <fa-icon [icon]="['fas', 'exclamation-triangle']" class="text-warning"></fa-icon>
+              </span>
+            </a>
           </li>
           <li class="nav-item" role="presentation">
             <a class="nav-link" id="vcd-tab" data-toggle="tab" href="#vcd" role="tab" aria-controls="vcd" aria-selected="false"
@@ -102,6 +108,42 @@
               <div class="col-md-6">
                 <!-- Base Tenant Options -->
                 <h5 class="section-title compact-title">Base Tenant Options</h5>
+                <div class="form-group row compact-form-group" [class.environment-required]="!form.get('environmentId')?.value">
+                  <label class="col-sm-4 col-form-label" for="environmentId">
+                    Environment *
+                    <span *ngIf="!form.get('environmentId')?.value" class="environment-requirement-badge">
+                      <fa-icon [icon]="['fas', 'exclamation-triangle']" class="text-warning"></fa-icon>
+                      Required for VRF Configuration
+                    </span>
+                  </label>
+                  <div class="col-sm-8">
+                    <select
+                      id="environmentId"
+                      formControlName="environmentId"
+                      class="form-control form-control-sm"
+                      [class.is-invalid]="submitted && f.environmentId.errors"
+                      [class.environment-required-field]="!form.get('environmentId')?.value"
+                    >
+                      <option value="">Select an environment...</option>
+                      <option *ngFor="let env of environments" [value]="env.id">{{ env.name }} - {{ env.description }}</option>
+                    </select>
+                    <div *ngIf="isLoadingEnvironments" class="small text-muted mt-1">
+                      <fa-icon [icon]="['fas', 'spinner']" spin></fa-icon>
+                      Loading environments...
+                    </div>
+                    <div *ngIf="submitted && f.environmentId.errors" class="invalid-feedback">
+                      <div *ngIf="f.environmentId.errors.required">Environment selection is required</div>
+                    </div>
+                    <div *ngIf="!form.get('environmentId')?.value && !submitted" class="environment-requirement-help">
+                      <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+                      <small class="text-info">VRF Configuration requires an environment selection</small>
+                    </div>
+                    <small *ngIf="form.get('environmentId')?.value" class="form-text text-muted">
+                      Selected environment will determine available VRF options
+                    </small>
+                  </div>
+                </div>
+
                 <div class="form-group row compact-form-group">
                   <label class="col-sm-4 col-form-label" for="tenantSize">Tenant Size</label>
                   <div class="col-sm-8">
@@ -152,258 +194,257 @@
                   </div>
                 </div>
               </div>
-
-
             </div>
-
-
           </div>
 
           <!-- VRF Configuration Tab -->
           <div class="tab-pane fade" id="vrf-config" role="tabpanel" aria-labelledby="vrf-config-tab">
             <h5 class="section-title compact-title">VRF Configuration</h5>
 
-            <!-- VRF Configuration informational message -->
-            <div *ngIf="!f.multiVrf.value" class="alert alert-info">
-              <strong>Note:</strong> You can configure the default VRF below. Enable Multi-VRF in Base Configuration to add additional VRFs.
+            <!-- Environment Required Message -->
+            <div *ngIf="!form.get('environmentId')?.value" class="alert alert-warning environment-required-alert">
+              <div class="d-flex align-items-center">
+                <fa-icon [icon]="['fas', 'exclamation-triangle']" class="text-warning mr-2" size="lg"></fa-icon>
+                <div>
+                  <strong>Environment Selection Required</strong>
+                  <p class="mb-0">
+                    Please select an environment in the <strong>Base Configuration</strong> tab before configuring VRFs. VRF options will be
+                    filtered based on your selected environment.
+                  </p>
+                </div>
+              </div>
+              <div class="mt-2">
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="$('#base-tab').tab('show')">
+                  <fa-icon [icon]="['fas', 'arrow-left']"></fa-icon>
+                  Go to Base Configuration
+                </button>
+              </div>
             </div>
 
-            <!-- VRF List and Management -->
-            <div class="row mb-3">
-              <div class="col-md-12">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <h6 class="mb-0">VRF Configurations</h6>
-                  <button *ngIf="f.multiVrf.value" type="button" class="btn btn-sm btn-primary" (click)="addVrf()">
-                    <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-                    Add VRF
-                  </button>
-                </div>
+            <!-- VRF Configuration Content (only show when environment is selected) -->
+            <div *ngIf="form.get('environmentId')?.value">
+              <!-- VRF Configuration informational message -->
+              <div *ngIf="!f.multiVrf.value" class="alert alert-info">
+                <strong>Note:</strong> You can configure the default VRF below. Enable Multi-VRF in Base Configuration to add additional
+                VRFs.
+              </div>
 
-                <!-- VRF Cards -->
-                <div *ngFor="let vrf of vrfConfigurations; let i = index" class="card mb-3">
-                  <div class="card-header d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                      <button
-                        type="button"
-                        class="btn btn-sm btn-link p-0 mr-2"
-                        (click)="toggleVrfCollapse(i)"
-                        [title]="vrfCollapsedStates[i] ? 'Expand VRF' : 'Collapse VRF'"
-                      >
-                        <fa-icon [icon]="['fas', vrfCollapsedStates[i] ? 'chevron-right' : 'chevron-down']"></fa-icon>
-                      </button>
-                      <h6 class="mb-0">VRF {{ i + 1 }}: {{ vrf.name || 'Unnamed' }}</h6>
-                    </div>
-                    <button
-                      *ngIf="f.multiVrf.value"
-                      type="button"
-                      class="btn btn-sm btn-danger"
-                      (click)="removeVrf(i)"
-                      [disabled]="!canRemoveVrf(i)"
-                      [title]="
-                        vrf.name === 'default_vrf' ? 'Default VRF cannot be deleted' : !canRemoveVrf(i) ? 'Cannot delete the last VRF' : ''
-                      "
-                    >
-                      <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+              <!-- VRF List and Management -->
+              <div class="row mb-3">
+                <div class="col-md-12">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0">VRF Configurations</h6>
+                    <button *ngIf="f.multiVrf.value" type="button" class="btn btn-sm btn-primary" (click)="addVrf()">
+                      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                      Add VRF
                     </button>
                   </div>
-                  
-                  <!-- Collapsed Summary View -->
-                  <div *ngIf="vrfCollapsedStates[i]" class="card-body py-2">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <small class="text-muted">
-                          <strong>External VRFs:</strong> {{ vrf.externalVrfs?.length || 0 }} | 
-                          <strong>Policy Control:</strong> {{ vrf.policyControlEnforced ? 'Yes' : 'No' }} | 
-                          <strong>Ingress Enforcement:</strong> {{ vrf.policyControlEnforcementIngress ? 'Yes' : 'No' }} | 
-                          <strong>BGP ASN:</strong> {{ vrf.bgpASN || 'Not set' }}
-                        </small>
+
+                  <!-- VRF Cards -->
+                  <div *ngFor="let vrf of vrfConfigurations; let i = index" class="card mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <div class="d-flex align-items-center">
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-link p-0 mr-2"
+                          (click)="toggleVrfCollapse(i)"
+                          [title]="vrfCollapsedStates[i] ? 'Expand VRF' : 'Collapse VRF'"
+                        >
+                          <fa-icon [icon]="['fas', vrfCollapsedStates[i] ? 'chevron-right' : 'chevron-down']"></fa-icon>
+                        </button>
+                        <h6 class="mb-0">VRF {{ i + 1 }}: {{ vrf.name || 'Unnamed' }}</h6>
+                      </div>
+                      <button
+                        *ngIf="f.multiVrf.value"
+                        type="button"
+                        class="btn btn-sm btn-danger"
+                        (click)="removeVrf(i)"
+                        [disabled]="!canRemoveVrf(i)"
+                        [title]="
+                          vrf.name === 'default_vrf'
+                            ? 'Default VRF cannot be deleted'
+                            : !canRemoveVrf(i)
+                            ? 'Cannot delete the last VRF'
+                            : ''
+                        "
+                      >
+                        <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+                      </button>
+                    </div>
+
+                    <!-- Collapsed Summary View -->
+                    <div *ngIf="vrfCollapsedStates[i]" class="card-body py-2">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <small class="text-muted">
+                            <strong>External VRFs:</strong> {{ vrf.externalVrfs?.length || 0 }} | <strong>Policy Control:</strong>
+                            {{ vrf.policyControlEnforced ? 'Yes' : 'No' }} | <strong>Ingress Enforcement:</strong>
+                            {{ vrf.policyControlEnforcementIngress ? 'Yes' : 'No' }} | <strong>BGP ASN:</strong>
+                            {{ vrf.bgpASN || 'Not set' }}
+                          </small>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <!-- Expanded Detail View -->
-                  <div *ngIf="!vrfCollapsedStates[i]" class="card-body">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label [for]="'vrfName' + i">VRF Name</label>
-                          <input
-                            type="text"
-                            [id]="'vrfName' + i"
-                            [(ngModel)]="vrf.name"
-                            [ngModelOptions]="{ standalone: true }"
-                            class="form-control form-control-sm"
-                            placeholder="Enter VRF name"
-                          />
+                    <!-- Expanded Detail View -->
+                    <div *ngIf="!vrfCollapsedStates[i]" class="card-body">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label [for]="'vrfName' + i">VRF Name</label>
+                            <input
+                              type="text"
+                              [id]="'vrfName' + i"
+                              [(ngModel)]="vrf.name"
+                              [ngModelOptions]="{ standalone: true }"
+                              class="form-control form-control-sm"
+                              placeholder="Enter VRF name"
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label [for]="'vrfDescription' + i">Description</label>
-                          <input
-                            type="text"
-                            [id]="'vrfDescription' + i"
-                            [(ngModel)]="vrf.description"
-                            [ngModelOptions]="{ standalone: true }"
-                            class="form-control form-control-sm"
-                            placeholder="Enter VRF description"
-                          />
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label [for]="'vrfDescription' + i">Description</label>
+                            <input
+                              type="text"
+                              [id]="'vrfDescription' + i"
+                              [(ngModel)]="vrf.description"
+                              [ngModelOptions]="{ standalone: true }"
+                              class="form-control form-control-sm"
+                              placeholder="Enter VRF description"
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-8">
-                        <div class="form-group">
-                          <label [for]="'externalConnectivity' + i">External VRF Connectivity</label>
-                          
-                          <!-- External VRF Selection -->
-                          <div class="mb-3">
-                            <div class="input-group input-group-sm">
-                              <select
-                                [id]="'externalVrfSelect' + i"
-                                [(ngModel)]="selectedExternalVrf"
-                                [ngModelOptions]="{ standalone: true }"
-                                class="form-control form-control-sm"
-                              >
-                                <option value="">Select External VRF to add...</option>
-                                <option *ngFor="let option of getAvailableExternalVrfs(i)" [value]="option">
-                                  {{ option }}
-                                </option>
-                              </select>
-                              <div class="input-group-append">
-                                <button
-                                  type="button"
-                                  class="btn btn-sm btn-primary"
-                                  (click)="addExternalVrfAndClear(i, selectedExternalVrf)"
-                                  [disabled]="!selectedExternalVrf"
-                                >
-                                  Add
-                                </button>
+                        <div class="col-md-8">
+                          <div class="form-group">
+                            <label [for]="'externalConnectivity' + i">External VRF Connectivity</label>
+
+                            <!-- Selected External VRFs Section -->
+                            <div class="vrf-section">
+                              <h6 class="vrf-section-title">Selected External VRFs</h6>
+                              <div class="vrf-list-container selected-vrfs" [class.empty]="getSelectedExternalVrfs(i).length === 0">
+                                <div *ngIf="getSelectedExternalVrfs(i).length === 0" class="empty-message">No external VRFs selected</div>
+                                <div *ngFor="let extVrf of getSelectedExternalVrfs(i)" class="vrf-item selected">
+                                  <div class="vrf-content">
+                                    <span class="vrf-label">{{ extVrf }}</span>
+                                    <div class="vrf-options">
+                                      <label class="checkbox-label">
+                                        <input
+                                          type="checkbox"
+                                          [checked]="isDefaultExternalVrf(i, extVrf)"
+                                          (change)="toggleDefaultExternalVrf(i, extVrf)"
+                                          class="form-check-input"
+                                        />
+                                        Default
+                                      </label>
+                                    </div>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-danger remove-btn"
+                                    (click)="removeExternalVrf(i, extVrf)"
+                                    [disabled]="vrf.externalVrfs.length === 1"
+                                    [title]="vrf.externalVrfs.length === 1 ? 'Cannot remove the last external VRF' : 'Remove external VRF'"
+                                  >
+                                    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Available External VRFs Section -->
+                            <div class="vrf-section">
+                              <h6 class="vrf-section-title">Available External VRFs</h6>
+                              <div class="vrf-list-container available-vrfs" [class.empty]="getAvailableExternalVrfs(i).length === 0">
+                                <div *ngIf="getAvailableExternalVrfs(i).length === 0" class="empty-message">
+                                  <span *ngIf="!form.get('environmentId')?.value">Select an environment to see available VRFs</span>
+                                  <span *ngIf="form.get('environmentId')?.value">All external VRFs have been selected</span>
+                                </div>
+                                <div *ngFor="let vrfOption of getAvailableExternalVrfs(i)" class="vrf-item available">
+                                  <span class="vrf-label">{{ vrfOption.label }}</span>
+                                  <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-primary add-vrf-btn"
+                                    (click)="addExternalVrf(i, vrfOption.value)"
+                                  >
+                                    <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                                    Add
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
-
-                          <!-- Selected External VRFs Table -->
-                          <div *ngIf="vrf.externalVrfs && vrf.externalVrfs.length > 0" class="table-responsive">
-                            <table class="table table-sm table-bordered">
-                              <thead class="thead-light">
-                                <tr>
-                                  <th>External VRF</th>
-                                  <th width="80">Default<tooltip [message]="helpText.DefaultExternalVrf"></tooltip></th>
-                                  <th width="60">Remove</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr *ngFor="let extVrf of vrf.externalVrfs">
-                                  <td>{{ extVrf }}</td>
-                                  <td class="text-center">
-                                    <input
-                                      type="radio"
-                                      [name]="'defaultVrf' + i"
-                                      [checked]="isDefaultExternalVrf(i, extVrf)"
-                                      (change)="setDefaultExternalVrf(i, extVrf)"
-                                      class="form-check-input"
-                                    />
-                                  </td>
-                                  <td class="text-center">
-                                    <button
-                                      type="button"
-                                      class="btn btn-sm btn-outline-danger"
-                                      (click)="removeExternalVrf(i, extVrf)"
-                                      [disabled]="!canRemoveExternalVrf(i, extVrf)"
-                                      [title]="
-                                        vrf.externalVrfs.length === 1 
-                                          ? 'Cannot remove the last external VRF' 
-                                          : isDefaultExternalVrf(i, extVrf) 
-                                            ? 'Cannot remove the default external VRF' 
-                                            : 'Remove external VRF'
-                                      "
-                                    >
-                                      <fa-icon [icon]="['fas', 'times']"></fa-icon>
-                                    </button>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-
-                          <!-- Empty state -->
-                          <div *ngIf="!vrf.externalVrfs || vrf.externalVrfs.length === 0" class="alert alert-warning">
-                            No external VRFs selected. Please select at least one external VRF.
-                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <!-- VRF Policy and Network Settings -->
-                    <div class="row mt-3">
-                      <div class="col-md-6">
-                        <h6 class="feature-section-title">Policy Settings</h6>
-                        <div class="form-group">
-                          <div class="feature-flag-item mb-2">
-                            <input
-                              type="checkbox"
-                              [id]="'policyControlEnforced' + i"
-                              [(ngModel)]="vrf.policyControlEnforced"
-                              [ngModelOptions]="{ standalone: true }"
-                              class="form-check-input"
-                            />
-                            <label class="form-check-label" [for]="'policyControlEnforced' + i"> 
-                              Policy Control Enforced 
-                            </label>
-                          </div>
-                          <div class="feature-flag-item">
-                            <input
-                              type="checkbox"
-                              [id]="'policyControlEnforcementIngress' + i"
-                              [(ngModel)]="vrf.policyControlEnforcementIngress"
-                              [ngModelOptions]="{ standalone: true }"
-                              class="form-check-input"
-                            />
-                            <label class="form-check-label" [for]="'policyControlEnforcementIngress' + i"> 
-                              Ingress Policy Enforcement 
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="col-md-6">
-                        <h6 class="feature-section-title">Routing Settings</h6>
-                        <div class="form-group">
-                          <div class="feature-flag-item mb-2">
-                            <input
-                              type="checkbox"
-                              [id]="'hostBasedRoutes' + i"
-                              [(ngModel)]="vrf.hostBasedRoutesToExternalVrfs"
-                              [ngModelOptions]="{ standalone: true }"
-                              class="form-check-input"
-                            />
-                            <label class="form-check-label" [for]="'hostBasedRoutes' + i"> 
-                              Host-based Routes to External VRFs 
-                            </label>
-                          </div>
-                          <div class="row">
-                            <div class="col-6">
-                              <label [for]="'maxExternalRoutes' + i" class="form-label">Max External Routes</label>
+                      <!-- VRF Policy and Network Settings -->
+                      <div class="row mt-3">
+                        <div class="col-md-6">
+                          <h6 class="feature-section-title">Policy Settings</h6>
+                          <div class="form-group">
+                            <div class="feature-flag-item mb-2">
                               <input
-                                type="number"
-                                [id]="'maxExternalRoutes' + i"
-                                [(ngModel)]="vrf.maxExternalRoutes"
+                                type="checkbox"
+                                [id]="'policyControlEnforced' + i"
+                                [(ngModel)]="vrf.policyControlEnforced"
                                 [ngModelOptions]="{ standalone: true }"
-                                class="form-control form-control-sm"
-                                min="0"
-                                max="10000"
+                                class="form-check-input"
                               />
+                              <label class="form-check-label" [for]="'policyControlEnforced' + i"> Policy Control Enforced </label>
                             </div>
-                            <div class="col-6">
-                              <label [for]="'bgpASN' + i" class="form-label">BGP ASN</label>
+                            <div class="feature-flag-item">
                               <input
-                                type="number"
-                                [id]="'bgpASN' + i"
-                                [(ngModel)]="vrf.bgpASN"
+                                type="checkbox"
+                                [id]="'policyControlEnforcementIngress' + i"
+                                [(ngModel)]="vrf.policyControlEnforcementIngress"
                                 [ngModelOptions]="{ standalone: true }"
-                                class="form-control form-control-sm"
-                                min="1"
-                                max="4294967295"
+                                class="form-check-input"
                               />
+                              <label class="form-check-label" [for]="'policyControlEnforcementIngress' + i">
+                                Ingress Policy Enforcement
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <h6 class="feature-section-title">Routing Settings</h6>
+                          <div class="form-group">
+                            <div class="feature-flag-item mb-2">
+                              <input
+                                type="checkbox"
+                                [id]="'hostBasedRoutes' + i"
+                                [(ngModel)]="vrf.hostBasedRoutesToExternalVrfs"
+                                [ngModelOptions]="{ standalone: true }"
+                                class="form-check-input"
+                              />
+                              <label class="form-check-label" [for]="'hostBasedRoutes' + i"> Host-based Routes to External VRFs </label>
+                            </div>
+                            <div class="row">
+                              <div class="col-6">
+                                <label [for]="'maxExternalRoutes' + i" class="form-label">Max External Routes</label>
+                                <input
+                                  type="number"
+                                  [id]="'maxExternalRoutes' + i"
+                                  [(ngModel)]="vrf.maxExternalRoutes"
+                                  [ngModelOptions]="{ standalone: true }"
+                                  class="form-control form-control-sm"
+                                  min="0"
+                                  max="10000"
+                                />
+                              </div>
+                              <div class="col-6">
+                                <label [for]="'bgpASN' + i" class="form-label">BGP ASN</label>
+                                <input
+                                  type="number"
+                                  [id]="'bgpASN' + i"
+                                  [(ngModel)]="vrf.bgpASN"
+                                  [ngModelOptions]="{ standalone: true }"
+                                  class="form-control form-control-sm"
+                                  min="1"
+                                  max="4294967295"
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>

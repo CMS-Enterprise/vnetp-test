@@ -1,3 +1,154 @@
+/* Tab Navigation Styles */
+.nav-link.disabled {
+  color: #6c757d !important;
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.6;
+}
+
+.tab-requirement-indicator {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+}
+
+/* Environment Selection Styles */
+.environment-required {
+  position: relative;
+}
+
+.environment-requirement-badge {
+  display: block;
+  font-size: 0.7rem;
+  color: #856404;
+  font-weight: normal;
+  margin-top: 0.2rem;
+}
+
+.environment-required-field {
+  border-color: #ffc107 !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25) !important;
+}
+
+.environment-requirement-help {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #d1ecf1;
+  border: 1px solid #bee5eb;
+  border-radius: 0.25rem;
+}
+
+.environment-requirement-help small {
+  margin-left: 0.5rem;
+}
+
+.environment-required-alert {
+  border-left: 4px solid #ffc107;
+}
+
+/* VRF Section Styles (similar to environment modal) */
+.vrf-section {
+  margin-bottom: 1.5rem;
+}
+
+.vrf-section:last-child {
+  margin-bottom: 0;
+}
+
+.vrf-section-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 0.25rem;
+}
+
+.vrf-list-container {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+.vrf-list-container.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+}
+
+.empty-message {
+  color: #6c757d;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.vrf-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0.5rem;
+  margin-bottom: 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.vrf-item:last-child {
+  margin-bottom: 0;
+}
+
+.vrf-item.selected {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+}
+
+.vrf-item.available {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+}
+
+.vrf-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.vrf-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.vrf-options {
+  margin-top: 0.25rem;
+}
+
+.checkbox-label {
+  font-size: 0.8rem;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label input {
+  margin-right: 0.25rem;
+}
+
+.add-vrf-btn {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.add-vrf-btn fa-icon {
+  margin-right: 0.25rem;
+}
+
+.remove-btn {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
 .section-title {
   font-size: 1.25rem;
   margin-bottom: 1rem;

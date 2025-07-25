@@ -8,7 +8,7 @@ import {
   Tier,
   V2AppCentricTenantsService,
   Vrf,
-  Tenant
+  Tenant,
 } from 'client';
 import { Tab, TabsComponent } from 'src/app/common/tabs/tabs.component';
 import { ApplicationMode } from 'src/app/models/other/application-mode-enum';
@@ -130,24 +130,14 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
    * Type guard to check if a tab has a valid ID
    */
   private hasValidTabId(tab: Tab | null | undefined): tab is Tab & { id: string } {
-    return !!(tab?.id);
+    return !!tab?.id;
   }
 
   /**
    * Type guard to check if a tab has a valid route
    */
   private hasValidRoute(tab: Tab | null | undefined): tab is Tab & { route: string[] } {
-    return !!(tab?.route?.[0]);
-  }
-
-  /**
-   * Type guard to check if a VRF has valid tier references
-   */
-  private hasValidTiers(vrf: Vrf | null): vrf is Vrf & {
-    internalNetworkServicesTier: Tier;
-    externalNetworkServicesTier: Tier;
-  } {
-    return !!(vrf?.internalNetworkServicesTier?.id && vrf?.externalNetworkServicesTier?.id);
+    return !!tab?.route?.[0];
   }
 
   /**
@@ -207,7 +197,6 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
       const tierIds = [internalTierId, externalTierId].filter(Boolean) as string[];
 
       if (tierIds.length > 0) {
-        console.log('loadVrfTiersAndRuleGroups - tierIds:', tierIds);
         this.isLoadingTiers = true;
 
         // Get the full tier objects with rule groups
@@ -216,7 +205,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
             filter: [`id||in||${tierIds.join(',')}`],
             join: ['firewallRuleGroups', 'natRuleGroups'],
             page: 1,
-            perPage: 10
+            perPage: 10,
           })
           .pipe(takeUntil(this.destroy$))
           .subscribe({
@@ -262,7 +251,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
               this.isLoadingVrfData = false;
               // Still attempt to retrigger with existing data
               this.retriggerCurrentSubtab();
-            }
+            },
           });
       }
     } else {
@@ -287,13 +276,10 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   private navigateToRuleGroup(routePath: string[], ruleGroupId: string | null, tierId: string | null): void {
     if (ruleGroupId && tierId) {
       this.switchTierContext(tierId);
-      this.router.navigate(
-        [{ outlets: { 'tenant-portal': [...routePath, 'edit', ruleGroupId] } }],
-        {
-          queryParamsHandling: 'merge',
-          relativeTo: this.activatedRoute,
-        },
-      );
+      this.router.navigate([{ outlets: { 'tenant-portal': [...routePath, 'edit', ruleGroupId] } }], {
+        queryParamsHandling: 'merge',
+        relativeTo: this.activatedRoute,
+      });
     }
   }
 
@@ -309,26 +295,26 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
         urlPattern: 'internal-firewall/edit/',
         routePath: ['internal-firewall'],
         ruleGroupId: this.selectedVrfInternalFirewallRuleGroup?.id || null,
-        tierId: this.selectedVrfInternalTier?.id || null
+        tierId: this.selectedVrfInternalTier?.id || null,
       },
       {
         urlPattern: 'external-firewall/edit/',
         routePath: ['external-firewall'],
         ruleGroupId: this.selectedVrfExternalFirewallRuleGroup?.id || null,
-        tierId: this.selectedVrfExternalTier?.id || null
+        tierId: this.selectedVrfExternalTier?.id || null,
       },
       {
         urlPattern: 'internal-nat/edit/',
         routePath: ['internal-nat'],
         ruleGroupId: this.selectedVrfInternalNatRuleGroup?.id || null,
-        tierId: this.selectedVrfInternalTier?.id || null
+        tierId: this.selectedVrfInternalTier?.id || null,
       },
       {
         urlPattern: 'external-nat/edit/',
         routePath: ['external-nat'],
         ruleGroupId: this.selectedVrfExternalNatRuleGroup?.id || null,
-        tierId: this.selectedVrfExternalTier?.id || null
-      }
+        tierId: this.selectedVrfExternalTier?.id || null,
+      },
     ];
 
     // Find matching route and navigate
@@ -405,13 +391,13 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
           this.navigateToRuleGroup(
             ['internal-firewall'],
             this.selectedVrfInternalFirewallRuleGroup?.id || null,
-            this.selectedVrfInternalTier?.id || null
+            this.selectedVrfInternalTier?.id || null,
           );
         } else if (this.isExternalFirewallContext(currentTabId, parentTabId)) {
           this.navigateToRuleGroup(
             ['external-firewall'],
             this.selectedVrfExternalFirewallRuleGroup?.id || null,
-            this.selectedVrfExternalTier?.id || null
+            this.selectedVrfExternalTier?.id || null,
           );
         }
         break;
@@ -420,22 +406,20 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
           this.navigateToRuleGroup(
             ['internal-nat'],
             this.selectedVrfInternalNatRuleGroup?.id || null,
-            this.selectedVrfInternalTier?.id || null
+            this.selectedVrfInternalTier?.id || null,
           );
         } else if (this.isExternalFirewallContext(currentTabId, parentTabId)) {
           this.navigateToRuleGroup(
             ['external-nat'],
             this.selectedVrfExternalNatRuleGroup?.id || null,
-            this.selectedVrfExternalTier?.id || null
+            this.selectedVrfExternalTier?.id || null,
           );
         }
         break;
 
       default:
         // For any other tab, look up its route and navigate using type-safe lookup
-        const routeTab = this.hasValidTabId(tab)
-          ? this.tabs.find(t => t.id === tab.id)
-          : this.tabs.find(t => t.name === tab.name);
+        const routeTab = this.hasValidTabId(tab) ? this.tabs.find(t => t.id === tab.id) : this.tabs.find(t => t.name === tab.name);
 
         if (routeTab && this.hasValidRoute(routeTab)) {
           this.router.navigate([{ outlets: { 'tenant-portal': routeTab.route } }], {
@@ -458,11 +442,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tenantService
       .getOneTenant({
         id: this.tenantId,
-        join: [
-          'vrfs',
-          'vrfs.internalNetworkServicesTier',
-          'vrfs.externalNetworkServicesTier',
-        ]
+        join: ['vrfs', 'vrfs.internalNetworkServicesTier', 'vrfs.externalNetworkServicesTier'],
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe(
@@ -477,8 +457,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
             this.getNetworkServicesContainerDatacenter(response.datacenterId);
           }
         },
-        error => {
-          console.error('Error loading tenant:', error);
+        () => {
           this.tenants = null;
           this.isLoadingTenant = false;
         },
@@ -504,35 +483,36 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public getNetworkServicesContainerDatacenter(datacenterId: string): void {
-    this.datacenterService.getOneDatacenter({
-      id: datacenterId,
-      join: ['tiers', 'tiers.firewallRuleGroups', 'tiers.natRuleGroups']
-    })
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: response => {
-        this.networkServicesContainerDatacenter = response;
-        this.datacenterContextService.unlockDatacenter();
-        this.datacenterContextService.switchDatacenter(response.id);
-        this.datacenterContextService.lockDatacenter();
+    this.datacenterService
+      .getOneDatacenter({
+        id: datacenterId,
+        join: ['tiers', 'tiers.firewallRuleGroups', 'tiers.natRuleGroups'],
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: response => {
+          this.networkServicesContainerDatacenter = response;
+          this.datacenterContextService.refreshDatacenters();
+          this.datacenterContextService.unlockDatacenter();
+          this.datacenterContextService.switchDatacenter(response.id);
+          this.datacenterContextService.lockDatacenter();
 
-        // Load tiers and rule groups for the selected VRF
-        if (this.selectedVrf) {
-          this.loadVrfTiersAndRuleGroups(this.selectedVrf);
-        }
+          // Load tiers and rule groups for the selected VRF
+          if (this.selectedVrf) {
+            this.loadVrfTiersAndRuleGroups(this.selectedVrf);
+          }
 
-        // Call getInitialTabIndex after we have all the necessary data
-        this.getInitialTabIndex();
-      },
-      error: error => {
-        console.error('Error loading datacenter:', error);
-        // Still attempt to proceed with available data
-        if (this.selectedVrf) {
-          this.loadVrfTiersAndRuleGroups(this.selectedVrf);
-        }
-        this.getInitialTabIndex();
-      }
-    });
+          // Call getInitialTabIndex after we have all the necessary data
+          this.getInitialTabIndex();
+        },
+        error: () => {
+          // Still attempt to proceed with available data
+          if (this.selectedVrf) {
+            this.loadVrfTiersAndRuleGroups(this.selectedVrf);
+          }
+          this.getInitialTabIndex();
+        },
+      });
   }
 
   ngOnInit(): void {
@@ -615,7 +595,6 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
       this.currentTab = fallbackTab?.name || 'Application Profile';
       this.initialSubTab = null;
       return 0;
-
     } catch (error) {
       const errorFallbackTab = this.tabs[0];
       this.currentTab = errorFallbackTab?.name || 'Application Profile';

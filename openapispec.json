@@ -16859,7 +16859,52 @@
             }
           }
         },
-        "tags": ["admin/v2/app-centric/vrfs"]
+        "tags": [
+          "admin/v2/app-centric/vrfs"
+        ]
+      }
+    },
+    "/admin/v2/app-centric/vrfs/{id}/basic": {
+      "put": {
+        "operationId": "updateVrfBasic",
+        "summary": "Update VRF basic properties",
+        "description": "Update only non-sensitive VRF properties (alias, description, policy settings).",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "VRF ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VrfBasicUpdateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vrf"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "admin/v2/app-centric/vrfs"
+        ]
       }
     },
     "/v2/app-centric/bridge-domains/{bridgeDomainId}/l3outs/{l3OutId}": {
@@ -22263,6 +22308,132 @@
         "tags": ["v3/global/environment"]
       }
     },
+    "/v3/global/environment/{id}": {
+      "put": {
+        "operationId": "updateOneEnvironment",
+        "summary": "Update one Environment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Environment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Environment"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environment"
+        ]
+      },
+      "get": {
+        "operationId": "getOneEnvironment",
+        "summary": "Get one Environment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Environment"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environment"
+        ]
+      }
+    },
+    "/v3/global/environment/summary": {
+      "get": {
+        "operationId": "getManyEnvironmentSummaries",
+        "summary": "Get many Environment Summaries",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EnvironmentSummary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environment"
+        ]
+      }
+    },
+    "/v3/global/environment/{id}/summary": {
+      "get": {
+        "operationId": "getOneEnvironmentSummary",
+        "summary": "Get one Environment Summary",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvironmentSummary"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environment"
+        ]
+      }
+    },
     "/v3/global/external-routes/environment/{environmentId}/external-routes": {
       "get": {
         "operationId": "getManyExternalRoutes",
@@ -22731,7 +22902,13 @@
             }
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/internal-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       },
       "get": {
         "operationId": "getManyInternalRoute",
@@ -22883,7 +23060,13 @@
             }
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/internal-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/{routeId}": {
@@ -22923,7 +23106,13 @@
             }
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/internal-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/bulk": {
@@ -22966,7 +23155,13 @@
             }
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/internal-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/{id}": {
@@ -23020,7 +23215,13 @@
             }
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/internal-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       },
       "put": {
         "operationId": "updateOneInternalRoute",
@@ -23058,7 +23259,13 @@
             }
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/internal-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       },
       "delete": {
         "operationId": "deleteOneInternalRoute",
@@ -23086,7 +23293,13 @@
             }
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/internal-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/{id}/soft": {
@@ -23109,7 +23322,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/internal-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/{id}/restore": {
@@ -23132,7 +23351,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/internal-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/{id}/provision": {
@@ -23155,7 +23380,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/internal-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/internal-routes/{id}/deprovision": {
@@ -23178,7 +23409,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/internal-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/internal-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/external-routes": {
@@ -23200,7 +23437,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/external-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       },
       "get": {
         "operationId": "getManyExternalRoute",
@@ -23352,9 +23595,59 @@
             }
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/external-routes"
+        ]
+      }
+    },
+    "/v1/network-scope-forms/external-routes/{routeId}": {
+      "delete": {
+        "operationId": "removeExternalRouteFromWanForm",
+        "summary": "Remove External Route from WAN Form",
+        "description": "Remove an external route from the specified WAN form",
+        "parameters": [
+          {
+            "name": "wanFormId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the WAN form to remove the route from",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "routeId",
+            "required": true,
+            "in": "path",
+            "description": "ID of the route to remove from the WAN form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalRoute"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v1/network-scope-forms/external-routes"
+        ]
+      }
+    },
+=======
         "tags": ["v1/network-scope-forms/external-routes"]
       }
     },
+>>>>>>> task/tenant-v2-wan
     "/v1/network-scope-forms/external-routes/bulk": {
       "post": {
         "operationId": "createManyExternalRoute",
@@ -23395,7 +23688,13 @@
             }
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/external-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/external-routes/{id}": {
@@ -23449,7 +23748,13 @@
             }
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/external-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       },
       "put": {
         "operationId": "updateOneExternalRoute",
@@ -23487,7 +23792,13 @@
             }
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/external-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       },
       "delete": {
         "operationId": "deleteOneExternalRoute",
@@ -23515,7 +23826,13 @@
             }
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/external-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/external-routes/{id}/soft": {
@@ -23538,7 +23855,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/external-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/external-routes/{id}/restore": {
@@ -23561,7 +23884,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/external-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/external-routes/{id}/provision": {
@@ -23584,7 +23913,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/external-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     },
     "/v1/network-scope-forms/external-routes/{id}/deprovision": {
@@ -23607,7 +23942,13 @@
             "description": ""
           }
         },
+<<<<<<< HEAD
+        "tags": [
+          "v1/network-scope-forms/external-routes"
+        ]
+=======
         "tags": ["v1/network-scope-forms/external-routes"]
+>>>>>>> task/tenant-v2-wan
       }
     }
   },
@@ -24267,7 +24608,11 @@
             "type": "string"
           }
         },
-        "required": ["network", "wanFormId"]
+        "required": [
+          "network",
+          "externalVrf",
+          "wanFormId"
+        ]
       },
       "Job": {
         "type": "object",
@@ -27821,7 +28166,14 @@
           },
           "type": {
             "type": "string",
-            "enum": ["Intravrf", "Intervrf", "External", "ZoneBased", "OneArmServiceGraph"]
+            "enum": [
+              "Intravrf",
+              "Intervrf",
+              "External",
+              "ZoneBased",
+              "OneArmServiceGraph",
+              "V2ZoneBased"
+            ]
           },
           "tierId": {
             "type": "string"
@@ -30398,7 +30750,31 @@
             "description": "Tenant ID for VRF assignment (required for creation)"
           }
         },
-        "required": ["name", "defaultExternalVrf"]
+        "required": [
+          "name",
+          "defaultExternalVrf"
+        ]
+      },
+      "VrfBasicUpdateDto": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "policyControlEnforced": {
+            "type": "boolean",
+            "description": "Security rules (contracts) will be enforced"
+          },
+          "policyControlEnforcementIngress": {
+            "type": "boolean",
+            "description": "Policy enforcement direction - true for ingress, false for egress"
+          }
+        }
       },
       "EndpointConnectivityQuery": {
         "type": "object",
@@ -31448,7 +31824,11 @@
           "description": {
             "type": "string"
           },
-          "allowedVrfs": {
+          "lastRouteSyncAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "externalVrfs": {
             "type": "array",
             "nullable": true,
             "description": "External VRFs allowed for this environment",
@@ -31483,7 +31863,12 @@
             }
           }
         },
-        "required": ["name", "description", "allowedVrfs", "globalExternalRoutes"]
+        "required": [
+          "name",
+          "description",
+          "allowedVrfs",
+          "globalExternalRoutes"
+        ]
       },
       "GlobalExternalRoute": {
         "type": "object",
@@ -31552,6 +31937,103 @@
           }
         },
         "required": ["network", "externalVrf", "lastSeen", "expired", "uptime", "protocol", "asPath", "tag", "environmentId", "environment"]
+      },
+      "GlobalExternalRouteSummary": {
+        "type": "object",
+        "properties": {
+          "vrfName": {
+            "type": "string",
+            "description": "External VRF name",
+            "example": "appprod"
+          },
+          "numberOfRoutes": {
+            "type": "integer",
+            "description": "Number of routes in this VRF",
+            "example": 750
+          }
+        },
+        "required": [
+          "vrfName",
+          "numberOfRoutes"
+        ]
+      },
+      "EnvironmentSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Environment ID",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+          },
+          "name": {
+            "type": "string",
+            "description": "Environment name",
+            "example": "Production Environment"
+          },
+          "description": {
+            "type": "string",
+            "description": "Environment description",
+            "example": "Main production environment",
+            "nullable": true
+          },
+          "lastRouteSyncAt": {
+            "type": "string",
+            "description": "Last time routes were synchronized",
+            "example": "2024-01-15T10:30:00Z",
+            "format": "date-time",
+            "nullable": true
+          },
+          "externalVrfs": {
+            "type": "array",
+            "description": "External VRFs allowed for this environment",
+            "example": [
+              "cmsnet_transport"
+            ],
+            "items": {
+              "type": "string",
+              "enum": [
+                "cms-entsrv-inet",
+                "cms-entsrv-ldapdns",
+                "cms-entsrv-mgmt",
+                "cms-entsrv-mon",
+                "cms-entsrv-pres",
+                "cms-entsrv-sec",
+                "cms-entsrv-vpn",
+                "cmsnet_appdev",
+                "cmsnet_appprod",
+                "cmsnet_datadev",
+                "cmsnet_dataprod",
+                "cmsnet_edc_vpn",
+                "cmsnet_edcmgmt",
+                "cmsnet_presdev",
+                "cmsnet_presprod",
+                "cmsnet_sec",
+                "cmsnet_transport"
+              ]
+            }
+          },
+          "totalRoutes": {
+            "type": "integer",
+            "description": "Total number of external routes in this environment",
+            "example": 1250
+          },
+          "globalExternalRoutes": {
+            "description": "Route count summary by VRF",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GlobalExternalRouteSummary"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "lastRouteSyncAt",
+          "externalVrfs",
+          "totalRoutes",
+          "globalExternalRoutes"
+        ]
       },
       "ExternalRouteSyncDto": {
         "type": "object",
