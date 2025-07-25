@@ -3,7 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { Subscription } from 'rxjs';
+import { forkJoin, Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ModalMode } from 'src/app/models/other/modal-mode';
 import { RuntimeDataService } from 'src/app/services/runtime-data.service';
 import {
@@ -96,22 +97,46 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
   }
 
   getAllRoutes(): void {
+    forkJoin({
+      globalRoutes: this._fetchGlobalRoutes(),
+      assignedRoutes: this._fetchAssignedRoutes(),
+    }).subscribe(({ globalRoutes, assignedRoutes }) => {
+      this._processRoutesData(globalRoutes, assignedRoutes);
+    });
+  }
+
+  private _fetchGlobalRoutes(): Observable<GlobalExternalRoute[]> {
     const availableExternalVrfs = this.parentVrf.externalVrfs.join(',');
-    this.globalExternalRouteService
-      .getManyExternalRoutes({ environmentId: this.environmentId, limit: 50000, filter: [`externalVrf||in||${availableExternalVrfs}`] })
-      .subscribe(globalData => {
-        this.allGlobalRoutes = globalData as unknown as GlobalExternalRoute[];
-        this.availableVrfs = [...new Set(this.allGlobalRoutes.map(route => route.externalVrf))].sort();
-        this.availableVrfs = this.availableVrfs.filter(vrf => this.parentVrf.externalVrfs.some(parentVrf => parentVrf === vrf));
-        this.externalRouteService.getManyExternalRoute({ filter: [`wanFormId||eq||${this.wanForm.id}`], limit: 50000 }).subscribe(data => {
-          const localRoutes = data as unknown as ExternalRouteWithGlobalRoute[];
-          localRoutes.forEach(route => {
-            route.globalExternalRoute = this.allGlobalRoutes.find(globalRoute => globalRoute.id === route.globalExternalRouteId);
-          });
-          this.assignedRoutesDataSource.data = localRoutes;
-          this.updateAvailableRoutes();
-        });
-      });
+    return this.globalExternalRouteService
+      .getManyExternalRoutes({
+        environmentId: this.environmentId,
+        limit: 50000,
+        filter: [`externalVrf||in||${availableExternalVrfs}`],
+      })
+      .pipe(map(response => response.data as GlobalExternalRoute[]));
+  }
+
+  private _fetchAssignedRoutes(): Observable<ExternalRoute[]> {
+    return this.externalRouteService
+      .getManyExternalRoute({
+        filter: [`wanFormId||eq||${this.wanForm.id}`],
+        limit: 50000,
+      })
+      .pipe(map(response => response.data as ExternalRoute[]));
+  }
+
+  private _processRoutesData(globalRoutes: GlobalExternalRoute[], assignedRoutes: ExternalRoute[]): void {
+    this.allGlobalRoutes = globalRoutes;
+    this.availableVrfs = [...new Set(this.allGlobalRoutes.map(route => route.externalVrf))].sort();
+    this.availableVrfs = this.availableVrfs.filter(vrf => this.parentVrf.externalVrfs.some(parentVrf => parentVrf === vrf));
+
+    const localRoutes = assignedRoutes as ExternalRouteWithGlobalRoute[];
+    localRoutes.forEach(route => {
+      route.globalExternalRoute = this.allGlobalRoutes.find(globalRoute => globalRoute.id === route.globalExternalRouteId);
+    });
+
+    this.assignedRoutesDataSource.data = localRoutes;
+    this.updateAvailableRoutes();
   }
 
   deleteRoute(route: ExternalRoute): void {
