@@ -23706,6 +23706,132 @@
         ]
       }
     },
+    "/v3/global/environment/{id}": {
+      "put": {
+        "operationId": "updateOneEnvironment",
+        "summary": "Update one Environment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Environment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Environment"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environment"
+        ]
+      },
+      "get": {
+        "operationId": "getOneEnvironment",
+        "summary": "Get one Environment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Environment"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environment"
+        ]
+      }
+    },
+    "/v3/global/environment/summary": {
+      "get": {
+        "operationId": "getManyEnvironmentSummaries",
+        "summary": "Get many Environment Summaries",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EnvironmentSummary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environment"
+        ]
+      }
+    },
+    "/v3/global/environment/{id}/summary": {
+      "get": {
+        "operationId": "getOneEnvironmentSummary",
+        "summary": "Get one Environment Summary",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvironmentSummary"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "v3/global/environment"
+        ]
+      }
+    },
     "/v3/global/external-routes/environment/{environmentId}/external-routes": {
       "get": {
         "operationId": "getManyExternalRoutes",
@@ -24678,6 +24804,7 @@
     "/v1/network-scope-forms/external-routes": {
       "post": {
         "operationId": "createOneExternalRoute",
+        "summary": "Create one ExternalRoute",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -24691,7 +24818,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalRoute"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -33776,7 +33910,11 @@
           "description": {
             "type": "string"
           },
-          "allowedVrfs": {
+          "lastRouteSyncAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "externalVrfs": {
             "type": "array",
             "nullable": true,
             "description": "External VRFs allowed for this environment",
@@ -33814,7 +33952,8 @@
         "required": [
           "name",
           "description",
-          "allowedVrfs",
+          "lastRouteSyncAt",
+          "externalVrfs",
           "globalExternalRoutes"
         ]
       },
@@ -33895,6 +34034,103 @@
           "tag",
           "environmentId",
           "environment"
+        ]
+      },
+      "GlobalExternalRouteSummary": {
+        "type": "object",
+        "properties": {
+          "vrfName": {
+            "type": "string",
+            "description": "External VRF name",
+            "example": "appprod"
+          },
+          "numberOfRoutes": {
+            "type": "integer",
+            "description": "Number of routes in this VRF",
+            "example": 750
+          }
+        },
+        "required": [
+          "vrfName",
+          "numberOfRoutes"
+        ]
+      },
+      "EnvironmentSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Environment ID",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+          },
+          "name": {
+            "type": "string",
+            "description": "Environment name",
+            "example": "Production Environment"
+          },
+          "description": {
+            "type": "string",
+            "description": "Environment description",
+            "example": "Main production environment",
+            "nullable": true
+          },
+          "lastRouteSyncAt": {
+            "type": "string",
+            "description": "Last time routes were synchronized",
+            "example": "2024-01-15T10:30:00Z",
+            "format": "date-time",
+            "nullable": true
+          },
+          "externalVrfs": {
+            "type": "array",
+            "description": "External VRFs allowed for this environment",
+            "example": [
+              "cmsnet_transport"
+            ],
+            "items": {
+              "type": "string",
+              "enum": [
+                "cms-entsrv-inet",
+                "cms-entsrv-ldapdns",
+                "cms-entsrv-mgmt",
+                "cms-entsrv-mon",
+                "cms-entsrv-pres",
+                "cms-entsrv-sec",
+                "cms-entsrv-vpn",
+                "cmsnet_appdev",
+                "cmsnet_appprod",
+                "cmsnet_datadev",
+                "cmsnet_dataprod",
+                "cmsnet_edc_vpn",
+                "cmsnet_edcmgmt",
+                "cmsnet_presdev",
+                "cmsnet_presprod",
+                "cmsnet_sec",
+                "cmsnet_transport"
+              ]
+            }
+          },
+          "totalRoutes": {
+            "type": "integer",
+            "description": "Total number of external routes in this environment",
+            "example": 1250
+          },
+          "globalExternalRoutes": {
+            "description": "Route count summary by VRF",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GlobalExternalRouteSummary"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "lastRouteSyncAt",
+          "externalVrfs",
+          "totalRoutes",
+          "globalExternalRoutes"
         ]
       },
       "ExternalRouteSyncDto": {

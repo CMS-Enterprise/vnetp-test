@@ -9,21 +9,40 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { GlobalExternalRoute } from './globalExternalRoute';
+import { GlobalExternalRouteSummary } from './globalExternalRouteSummary';
 
 
-export interface Environment { 
-    readonly id?: string;
+export interface EnvironmentSummary { 
+    /**
+     * Environment ID
+     */
+    id: string;
+    /**
+     * Environment name
+     */
     name: string;
-    description: string;
-    lastRouteSyncAt: string;
+    /**
+     * Environment description
+     */
+    description: string | null;
+    /**
+     * Last time routes were synchronized
+     */
+    lastRouteSyncAt: string | null;
     /**
      * External VRFs allowed for this environment
      */
-    externalVrfs: Array<EnvironmentExternalVrfsEnum> | null;
-    readonly globalExternalRoutes: Array<GlobalExternalRoute>;
+    externalVrfs: Array<EnvironmentSummaryExternalVrfsEnum>;
+    /**
+     * Total number of external routes in this environment
+     */
+    totalRoutes: number;
+    /**
+     * Route count summary by VRF
+     */
+    globalExternalRoutes: Array<GlobalExternalRouteSummary>;
 }
-export enum EnvironmentExternalVrfsEnum {
+export enum EnvironmentSummaryExternalVrfsEnum {
     CmsEntsrvInet = 'cms-entsrv-inet',
     CmsEntsrvLdapdns = 'cms-entsrv-ldapdns',
     CmsEntsrvMgmt = 'cms-entsrv-mgmt',

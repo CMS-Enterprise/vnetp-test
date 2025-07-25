@@ -8,7 +8,9 @@ import {
   TenantAdminDto,
   VrfAdminDto,
   VrfAdminDtoExternalVrfsEnum,
-  VrfAdminDtoDefaultExternalVrfEnum
+  VrfAdminDtoDefaultExternalVrfEnum,
+  Environment,
+  V3GlobalEnvironmentService,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { TenantModalDto } from 'src/app/models/appcentric/tenant-modal-dto';
@@ -36,6 +38,8 @@ export class TenantSelectModalComponent implements OnInit {
   public externalConnectivityOptions: string[] = [];
   public vrfConfigurations: VrfAdminDto[] = [];
   public vrfCollapsedStates: boolean[] = [];
+  public environments: Environment[] = [];
+  public isLoadingEnvironments = false;
 
   // Help text for tooltips
   public helpText: TenantSelectModalHelpText;
@@ -46,6 +50,7 @@ export class TenantSelectModalComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private ngx: NgxSmartModalService,
     private tenantService: AdminV2AppCentricTenantsService,
+    private environmentService: V3GlobalEnvironmentService,
     helpText: TenantSelectModalHelpText,
   ) {
     this.helpText = helpText;
@@ -56,6 +61,7 @@ export class TenantSelectModalComponent implements OnInit {
     this.initializeExternalConnectivityOptions();
     this.buildForm();
     this.initializeVrfConfigurations();
+    this.loadEnvironments();
   }
 
   /**
@@ -63,6 +69,23 @@ export class TenantSelectModalComponent implements OnInit {
    */
   private initializeExternalConnectivityOptions(): void {
     this.externalConnectivityOptions = Object.values(VrfExternalVrfsEnum);
+  }
+
+  /**
+   * Load available environments from the API
+   */
+  private loadEnvironments(): void {
+    this.isLoadingEnvironments = true;
+    this.environmentService.getManyEnvironments().subscribe({
+      next: environments => {
+        this.environments = environments;
+        this.isLoadingEnvironments = false;
+      },
+      error: error => {
+        console.error('Error loading environments:', error);
+        this.isLoadingEnvironments = false;
+      },
+    });
   }
 
   /**
@@ -87,7 +110,7 @@ export class TenantSelectModalComponent implements OnInit {
       policyControlEnforcementIngress: true,
       hostBasedRoutesToExternalVrfs: false,
       maxExternalRoutes: 100,
-      bgpASN: 65000
+      bgpASN: 65000,
     };
   }
 
@@ -125,12 +148,24 @@ export class TenantSelectModalComponent implements OnInit {
 
   /**
    * Get available external VRFs for a specific VRF configuration (not already selected)
+   * Filters based on selected environment if available
    */
-  public getAvailableExternalVrfs(vrfIndex: number): VrfAdminDtoExternalVrfsEnum[] {
+  public getAvailableExternalVrfs(vrfIndex: number): Array<{ value: VrfAdminDtoExternalVrfsEnum; label: string }> {
     const selectedVrfs = this.vrfConfigurations[vrfIndex].externalVrfs || [];
-    return Object.values(VrfAdminDtoExternalVrfsEnum).filter(
-      vrf => !selectedVrfs.includes(vrf)
-    );
+    let availableVrfs = Object.values(VrfAdminDtoExternalVrfsEnum);
+
+    // Filter based on selected environment
+    const selectedEnvironmentId = this.form.get('environmentId')?.value;
+    if (selectedEnvironmentId) {
+      const selectedEnvironment = this.environments.find(env => env.id === selectedEnvironmentId);
+      if (selectedEnvironment && selectedEnvironment.externalVrfs) {
+        // Only show VRFs that are available in the selected environment
+        const environmentVrfs = selectedEnvironment.externalVrfs.map(vrf => vrf as unknown as VrfAdminDtoExternalVrfsEnum);
+        availableVrfs = availableVrfs.filter(vrf => environmentVrfs.includes(vrf));
+      }
+    }
+
+    return availableVrfs.filter(vrf => !selectedVrfs.includes(vrf)).map(vrf => ({ value: vrf, label: vrf }));
   }
 
   /**
@@ -159,6 +194,27 @@ export class TenantSelectModalComponent implements OnInit {
     if (selectedVrf) {
       this.addExternalVrf(vrfIndex, selectedVrf as any);
       this.selectedExternalVrf = '';
+    }
+  }
+
+  /**
+   * Get selected external VRFs for a VRF configuration
+   */
+  public getSelectedExternalVrfs(vrfIndex: number): VrfAdminDtoExternalVrfsEnum[] {
+    return this.vrfConfigurations[vrfIndex].externalVrfs || [];
+  }
+
+  /**
+   * Toggle default VRF status (checkbox behavior)
+   */
+  public toggleDefaultExternalVrf(vrfIndex: number, externalVrf: VrfAdminDtoExternalVrfsEnum): void {
+    const vrf = this.vrfConfigurations[vrfIndex];
+    if (this.isDefaultExternalVrf(vrfIndex, externalVrf)) {
+      // Unset as default
+      vrf.defaultExternalVrf = undefined;
+    } else {
+      // Set as default
+      vrf.defaultExternalVrf = externalVrf as unknown as VrfAdminDtoDefaultExternalVrfEnum;
     }
   }
 
@@ -285,6 +341,8 @@ export class TenantSelectModalComponent implements OnInit {
         this.form.controls.vcdTenantId.setValue(this.modalData.vcdTenantId);
       }
 
+      // Environment selection will default to empty and be required
+
       // Update size-based options
       this.updateSizeBasedOptions();
     }
@@ -304,6 +362,9 @@ export class TenantSelectModalComponent implements OnInit {
       name: ['', NameValidator()],
       alias: ['', Validators.compose([Validators.maxLength(100)])],
       description: ['', Validators.compose([Validators.maxLength(500)])],
+
+      // Environment selection (required)
+      environmentId: ['', Validators.required],
 
       // Base tenant options
       tenantSize: ['medium'],
@@ -328,6 +389,11 @@ export class TenantSelectModalComponent implements OnInit {
       this.form.get('vcdTenantId').updateValueAndValidity();
     });
 
+    // Watch for environment changes and filter VRFs accordingly
+    this.form.get('environmentId').valueChanges.subscribe(() => {
+      this.filterVrfsBasedOnEnvironment();
+    });
+
     // New form control handlers
     this.form.get('tenantSize').valueChanges.subscribe(() => {
       this.updateSizeBasedOptions();
@@ -337,7 +403,35 @@ export class TenantSelectModalComponent implements OnInit {
     this.updateSizeBasedOptions();
   }
 
+  /**
+   * Filter VRF configurations based on selected environment
+   */
+  private filterVrfsBasedOnEnvironment(): void {
+    const selectedEnvironmentId = this.form.get('environmentId')?.value;
+    if (!selectedEnvironmentId) {
+      return;
+    }
 
+    const selectedEnvironment = this.environments.find(env => env.id === selectedEnvironmentId);
+    if (!selectedEnvironment || !selectedEnvironment.externalVrfs) {
+      return;
+    }
+
+    const environmentVrfs = selectedEnvironment.externalVrfs.map(vrf => vrf as unknown as VrfAdminDtoExternalVrfsEnum);
+
+    // Filter each VRF configuration to remove VRFs not available in the environment
+    this.vrfConfigurations.forEach(vrf => {
+      if (vrf.externalVrfs) {
+        // Remove VRFs that are not available in the selected environment
+        vrf.externalVrfs = vrf.externalVrfs.filter(extVrf => environmentVrfs.includes(extVrf));
+
+        // Clear default if it's no longer available
+        if (vrf.defaultExternalVrf && !environmentVrfs.includes(vrf.defaultExternalVrf as unknown as VrfAdminDtoExternalVrfsEnum)) {
+          vrf.defaultExternalVrf = undefined;
+        }
+      }
+    });
+  }
 
   private createTenant(tenantAdminCreateDto: TenantAdminCreateDto): void {
     if (this.isAdminPortalMode) {
@@ -352,12 +446,14 @@ export class TenantSelectModalComponent implements OnInit {
 
   private editTenant(tenantAdminDto: TenantAdminDto): void {
     if (this.isAdminPortalMode) {
-      this.tenantService.updateTenantAdmin({
-        id: this.TenantId,
-        tenantAdminDto
-      }).subscribe(() => {
-        this.closeModal();
-      });
+      this.tenantService
+        .updateTenantAdmin({
+          id: this.TenantId,
+          tenantAdminDto,
+        })
+        .subscribe(() => {
+          this.closeModal();
+        });
     } else {
       // For non-admin mode, just close the modal for now
       this.closeModal();
@@ -374,6 +470,7 @@ export class TenantSelectModalComponent implements OnInit {
       name,
       description,
       alias,
+      environmentId,
       // tenantSize,
       vendorAgnosticNat,
       multiVrf,
@@ -389,6 +486,7 @@ export class TenantSelectModalComponent implements OnInit {
           name,
           description,
           alias,
+          environmentId,
           multiVrf,
           multiL3out,
           allowServiceGraphBypass: vendorAgnosticNat, // Map this field appropriately
@@ -401,6 +499,7 @@ export class TenantSelectModalComponent implements OnInit {
           name,
           description,
           alias,
+          environmentId,
           multiVrf,
           multiL3out,
           allowServiceGraphBypass: vendorAgnosticNat,
@@ -414,4 +513,3 @@ export class TenantSelectModalComponent implements OnInit {
     }
   }
 }
-

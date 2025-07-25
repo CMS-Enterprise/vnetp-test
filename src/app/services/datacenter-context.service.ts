@@ -95,6 +95,10 @@ export class DatacenterContextService implements OnInit {
     this.lockCurrentDatacenterSubject.next(true);
   }
 
+  public refreshDatacenters() {
+    this.getDatacenters();
+  }
+
   /** Unlocks the currentDatacenter. This allows the
    * datacenter context switch to occur.
    */

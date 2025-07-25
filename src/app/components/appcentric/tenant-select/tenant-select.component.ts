@@ -11,6 +11,8 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
 import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 import { TableContextService } from 'src/app/services/table-context.service';
 import { RouteDataUtil } from 'src/app/utils/route-data.util';
+import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
+import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 
 @Component({
   selector: 'app-tenant-select',
@@ -137,22 +139,26 @@ export class TenantSelectComponent implements OnInit {
     if (tenant.deletedAt) {
       this.openTypeDeleteModal(tenant);
     } else {
-      this.tenantService
-        .softDeleteOneTenant({
-          id: tenant.id,
-        })
-        .subscribe(() => {
-          const params = this.tableContextService.getSearchLocalStorage();
-          const { filteredResults } = params;
+      const modalDto = new YesNoModalDto('Soft Delete Tenant', `Are you sure you want to soft delete ${tenant.name}? This can be undone.`);
+      const onConfirm = () => {
+        this.tenantService
+          .softDeleteOneTenant({
+            id: tenant.id,
+          })
+          .subscribe(() => {
+            const params = this.tableContextService.getSearchLocalStorage();
+            const { filteredResults } = params;
 
-          // if filtered results boolean is true, apply search params in the
-          // subsequent get call
-          if (filteredResults) {
-            this.getTenants();
-          } else {
-            this.getTenants();
-          }
-        });
+            // if filtered results boolean is true, apply search params in the
+            // subsequent get call
+            if (filteredResults) {
+              this.getTenants();
+            } else {
+              this.getTenants();
+            }
+          });
+      };
+      SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
     }
   }
 
