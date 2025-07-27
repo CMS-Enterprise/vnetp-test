@@ -71,7 +71,6 @@ spec:
       }
     }
 
-
     // Internal Test
     stage('Test') {
       steps {
