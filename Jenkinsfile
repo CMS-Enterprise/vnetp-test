@@ -84,9 +84,6 @@ spec:
      // Test with SonarQube
     stage('SonarQube') {
       // Pre-requisites: Use withSonarQubeEnv step in your pipeline 
-      when {
-                expression { env.GIT_BRANCH == 'master' || env.GIT_BRANCH == 'dev' || env.GIT_BRANCH == 'int'}
-            }
       steps {
         container("sonarcli") {
             withCredentials([string(credentialsId: 'CB2Sonar', variable: 'SONARQUBE')]) {
