@@ -59,7 +59,6 @@ spec:
 """
     }
   }
-
   
   stages {
     stage('Build') {
