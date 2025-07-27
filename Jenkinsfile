@@ -106,7 +106,7 @@ spec:
         container('kaniko') {
             sh '''
             cat /kaniko/.docker/config.json
-            /kaniko/executor --context $(pwd) --build-arg build-number=${BUILD_NUMBER} --dockerfile Dockerfile --destination artifactory.cloud.cms.gov/cds-docker-local/${BUILD_NUMBER}/testimage:${GIT_COMMIT}
+            /kaniko/executor --context $(pwd) --build-arg build-number=${BUILD_NUMBER} --dockerfile Dockerfile --destination artifactory.cloud.cms.gov/cds-docker-local/vnetp-ui:${GIT_COMMIT}
             '''
         }
       }
