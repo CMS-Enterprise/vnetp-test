@@ -92,7 +92,7 @@ spec:
                 -Dsonar.projectKey=vnetp-ui \
                 -Dsonar.sources=. \
                 -Dsonar.host.url=https://sonarqube.cloud.cms.gov \
-                -Dsonar.login=sqp_10cbfa7b9096207fc600bab49b10408f26c33258
+                -Dsonar.login=sqp_139a5e40eefe753278e47054fc61e62d8ea617bb
               '''
             }
         }
