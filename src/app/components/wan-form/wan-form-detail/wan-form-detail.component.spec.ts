@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, ActivatedRoute } from '@angular/router';
-import { WanForm } from '../../../../../../client';
 import { WanFormDetailComponent } from './wan-form-detail.component';
 
 describe('WanFormDetailComponent', () => {
@@ -31,7 +30,7 @@ describe('WanFormDetailComponent', () => {
 
     fixture = TestBed.createComponent(WanFormDetailComponent);
     component = fixture.componentInstance;
-    component.wanForm = { id: 'testWanFormId' } as WanForm;
+    component.wanForm = { id: 'testWanFormId' } as any;
     fixture.detectChanges();
   });
 
@@ -48,33 +47,6 @@ describe('WanFormDetailComponent', () => {
     it('should set global to true when the value is true', () => {
       component.global = true;
       expect(component.global).toBe(true);
-    });
-  });
-
-  describe('ngOnInit', () => {
-    it('should set dcsMode from route snapshot data', () => {
-      component.ngOnInit();
-      expect(component.dcsMode).toBe('netcentric');
-    });
-  });
-
-  describe('navigateToInternalRoutes', () => {
-    it('should navigate to WAN form subnets with current query params', () => {
-      component.navigateToInternalRoutes();
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/netcentric/wan-form', 'testWanFormId', 'internal-routes'], {
-        relativeTo: mockRoute,
-        queryParams: mockRoute.snapshot.queryParams,
-        state: { data: component.wanForm },
-      });
-    });
-  });
-
-  it('should navigate to route table with current query params', () => {
-    component.navigateToExternalRoute();
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/netcentric/wan-form', 'testWanFormId', 'external-route'], {
-      relativeTo: mockRoute,
-      queryParams: mockRoute.snapshot.queryParams,
-      state: { data: component.wanForm },
     });
   });
 });

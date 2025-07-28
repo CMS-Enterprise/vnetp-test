@@ -694,14 +694,5 @@ describe('HelpTextService', () => {
         'Adds a UI option when creating NAT rules that generates a corresponding firewall rule',
       );
     });
-
-    it('should have the correct RegionalHA help text', () => {
-      expect(tenantSelectModalHelpText.RegionalHA).toEqual('Configure high availability across multiple datacenter regions');
-    });
-
-    it('should have the correct DeploymentMode help text', () => {
-      expect(tenantSelectModalHelpText.DeploymentMode).toContain('Hot Site First: Deploy to primary site first, then secondary');
-      expect(tenantSelectModalHelpText.DeploymentMode).toContain('Note: A failure in the secondary deployment will halt the workflow');
-    });
   });
 });

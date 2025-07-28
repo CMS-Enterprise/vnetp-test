@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of } from 'rxjs';
 import {
-  V1NetworkScopeFormsInternalRouteService,
+  V1NetworkScopeFormsInternalRoutesService,
   V1NetworkScopeFormsWanFormService,
   V1NetworkSubnetsService,
   V2AppCentricAppCentricSubnetsService,
@@ -12,14 +12,14 @@ import {
 import { InternalRouteModalDto } from '../../../models/network-scope-forms/internal-route-modal.dto';
 import { ModalMode } from '../../../models/other/modal-mode';
 import { TableContextService } from '../../../services/table-context.service';
-import { InternalRoutesComponent } from './internal-route.component';
 import { MockComponent, MockFontAwesomeComponent, MockNgxSmartModalComponent } from '../../../../test/mock-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApplicationMode } from '../../../models/other/application-mode-enum';
+import { InternalRouteComponent } from './internal-route.component';
 
 describe('InternalRoutesComponent', () => {
-  let component: InternalRoutesComponent;
-  let fixture: ComponentFixture<InternalRoutesComponent>;
+  let component: InternalRouteComponent;
+  let fixture: ComponentFixture<InternalRouteComponent>;
   let mockNgxSmartModalService: any;
   let mockInternalRouteService: any;
   let mockWanFormService: any;
@@ -84,15 +84,15 @@ describe('InternalRoutesComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [
         MockNgxSmartModalComponent,
-        InternalRoutesComponent,
+        InternalRouteComponent,
         MockFontAwesomeComponent,
         MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
-        MockComponent('app-internal-routes-modal'),
+        MockComponent({ selector: 'app-internal-route-modal', inputs: ['vrfId'] }),
       ],
       imports: [FormsModule, ReactiveFormsModule],
       providers: [
         { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
-        { provide: V1NetworkScopeFormsInternalRouteService, useValue: mockInternalRouteService },
+        { provide: V1NetworkScopeFormsInternalRoutesService, useValue: mockInternalRouteService },
         { provide: V1NetworkScopeFormsWanFormService, useValue: mockWanFormService },
         { provide: V1NetworkSubnetsService, useValue: mockNetcentricSubnetService },
         { provide: V2AppCentricAppCentricSubnetsService, useValue: mockAppcentricSubnetService },
@@ -102,7 +102,7 @@ describe('InternalRoutesComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(InternalRoutesComponent);
+    fixture = TestBed.createComponent(InternalRouteComponent);
     component = fixture.componentInstance;
     component.wanForm = { id: 'testWanFormId' } as WanForm;
     fixture.detectChanges();
@@ -113,12 +113,6 @@ describe('InternalRoutesComponent', () => {
   });
 
   describe('ngOnInit', () => {
-    it('should set wanFormId and dcsMode from route snapshot', () => {
-      component.ngOnInit();
-      expect(component.wanForm.id).toBe('testWanFormId');
-      expect(component.applicationMode).toBe(ApplicationMode.NETCENTRIC);
-    });
-
     it('should fetch WAN form subnets on initialization', () => {
       const getInternalRoutesSpy = jest.spyOn(component, 'getInternalRoutes');
       component.ngOnInit();

@@ -130,7 +130,6 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
     this.availableVrfs = [...new Set(this.parentVrf.externalVrfs)].sort();
 
     const localRoutes = assignedRoutes as ExternalRouteWithGlobalRoute[];
-    console.log(localRoutes);
     localRoutes.forEach(route => {
       route.globalExternalRoute = this.allGlobalRoutes.find(globalRoute => globalRoute.id === route.globalExternalRouteId);
     });

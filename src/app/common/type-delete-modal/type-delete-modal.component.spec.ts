@@ -35,7 +35,7 @@ describe('TypeDeleteModal', () => {
     component.objectName = 'deleteMe';
     component.objectToDelete = { name: 'deleteMe', id: '123' };
     const deleteTenantSpy = jest.spyOn(component, 'deleteTenant');
-    const cascadeDeleteTenantSpy = jest.spyOn(component['tenantService'], 'cascadeDeleteTenantTenant');
+    const cascadeDeleteTenantSpy = jest.spyOn(component['tenantService'], 'cascadeDeleteTenantTenantAdmin');
     component.delete();
     expect(deleteTenantSpy).toHaveBeenCalled();
     expect(cascadeDeleteTenantSpy).toHaveBeenCalled();
