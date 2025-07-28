@@ -22,6 +22,7 @@ const MOCK_TENANT: Tenant = {
   multiVrf: false,
   multiL3out: false,
   allowServiceGraphBypass: false,
+  environmentId: 'e-1',
 };
 
 describe('TenantSelectModalComponent', () => {
