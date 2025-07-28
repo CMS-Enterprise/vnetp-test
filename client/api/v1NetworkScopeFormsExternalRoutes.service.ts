@@ -214,14 +214,15 @@ export class V1NetworkScopeFormsExternalRoutesService {
     }
 
     /**
+     * Create one ExternalRoute
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ExternalRoute>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ExternalRoute>>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ExternalRoute>>;
+    public createOneExternalRoute(requestParameters: CreateOneExternalRouteRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const externalRoute = requestParameters.externalRoute;
         if (externalRoute === null || externalRoute === undefined) {
             throw new Error('Required parameter externalRoute was null or undefined when calling createOneExternalRoute.');
@@ -233,6 +234,7 @@ export class V1NetworkScopeFormsExternalRoutesService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -255,7 +257,7 @@ export class V1NetworkScopeFormsExternalRoutesService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes`,
+        return this.httpClient.post<ExternalRoute>(`${this.configuration.basePath}/v1/network-scope-forms/external-routes`,
             externalRoute,
             {
                 responseType: <any>responseType,

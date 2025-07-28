@@ -59,6 +59,6 @@ export interface Tenant {
     readonly multiL3out: boolean;
     readonly allowServiceGraphBypass: boolean;
     readonly tenantVersion?: number;
-    readonly environmentId?: string;
+    readonly environmentId: string;
 }
 

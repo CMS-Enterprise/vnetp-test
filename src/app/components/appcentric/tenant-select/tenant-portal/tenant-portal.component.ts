@@ -117,6 +117,7 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
   private initializeTabs(): void {
     if (this.applicationMode === ApplicationMode.TENANTV2) {
       // Show all tabs including firewalls for V2, preserving subTabs
+      this.datacenterContextService.refreshDatacenters();
       this.tabs = [...tabs];
     } else {
       // Filter out tenant v2 tabs
@@ -492,7 +493,6 @@ export class TenantPortalComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe({
         next: response => {
           this.networkServicesContainerDatacenter = response;
-          this.datacenterContextService.refreshDatacenters();
           this.datacenterContextService.unlockDatacenter();
           this.datacenterContextService.switchDatacenter(response.id);
           this.datacenterContextService.lockDatacenter();
