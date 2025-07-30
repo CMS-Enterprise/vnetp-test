@@ -152,7 +152,7 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
       this.form.controls.name.enable();
       this.form.controls.netcentricSubnetId.enable();
       this.form.controls.appcentricSubnetId.enable();
-      this.form.controls.vrf.enable();
+      this.form.controls.exportedToVrfs.enable();
     }
 
     const internalRoute = dto.internalRoute;
@@ -176,7 +176,7 @@ export class InternalRouteModalComponent implements OnInit, OnDestroy {
     this.buildForm();
   }
 
-  private buildForm(): void {
+  public buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', NameValidator()],
       description: ['', Validators.compose([Validators.maxLength(500)])],

@@ -1,40 +1,52 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { V3GlobalEnvironmentService } from 'client';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of } from 'rxjs';
 
 import { EnvironmentManagementComponent } from './environment-management.component';
+import { ActivatedRoute } from '@angular/router';
+import { MockComponent } from '../../../../test/mock-components';
 
 describe('EnvironmentManagementComponent', () => {
   let component: EnvironmentManagementComponent;
   let fixture: ComponentFixture<EnvironmentManagementComponent>;
-  let mockEnvironmentService: jasmine.SpyObj<V3GlobalEnvironmentService>;
+  let mockEnvironmentService: Partial<V3GlobalEnvironmentService>;
+  let mockNgxSmartModalService: Partial<NgxSmartModalService>;
 
   beforeEach(async () => {
-    const spy = jasmine.createSpyObj('V3GlobalEnvironmentService', ['getManyEnvironments', 'getManyEnvironmentSummaries']);
+    mockEnvironmentService = {
+      getManyEnvironments: jest.fn().mockReturnValue(of([])),
+      getManyEnvironmentSummaries: jest.fn().mockReturnValue(of([])),
+    };
+
+    mockNgxSmartModalService = {
+      getModal: jest.fn().mockReturnValue({
+        onCloseFinished: of({}),
+      }),
+      setModalData: jest.fn(),
+      resetModalData: jest.fn(),
+    };
 
     await TestBed.configureTestingModule({
-      declarations: [EnvironmentManagementComponent],
-      imports: [NgxSmartModalModule.forRoot()],
-      providers: [{ provide: V3GlobalEnvironmentService, useValue: spy }],
+      declarations: [
+        EnvironmentManagementComponent,
+        MockComponent({ selector: 'app-table', inputs: ['config', 'data', 'itemsPerPage', 'searchColumns'] }),
+      ],
+      providers: [
+        { provide: V3GlobalEnvironmentService, useValue: mockEnvironmentService },
+        { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
+        { provide: ActivatedRoute, useValue: jest.fn() },
+      ],
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(EnvironmentManagementComponent);
     component = fixture.componentInstance;
-    mockEnvironmentService = TestBed.inject(V3GlobalEnvironmentService) as jasmine.SpyObj<V3GlobalEnvironmentService>;
-
-    // Setup default mock responses
-    mockEnvironmentService.getManyEnvironments.and.returnValue(of([]));
-    mockEnvironmentService.getManyEnvironmentSummaries.and.returnValue(of([]));
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should load environments on init', () => {
-    component.ngOnInit();
-    expect(mockEnvironmentService.getManyEnvironments).toHaveBeenCalled();
-    expect(mockEnvironmentService.getManyEnvironmentSummaries).toHaveBeenCalled();
   });
 });

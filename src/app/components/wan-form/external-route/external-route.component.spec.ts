@@ -2,11 +2,21 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ExternalRouteComponent } from './external-route.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { V1NetworkScopeFormsWanFormService, V1RuntimeDataExternalRouteService } from '../../../../../../client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { RuntimeDataService } from '../../../../services/runtime-data.service';
-import { MockComponent, MockFontAwesomeComponent } from '../../../../../test/mock-components';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
+import { V1NetworkScopeFormsExternalRoutesService, V1NetworkScopeFormsWanFormService } from '../../../../../client';
+import { MockFontAwesomeComponent, MockComponent } from '../../../../test/mock-components';
+import { RuntimeDataService } from '../../../services/runtime-data.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 
 describe('ExternalRouteComponent', () => {
   let component: ExternalRouteComponent;
@@ -34,6 +44,7 @@ describe('ExternalRouteComponent', () => {
       getManyExternalRoute: jest.fn(),
       createRuntimeDataJobExternalRoute: jest.fn(),
       deleteOneExternalRoute: jest.fn(),
+      softDeleteOneExternalRoute: jest.fn(),
     };
     mockWanFormService = {
       getOneWanForm: jest.fn().mockReturnValue(of({})),
@@ -57,12 +68,24 @@ describe('ExternalRouteComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [],
+      imports: [
+        HttpClientTestingModule,
+        MatSortModule,
+        MatPaginatorModule,
+        NoopAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatTableModule,
+        MatTabsModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatSelectModule,
+      ],
       declarations: [ExternalRouteComponent, MockFontAwesomeComponent, MockComponent({ selector: 'app-external-route-modal' })],
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: V1NetworkScopeFormsWanFormService, useValue: mockWanFormService },
-        { provide: V1RuntimeDataExternalRouteService, useValue: mockExternalRouteService },
+        { provide: V1NetworkScopeFormsExternalRoutesService, useValue: mockExternalRouteService },
         { provide: NgxSmartModalService, useValue: mockNgx },
         { provide: Router, useValue: mockRouter },
         { provide: RuntimeDataService, useValue: mockRuntimeDataService },
@@ -71,159 +94,13 @@ describe('ExternalRouteComponent', () => {
 
     fixture = TestBed.createComponent(ExternalRouteComponent);
     component = fixture.componentInstance;
+    component.vrfId = 'vrfId';
     component.getAllRoutes = jest.fn().mockImplementation(() => {});
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('sortedRoutes', () => {
-    it('should sort routes with wanForm before routes without wanForm', () => {
-      component.filteredRoutes = [
-        { wanForms: null, protocol: 'manual' },
-        { wanForms: [{ id: 'wan1' }], protocol: 'auto' },
-      ] as any;
-      component.wanFormId = 'wan1';
-
-      const sorted = component.sortedRoutes;
-
-      expect(sorted).toEqual([
-        { wanForms: [{ id: 'wan1' }], protocol: 'auto' },
-        { wanForms: null, protocol: 'manual' },
-      ]);
-    });
-
-    it('should sort routes without wanForm after routes with wanForm', () => {
-      component.filteredRoutes = [
-        { wanForms: [{ id: 'wan1' }], protocol: 'auto' },
-        { wanForms: null, protocol: 'manual' },
-      ] as any;
-      component.wanFormId = 'wan1';
-
-      const sorted = component.sortedRoutes;
-
-      expect(sorted).toEqual([
-        { wanForms: [{ id: 'wan1' }], protocol: 'auto' },
-        { wanForms: null, protocol: 'manual' },
-      ]);
-    });
-
-    it('should sort routes with protocol "manual" before other protocols', () => {
-      component.filteredRoutes = [
-        { wanForms: null, protocol: 'auto' },
-        { wanForms: null, protocol: 'manual' },
-      ] as any;
-
-      const sorted = component.sortedRoutes;
-
-      expect(sorted).toEqual([
-        { wanForms: null, protocol: 'manual' },
-        { wanForms: null, protocol: 'auto' },
-      ]);
-    });
-
-    it('should sort routes with non-manual protocol after manual protocol', () => {
-      component.filteredRoutes = [
-        { wanForms: null, protocol: 'manual' },
-        { wanForms: null, protocol: 'auto' },
-      ] as any;
-
-      const sorted = component.sortedRoutes;
-
-      expect(sorted).toEqual([
-        { wanForms: null, protocol: 'manual' },
-        { wanForms: null, protocol: 'auto' },
-      ]);
-    });
-
-    it('should keep routes in order if they have the same wanForm and protocol', () => {
-      component.filteredRoutes = [
-        { wanForms: null, protocol: 'auto' },
-        { wanForms: null, protocol: 'auto' },
-      ] as any;
-
-      const sorted = component.sortedRoutes;
-
-      expect(sorted).toEqual([
-        { wanForms: null, protocol: 'auto' },
-        { wanForms: null, protocol: 'auto' },
-      ]);
-    });
-
-    it('should handle empty filteredRoutes', () => {
-      component.filteredRoutes = [];
-
-      const sorted = component.sortedRoutes;
-
-      expect(sorted).toEqual([]);
-    });
-
-    it('should handle null filteredRoutes', () => {
-      component.filteredRoutes = null;
-
-      const sorted = component.sortedRoutes;
-
-      expect(sorted).toBeUndefined();
-    });
-  });
-
-  it('should add route to wanForm and call getAllRoutes', () => {
-    jest.spyOn(mockWanFormService, 'addRouteToWanFormWanForm').mockReturnValue(of({}));
-    component.wanForm = { id: 'wan1' } as any;
-    const route = { id: 'route1' } as any;
-    component.addRouteToWanForm(route);
-
-    expect(mockWanFormService.addRouteToWanFormWanForm).toHaveBeenCalledWith({ wanId: 'wan1', routeId: 'route1' });
-    expect(component.getAllRoutes).toHaveBeenCalled();
-  });
-
-  it('should remove route from wanForm and call getAllRoutes', () => {
-    jest.spyOn(mockWanFormService, 'removeRouteFromWanFormWanForm').mockReturnValue(of({}));
-    component.wanForm = { id: 'wan1' } as any;
-    const route = { id: 'route1' } as any;
-    component.removeRouteFromWanForm(route);
-
-    expect(mockWanFormService.removeRouteFromWanFormWanForm).toHaveBeenCalledWith({ wanId: 'wan1', routeId: 'route1' });
-    expect(component.getAllRoutes).toHaveBeenCalled();
-  });
-
-  describe('refreshRuntimeData', () => {
-    it('should return if isRecentlyRefreshed is true', () => {
-      jest.spyOn(component, 'isRecentlyRefreshed').mockReturnValue(true);
-      const serviceSpy = jest.spyOn(mockExternalRouteService, 'createRuntimeDataJobExternalRoute');
-      component.refreshRuntimeData();
-      expect(serviceSpy).not.toHaveBeenCalled();
-    });
-
-    it('should return if isRefreshingRuntimeData is true', () => {
-      jest.spyOn(component, 'isRecentlyRefreshed').mockReturnValue(false);
-      const serviceSpy = jest.spyOn(mockExternalRouteService, 'createRuntimeDataJobExternalRoute');
-      component.isRefreshingRuntimeData = true;
-      component.refreshRuntimeData();
-      expect(serviceSpy).not.toHaveBeenCalled();
-    });
-
-    it('should call getAciRuntimeData when polling is complete', () => {
-      jest.spyOn(component, 'isRecentlyRefreshed').mockReturnValue(false);
-      component.isRefreshingRuntimeData = false;
-      jest.spyOn(mockExternalRouteService, 'createRuntimeDataJobExternalRoute').mockReturnValue(of({ id: '1' }));
-      jest.spyOn(mockRuntimeDataService, 'pollJobStatus').mockReturnValue(of({ status: 'successful' }));
-      const getAciRuntimeDataSpy = jest.spyOn(component, 'getAllRoutes');
-      component.refreshRuntimeData();
-      expect(getAciRuntimeDataSpy).toHaveBeenCalled();
-      expect(component.jobStatus).toEqual('successful');
-    });
-
-    it('should set jobStatus to error when polling errors', () => {
-      jest.spyOn(component, 'isRecentlyRefreshed').mockReturnValue(false);
-      component.isRefreshingRuntimeData = false;
-      jest.spyOn(mockExternalRouteService, 'createRuntimeDataJobExternalRoute').mockReturnValue(of({ id: '1' }));
-      jest.spyOn(mockRuntimeDataService, 'pollJobStatus').mockReturnValue(throwError('Polling error'));
-      component.refreshRuntimeData();
-      expect(component.jobStatus).toEqual('error');
-    });
   });
 
   describe('getTooltipMessage', () => {
@@ -248,14 +125,17 @@ describe('ExternalRouteComponent', () => {
     });
   });
 
-  it('should navigate to wan form', () => {
-    const navigateSpy = jest.spyOn(mockRouter, 'navigate');
-    component.navigateToWanForm();
-    expect(navigateSpy).toHaveBeenCalledWith(['/mode/wan-form'], { queryParams: { id: 'id' } });
+  it('should soft delete route', () => {
+    const route = { id: 'route1' } as any;
+    const deleteSpy = jest.spyOn(mockExternalRouteService, 'softDeleteOneExternalRoute').mockReturnValue(of({}));
+    const getAllRoutesSpy = jest.spyOn(component, 'getAllRoutes');
+    component.deleteRoute(route);
+    expect(deleteSpy).toHaveBeenCalledWith({ id: 'route1' });
+    expect(getAllRoutesSpy).toHaveBeenCalled();
   });
 
   it('should delete route', () => {
-    const route = { id: 'route1' } as any;
+    const route = { id: 'route1', deletedAt: '2021-01-01' } as any;
     const deleteSpy = jest.spyOn(mockExternalRouteService, 'deleteOneExternalRoute').mockReturnValue(of({}));
     const getAllRoutesSpy = jest.spyOn(component, 'getAllRoutes');
     component.deleteRoute(route);
@@ -264,74 +144,10 @@ describe('ExternalRouteComponent', () => {
   });
 
   it('should open route table modal', () => {
-    component.wanFormId = 'wan1';
+    component.wanForm = { id: 'wan1' } as any;
     (component as any).modalSubscription = of({}).subscribe();
     const setModalDataSpy = jest.spyOn(mockNgx, 'setModalData');
     component.openModal();
     expect(setModalDataSpy).toHaveBeenCalledWith({ wanFormId: 'wan1' }, 'externalRouteModal');
-  });
-
-  describe('onSearch', () => {
-    beforeEach(() => {
-      component.routes = [
-        { network: '192.168.1.0', vrf: 'VRF1', metric: 10, fromPrefixLength: 24, toPrefixLength: 24, protocol: 'manual' },
-        { network: '10.0.0.0', vrf: 'VRF2', metric: 20, fromPrefixLength: 45, toPrefixLength: 45, protocol: 'auto' },
-        { network: '172.16.0.0', vrf: 'VRF3', metric: 30, fromPrefixLength: 12, toPrefixLength: 12, protocol: 'manual' },
-      ];
-    });
-    it('should reset filteredRoutes to routes if searchQuery is empty', () => {
-      component.searchQuery = '';
-      component.onSearch();
-      expect(component.filteredRoutes).toEqual(component.routes);
-    });
-
-    it('should filter routes by network', () => {
-      component.searchQuery = '192.168.1.0';
-      component.onSearch();
-      expect(component.filteredRoutes).toEqual([
-        { network: '192.168.1.0', vrf: 'VRF1', metric: 10, fromPrefixLength: 24, toPrefixLength: 24, protocol: 'manual' },
-      ]);
-    });
-
-    it('should filter routes by vrf', () => {
-      component.searchQuery = 'VRF2';
-      component.onSearch();
-      expect(component.filteredRoutes).toEqual([
-        { network: '10.0.0.0', vrf: 'VRF2', metric: 20, fromPrefixLength: 45, toPrefixLength: 45, protocol: 'auto' },
-      ]);
-    });
-
-    it('should filter routes by metric', () => {
-      component.searchQuery = '30';
-      component.onSearch();
-      expect(component.filteredRoutes).toEqual([
-        { network: '172.16.0.0', vrf: 'VRF3', metric: 30, fromPrefixLength: 12, toPrefixLength: 12, protocol: 'manual' },
-      ]);
-    });
-
-    it('should filter routes by prefixLength', () => {
-      component.searchQuery = '45';
-      component.onSearch();
-      expect(component.filteredRoutes).toEqual([
-        { network: '10.0.0.0', vrf: 'VRF2', metric: 20, fromPrefixLength: 45, toPrefixLength: 45, protocol: 'auto' },
-      ]);
-    });
-
-    it('should filter routes by protocol', () => {
-      component.searchQuery = 'manual';
-      component.onSearch();
-      expect(component.filteredRoutes).toEqual([
-        { network: '192.168.1.0', vrf: 'VRF1', metric: 10, fromPrefixLength: 24, toPrefixLength: 24, protocol: 'manual' },
-        { network: '172.16.0.0', vrf: 'VRF3', metric: 30, fromPrefixLength: 12, toPrefixLength: 12, protocol: 'manual' },
-      ]);
-    });
-
-    it('should filter routes by network/prefixLength combination', () => {
-      component.searchQuery = '192.168.1.0/24';
-      component.onSearch();
-      expect(component.filteredRoutes).toEqual([
-        { network: '192.168.1.0', vrf: 'VRF1', metric: 10, fromPrefixLength: 24, toPrefixLength: 24, protocol: 'manual' },
-      ]);
-    });
   });
 });

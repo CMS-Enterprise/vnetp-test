@@ -2,10 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ExternalRouteModalComponent } from './external-route-modal.component';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { V1RuntimeDataExternalRouteService } from '../../../../../../../client';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from '../../../../../../test/mock-components';
 import { of } from 'rxjs';
+import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from '../../../../../test/mock-components';
+import { V1NetworkScopeFormsExternalRoutesService } from '../../../../../../client';
 
 describe('ExternalRouteModalComponent', () => {
   let component: ExternalRouteModalComponent;
@@ -30,7 +30,7 @@ describe('ExternalRouteModalComponent', () => {
       providers: [
         { provide: NgxSmartModalService, useValue: mockNgx },
         { provide: FormBuilder, useValue: formBuilder },
-        { provide: V1RuntimeDataExternalRouteService, useValue: mockExternalRouteService },
+        { provide: V1NetworkScopeFormsExternalRoutesService, useValue: mockExternalRouteService },
       ],
     }).compileComponents();
 
@@ -80,10 +80,7 @@ describe('ExternalRouteModalComponent', () => {
     it('should save', () => {
       component.form.setValue({
         network: '192.168.0.1',
-        fromPrefixLength: 20,
-        toPrefixLength: 24,
-        metric: 1,
-        vrf: 'vrf',
+        externalVrf: 'vrf',
       });
       const createOneSpy = jest.spyOn(mockExternalRouteService, 'createOneExternalRoute');
       component.save();

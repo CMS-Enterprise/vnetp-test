@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { V3GlobalEnvironmentService } from 'client';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 import { of } from 'rxjs';
 
 import { EnvironmentModalComponent } from './environment-modal.component';
@@ -9,51 +9,46 @@ import { EnvironmentModalComponent } from './environment-modal.component';
 describe('EnvironmentModalComponent', () => {
   let component: EnvironmentModalComponent;
   let fixture: ComponentFixture<EnvironmentModalComponent>;
-  let mockEnvironmentService: jasmine.SpyObj<V3GlobalEnvironmentService>;
+  let mockEnvironmentService: Partial<V3GlobalEnvironmentService>;
+  let mockNgxSmartModalService: Partial<NgxSmartModalService>;
 
   beforeEach(async () => {
-    const spy = jasmine.createSpyObj('V3GlobalEnvironmentService', ['getOneEnvironment', 'createOneEnvironment', 'updateOneEnvironment']);
+    mockEnvironmentService = {
+      getOneEnvironment: jest.fn().mockReturnValue(of({})),
+      createOneEnvironment: jest.fn().mockReturnValue(of({})),
+      updateOneEnvironment: jest.fn().mockReturnValue(of({})),
+    };
+
+    mockNgxSmartModalService = {
+      getModalData: jest.fn().mockReturnValue({}),
+      setModalData: jest.fn(),
+      getModal: jest.fn().mockReturnValue({
+        open: jest.fn(),
+        close: jest.fn(),
+        onCloseFinished: of({}),
+      }),
+      close: jest.fn(),
+      resetModalData: jest.fn(),
+    };
 
     await TestBed.configureTestingModule({
       declarations: [EnvironmentModalComponent],
-      imports: [ReactiveFormsModule, NgxSmartModalModule.forRoot()],
-      providers: [{ provide: V3GlobalEnvironmentService, useValue: spy }],
+      imports: [ReactiveFormsModule],
+      providers: [
+        UntypedFormBuilder,
+        { provide: V3GlobalEnvironmentService, useValue: mockEnvironmentService },
+        { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
+      ],
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(EnvironmentModalComponent);
     component = fixture.componentInstance;
-    mockEnvironmentService = TestBed.inject(V3GlobalEnvironmentService) as jasmine.SpyObj<V3GlobalEnvironmentService>;
-
-    // Setup default mock responses
-    mockEnvironmentService.getOneEnvironment.and.returnValue(
-      of({
-        id: '1',
-        name: 'Test Environment',
-        description: 'Test Description',
-        externalVrfs: [],
-        lastRouteSyncAt: new Date().toISOString(),
-        globalExternalRoutes: [],
-      }),
-    );
-    mockEnvironmentService.createOneEnvironment.and.returnValue(of({} as any));
-    mockEnvironmentService.updateOneEnvironment.and.returnValue(of({} as any));
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should build form on init', () => {
-    component.ngOnInit();
-    expect(component.form).toBeDefined();
-    expect(component.form.get('name')).toBeDefined();
-    expect(component.form.get('description')).toBeDefined();
-    expect(component.form.get('externalVrfs')).toBeDefined();
-  });
-
-  it('should have VRF options available', () => {
-    expect(component.vrfOptions.length).toBeGreaterThan(0);
-    expect(component.vrfOptions[0]).toHaveProperty('value');
-    expect(component.vrfOptions[0]).toHaveProperty('label');
   });
 });

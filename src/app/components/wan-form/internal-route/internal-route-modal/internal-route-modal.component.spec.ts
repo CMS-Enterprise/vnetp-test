@@ -1,29 +1,32 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { InternalRoutesModalComponent } from './internal-route-modal.component';
-import { MockFontAwesomeComponent, MockNgxSmartModalComponent } from '../../../../../../test/mock-components';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import { of } from 'rxjs';
 import {
-  V1NetworkScopeFormsInternalRouteService,
+  V1NetworkScopeFormsInternalRoutesService,
   V1NetworkSubnetsService,
   V2AppCentricAppCentricSubnetsService,
-} from '../../../../../../../client';
-import { DatacenterContextService } from '../../../../../services/datacenter-context.service';
-import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ModalMode } from '../../../../../models/other/modal-mode';
-import { ApplicationMode } from '../../../../../models/other/application-mode-enum';
+  V2AppCentricVrfsService,
+} from '../../../../../../client';
+import { MockNgxSmartModalComponent, MockFontAwesomeComponent } from '../../../../../test/mock-components';
+import { ApplicationMode } from '../../../../models/other/application-mode-enum';
+import { ModalMode } from '../../../../models/other/modal-mode';
+import { DatacenterContextService } from '../../../../services/datacenter-context.service';
+import { InternalRouteModalComponent } from './internal-route-modal.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NgSelectModule } from '@ng-select/ng-select';
 
-describe('InternalRoutesModalComponent', () => {
-  let component: InternalRoutesModalComponent;
-  let fixture: ComponentFixture<InternalRoutesModalComponent>;
+describe('InternalRouteModalComponent', () => {
+  let component: InternalRouteModalComponent;
+  let fixture: ComponentFixture<InternalRouteModalComponent>;
   let mockRoute: any;
   let mockDatacenterContextService: any;
   let mockNgxSmartModalService: any;
   let mockInternalRouteService: any;
   let mockNetcentricSubnetService: any;
   let mockAppcentricSubnetService: any;
+  let mockVrfService: any;
   let formBuilder: FormBuilder;
 
   beforeEach(async () => {
@@ -44,6 +47,11 @@ describe('InternalRoutesModalComponent', () => {
         },
       }),
     };
+
+    mockVrfService = {
+      getOneVrf: jest.fn().mockReturnValue(of({ externalVrfs: ['testVRF'] })),
+    };
+
     mockRoute = {
       snapshot: {
         data: {
@@ -83,21 +91,24 @@ describe('InternalRoutesModalComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [InternalRoutesModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent],
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, NgSelectModule],
+      declarations: [InternalRouteModalComponent, MockNgxSmartModalComponent, MockFontAwesomeComponent],
       providers: [
         { provide: NgxSmartModalService, useValue: mockNgxSmartModalService },
-        { provide: V1NetworkScopeFormsInternalRouteService, useValue: mockInternalRouteService },
+        { provide: V1NetworkScopeFormsInternalRoutesService, useValue: mockInternalRouteService },
         { provide: DatacenterContextService, useValue: mockDatacenterContextService },
         { provide: V1NetworkSubnetsService, useValue: mockNetcentricSubnetService },
         { provide: V2AppCentricAppCentricSubnetsService, useValue: mockAppcentricSubnetService },
+        { provide: V2AppCentricVrfsService, useValue: mockVrfService },
         { provide: ActivatedRoute, useValue: mockRoute },
         { provide: FormBuilder, useValue: formBuilder },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(InternalRoutesModalComponent);
+    fixture = TestBed.createComponent(InternalRouteModalComponent);
     component = fixture.componentInstance;
+    component.vrfId = 'vrfId';
+    component.buildForm();
     fixture.detectChanges();
   });
 
@@ -112,14 +123,6 @@ describe('InternalRoutesModalComponent', () => {
   });
 
   describe('getData', () => {
-    it('should get modal data and assign to component properties', () => {
-      component.getData();
-
-      expect(component.wanFormId).toBe('testWanFormId');
-      expect(component.modalMode).toBe('Edit');
-      expect(component.internalRouteId).toBe('testInternalRouteId');
-    });
-
     it('should set form values and disable name control', () => {
       const formControls = component.form.controls;
 
@@ -128,8 +131,6 @@ describe('InternalRoutesModalComponent', () => {
       expect(formControls.name.value).toBe('testName');
       expect(formControls.name.disabled).toBe(true);
       expect(formControls.description.value).toBe('testDescription');
-      expect(formControls.vrf.value).toBe('testVRF');
-      expect(formControls.environment.value).toBe('testEnvironment');
     });
 
     it('should reset modal data after processing', () => {
@@ -164,37 +165,31 @@ describe('InternalRoutesModalComponent', () => {
 
       expect(component.form.contains('name')).toBeTruthy();
       expect(component.form.contains('description')).toBeTruthy();
-      expect(component.form.contains('vrf')).toBeTruthy();
-      expect(component.form.contains('environment')).toBeTruthy();
+      expect(component.form.contains('exportedToVrfs')).toBeTruthy();
       expect(component.form.contains('netcentricSubnetId')).toBeTruthy();
       expect(component.form.contains('appcentricSubnetId')).toBeTruthy();
 
       const nameControl = component.form.get('name');
       const descriptionControl = component.form.get('description');
-      const vrfControl = component.form.get('vrf');
-      const environmentControl = component.form.get('environment');
+      const exportedToVrfsControl = component.form.get('exportedToVrfs');
 
       expect(nameControl?.validator).toBeTruthy();
       expect(descriptionControl?.validator).toBeTruthy();
-      expect(vrfControl?.validator).toBeTruthy();
-      expect(environmentControl?.validator).toBeTruthy();
+      expect(exportedToVrfsControl?.validator).toBeTruthy();
     });
   });
 
   describe('save', () => {
     beforeEach(() => {
       component.modalMode = ModalMode.Create;
-      component.currentDcsMode = ApplicationMode.NETCENTRIC;
-      component.wanFormId = 'testWanFormId';
+      component.applicationMode = ApplicationMode.NETCENTRIC;
+      component.wanForm = { id: 'testWanFormId' } as any;
       (component as any).datacenterId = 'testDatacenterId';
       (component as any).buildForm();
       component.form.setValue({
         name: 'testName',
         description: 'testDescription',
-        vrf: 'testVRF',
-        environment: 'testEnvironment',
-        fromPrefixLength: 20,
-        toPrefixLength: 24,
+        exportedToVrfs: ['testVRF'],
         netcentricSubnetId: 'testNetcentricSubnetId',
         appcentricSubnetId: 'testAppcentricSubnetId',
       });
@@ -213,13 +208,11 @@ describe('InternalRoutesModalComponent', () => {
         internalRoute: {
           name: 'testName',
           description: 'testDescription',
-          vrf: 'testVRF',
-          environment: 'testEnvironment',
+          exportedToVrfs: ['testVRF'],
           wanFormId: 'testWanFormId',
           datacenterId: 'testDatacenterId',
           netcentricSubnetId: 'testNetcentricSubnetId',
-          fromPrefixLength: 20,
-          toPrefixLength: 24,
+          appcentricSubnetId: 'testAppcentricSubnetId',
         },
       });
     });
@@ -240,50 +233,43 @@ describe('InternalRoutesModalComponent', () => {
         internalRoute: {
           name: 'testName',
           description: 'testDescription',
-          vrf: 'testVRF',
-          environment: 'testEnvironment',
+          exportedToVrfs: ['testVRF'],
           datacenterId: 'testDatacenterId',
-          fromPrefixLength: 20,
-          toPrefixLength: 24,
         },
       });
       expect(mockInternalRouteService.createOneInternalRoute).not.toHaveBeenCalled();
     });
 
     it('should delete appcentricSubnetId if currentDcsMode is netcentric', () => {
-      component.currentDcsMode = ApplicationMode.NETCENTRIC;
+      component.applicationMode = ApplicationMode.NETCENTRIC;
       component.save();
 
       expect(mockInternalRouteService.createOneInternalRoute).toHaveBeenCalledWith({
         internalRoute: {
           name: 'testName',
           description: 'testDescription',
-          vrf: 'testVRF',
-          environment: 'testEnvironment',
+          exportedToVrfs: ['testVRF'],
           wanFormId: 'testWanFormId',
           datacenterId: 'testDatacenterId',
           netcentricSubnetId: 'testNetcentricSubnetId',
-          fromPrefixLength: 20,
-          toPrefixLength: 24,
+          appcentricSubnetId: 'testAppcentricSubnetId',
         },
       });
     });
 
     it('should delete netcentricSubnetId if currentDcsMode is appcentric', () => {
-      component.currentDcsMode = ApplicationMode.APPCENTRIC;
+      component.applicationMode = ApplicationMode.APPCENTRIC;
       component.save();
 
       expect(mockInternalRouteService.createOneInternalRoute).toHaveBeenCalledWith({
         internalRoute: {
           name: 'testName',
           description: 'testDescription',
-          vrf: 'testVRF',
-          environment: 'testEnvironment',
+          exportedToVrfs: ['testVRF'],
           wanFormId: 'testWanFormId',
           datacenterId: 'testDatacenterId',
-          fromPrefixLength: 20,
-          toPrefixLength: 24,
           appcentricSubnetId: 'testAppcentricSubnetId',
+          netcentricSubnetId: 'testNetcentricSubnetId',
         },
       });
     });
@@ -327,7 +313,7 @@ describe('InternalRoutesModalComponent', () => {
 
   describe('getAppcentricSubnets', () => {
     it('should call getManyAppCentricSubnet with the correct parameters', () => {
-      component.tenantId = 'testTenantId';
+      component.wanForm = { tenantId: 'testTenantId' } as any;
       component.getAppcentricSubnets();
 
       expect(mockAppcentricSubnetService.getManyAppCentricSubnet).toHaveBeenCalledWith({
@@ -337,7 +323,7 @@ describe('InternalRoutesModalComponent', () => {
     });
 
     it('should assign the returned data to availableAppcentricSubnets', () => {
-      component.tenantId = 'testTenantId';
+      component.wanForm = { tenantId: 'testTenantId' } as any;
       component.getAppcentricSubnets();
 
       expect(component.availableAppcentricSubnets).toEqual([

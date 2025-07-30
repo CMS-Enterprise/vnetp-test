@@ -45,6 +45,7 @@ describe('VrfComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(VrfComponent);
     component = fixture.componentInstance;
+    component.tenantId = '123';
     fixture.detectChanges();
   });
 
