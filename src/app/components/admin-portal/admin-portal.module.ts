@@ -14,7 +14,6 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { BreadcrumbsModule } from 'src/app/common/breadcrumbs/breadcrumbs.module';
 import { GlobalMessagesComponent } from './global-messages/global-messages.component';
 import { TenantSelectComponent } from '../appcentric/tenant-select/tenant-select.component';
-import { WanFormRequestComponent } from './wan-form-request/wan-form-request.component';
 import { AppIdMaintenanceModule } from './app-id-maintenance/app-id-maintenance.module';
 import { AppIdMaintenanceComponent } from './app-id-maintenance/app-id-maintenance.component';
 import { EnvironmentManagementComponent } from './environment-management/environment-management.component';
@@ -57,7 +56,6 @@ const routes: Routes = [
       },
       {
         path: 'wan-form-request',
-        component: WanFormRequestComponent,
         canActivate: [AdminAuthGuard],
         data: { breadcrumb: 'WAN Form Requests', title: 'WAN Form Requests' },
         loadChildren: () => import('./wan-form-request/wan-form-request.module').then(m => m.WanFormRequestModule),

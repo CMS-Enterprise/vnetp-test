@@ -60,5 +60,13 @@ export interface Tenant {
     readonly allowServiceGraphBypass: boolean;
     readonly tenantVersion?: number;
     readonly environmentId: string;
+    readonly wanFormStatus?: TenantWanFormStatusEnum;
 }
+export enum TenantWanFormStatusEnum {
+    Pending = 'PENDING',
+    Approved = 'APPROVED',
+    Active = 'ACTIVE'
+};
+
+
 

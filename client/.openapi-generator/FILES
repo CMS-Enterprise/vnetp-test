@@ -275,6 +275,7 @@ model/tenant.ts
 model/tenantAdminCreateDto.ts
 model/tenantAdminDto.ts
 model/tenantBasicUpdateDto.ts
+model/tenantWanFormChanges.ts
 model/terraformPlan.ts
 model/tier.ts
 model/tierGroup.ts
@@ -289,6 +290,9 @@ model/vrf.ts
 model/vrfAdminDto.ts
 model/vrfAdminUpdateDto.ts
 model/wanForm.ts
+model/wanFormChanges.ts
+model/wanFormChangesExternalRouteDto.ts
+model/wanFormChangesInternalRouteDto.ts
 model/wanFormRequest.ts
 model/wanFormRequestDto.ts
 model/workflow.ts

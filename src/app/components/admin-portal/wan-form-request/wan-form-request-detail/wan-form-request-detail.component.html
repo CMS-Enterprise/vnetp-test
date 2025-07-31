@@ -1,0 +1,67 @@
+<div *ngIf="isLoading" class="text-center mt-5">
+  <p>Loading Request Details...</p>
+</div>
+
+<div *ngIf="!isLoading && wanFormRequest">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3>WAN Form Request for Tenant: {{ wanFormChanges.tenantName || 'N/A' }}</h3>
+      <button class="btn btn-link" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Back to Requests
+      </button>
+    </div>
+    <div>
+      <button class="btn btn-success mr-2" (click)="approveRequest()">Approve</button>
+      <button class="btn btn-danger" (click)="rejectRequest()">Reject</button>
+    </div>
+  </div>
+
+  <mat-accordion *ngIf="groupedChanges && groupedChanges.length > 0">
+    <mat-expansion-panel *ngFor="let change of groupedChanges">
+      <mat-expansion-panel-header>
+        <mat-panel-title> VRF: {{ change.wanFormName }} </mat-panel-title>
+        <mat-panel-description> Click to view changes </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <!-- Additions -->
+      <div *ngIf="change.additions && change.additions.length > 0">
+        <h4>Additions</h4>
+        <div *ngFor="let addition of change.additions" class="card mb-3 bg-light">
+          <div class="card-body">
+            <h5 class="card-title">{{ addition.name || 'Route' }}</h5>
+            <pre>{{ addition | json }}</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modifications -->
+      <div *ngIf="change.modifications && change.modifications.length > 0">
+        <h4>Modifications</h4>
+        <div *ngFor="let mod of change.modifications" class="card mb-3 bg-light">
+          <div class="card-body">
+            <h5 class="card-title">{{ mod.name || 'Route' }}</h5>
+            <pre>{{ mod | json }}</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deletions -->
+      <div *ngIf="change.deletions && change.deletions.length > 0">
+        <h4>Deletions</h4>
+        <div *ngFor="let deletion of change.deletions" class="card mb-3 bg-light">
+          <div class="card-body">
+            <h5 class="card-title">{{ deletion.name || 'Route' }}</h5>
+            <pre>{{ deletion | json }}</pre>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div *ngIf="!groupedChanges || groupedChanges.length === 0" class="alert alert-info mt-4" role="alert">
+    No pending changes found for this request.
+  </div>
+</div>
+
+<app-yes-no-modal #yesNoModal></app-yes-no-modal>

@@ -1,6 +1,7 @@
 <ng-container [ngSwitch]="currentView">
   <ng-container *ngSwitchCase="'vrf'">
     <ng-container *ngIf="!isLoading; else loading">
+      <button (click)="createWanFormRequest()">create wan form request</button>
       <app-table
         [config]="config"
         [data]="vrfs"
@@ -88,6 +89,11 @@
 
 <ng-template #expandableRows let-vrf="datum">
   <section class="table__expanded-row">
-    <app-wan-form-detail [wanForm]="vrf.wanForm" (manageSubnets)="showSubnets(vrf)" (manageRoutes)="showRoutes(vrf)"></app-wan-form-detail>
+    <app-wan-form-detail
+      [wanForm]="vrf.wanForm"
+      (manageSubnets)="showSubnets(vrf)"
+      (manageRoutes)="showRoutes(vrf)"
+      [tenant]="tenant"
+    ></app-wan-form-detail>
   </section>
 </ng-template>

@@ -1,6 +1,13 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GetManyVrfResponseDto, Tenant, V2AppCentricTenantsService, V2AppCentricVrfsService, Vrf } from 'client';
+import {
+  GetManyVrfResponseDto,
+  Tenant,
+  V2AppCentricTenantsService,
+  V2AppCentricVrfsService,
+  V3GlobalWanFormRequestService,
+  Vrf,
+} from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
 import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-search.adapter';
@@ -68,6 +75,7 @@ export class VrfComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private tenantService: V2AppCentricTenantsService,
+    private wanFormRequestService: V3GlobalWanFormRequestService,
   ) {
     const advancedSearchAdapter = new AdvancedSearchAdapter<Vrf>();
     advancedSearchAdapter.setService(this.vrfService);
@@ -294,5 +302,20 @@ export class VrfComponent implements OnInit {
       `Are you sure you would like to import ${event.length} VRF${event.length > 1 ? 's' : ''}?`,
       onConfirm,
     );
+  }
+
+  public createWanFormRequest(): void {
+    this.wanFormRequestService
+      .createOneWanFormRequest({
+        wanFormRequestDto: {
+          tenantId: this.tenantId,
+          organization: 'test',
+        },
+      })
+      .subscribe({
+        next: () => {
+          this.refreshVrfs();
+        },
+      });
   }
 }

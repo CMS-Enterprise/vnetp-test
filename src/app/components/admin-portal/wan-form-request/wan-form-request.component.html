@@ -1,17 +1,27 @@
-<app-table
-  [config]="config"
-  [data]="wanFormRequestTableDto"
-  (clearResults)="getAllWanFormRequests($event)"
-  (searchParams)="getAllWanFormRequests($event)"
-  [searchColumns]="searchColumns"
-  [(itemsPerPage)]="perPage"
-  (tableEvent)="onTableEvent($event)"
-></app-table>
+<div *ngIf="isLoading" class="text-center mt-5">
+  <p>Loading requests...</p>
+</div>
 
-<ng-template #expandedRows let-wanFormRequest="datum">
-  <section class="table__expanded-row">
-    <button class="btn btn-primary float-right" (click)="approveWanFormRequest(wanFormRequest.id)">Approve</button>
-    <button class="btn btn-danger float-right" (click)="rejectWanFormRequest(wanFormRequest.id)">Reject</button>
-    <app-wan-form-detail [global]="true" [wanForm]="wanFormRequest.wanForm"></app-wan-form-detail>
-  </section>
-</ng-template>
+<div *ngIf="!isLoading && wanFormRequests.length > 0" class="request-list">
+  <mat-card *ngFor="let request of wanFormRequests" class="request-card mb-3">
+    <mat-card-header>
+      <mat-card-title>{{ request.tenantName }}</mat-card-title>
+      <mat-card-subtitle>Submitted: {{ request.createdAt | date : 'medium' }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        This request includes
+        <span class="font-weight-bold text-success">{{ request.additions }} additions</span>,
+        <span class="font-weight-bold text-primary">{{ request.modifications }} modifications</span>, and
+        <span class="font-weight-bold text-danger">{{ request.deletions }} deletions</span>.
+      </p>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-flat-button color="primary" (click)="viewRequestDetails(request.id)">View Details</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<div *ngIf="!isLoading && wanFormRequests.length === 0" class="alert alert-info mt-4" role="alert">
+  There are no pending WAN Form Requests.
+</div>

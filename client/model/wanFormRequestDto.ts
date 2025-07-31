@@ -12,9 +12,7 @@
 
 
 export interface WanFormRequestDto { 
-    wanFormId: string;
-    tenant: string;
-    datacenterId?: string;
-    aciTenantId?: string;
+    tenantId: string;
+    organization: string;
 }
 

@@ -1,6 +1,6 @@
 <h3 class="header-with-button">
   Advetised Internal Routes
-  <button *ngIf="!global" class="inline-button" (click)="manageSubnets.emit()" [disabled]="wanForm.status === 'PENDING'">
+  <button *ngIf="!global" class="inline-button" (click)="manageSubnets.emit()" [disabled]="tenant.wanFormStatus === 'PENDING'">
     Manage Internal Routes
   </button>
 </h3>
@@ -27,7 +27,7 @@
 
 <h3 class="header-with-button">
   Allowed External Routes
-  <button *ngIf="!global" class="inline-button" (click)="manageRoutes.emit()" [disabled]="wanForm.status === 'PENDING'">
+  <button *ngIf="!global" class="inline-button" (click)="manageRoutes.emit()" [disabled]="tenant.wanFormStatus === 'PENDING'">
     Manage External Routes
   </button>
 </h3>

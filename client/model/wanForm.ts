@@ -27,7 +27,6 @@ export interface WanForm {
     readonly provisionedVersion?: number;
     name: string;
     description?: string;
-    status?: string;
     readonly internalRoutes?: Array<InternalRoute>;
     readonly externalRoutes?: Array<ExternalRoute>;
     vrfId?: string;
