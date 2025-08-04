@@ -1,6 +1,12 @@
 <h3 class="header-with-button">
   Advetised Internal Routes
-  <button *ngIf="!global" class="inline-button" (click)="manageSubnets.emit()" [disabled]="tenant.wanFormStatus === 'PENDING'">
+  <button
+    *ngIf="!global"
+    class="inline-button"
+    (click)="manageSubnets.emit()"
+    [disabled]="tenant.wanFormStatus === 'PENDING'"
+    data-testid="manage-subnets-button"
+  >
     Manage Internal Routes
   </button>
 </h3>
@@ -27,7 +33,13 @@
 
 <h3 class="header-with-button">
   Allowed External Routes
-  <button *ngIf="!global" class="inline-button" (click)="manageRoutes.emit()" [disabled]="tenant.wanFormStatus === 'PENDING'">
+  <button
+    *ngIf="!global"
+    class="inline-button"
+    (click)="manageRoutes.emit()"
+    [disabled]="tenant.wanFormStatus === 'PENDING'"
+    data-testid="manage-routes-button"
+  >
     Manage External Routes
   </button>
 </h3>
@@ -49,7 +61,8 @@
         <td>{{ route.network }}</td>
         <td>{{ route.externalVrf }}</td>
         <td>
-          {{ route.lastSeen }} <mat-icon matTooltip="Expired" aria-label="Expired route icon" *ngIf="route.expired">event_busy</mat-icon>
+          {{ route.lastSeen }}
+          <mat-icon matTooltip="Expired" aria-label="Expired route icon" *ngIf="route.expired">event_busy</mat-icon>
         </td>
         <td>{{ route.protocol }}</td>
         <td>{{ route.metric }}</td>

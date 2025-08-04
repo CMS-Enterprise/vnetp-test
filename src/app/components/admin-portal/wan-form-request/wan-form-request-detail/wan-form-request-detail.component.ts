@@ -18,7 +18,7 @@ interface GroupedChange {
   styleUrls: ['./wan-form-request-detail.component.css'],
 })
 export class WanFormRequestDetailComponent implements OnInit {
-  public wanFormRequest: WanFormRequest;
+  public wanFormRequest: WanFormRequest = {} as WanFormRequest;
   public wanFormChanges: TenantWanFormChanges;
   public groupedChanges: GroupedChange[] = [];
   public isLoading = false;
@@ -37,6 +37,8 @@ export class WanFormRequestDetailComponent implements OnInit {
     this.requestId = this.route.snapshot.paramMap.get('id');
     if (this.requestId) {
       this.loadRequestDetails();
+    } else {
+      this.isLoading = false;
     }
   }
 
