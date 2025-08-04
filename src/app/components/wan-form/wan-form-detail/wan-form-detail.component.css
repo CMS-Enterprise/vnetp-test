@@ -75,3 +75,12 @@
 .inline-button:disabled:hover {
   border-bottom: 1px solid #999;
 }
+
+/* Column width classes for table alignment */
+:host .col-network {
+  width: 30%;
+}
+
+:host .col-vrf {
+  width: 70%;
+}

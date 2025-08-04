@@ -23,7 +23,7 @@ describe('WanFormRequestDetailComponent', () => {
 
   const mockWanFormRequest: WanFormRequest = {
     id: requestId,
-    tenantId: tenantId,
+    tenantId,
     status: 'PENDING',
     tenantName: 'test-tenant',
   } as any;

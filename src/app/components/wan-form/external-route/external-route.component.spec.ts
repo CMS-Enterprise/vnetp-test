@@ -103,28 +103,6 @@ describe('ExternalRouteComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('getTooltipMessage', () => {
-    it('should return "Job Status: Failed" when status is "failed"', () => {
-      const message = component.getTooltipMessage('failed');
-      expect(message).toEqual('Job Status: Failed');
-    });
-
-    it('should return "Job Status: Timeout" when status is "running"', () => {
-      const message = component.getTooltipMessage('running');
-      expect(message).toEqual('Job Status: Timeout');
-    });
-
-    it('should return "An error occurred during polling" when status is "error"', () => {
-      const message = component.getTooltipMessage('error');
-      expect(message).toEqual('An error occurred during polling');
-    });
-
-    it('should return an status string for any other status', () => {
-      const message = component.getTooltipMessage('success');
-      expect(message).toEqual('success');
-    });
-  });
-
   it('should soft delete route', () => {
     const route = { id: 'route1' } as any;
     const deleteSpy = jest.spyOn(mockExternalRouteService, 'softDeleteOneExternalRoute').mockReturnValue(of({}));

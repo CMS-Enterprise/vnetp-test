@@ -1,29 +1,19 @@
 <ng-template #refreshButtonTemplate>
-  <button
-    (click)="refreshRuntimeData()"
-    class="btn"
-    [ngClass]="{ 'btn-success': isRecentlyRefreshed(), 'btn-secondary': !isRecentlyRefreshed() }"
-    [disabled]="isRefreshingRuntimeData || isRecentlyRefreshed()"
-  >
-    <ng-container *ngIf="!isRefreshingRuntimeData && !isRecentlyRefreshed()">Refresh</ng-container>
-    <ng-container *ngIf="isRefreshingRuntimeData">
-      <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-      Refreshing...
-    </ng-container>
-    <ng-container *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData">Refreshed</ng-container>
+  <button (click)="getAllRoutes()" class="btn" [ngClass]="'btn-success'">
+    <ng-container>Refresh</ng-container>
   </button>
 </ng-template>
 
 <h1>Manage Allowed External Routes for: {{ wanForm?.name }}</h1>
 
 <div>
-  <section class="btn-toolbar" role="toolbar" aria-label="create-external-route">
+  <!-- <section class="btn-toolbar" role="toolbar" aria-label="create-external-route">
     <button class="btn btn-primary" (click)="openModal()">
       <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
       <span>Create External Route</span>
     </button>
     <ng-container *ngTemplateOutlet="refreshButtonTemplate"></ng-container>
-  </section>
+  </section> -->
 
   <mat-tab-group>
     <mat-tab label="Assigned Routes">
