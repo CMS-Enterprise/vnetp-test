@@ -7,6 +7,7 @@ import {
   V2AppCentricVrfsService,
   V3GlobalWanFormRequestService,
   Vrf,
+  WanFormRequest,
 } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { Subscription } from 'rxjs';
@@ -41,6 +42,7 @@ export class VrfComponent implements OnInit {
   public selectedVrf: Vrf | null = null;
   public expandedRow: Vrf | null = null;
   public tenant: Tenant;
+  public wanFormRequest: WanFormRequest;
 
   @ViewChild('actionsTemplate') actionsTemplate: TemplateRef<any>;
 
@@ -100,6 +102,9 @@ export class VrfComponent implements OnInit {
   public getTenant(): void {
     this.tenantService.getOneTenant({ id: this.tenantId }).subscribe(tenant => {
       this.tenant = tenant;
+      if (this.tenant.wanFormStatus === 'PENDING') {
+        this.getWanFormRequest();
+      }
     });
   }
 
@@ -305,17 +310,50 @@ export class VrfComponent implements OnInit {
   }
 
   public createWanFormRequest(): void {
+    const message =
+      'This action will submit your route changes for approval. ' +
+      'Once submitted, you will not be able to make further changes until the request is approved, rejected, or cancelled. ' +
+      'Are you sure you want to proceed?';
+    const title = 'Request Deployment of Route Changes';
+    const onConfirm = () => {
+      this.wanFormRequestService
+        .createOneWanFormRequest({
+          wanFormRequestDto: {
+            tenantId: this.tenantId,
+            organization: 'test',
+          },
+        })
+        .subscribe({
+          next: () => {
+            this.refreshVrfs();
+          },
+        });
+    };
+
+    this.showConfirmationModal(title, message, onConfirm);
+  }
+
+  public getWanFormRequest(): void {
     this.wanFormRequestService
-      .createOneWanFormRequest({
-        wanFormRequestDto: {
-          tenantId: this.tenantId,
-          organization: 'test',
-        },
-      })
-      .subscribe({
+      .getManyWanFormRequests({ filter: [`tenantId||eq||${this.tenantId}`, 'status||eq||PENDING'] })
+      .subscribe(wanFormRequests => {
+        this.wanFormRequest = wanFormRequests[0];
+      });
+  }
+
+  public cancelWanFormRequest(): void {
+    const title = 'Cancel Route Change Request';
+    const message =
+      'This action will cancel your pending route change request and discard all unpublished changes. ' +
+      'This cannot be undone. Are you sure you want to proceed?';
+    const onConfirm = () => {
+      this.wanFormRequestService.deleteOneWanFormRequest({ wanFormRequestId: this.wanFormRequest.id }).subscribe({
         next: () => {
+          this.getTenant();
           this.refreshVrfs();
         },
       });
+    };
+    this.showConfirmationModal(title, message, onConfirm);
   }
 }
