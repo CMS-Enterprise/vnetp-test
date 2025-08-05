@@ -1,12 +1,6 @@
 <h3 class="header-with-button">
-  Advetised Internal Routes
-  <button
-    *ngIf="!global"
-    class="inline-button"
-    (click)="manageSubnets.emit()"
-    [disabled]="tenant.wanFormStatus === 'PENDING'"
-    data-testid="manage-subnets-button"
-  >
+  Advertised Internal Routes
+  <button *ngIf="!global" class="inline-button" (click)="manageSubnets.emit()" data-testid="manage-subnets-button">
     Manage Internal Routes
   </button>
 </h3>
@@ -14,32 +8,22 @@
   <table>
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th>VRF</th>
-        <th>Environment</th>
+        <th class="col-network">Network</th>
+        <th class="col-vrf">Advertised to External VRF(s)</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let internalRoute of wanForm?.internalRoutes">
-        <td>{{ internalRoute.name }}</td>
-        <td>{{ internalRoute.description || '-' }}</td>
-        <td>{{ internalRoute.vrf }}</td>
-        <td>{{ internalRoute.environment }}</td>
+        <td class="col-network">{{ internalRoute.appcentricSubnet?.gatewayIp }}</td>
+        <td class="col-vrf">{{ internalRoute.exportedToVrfs.join(', ') }}</td>
       </tr>
     </tbody>
   </table>
 </div>
 
 <h3 class="header-with-button">
-  Allowed External Routes
-  <button
-    *ngIf="!global"
-    class="inline-button"
-    (click)="manageRoutes.emit()"
-    [disabled]="tenant.wanFormStatus === 'PENDING'"
-    data-testid="manage-routes-button"
-  >
+  Learned External Routes
+  <button *ngIf="!global" class="inline-button" (click)="manageRoutes.emit()" data-testid="manage-routes-button">
     Manage External Routes
   </button>
 </h3>
@@ -47,27 +31,14 @@
   <table>
     <thead>
       <tr>
-        <th>Network</th>
-        <th>External VRF</th>
-        <th>Last Seen</th>
-        <th>Protocol</th>
-        <th>Metric</th>
-        <th>Uptime</th>
-        <th>Tag</th>
+        <th class="col-network">Network</th>
+        <th class="col-vrf">Learned from External VRF</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let route of wanForm?.externalRoutes">
-        <td>{{ route.network }}</td>
-        <td>{{ route.externalVrf }}</td>
-        <td>
-          {{ route.lastSeen }}
-          <mat-icon matTooltip="Expired" aria-label="Expired route icon" *ngIf="route.expired">event_busy</mat-icon>
-        </td>
-        <td>{{ route.protocol }}</td>
-        <td>{{ route.metric }}</td>
-        <td>{{ route.uptime || '-' }}</td>
-        <td>{{ route.tag || '-' }}</td>
+        <td class="col-network">{{ route.network }}</td>
+        <td class="col-vrf">{{ route.externalVrf }}</td>
       </tr>
     </tbody>
   </table>

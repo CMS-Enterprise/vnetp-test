@@ -6,7 +6,6 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 import { forkJoin, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ModalMode } from 'src/app/models/other/modal-mode';
-import { RuntimeDataService } from 'src/app/services/runtime-data.service';
 import {
   WanForm,
   ExternalRoute,
@@ -38,10 +37,6 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
   public ModalMode = ModalMode;
   assignedRoutesSearchQuery = '';
   availableRoutesSearchQuery = '';
-  isRefreshingRuntimeData = false;
-  jobStatus: string;
-  showComponent = false;
-  refreshedNoData = false;
 
   public allGlobalRoutes: GlobalExternalRoute[];
   public availableVrfs: string[] = [];
@@ -59,7 +54,6 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
   constructor(
     private wanFormService: V1NetworkScopeFormsWanFormService,
     private ngx: NgxSmartModalService,
-    private runtimeDataService: RuntimeDataService,
     private globalExternalRouteService: V3GlobalExternalRoutesService,
     private externalRouteService: V1NetworkScopeFormsExternalRoutesService,
     private vrfService: V2AppCentricVrfsService,
@@ -200,56 +194,5 @@ export class ExternalRouteComponent implements OnInit, AfterViewInit {
 
   public onAvailableRoutesSearch(): void {
     this.availableRoutesDataSource.filter = this.availableRoutesSearchQuery.trim().toLowerCase();
-  }
-
-  refreshRuntimeData(): void {
-    // if (this.isRecentlyRefreshed() || this.isRefreshingRuntimeData) {
-    //   return;
-    // }
-    // this.isRefreshingRuntimeData = true;
-    // this.externalRouteService
-    //   .createRuntimeDataJobExternalRoute({
-    //     externalRouteJobCreateDto: {
-    //       type: ExternalRouteJobCreateDtoTypeEnum.ExternalRoute,
-    //     },
-    //   })
-    //   .subscribe(job => {
-    //     let status = '';
-    //     this.runtimeDataService.pollJobStatus(job.id).subscribe({
-    //       next: towerJobDto => {
-    //         status = towerJobDto.status;
-    //       },
-    //       error: () => {
-    //         status = 'error';
-    //         this.isRefreshingRuntimeData = false;
-    //         this.jobStatus = status;
-    //       },
-    //       complete: () => {
-    //         this.isRefreshingRuntimeData = false;
-    //         if (status === 'successful') {
-    //           this.getAllRoutes();
-    //         }
-    //         this.jobStatus = status;
-    //       },
-    //     });
-    //   });
-  }
-
-  isRecentlyRefreshed(): boolean {
-    // return this.runtimeDataService.isRecentlyRefreshed(this.assignedRoutesDataSource.data?.[0]?.runtimeDataLastRefreshed);
-    return false;
-  }
-
-  getTooltipMessage(status: string): string {
-    switch (status) {
-      case 'failed':
-        return 'Job Status: Failed';
-      case 'running':
-        return 'Job Status: Timeout';
-      case 'error':
-        return 'An error occurred during polling';
-      default:
-        return status;
-    }
   }
 }
