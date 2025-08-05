@@ -346,7 +346,7 @@ export class VrfComponent implements OnInit {
   public cancelWanFormRequest(): void {
     const title = 'Cancel Route Change Request';
     const message =
-      'This action will cancel your pending route change request and discard all unpublished changes. ' +
+      'This action will cancel your pending route change request and restart the approval process. ' +
       'This cannot be undone. Are you sure you want to proceed?';
     const onConfirm = () => {
       this.wanFormRequestService.deleteOneWanFormRequest({ wanFormRequestId: this.wanFormRequest.id }).subscribe({
