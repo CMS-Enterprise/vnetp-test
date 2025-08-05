@@ -327,6 +327,7 @@ export class VrfComponent implements OnInit {
         })
         .subscribe({
           next: () => {
+            this.getTenant();
             this.refreshVrfs();
           },
         });
