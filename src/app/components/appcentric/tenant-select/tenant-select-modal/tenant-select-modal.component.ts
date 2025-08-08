@@ -110,7 +110,8 @@ export class TenantSelectModalComponent implements OnInit {
       policyControlEnforcementIngress: true,
       hostBasedRoutesToExternalVrfs: false,
       maxExternalRoutes: 100,
-      bgpASN: 65000,
+      autoSelectInternalBgpAsn: true,
+      autoSelectExternalBgpAsn: true,
     };
   }
 
@@ -466,6 +467,18 @@ export class TenantSelectModalComponent implements OnInit {
       return;
     }
 
+    // Validate VRF ASN selections: for each VRF, require either auto-select OR a valid ASN for both internal and external
+    const isValidAsn = (value?: number) => typeof value === 'number' && value >= 1 && value <= 4294967295;
+    const vrfValidationFailed = this.vrfConfigurations.some(vrf => {
+      const internalOk = vrf.autoSelectInternalBgpAsn === true || isValidAsn(vrf.internalBgpAsn);
+      const externalOk = vrf.autoSelectExternalBgpAsn === true || isValidAsn(vrf.externalBgpAsn);
+      return !internalOk || !externalOk;
+    });
+
+    if (vrfValidationFailed) {
+      return;
+    }
+
     const {
       name,
       description,
@@ -511,5 +524,48 @@ export class TenantSelectModalComponent implements OnInit {
       // Handle non-admin mode if still needed
       this.closeModal();
     }
+  }
+
+  // BGP ASN helpers for template bindings
+  public onInternalAutoSelectChange(vrf: VrfAdminDto): void {
+    if (vrf.autoSelectInternalBgpAsn) {
+      vrf.internalBgpAsn = undefined;
+    }
+  }
+
+  public onExternalAutoSelectChange(vrf: VrfAdminDto): void {
+    if (vrf.autoSelectExternalBgpAsn) {
+      vrf.externalBgpAsn = undefined;
+    }
+  }
+
+  public onInternalAsnInput(vrf: VrfAdminDto): void {
+    if (vrf.internalBgpAsn !== undefined && vrf.internalBgpAsn !== null && (vrf.internalBgpAsn as any) !== '') {
+      vrf.autoSelectInternalBgpAsn = false;
+    }
+  }
+
+  public onExternalAsnInput(vrf: VrfAdminDto): void {
+    if (vrf.externalBgpAsn !== undefined && vrf.externalBgpAsn !== null && (vrf.externalBgpAsn as any) !== '') {
+      vrf.autoSelectExternalBgpAsn = false;
+    }
+  }
+
+  public internalAsnInvalid(vrf: VrfAdminDto): boolean {
+    if (vrf.autoSelectInternalBgpAsn) {
+      return false;
+    }
+    const value = vrf.internalBgpAsn as any;
+    const num = typeof value === 'string' ? Number(value) : value;
+    return !(typeof num === 'number' && !isNaN(num) && num >= 1 && num <= 4294967295);
+  }
+
+  public externalAsnInvalid(vrf: VrfAdminDto): boolean {
+    if (vrf.autoSelectExternalBgpAsn) {
+      return false;
+    }
+    const value = vrf.externalBgpAsn as any;
+    const num = typeof value === 'string' ? Number(value) : value;
+    return !(typeof num === 'number' && !isNaN(num) && num >= 1 && num <= 4294967295);
   }
 }

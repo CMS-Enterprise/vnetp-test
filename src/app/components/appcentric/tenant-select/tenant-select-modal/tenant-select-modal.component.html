@@ -279,8 +279,9 @@
                           <small class="text-muted">
                             <strong>External VRFs:</strong> {{ vrf.externalVrfs?.length || 0 }} | <strong>Policy Control:</strong>
                             {{ vrf.policyControlEnforced ? 'Yes' : 'No' }} | <strong>Ingress Enforcement:</strong>
-                            {{ vrf.policyControlEnforcementIngress ? 'Yes' : 'No' }} | <strong>BGP ASN:</strong>
-                            {{ vrf.bgpASN || 'Not set' }}
+                            {{ vrf.policyControlEnforcementIngress ? 'Yes' : 'No' }} | <strong>Internal BGP:</strong>
+                            {{ vrf.autoSelectInternalBgpAsn ? 'Auto' : vrf.internalBgpAsn || 'Not set' }} | <strong>External BGP:</strong>
+                            {{ vrf.autoSelectExternalBgpAsn ? 'Auto' : vrf.externalBgpAsn || 'Not set' }}
                           </small>
                         </div>
                       </div>
@@ -434,16 +435,66 @@
                                 />
                               </div>
                               <div class="col-6">
-                                <label [for]="'bgpASN' + i" class="form-label">BGP ASN</label>
-                                <input
-                                  type="number"
-                                  [id]="'bgpASN' + i"
-                                  [(ngModel)]="vrf.bgpASN"
-                                  [ngModelOptions]="{ standalone: true }"
-                                  class="form-control form-control-sm"
-                                  min="1"
-                                  max="4294967295"
-                                />
+                                <div class="form-group mb-2">
+                                  <label class="form-label d-block">Internal BGP ASN</label>
+                                  <div class="form-check mb-1">
+                                    <input
+                                      type="checkbox"
+                                      class="form-check-input"
+                                      [id]="'autoInternal' + i"
+                                      [(ngModel)]="vrf.autoSelectInternalBgpAsn"
+                                      (change)="onInternalAutoSelectChange(vrf)"
+                                      [ngModelOptions]="{ standalone: true }"
+                                    />
+                                    <label class="form-check-label" [for]="'autoInternal' + i"> Auto-select from environment </label>
+                                  </div>
+                                  <input
+                                    type="number"
+                                    class="form-control form-control-sm"
+                                    [class.is-invalid]="submitted && internalAsnInvalid(vrf)"
+                                    [disabled]="vrf.autoSelectInternalBgpAsn"
+                                    [id]="'internalAsn' + i"
+                                    [(ngModel)]="vrf.internalBgpAsn"
+                                    (input)="onInternalAsnInput(vrf)"
+                                    [ngModelOptions]="{ standalone: true }"
+                                    min="1"
+                                    max="4294967295"
+                                    placeholder="Enter internal ASN"
+                                  />
+                                  <div *ngIf="submitted && internalAsnInvalid(vrf)" class="invalid-feedback d-block">
+                                    Provide a valid Internal ASN (1 - 4294967295) or enable Auto-select.
+                                  </div>
+                                </div>
+                                <div class="form-group mb-0">
+                                  <label class="form-label d-block">External BGP ASN</label>
+                                  <div class="form-check mb-1">
+                                    <input
+                                      type="checkbox"
+                                      class="form-check-input"
+                                      [id]="'autoExternal' + i"
+                                      [(ngModel)]="vrf.autoSelectExternalBgpAsn"
+                                      (change)="onExternalAutoSelectChange(vrf)"
+                                      [ngModelOptions]="{ standalone: true }"
+                                    />
+                                    <label class="form-check-label" [for]="'autoExternal' + i"> Auto-select from environment </label>
+                                  </div>
+                                  <input
+                                    type="number"
+                                    class="form-control form-control-sm"
+                                    [class.is-invalid]="submitted && externalAsnInvalid(vrf)"
+                                    [disabled]="vrf.autoSelectExternalBgpAsn"
+                                    [id]="'externalAsn' + i"
+                                    [(ngModel)]="vrf.externalBgpAsn"
+                                    (input)="onExternalAsnInput(vrf)"
+                                    [ngModelOptions]="{ standalone: true }"
+                                    min="1"
+                                    max="4294967295"
+                                    placeholder="Enter external ASN"
+                                  />
+                                  <div *ngIf="submitted && externalAsnInvalid(vrf)" class="invalid-feedback d-block">
+                                    Provide a valid External ASN (1 - 4294967295) or enable Auto-select.
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>

@@ -35,8 +35,9 @@
           <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="tenant-v2" queryParamsHandling="merge">
             Manage Logical Tenants
           </a>
-          <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="wan-form" queryParamsHandling="merge">
-            Manage WAN
+
+          <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="global-bgp-asn" queryParamsHandling="merge">
+            Global BGP ASN
           </a>
 
           <a *ngIf="userRoles?.includes('global-admin')" class="dropdown-item" routerLink="wan-form-request" queryParamsHandling="merge"

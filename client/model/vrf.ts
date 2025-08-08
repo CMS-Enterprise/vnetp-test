@@ -11,6 +11,7 @@
  */
 import { L3Out } from './l3Out';
 import { Tenant } from './tenant';
+import { UnderlayAllocation } from './underlayAllocation';
 import { Tier } from './tier';
 import { BridgeDomain } from './bridgeDomain';
 import { WanForm } from './wanForm';
@@ -47,7 +48,10 @@ export interface Vrf {
     defaultExternalVrf?: VrfDefaultExternalVrfEnum;
     hostBasedRoutesToExternalVrfs?: boolean;
     maxExternalRoutes?: number;
-    bgpASN?: number;
+    internalBgpAsn?: number;
+    externalBgpAsn?: number;
+    readonly serviceGraphUnderlayAllocation?: Array<UnderlayAllocation>;
+    readonly externalVrfUnderlayAllocations?: Array<UnderlayAllocation>;
 }
 export enum VrfExternalVrfsEnum {
     CmsEntsrvInet = 'cms-entsrv-inet',

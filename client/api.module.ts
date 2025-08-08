@@ -58,6 +58,7 @@ import { V2AppCentricSubjectsService } from './api/v2AppCentricSubjects.service'
 import { V2AppCentricTenantsService } from './api/v2AppCentricTenants.service';
 import { V2AppCentricVrfsService } from './api/v2AppCentricVrfs.service';
 import { V2WorkflowsService } from './api/v2Workflows.service';
+import { V3GlobalBgpRangesService } from './api/v3GlobalBgpRanges.service';
 import { V3GlobalEnvironmentService } from './api/v3GlobalEnvironment.service';
 import { V3GlobalExternalRoutesService } from './api/v3GlobalExternalRoutes.service';
 import { V3GlobalMessagesService } from './api/v3GlobalMessages.service';

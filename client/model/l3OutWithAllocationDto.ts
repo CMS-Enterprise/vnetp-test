@@ -9,15 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { UnderlayAllocationDto } from './underlayAllocationDto';
 
 
-export interface WanFormRequest { 
-    readonly id?: string;
-    readonly tenantId?: string;
-    readonly datacenterId?: string;
-    readonly organization: string;
-    readonly createdAt?: string;
-    readonly updatedAt?: string;
-    status?: string;
+export interface L3OutWithAllocationDto { 
+    id: string;
+    underlayAllocation: UnderlayAllocationDto;
 }
 

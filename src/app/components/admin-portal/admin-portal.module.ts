@@ -35,6 +35,15 @@ const routes: Routes = [
         loadChildren: () => import('./admin-portal-dashboard/admin-portal-dashboard.module').then(m => m.AdminPortalDashboardModule),
       },
       {
+        path: 'global-bgp-asn',
+        canActivate: [AdminAuthGuard],
+        data: {
+          breadcrumb: 'Global BGP ASN',
+          title: 'Global BGP ASN',
+        },
+        loadChildren: () => import('./global-bgp-asn/global-bgp-asn.module').then(m => m.GlobalBgpAsnModule),
+      },
+      {
         path: 'global-messages',
         component: GlobalMessagesComponent,
         canActivate: [AdminAuthGuard],

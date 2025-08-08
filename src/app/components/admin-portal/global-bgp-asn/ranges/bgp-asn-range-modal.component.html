@@ -1,0 +1,48 @@
+<form [formGroup]="form" class="form">
+  <div class="form-group">
+    <label>Environment</label>
+    <select class="form-control" formControlName="environmentId">
+      <option [ngValue]="null" disabled>Select environment</option>
+      <option *ngFor="let env of environments" [ngValue]="env.id">{{ env.name }}</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Start ASN</label>
+    <input type="number" class="form-control" formControlName="start" />
+    <div class="text-danger small" *ngIf="start.touched && start.invalid">
+      <div *ngIf="start.errors?.required">Start ASN is required.</div>
+      <div *ngIf="start.errors?.min">Start ASN must be ≥ 65536.</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>End ASN</label>
+    <input type="number" class="form-control" formControlName="end" />
+    <div class="text-danger small" *ngIf="end.touched && end.invalid">
+      <div *ngIf="end.errors?.required">End ASN is required.</div>
+      <div *ngIf="end.errors?.min">End ASN must be ≥ 65536.</div>
+      <div *ngIf="end.errors?.minRange">End ASN must be ≥ Start ASN.</div>
+      <div *ngIf="end.errors?.max">End ASN exceeds allowed private 4-byte range.</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Range Type</label>
+    <select class="form-control" formControlName="type">
+      <option [ngValue]="'internal'">internal</option>
+      <option [ngValue]="'external'">external</option>
+      <option [ngValue]="'any'">any</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Description</label>
+    <textarea class="form-control" rows="3" formControlName="description"></textarea>
+  </div>
+
+  <div class="d-flex justify-content-end gap-2">
+    <button type="button" class="btn btn-link" (click)="close()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="form.invalid">Save</button>
+  </div>
+</form>
