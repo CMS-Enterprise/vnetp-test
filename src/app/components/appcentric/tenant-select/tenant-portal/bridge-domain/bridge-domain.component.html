@@ -6,48 +6,47 @@
     </button>
   </section>
 
-  <ng-container *ngIf="!isLoading; else loading">
-    <app-table
-      [config]="config"
-      [data]="bridgeDomains"
-      (clearResults)="getBridgeDomains($event)"
-      (searchParams)="getBridgeDomains($event)"
-      [searchColumns]="searchColumns"
-      [(itemsPerPage)]="perPage"
-      (tableEvent)="onTableEvent($event)"
-    ></app-table>
-    <section class="btn-toolbar" role="toolbar">
-      <app-import-export
-        [exportObject]="bridgeDomains"
-        exportFileName="bridgeDomains"
-        [disableJson]="false"
-        (import)="importBridgeDomains($event)"
-      ></app-import-export>
-    </section>
-  </ng-container>
+  @if (!isLoading) {
+  <app-table
+    [config]="config"
+    [data]="bridgeDomains"
+    (clearResults)="getBridgeDomains($event)"
+    (searchParams)="getBridgeDomains($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
+  <section class="btn-toolbar" role="toolbar">
+    <app-import-export
+      [exportObject]="bridgeDomains"
+      exportFileName="bridgeDomains"
+      [disableJson]="false"
+      (import)="importBridgeDomains($event)"
+    ></app-import-export>
+  </section>
+  } @else {
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  }
 </ng-container>
 
 <ng-template #actionsTemplate let-bridgeDomain="datum">
   <section class="table__actions">
+    @if (!bridgeDomain?.deletedAt) {
+    <app-icon-button icon="add" label="Add Subnet" (handleClick)="openSubnetsModal(bridgeDomain)"></app-icon-button>
+    } @if (!bridgeDomain?.deletedAt) {
     <app-icon-button
-      *ngIf="!bridgeDomain?.deletedAt"
-      icon="add"
-      label="Add Subnet"
-      (handleClick)="openSubnetsModal(bridgeDomain)"
-    ></app-icon-button>
-    <app-icon-button
-      *ngIf="!bridgeDomain?.deletedAt"
       icon="edit"
       label="Edit Bridge Domain"
       (handleClick)="openBridgeDomainModal(ModalMode.Edit, bridgeDomain)"
     ></app-icon-button>
+    } @if (bridgeDomain?.deletedAt) {
     <app-icon-button
-      *ngIf="bridgeDomain?.deletedAt"
       icon="undo"
       label="Restore Bridge Domain"
       type="success"
       (handleClick)="restoreBridgeDomain(bridgeDomain)"
     ></app-icon-button>
+    }
     <app-icon-button
       icon="delete"
       label="Soft-Delete/Delete Bridge Domain"

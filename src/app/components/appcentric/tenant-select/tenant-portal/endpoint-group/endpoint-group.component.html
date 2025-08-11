@@ -5,37 +5,40 @@
       <span>Create Endpoint Group</span>
     </button>
   </section>
-  <ng-container *ngIf="!isLoading; else loading">
-    <app-table
-      [config]="config"
-      [data]="endpointGroups"
-      (clearResults)="getEndpointGroups($event)"
-      (searchParams)="getEndpointGroups($event)"
-      [searchColumns]="searchColumns"
-      [(itemsPerPage)]="perPage"
-      (tableEvent)="onTableEvent($event)"
-    ></app-table>
-    <section class="btn-toolbar" role="toolbar">
-      <app-import-export
-        [exportObject]="endpointGroups"
-        exportFileName="endpointGroups"
-        [disableJson]="false"
-        (import)="importEndpointGroups($event)"
-      ></app-import-export>
-    </section>
-  </ng-container>
+  @if (!isLoading) {
+  <app-table
+    [config]="config"
+    [data]="endpointGroups"
+    (clearResults)="getEndpointGroups($event)"
+    (searchParams)="getEndpointGroups($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
+  <section class="btn-toolbar" role="toolbar">
+    <app-import-export
+      [exportObject]="endpointGroups"
+      exportFileName="endpointGroups"
+      [disableJson]="false"
+      (import)="importEndpointGroups($event)"
+    ></app-import-export>
+  </section>
+  } @else {
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  }
 </ng-container>
 
 <app-endpoint-group-modal [tenantId]="tenantId"></app-endpoint-group-modal>
 
 <ng-template #actionsTemplate let-endpointGroup="datum">
   <section>
+    @if (!endpointGroup?.deletedAt) {
     <app-icon-button
-      *ngIf="!endpointGroup?.deletedAt"
       icon="edit"
       label="Edit Endpoint Group"
       (handleClick)="openEndpointGroupModal(ModalMode.Edit, endpointGroup)"
     ></app-icon-button>
+    }
 
     <app-icon-button
       icon="delete"
@@ -44,13 +47,14 @@
       (handleClick)="deleteEndpointGroup(endpointGroup)"
     ></app-icon-button>
 
+    @if (endpointGroup?.deletedAt) {
     <app-icon-button
-      *ngIf="endpointGroup?.deletedAt"
       icon="undo"
       label="Restore Endpoint Group"
       type="success"
       (handleClick)="restoreEndpointGroup(endpointGroup)"
     ></app-icon-button>
+    }
   </section>
 </ng-template>
 

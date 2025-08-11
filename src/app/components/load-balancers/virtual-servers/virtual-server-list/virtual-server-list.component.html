@@ -5,48 +5,36 @@
   </button>
 </section>
 
-<ng-container *ngIf="!isLoading; else loading">
-  <app-table
-    [config]="config"
-    [data]="virtualServers"
-    (clearResults)="loadVirtualServers($event)"
-    (searchParams)="loadVirtualServers($event)"
-    [searchColumns]="searchColumns"
-    [(itemsPerPage)]="perPage"
-    (tableEvent)="onTableEvent($event)"
-  ></app-table>
-  <section class="btn-toolbar" role="toolbar">
-    <app-import-export
-      [exportObject]="virtualServers"
-      exportFileName="LoadBalancer_VirtualServers_{{ currentTier.name }}"
-      (import)="import($event)"
-    ></app-import-export>
-  </section>
-</ng-container>
+@if (!isLoading) {
+<app-table
+  [config]="config"
+  [data]="virtualServers"
+  (clearResults)="loadVirtualServers($event)"
+  (searchParams)="loadVirtualServers($event)"
+  [searchColumns]="searchColumns"
+  [(itemsPerPage)]="perPage"
+  (tableEvent)="onTableEvent($event)"
+></app-table>
+<section class="btn-toolbar" role="toolbar">
+  <app-import-export
+    [exportObject]="virtualServers"
+    exportFileName="LoadBalancer_VirtualServers_{{ currentTier.name }}"
+    (import)="import($event)"
+  ></app-import-export>
+</section>
+} @else {
+<fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+}
 
 <ng-template #actionsTemplate let-virtualServer="datum">
   <section class="table__actions">
-    <app-icon-button
-      *ngIf="checkUndeployedChanges(virtualServer)"
-      icon="asterisk"
-      [label]="'Undeployed Changes'"
-      [type]="'info'"
-    ></app-icon-button>
-
-    <app-icon-button
-      *ngIf="!virtualServer?.deletedAt"
-      icon="edit"
-      label="Edit Virtual Server"
-      (handleClick)="openModal(virtualServer)"
-    ></app-icon-button>
-
-    <app-icon-button
-      *ngIf="virtualServer?.deletedAt"
-      icon="undo"
-      label="Restore Virtual Server"
-      type="success"
-      (handleClick)="restore(virtualServer)"
-    ></app-icon-button>
+    @if (checkUndeployedChanges(virtualServer)) {
+    <app-icon-button icon="asterisk" [label]="'Undeployed Changes'" [type]="'info'"></app-icon-button>
+    } @if (!virtualServer?.deletedAt) {
+    <app-icon-button icon="edit" label="Edit Virtual Server" (handleClick)="openModal(virtualServer)"></app-icon-button>
+    } @if (virtualServer?.deletedAt) {
+    <app-icon-button icon="undo" label="Restore Virtual Server" type="success" (handleClick)="restore(virtualServer)"></app-icon-button>
+    }
 
     <app-icon-button
       icon="delete"
@@ -55,10 +43,6 @@
       (handleClick)="delete(virtualServer)"
     ></app-icon-button>
   </section>
-</ng-template>
-
-<ng-template #loading>
-  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>
 
 <app-virtual-server-modal></app-virtual-server-modal>

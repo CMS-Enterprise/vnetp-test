@@ -1,8 +1,8 @@
-<nav class="navbar navbar-expand-lg" *ngIf="user && tenant">
+@if (user && tenant) {
+<nav class="navbar navbar-expand-lg">
   <a class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
     <fa-icon class="icon" [icon]="['fas', 'bolt']"></fa-icon>
   </a>
-
   <button
     class="navbar-toggler"
     type="button"
@@ -14,7 +14,6 @@
   >
     <fa-icon class="icon" [icon]="['fas', 'bars']"></fa-icon>
   </button>
-
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item dropdown">
@@ -29,32 +28,28 @@
           >Networking
         </a>
         <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
-          <a
-            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
-            class="dropdown-item"
-            routerLink="/appcentric/tenant-select"
-            queryParamsHandling="merge"
-            >Tenant Select</a
-          >
+          @if (userRoles?.includes('admin') || userRoles?.includes('network_admin')) {
+          <a class="dropdown-item" routerLink="/appcentric/tenant-select" queryParamsHandling="merge">Tenant Select</a>
+          }
           <!-- <a
-            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
-            class="dropdown-item"
-            routerLink="wan-form"
-            queryParamsHandling="merge"
-            >Wan Form</a
-          > -->
+              *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
+              class="dropdown-item"
+              routerLink="wan-form"
+              queryParamsHandling="merge"
+              >Wan Form</a
+              > -->
         </div>
       </li>
     </ul>
-
     <ul class="navbar-nav m-auto">
       <li id="accountNumber" class="nav-item">
         <a>
-          <span *ngIf="tenant">Appcentric - {{ tenant }}</span>
+          @if (tenant) {
+          <span>Appcentric - {{ tenant }}</span>
+          }
         </a>
       </li>
     </ul>
-
     <ul class="navbar-nav ml-auto align-items-lg-center">
       <li class="nav-item dropdown">
         <a
@@ -66,26 +61,24 @@
           aria-haspopup="true"
           aria-expanded="false"
         >
-          <span *ngIf="user">{{ user.uid }} ({{ user.cn }})</span>
+          @if (user) {
+          <span>{{ user.uid }} ({{ user.cn }})</span>
+          }
         </a>
         <div class="dropdown-menu dropdown-menu--reverse" aria-labelledby="userNavbarDropdown">
           <a id="environment-summary-link" class="dropdown-item" routerLink="environment-summary" queryParamsHandling="merge"
             >Environment Summary</a
           >
-          <a
-            id="audit-log-link"
-            *ngIf="userRoles?.includes('admin')"
-            class="dropdown-item"
-            routerLink="audit-log"
-            queryParamsHandling="preserve"
-            >Audit Log</a
-          >
+          @if (userRoles?.includes('admin')) {
+          <a id="audit-log-link" class="dropdown-item" routerLink="audit-log" queryParamsHandling="preserve">Audit Log</a>
+          }
           <a class="dropdown-item" (click)="openLogoutModal()">Logout</a>
         </div>
       </li>
     </ul>
   </div>
 </nav>
+}
 
 <!-- Logout -->
 <ngx-smart-modal #logoutModal identifier="logoutModal">

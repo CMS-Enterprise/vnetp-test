@@ -17,12 +17,19 @@
         <label for="name">Name</label>
         <tooltip [message]="helpText.Name"></tooltip>
         <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" required />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 60 characters or less</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-","_",":", "."</div>
+        @if (submitted && f.name.errors) {
+        <div class="invalid-feedback">
+          @if (f.name.errors.required) {
+          <div>Name is required</div>
+          } @if (f.name.errors.minlength) {
+          <div>Name must be at least 3 characters</div>
+          } @if (f.name.errors.maxlength) {
+          <div>Name must be 60 characters or less</div>
+          } @if (f.name.errors.invalidName) {
+          <div>Name must only contain alphanumeric characters or "-","_",":", "."</div>
+          }
         </div>
+        }
       </div>
 
       <!-- Description -->
@@ -35,25 +42,36 @@
           class="form-control"
           [class.is-invalid]="submitted && f.description.errors"
         />
-        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.minlength">Description must be at least 3 characters</div>
-          <div *ngIf="f.name.errors.maxlength">Description must be 500 characters or less</div>
+        @if (submitted && f.description.errors) {
+        <div class="invalid-feedback">
+          @if (f.name.errors.minlength) {
+          <div>Description must be at least 3 characters</div>
+          } @if (f.name.errors.maxlength) {
+          <div>Description must be 500 characters or less</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-row">
         <!-- NAT Direction -->
-        <div class="form-group col-md-3" *ngIf="NatRuleGroupType !== 'ZoneBased'">
+        @if (NatRuleGroupType !== 'ZoneBased') {
+        <div class="form-group col-md-3">
           <label for="direction">NAT Direction</label>
           <tooltip [message]="helpText.Direction"></tooltip>
           <select id="direction" formControlName="direction" class="form-control" [class.is-invalid]="submitted && f.direction.errors">
             <option [value]="NatRuleDirection.In">In</option>
             <option [value]="NatRuleDirection.Out">Out</option>
           </select>
-          <div *ngIf="submitted && f.direction.errors" class="invalid-feedback">
-            <div *ngIf="f.direction.errors.required">NAT Direction is required</div>
+          @if (submitted && f.direction.errors) {
+          <div class="invalid-feedback">
+            @if (f.direction.errors.required) {
+            <div>NAT Direction is required</div>
+            }
           </div>
+          }
         </div>
+        }
 
         <div class="form-group col-md-3">
           <label for="biDirectional">Bi-directional</label>
@@ -67,9 +85,13 @@
             <option [ngValue]="true">True</option>
             <option [ngValue]="false">False</option>
           </select>
-          <div *ngIf="submitted && f.biDirectional.errors" class="invalid-feedback">
-            <div *ngIf="f.biDirectional.errors.required">BiDirectional is required</div>
+          @if (submitted && f.biDirectional.errors) {
+          <div class="invalid-feedback">
+            @if (f.biDirectional.errors.required) {
+            <div>BiDirectional is required</div>
+            }
           </div>
+          }
         </div>
 
         <!-- Rule Index -->
@@ -83,10 +105,15 @@
             class="form-control"
             [class.is-invalid]="submitted && f.ruleIndex.errors"
           />
-          <div *ngIf="submitted && f.ruleIndex.errors" class="invalid-feedback">
-            <div *ngIf="f.ruleIndex.errors.required">Rule Index is required</div>
-            <div *ngIf="f.ruleIndex.errors.min">Rule Index must be greater than or equal to 1.</div>
+          @if (submitted && f.ruleIndex.errors) {
+          <div class="invalid-feedback">
+            @if (f.ruleIndex.errors.required) {
+            <div>Rule Index is required</div>
+            } @if (f.ruleIndex.errors.min) {
+            <div>Rule Index must be greater than or equal to 1.</div>
+            }
           </div>
+          }
         </div>
 
         <!-- Enabled -->
@@ -107,9 +134,10 @@
         </div>
       </div>
 
-      <hr *ngIf="NatRuleGroupType === 'ZoneBased'" />
-
-      <div class="form-row" *ngIf="NatRuleGroupType === 'ZoneBased'">
+      @if (NatRuleGroupType === 'ZoneBased') {
+      <hr />
+      } @if (NatRuleGroupType === 'ZoneBased') {
+      <div class="form-row">
         <div class="form-group col-md-6">
           <table class="table table-striped table-sm table-bordered">
             <thead>
@@ -119,34 +147,35 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let selectedFromZone of selectedFromZones">
+              @for (selectedFromZone of selectedFromZones; track selectedFromZone) {
+              <tr>
                 <td>{{ selectedFromZone.name }}</td>
                 <td class="table__actions">
                   <app-icon-button icon="delete" label="Remove From Zone" (click)="removeZone(selectedFromZone.id)"></app-icon-button>
                 </td>
               </tr>
-              <tr *ngIf="!selectedFromZones?.length" class="text-center">
+              } @if (!selectedFromZones?.length) {
+              <tr class="text-center">
                 <td colspan="2">No From Zones Selected</td>
               </tr>
+              }
             </tbody>
           </table>
-
           <div class="input-group align-items-center">
             <select id="availableFromZones" class="form-control mr-3" formControlName="selectedFromZone">
               <option></option>
-              <option *ngFor="let zone of zones" [ngValue]="zone.id">{{ zone.name }}</option>
+              @for (zone of zones; track zone) {
+              <option [ngValue]="zone.id">{{ zone.name }}</option>
+              }
             </select>
-
             <button type="button" class="btn btn-info" (click)="addZone()" [disabled]="!f.selectedFromZone.value">
               <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
               <span>Add From Zone</span>
             </button>
           </div>
         </div>
-
         <div class="form-group col-md-6">
           <label for="toZone">To Zone</label>
-
           <ng-select
             formControlName="toZone"
             id="toZone"
@@ -158,11 +187,16 @@
             bindLabel="name"
             bindValue="id"
           ></ng-select>
-          <div *ngIf="submitted && f.toZone.errors" class="invalid-feedback">
-            <div *ngIf="f.toZone.errors.required">To Zone is required</div>
+          @if (submitted && f.toZone.errors) {
+          <div class="invalid-feedback">
+            @if (f.toZone.errors.required) {
+            <div>To Zone is required</div>
+            }
           </div>
+          }
         </div>
       </div>
+      }
 
       <hr />
 
@@ -179,20 +213,24 @@
             class="form-control"
             [class.is-invalid]="submitted && f.originalServiceType.errors"
           >
-            <option *ngIf="f.translatedServiceType.value === NatRuleTranslatedServiceType.None" [value]="NatRuleOriginalServiceType.None">
-              None
-            </option>
+            @if (f.translatedServiceType.value === NatRuleTranslatedServiceType.None) {
+            <option [value]="NatRuleOriginalServiceType.None">None</option>
+            }
             <option [value]="NatRuleOriginalServiceType.ServiceObject">Service Object</option>
           </select>
-          <div *ngIf="submitted && f.originalServiceType.errors" class="invalid-feedback">
-            <div *ngIf="f.originalServiceType.errors.required">Original Service Type is required</div>
+          @if (submitted && f.originalServiceType.errors) {
+          <div class="invalid-feedback">
+            @if (f.originalServiceType.errors.required) {
+            <div>Original Service Type is required</div>
+            }
           </div>
+          }
         </div>
 
         <!-- Original Service Object -->
-        <div class="form-group col-md-6" *ngIf="f.originalServiceType.value === NatRuleOriginalServiceType.ServiceObject">
+        @if (f.originalServiceType.value === NatRuleOriginalServiceType.ServiceObject) {
+        <div class="form-group col-md-6">
           <label for="originalServiceObject">Original Service Object</label>
-
           <ng-select
             formControlName="originalServiceObject"
             id="originalServiceObject"
@@ -204,15 +242,19 @@
             bindLabel="name"
             bindValue="id"
           ></ng-select>
-          <div *ngIf="submitted && f.originalServiceObject.errors" class="invalid-feedback">
-            <div *ngIf="f.originalServiceObject.errors.required">Original Service Object is required</div>
+          @if (submitted && f.originalServiceObject.errors) {
+          <div class="invalid-feedback">
+            @if (f.originalServiceObject.errors.required) {
+            <div>Original Service Object is required</div>
+            }
           </div>
-          <span
-            *ngIf="f.originalServiceType.value === 'ServiceObject'"
-            (click)="getObjectInfo('Original Service Type Object', f.originalServiceType.value, f.originalServiceObject.value)"
+          } @if (f.originalServiceType.value === 'ServiceObject') {
+          <span (click)="getObjectInfo('Original Service Type Object', f.originalServiceType.value, f.originalServiceObject.value)"
             >(object info)</span
           >
+          }
         </div>
+        }
       </div>
 
       <!-- Original Source Address Type -->
@@ -226,24 +268,25 @@
             class="form-control"
             [class.is-invalid]="submitted && f.originalSourceAddressType.errors"
           >
-            <option
-              *ngIf="f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.None"
-              [value]="NatRuleOriginalSourceAddressType.None"
-            >
-              None
-            </option>
+            @if (f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.None) {
+            <option [value]="NatRuleOriginalSourceAddressType.None">None</option>
+            }
             <option [value]="NatRuleOriginalSourceAddressType.NetworkObject">Network Object</option>
             <option [value]="NatRuleOriginalSourceAddressType.NetworkObjectGroup">Network Object Group</option>
           </select>
-          <div *ngIf="submitted && f.originalSourceAddressType.errors" class="invalid-feedback">
-            <div *ngIf="f.originalSourceAddressType.errors.required">Original Source Address Type is required</div>
+          @if (submitted && f.originalSourceAddressType.errors) {
+          <div class="invalid-feedback">
+            @if (f.originalSourceAddressType.errors.required) {
+            <div>Original Source Address Type is required</div>
+            }
           </div>
+          }
         </div>
 
         <!-- Original Source Network Object -->
-        <div class="form-group col-md-6" *ngIf="f.originalSourceAddressType.value === NatRuleOriginalSourceAddressType.NetworkObject">
+        @if (f.originalSourceAddressType.value === NatRuleOriginalSourceAddressType.NetworkObject) {
+        <div class="form-group col-md-6">
           <label for="originalSourceNetworkObject">Original Source Network Object</label>
-
           <ng-select
             formControlName="originalSourceNetworkObject"
             id="originalSourceNetworkObject"
@@ -255,23 +298,27 @@
             bindLabel="name"
             bindValue="id"
           ></ng-select>
-
-          <div *ngIf="submitted && f.originalSourceNetworkObject.errors" class="invalid-feedback">
-            <div *ngIf="f.originalSourceNetworkObject.errors.required">Original Source Network Object is required</div>
+          @if (submitted && f.originalSourceNetworkObject.errors) {
+          <div class="invalid-feedback">
+            @if (f.originalSourceNetworkObject.errors.required) {
+            <div>Original Source Network Object is required</div>
+            }
           </div>
+          } @if (f.originalSourceAddressType.value === NatRuleOriginalSourceAddressType.NetworkObject) {
           <span
-            *ngIf="f.originalSourceAddressType.value === NatRuleOriginalSourceAddressType.NetworkObject"
             (click)="
               getObjectInfo('Original Source Address Object', f.originalSourceAddressType.value, f.originalSourceNetworkObject.value)
             "
             >(object info)</span
           >
+          }
         </div>
+        }
 
         <!-- Original Source Network Object Group -->
-        <div class="form-group col-md-6" *ngIf="f.originalSourceAddressType.value === NatRuleOriginalSourceAddressType.NetworkObjectGroup">
+        @if (f.originalSourceAddressType.value === NatRuleOriginalSourceAddressType.NetworkObjectGroup) {
+        <div class="form-group col-md-6">
           <label for="originalSourceNetworkObjectGroup">Original Source Network Object Group</label>
-
           <ng-select
             formControlName="originalSourceNetworkObjectGroup"
             id="originalSourceNetworkObjectGroup"
@@ -283,12 +330,14 @@
             bindLabel="name"
             bindValue="id"
           ></ng-select>
-
-          <div *ngIf="submitted && f.originalSourceNetworkObjectGroup.errors" class="invalid-feedback">
-            <div *ngIf="f.originalSourceNetworkObjectGroup.errors.required">Original Source Network Object Group is required</div>
+          @if (submitted && f.originalSourceNetworkObjectGroup.errors) {
+          <div class="invalid-feedback">
+            @if (f.originalSourceNetworkObjectGroup.errors.required) {
+            <div>Original Source Network Object Group is required</div>
+            }
           </div>
+          } @if (f.originalSourceAddressType.value === NatRuleOriginalSourceAddressType.NetworkObjectGroup) {
           <span
-            *ngIf="f.originalSourceAddressType.value === NatRuleOriginalSourceAddressType.NetworkObjectGroup"
             (click)="
               getObjectInfo(
                 'Original Source Address Object Group',
@@ -298,7 +347,9 @@
             "
             >(object info)</span
           >
+          }
         </div>
+        }
       </div>
 
       <!-- Original Destination Address Type -->
@@ -313,26 +364,25 @@
             class="form-control"
             [class.is-invalid]="submitted && f.originalDestinationAddressType.errors"
           >
-            <option
-              *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.None"
-              [value]="NatRuleOriginalDestinationAddressType.None"
-            >
-              None
-            </option>
+            @if (f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.None) {
+            <option [value]="NatRuleOriginalDestinationAddressType.None">None</option>
+            }
             <option [value]="NatRuleOriginalDestinationAddressType.NetworkObject">Network Object</option>
             <option [value]="NatRuleOriginalDestinationAddressType.NetworkObjectGroup">Network Object Group</option>
           </select>
 
-          <div *ngIf="submitted && f.originalDestinationAddressType.errors" class="invalid-feedback">
-            <div *ngIf="f.originalDestinationAddressType.errors.required">Original Destination Address Type is required</div>
+          @if (submitted && f.originalDestinationAddressType.errors) {
+          <div class="invalid-feedback">
+            @if (f.originalDestinationAddressType.errors.required) {
+            <div>Original Destination Address Type is required</div>
+            }
           </div>
+          }
         </div>
 
         <!-- Original Destination Network Object -->
-        <div
-          class="form-group col-md-6"
-          *ngIf="f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObject"
-        >
+        @if (f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObject) {
+        <div class="form-group col-md-6">
           <label for="originalDestinationNetworkObject">Original Destination Network Object</label>
           <ng-select
             formControlName="originalDestinationNetworkObject"
@@ -345,11 +395,14 @@
             bindLabel="name"
             bindValue="id"
           ></ng-select>
-          <div *ngIf="submitted && f.originalDestinationNetworkObject.errors" class="invalid-feedback">
-            <div *ngIf="f.originalDestinationNetworkObject.errors.required">Original Destination Network Object is required</div>
+          @if (submitted && f.originalDestinationNetworkObject.errors) {
+          <div class="invalid-feedback">
+            @if (f.originalDestinationNetworkObject.errors.required) {
+            <div>Original Destination Network Object is required</div>
+            }
           </div>
+          } @if (f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObject) {
           <span
-            *ngIf="f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObject"
             (click)="
               getObjectInfo(
                 'Original Destination Address Object',
@@ -359,13 +412,13 @@
             "
             >(object info)</span
           >
+          }
         </div>
+        }
 
         <!-- Original Destination Network Object Group -->
-        <div
-          class="form-group col-md-6"
-          *ngIf="f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObjectGroup"
-        >
+        @if (f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObjectGroup) {
+        <div class="form-group col-md-6">
           <label for="originalDestinationNetworkObjectGroup">Original Destination Network Object Group</label>
           <ng-select
             formControlName="originalDestinationNetworkObjectGroup"
@@ -378,11 +431,14 @@
             bindLabel="name"
             bindValue="id"
           ></ng-select>
-          <div *ngIf="submitted && f.originalDestinationNetworkObjectGroup.errors" class="invalid-feedback">
-            <div *ngIf="f.originalDestinationNetworkObjectGroup.errors.required">Original Destination Network Object Group is required</div>
+          @if (submitted && f.originalDestinationNetworkObjectGroup.errors) {
+          <div class="invalid-feedback">
+            @if (f.originalDestinationNetworkObjectGroup.errors.required) {
+            <div>Original Destination Network Object Group is required</div>
+            }
           </div>
+          } @if (f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObjectGroup) {
           <span
-            *ngIf="f.originalDestinationAddressType.value === NatRuleOriginalDestinationAddressType.NetworkObjectGroup"
             (click)="
               getObjectInfo(
                 'Original Destination Address Object Group',
@@ -392,7 +448,9 @@
             "
             >(object info)</span
           >
+          }
         </div>
+        }
       </div>
 
       <hr />
@@ -413,9 +471,13 @@
           <option [value]="NatRuleTranslationType.DynamicIp">Dynamic IP</option>
           <option [value]="NatRuleTranslationType.DynamicIpAndPort">Dynamic IP and Port</option>
         </select>
-        <div *ngIf="submitted && f.translationType.errors" class="invalid-feedback">
-          <div *ngIf="f.translationType.errors.required">Translation Type is required</div>
+        @if (submitted && f.translationType.errors) {
+        <div class="invalid-feedback">
+          @if (f.translationType.errors.required) {
+          <div>Translation Type is required</div>
+          }
         </div>
+        }
       </div>
 
       <div>
@@ -433,13 +495,18 @@
               <option [value]="NatRuleTranslatedServiceType.None">None</option>
               <option [value]="NatRuleTranslatedServiceType.ServiceObject">Service Object</option>
             </select>
-            <div *ngIf="submitted && f.translatedServiceType.errors" class="invalid-feedback">
-              <div *ngIf="f.translatedServiceType.errors.required">Translated Service Type is required</div>
+            @if (submitted && f.translatedServiceType.errors) {
+            <div class="invalid-feedback">
+              @if (f.translatedServiceType.errors.required) {
+              <div>Translated Service Type is required</div>
+              }
             </div>
+            }
           </div>
 
           <!-- Translated Service Object -->
-          <div class="form-group col-md-6" *ngIf="f.translatedServiceType.value === NatRuleTranslatedServiceType.ServiceObject">
+          @if (f.translatedServiceType.value === NatRuleTranslatedServiceType.ServiceObject) {
+          <div class="form-group col-md-6">
             <label for="translatedServiceObject">Translated Service Object</label>
             <ng-select
               formControlName="translatedServiceObject"
@@ -452,15 +519,19 @@
               bindLabel="name"
               bindValue="id"
             ></ng-select>
-            <div *ngIf="submitted && f.translatedServiceObject.errors" class="invalid-feedback">
-              <div *ngIf="f.translatedServiceObject.errors.required">Translated Service Object is required</div>
+            @if (submitted && f.translatedServiceObject.errors) {
+            <div class="invalid-feedback">
+              @if (f.translatedServiceObject.errors.required) {
+              <div>Translated Service Object is required</div>
+              }
             </div>
-            <span
-              *ngIf="f.translatedServiceType.value === NatRuleTranslatedServiceType.ServiceObject"
-              (click)="getObjectInfo('Translated Service Object', f.translatedServiceType.value, f.translatedServiceObject.value)"
+            } @if (f.translatedServiceType.value === NatRuleTranslatedServiceType.ServiceObject) {
+            <span (click)="getObjectInfo('Translated Service Object', f.translatedServiceType.value, f.translatedServiceObject.value)"
               >(object info)</span
             >
+            }
           </div>
+          }
         </div>
         <div class="form-row">
           <!-- Translated Source Address Type -->
@@ -473,24 +544,26 @@
               class="form-control"
               [class.is-invalid]="submitted && f.translatedSourceAddressType.errors"
             >
-              <option *ngIf="f.translationType.value === NatRuleTranslationType.Static" [value]="NatRuleTranslatedSourceAddressType.None">
-                None
-              </option>
+              @if (f.translationType.value === NatRuleTranslationType.Static) {
+              <option [value]="NatRuleTranslatedSourceAddressType.None">None</option>
+              }
               <option [value]="NatRuleTranslatedSourceAddressType.NetworkObject">Network Object</option>
-              <option
-                *ngIf="f.translationType.value !== NatRuleTranslationType.Static"
-                [value]="NatRuleTranslatedSourceAddressType.NetworkObjectGroup"
-              >
-                Network Object Group
-              </option>
+              @if (f.translationType.value !== NatRuleTranslationType.Static) {
+              <option [value]="NatRuleTranslatedSourceAddressType.NetworkObjectGroup">Network Object Group</option>
+              }
             </select>
-            <div *ngIf="submitted && f.translatedSourceAddressType.errors" class="invalid-feedback">
-              <div *ngIf="f.translatedSourceAddressType.errors.required">Translated Source Address Type is required</div>
+            @if (submitted && f.translatedSourceAddressType.errors) {
+            <div class="invalid-feedback">
+              @if (f.translatedSourceAddressType.errors.required) {
+              <div>Translated Source Address Type is required</div>
+              }
             </div>
+            }
           </div>
 
           <!-- Translated Source Network Object -->
-          <div class="form-group col-md-6" *ngIf="f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObject">
+          @if (f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObject) {
+          <div class="form-group col-md-6">
             <label for="translatedSourceNetworkObject">Translated Source Network Object</label>
             <ng-select
               formControlName="translatedSourceNetworkObject"
@@ -503,11 +576,14 @@
               bindLabel="name"
               bindValue="id"
             ></ng-select>
-            <div *ngIf="submitted && f.translatedSourceNetworkObject.errors" class="invalid-feedback">
-              <div *ngIf="f.translatedSourceNetworkObject.errors.required">Translated Source Network Object is required</div>
+            @if (submitted && f.translatedSourceNetworkObject.errors) {
+            <div class="invalid-feedback">
+              @if (f.translatedSourceNetworkObject.errors.required) {
+              <div>Translated Source Network Object is required</div>
+              }
             </div>
+            } @if (f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObject) {
             <span
-              *ngIf="f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObject"
               (click)="
                 getObjectInfo(
                   'Translated Source Address Object',
@@ -517,13 +593,13 @@
               "
               >(object info)</span
             >
+            }
           </div>
+          }
 
           <!-- Translated Source Network Object Group -->
-          <div
-            class="form-group col-md-6"
-            *ngIf="f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObjectGroup"
-          >
+          @if (f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObjectGroup) {
+          <div class="form-group col-md-6">
             <label for="translatedSourceNetworkObjectGroup">Translated Source Network Object Group</label>
             <ng-select
               formControlName="translatedSourceNetworkObjectGroup"
@@ -536,11 +612,14 @@
               bindLabel="name"
               bindValue="id"
             ></ng-select>
-            <div *ngIf="submitted && f.translatedSourceNetworkObjectGroup.errors" class="invalid-feedback">
-              <div *ngIf="f.translatedSourceNetworkObjectGroup.errors.required">Translated Source Network Object Group is required</div>
+            @if (submitted && f.translatedSourceNetworkObjectGroup.errors) {
+            <div class="invalid-feedback">
+              @if (f.translatedSourceNetworkObjectGroup.errors.required) {
+              <div>Translated Source Network Object Group is required</div>
+              }
             </div>
+            } @if (f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObjectGroup) {
             <span
-              *ngIf="f.translatedSourceAddressType.value === NatRuleTranslatedSourceAddressType.NetworkObjectGroup"
               (click)="
                 getObjectInfo(
                   'Translated Source Address Object Group',
@@ -550,7 +629,9 @@
               "
               >(object info)</span
             >
+            }
           </div>
+          }
         </div>
 
         <div class="form-row">
@@ -566,23 +647,22 @@
             >
               <option [value]="NatRuleTranslatedDestinationAddressType.None">None</option>
               <option [value]="NatRuleTranslatedDestinationAddressType.NetworkObject">Network Object</option>
-              <option
-                *ngIf="f.translationType.value !== NatRuleTranslationType.Static"
-                [value]="NatRuleTranslatedDestinationAddressType.NetworkObjectGroup"
-              >
-                Network Object Group
-              </option>
+              @if (f.translationType.value !== NatRuleTranslationType.Static) {
+              <option [value]="NatRuleTranslatedDestinationAddressType.NetworkObjectGroup">Network Object Group</option>
+              }
             </select>
-            <div *ngIf="submitted && f.translatedDestinationAddressType.errors" class="invalid-feedback">
-              <div *ngIf="f.translatedDestinationAddressType.errors.required">Translated Source Address Type is required</div>
+            @if (submitted && f.translatedDestinationAddressType.errors) {
+            <div class="invalid-feedback">
+              @if (f.translatedDestinationAddressType.errors.required) {
+              <div>Translated Source Address Type is required</div>
+              }
             </div>
+            }
           </div>
 
           <!-- Translated Destination Network Object -->
-          <div
-            class="form-group col-md-6"
-            *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObject"
-          >
+          @if (f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObject) {
+          <div class="form-group col-md-6">
             <label for="translatedDestinationNetworkObject">Translated Destination Network Object</label>
             <ng-select
               formControlName="translatedDestinationNetworkObject"
@@ -595,11 +675,14 @@
               bindLabel="name"
               bindValue="id"
             ></ng-select>
-            <div *ngIf="submitted && f.translatedDestinationNetworkObject.errors" class="invalid-feedback">
-              <div *ngIf="f.translatedDestinationNetworkObject.errors.required">Translated Destination Network Object is required</div>
+            @if (submitted && f.translatedDestinationNetworkObject.errors) {
+            <div class="invalid-feedback">
+              @if (f.translatedDestinationNetworkObject.errors.required) {
+              <div>Translated Destination Network Object is required</div>
+              }
             </div>
+            } @if (f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObject) {
             <span
-              *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObject"
               (click)="
                 getObjectInfo(
                   'Translated Destination Address Object',
@@ -609,13 +692,13 @@
               "
               >(object info)</span
             >
+            }
           </div>
+          }
 
           <!-- Translated Destination Network Object Group -->
-          <div
-            class="form-group col-md-6"
-            *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObjectGroup"
-          >
+          @if (f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObjectGroup) {
+          <div class="form-group col-md-6">
             <label for="translatedDestinationNetworkObjectGroup">Translated Destination Network Object Group</label>
             <ng-select
               formControlName="translatedDestinationNetworkObjectGroup"
@@ -628,13 +711,14 @@
               bindLabel="name"
               bindValue="id"
             ></ng-select>
-            <div *ngIf="submitted && f.translatedDestinationNetworkObjectGroup.errors" class="invalid-feedback">
-              <div *ngIf="f.translatedDestinationNetworkObjectGroup.errors.required">
-                Translated Destination Network Object Group is required
-              </div>
+            @if (submitted && f.translatedDestinationNetworkObjectGroup.errors) {
+            <div class="invalid-feedback">
+              @if (f.translatedDestinationNetworkObjectGroup.errors.required) {
+              <div>Translated Destination Network Object Group is required</div>
+              }
             </div>
+            } @if (f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObjectGroup) {
             <span
-              *ngIf="f.translatedDestinationAddressType.value === NatRuleTranslatedDestinationAddressType.NetworkObjectGroup"
               (click)="
                 getObjectInfo(
                   'Translated Destination Address Object Group',
@@ -644,7 +728,9 @@
               "
               >(object info)</span
             >
+            }
           </div>
+          }
         </div>
       </div>
     </div>

@@ -1,14 +1,16 @@
 <h1>Static Routes</h1>
-<ng-container *ngIf="tiers.length !== 0; else warningMessage">
-  <section class="btn-toolbar" role="toolbar">
-    <!-- Refresh -->
-    <button type="button" class="btn btn-info" (click)="getTiers()">
-      <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
-      <span>Refresh</span>
-    </button>
-  </section>
-  <app-table [config]="config" [data]="tiers"></app-table>
-</ng-container>
+@if (tiers.length !== 0) {
+<section class="btn-toolbar" role="toolbar">
+  <!-- Refresh -->
+  <button type="button" class="btn btn-info" (click)="getTiers()">
+    <fa-icon class="icon" [icon]="['fas', 'sync-alt']"></fa-icon>
+    <span>Refresh</span>
+  </button>
+</section>
+<app-table [config]="config" [data]="tiers"></app-table>
+} @else {
+<p>Create a Tier to display Static Route details</p>
+}
 <ng-template #nameTemplate let-tier="datum">
   <a routerLink="/netcentric/static-routes/edit/{{ tier?.id }}" queryParamsHandling="merge"
     >{{ tier.name | slice : 0 : 20 }}{{ tier.name.length > 20 ? '...' : '' }}</a

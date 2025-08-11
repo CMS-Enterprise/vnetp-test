@@ -21,12 +21,19 @@
           [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
         />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or '_'.</div>
+        @if (submitted && f.name.errors) {
+        <div class="invalid-feedback">
+          @if (f.name.errors.required) {
+          <div>Name is required</div>
+          } @if (f.name.errors.minlength) {
+          <div>Name must be at least 3 characters.</div>
+          } @if (f.name.errors.maxlength) {
+          <div>Name must be 100 characters or less.</div>
+          } @if (f.name.errors.invalidName) {
+          <div>Name must only contain alphanumeric characters or '_'.</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -39,9 +46,13 @@
           [class.is-invalid]="submitted && f.alias.errors"
           aria-label="Alias"
         />
-        <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
-          <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+        @if (submitted && f.alias.errors) {
+        <div class="invalid-feedback">
+          @if (f.alias.errors.maxlength) {
+          <div>Alias must be 100 characters or less.</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -54,9 +65,13 @@
           [class.is-invalid]="submitted && f.description.errors"
           aria-label="Description"
         />
-        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+        @if (submitted && f.description.errors) {
+        <div class="invalid-feedback">
+          @if (f.description.errors.maxlength) {
+          <div>Description must be 500 characters or less.</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-row">
@@ -70,9 +85,13 @@
             [class.is-invalid]="submitted && f.globalAlias.errors"
             aria-label="globalAlias"
           />
-          <div *ngIf="submitted && f.globalAlias.errors" class="invalid-feedback">
-            <div *ngIf="f.globalAlias.errors.maxlength">Global Alias must be 100 characters or less.</div>
+          @if (submitted && f.globalAlias.errors) {
+          <div class="invalid-feedback">
+            @if (f.globalAlias.errors.maxlength) {
+            <div>Global Alias must be 100 characters or less.</div>
+            }
           </div>
+          }
         </div>
 
         <div class="form-group col-md-3">
@@ -113,37 +132,36 @@
       </button>
     </div>
   </form>
-  <ng-container *ngIf="modalMode === 'Edit'">
-    <header class="modal-header">
-      <h4 class="modal-title">Add Filter</h4>
-    </header>
-    <div class="modal-body">
-      <div class="form-group">
-        <label for="filters">Filters</label>
-        <ng-select
-          [(ngModel)]="selectedFilter"
-          [ngModelOptions]="{ standalone: true }"
-          [items]="filters"
-          id="filters"
-          bindLabel="name"
-        ></ng-select>
-        <button class="btn btn-success" (click)="addFilter()">
-          <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-          <span>Add Filter</span>
-        </button>
-      </div>
-
-      <app-table
-        [config]="config"
-        [data]="filterTableData"
-        (clearResults)="getFiltertableData()"
-        (searchParams)="getFiltertableData()"
-        [searchColumns]="searchColumns"
-        [(itemsPerPage)]="perPage"
-        (tableEvent)="onTableEvent($event)"
-      ></app-table>
+  @if (modalMode === 'Edit') {
+  <header class="modal-header">
+    <h4 class="modal-title">Add Filter</h4>
+  </header>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="filters">Filters</label>
+      <ng-select
+        [(ngModel)]="selectedFilter"
+        [ngModelOptions]="{ standalone: true }"
+        [items]="filters"
+        id="filters"
+        bindLabel="name"
+      ></ng-select>
+      <button class="btn btn-success" (click)="addFilter()">
+        <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+        <span>Add Filter</span>
+      </button>
     </div>
-  </ng-container>
+    <app-table
+      [config]="config"
+      [data]="filterTableData"
+      (clearResults)="getFiltertableData()"
+      (searchParams)="getFiltertableData()"
+      [searchColumns]="searchColumns"
+      [(itemsPerPage)]="perPage"
+      (tableEvent)="onTableEvent($event)"
+    ></app-table>
+  </div>
+  }
 
   <app-import-export
     [exportObject]="subjects"

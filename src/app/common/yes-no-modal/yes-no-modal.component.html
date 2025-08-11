@@ -6,7 +6,8 @@
   <div class="modal-body">
     {{ modalBody }}
   </div>
-  <div [style.padding]="'15px 22px'" class="custom-control custom-radio" *ngIf="allowEmptyTier">
+  @if (allowEmptyTier) {
+  <div [style.padding]="'15px 22px'" class="custom-control custom-radio">
     <input
       type="checkbox"
       class="custom-control-input"
@@ -17,6 +18,7 @@
     />
     <label class="custom-control-label" for="allowEmptyTierRadio"> If checked, CSV's without TierIDs will default to current tier. </label>
   </div>
+  }
 
   <footer class="modal-footer">
     <button type="button" class="btn btn-link" data-dismiss="modal" (click)="no()">

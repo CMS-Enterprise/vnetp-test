@@ -17,16 +17,16 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^19.2.14",
+    "@angular/animations": "^20.1.6",
     "@angular/cdk": "^17.3.9",
-    "@angular/common": "^19.2.14",
-    "@angular/compiler": "^19.2.14",
-    "@angular/core": "^19.2.14",
-    "@angular/forms": "^19.2.14",
+    "@angular/common": "^20.1.6",
+    "@angular/compiler": "^20.1.6",
+    "@angular/core": "^20.1.6",
+    "@angular/forms": "^20.1.6",
     "@angular/material": "^17.3.9",
-    "@angular/platform-browser": "^19.2.14",
-    "@angular/platform-browser-dynamic": "^19.2.14",
-    "@angular/router": "^19.2.14",
+    "@angular/platform-browser": "^20.1.6",
+    "@angular/platform-browser-dynamic": "^20.1.6",
+    "@angular/router": "^20.1.6",
     "@fortawesome/angular-fontawesome": "^0.14.1",
     "@fortawesome/fontawesome-common-types": "^0.2.36",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
@@ -46,10 +46,10 @@
     "zone.js": "^0.15.1"
   },
   "devDependencies": {
-    "@angular/build": "^19.2.15",
-    "@angular/cli": "^19.2.15",
-    "@angular/compiler-cli": "^19.2.14",
-    "@angular/language-service": "^19.2.14",
+    "@angular/build": "^20.1.5",
+    "@angular/cli": "^20.1.5",
+    "@angular/compiler-cli": "^20.1.6",
+    "@angular/language-service": "^20.1.6",
     "@compodoc/compodoc": "^1.1.16",
     "@openapitools/openapi-generator-cli": "^2.13.4",
     "@types/jest": "^29.5.12",
@@ -81,7 +81,7 @@
     ]
   },
   "engines": {
-    "node": ">=20.16.0",
+    "node": ">=22.12.0",
     "npm": ">=10.8.0"
   }
 }

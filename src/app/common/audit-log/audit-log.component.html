@@ -1,36 +1,33 @@
 <h1>Audit Log</h1>
-<ng-container *ngIf="currentDatacenter; else warningMessage">
-  <ng-container *ngIf="!isLoading; else loading">
-    <app-table
-      *ngIf="!showingAppCentricLogs"
-      [config]="config"
-      [data]="auditLogs"
-      [(itemsPerPage)]="perPage"
-      (tableEvent)="onTableEvent($event)"
-    >
-    </app-table>
-    <app-table
-      *ngIf="showingAppCentricLogs"
-      (tableEvent)="onAppCentricTableEvent($event)"
-      [config]="appCentricConfig"
-      [data]="auditLogs"
-      [(itemsPerPage)]="perPage"
-    >
-    </app-table>
-  </ng-container>
-</ng-container>
+@if (currentDatacenter) { @if (!isLoading) { @if (!showingAppCentricLogs) {
+<app-table [config]="config" [data]="auditLogs" [(itemsPerPage)]="perPage" (tableEvent)="onTableEvent($event)"> </app-table>
+} @if (showingAppCentricLogs) {
+<app-table (tableEvent)="onAppCentricTableEvent($event)" [config]="appCentricConfig" [data]="auditLogs" [(itemsPerPage)]="perPage">
+</app-table>
+} } @else {
+<fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+} } @else {
+<p>Select a Datacenter to display Audit Log details</p>
+}
 
 <ng-template #entityAfterTemplate let-auditLog="datum">
-  <div *ngIf="auditLog.entityAfter">
-    <span *ngIf="auditLog.actionType === 'Update'" (click)="openDetailedModal(auditLog)">{{ auditLog.entityAfter.name }}</span>
-    <div *ngIf="auditLog.actionType !== 'Update'">{{ auditLog.entityAfter.name }}</div>
+  @if (auditLog.entityAfter) {
+  <div>
+    @if (auditLog.actionType === 'Update') {
+    <span (click)="openDetailedModal(auditLog)">{{ auditLog.entityAfter.name }}</span>
+    } @if (auditLog.actionType !== 'Update') {
+    <div>{{ auditLog.entityAfter.name }}</div>
+    }
   </div>
-  <div *ngIf="auditLog.entityBefore && !auditLog.entityAfter">
+  } @if (auditLog.entityBefore && !auditLog.entityAfter) {
+  <div>
     <div>{{ auditLog.entityBefore.name }}</div>
   </div>
-  <div *ngIf="auditLog.entityAfter?.definition?.vrf_name">
+  } @if (auditLog.entityAfter?.definition?.vrf_name) {
+  <div>
     <span (click)="openDetailedModal(auditLog)">{{ auditLog.entityAfter.definition.vrf_name }}</span>
   </div>
+  }
 </ng-template>
 
 <ng-template #loading>

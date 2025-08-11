@@ -22,12 +22,19 @@
           [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
         />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or '_'.</div>
+        @if (submitted && f.name.errors) {
+        <div class="invalid-feedback">
+          @if (f.name.errors.required) {
+          <div>Name is required</div>
+          } @if (f.name.errors.minlength) {
+          <div>Name must be at least 3 characters.</div>
+          } @if (f.name.errors.maxlength) {
+          <div>Name must be 100 characters or less.</div>
+          } @if (f.name.errors.invalidName) {
+          <div>Name must only contain alphanumeric characters or '_'.</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -40,9 +47,13 @@
           [class.is-invalid]="submitted && f.alias.errors"
           aria-label="Alias"
         />
-        <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
-          <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+        @if (submitted && f.alias.errors) {
+        <div class="invalid-feedback">
+          @if (f.alias.errors.maxlength) {
+          <div>Alias must be 100 characters or less.</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -55,9 +66,13 @@
           [class.is-invalid]="submitted && f.description.errors"
           aria-label="Description"
         />
-        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+        @if (submitted && f.description.errors) {
+        <div class="invalid-feedback">
+          @if (f.description.errors.maxlength) {
+          <div>Description must be 500 characters or less.</div>
+          }
         </div>
+        }
       </div>
     </div>
 
@@ -69,7 +84,8 @@
       </button>
     </footer>
   </form>
-  <div *ngIf="modalMode == 'Edit'">
+  @if (modalMode == 'Edit') {
+  <div>
     <div class="modal-body">
       <hr />
       <h5>Filter Entries</h5>
@@ -96,16 +112,18 @@
       (import)="importFilterEntries($event)"
     ></app-import-export>
   </div>
+  }
 </ngx-smart-modal>
 
 <ng-template #actionsTemplate let-filterEntry="datum">
   <section>
+    @if (!filterEntry?.deletedAt) {
     <app-icon-button
-      *ngIf="!filterEntry?.deletedAt"
       icon="edit"
       label="Edit FIlter Entry"
       (handleClick)="openFilterEntryModal(ModalMode.Edit, filterEntry)"
     ></app-icon-button>
+    }
     <app-icon-button
       icon="delete"
       label="Soft-Delete/Delete Filter Entry"
@@ -113,29 +131,32 @@
       (handleClick)="removeFilterEntry(filterEntry)"
     ></app-icon-button>
 
+    @if (filterEntry?.deletedAt) {
     <app-icon-button
-      *ngIf="filterEntry?.deletedAt"
       icon="undo"
       label="Restore Filter Entry"
       type="success"
       (handleClick)="restoreFilterEntry(filterEntry)"
     ></app-icon-button>
+    }
   </section>
 </ng-template>
 
 <ng-template #sourcePortTemplate let-filterEntry="datum">
   <section>
-    <span *ngIf="filterEntry.sourceFromPort && filterEntry.sourceToPort"
-      >{{ filterEntry?.sourceFromPort }} - {{ filterEntry?.sourceToPort }}</span
-    >
+    @if (filterEntry.sourceFromPort && filterEntry.sourceToPort) {
+    <span>{{ filterEntry?.sourceFromPort }} - {{ filterEntry?.sourceToPort }}</span>
+    }
   </section>
 </ng-template>
 
 <ng-template #destinationPortTemplate let-filterEntry="datum">
   <section>
-    <span *ngIf="filterEntry.destinationFromPort || filterEntry.destinationToPort">
+    @if (filterEntry.destinationFromPort || filterEntry.destinationToPort) {
+    <span>
       {{ filterEntry.destinationFromPort ? filterEntry.destinationFromPort + ' - ' : '' }}{{ filterEntry.destinationToPort || '' }}
     </span>
+    }
   </section>
 </ng-template>
 <app-filter-entry-modal [tenantId]="tenantId"></app-filter-entry-modal>

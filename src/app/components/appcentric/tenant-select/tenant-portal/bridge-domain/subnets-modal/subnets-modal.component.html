@@ -40,12 +40,9 @@
 
 <ng-template #actionsTemplate let-subnet="datum">
   <section>
-    <app-icon-button
-      *ngIf="!subnet?.deletedAt"
-      icon="edit"
-      label="Edit Subnet"
-      (handleClick)="openSubnetsEditModal(ModalMode.Edit, subnet)"
-    ></app-icon-button>
+    @if (!subnet?.deletedAt) {
+    <app-icon-button icon="edit" label="Edit Subnet" (handleClick)="openSubnetsEditModal(ModalMode.Edit, subnet)"></app-icon-button>
+    }
     <app-icon-button
       icon="delete"
       label="Soft-Delete/Delete Bridge Domain"
@@ -53,12 +50,8 @@
       (handleClick)="removeSubnet(subnet)"
     ></app-icon-button>
 
-    <app-icon-button
-      *ngIf="subnet?.deletedAt"
-      icon="undo"
-      label="Restore Bridge Domain"
-      type="success"
-      (handleClick)="restoreSubnet(subnet)"
-    ></app-icon-button>
+    @if (subnet?.deletedAt) {
+    <app-icon-button icon="undo" label="Restore Bridge Domain" type="success" (handleClick)="restoreSubnet(subnet)"></app-icon-button>
+    }
   </section>
 </ng-template>

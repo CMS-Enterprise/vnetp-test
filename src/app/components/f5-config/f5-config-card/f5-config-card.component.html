@@ -16,17 +16,22 @@
     </div>
     <!-- Icons and refresh button on the right -->
     <div class="d-flex align-items-center">
+      @if (jobStatus && jobStatus !== 'successful') {
       <fa-icon
-        *ngIf="jobStatus && jobStatus !== 'successful'"
         class="icon"
         [icon]="['fas', 'exclamation-triangle']"
         data-bs-toggle="tooltip"
         [attr.title]="getTooltipMessage(jobStatus)"
       ></fa-icon>
+      }
       <p class="mb-0">
-        <small *ngIf="!isRecentlyRefreshed() && !isRefreshingRuntimeData" style="color: #717579">{{ lastRefreshed }}</small>
-        <small *ngIf="isRefreshingRuntimeData" style="color: #717579">Refreshing</small>
-        <small *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" style="color: #717579">Refreshed</small>
+        @if (!isRecentlyRefreshed() && !isRefreshingRuntimeData) {
+        <small style="color: #717579">{{ lastRefreshed }}</small>
+        } @if (isRefreshingRuntimeData) {
+        <small style="color: #717579">Refreshing</small>
+        } @if (isRecentlyRefreshed() && !isRefreshingRuntimeData) {
+        <small style="color: #717579">Refreshed</small>
+        }
       </p>
       <button
         type="button"
@@ -35,8 +40,11 @@
         (click)="refreshF5Config(); $event.stopPropagation()"
         [disabled]="isRecentlyRefreshed() || isRefreshingRuntimeData"
       >
-        <fa-icon *ngIf="!isRecentlyRefreshed()" class="icon" [icon]="['fas', 'sync-alt']" [spin]="isRefreshingRuntimeData"></fa-icon>
-        <fa-icon *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData" class="icon" [icon]="['fas', 'check']"></fa-icon>
+        @if (!isRecentlyRefreshed()) {
+        <fa-icon class="icon" [icon]="['fas', 'sync-alt']" [spin]="isRefreshingRuntimeData"></fa-icon>
+        } @if (isRecentlyRefreshed() && !isRefreshingRuntimeData) {
+        <fa-icon class="icon" [icon]="['fas', 'check']"></fa-icon>
+        }
       </button>
     </div>
   </div>
@@ -45,9 +53,11 @@
     <p class="card-text mb-0">
       <small style="color: #717579">Version: {{ softwareVersion }}</small>
     </p>
-    <div *ngIf="expiredCertsWarning" class="alert alert-warning alert-sm mt-3" role="alert">
+    @if (expiredCertsWarning) {
+    <div class="alert alert-warning alert-sm mt-3" role="alert">
       <small> Warning: One or more in-use certificates have expired or will expire within 30 days. </small>
     </div>
+    }
   </div>
   <div class="card-footer d-flex justify-content-end">
     <button

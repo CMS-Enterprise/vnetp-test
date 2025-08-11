@@ -1,12 +1,15 @@
 <div class="select-wrap">
-  <app-icon-button *ngIf="undeployedChanges" icon="asterisk" [label]="'Undeployed Changes'" [type]="'info'"></app-icon-button>
-
-  <span *ngIf="currentDatacenter">
+  @if (undeployedChanges) {
+  <app-icon-button icon="asterisk" [label]="'Undeployed Changes'" [type]="'info'"></app-icon-button>
+  } @if (currentDatacenter) {
+  <span>
     Current Datacenter: <span class="text-bold ml-1">{{ currentDatacenter.name }}</span>
   </span>
-
-  <span *ngIf="!currentDatacenter">No Datacenter Selected</span>
-  <tooltip *ngIf="disableSelect" message="Switch Datacenter on Dashboard."></tooltip>
+  } @if (!currentDatacenter) {
+  <span>No Datacenter Selected</span>
+  } @if (disableSelect) {
+  <tooltip message="Switch Datacenter on Dashboard."></tooltip>
+  }
 
   <button class="btn btn-primary ml-3" [disabled]="lockCurrentDatacenter || disableSelect" (click)="openDatacenterSwitchModal()">
     {{ currentDatacenter ? 'Switch' : 'Select' }} Datacenter
@@ -24,7 +27,9 @@
 
     <select [(ngModel)]="selectedDatacenter" class="form-control">
       <option></option>
-      <option *ngFor="let datacenter of datacenters" [ngValue]="datacenter">{{ datacenter.name }}</option>
+      @for (datacenter of datacenters; track datacenter) {
+      <option [ngValue]="datacenter">{{ datacenter.name }}</option>
+      }
     </select>
   </div>
 

@@ -17,14 +17,20 @@
           required
         >
           <option></option>
-          <option *ngFor="let availablelocation of availableLocations">
+          @for (availablelocation of availableLocations; track availablelocation) {
+          <option>
             {{ availablelocation }}
           </option>
+          }
         </select>
 
-        <div *ngIf="form.submitted && location.invalid" class="invalid-feedback">
-          <div *ngIf="location.errors.required">Select a location</div>
+        @if (form.submitted && location.invalid) {
+        <div class="invalid-feedback">
+          @if (location.errors.required) {
+          <div>Select a location</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -43,9 +49,13 @@
           [disabled]="disableUserPass"
           required
         />
-        <div *ngIf="form.submitted && username.invalid" class="invalid-feedback">
-          <div *ngIf="username.errors.required">Username is required</div>
+        @if (form.submitted && username.invalid) {
+        <div class="invalid-feedback">
+          @if (username.errors.required) {
+          <div>Username is required</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -65,18 +75,26 @@
           required
         />
 
-        <div *ngIf="form.submitted && password.invalid" class="invalid-feedback">
-          <div *ngIf="password.errors.required">Password is required</div>
+        @if (form.submitted && password.invalid) {
+        <div class="invalid-feedback">
+          @if (password.errors.required) {
+          <div>Password is required</div>
+          }
         </div>
+        }
       </div>
 
       <div class="button-container">
-        <button id="getAccountsButton" *ngIf="!showTenantButton" class="btn btn-primary btn-lg" type="submit">Get Accounts</button>
+        @if (!showTenantButton) {
+        <button id="getAccountsButton" class="btn btn-primary btn-lg" type="submit">Get Accounts</button>
+        }
       </div>
 
-      <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+      @if (errorMessage) {
+      <div class="alert alert-danger mt-3">
         {{ errorMessage }}
       </div>
+      }
     </form>
 
     <form name="tenantForm" (ngSubmit)="(secondform.form.valid)" #secondform="ngForm" novalidate>
@@ -94,14 +112,20 @@
           required
         >
           <option></option>
-          <option *ngFor="let availableTenant of availableTenants" [ngValue]="availableTenant">
+          @for (availableTenant of availableTenants; track availableTenant) {
+          <option [ngValue]="availableTenant">
             {{ availableTenant.tenantFullName }}
           </option>
+          }
         </select>
 
-        <div *ngIf="secondform.submitted && tenant.invalid" class="invalid-feedback">
-          <div *ngIf="tenant.errors.required">Select Account</div>
+        @if (secondform.submitted && tenant.invalid) {
+        <div class="invalid-feedback">
+          @if (tenant.errors.required) {
+          <div>Select Account</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -121,10 +145,11 @@
         </select>
       </div>
 
-      <button *ngIf="!globalOnlyUser" class="btn btn-primary btn-lg" (click)="setTenantAndNavigate(selectedTenant, selectedMode)">
-        Select Account
-      </button>
-      <button *ngIf="showAdminPortalButton" class="btn btn-primary btn-lg" (click)="navToAdminPortal(selectedTenant)">Admin Portal</button>
+      @if (!globalOnlyUser) {
+      <button class="btn btn-primary btn-lg" (click)="setTenantAndNavigate(selectedTenant, selectedMode)">Select Account</button>
+      } @if (showAdminPortalButton) {
+      <button class="btn btn-primary btn-lg" (click)="navToAdminPortal(selectedTenant)">Admin Portal</button>
+      }
     </form>
   </div>
 </div>

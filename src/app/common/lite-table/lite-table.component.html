@@ -2,18 +2,27 @@
   <table>
     <thead>
       <tr>
-        <th *ngFor="let column of config.columns" scope="col">{{ column.name }}</th>
+        @for (column of config.columns; track column) {
+        <th scope="col">{{ column.name }}</th>
+        }
       </tr>
     </thead>
     <tbody>
-      <tr *ngIf="data && data.length === 0" class="no-data-row">
+      @if (data && data.length === 0) {
+      <tr class="no-data-row">
         <td [attr.colspan]="config.columns.length" class="no-data-cell">No Data Present</td>
       </tr>
-      <tr *ngFor="let row of data">
-        <td *ngFor="let column of config.columns">
-          <ng-container *ngIf="column.property">{{ row[column.property] }}</ng-container>
+      } @for (row of data; track row) {
+      <tr>
+        @for (column of config.columns; track column) {
+        <td>
+          @if (column.property) {
+          {{ row[column.property] }}
+          }
         </td>
+        }
       </tr>
+      }
     </tbody>
   </table>
 </div>

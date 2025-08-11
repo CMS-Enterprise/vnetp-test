@@ -23,12 +23,19 @@
             [class.is-invalid]="submitted && f.name.errors"
             aria-label="Name"
           />
-          <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-            <div *ngIf="f.name.errors.required">Name is required</div>
-            <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-            <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-            <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+          @if (submitted && f.name.errors) {
+          <div class="invalid-feedback">
+            @if (f.name.errors.required) {
+            <div>Name is required</div>
+            } @if (f.name.errors.minlength) {
+            <div>Name must be at least 3 characters.</div>
+            } @if (f.name.errors.maxlength) {
+            <div>Name must be 100 characters or less.</div>
+            } @if (f.name.errors.invalidName) {
+            <div>Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+            }
           </div>
+          }
         </div>
 
         <!-- Tag -->
@@ -45,11 +52,17 @@
             max="4094"
             required
           />
-          <div *ngIf="submitted && f.tag.errors" class="invalid-feedback">
-            <div *ngIf="f.tag.errors.required">Tag is required</div>
-            <div *ngIf="f.tag.errors.min">Tag must be greater than or equal to 1</div>
-            <div *ngIf="f.tag.errors.max">Tag must be less than or equal to 4094</div>
+          @if (submitted && f.tag.errors) {
+          <div class="invalid-feedback">
+            @if (f.tag.errors.required) {
+            <div>Tag is required</div>
+            } @if (f.tag.errors.min) {
+            <div>Tag must be greater than or equal to 1</div>
+            } @if (f.tag.errors.max) {
+            <div>Tag must be less than or equal to 4094</div>
+            }
           </div>
+          }
         </div>
       </div>
     </div>

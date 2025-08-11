@@ -18,57 +18,49 @@
     <span>Refresh</span>
   </button>
 
-  <button
-    class="btn btn-info"
-    *ngIf="FirewallRuleGroup?.type === 'Intervrf' || FirewallRuleGroup?.type === 'External'"
-    (click)="openPacketTracer()"
-  >
-    Packet Tracer
-  </button>
+  @if (FirewallRuleGroup?.type === 'Intervrf' || FirewallRuleGroup?.type === 'External') {
+  <button class="btn btn-info" (click)="openPacketTracer()">Packet Tracer</button>
+  }
 </section>
 
-<ng-container *ngIf="!isLoading; else loading">
-  <app-table
-    [config]="config"
-    [data]="firewallRules"
-    (clearResults)="getFirewallRules($event)"
-    (searchParams)="getFirewallRules($event)"
-    [searchColumns]="searchColumns"
-    [(itemsPerPage)]="perPage"
-    (tableEvent)="onTableEvent($event)"
-  ></app-table>
-</ng-container>
+@if (!isLoading) {
+<app-table
+  [config]="config"
+  [data]="firewallRules"
+  (clearResults)="getFirewallRules($event)"
+  (searchParams)="getFirewallRules($event)"
+  [searchColumns]="searchColumns"
+  [(itemsPerPage)]="perPage"
+  (tableEvent)="onTableEvent($event)"
+></app-table>
+} @else {
+<fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+}
 
 <ng-template #actionsTemplate let-firewallRule="datum">
   <section class="table__actions">
+    @if (checkUndeployedChanges(firewallRule)) {
+    <app-icon-button icon="asterisk" label="Undeployed Changes" [type]="'info'"></app-icon-button>
+    } @if (!firewallRule?.deletedAt && FirewallRuleGroup?.type !== 'ZoneBased') {
     <app-icon-button
-      *ngIf="checkUndeployedChanges(firewallRule)"
-      icon="asterisk"
-      label="Undeployed Changes"
-      [type]="'info'"
-    ></app-icon-button>
-
-    <app-icon-button
-      *ngIf="!firewallRule?.deletedAt && FirewallRuleGroup?.type !== 'ZoneBased'"
       icon="clone"
       label="Move/Clone Firewall Rule"
       (handleClick)="openFirewallRuleOperationModal(firewallRule)"
     ></app-icon-button>
-
+    } @if (!firewallRule?.deletedAt) {
     <app-icon-button
-      *ngIf="!firewallRule?.deletedAt"
       icon="edit"
       label="Edit Firewall Rule"
       (handleClick)="openFirewallRuleModal(ModalMode.Edit, firewallRule)"
     ></app-icon-button>
-
+    } @if (firewallRule?.deletedAt) {
     <app-icon-button
-      *ngIf="firewallRule?.deletedAt"
       icon="undo"
       label="Restore Firewall Rule"
       type="success"
       (handleClick)="restoreFirewallRule(firewallRule)"
     ></app-icon-button>
+    }
 
     <app-icon-button
       icon="delete"
@@ -78,10 +70,6 @@
     >
     </app-icon-button>
   </section>
-</ng-template>
-
-<ng-template #loading>
-  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
 </ng-template>
 
 <section class="btn-toolbar" role="toolbar">
@@ -101,86 +89,96 @@
 
 <!-- source address template -->
 <ng-template #sourceAddress let-firewallRule="datum">
-  <p *ngIf="firewallRule.sourceAddressType === 'IpAddress'" aria-label="Source IP">
+  @if (firewallRule.sourceAddressType === 'IpAddress') {
+  <p aria-label="Source IP">
     {{ firewallRule?.sourceIpAddress }}
   </p>
+  } @if (firewallRule.sourceAddressType === 'NetworkObject') {
   <p
     (click)="getObjectInfo('Source NetworkObject', firewallRule.sourceAddressType, firewallRule.sourceNetworkObjectId)"
     style="color: blue; cursor: pointer"
-    *ngIf="firewallRule.sourceAddressType === 'NetworkObject'"
     aria-label="Source Network Object"
   >
     {{ firewallRule?.sourceNetworkObjectId | resolve : getNetworkObjectName }}
     (Object)
   </p>
+  } @if (firewallRule.sourceAddressType === 'NetworkObjectGroup') {
   <p
     (click)="getObjectInfo('Source NetworkObjectGroup', firewallRule.sourceAddressType, firewallRule.sourceNetworkObjectGroupId)"
     style="color: blue; cursor: pointer"
-    *ngIf="firewallRule.sourceAddressType === 'NetworkObjectGroup'"
     aria-label="Source Network Object Group"
   >
     {{ firewallRule?.sourceNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
     (Object Group)
   </p>
+  }
 </ng-template>
 
 <!-- destination address template -->
 <ng-template #destinationAddress let-firewallRule="datum">
-  <p *ngIf="firewallRule.destinationAddressType === 'IpAddress'" aria-label="Destination IP">
+  @if (firewallRule.destinationAddressType === 'IpAddress') {
+  <p aria-label="Destination IP">
     {{ firewallRule?.destinationIpAddress }}
   </p>
+  } @if (firewallRule.destinationAddressType === 'NetworkObject') {
   <p
     (click)="getObjectInfo('Destination NetworkObject', firewallRule.destinationAddressType, firewallRule.destinationNetworkObjectId)"
     style="color: blue; cursor: pointer"
-    *ngIf="firewallRule.destinationAddressType === 'NetworkObject'"
     aria-label="Destination Network Object"
   >
     {{ firewallRule?.destinationNetworkObjectId | resolve : getNetworkObjectName }}
     (Object)
   </p>
+  } @if (firewallRule.destinationAddressType === 'NetworkObjectGroup') {
   <p
     (click)="
       getObjectInfo('Destination NetworkObjectGroup', firewallRule.destinationAddressType, firewallRule.destinationNetworkObjectGroupId)
     "
     style="color: blue; cursor: pointer"
-    *ngIf="firewallRule.destinationAddressType === 'NetworkObjectGroup'"
     aria-label="Destination Network Object Group"
   >
     {{ firewallRule?.destinationNetworkObjectGroupId | resolve : getNetworkObjectGroupName }}
     (Object Group)
   </p>
+  }
 </ng-template>
 
 <!-- service type template -->
 <ng-template #serviceType let-firewallRule="datum">
-  <p *ngIf="firewallRule.serviceType === 'Port'" aria-label="Source/Destination Ports">
+  @if (firewallRule.serviceType === 'Port') {
+  <p aria-label="Source/Destination Ports">
     Source Ports: {{ firewallRule?.sourcePorts }} - Destination Ports: {{ firewallRule?.destinationPorts }}
   </p>
+  } @if (firewallRule.serviceType === 'ServiceObject') {
   <p
     (click)="getObjectInfo('Service Object', firewallRule.serviceType, firewallRule.serviceObjectId)"
     style="color: blue; cursor: pointer"
-    *ngIf="firewallRule.serviceType === 'ServiceObject'"
     aria-label="Service Object"
   >
     {{ firewallRule?.serviceObjectId | resolve : getServiceObjectName }} (Object)
   </p>
+  } @if (firewallRule.serviceType === 'ServiceObjectGroup') {
   <p
     (click)="getObjectInfo('Service Object Group', firewallRule.serviceType, firewallRule.serviceObjectGroupId)"
     style="color: blue; cursor: pointer"
-    *ngIf="firewallRule.serviceType === 'ServiceObjectGroup'"
     aria-label="Service Object Group"
   >
     {{ firewallRule?.serviceObjectGroupId | resolve : getServiceObjectGroupName }} (Object Group)
   </p>
+  }
 </ng-template>
 
 <!-- to/from zone/direction template -->
 <ng-template #directionZone let-firewallRule="datum">
-  <p *ngIf="FirewallRuleGroup?.type === 'Intervrf' || FirewallRuleGroup?.type === 'External'" aria-label="Direction">
+  @if (FirewallRuleGroup?.type === 'Intervrf' || FirewallRuleGroup?.type === 'External') {
+  <p aria-label="Direction">
     {{ firewallRule?.direction }}
   </p>
-  <p *ngIf="FirewallRuleGroup?.type === 'ZoneBased'" aria-label="From Zone">From: {{ getZoneNames(firewallRule.fromZone) }}</p>
-  <p *ngIf="FirewallRuleGroup?.type === 'ZoneBased'" aria-label="To Zone">To: {{ getZoneNames(firewallRule.toZone) }}</p>
+  } @if (FirewallRuleGroup?.type === 'ZoneBased') {
+  <p aria-label="From Zone">From: {{ getZoneNames(firewallRule.fromZone) }}</p>
+  } @if (FirewallRuleGroup?.type === 'ZoneBased') {
+  <p aria-label="To Zone">To: {{ getZoneNames(firewallRule.toZone) }}</p>
+  }
 </ng-template>
 
 <app-firewall-rule-packet-tracer [objects]="packetTracerObjects"></app-firewall-rule-packet-tracer>
@@ -213,12 +211,9 @@
       [ngClass]="{ 'green-button': isRecentlyRefreshed() }"
       [disabled]="isRefreshingRuntimeData || isRecentlyRefreshed()"
     >
-      <ng-container *ngIf="!isRefreshingRuntimeData && !isRecentlyRefreshed()">Refresh Hitcount</ng-container>
-      <ng-container *ngIf="isRefreshingRuntimeData">
-        <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-        Refreshing...
-      </ng-container>
-      <ng-container *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData">Refreshed</ng-container>
+      @if (!isRefreshingRuntimeData && !isRecentlyRefreshed()) { Refresh Hitcount } @if (isRefreshingRuntimeData) {
+      <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      Refreshing... } @if (isRecentlyRefreshed() && !isRefreshingRuntimeData) { Refreshed }
     </button>
   </div>
 </ng-template>

@@ -3,12 +3,14 @@
   <!-- Service Status -->
   <aside class="dashboard__card" aria-label="Service Status">
     <h4 class="dashboard__heading">Service Status</h4>
-    <div *ngFor="let service of status" class="status-item">
+    @for (service of status; track service) {
+    <div class="status-item">
       <span>
         {{ service.name }}
       </span>
       <div class="status-light" [ngClass]="service.status"></div>
     </div>
+    }
   </aside>
 
   <!-- Overall Environment -->

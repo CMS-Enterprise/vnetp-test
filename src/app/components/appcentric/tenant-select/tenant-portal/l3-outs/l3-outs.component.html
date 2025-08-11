@@ -6,43 +6,36 @@
     </button>
   </section>
 
-  <ng-container *ngIf="!isLoading; else loading">
-    <app-table
-      [config]="config"
-      [data]="l3Outs"
-      (clearResults)="getL3Outs($event)"
-      (searchParams)="getL3Outs($event)"
-      [searchColumns]="searchColumns"
-      [(itemsPerPage)]="perPage"
-      (tableEvent)="onTableEvent($event)"
-    ></app-table>
-    <section class="btn-toolbar" role="toolbar">
-      <app-import-export
-        [exportObject]="l3Outs"
-        exportFileName="l3Outs"
-        [disableJson]="false"
-        (import)="importL3Outs($event)"
-      ></app-import-export>
-    </section>
-  </ng-container>
+  @if (!isLoading) {
+  <app-table
+    [config]="config"
+    [data]="l3Outs"
+    (clearResults)="getL3Outs($event)"
+    (searchParams)="getL3Outs($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
+  <section class="btn-toolbar" role="toolbar">
+    <app-import-export
+      [exportObject]="l3Outs"
+      exportFileName="l3Outs"
+      [disableJson]="false"
+      (import)="importL3Outs($event)"
+    ></app-import-export>
+  </section>
+  } @else {
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  }
 </ng-container>
 
 <ng-template #actionsTemplate let-l3Out="datum">
   <section class="table__actions">
-    <app-icon-button
-      *ngIf="!l3Out?.deletedAt"
-      icon="edit"
-      label="Edit L3 Out"
-      (handleClick)="openL3OutsModal(ModalMode.Edit, l3Out)"
-    ></app-icon-button>
-
-    <app-icon-button
-      *ngIf="l3Out?.deletedAt"
-      icon="undo"
-      label="Restore L3 Out"
-      type="success"
-      (handleClick)="restoreL3Out(l3Out)"
-    ></app-icon-button>
+    @if (!l3Out?.deletedAt) {
+    <app-icon-button icon="edit" label="Edit L3 Out" (handleClick)="openL3OutsModal(ModalMode.Edit, l3Out)"></app-icon-button>
+    } @if (l3Out?.deletedAt) {
+    <app-icon-button icon="undo" label="Restore L3 Out" type="success" (handleClick)="restoreL3Out(l3Out)"></app-icon-button>
+    }
 
     <app-icon-button
       icon="delete"

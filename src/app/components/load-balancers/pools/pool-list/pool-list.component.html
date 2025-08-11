@@ -5,30 +5,28 @@
   </button>
 </section>
 
-<ng-container *ngIf="!isLoading; else loading">
-  <app-table
-    [config]="config"
-    [data]="pools"
-    (clearResults)="loadPools()"
-    [searchColumns]="searchColumns"
-    [(itemsPerPage)]="perPage"
-    (tableEvent)="onTableEvent($event)"
-  ></app-table>
-</ng-container>
+@if (!isLoading) {
+<app-table
+  [config]="config"
+  [data]="pools"
+  (clearResults)="loadPools()"
+  [searchColumns]="searchColumns"
+  [(itemsPerPage)]="perPage"
+  (tableEvent)="onTableEvent($event)"
+></app-table>
+} @else {
+<fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+}
 
 <ng-template #actionsTemplate let-pool="datum">
   <section class="table__actions">
-    <app-icon-button *ngIf="checkUndeployedChanges(pool)" icon="asterisk" [label]="'Undeployed Changes'" [type]="'info'"></app-icon-button>
-
-    <app-icon-button *ngIf="!pool?.deletedAt" icon="edit" label="Edit Pool" (handleClick)="openModal(pool)"></app-icon-button>
-
-    <app-icon-button
-      *ngIf="pool?.deletedAt"
-      icon="undo"
-      label="Restore Pool"
-      type="success"
-      (handleClick)="restore(pool)"
-    ></app-icon-button>
+    @if (checkUndeployedChanges(pool)) {
+    <app-icon-button icon="asterisk" [label]="'Undeployed Changes'" [type]="'info'"></app-icon-button>
+    } @if (!pool?.deletedAt) {
+    <app-icon-button icon="edit" label="Edit Pool" (handleClick)="openModal(pool)"></app-icon-button>
+    } @if (pool?.deletedAt) {
+    <app-icon-button icon="undo" label="Restore Pool" type="success" (handleClick)="restore(pool)"></app-icon-button>
+    }
 
     <app-icon-button
       icon="delete"

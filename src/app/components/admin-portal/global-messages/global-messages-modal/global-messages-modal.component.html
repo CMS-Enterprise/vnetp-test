@@ -15,10 +15,15 @@
           [class.is-invalid]="submitted && f.description.errors"
           aria-label="description"
         />
-        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.required">Description is required</div>
-          <div *ngIf="f.description.errors.maxlength">Description must be at less than 100 characters</div>
+        @if (submitted && f.description.errors) {
+        <div class="invalid-feedback">
+          @if (f.description.errors.required) {
+          <div>Description is required</div>
+          } @if (f.description.errors.maxlength) {
+          <div>Description must be at less than 100 characters</div>
+          }
         </div>
+        }
       </div>
     </div>
     <footer class="modal-footer">

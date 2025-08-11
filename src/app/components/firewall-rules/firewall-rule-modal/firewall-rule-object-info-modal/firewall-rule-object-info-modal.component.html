@@ -10,8 +10,10 @@
   </header>
 
   <div class="modal-body">
-    <div *ngFor="let element of modalBody">
+    @for (element of modalBody; track element) {
+    <div>
       {{ element }}
     </div>
+    }
   </div>
 </ngx-smart-modal>

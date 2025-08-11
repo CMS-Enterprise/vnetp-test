@@ -17,12 +17,19 @@
         <div class="form-group col-md-6">
           <label for="name">Name</label>
           <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
-          <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-            <div *ngIf="f.name.errors.required">Name is required</div>
-            <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-            <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-            <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+          @if (submitted && f.name.errors) {
+          <div class="invalid-feedback">
+            @if (f.name.errors.required) {
+            <div>Name is required</div>
+            } @if (f.name.errors.minlength) {
+            <div>Name must be at least 3 characters.</div>
+            } @if (f.name.errors.maxlength) {
+            <div>Name must be 100 characters or less.</div>
+            } @if (f.name.errors.invalidName) {
+            <div>Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+            }
           </div>
+          }
         </div>
 
         <!-- Description -->
@@ -35,10 +42,15 @@
             class="form-control"
             [class.is-invalid]="submitted && f.description.errors"
           />
-          <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-            <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
-            <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+          @if (submitted && f.description.errors) {
+          <div class="invalid-feedback">
+            @if (f.description.errors.minlength) {
+            <div>Description must be at least 3 characters.</div>
+            } @if (f.description.errors.maxlength) {
+            <div>Description must be 500 characters or less.</div>
+            }
           </div>
+          }
         </div>
       </div>
 
@@ -51,27 +63,38 @@
             <option value="ClientSSL">ClientSSL</option>
             <option value="Http">HTTP</option>
           </select>
-          <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
-            <div *ngIf="f.type.errors.required">Type is required</div>
+          @if (submitted && f.type.errors) {
+          <div class="invalid-feedback">
+            @if (f.type.errors.required) {
+            <div>Type is required</div>
+            }
           </div>
+          }
         </div>
       </div>
 
-      <div class="form-row" *ngIf="f.type.value === ProfileType.Http">
+      @if (f.type.value === ProfileType.Http) {
+      <div class="form-row">
         <!-- Reverse Proxy -->
         <div class="form-group col-md-6">
           <label for="reverseProxy">Reverse Proxy</label>
           <select formControlName="reverseProxy" class="form-control" [class.is-invalid]="submitted && f.reverseProxy.errors">
             <option></option>
-            <option *ngFor="let type of reverseProxyTypes" [ngValue]="type">{{ type }}</option>
+            @for (type of reverseProxyTypes; track type) {
+            <option [ngValue]="type">{{ type }}</option>
+            }
           </select>
-          <div *ngIf="submitted && f.reverseProxy.errors" class="invalid-feedback">
-            <div *ngIf="f.reverseProxy.errors.required">Reverse Proxy is required</div>
+          @if (submitted && f.reverseProxy.errors) {
+          <div class="invalid-feedback">
+            @if (f.reverseProxy.errors.required) {
+            <div>Reverse Proxy is required</div>
+            }
           </div>
+          }
         </div>
       </div>
-
-      <div class="form-row" *ngIf="f.type.value === ProfileType.ClientSsl">
+      } @if (f.type.value === ProfileType.ClientSsl) {
+      <div class="form-row">
         <div class="form-group col-md-12">
           <label for="publicKey">Client SSL Certificate</label>
           <textarea
@@ -83,23 +106,28 @@
             [class.is-invalid]="submitted && f.certificate.errors"
           >
           </textarea>
-          <div *ngIf="submitted && f.certificate.errors" class="invalid-feedback">
-            <div *ngIf="f.certificate.errors.required">Client SSL Certificate is required</div>
-            <div *ngIf="f.certificate.errors.minLength">Client SSL Certificate must be at least 50 characters.</div>
+          @if (submitted && f.certificate.errors) {
+          <div class="invalid-feedback">
+            @if (f.certificate.errors.required) {
+            <div>Client SSL Certificate is required</div>
+            } @if (f.certificate.errors.minLength) {
+            <div>Client SSL Certificate must be at least 50 characters.</div>
+            }
           </div>
+          }
         </div>
       </div>
-
-      <div class="form-row" *ngIf="f.type.value === ProfileType.ClientSsl">
+      } @if (f.type.value === ProfileType.ClientSsl) {
+      <div class="form-row">
         <div class="form-group col-md-6">
           <button class="btn btn-warning" (click)="privateKeyCipherUploader.click()" type="button">
             <fa-icon class="icon" [icon]="['fas', 'upload']"></fa-icon>
             <span>{{ privateKeyCipher ? 'Replace' : 'Upload' }} Encrypted Private Key</span>
           </button>
-
           <input hidden type="file" #privateKeyCipherUploader (change)="importPrivateKeyCipher($event)" />
         </div>
       </div>
+      }
     </div>
 
     <footer class="modal-footer">

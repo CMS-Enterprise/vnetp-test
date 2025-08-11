@@ -13,14 +13,17 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let job of jobs | paginate : { itemsPerPage: perPage, currentPage: currentJobsPage }">
+    @for (job of jobs | paginate : { itemsPerPage: perPage, currentPage: currentJobsPage }; track job) {
+    <tr>
       <td>{{ job?.jobType }}</td>
       <td>{{ job?.createdAt | date : 'medium' }}</td>
       <td>{{ job?.completedAt | date : 'medium' }}</td>
     </tr>
-    <tr *ngIf="!jobs?.length" class="text-center">
+    } @if (!jobs?.length) {
+    <tr class="text-center">
       <td colspan="3">No Jobs</td>
     </tr>
+    }
   </tbody>
 </table>
 <pagination-controls (pageChange)="currentJobsPage = $event"></pagination-controls>

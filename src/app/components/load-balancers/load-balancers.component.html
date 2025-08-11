@@ -1,11 +1,9 @@
 <app-tier-select></app-tier-select>
 <h1>Load Balancers</h1>
 
-<ng-container *ngIf="currentDatacenter && currentTier; else warningMessage">
-  <app-tabs #tabsRef [tabs]="tabs" [initialTabIndex]="initialTabIndex" (tabChange)="handleTabChange($event)"></app-tabs>
-  <router-outlet name="load-balancer"></router-outlet>
-</ng-container>
-
-<ng-template #warningMessage>
-  <p>Select a Tier to display Load Balancer details.</p>
-</ng-template>
+@if (currentDatacenter && currentTier) {
+<app-tabs #tabsRef [tabs]="tabs" [initialTabIndex]="initialTabIndex" (tabChange)="handleTabChange($event)"></app-tabs>
+<router-outlet name="load-balancer"></router-outlet>
+} @else {
+<p>Select a Tier to display Load Balancer details.</p>
+}

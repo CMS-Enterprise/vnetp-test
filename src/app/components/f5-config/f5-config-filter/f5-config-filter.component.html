@@ -17,11 +17,15 @@
         >
           {{ selectedPartition }}
         </div>
-        <div class="dropdown-menu" *ngIf="showDropdown">
-          <div class="dropdown-item" *ngFor="let partition of partitions" (click)="showPartitionFilter ? selectPartition(partition) : null">
+        @if (showDropdown) {
+        <div class="dropdown-menu">
+          @for (partition of partitions; track partition) {
+          <div class="dropdown-item" (click)="showPartitionFilter ? selectPartition(partition) : null">
             {{ partition }}
           </div>
+          }
         </div>
+        }
       </div>
     </ng-container>
     <input

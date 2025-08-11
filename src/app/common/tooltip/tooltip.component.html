@@ -13,8 +13,11 @@
   <div class="tooltiptext" [class.show]="isShowTooltip" [class.lock]="isLockTooltip" [ngStyle]="tooltipMsgStyle">
     <p [innerHTML]="message"></p>
     <div class="pin" (click)="toggleVisiblity()">
-      <span *ngIf="!isLockTooltip" class="pin-icon">+</span>
-      <span *ngIf="isLockTooltip" class="pin-icon">-</span>
+      @if (!isLockTooltip) {
+      <span class="pin-icon">+</span>
+      } @if (isLockTooltip) {
+      <span class="pin-icon">-</span>
+      }
     </div>
   </div>
 </div>

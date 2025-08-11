@@ -15,12 +15,19 @@
           [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
         />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+        @if (submitted && f.name.errors) {
+        <div class="invalid-feedback">
+          @if (f.name.errors.required) {
+          <div>Name is required</div>
+          } @if (f.name.errors.minlength) {
+          <div>Name must be at least 3 characters.</div>
+          } @if (f.name.errors.maxlength) {
+          <div>Name must be 100 characters or less.</div>
+          } @if (f.name.errors.invalidName) {
+          <div>Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -33,11 +40,17 @@
           [class.is-invalid]="submitted && f.description.errors"
           aria-label="Description"
         />
-        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.required">Description is required</div>
-          <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters</div>
-          <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less</div>
+        @if (submitted && f.description.errors) {
+        <div class="invalid-feedback">
+          @if (f.description.errors.required) {
+          <div>Description is required</div>
+          } @if (f.description.errors.minlength) {
+          <div>Description must be at least 3 characters</div>
+          } @if (f.description.errors.maxlength) {
+          <div>Description must be 500 characters or less</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -52,11 +65,17 @@
           min="1"
           max="4094"
         />
-        <div *ngIf="submitted && f.vlanNumber.errors" class="invalid-feedback">
-          <div *ngIf="f.vlanNumber.errors.required">VLAN Number is required</div>
-          <div *ngIf="f.vlanNumber.errors.min">VLAN Number must be greater than or equal to 1</div>
-          <div *ngIf="f.vlanNumber.errors.max">VLAN Number must be less than or equal to 4094</div>
+        @if (submitted && f.vlanNumber.errors) {
+        <div class="invalid-feedback">
+          @if (f.vlanNumber.errors.required) {
+          <div>VLAN Number is required</div>
+          } @if (f.vlanNumber.errors.min) {
+          <div>VLAN Number must be greater than or equal to 1</div>
+          } @if (f.vlanNumber.errors.max) {
+          <div>VLAN Number must be less than or equal to 4094</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">

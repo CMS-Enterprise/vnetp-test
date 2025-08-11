@@ -21,14 +21,19 @@
           [class.is-invalid]="submitted && f.network.errors"
           aria-label="Network"
         />
-        <div *ngIf="submitted && f.network.errors" class="invalid-feedback">
-          <div *ngIf="f.network.errors.required">Network is required</div>
-          <div *ngIf="f.network.errors.invalidIpCidr">Invalid Network address, must be a valid CIDR.</div>
-          <div *ngIf="f.network.errors.invalidExternalRouteIp">
-            Invalid Network address, mus begin with 10.x.x.x, 158.73.x.x, or 192.168.x.x
-          </div>
-          <div *ngIf="f.network.errors.invalidHost">Invalid network id for subnet mask</div>
+        @if (submitted && f.network.errors) {
+        <div class="invalid-feedback">
+          @if (f.network.errors.required) {
+          <div>Network is required</div>
+          } @if (f.network.errors.invalidIpCidr) {
+          <div>Invalid Network address, must be a valid CIDR.</div>
+          } @if (f.network.errors.invalidExternalRouteIp) {
+          <div>Invalid Network address, mus begin with 10.x.x.x, 158.73.x.x, or 192.168.x.x</div>
+          } @if (f.network.errors.invalidHost) {
+          <div>Invalid network id for subnet mask</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -41,11 +46,17 @@
           [class.is-invalid]="submitted && f.prefixLength.errors"
           aria-label="Prefix Length"
         />
-        <div *ngIf="submitted && f.prefixLength.errors" class="invalid-feedback">
-          <div *ngIf="f.prefixLength.errors.required">Prefix Length is required.</div>
-          <div *ngIf="f.prefixLength.errors.min">Prefix Length must be greater than 0.</div>
-          <div *ngIf="f.prefixLength.errors.max">Prefix Length must be less than 32.</div>
+        @if (submitted && f.prefixLength.errors) {
+        <div class="invalid-feedback">
+          @if (f.prefixLength.errors.required) {
+          <div>Prefix Length is required.</div>
+          } @if (f.prefixLength.errors.min) {
+          <div>Prefix Length must be greater than 0.</div>
+          } @if (f.prefixLength.errors.max) {
+          <div>Prefix Length must be less than 32.</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -58,9 +69,13 @@
           [class.is-invalid]="submitted && f.metric.errors"
           aria-label="Metric"
         />
-        <div *ngIf="submitted && f.metric.errors" class="invalid-feedback">
-          <div *ngIf="f.metric.errors.required">Metric is required.</div>
+        @if (submitted && f.metric.errors) {
+        <div class="invalid-feedback">
+          @if (f.metric.errors.required) {
+          <div>Metric is required.</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -80,9 +95,13 @@
           <option value="edcmgmt">edcmgmt (vpn_edc_mgmt)</option>
           <option value="transport">Transport</option>
         </select>
-        <div *ngIf="submitted && f.vrf.errors" class="invalid-feedback">
-          <div *ngIf="f.vrf.errors.required">VRF/Zone is required</div>
+        @if (submitted && f.vrf.errors) {
+        <div class="invalid-feedback">
+          @if (f.vrf.errors.required) {
+          <div>VRF/Zone is required</div>
+          }
         </div>
+        }
       </div>
     </div>
 

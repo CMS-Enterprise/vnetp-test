@@ -23,12 +23,19 @@
           aria-label="Name"
           id="name"
         />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+        @if (submitted && f.name.errors) {
+        <div class="invalid-feedback">
+          @if (f.name.errors.required) {
+          <div>Name is required</div>
+          } @if (f.name.errors.minlength) {
+          <div>Name must be at least 3 characters.</div>
+          } @if (f.name.errors.maxlength) {
+          <div>Name must be 100 characters or less.</div>
+          } @if (f.name.errors.invalidName) {
+          <div>Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -42,16 +49,22 @@
           aria-label="Description"
           id="description"
         />
-        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
-          <div *ngIf="f.description.errors.maxlength">Description must be 100 characters or less.</div>
+        @if (submitted && f.description.errors) {
+        <div class="invalid-feedback">
+          @if (f.description.errors.minlength) {
+          <div>Description must be at least 3 characters.</div>
+          } @if (f.description.errors.maxlength) {
+          <div>Description must be 100 characters or less.</div>
+          }
         </div>
+        }
       </div>
 
       Network Objects
       <tooltip [message]="helpText.NetworkObjects"></tooltip>
 
-      <div *ngIf="ModalMode === 'Edit'">
+      @if (ModalMode === 'Edit') {
+      <div>
         <!-- Select Network Object-->
         <ng-select
           [items]="tierNetworkObjects"
@@ -65,6 +78,7 @@
           <span>Add Network Object</span>
         </button>
       </div>
+      }
 
       <table class="table table-striped table-sm table-bordered">
         <caption>
@@ -80,7 +94,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let netObj of networkObjects">
+          @for (netObj of networkObjects; track netObj) {
+          <tr>
             <td>
               <span>{{ netObj.name }}</span>
             </td>
@@ -88,16 +103,21 @@
               <span>{{ netObj.type }}</span>
             </td>
             <td>
-              <span *ngIf="netObj.type === 'IpAddress'">{{ netObj?.ipAddress }}</span>
-              <span *ngIf="netObj.type === 'Range'"> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
+              @if (netObj.type === 'IpAddress') {
+              <span>{{ netObj?.ipAddress }}</span>
+              } @if (netObj.type === 'Range') {
+              <span> {{ netObj?.startIpAddress }} - {{ netObj?.endIpAddress }} </span>
+              }
             </td>
             <td class="table__actions">
               <app-icon-button icon="delete" label="Remove Network Object" (handleClick)="removeNetworkObject(netObj)"></app-icon-button>
             </td>
           </tr>
-          <tr *ngIf="!networkObjects?.length" class="text-center">
+          } @if (!networkObjects?.length) {
+          <tr class="text-center">
             <td colspan="4">No Network Objects</td>
           </tr>
+          }
         </tbody>
       </table>
     </div>

@@ -13,15 +13,19 @@
 </ngx-smart-modal>
 
 <ng-template #changedTemplate let-auditLog="datum">
-  <div *ngIf="auditLog.changedProperties">
+  @if (auditLog.changedProperties) {
+  <div>
     <table class="table table-striped table-sm table-bordered">
       <thead>
         <tr>
-          <th scope="col" *ngFor="let prop of changedPropsConfig.columns">{{ prop.name }}</th>
+          @for (prop of changedPropsConfig.columns; track prop) {
+          <th scope="col">{{ prop.name }}</th>
+          }
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let changedProperty of auditLog.changedProperties">
+        @for (changedProperty of auditLog.changedProperties; track changedProperty) {
+        <tr>
           <td>
             <p>{{ changedProperty.propertyName }}</p>
           </td>
@@ -32,7 +36,9 @@
             <p style="overflow-wrap: anywhere">{{ changedProperty?.after }}</p>
           </td>
         </tr>
+        }
       </tbody>
     </table>
   </div>
+  }
 </ng-template>

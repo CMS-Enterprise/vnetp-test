@@ -7,42 +7,45 @@
     </button>
   </section>
 
-  <ng-container *ngIf="!isLoading; else loading">
-    <app-table
-      [config]="config"
-      [data]="applicationProfiles"
-      (clearResults)="getApplicationProfiles($event)"
-      (searchParams)="getApplicationProfiles($event)"
-      [searchColumns]="searchColumns"
-      [(itemsPerPage)]="perPage"
-      (tableEvent)="onTableEvent($event)"
-    ></app-table>
-    <section class="btn-toolbar" role="toolbar">
-      <app-import-export
-        [exportObject]="applicationProfiles"
-        exportFileName="applicationProfiles"
-        [disableJson]="false"
-        (import)="importAppProfiles($event)"
-      ></app-import-export>
-    </section>
-  </ng-container>
+  @if (!isLoading) {
+  <app-table
+    [config]="config"
+    [data]="applicationProfiles"
+    (clearResults)="getApplicationProfiles($event)"
+    (searchParams)="getApplicationProfiles($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
+  <section class="btn-toolbar" role="toolbar">
+    <app-import-export
+      [exportObject]="applicationProfiles"
+      exportFileName="applicationProfiles"
+      [disableJson]="false"
+      (import)="importAppProfiles($event)"
+    ></app-import-export>
+  </section>
+  } @else {
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  }
 </ng-container>
 
 <ng-template #actionsTemplate let-applicationProfile="datum">
   <section class="table__actions">
+    @if (!applicationProfile?.deletedAt) {
     <app-icon-button
-      *ngIf="!applicationProfile?.deletedAt"
       icon="edit"
       label="Edit Application Profile"
       (handleClick)="openApplicationProfileModal(ModalMode.Edit, applicationProfile)"
     ></app-icon-button>
+    } @if (applicationProfile?.deletedAt) {
     <app-icon-button
-      *ngIf="applicationProfile?.deletedAt"
       icon="undo"
       label="Restore Application Profile"
       type="success"
       (handleClick)="restoreApplicationProfile(applicationProfile)"
     ></app-icon-button>
+    }
     <app-icon-button
       icon="delete"
       label="Soft-Delete/Delete Application Profile"

@@ -28,9 +28,13 @@
       <div class="form-group">
         <label for="natRuleGroups">Nat Rule Groups</label>
         <ng-select id="natRuleGroups" [items]="natRuleGroups" bindLabel="name" bindValue="id" formControlName="natRuleGroupId"></ng-select>
-        <div *ngIf="submitted && f.natRuleGroupId.errors" class="invalid-feedback">
-          <div *ngIf="f.natRuleGroupId.errors.required">Nat Group is required</div>
+        @if (submitted && f.natRuleGroupId.errors) {
+        <div class="invalid-feedback">
+          @if (f.natRuleGroupId.errors.required) {
+          <div>Nat Group is required</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -40,12 +44,18 @@
         ></tooltip>
         <select class="form-control" id="operation" class="form-control" formControlName="operation">
           <option></option>
-          <option *ngIf="this.form.controls.natRuleGroupId.value !== sourceNatRuleGroupId" value="Move">Move</option>
+          @if (this.form.controls.natRuleGroupId.value !== sourceNatRuleGroupId) {
+          <option value="Move">Move</option>
+          }
           <option value="Clone">Clone</option>
         </select>
-        <div *ngIf="submitted && f.operation.errors" class="invalid-feedback">
-          <div *ngIf="f.operation.errors.required">Operation is required</div>
+        @if (submitted && f.operation.errors) {
+        <div class="invalid-feedback">
+          @if (f.operation.errors.required) {
+          <div>Operation is required</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -54,12 +64,19 @@
           message="Please note that a rule with the same name must not already exist in order for the new rule to be moved/cloned."
         ></tooltip>
         <input aria-label="name" class="form-control" id="name" type="text" formControlName="name" />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 60 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+        @if (submitted && f.name.errors) {
+        <div class="invalid-feedback">
+          @if (f.name.errors.required) {
+          <div>Name is required</div>
+          } @if (f.name.errors.minlength) {
+          <div>Name must be at least 3 characters.</div>
+          } @if (f.name.errors.maxlength) {
+          <div>Name must be 60 characters or less.</div>
+          } @if (f.name.errors.invalidName) {
+          <div>Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -68,9 +85,13 @@
           message="Please note that a rule with the same rule index must not already exist in order for the new rule to be moved/cloned."
         ></tooltip>
         <input aria-label="ruleIndex" class="form-control" id="ruleIndex" type="number" formControlName="ruleIndex" />
-        <div *ngIf="submitted && f.ruleIndex.errors" class="invalid-feedback">
-          <div *ngIf="f.ruleIndex.errors.required">Rule Index is required</div>
+        @if (submitted && f.ruleIndex.errors) {
+        <div class="invalid-feedback">
+          @if (f.ruleIndex.errors.required) {
+          <div>Rule Index is required</div>
+          }
         </div>
+        }
       </div>
     </div>
     <footer class="modal-footer">

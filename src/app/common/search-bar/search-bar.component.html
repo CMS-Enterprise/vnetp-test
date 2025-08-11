@@ -5,14 +5,18 @@
   <select aria-label="searchColumn" id="searchColumn" [(ngModel)]="searchColumn" placeholder="Column">
     <optgroup aria-label="search-properties">
       <option [ngValue]="defaultSearch.propertyName" selected>{{ defaultSearch.displayName }}</option>
-      <option *ngFor="let column of columns" [ngValue]="column.propertyName">
+      @for (column of columns; track column) {
+      <option [ngValue]="column.propertyName">
         {{ column.displayName }}
       </option>
+      }
     </optgroup>
   </select>
   <input (keyup.enter)="searchThis()" aria-label="searchText" type="search" [(ngModel)]="searchText" placeholder="Search" />
   <a id="search-button" aria-label="searchButton" (click)="searchThis()">
     <fa-icon class="icon" [icon]="['fas', 'search']"></fa-icon>
   </a>
-  <span (keyup.enter)="clearFilteredResults()" *ngIf="filteredResults" id="clear" (click)="clearFilteredResults()">clear</span>
+  @if (filteredResults) {
+  <span (keyup.enter)="clearFilteredResults()" id="clear" (click)="clearFilteredResults()">clear</span>
+  }
 </div>

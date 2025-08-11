@@ -13,12 +13,14 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let subnet of wanForm?.wanFormSubnets">
+      @for (subnet of wanForm?.wanFormSubnets; track subnet) {
+      <tr>
         <td>{{ subnet.name }}</td>
         <td>{{ subnet.description || '-' }}</td>
         <td>{{ subnet.vrf }}</td>
         <td>{{ subnet.environment }}</td>
       </tr>
+      }
     </tbody>
   </table>
 </div>
@@ -39,13 +41,15 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let route of wanForm?.externalRoutes">
+      @for (route of wanForm?.externalRoutes; track route) {
+      <tr>
         <td>{{ route.network }}/{{ route.prefixLength }}</td>
         <td>{{ route.protocol }}</td>
         <td>{{ route.metric }}</td>
         <td>{{ route.vrf }}</td>
         <td>{{ route.uptime }}</td>
       </tr>
+      }
     </tbody>
   </table>
 </div>

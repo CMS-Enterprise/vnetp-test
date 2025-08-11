@@ -21,12 +21,19 @@
           [class.is-invalid]="submitted && f.name.errors"
           aria-label="Name"
         />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or '_'.</div>
+        @if (submitted && f.name.errors) {
+        <div class="invalid-feedback">
+          @if (f.name.errors.required) {
+          <div>Name is required</div>
+          } @if (f.name.errors.minlength) {
+          <div>Name must be at least 3 characters.</div>
+          } @if (f.name.errors.maxlength) {
+          <div>Name must be 100 characters or less.</div>
+          } @if (f.name.errors.invalidName) {
+          <div>Name must only contain alphanumeric characters or '_'.</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -39,9 +46,13 @@
           [class.is-invalid]="submitted && f.alias.errors"
           aria-label="Alias"
         />
-        <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
-          <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+        @if (submitted && f.alias.errors) {
+        <div class="invalid-feedback">
+          @if (f.alias.errors.maxlength) {
+          <div>Alias must be 100 characters or less.</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
@@ -54,9 +65,13 @@
           [class.is-invalid]="submitted && f.description.errors"
           aria-label="Description"
         />
-        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+        @if (submitted && f.description.errors) {
+        <div class="invalid-feedback">
+          @if (f.description.errors.maxlength) {
+          <div>Description must be 500 characters or less.</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-row">
@@ -70,9 +85,13 @@
             [class.is-invalid]="submitted && f.bdMacAddress.errors"
             aria-label="BD Mac Address"
           />
-          <div *ngIf="submitted && f.bdMacAddress.errors" class="invalid-feedback">
-            <div *ngIf="f.bdMacAddress.errors.invalidMacAddress">Bridge Domain MAC Address Must be a Valid MAC Address</div>
+          @if (submitted && f.bdMacAddress.errors) {
+          <div class="invalid-feedback">
+            @if (f.bdMacAddress.errors.invalidMacAddress) {
+            <div>Bridge Domain MAC Address Must be a Valid MAC Address</div>
+            }
           </div>
+          }
         </div>
 
         <div class="form-group col-md-3">
@@ -150,14 +169,18 @@
       <div class="form-group">
         <label for="vrfs">VRF</label>
         <ng-select id="vrfs" [items]="vrfs" bindLabel="name" bindValue="id" formControlName="vrfId"></ng-select>
-        <div *ngIf="submitted && f.vrfId.errors" class="custom-invalid-feedback">
-          <div *ngIf="f.vrfId.errors.required">VRF is required</div>
+        @if (submitted && f.vrfId.errors) {
+        <div class="custom-invalid-feedback">
+          @if (f.vrfId.errors.required) {
+          <div>VRF is required</div>
+          }
         </div>
+        }
       </div>
 
-      <div *ngIf="modalMode === 'Edit'">
+      @if (modalMode === 'Edit') {
+      <div>
         <hr />
-
         <div class="form-group">
           <label for="l3Outs">Associated L3 Outs</label>
           <ng-select
@@ -172,7 +195,6 @@
             <span>Add L3 Out</span>
           </button>
         </div>
-
         <app-table
           [config]="config"
           [data]="l3OutsTableData"
@@ -183,8 +205,8 @@
           (tableEvent)="onTableEvent($event)"
         ></app-table>
       </div>
-
-      <div *ngIf="modalMode === 'Edit'">
+      } @if (modalMode === 'Edit') {
+      <div>
         <hr />
         <div class="form-group">
           <label for="l3outForRouteProfile">L3 Out for Route Profile</label>
@@ -196,7 +218,8 @@
             formControlName="l3OutForRouteProfileId"
           ></ng-select>
         </div>
-        <div class="form-group" *ngIf="f.l3OutForRouteProfileId.value">
+        @if (f.l3OutForRouteProfileId.value) {
+        <div class="form-group">
           <label for="routeProfile">Route Profile</label>
           <ng-select
             id="routeProfile"
@@ -206,11 +229,17 @@
             formControlName="routeProfileId"
             [class.is-invalid]="submitted && f.routeProfileId.errors"
           ></ng-select>
-          <div *ngIf="submitted && f.routeProfileId.errors" class="custom-invalid-feedback">
-            <div *ngIf="f.routeProfileId.errors.required">Route Profile is required when Route Profile for L3 Out has a value</div>
+          @if (submitted && f.routeProfileId.errors) {
+          <div class="custom-invalid-feedback">
+            @if (f.routeProfileId.errors.required) {
+            <div>Route Profile is required when Route Profile for L3 Out has a value</div>
+            }
           </div>
+          }
         </div>
+        }
       </div>
+      }
     </div>
 
     <footer class="modal-footer">

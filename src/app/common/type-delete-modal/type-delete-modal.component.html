@@ -6,8 +6,11 @@
   <main style="text-align: center" class="modal-body">
     <input type="text" [(ngModel)]="objectName" />
     <div>
-      <span style="color: #dc3545" *ngIf="nameMismatch">Names do not match</span>
-      <span *ngIf="!nameMismatch">Please type in the name of the object you wish to delete</span>
+      @if (nameMismatch) {
+      <span style="color: #dc3545">Names do not match</span>
+      } @if (!nameMismatch) {
+      <span>Please type in the name of the object you wish to delete</span>
+      }
     </div>
   </main>
 

@@ -16,12 +16,19 @@
       <div class="form-group">
         <label for="name">Name</label>
         <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+        @if (submitted && f.name.errors) {
+        <div class="invalid-feedback">
+          @if (f.name.errors.required) {
+          <div>Name is required</div>
+          } @if (f.name.errors.minlength) {
+          <div>Name must be at least 3 characters.</div>
+          } @if (f.name.errors.maxlength) {
+          <div>Name must be 100 characters or less.</div>
+          } @if (f.name.errors.invalidName) {
+          <div>Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-row">
@@ -30,11 +37,17 @@
           <label for="type">Type</label>
           <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors">
             <option></option>
-            <option *ngFor="let type of healthMonitorTypes" [ngValue]="type">{{ type }}</option>
+            @for (type of healthMonitorTypes; track type) {
+            <option [ngValue]="type">{{ type }}</option>
+            }
           </select>
-          <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
-            <div *ngIf="f.type.errors.required">Type is required</div>
+          @if (submitted && f.type.errors) {
+          <div class="invalid-feedback">
+            @if (f.type.errors.required) {
+            <div>Type is required</div>
+            }
           </div>
+          }
         </div>
 
         <!-- Service Port -->
@@ -49,10 +62,15 @@
             formControlName="servicePort"
             [class.is-invalid]="submitted && f.servicePort.errors"
           />
-          <div *ngIf="submitted && f.servicePort.errors" class="invalid-feedback">
-            <div *ngIf="f.servicePort.errors.required">Service Port is required</div>
-            <div *ngIf="f.servicePort.errors.min || f.servicePort.errors.max">Service Port must be between 1-65535</div>
+          @if (submitted && f.servicePort.errors) {
+          <div class="invalid-feedback">
+            @if (f.servicePort.errors.required) {
+            <div>Service Port is required</div>
+            } @if (f.servicePort.errors.min || f.servicePort.errors.max) {
+            <div>Service Port must be between 1-65535</div>
+            }
           </div>
+          }
         </div>
       </div>
 
@@ -71,10 +89,15 @@
             min="1"
             max="300"
           />
-          <div *ngIf="submitted && f.interval.errors" class="invalid-feedback">
-            <div *ngIf="f.interval.errors.required">Interval is required</div>
-            <div *ngIf="f.interval.errors.min || f.interval.errors.max">Interval must be between 5-300 seconds</div>
+          @if (submitted && f.interval.errors) {
+          <div class="invalid-feedback">
+            @if (f.interval.errors.required) {
+            <div>Interval is required</div>
+            } @if (f.interval.errors.min || f.interval.errors.max) {
+            <div>Interval must be between 5-300 seconds</div>
+            }
           </div>
+          }
         </div>
 
         <!-- Timeout -->
@@ -91,10 +114,15 @@
             min="1"
             max="300"
           />
-          <div *ngIf="submitted && f.timeout.errors" class="invalid-feedback">
-            <div *ngIf="f.timeout.errors.required">Timeout is required</div>
-            <div *ngIf="f.timeout.errors.min || f.timeout.errors.max">Timeout must be between 5-300 seconds</div>
+          @if (submitted && f.timeout.errors) {
+          <div class="invalid-feedback">
+            @if (f.timeout.errors.required) {
+            <div>Timeout is required</div>
+            } @if (f.timeout.errors.min || f.timeout.errors.max) {
+            <div>Timeout must be between 5-300 seconds</div>
+            }
           </div>
+          }
         </div>
       </div>
     </div>

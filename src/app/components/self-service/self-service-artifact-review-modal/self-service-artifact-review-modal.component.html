@@ -16,12 +16,13 @@
       [disableCsv]="true"
       [disableImport]="true"
     ></app-import-export>
-    <ng-container *ngIf="selfService">
-      <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
-      <ng-container *ngIf="!loadingTabObjects; else loadingObjects">
-        <app-table [config]="config" [data]="selectedObjects"></app-table>
-      </ng-container>
-    </ng-container>
+    @if (selfService) {
+    <app-tabs [tabs]="tabs" (tabChange)="handleTabChange($event)"></app-tabs>
+    @if (!loadingTabObjects) {
+    <app-table [config]="config" [data]="selectedObjects"></app-table>
+    } @else {
+    <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    } }
   </main>
 </ngx-smart-modal>
 
@@ -33,16 +34,20 @@
     {{ selectedObject?.path }}
   </span>
 
-  <span *ngIf="!selectedObject.info && !selectedObject.path">
+  @if (!selectedObject.info && !selectedObject.path) {
+  <span>
     {{ selectedObject }}
   </span>
+  }
 </ng-template>
 
 <ng-template #errorsTemplate let-selectedObject="datum">
   <ul>
-    <li *ngFor="let warning of selectedObject.warnings">
+    @for (warning of selectedObject.warnings; track warning) {
+    <li>
       {{ warning }}
     </li>
+    }
   </ul>
 </ng-template>
 

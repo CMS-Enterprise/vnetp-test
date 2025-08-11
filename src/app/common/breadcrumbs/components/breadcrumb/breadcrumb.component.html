@@ -1,12 +1,18 @@
-<div *ngIf="render" class="breadcrumb-wrap mb-3">
+@if (render) {
+<div class="breadcrumb-wrap mb-3">
   <ul class="breadcrumb">
-    <li *ngFor="let breadcrumb of breadcrumbs" class="breadcrumb-item">
+    @for (breadcrumb of breadcrumbs; track breadcrumb) {
+    <li class="breadcrumb-item">
       <a routerLink="{{ breadcrumb.url }}" queryParamsHandling="merge">
         {{ breadcrumb.label }}
       </a>
     </li>
+    }
   </ul>
-  <div *ngIf="currentMode === 'netcentric'">
+  @if (currentMode === 'netcentric') {
+  <div>
     <app-datacenter-select></app-datacenter-select>
   </div>
+  }
 </div>
+}

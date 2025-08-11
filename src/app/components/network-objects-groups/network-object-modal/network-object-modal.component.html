@@ -16,15 +16,23 @@
           aria-label="Name"
           id="name"
         />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+        @if (submitted && f.name.errors) {
+        <div class="invalid-feedback">
+          @if (f.name.errors.required) {
+          <div>Name is required</div>
+          } @if (f.name.errors.minlength) {
+          <div>Name must be at least 3 characters.</div>
+          } @if (f.name.errors.maxlength) {
+          <div>Name must be 100 characters or less.</div>
+          } @if (f.name.errors.invalidName) {
+          <div>Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+          }
         </div>
+        }
       </div>
 
-      <div class="form-group" *ngIf="!f.nat.value">
+      @if (!f.nat.value) {
+      <div class="form-group">
         <label for="type">Type</label>
         <tooltip [message]="helpText.Type"></tooltip>
         <select id="type" formControlName="type" class="form-control" [class.is-invalid]="submitted && f.type.errors" aria-label="Type">
@@ -33,14 +41,20 @@
           <option value="Range">Range</option>
           <option value="Fqdn">FQDN</option>
         </select>
-        <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
-          <div *ngIf="f.type.errors.required">Type is required</div>
+        @if (submitted && f.type.errors) {
+        <div class="invalid-feedback">
+          @if (f.type.errors.required) {
+          <div>Type is required</div>
+          }
         </div>
+        }
       </div>
-
-      <div class="form-group" *ngIf="f.type.value == 'IpAddress'">
+      } @if (f.type.value == 'IpAddress') {
+      <div class="form-group">
         <label for="ipAddress">IP Address</label>
-        <tooltip *ngIf="f.type.value == 'IpAddress'" [message]="helpText.IpAddress"></tooltip>
+        @if (f.type.value == 'IpAddress') {
+        <tooltip [message]="helpText.IpAddress"></tooltip>
+        } @if (f.type.value == 'IpAddress') {
         <input
           type="text"
           id="ipAddress"
@@ -48,17 +62,25 @@
           class="form-control"
           [class.is-invalid]="submitted && f.ipAddress.errors"
           aria-label="IP Address"
-          *ngIf="f.type.value == 'IpAddress'"
         />
-        <div *ngIf="submitted && f.ipAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.ipAddress.errors.required">IP Address is required</div>
-          <div *ngIf="f.ipAddress.errors.invalidIpAny">IP Address is invalid, must be a valid IPv4/IPv6 address or CIDR</div>
+        } @if (submitted && f.ipAddress.errors) {
+        <div class="invalid-feedback">
+          @if (f.ipAddress.errors.required) {
+          <div>IP Address is required</div>
+          } @if (f.ipAddress.errors.invalidIpAny) {
+          <div>IP Address is invalid, must be a valid IPv4/IPv6 address or CIDR</div>
+          }
         </div>
+        }
       </div>
+      }
 
       <div class="form-group">
-        <label for="startIpAddress" *ngIf="f.type.value == 'Range'">Start Address</label>
-        <tooltip *ngIf="f.type.value == 'Range'" [message]="helpText.StartIpAddress"></tooltip>
+        @if (f.type.value == 'Range') {
+        <label for="startIpAddress">Start Address</label>
+        } @if (f.type.value == 'Range') {
+        <tooltip [message]="helpText.StartIpAddress"></tooltip>
+        } @if (f.type.value == 'Range') {
         <input
           type="text"
           id="startIpAddress"
@@ -68,18 +90,24 @@
             'is-invalid': submitted && f.startIpAddress.errors
           }"
           aria-label="Start Address"
-          *ngIf="f.type.value == 'Range'"
         />
-
-        <div *ngIf="submitted && f.startIpAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.startIpAddress.errors && f.startIpAddress.errors.required">Start Address is required</div>
-          <div *ngIf="f.startIpAddress.errors && f.startIpAddress.errors.invalidIpAddress">IP Address is invalid</div>
+        } @if (submitted && f.startIpAddress.errors) {
+        <div class="invalid-feedback">
+          @if (f.startIpAddress.errors && f.startIpAddress.errors.required) {
+          <div>Start Address is required</div>
+          } @if (f.startIpAddress.errors && f.startIpAddress.errors.invalidIpAddress) {
+          <div>IP Address is invalid</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-group">
-        <label for="endIpAddress" *ngIf="f.type.value == 'Range'">End Address</label>
-        <tooltip *ngIf="f.type.value == 'Range'" [message]="helpText.EndIpAddress"></tooltip>
+        @if (f.type.value == 'Range') {
+        <label for="endIpAddress">End Address</label>
+        } @if (f.type.value == 'Range') {
+        <tooltip [message]="helpText.EndIpAddress"></tooltip>
+        } @if (f.type.value == 'Range') {
         <input
           type="text"
           id="endIpAddress"
@@ -87,17 +115,24 @@
           formControlName="endIpAddress"
           [class.is-invalid]="submitted && f.endIpAddress.errors"
           aria-label="End Address"
-          *ngIf="f.type.value == 'Range'"
         />
-        <div *ngIf="submitted && f.endIpAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.endIpAddress.errors.invalidIpAddress">IP Address is invalid</div>
-          <div *ngIf="f.endIpAddress.errors.required">End Address is required</div>
+        } @if (submitted && f.endIpAddress.errors) {
+        <div class="invalid-feedback">
+          @if (f.endIpAddress.errors.invalidIpAddress) {
+          <div>IP Address is invalid</div>
+          } @if (f.endIpAddress.errors.required) {
+          <div>End Address is required</div>
+          }
         </div>
+        }
       </div>
 
-      <div class="form-group" *ngIf="f.type.value == 'Fqdn'">
+      @if (f.type.value == 'Fqdn') {
+      <div class="form-group">
         <label for="fqdn">FQDN</label>
-        <tooltip *ngIf="f.type.value == 'Fqdn'" [message]="helpText.Fqdn"></tooltip>
+        @if (f.type.value == 'Fqdn') {
+        <tooltip [message]="helpText.Fqdn"></tooltip>
+        } @if (f.type.value == 'Fqdn') {
         <input
           type="text"
           id="fqdn"
@@ -105,25 +140,33 @@
           class="form-control"
           [class.is-invalid]="submitted && f.fqdn.errors"
           aria-label="FQDN"
-          *ngIf="f.type.value == 'Fqdn'"
         />
-        <div *ngIf="submitted && f.fqdn.errors" class="invalid-feedback">
-          <div *ngIf="f.fqdn.errors.required">FQDN is required</div>
-          <div *ngIf="f.fqdn.errors.invalidFqdn">FQDN is invalid.</div>
+        } @if (submitted && f.fqdn.errors) {
+        <div class="invalid-feedback">
+          @if (f.fqdn.errors.required) {
+          <div>FQDN is required</div>
+          } @if (f.fqdn.errors.invalidFqdn) {
+          <div>FQDN is invalid.</div>
+          }
         </div>
+        }
       </div>
-
-      <div class="form-group" *ngIf="f.type.value === 'IpAddress'">
+      } @if (f.type.value === 'IpAddress') {
+      <div class="form-group">
         <div class="form-check form-check-inline">
           <input type="checkbox" name="nat" class="form-check-input" formControlName="nat" aria-label="NAT" />
           <label class="form-check-label" for="nat">NAT</label>
-          <tooltip *ngIf="f.type.value == 'IpAddress'" [message]="helpText.Nat"></tooltip>
+          @if (f.type.value == 'IpAddress') {
+          <tooltip [message]="helpText.Nat"></tooltip>
+          }
         </div>
       </div>
-
-      <div class="form-group" *ngIf="f.nat.value">
+      } @if (f.nat.value) {
+      <div class="form-group">
         <label for="natType">NAT Type</label>
-        <tooltip *ngIf="f.nat.value" [message]="helpText.NatType"></tooltip>
+        @if (f.nat.value) {
+        <tooltip [message]="helpText.NatType"></tooltip>
+        }
         <select
           name="natType"
           formControlName="natType"
@@ -135,14 +178,20 @@
           <option value="Intervrf">InterVRF</option>
           <option value="External">External</option>
         </select>
-        <div *ngIf="submitted && f.natType.errors" class="invalid-feedback">
-          <div *ngIf="f.natType.errors.required">NAT Type is required</div>
+        @if (submitted && f.natType.errors) {
+        <div class="invalid-feedback">
+          @if (f.natType.errors.required) {
+          <div>NAT Type is required</div>
+          }
         </div>
+        }
       </div>
-
-      <div class="form-group" *ngIf="f.nat.value">
+      } @if (f.nat.value) {
+      <div class="form-group">
         <label for="natDirection">NAT Direction</label>
-        <tooltip *ngIf="f.nat.value" [message]="helpText.NatDirection"></tooltip>
+        @if (f.nat.value) {
+        <tooltip [message]="helpText.NatDirection"></tooltip>
+        }
         <select
           name="natDirection"
           formControlName="natDirection"
@@ -154,14 +203,20 @@
           <option value="In">In</option>
           <option value="Out">Out</option>
         </select>
-        <div *ngIf="submitted && f.natDirection.errors" class="invalid-feedback">
-          <div *ngIf="f.natDirection.errors.required">NAT Direction is required</div>
+        @if (submitted && f.natDirection.errors) {
+        <div class="invalid-feedback">
+          @if (f.natDirection.errors.required) {
+          <div>NAT Direction is required</div>
+          }
         </div>
+        }
       </div>
-
-      <div class="form-group" *ngIf="f.nat.value">
+      } @if (f.nat.value) {
+      <div class="form-group">
         <label for="translatedIpAddress">Translated IP Address</label>
-        <tooltip *ngIf="f.nat.value" [message]="helpText.TranslatedIpAddress"></tooltip>
+        @if (f.nat.value) {
+        <tooltip [message]="helpText.TranslatedIpAddress"></tooltip>
+        }
         <input
           type="text"
           name="translatedIpAddress"
@@ -170,22 +225,30 @@
           aria-label="Translated IP"
           [class.is-invalid]="submitted && f.translatedIpAddress.errors"
         />
-        <div *ngIf="submitted && f.translatedIpAddress.errors" class="invalid-feedback">
-          <div *ngIf="f.translatedIpAddress.errors.required">Translated IP Address is required</div>
+        @if (submitted && f.translatedIpAddress.errors) {
+        <div class="invalid-feedback">
+          @if (f.translatedIpAddress.errors.required) {
+          <div>Translated IP Address is required</div>
+          }
         </div>
+        }
       </div>
-
-      <div class="form-group" *ngIf="f.nat.value">
+      } @if (f.nat.value) {
+      <div class="form-group">
         <div class="form-check form-check-inline">
           <input type="checkbox" name="natService" class="form-check-input" formControlName="natService" aria-label="NAT Service" />
           <label class="form-check-label" for="nat">NAT Service</label>
-          <tooltip *ngIf="f.nat.value" [message]="helpText.NatService"></tooltip>
+          @if (f.nat.value) {
+          <tooltip [message]="helpText.NatService"></tooltip>
+          }
         </div>
       </div>
-
-      <div class="form-group" *ngIf="f.natService.value">
+      } @if (f.natService.value) {
+      <div class="form-group">
         <label for="type">NAT Protocol</label>
-        <tooltip *ngIf="f.natService.value" [message]="helpText.NatProtocol"></tooltip>
+        @if (f.natService.value) {
+        <tooltip [message]="helpText.NatProtocol"></tooltip>
+        }
         <select
           name="natProtocol"
           formControlName="natProtocol"
@@ -197,15 +260,21 @@
           <option value="TCP">TCP</option>
           <option value="UDP">UDP</option>
         </select>
-        <div *ngIf="submitted && f.natProtocol.errors" class="invalid-feedback">
-          <div *ngIf="f.natProtocol.errors.required">NAT Protocol is required</div>
+        @if (submitted && f.natProtocol.errors) {
+        <div class="invalid-feedback">
+          @if (f.natProtocol.errors.required) {
+          <div>NAT Protocol is required</div>
+          }
         </div>
+        }
       </div>
-
-      <div class="form-row" *ngIf="f.natService.value">
+      } @if (f.natService.value) {
+      <div class="form-row">
         <div class="form-group col-md-6">
           <label for="natSourcePort">Source Port</label>
-          <tooltip *ngIf="f.natService.value" [message]="helpText.NatSourcePort"></tooltip>
+          @if (f.natService.value) {
+          <tooltip [message]="helpText.NatSourcePort"></tooltip>
+          }
           <input
             type="text"
             name="natSourcePort"
@@ -214,15 +283,21 @@
             [class.is-invalid]="submitted && f.natSourcePort.errors"
             mask="09999"
           />
-          <div *ngIf="submitted && f.natSourcePort.errors" class="invalid-feedback">
-            <div *ngIf="f.natSourcePort.errors.invalidPortNumber">Source Port/Range must be between 1-65535</div>
-            <div *ngIf="f.natSourcePort.errors.required">Source Port is required</div>
+          @if (submitted && f.natSourcePort.errors) {
+          <div class="invalid-feedback">
+            @if (f.natSourcePort.errors.invalidPortNumber) {
+            <div>Source Port/Range must be between 1-65535</div>
+            } @if (f.natSourcePort.errors.required) {
+            <div>Source Port is required</div>
+            }
           </div>
+          }
         </div>
-
         <div class="form-group col-md-6">
           <label for="natTranslatedPort">Translated Port</label>
-          <tooltip *ngIf="f.natService.value" [message]="helpText.NatTranslatedPort"></tooltip>
+          @if (f.natService.value) {
+          <tooltip [message]="helpText.NatTranslatedPort"></tooltip>
+          }
           <input
             type="text"
             name="natTranslatedPort"
@@ -231,12 +306,18 @@
             [class.is-invalid]="submitted && f.natTranslatedPort.errors"
             mask="09999"
           />
-          <div *ngIf="submitted && f.natTranslatedPort.errors" class="invalid-feedback">
-            <div *ngIf="f.natTranslatedPort.errors.invalidPortNumber">Translated Port must be between 1-65535</div>
-            <div *ngIf="f.natTranslatedPort.errors.required">Translated Port is required</div>
+          @if (submitted && f.natTranslatedPort.errors) {
+          <div class="invalid-feedback">
+            @if (f.natTranslatedPort.errors.invalidPortNumber) {
+            <div>Translated Port must be between 1-65535</div>
+            } @if (f.natTranslatedPort.errors.required) {
+            <div>Translated Port is required</div>
+            }
           </div>
+          }
         </div>
       </div>
+      }
     </div>
 
     <footer class="modal-footer">

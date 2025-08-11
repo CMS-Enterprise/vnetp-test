@@ -1,5 +1,5 @@
+@if (!expanded) {
 <div
-  *ngIf="!expanded"
   class="card"
   [ngClass]="{ collapsed: !expanded }"
   (click)="toggleExpanded(); $event.stopPropagation()"
@@ -14,40 +14,44 @@
         <small>{{ virtualServerAddress }}</small>
       </p>
     </div>
-
     <!-- Certificates Section -->
-    <div *ngIf="certStatusList.length > 0" class="ml-3 mt-2">
+    @if (certStatusList.length > 0) {
+    <div class="ml-3 mt-2">
       <h6 class="text-black mb-1">Certificates:</h6>
       <ul class="list-unstyled mb-2 ml-3">
-        <li
-          *ngFor="let cert of certStatusList"
-          class="d-flex align-items-center nowrap"
-          style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap"
-        >
+        @for (cert of certStatusList; track cert) {
+        <li class="d-flex align-items-center nowrap" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
           <small class="text-muted">{{ cert?.name }}</small>
-          <small *ngIf="cert?.isExpired" class="ml-2"> (Expired {{ cert?.timeString }} ago) </small>
-          <small *ngIf="!cert?.isExpired && cert?.isExpiringSoon" class="ml-2"> (Expires in {{ cert?.timeString }}) </small>
-          <small *ngIf="!cert?.isExpired && !cert?.isExpiringSoon" class="ml-2"> (Expires in {{ cert?.timeString }}) </small>
+          @if (cert?.isExpired) {
+          <small class="ml-2"> (Expired {{ cert?.timeString }} ago) </small>
+          } @if (!cert?.isExpired && cert?.isExpiringSoon) {
+          <small class="ml-2"> (Expires in {{ cert?.timeString }}) </small>
+          } @if (!cert?.isExpired && !cert?.isExpiringSoon) {
+          <small class="ml-2"> (Expires in {{ cert?.timeString }}) </small>
+          }
         </li>
+        }
       </ul>
     </div>
-
+    }
     <!-- Pool Information Section -->
     <div class="ml-3 mt-2">
       <p class="card-text mb-1 text-black">{{ poolName }}</p>
       <div class="ml-3">
-        <div *ngFor="let member of members" class="mb-3">
+        @for (member of members; track member) {
+        <div class="mb-3">
           <p class="card-text mb-0 text-muted">{{ member?.name }}</p>
           <p class="card-text mb-0 mt-0 tight-spacing">
             <small class="text-muted tight-spacing">{{ member?.address }}</small>
           </p>
         </div>
+        }
       </div>
     </div>
   </div>
 </div>
-
-<div *ngIf="expanded" class="card expanded-card">
+} @if (expanded) {
+<div class="card expanded-card">
   <div class="card-body expanded">
     <button type="button" class="close-button" aria-label="Close" (click)="toggleExpanded()">&times;</button>
     <div class="virtual-server-section mb-4">
@@ -114,7 +118,6 @@
         </tbody>
       </table>
     </div>
-
     <!-- Pools Section -->
     <div class="pools-section">
       <h5>Pools</h5>
@@ -174,3 +177,4 @@
     </div>
   </div>
 </div>
+}

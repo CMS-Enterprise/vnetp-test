@@ -16,12 +16,19 @@
       <div class="form-group">
         <label for="name">Name</label>
         <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+        @if (submitted && f.name.errors) {
+        <div class="invalid-feedback">
+          @if (f.name.errors.required) {
+          <div>Name is required</div>
+          } @if (f.name.errors.minlength) {
+          <div>Name must be at least 3 characters.</div>
+          } @if (f.name.errors.maxlength) {
+          <div>Name must be 100 characters or less.</div>
+          } @if (f.name.errors.invalidName) {
+          <div>Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+          }
         </div>
+        }
       </div>
 
       <!-- Load Balancing Method -->
@@ -35,169 +42,184 @@
           [class.is-invalid]="submitted && f.loadBalancingMethod.errors"
         >
           <option></option>
-          <option *ngFor="let method of methods" [ngValue]="method">{{ methodsLookup[method] }}</option>
+          @for (method of methods; track method) {
+          <option [ngValue]="method">{{ methodsLookup[method] }}</option>
+          }
         </select>
-        <div *ngIf="submitted && f.loadBalancingMethod.errors" class="invalid-feedback">
-          <div *ngIf="f.loadBalancingMethod.errors.required">Load Balancing Method is required</div>
+        @if (submitted && f.loadBalancingMethod.errors) {
+        <div class="invalid-feedback">
+          @if (f.loadBalancingMethod.errors.required) {
+          <div>Load Balancing Method is required</div>
+          }
         </div>
+        }
       </div>
 
-      <ng-container *ngIf="modalMode === ModalMode.Edit">
-        <hr />
-
-        <h5 class="mb-10">Nodes</h5>
-
-        <!-- Available Nodes -->
-        <div class="form-row">
-          <div class="form-group col-md-3">
-            <label for="availableNodes">Available Nodes</label>
-            <div class="input-group align-items-center">
-              <select id="avaiableNodes" class="form-control" id="availableNodes" formControlName="selectedNode">
-                <option></option>
-                <option *ngFor="let node of availableNodes" [ngValue]="node">{{ node.name }}</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Service Port -->
-          <div class="form-group col-md-3">
-            <label for="servicePort">Service Port</label>
-            <tooltip [message]="helpText.ServicePort"></tooltip>
-            <input
-              id="servicePort"
-              type="text"
-              formControlName="servicePort"
-              class="form-control"
-              [class.is-invalid]="submitted && f.servicePort.errors"
-            />
-            <div *ngIf="f.servicePort.errors" class="invalid-feedback">
-              <div *ngIf="f.servicePort.errors.required">Service Port is required</div>
-              <div *ngIf="f.servicePort.errors.min || f.servicePort.errors.max">Service Port must be between 1-65535</div>
-            </div>
-          </div>
-
-          <!-- Ratio -->
-          <div class="form-group col-md-3">
-            <label for="ratio">Ratio</label>
-            <tooltip [message]="helpText.Ratio"></tooltip>
-            <input id="ratio" type="text" formControlName="ratio" class="form-control" [class.is-invalid]="submitted && f.ratio.errors" />
-            <div *ngIf="f.ratio.errors" class="invalid-feedback">
-              <div *ngIf="f.ratio.errors.required">Ratio is required</div>
-              <div *ngIf="f.ratio.errors.min">Ratio must be greater than or equal to 1.</div>
-              <div *ngIf="f.ratio.errors.max">Ratio must be equal to or less than 100.</div>
-            </div>
-          </div>
-
-          <div class="col-md-3 text-right" style="margin-top: 25px">
-            <button
-              type="button"
-              class="btn btn-info"
-              (click)="addNode()"
-              [disabled]="!f.selectedNode.value || f?.servicePort?.errors || f?.ratio?.errors"
-            >
-              <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-              <span>Add Node</span>
-            </button>
-          </div>
-        </div>
-
-        <table class="table table-striped table-sm table-bordered">
-          <caption>
-            <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-            <span>Selected Nodes on this Pool</span>
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Service Port</th>
-              <th scope="col">Ratio</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let node of selectedNodes">
-              <td>
-                {{ node?.loadBalancerNode?.name }}
-              </td>
-              <td>
-                {{ node?.servicePort }}
-              </td>
-              <td>
-                {{ node?.ratio }}
-              </td>
-              <td class="table__actions">
-                <app-icon-button icon="delete" label="Remove Node" (handleClick)="removeNode(node)"></app-icon-button>
-              </td>
-            </tr>
-            <tr *ngIf="!selectedNodes?.length" class="text-center">
-              <td colspan="4">No nodes on this pool</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <hr />
-
-        <h5 class="mb-10">Health Monitors</h5>
-
-        <div class="form-group">
-          <label for="availableHealthMonitors">Available Health Monitors</label>
-
+      @if (modalMode === ModalMode.Edit) {
+      <hr />
+      <h5 class="mb-10">Nodes</h5>
+      <!-- Available Nodes -->
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="availableNodes">Available Nodes</label>
           <div class="input-group align-items-center">
-            <select id="availableHealthMonitors" class="form-control mr-3" formControlName="selectedHealthMonitor">
+            <select id="avaiableNodes" class="form-control" id="availableNodes" formControlName="selectedNode">
               <option></option>
-              <option *ngFor="let healthMonitor of availableHealthMonitors" [ngValue]="healthMonitor.id">{{ healthMonitor.name }}</option>
-              <option *ngFor="let defaultHealthMonitor of defaultHealthMonitors" [ngValue]="defaultHealthMonitor">
-                {{ defaultHealthMonitor }} (Default)
-              </option>
+              @for (node of availableNodes; track node) {
+              <option [ngValue]="node">{{ node.name }}</option>
+              }
             </select>
-
-            <button type="button" class="btn btn-info" (click)="addHealthMonitor()" [disabled]="!f.selectedHealthMonitor.value">
-              <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
-              <span>Add Health Monitor</span>
-            </button>
           </div>
         </div>
-
-        <table class="table table-striped table-sm table-bordered">
-          <caption>
-            <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-            <span>Selected Health Monitors on this Pool</span>
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let healthMonitor of selectedHealthMonitors">
-              <td>
-                {{ healthMonitor.name }}
-              </td>
-              <td class="table__actions">
-                <app-icon-button
-                  icon="delete"
-                  label="Remove Health Monitor"
-                  (handleClick)="removeHealthMonitor(healthMonitor.id)"
-                ></app-icon-button>
-              </td>
-            </tr>
-            <tr *ngFor="let defaultHealthMonitor of selectedDefaultHealthMonitors">
-              <td>{{ defaultHealthMonitor }} (Default)</td>
-              <td class="table__actions">
-                <app-icon-button
-                  icon="delete"
-                  label="Remove Default Health Monitor"
-                  (handleClick)="removeHealthMonitor(defaultHealthMonitor, true)"
-                ></app-icon-button>
-              </td>
-            </tr>
-            <tr *ngIf="!selectedHealthMonitors?.length && !selectedDefaultHealthMonitors?.length" class="text-center">
-              <td colspan="2">No Health Monitors Selected</td>
-            </tr>
-          </tbody>
-        </table>
-      </ng-container>
+        <!-- Service Port -->
+        <div class="form-group col-md-3">
+          <label for="servicePort">Service Port</label>
+          <tooltip [message]="helpText.ServicePort"></tooltip>
+          <input
+            id="servicePort"
+            type="text"
+            formControlName="servicePort"
+            class="form-control"
+            [class.is-invalid]="submitted && f.servicePort.errors"
+          />
+          @if (f.servicePort.errors) {
+          <div class="invalid-feedback">
+            @if (f.servicePort.errors.required) {
+            <div>Service Port is required</div>
+            } @if (f.servicePort.errors.min || f.servicePort.errors.max) {
+            <div>Service Port must be between 1-65535</div>
+            }
+          </div>
+          }
+        </div>
+        <!-- Ratio -->
+        <div class="form-group col-md-3">
+          <label for="ratio">Ratio</label>
+          <tooltip [message]="helpText.Ratio"></tooltip>
+          <input id="ratio" type="text" formControlName="ratio" class="form-control" [class.is-invalid]="submitted && f.ratio.errors" />
+          @if (f.ratio.errors) {
+          <div class="invalid-feedback">
+            @if (f.ratio.errors.required) {
+            <div>Ratio is required</div>
+            } @if (f.ratio.errors.min) {
+            <div>Ratio must be greater than or equal to 1.</div>
+            } @if (f.ratio.errors.max) {
+            <div>Ratio must be equal to or less than 100.</div>
+            }
+          </div>
+          }
+        </div>
+        <div class="col-md-3 text-right" style="margin-top: 25px">
+          <button
+            type="button"
+            class="btn btn-info"
+            (click)="addNode()"
+            [disabled]="!f.selectedNode.value || f?.servicePort?.errors || f?.ratio?.errors"
+          >
+            <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+            <span>Add Node</span>
+          </button>
+        </div>
+      </div>
+      <table class="table table-striped table-sm table-bordered">
+        <caption>
+          <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+          <span>Selected Nodes on this Pool</span>
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Service Port</th>
+            <th scope="col">Ratio</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (node of selectedNodes; track node) {
+          <tr>
+            <td>
+              {{ node?.loadBalancerNode?.name }}
+            </td>
+            <td>
+              {{ node?.servicePort }}
+            </td>
+            <td>
+              {{ node?.ratio }}
+            </td>
+            <td class="table__actions">
+              <app-icon-button icon="delete" label="Remove Node" (handleClick)="removeNode(node)"></app-icon-button>
+            </td>
+          </tr>
+          } @if (!selectedNodes?.length) {
+          <tr class="text-center">
+            <td colspan="4">No nodes on this pool</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      <hr />
+      <h5 class="mb-10">Health Monitors</h5>
+      <div class="form-group">
+        <label for="availableHealthMonitors">Available Health Monitors</label>
+        <div class="input-group align-items-center">
+          <select id="availableHealthMonitors" class="form-control mr-3" formControlName="selectedHealthMonitor">
+            <option></option>
+            @for (healthMonitor of availableHealthMonitors; track healthMonitor) {
+            <option [ngValue]="healthMonitor.id">{{ healthMonitor.name }}</option>
+            } @for (defaultHealthMonitor of defaultHealthMonitors; track defaultHealthMonitor) {
+            <option [ngValue]="defaultHealthMonitor">{{ defaultHealthMonitor }} (Default)</option>
+            }
+          </select>
+          <button type="button" class="btn btn-info" (click)="addHealthMonitor()" [disabled]="!f.selectedHealthMonitor.value">
+            <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+            <span>Add Health Monitor</span>
+          </button>
+        </div>
+      </div>
+      <table class="table table-striped table-sm table-bordered">
+        <caption>
+          <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+          <span>Selected Health Monitors on this Pool</span>
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (healthMonitor of selectedHealthMonitors; track healthMonitor) {
+          <tr>
+            <td>
+              {{ healthMonitor.name }}
+            </td>
+            <td class="table__actions">
+              <app-icon-button
+                icon="delete"
+                label="Remove Health Monitor"
+                (handleClick)="removeHealthMonitor(healthMonitor.id)"
+              ></app-icon-button>
+            </td>
+          </tr>
+          } @for (defaultHealthMonitor of selectedDefaultHealthMonitors; track defaultHealthMonitor) {
+          <tr>
+            <td>{{ defaultHealthMonitor }} (Default)</td>
+            <td class="table__actions">
+              <app-icon-button
+                icon="delete"
+                label="Remove Default Health Monitor"
+                (handleClick)="removeHealthMonitor(defaultHealthMonitor, true)"
+              ></app-icon-button>
+            </td>
+          </tr>
+          } @if (!selectedHealthMonitors?.length && !selectedDefaultHealthMonitors?.length) {
+          <tr class="text-center">
+            <td colspan="2">No Health Monitors Selected</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      }
     </div>
 
     <footer class="modal-footer">

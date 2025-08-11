@@ -8,11 +8,13 @@
   <header class="modal-header">
     <h4 class="modal-title">Firewall Rule Packet Tracer</h4>
   </header>
-  <div *ngIf="rulesHit.length > 0">
+  @if (rulesHit.length > 0) {
+  <div>
     <div class="dropdown">
       <app-icon-button id="dropdownToggle" icon="filter" label="Filter" (handleClick)="toggleDropdown()"></app-icon-button>
       <label for="dropdownToggle">Filter Results</label>
-      <div class="dropdown-menu" *ngIf="dropdownOpen" id="dropdownMenu">
+      @if (dropdownOpen) {
+      <div class="dropdown-menu" id="dropdownMenu">
         <div class="form-check">
           <input type="checkbox" id="exactMatchCheckbox" [(ngModel)]="filterExact" (change)="applyFilter()" />
           <label for="exactMatchCheckbox">Exact Matches</label>
@@ -22,6 +24,7 @@
           <label for="partialMatchCheckbox">Partial Matches</label>
         </div>
       </div>
+      }
     </div>
     <div>
       <table class="table table-sm table-striped table-bordered">
@@ -42,16 +45,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngIf="filteredRules && filteredRules?.length === 0" class="text-center">
+          @if (filteredRules && filteredRules?.length === 0) {
+          <tr class="text-center">
             <td [attr.colspan]="8">No Matches</td>
           </tr>
-          <tr *ngFor="let rule of filteredRules | paginate : { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }">
+          } @for (rule of filteredRules | paginate : { id: 'rulesMatch', itemsPerPage: pageSize, currentPage: currentPage }; track rule) {
+          <tr>
             <td>
               <span class="d-flex">
                 {{ rule.name }}
-                <div *ngIf="rule.checkList.softDeleted" class="icon-spacing">
+                @if (rule.checkList.softDeleted) {
+                <div class="icon-spacing">
                   <fa-icon class="icon" [icon]="['fas', 'trash']" style="color: #d33737"></fa-icon>
                 </div>
+                }
               </span>
             </td>
             <td>
@@ -95,6 +102,7 @@
               </span>
             </td>
           </tr>
+          }
         </tbody>
         <tfoot>
           <td [attr.colspan]="8">
@@ -104,6 +112,7 @@
       </table>
     </div>
   </div>
+  }
 
   <form [formGroup]="form" (ngSubmit)="search()">
     <div class="modal-body">
@@ -184,11 +193,17 @@
             [class.is-invalid]="submitted && f.sourceIpAddress.errors"
             aria-label="Source IP"
           />
-          <div *ngIf="submitted && f.sourceIpAddress.errors" class="invalid-feedback">
-            <div *ngIf="f.sourceIpAddress.errors.required">Source IP Address is required</div>
-            <div *ngIf="f.sourceIpAddress.errors.invalidIp">Invalid IP address, must be a valid IPv4</div>
-            <div *ngIf="f.sourceIpAddress.errors.invalidIpNoSubnet">Invalid IP address, must be a valid IPv4 with no CIDR</div>
+          @if (submitted && f.sourceIpAddress.errors) {
+          <div class="invalid-feedback">
+            @if (f.sourceIpAddress.errors.required) {
+            <div>Source IP Address is required</div>
+            } @if (f.sourceIpAddress.errors.invalidIp) {
+            <div>Invalid IP address, must be a valid IPv4</div>
+            } @if (f.sourceIpAddress.errors.invalidIpNoSubnet) {
+            <div>Invalid IP address, must be a valid IPv4 with no CIDR</div>
+            }
           </div>
+          }
         </div>
       </div>
 
@@ -203,16 +218,23 @@
             [class.is-invalid]="submitted && f.destinationIpAddress.errors"
             aria-label="Destination IP"
           />
-          <div *ngIf="submitted && f.destinationIpAddress.errors" class="invalid-feedback">
-            <div *ngIf="f.destinationIpAddress.errors.required">Destination IP is required</div>
-            <div *ngIf="f.destinationIpAddress.errors.invalidIp">Invalid IP address, must be a valid IPv4</div>
-            <div *ngIf="f.destinationIpAddress.errors.invalidIpNoSubnet">Invalid IP address, must be a valid IPv4 with no CIDR</div>
+          @if (submitted && f.destinationIpAddress.errors) {
+          <div class="invalid-feedback">
+            @if (f.destinationIpAddress.errors.required) {
+            <div>Destination IP is required</div>
+            } @if (f.destinationIpAddress.errors.invalidIp) {
+            <div>Invalid IP address, must be a valid IPv4</div>
+            } @if (f.destinationIpAddress.errors.invalidIpNoSubnet) {
+            <div>Invalid IP address, must be a valid IPv4 with no CIDR</div>
+            }
           </div>
+          }
         </div>
       </div>
 
       <div class="form-row">
-        <div *ngIf="f.protocol.value === 'TCP' || f.protocol.value === 'UDP'" class="form-row">
+        @if (f.protocol.value === 'TCP' || f.protocol.value === 'UDP') {
+        <div class="form-row">
           <div class="form-group col-md-6">
             <label for="sourcePorts">Source Port</label>
             <input
@@ -223,13 +245,18 @@
               [class.is-invalid]="submitted && f.sourcePorts.errors"
               aria-label="Source Ports"
             />
-            <div *ngIf="submitted && f.sourcePorts.errors" class="invalid-feedback">
-              <div *ngIf="f.sourcePorts.errors.required">Source Port is required</div>
-              <div *ngIf="f.sourcePorts.errors.invalidPortNumber">Source Port must be between 1-65535</div>
-              <div *ngIf="f.sourcePorts.errors.portRangeNotAllowed">Port range not allowed</div>
+            @if (submitted && f.sourcePorts.errors) {
+            <div class="invalid-feedback">
+              @if (f.sourcePorts.errors.required) {
+              <div>Source Port is required</div>
+              } @if (f.sourcePorts.errors.invalidPortNumber) {
+              <div>Source Port must be between 1-65535</div>
+              } @if (f.sourcePorts.errors.portRangeNotAllowed) {
+              <div>Port range not allowed</div>
+              }
             </div>
+            }
           </div>
-
           <div class="form-group col-md-6">
             <label for="destinationPorts">Destination Port</label>
             <input
@@ -240,13 +267,20 @@
               [class.is-invalid]="submitted && f.destinationPorts.errors"
               aria-label="Destination Ports"
             />
-            <div *ngIf="submitted && f.destinationPorts.errors" class="invalid-feedback">
-              <div *ngIf="f.destinationPorts.errors.required">Destination Port is required</div>
-              <div *ngIf="f.destinationPorts.errors.invalidPortNumber">Destination Port must be between 1-65535</div>
-              <div *ngIf="f.destinationPorts.errors.portRangeNotAllowed">Port range not allowed</div>
+            @if (submitted && f.destinationPorts.errors) {
+            <div class="invalid-feedback">
+              @if (f.destinationPorts.errors.required) {
+              <div>Destination Port is required</div>
+              } @if (f.destinationPorts.errors.invalidPortNumber) {
+              <div>Destination Port must be between 1-65535</div>
+              } @if (f.destinationPorts.errors.portRangeNotAllowed) {
+              <div>Port range not allowed</div>
+              }
             </div>
+            }
           </div>
         </div>
+        }
       </div>
     </div>
 

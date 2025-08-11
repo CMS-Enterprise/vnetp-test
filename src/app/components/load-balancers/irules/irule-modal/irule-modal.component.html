@@ -17,12 +17,19 @@
         <div class="form-group col-md-6">
           <label for="name">Name</label>
           <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="submitted && f.name.errors" />
-          <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-            <div *ngIf="f.name.errors.required">Name is required</div>
-            <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-            <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-            <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+          @if (submitted && f.name.errors) {
+          <div class="invalid-feedback">
+            @if (f.name.errors.required) {
+            <div>Name is required</div>
+            } @if (f.name.errors.minlength) {
+            <div>Name must be at least 3 characters.</div>
+            } @if (f.name.errors.maxlength) {
+            <div>Name must be 100 characters or less.</div>
+            } @if (f.name.errors.invalidName) {
+            <div>Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+            }
           </div>
+          }
         </div>
 
         <!-- Description -->
@@ -35,10 +42,15 @@
             class="form-control"
             [class.is-invalid]="submitted && f.description.errors"
           />
-          <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-            <div *ngIf="f.description.errors.minlength">Description must be at least 3 characters.</div>
-            <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+          @if (submitted && f.description.errors) {
+          <div class="invalid-feedback">
+            @if (f.description.errors.minlength) {
+            <div>Description must be at least 3 characters.</div>
+            } @if (f.description.errors.maxlength) {
+            <div>Description must be 500 characters or less.</div>
+            }
           </div>
+          }
         </div>
       </div>
 
@@ -48,9 +60,13 @@
         <tooltip [message]="helpText.Content"></tooltip>
         <textarea id="content" rows="15" formControlName="content" class="form-control" [class.is-invalid]="submitted && f.content.errors">
         </textarea>
-        <div *ngIf="submitted && f.content.errors" class="invalid-feedback">
-          <div *ngIf="f.content.errors.required">Content is required</div>
+        @if (submitted && f.content.errors) {
+        <div class="invalid-feedback">
+          @if (f.content.errors.required) {
+          <div>Content is required</div>
+          }
         </div>
+        }
       </div>
     </div>
 

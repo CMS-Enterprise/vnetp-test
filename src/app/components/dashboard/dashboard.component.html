@@ -4,12 +4,14 @@
   <!-- Service Status -->
   <aside class="dashboard__card" aria-label="Service Status">
     <h2 class="dashboard__heading">Service Status</h2>
-    <div *ngFor="let service of status" class="status-item">
+    @for (service of status; track service) {
+    <div class="status-item">
       <span>
         {{ service.name }}
       </span>
       <div class="status-light" [ngClass]="service.status"></div>
     </div>
+    }
   </aside>
 
   <!-- Overall Environment -->
@@ -126,13 +128,15 @@
   <aside class="dashboard__card" aria-label="Overall Environment">
     <h2 class="dashboard__heading">Messages</h2>
     <ul class="dash-card">
-      <li *ngFor="let message of messages?.data" class="dash-card__item">
+      @for (message of messages?.data; track message) {
+      <li class="dash-card__item">
         <a style="display: list-item; overflow-wrap: anywhere">
           <span>
             {{ message.description }}
           </span>
         </a>
       </li>
+      }
     </ul>
   </aside>
 </main>

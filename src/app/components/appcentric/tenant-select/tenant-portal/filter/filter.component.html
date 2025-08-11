@@ -6,43 +6,36 @@
     </button>
   </section>
 
-  <ng-container *ngIf="!isLoading; else loading">
-    <app-table
-      [config]="config"
-      [data]="filters"
-      (clearResults)="getFilters($event)"
-      (searchParams)="getFilters($event)"
-      [searchColumns]="searchColumns"
-      [(itemsPerPage)]="perPage"
-      (tableEvent)="onTableEvent($event)"
-    ></app-table>
-    <section class="btn-toolbar" role="toolbar">
-      <app-import-export
-        [exportObject]="filters"
-        exportFileName="filters"
-        [disableJson]="false"
-        (import)="importFilters($event)"
-      ></app-import-export>
-    </section>
-  </ng-container>
+  @if (!isLoading) {
+  <app-table
+    [config]="config"
+    [data]="filters"
+    (clearResults)="getFilters($event)"
+    (searchParams)="getFilters($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
+  <section class="btn-toolbar" role="toolbar">
+    <app-import-export
+      [exportObject]="filters"
+      exportFileName="filters"
+      [disableJson]="false"
+      (import)="importFilters($event)"
+    ></app-import-export>
+  </section>
+  } @else {
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  }
 </ng-container>
 
 <ng-template #actionsTemplate let-filter="datum">
   <section class="table__actions">
-    <app-icon-button
-      *ngIf="!filter?.deletedAt"
-      icon="edit"
-      label="Edit Filter"
-      (handleClick)="openFilterModal(ModalMode.Edit, filter)"
-    ></app-icon-button>
-
-    <app-icon-button
-      *ngIf="filter?.deletedAt"
-      icon="undo"
-      label="Restore Filter"
-      type="success"
-      (handleClick)="restoreFilter(filter)"
-    ></app-icon-button>
+    @if (!filter?.deletedAt) {
+    <app-icon-button icon="edit" label="Edit Filter" (handleClick)="openFilterModal(ModalMode.Edit, filter)"></app-icon-button>
+    } @if (filter?.deletedAt) {
+    <app-icon-button icon="undo" label="Restore Filter" type="success" (handleClick)="restoreFilter(filter)"></app-icon-button>
+    }
 
     <app-icon-button
       icon="delete"

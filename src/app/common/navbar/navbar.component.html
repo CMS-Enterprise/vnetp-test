@@ -1,8 +1,8 @@
-<nav class="navbar navbar-expand-lg" *ngIf="user && tenant">
+@if (user && tenant) {
+<nav class="navbar navbar-expand-lg">
   <a id="dashboard-link" class="navbar-brand" routerLink="dashboard" queryParamsHandling="merge" title="DRaaS">
     <fa-icon class="icon" [icon]="['fas', 'bolt']"></fa-icon>
   </a>
-
   <button
     class="navbar-toggler"
     type="button"
@@ -14,7 +14,6 @@
   >
     <fa-icon class="icon" [icon]="['fas', 'bars']"></fa-icon>
   </button>
-
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item dropdown">
@@ -30,89 +29,48 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="networkingNavbarDropdown">
           <a id="tiers-link" class="dropdown-item" routerLink="tiers" queryParamsHandling="merge">Tiers</a>
-          <a
-            id="self-service-link"
-            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
-            class="dropdown-item"
-            routerLink="self-service"
-            queryParamsHandling="merge"
-            >Managed Network</a
-          >
-          <a
-            id="subnets-vlans-link"
-            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
-            class="dropdown-item"
-            routerLink="subnets-vlans"
-            queryParamsHandling="merge"
-            >Subnets & VLANs</a
-          >
-          <a
-            id="firewall-rule-groups-link"
-            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
-            class="dropdown-item"
-            routerLink="firewall-rules"
-            queryParamsHandling="merge"
+          @if (userRoles?.includes('admin') || userRoles?.includes('network_admin')) {
+          <a id="self-service-link" class="dropdown-item" routerLink="self-service" queryParamsHandling="merge">Managed Network</a>
+          } @if (userRoles?.includes('admin') || userRoles?.includes('network_admin')) {
+          <a id="subnets-vlans-link" class="dropdown-item" routerLink="subnets-vlans" queryParamsHandling="merge">Subnets & VLANs</a>
+          } @if (userRoles?.includes('admin') || userRoles?.includes('network_admin')) {
+          <a id="firewall-rule-groups-link" class="dropdown-item" routerLink="firewall-rules" queryParamsHandling="merge"
             >Firewall Rule Groups</a
           >
-          <a
-            id="nat-rule-groups-link"
-            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
-            class="dropdown-item"
-            routerLink="nat-rules"
-            queryParamsHandling="merge"
-            >NAT Rule Groups</a
-          >
-          <a
-            id="network-objects-groups-link"
-            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
-            class="dropdown-item"
-            routerLink="network-objects-groups"
-            queryParamsHandling="merge"
+          } @if (userRoles?.includes('admin') || userRoles?.includes('network_admin')) {
+          <a id="nat-rule-groups-link" class="dropdown-item" routerLink="nat-rules" queryParamsHandling="merge">NAT Rule Groups</a>
+          } @if (userRoles?.includes('admin') || userRoles?.includes('network_admin')) {
+          <a id="network-objects-groups-link" class="dropdown-item" routerLink="network-objects-groups" queryParamsHandling="merge"
             >Network Objects/Groups</a
           >
-          <a
-            id="service-objects-groups-link"
-            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
-            class="dropdown-item"
-            routerLink="service-objects-groups"
-            queryParamsHandling="merge"
+          } @if (userRoles?.includes('admin') || userRoles?.includes('network_admin')) {
+          <a id="service-objects-groups-link" class="dropdown-item" routerLink="service-objects-groups" queryParamsHandling="merge"
             >Service Objects/Groups</a
           >
-          <a
-            id="load-balancers-link"
-            *ngIf="userRoles?.includes('admin') || userRoles?.includes('loadbalancer_admin')"
-            class="dropdown-item"
-            routerLink="load-balancers"
-            queryParamsHandling="merge"
-            >Load Balancers</a
-          >
-          <a
-            id="routing-link"
-            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
-            class="dropdown-item"
-            routerLink="static-routes"
-            queryParamsHandling="merge"
-            >Routing</a
-          >
+          } @if (userRoles?.includes('admin') || userRoles?.includes('loadbalancer_admin')) {
+          <a id="load-balancers-link" class="dropdown-item" routerLink="load-balancers" queryParamsHandling="merge">Load Balancers</a>
+          } @if (userRoles?.includes('admin') || userRoles?.includes('network_admin')) {
+          <a id="routing-link" class="dropdown-item" routerLink="static-routes" queryParamsHandling="merge">Routing</a>
+          }
           <!-- <a
-            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
-            class="dropdown-item"
-            routerLink="wan-form"
-            queryParamsHandling="merge"
-            >Wan Form</a
-          > -->
+                            *ngIf="userRoles?.includes('admin') || userRoles?.includes('network_admin')"
+                            class="dropdown-item"
+                            routerLink="wan-form"
+                            queryParamsHandling="merge"
+                            >Wan Form</a
+                            > -->
         </div>
       </li>
     </ul>
-
     <ul class="navbar-nav m-auto">
       <li id="accountNumber" class="nav-item">
         <a>
-          <span *ngIf="tenant">{{ tenant }}</span>
+          @if (tenant) {
+          <span>{{ tenant }}</span>
+          }
         </a>
       </li>
     </ul>
-
     <ul class="navbar-nav ml-auto align-items-lg-center">
       <li class="nav-item">
         <a id="jobs-link" class="nav-link" [routerLinkActive]="['active']" routerLink="jobs" queryParamsHandling="merge">
@@ -129,22 +87,18 @@
           aria-haspopup="true"
           aria-expanded="false"
         >
-          <span *ngIf="user">{{ user.uid }} ({{ user.cn }})</span>
+          @if (user) {
+          <span>{{ user.uid }} ({{ user.cn }})</span>
+          }
         </a>
         <div class="dropdown-menu dropdown-menu--reverse" aria-labelledby="userNavbarDropdown">
           <a id="environment-summary-link" class="dropdown-item" routerLink="environment-summary" queryParamsHandling="merge"
             >Environment Summary</a
           >
-
           <a id="f5-config-link" class="dropdown-item" routerLink="f5-config" queryParamsHandling="merge">F5 Config</a>
-          <a
-            id="audit-log-link"
-            *ngIf="userRoles?.includes('admin')"
-            class="dropdown-item"
-            routerLink="audit-log"
-            queryParamsHandling="merge"
-            >Audit Log</a
-          >
+          @if (userRoles?.includes('admin')) {
+          <a id="audit-log-link" class="dropdown-item" routerLink="audit-log" queryParamsHandling="merge">Audit Log</a>
+          }
           <a id="ticket-link" class="dropdown-item" target="_blank" rel="noopener noreferrer" href="{{ environment?.dynamic?.snowBase }}"
             >Ticketing System</a
           >
@@ -157,17 +111,20 @@
             >Documentation</a
           >
           <a tabindex="0" (keyup.enter)="openLogoutModal()" name="logout-link" class="dropdown-item" (click)="openLogoutModal()">Logout</a>
-          <div class="dropdown-divider" *ngIf="dcsVersion"></div>
-          <a name="version" class="dropdown-item" target="_blank" rel="noopener noreferrer" *ngIf="dcsVersion">v{{ dcsVersion }}</a>
+          @if (dcsVersion) {
+          <div class="dropdown-divider"></div>
+          } @if (dcsVersion) {
+          <a name="version" class="dropdown-item" target="_blank" rel="noopener noreferrer">v{{ dcsVersion }}</a>
+          }
         </div>
       </li>
-
       <li class="nav-item align-self-end align-self-lg-center">
         <button class="btn btn-danger" routerLink="deploy" queryParamsHandling="merge">Deploy</button>
       </li>
     </ul>
   </div>
 </nav>
+}
 
 <!-- Logout -->
 <ngx-smart-modal #logoutModal identifier="logoutModal">

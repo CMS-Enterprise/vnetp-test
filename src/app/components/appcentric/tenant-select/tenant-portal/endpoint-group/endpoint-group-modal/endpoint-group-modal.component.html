@@ -9,21 +9,18 @@
   <header class="modal-header">
     <h4 class="modal-title">Endpoint Group</h4>
   </header>
-  <app-tabs
-    *ngIf="ModalMode === 'Edit'"
-    #tabsRef
-    [tabs]="tabs"
-    [initialTabIndex]="initialTabIndex"
-    (tabChange)="handleTabChange($event)"
-  ></app-tabs>
-
-  <div class="modal-body" *ngIf="currentTab === 'Consumed Contracts'">
+  @if (ModalMode === 'Edit') {
+  <app-tabs #tabsRef [tabs]="tabs" [initialTabIndex]="initialTabIndex" (tabChange)="handleTabChange($event)"></app-tabs>
+  } @if (currentTab === 'Consumed Contracts') {
+  <div class="modal-body">
     <app-consumed-contract #consumedContract [endpointGroupId]="endpointGroupId" [tenantId]="tenantId"></app-consumed-contract>
   </div>
-  <div class="modal-body" *ngIf="currentTab === 'Provided Contracts'">
+  } @if (currentTab === 'Provided Contracts') {
+  <div class="modal-body">
     <app-provided-contract #providedContract [endpointGroupId]="endpointGroupId" [tenantId]="tenantId"></app-provided-contract>
   </div>
-  <div *ngIf="currentTab === 'Endpoint Group'">
+  } @if (currentTab === 'Endpoint Group') {
+  <div>
     <form [formGroup]="form" (ngSubmit)="save()">
       <div class="modal-body">
         <div class="form-group">
@@ -36,14 +33,20 @@
             [class.is-invalid]="submitted && f.name.errors"
             aria-label="Name"
           />
-          <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-            <div *ngIf="f.name.errors.required">Name is required</div>
-            <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-            <div *ngIf="f.name.errors.maxlength">Name must be 100 characters or less.</div>
-            <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or '_'.</div>
+          @if (submitted && f.name.errors) {
+          <div class="invalid-feedback">
+            @if (f.name.errors.required) {
+            <div>Name is required</div>
+            } @if (f.name.errors.minlength) {
+            <div>Name must be at least 3 characters.</div>
+            } @if (f.name.errors.maxlength) {
+            <div>Name must be 100 characters or less.</div>
+            } @if (f.name.errors.invalidName) {
+            <div>Name must only contain alphanumeric characters or '_'.</div>
+            }
           </div>
+          }
         </div>
-
         <div class="form-group">
           <label for="alias">Alias</label>
           <input
@@ -54,11 +57,14 @@
             [class.is-invalid]="submitted && f.alias.errors"
             aria-label="Alias"
           />
-          <div *ngIf="submitted && f.alias.errors" class="invalid-feedback">
-            <div *ngIf="f.alias.errors.maxlength">Alias must be 100 characters or less.</div>
+          @if (submitted && f.alias.errors) {
+          <div class="invalid-feedback">
+            @if (f.alias.errors.maxlength) {
+            <div>Alias must be 100 characters or less.</div>
+            }
           </div>
+          }
         </div>
-
         <div class="form-group">
           <label for="description">Description</label>
           <input
@@ -69,11 +75,14 @@
             [class.is-invalid]="submitted && f.description.errors"
             aria-label="Description"
           />
-          <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-            <div *ngIf="f.description.errors.maxlength">Description must be 500 characters or less.</div>
+          @if (submitted && f.description.errors) {
+          <div class="invalid-feedback">
+            @if (f.description.errors.maxlength) {
+            <div>Description must be 500 characters or less.</div>
+            }
           </div>
+          }
         </div>
-
         <div class="form-group">
           <label for="intraEpgIsolation">Intra Epg Isolation</label>
           <select
@@ -88,15 +97,17 @@
             <option [ngValue]="false">Not Isolated</option>
           </select>
         </div>
-
         <div class="form-group">
           <label for="bridgeDomain">Bridge Domain</label>
           <ng-select formControlName="bridgeDomain" [items]="bridgeDomains" id="bridgeDomain" bindLabel="name" bindValue="id"></ng-select>
-          <div *ngIf="submitted && f.bridgeDomain.errors" class="custom-invalid-feedback">
-            <div *ngIf="f.bridgeDomain.errors.required">Bridge Domain is required</div>
+          @if (submitted && f.bridgeDomain.errors) {
+          <div class="custom-invalid-feedback">
+            @if (f.bridgeDomain.errors.required) {
+            <div>Bridge Domain is required</div>
+            }
           </div>
+          }
         </div>
-
         <div class="form-group">
           <label for="applicationProfile">Application Profile</label>
           <ng-select
@@ -106,9 +117,13 @@
             bindLabel="name"
             bindValue="id"
           ></ng-select>
-          <div *ngIf="submitted && f.applicationProfileId.errors" class="custom-invalid-feedback">
-            <div *ngIf="f.applicationProfileId.errors.required">Application Profile is required</div>
+          @if (submitted && f.applicationProfileId.errors) {
+          <div class="custom-invalid-feedback">
+            @if (f.applicationProfileId.errors.required) {
+            <div>Application Profile is required</div>
+            }
           </div>
+          }
         </div>
       </div>
       <footer class="modal-footer">
@@ -120,4 +135,5 @@
       </footer>
     </form>
   </div>
+  }
 </ngx-smart-modal>

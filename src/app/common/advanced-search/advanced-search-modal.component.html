@@ -41,17 +41,18 @@
     <form [formGroup]="form" (ngSubmit)="searchThis()">
       <div class="modal-body">
         <div class="row">
-          <div *ngFor="let formInput of formInputs" class="col-md-6 mb-3">
+          @for (formInput of formInputs; track formInput) {
+          <div class="col-md-6 mb-3">
             <div class="form-group">
               <label>{{ formInput.displayName }}</label>
-              <ng-select
-                *ngIf="showPropertyList(formInput)"
-                [formControlName]="formInput.propertyName"
-                [items]="ngSelectOptions[formInput.propertyName]"
-              ></ng-select>
-              <input *ngIf="!showPropertyList(formInput)" type="text" class="form-control" [formControlName]="formInput.propertyName" />
+              @if (showPropertyList(formInput)) {
+              <ng-select [formControlName]="formInput.propertyName" [items]="ngSelectOptions[formInput.propertyName]"></ng-select>
+              } @if (!showPropertyList(formInput)) {
+              <input type="text" class="form-control" [formControlName]="formInput.propertyName" />
+              }
             </div>
           </div>
+          }
         </div>
       </div>
       <div class="modal-footer">

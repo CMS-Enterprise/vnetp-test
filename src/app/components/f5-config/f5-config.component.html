@@ -1,11 +1,15 @@
 <app-f5-config-filter (f5ConfigSearch)="onSearch($event)" [showPartitionFilter]="false"></app-f5-config-filter>
-<div *ngIf="!f5Configs || !f5Configs?.length" class="empty-state-container">
+@if (!f5Configs || !f5Configs?.length) {
+<div class="empty-state-container">
   <p>No F5's configured for F5 runtime within this tenant.</p>
 </div>
+}
 <div class="container">
   <div class="row">
-    <div class="col-sm-4" *ngFor="let f5Config of filteredF5Configs">
+    @for (f5Config of filteredF5Configs; track f5Config) {
+    <div class="col-sm-4">
       <app-f5-config-card [f5Config]="f5Config"></app-f5-config-card>
     </div>
+    }
   </div>
 </div>

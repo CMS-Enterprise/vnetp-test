@@ -23,12 +23,19 @@
           aria-label="Name"
           id="name"
         />
-        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-          <div *ngIf="f.name.errors.required">Name is required</div>
-          <div *ngIf="f.name.errors.minlength">Name must be at least 3 characters.</div>
-          <div *ngIf="f.name.errors.maxlength">Name must be 60 characters or less.</div>
-          <div *ngIf="f.name.errors.invalidName">Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+        @if (submitted && f.name.errors) {
+        <div class="invalid-feedback">
+          @if (f.name.errors.required) {
+          <div>Name is required</div>
+          } @if (f.name.errors.minlength) {
+          <div>Name must be at least 3 characters.</div>
+          } @if (f.name.errors.maxlength) {
+          <div>Name must be 60 characters or less.</div>
+          } @if (f.name.errors.invalidName) {
+          <div>Name must only contain alphanumeric characters or "-", "_", ":", "."</div>
+          }
         </div>
+        }
       </div>
 
       <div class="form-row">
@@ -46,12 +53,17 @@
             <option value="Deny">Deny</option>
             <option value="Permit">Permit</option>
           </select>
-          <div *ngIf="submitted && f.action.errors" class="invalid-feedback">
-            <div *ngIf="f.action.errors.required">Action is required</div>
+          @if (submitted && f.action.errors) {
+          <div class="invalid-feedback">
+            @if (f.action.errors.required) {
+            <div>Action is required</div>
+            }
           </div>
+          }
         </div>
 
-        <div class="form-group col-md-2" *ngIf="firewallRuleGroupType !== 'ZoneBased'">
+        @if (firewallRuleGroupType !== 'ZoneBased') {
+        <div class="form-group col-md-2">
           <label for="direction">Direction</label>
           <tooltip [message]="helpText.Direction"></tooltip>
           <select
@@ -65,10 +77,15 @@
             <option value="In">In</option>
             <option value="Out">Out</option>
           </select>
-          <div *ngIf="submitted && f.direction.errors" class="invalid-feedback">
-            <div *ngIf="f.direction.errors.required">Direction is required</div>
+          @if (submitted && f.direction.errors) {
+          <div class="invalid-feedback">
+            @if (f.direction.errors.required) {
+            <div>Direction is required</div>
+            }
           </div>
+          }
         </div>
+        }
 
         <div class="form-group col-md-2">
           <label for="protocol">Protocol</label>
@@ -86,9 +103,13 @@
             <option value="TCP">TCP</option>
             <option value="UDP">UDP</option>
           </select>
-          <div *ngIf="submitted && f.protocol.errors" class="invalid-feedback">
-            <div *ngIf="f.protocol.errors.required">Protocol is required</div>
+          @if (submitted && f.protocol.errors) {
+          <div class="invalid-feedback">
+            @if (f.protocol.errors.required) {
+            <div>Protocol is required</div>
+            }
           </div>
+          }
         </div>
 
         <div class="form-group col-md-2">
@@ -105,9 +126,13 @@
             <option [ngValue]="false">False</option>
             <option [ngValue]="true">True</option>
           </select>
-          <div *ngIf="submitted && f.logging.errors" class="invalid-feedback">
-            <div *ngIf="f.logging.errors.required">Logging is required</div>
+          @if (submitted && f.logging.errors) {
+          <div class="invalid-feedback">
+            @if (f.logging.errors.required) {
+            <div>Logging is required</div>
+            }
           </div>
+          }
         </div>
 
         <div class="form-group col-md-2">
@@ -124,9 +149,13 @@
             <option [ngValue]="false">False</option>
             <option [ngValue]="true">True</option>
           </select>
-          <div *ngIf="submitted && f.enabled.errors" class="invalid-feedback">
-            <div *ngIf="f.enabled.errors.required">Enabled is required</div>
+          @if (submitted && f.enabled.errors) {
+          <div class="invalid-feedback">
+            @if (f.enabled.errors.required) {
+            <div>Enabled is required</div>
+            }
           </div>
+          }
         </div>
 
         <div class="form-group col-md-2">
@@ -140,16 +169,22 @@
             [class.is-invalid]="submitted && f.ruleIndex.errors"
             aria-label="Rule Index"
           />
-          <div *ngIf="submitted && f.ruleIndex.errors" class="invalid-feedback">
-            <div *ngIf="f.ruleIndex.errors.required">Rule Index is required</div>
-            <div *ngIf="f.ruleIndex.errors.min">Rule Index must be greater than or equal to 1</div>
+          @if (submitted && f.ruleIndex.errors) {
+          <div class="invalid-feedback">
+            @if (f.ruleIndex.errors.required) {
+            <div>Rule Index is required</div>
+            } @if (f.ruleIndex.errors.min) {
+            <div>Rule Index must be greater than or equal to 1</div>
+            }
           </div>
+          }
         </div>
       </div>
 
-      <hr *ngIf="firewallRuleGroupType === 'ZoneBased'" />
-
-      <div class="form-row" *ngIf="firewallRuleGroupType === 'ZoneBased'">
+      @if (firewallRuleGroupType === 'ZoneBased') {
+      <hr />
+      } @if (firewallRuleGroupType === 'ZoneBased') {
+      <div class="form-row">
         <div class="form-group col-md-6">
           <table class="table table-striped table-sm table-bordered">
             <thead>
@@ -159,7 +194,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let selectedFromZone of selectedFromZones">
+              @for (selectedFromZone of selectedFromZones; track selectedFromZone) {
+              <tr>
                 <td>{{ selectedFromZone.name }}</td>
                 <td class="table__actions">
                   <app-icon-button
@@ -169,13 +205,14 @@
                   ></app-icon-button>
                 </td>
               </tr>
-              <tr *ngIf="!selectedFromZones?.length" class="text-center">
+              } @if (!selectedFromZones?.length) {
+              <tr class="text-center">
                 <td colspan="2">No From Zones Selected</td>
               </tr>
+              }
             </tbody>
           </table>
         </div>
-
         <div class="form-group col-md-6">
           <table class="table table-striped table-sm table-bordered">
             <thead>
@@ -185,41 +222,46 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let selectedToZone of selectedToZones">
+              @for (selectedToZone of selectedToZones; track selectedToZone) {
+              <tr>
                 <td>{{ selectedToZone.name }}</td>
                 <td class="table__actions">
                   <app-icon-button icon="delete" label="Remove To Zone" (click)="removeZone('to', selectedToZone.id)"></app-icon-button>
                 </td>
               </tr>
-              <tr *ngIf="!selectedToZones?.length" class="text-center">
+              } @if (!selectedToZones?.length) {
+              <tr class="text-center">
                 <td colspan="2">No To Zones Selected</td>
               </tr>
+              }
             </tbody>
           </table>
         </div>
       </div>
-      <div class="form-row" *ngIf="firewallRuleGroupType === 'ZoneBased'">
+      } @if (firewallRuleGroupType === 'ZoneBased') {
+      <div class="form-row">
         <div class="form-group col-md-6">
           <div class="input-group align-items-center">
             <select id="availableFromZones" class="form-control mr-3" formControlName="selectedFromZone">
               <option></option>
-              <option *ngFor="let zone of zones" [ngValue]="zone.id">{{ zone.name }}</option>
+              @for (zone of zones; track zone) {
+              <option [ngValue]="zone.id">{{ zone.name }}</option>
+              }
             </select>
-
             <button type="button" class="btn btn-info" (click)="addZone('from')" [disabled]="!f.selectedFromZone.value">
               <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
               <span>Add From Zone</span>
             </button>
           </div>
         </div>
-
         <div class="form-group col-md-6">
           <div class="input-group align-items-center">
             <select id="availableToZones" class="form-control mr-3" formControlName="selectedToZone">
               <option></option>
-              <option *ngFor="let zone of zones" [ngValue]="zone.id">{{ zone.name }}</option>
+              @for (zone of zones; track zone) {
+              <option [ngValue]="zone.id">{{ zone.name }}</option>
+              }
             </select>
-
             <button type="button" class="btn btn-info" (click)="addZone('to')" [disabled]="!f.selectedToZone.value">
               <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
               <span>Add To Zone</span>
@@ -227,6 +269,7 @@
           </div>
         </div>
       </div>
+      }
 
       <hr />
 
@@ -243,8 +286,11 @@
         </div>
 
         <div class="form-group col-md-6">
-          <label for="sourceIpAddress" *ngIf="f.sourceNetworkType.value === 'IpAddress'">Source IP</label>
-          <tooltip *ngIf="f.sourceNetworkType.value === 'IpAddress'" [message]="helpText.IpNetworkType"></tooltip>
+          @if (f.sourceNetworkType.value === 'IpAddress') {
+          <label for="sourceIpAddress">Source IP</label>
+          } @if (f.sourceNetworkType.value === 'IpAddress') {
+          <tooltip [message]="helpText.IpNetworkType"></tooltip>
+          } @if (f.sourceNetworkType.value === 'IpAddress') {
           <input
             type="text"
             formControlName="sourceIpAddress"
@@ -252,15 +298,20 @@
             class="form-control"
             [class.is-invalid]="submitted && f.sourceIpAddress.errors"
             aria-label="Source IP"
-            *ngIf="f.sourceNetworkType.value === 'IpAddress'"
           />
-          <div *ngIf="submitted && f.sourceIpAddress.errors" class="invalid-feedback">
-            <div *ngIf="f.sourceIpAddress.errors.required">Source IP Address is required</div>
-            <div *ngIf="f.sourceIpAddress.errors.invalidIpAny">Invalid IP address, must be a valid IPv4/IPv6 address or CIDR</div>
+          } @if (submitted && f.sourceIpAddress.errors) {
+          <div class="invalid-feedback">
+            @if (f.sourceIpAddress.errors.required) {
+            <div>Source IP Address is required</div>
+            } @if (f.sourceIpAddress.errors.invalidIpAny) {
+            <div>Invalid IP address, must be a valid IPv4/IPv6 address or CIDR</div>
+            }
           </div>
-
-          <label for="sourceNetworkObject" *ngIf="f.sourceNetworkType.value === 'NetworkObject'">Source Network Object</label>
-          <tooltip *ngIf="f.sourceNetworkType.value === 'NetworkObject'" [message]="helpText.NetworkObjectType"></tooltip>
+          } @if (f.sourceNetworkType.value === 'NetworkObject') {
+          <label for="sourceNetworkObject">Source Network Object</label>
+          } @if (f.sourceNetworkType.value === 'NetworkObject') {
+          <tooltip [message]="helpText.NetworkObjectType"></tooltip>
+          } @if (f.sourceNetworkType.value === 'NetworkObject') {
           <ng-select
             formControlName="sourceNetworkObject"
             id="sourceNetworkObject"
@@ -268,25 +319,27 @@
               'is-invalid': submitted && f.sourceNetworkObject.errors
             }"
             aria-label="Source Network Object"
-            *ngIf="f.sourceNetworkType.value === 'NetworkObject'"
             [items]="networkObjects"
             bindLabel="name"
             bindValue="id"
           ></ng-select>
-          <div *ngIf="submitted && f.sourceNetworkObject.errors" class="invalid-feedback">
-            <div *ngIf="f.sourceNetworkObject.errors.required">Source Network Object is required</div>
+          } @if (submitted && f.sourceNetworkObject.errors) {
+          <div class="invalid-feedback">
+            @if (f.sourceNetworkObject.errors.required) {
+            <div>Source Network Object is required</div>
+            }
           </div>
+          } @if (f.sourceNetworkType.value === 'NetworkObject') {
           <span
-            *ngIf="f.sourceNetworkType.value === 'NetworkObject'"
             (click)="getObjectInfo('Source NetworkObject', f.sourceNetworkType.value, f.sourceNetworkObject.value)"
             style="color: blue; cursor: pointer"
             >(object info)</span
           >
-
-          <label for="sourceNetworkObjectGroup" *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'"
-            >Source Network Object Group</label
-          >
-          <tooltip *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'" [message]="helpText.NetworkObjectGroupType"></tooltip>
+          } @if (f.sourceNetworkType.value === 'NetworkObjectGroup') {
+          <label for="sourceNetworkObjectGroup">Source Network Object Group</label>
+          } @if (f.sourceNetworkType.value === 'NetworkObjectGroup') {
+          <tooltip [message]="helpText.NetworkObjectGroupType"></tooltip>
+          } @if (f.sourceNetworkType.value === 'NetworkObjectGroup') {
           <ng-select
             formControlName="sourceNetworkObjectGroup"
             id="sourceNetworkObjectGroup"
@@ -294,21 +347,24 @@
               'is-invalid': submitted && f.sourceNetworkObjectGroup.errors
             }"
             aria-label="Source Network Object Group"
-            *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'"
             [items]="networkObjectGroups"
             bindLabel="name"
             bindValue="id"
           >
           </ng-select>
-          <div *ngIf="submitted && f.sourceNetworkObjectGroup.errors" class="invalid-feedback">
-            <div *ngIf="f.sourceNetworkObjectGroup.errors.required">Source Network Object Group is required</div>
+          } @if (submitted && f.sourceNetworkObjectGroup.errors) {
+          <div class="invalid-feedback">
+            @if (f.sourceNetworkObjectGroup.errors.required) {
+            <div>Source Network Object Group is required</div>
+            }
           </div>
+          } @if (f.sourceNetworkType.value === 'NetworkObjectGroup') {
           <span
-            *ngIf="f.sourceNetworkType.value === 'NetworkObjectGroup'"
             (click)="getObjectInfo('Source NetworkObjectGroup', f.sourceNetworkType.value, f.sourceNetworkObjectGroup.value)"
             style="color: blue; cursor: pointer"
             >(object info)</span
           >
+          }
         </div>
       </div>
 
@@ -330,8 +386,11 @@
         </div>
 
         <div class="form-group col-md-6">
-          <label for="destinationIpAddress" *ngIf="f.destinationNetworkType.value === 'IpAddress'">Destination IP</label>
-          <tooltip *ngIf="f.destinationNetworkType.value === 'IpAddress'" [message]="helpText.IpNetworkType"></tooltip>
+          @if (f.destinationNetworkType.value === 'IpAddress') {
+          <label for="destinationIpAddress">Destination IP</label>
+          } @if (f.destinationNetworkType.value === 'IpAddress') {
+          <tooltip [message]="helpText.IpNetworkType"></tooltip>
+          } @if (f.destinationNetworkType.value === 'IpAddress') {
           <input
             type="text"
             id="destinationIpAddress"
@@ -339,17 +398,20 @@
             class="form-control"
             [class.is-invalid]="submitted && f.destinationIpAddress.errors"
             aria-label="Destination IP"
-            *ngIf="f.destinationNetworkType.value === 'IpAddress'"
           />
-          <div *ngIf="submitted && f.destinationIpAddress.errors" class="invalid-feedback">
-            <div *ngIf="f.destinationIpAddress.errors.required">Destination IP is required</div>
-            <div *ngIf="f.destinationIpAddress.errors.invalidIpAny">Invalid IP address, must be a valid IPv4/IPv6 address or CIDR</div>
+          } @if (submitted && f.destinationIpAddress.errors) {
+          <div class="invalid-feedback">
+            @if (f.destinationIpAddress.errors.required) {
+            <div>Destination IP is required</div>
+            } @if (f.destinationIpAddress.errors.invalidIpAny) {
+            <div>Invalid IP address, must be a valid IPv4/IPv6 address or CIDR</div>
+            }
           </div>
-
-          <label for="destinationNetworkObject" *ngIf="f.destinationNetworkType.value === 'NetworkObject'"
-            >Destination Network Object</label
-          >
-          <tooltip *ngIf="f.destinationNetworkType.value === 'NetworkObject'" [message]="helpText.NetworkObjectType"></tooltip>
+          } @if (f.destinationNetworkType.value === 'NetworkObject') {
+          <label for="destinationNetworkObject">Destination Network Object</label>
+          } @if (f.destinationNetworkType.value === 'NetworkObject') {
+          <tooltip [message]="helpText.NetworkObjectType"></tooltip>
+          } @if (f.destinationNetworkType.value === 'NetworkObject') {
           <ng-select
             formControlName="destinationNetworkObject"
             id="destinationNetworkObject"
@@ -357,26 +419,28 @@
               'is-invalid': submitted && f.destinationNetworkObject.errors
             }"
             aria-label="Destination Network Object"
-            *ngIf="f.destinationNetworkType.value === 'NetworkObject'"
             [items]="networkObjects"
             bindLabel="name"
             bindValue="id"
           >
           </ng-select>
-          <div *ngIf="submitted && f.destinationNetworkObject.errors" class="invalid-feedback">
-            <div *ngIf="f.destinationNetworkObject.errors.required">Destination Network Object is required</div>
+          } @if (submitted && f.destinationNetworkObject.errors) {
+          <div class="invalid-feedback">
+            @if (f.destinationNetworkObject.errors.required) {
+            <div>Destination Network Object is required</div>
+            }
           </div>
+          } @if (f.destinationNetworkType.value === 'NetworkObject') {
           <span
-            *ngIf="f.destinationNetworkType.value === 'NetworkObject'"
             (click)="getObjectInfo('Destination NetworkObject', f.destinationNetworkType.value, f.destinationNetworkObject.value)"
             style="color: blue; cursor: pointer"
             >(object info)</span
           >
-
-          <label for="destinationNetworkObjectGroup" *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'"
-            >Destination Network Object Group</label
-          >
-          <tooltip *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'" [message]="helpText.NetworkObjectGroupType"></tooltip>
+          } @if (f.destinationNetworkType.value === 'NetworkObjectGroup') {
+          <label for="destinationNetworkObjectGroup">Destination Network Object Group</label>
+          } @if (f.destinationNetworkType.value === 'NetworkObjectGroup') {
+          <tooltip [message]="helpText.NetworkObjectGroupType"></tooltip>
+          } @if (f.destinationNetworkType.value === 'NetworkObjectGroup') {
           <ng-select
             formControlName="destinationNetworkObjectGroup"
             id="destinationNetworkObjectGroup"
@@ -384,25 +448,29 @@
               'is-invalid': submitted && f.destinationNetworkObjectGroup.errors
             }"
             aria-label="Destination Network Object Group"
-            *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'"
             [items]="networkObjectGroups"
             bindLabel="name"
             bindValue="id"
           >
           </ng-select>
-          <div *ngIf="submitted && f.destinationNetworkObjectGroup.errors" class="invalid-feedback">
-            <div *ngIf="f.destinationNetworkObjectGroup.errors.required">Destination Network Object Group is required</div>
+          } @if (submitted && f.destinationNetworkObjectGroup.errors) {
+          <div class="invalid-feedback">
+            @if (f.destinationNetworkObjectGroup.errors.required) {
+            <div>Destination Network Object Group is required</div>
+            }
           </div>
+          } @if (f.destinationNetworkType.value === 'NetworkObjectGroup') {
           <span
-            *ngIf="f.destinationNetworkType.value === 'NetworkObjectGroup'"
             (click)="getObjectInfo('Destination NetworkObjectGroup', f.destinationNetworkType.value, f.destinationNetworkObjectGroup.value)"
             style="color: blue; cursor: pointer"
             >(object info)</span
           >
+          }
         </div>
       </div>
 
-      <div *ngIf="f.protocol.value !== 'IP' && f.protocol.value !== 'ICMP'">
+      @if (f.protocol.value !== 'IP' && f.protocol.value !== 'ICMP') {
+      <div>
         <hr />
         <div class="form-row">
           <div class="form-group col-md-12">
@@ -416,11 +484,14 @@
             </select>
           </div>
         </div>
-
         <div class="form-row">
-          <div class="form-group col-md-6" *ngIf="f.serviceType.value === 'Port'">
-            <label for="sourcePorts" *ngIf="f.serviceType.value === 'Port'">Source Port</label>
-            <tooltip *ngIf="f.serviceType.value === 'Port'" [message]="helpText.PortServiceType"></tooltip>
+          @if (f.serviceType.value === 'Port') {
+          <div class="form-group col-md-6">
+            @if (f.serviceType.value === 'Port') {
+            <label for="sourcePorts">Source Port</label>
+            } @if (f.serviceType.value === 'Port') {
+            <tooltip [message]="helpText.PortServiceType"></tooltip>
+            } @if (f.serviceType.value === 'Port') {
             <input
               type="text"
               id="sourcePorts"
@@ -428,17 +499,24 @@
               class="form-control"
               [class.is-invalid]="submitted && f.sourcePorts.errors"
               aria-label="Source Ports"
-              *ngIf="f.serviceType.value === 'Port'"
             />
-            <div *ngIf="submitted && f.sourcePorts.errors" class="invalid-feedback">
-              <div *ngIf="f.sourcePorts.errors.invalidPortNumber">Source Port/Range must be between 1-65535</div>
-              <div *ngIf="f.sourcePorts.errors.required">Source Port is required</div>
+            } @if (submitted && f.sourcePorts.errors) {
+            <div class="invalid-feedback">
+              @if (f.sourcePorts.errors.invalidPortNumber) {
+              <div>Source Port/Range must be between 1-65535</div>
+              } @if (f.sourcePorts.errors.required) {
+              <div>Source Port is required</div>
+              }
             </div>
+            }
           </div>
-
+          }
           <div class="form-group col-md-6">
-            <label for="destinationPorts" *ngIf="f.serviceType.value === 'Port'">Destination Port</label>
-            <tooltip *ngIf="f.serviceType.value === 'Port'" [message]="helpText.PortServiceType"></tooltip>
+            @if (f.serviceType.value === 'Port') {
+            <label for="destinationPorts">Destination Port</label>
+            } @if (f.serviceType.value === 'Port') {
+            <tooltip [message]="helpText.PortServiceType"></tooltip>
+            } @if (f.serviceType.value === 'Port') {
             <input
               type="text"
               id="destinationPorts"
@@ -446,15 +524,20 @@
               class="form-control"
               [class.is-invalid]="submitted && f.destinationPorts.errors"
               aria-label="Destination Ports"
-              *ngIf="f.serviceType.value === 'Port'"
             />
-            <div *ngIf="submitted && f.destinationPorts.errors" class="invalid-feedback">
-              <div *ngIf="f.destinationPorts.errors.invalidPortNumber">Destination Port/Range must be between 1-65535</div>
-              <div *ngIf="f.destinationPorts.errors.required">Destination Port is required</div>
+            } @if (submitted && f.destinationPorts.errors) {
+            <div class="invalid-feedback">
+              @if (f.destinationPorts.errors.invalidPortNumber) {
+              <div>Destination Port/Range must be between 1-65535</div>
+              } @if (f.destinationPorts.errors.required) {
+              <div>Destination Port is required</div>
+              }
             </div>
-
-            <label for="serviceObject" *ngIf="f.serviceType.value === 'ServiceObject'">Service Object </label>
-            <tooltip *ngIf="f.serviceType.value === 'ServiceObject'" [message]="helpText.ServiceObjectType"></tooltip>
+            } @if (f.serviceType.value === 'ServiceObject') {
+            <label for="serviceObject">Service Object </label>
+            } @if (f.serviceType.value === 'ServiceObject') {
+            <tooltip [message]="helpText.ServiceObjectType"></tooltip>
+            } @if (f.serviceType.value === 'ServiceObject') {
             <ng-select
               formControlName="serviceObject"
               id="serviceObject"
@@ -462,24 +545,26 @@
                 'is-invalid': submitted && f.serviceObject.errors
               }"
               aria-label="Service Object Group"
-              *ngIf="f.serviceType.value === 'ServiceObject'"
               [items]="serviceObjects"
               bindLabel="name"
               bindValue="id"
             >
             </ng-select>
-            <div *ngIf="submitted && f.serviceObject.errors" class="invalid-feedback">
-              <div *ngIf="f.serviceObject.errors.required">Service Object is required</div>
+            } @if (submitted && f.serviceObject.errors) {
+            <div class="invalid-feedback">
+              @if (f.serviceObject.errors.required) {
+              <div>Service Object is required</div>
+              }
             </div>
-            <span
-              *ngIf="f.serviceType.value === 'ServiceObject'"
-              (click)="getObjectInfo('Service Object', f.serviceType.value, f.serviceObject.value)"
-              style="color: blue; cursor: pointer"
+            } @if (f.serviceType.value === 'ServiceObject') {
+            <span (click)="getObjectInfo('Service Object', f.serviceType.value, f.serviceObject.value)" style="color: blue; cursor: pointer"
               >(object info)</span
             >
-
-            <label for="serviceObjectGroup" *ngIf="f.serviceType.value === 'ServiceObjectGroup'">Service Object Group</label>
-            <tooltip *ngIf="f.serviceType.value === 'ServiceObjectGroup'" [message]="helpText.ServiceObjectGroupType"></tooltip>
+            } @if (f.serviceType.value === 'ServiceObjectGroup') {
+            <label for="serviceObjectGroup">Service Object Group</label>
+            } @if (f.serviceType.value === 'ServiceObjectGroup') {
+            <tooltip [message]="helpText.ServiceObjectGroupType"></tooltip>
+            } @if (f.serviceType.value === 'ServiceObjectGroup') {
             <ng-select
               formControlName="serviceObjectGroup"
               id="serviceObjectGroup"
@@ -487,24 +572,28 @@
                 'is-invalid': submitted && f.serviceObjectGroup.errors
               }"
               aria-label="Service Object Group"
-              *ngIf="f.serviceType.value === 'ServiceObjectGroup'"
               [items]="serviceObjectGroups"
               bindLabel="name"
               bindValue="id"
             >
             </ng-select>
-            <div *ngIf="submitted && f.serviceObjectGroup.errors" class="invalid-feedback">
-              <div *ngIf="f.serviceObjectGroup.errors.required">Service Object Group is required</div>
+            } @if (submitted && f.serviceObjectGroup.errors) {
+            <div class="invalid-feedback">
+              @if (f.serviceObjectGroup.errors.required) {
+              <div>Service Object Group is required</div>
+              }
             </div>
+            } @if (f.serviceType.value === 'ServiceObjectGroup') {
             <span
-              *ngIf="f.serviceType.value === 'ServiceObjectGroup'"
               (click)="getObjectInfo('Service Object Group', f.serviceType.value, f.serviceObjectGroup.value)"
               style="color: blue; cursor: pointer"
               >(object info)</span
             >
+            }
           </div>
         </div>
       </div>
+      }
     </div>
 
     <footer class="modal-footer">

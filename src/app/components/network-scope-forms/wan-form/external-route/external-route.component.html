@@ -5,12 +5,9 @@
     [ngClass]="{ 'btn-success': isRecentlyRefreshed(), 'btn-secondary': !isRecentlyRefreshed() }"
     [disabled]="isRefreshingRuntimeData || isRecentlyRefreshed()"
   >
-    <ng-container *ngIf="!isRefreshingRuntimeData && !isRecentlyRefreshed()">Refresh</ng-container>
-    <ng-container *ngIf="isRefreshingRuntimeData">
-      <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-      Refreshing...
-    </ng-container>
-    <ng-container *ngIf="isRecentlyRefreshed() && !isRefreshingRuntimeData">Refreshed</ng-container>
+    @if (!isRefreshingRuntimeData && !isRecentlyRefreshed()) { Refresh } @if (isRefreshingRuntimeData) {
+    <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    Refreshing... } @if (isRecentlyRefreshed() && !isRefreshingRuntimeData) { Refreshed }
   </button>
 </ng-template>
 
@@ -19,7 +16,8 @@
 </button>
 <h1>Manage Allowed External Routes for: {{ wanForm?.name }}</h1>
 
-<div *ngIf="!showComponent" class="mt-3">
+@if (!showComponent) {
+<div class="mt-3">
   <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert">
     <div>
       <fa-icon class="icon" [icon]="['fas', 'info-circle']"></fa-icon>
@@ -28,7 +26,8 @@
     <ng-container *ngTemplateOutlet="refreshButtonTemplate"></ng-container>
   </div>
 </div>
-<div *ngIf="showComponent">
+} @if (showComponent) {
+<div>
   <section class="btn-toolbar" role="toolbar" aria-label="create-external-route">
     <button class="btn btn-primary" (click)="openModal()">
       <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
@@ -58,44 +57,37 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngIf="sortedRoutes.length > 0; else noData">
-          <tr *ngFor="let route of sortedRoutes" [class.associated]="route.isAssociated">
-            <td>{{ route.network }}</td>
-            <td>{{ route.prefixLength }}</td>
-            <td>{{ route.protocol }}</td>
-            <td>{{ route.metric }}</td>
-            <td>{{ route.vrf }}</td>
-            <td>{{ route.uptime || '-' }}</td>
-            <td>
-              <app-icon-button
-                *ngIf="!checkIfWanFormExists(route)"
-                icon="add"
-                label="Add Route to Wan Form"
-                (handleClick)="addRouteToWanForm(route)"
-              ></app-icon-button>
-              <app-icon-button
-                *ngIf="checkIfWanFormExists(route)"
-                icon="times"
-                label="Remove Route from Wan Form"
-                (handleClick)="removeRouteFromWanForm(route)"
-              ></app-icon-button>
-              <app-icon-button
-                *ngIf="route?.protocol === 'manual' && !checkIfWanFormExists(route)"
-                icon="delete"
-                label="Delete Route"
-                (handleClick)="deleteRoute(route)"
-              ></app-icon-button>
-            </td>
-          </tr>
-        </ng-container>
-        <ng-template #noData>
-          <tr>
-            <td colspan="7" class="text-center">No routes available</td>
-          </tr>
-        </ng-template>
+        @if (sortedRoutes.length > 0) { @for (route of sortedRoutes; track route) {
+        <tr [class.associated]="route.isAssociated">
+          <td>{{ route.network }}</td>
+          <td>{{ route.prefixLength }}</td>
+          <td>{{ route.protocol }}</td>
+          <td>{{ route.metric }}</td>
+          <td>{{ route.vrf }}</td>
+          <td>{{ route.uptime || '-' }}</td>
+          <td>
+            @if (!checkIfWanFormExists(route)) {
+            <app-icon-button icon="add" label="Add Route to Wan Form" (handleClick)="addRouteToWanForm(route)"></app-icon-button>
+            } @if (checkIfWanFormExists(route)) {
+            <app-icon-button
+              icon="times"
+              label="Remove Route from Wan Form"
+              (handleClick)="removeRouteFromWanForm(route)"
+            ></app-icon-button>
+            } @if (route?.protocol === 'manual' && !checkIfWanFormExists(route)) {
+            <app-icon-button icon="delete" label="Delete Route" (handleClick)="deleteRoute(route)"></app-icon-button>
+            }
+          </td>
+        </tr>
+        } } @else {
+        <tr>
+          <td colspan="7" class="text-center">No routes available</td>
+        </tr>
+        }
       </tbody>
     </table>
   </div>
 </div>
+}
 
 <app-external-route-modal></app-external-route-modal>

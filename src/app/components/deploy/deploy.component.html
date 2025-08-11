@@ -18,7 +18,8 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let tier of tiers">
+    @for (tier of tiers; track tier) {
+    <tr>
       <td>
         <input aria-label="tierSelected" (keyup.enter)="tier.isSelected = !tier.isSelected" type="checkbox" [(ngModel)]="tier.isSelected" />
       </td>
@@ -41,18 +42,21 @@
         {{ tier?.item?.provisionedAt ? 'Provisioned' : 'Not Provisioned' }}
       </td>
       <td>
+        @if (checkUndeployedChanges(tier?.item)) {
         <app-icon-button
-          *ngIf="checkUndeployedChanges(tier?.item)"
           icon="asterisk"
           label="Undeployed Changes"
           [type]="'info'"
           (handleClick)="getChangeReport(tier.item)"
         ></app-icon-button>
+        }
       </td>
     </tr>
-    <tr *ngIf="!tiers?.length" class="text-center">
+    } @if (!tiers?.length) {
+    <tr class="text-center">
       <td colspan="7">No Tiers to Provision</td>
     </tr>
+    }
   </tbody>
 </table>
 
@@ -70,43 +74,45 @@
   <div class="modal-body">
     <p class="mb-3">The following objects have changes:</p>
 
-    <ng-container *ngFor="let group of reportGroups">
-      <ng-container *ngIf="group.data.length > 0">
-        <div class="scrollable-table-container" style="overflow-y: auto; max-height: 200px; margin-bottom: 20px">
-          <span
-            >{{ group.name }} <span class="badge bg-secondary">{{ group.data.length }}</span></span
-          >
-
-          <table class="table table-sm table-striped table-bordered">
-            <caption>
-              <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
-              <span>{{ group?.name }}</span>
-            </caption>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Last Updated At</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let obj of group.data">
-                <td>{{ obj.name }}</td>
-                <td>{{ obj.updatedAt }}</td>
-                <td>
-                  <span *ngIf="obj.provisionedVersion === null">Not Provisioned</span>
-                  <span *ngIf="obj.provisionedVersion !== null">Updated</span>
-                </td>
-                <td>
-                  <button class="btn btn-link p-0" (click)="getObjectAuditLogEvents(obj, group.type)">Show Diff</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </ng-container>
-    </ng-container>
+    @for (group of reportGroups; track group) { @if (group.data.length > 0) {
+    <div class="scrollable-table-container" style="overflow-y: auto; max-height: 200px; margin-bottom: 20px">
+      <span
+        >{{ group.name }} <span class="badge bg-secondary">{{ group.data.length }}</span></span
+      >
+      <table class="table table-sm table-striped table-bordered">
+        <caption>
+          <fa-icon class="icon" [icon]="['fas', 'table']"></fa-icon>
+          <span>{{ group?.name }}</span>
+        </caption>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Last Updated At</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (obj of group.data; track obj) {
+          <tr>
+            <td>{{ obj.name }}</td>
+            <td>{{ obj.updatedAt }}</td>
+            <td>
+              @if (obj.provisionedVersion === null) {
+              <span>Not Provisioned</span>
+              } @if (obj.provisionedVersion !== null) {
+              <span>Updated</span>
+              }
+            </td>
+            <td>
+              <button class="btn btn-link p-0" (click)="getObjectAuditLogEvents(obj, group.type)">Show Diff</button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    } }
   </div>
 </ngx-smart-modal>
 
@@ -131,31 +137,38 @@
           </tr>
         </thead>
         <tbody>
-          <ng-container *ngFor="let entry of report; let i = index">
-            <tr (click)="toggleExpand(i)" style="cursor: pointer">
-              <td>{{ entry.name }}</td>
-              <td>{{ entry.timestamp }}</td>
-              <td>{{ entry.actionType }}</td>
-              <td>
-                <button class="btn btn-link p-0" (click)="$event.stopPropagation(); toggleExpand(i)">View Details</button>
-              </td>
-            </tr>
-            <tr *ngIf="expandedRows.includes(i)">
-              <td colspan="4">
-                <div *ngIf="isArray(entry.differences); else simpleText">
-                  <ul>
-                    <li *ngFor="let diff of entry.differences">
-                      <strong>{{ diff.key }}:</strong> From "{{ diff.before }}" to "{{ diff.after }}"
-                    </li>
-                  </ul>
-                </div>
-                <ng-template #simpleText>{{ entry.differences }}</ng-template>
-              </td>
-            </tr>
-          </ng-container>
-          <tr *ngIf="report.length === 0">
+          @for (entry of report; track entry; let i = $index) {
+          <tr (click)="toggleExpand(i)" style="cursor: pointer">
+            <td>{{ entry.name }}</td>
+            <td>{{ entry.timestamp }}</td>
+            <td>{{ entry.actionType }}</td>
+            <td>
+              <button class="btn btn-link p-0" (click)="$event.stopPropagation(); toggleExpand(i)">View Details</button>
+            </td>
+          </tr>
+          @if (expandedRows.includes(i)) {
+          <tr>
+            <td colspan="4">
+              @if (isArray(entry.differences)) {
+              <div>
+                <ul>
+                  @for (diff of entry.differences; track diff) {
+                  <li>
+                    <strong>{{ diff.key }}:</strong> From "{{ diff.before }}" to "{{ diff.after }}"
+                  </li>
+                  }
+                </ul>
+              </div>
+              } @else {
+              {{ entry.differences }}
+              }
+            </td>
+          </tr>
+          } } @if (report.length === 0) {
+          <tr>
             <td colspan="3" class="text-center">No Changes Detected</td>
           </tr>
+          }
         </tbody>
       </table>
     </div>

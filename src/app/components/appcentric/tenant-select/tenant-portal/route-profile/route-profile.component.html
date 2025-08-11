@@ -6,43 +6,45 @@
     </button>
   </section>
 
-  <ng-container *ngIf="!isLoading; else loading">
-    <app-table
-      [config]="config"
-      [data]="routeProfiles"
-      (clearResults)="getRouteProfiles($event)"
-      (searchParams)="getRouteProfiles($event)"
-      [searchColumns]="searchColumns"
-      [(itemsPerPage)]="perPage"
-      (tableEvent)="onTableEvent($event)"
-    ></app-table>
-    <section class="btn-toolbar" role="toolbar">
-      <app-import-export
-        [exportObject]="routeProfiles"
-        exportFileName="routeProfiles"
-        [disableJson]="false"
-        (import)="importRouteProfiles($event)"
-      ></app-import-export>
-    </section>
-  </ng-container>
+  @if (!isLoading) {
+  <app-table
+    [config]="config"
+    [data]="routeProfiles"
+    (clearResults)="getRouteProfiles($event)"
+    (searchParams)="getRouteProfiles($event)"
+    [searchColumns]="searchColumns"
+    [(itemsPerPage)]="perPage"
+    (tableEvent)="onTableEvent($event)"
+  ></app-table>
+  <section class="btn-toolbar" role="toolbar">
+    <app-import-export
+      [exportObject]="routeProfiles"
+      exportFileName="routeProfiles"
+      [disableJson]="false"
+      (import)="importRouteProfiles($event)"
+    ></app-import-export>
+  </section>
+  } @else {
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  }
 </ng-container>
 
 <ng-template #actionsTemplate let-routeProfile="datum">
   <section class="table__actions">
+    @if (!routeProfile?.deletedAt) {
     <app-icon-button
-      *ngIf="!routeProfile?.deletedAt"
       icon="edit"
       label="Edit Route Profile"
       (handleClick)="openRouteProfileModal(ModalMode.Edit, routeProfile)"
     ></app-icon-button>
-
+    } @if (routeProfile?.deletedAt) {
     <app-icon-button
-      *ngIf="routeProfile?.deletedAt"
       icon="undo"
       label="Restore Route Profile"
       type="success"
       (handleClick)="restoreRouteProfile(routeProfile)"
     ></app-icon-button>
+    }
 
     <app-icon-button
       icon="delete"
