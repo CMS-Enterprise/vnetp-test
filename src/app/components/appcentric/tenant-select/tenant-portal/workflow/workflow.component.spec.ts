@@ -130,6 +130,7 @@ describe('WorkflowComponent', () => {
       fixture.detectChanges();
       const subscribeSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((_dto, _ngx, onConfirm, onClose) => {
         onConfirm();
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         onClose && onClose();
         return new Subscription();
       });
@@ -151,6 +152,7 @@ describe('WorkflowComponent', () => {
       fixture.detectChanges();
       const subscribeSpy = jest.spyOn(SubscriptionUtil, 'subscribeToYesNoModal').mockImplementation((_dto, _ngx, onConfirm, onClose) => {
         onConfirm();
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         onClose && onClose();
         return new Subscription();
       });

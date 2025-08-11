@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { V2WorkflowsService, Workflow } from 'client';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { WorkflowViewModalComponent } from './workflow-view-modal.component';
