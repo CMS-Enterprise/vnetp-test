@@ -1,7 +1,5 @@
 /* eslint-disable */
-import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import {
   MockComponent,
@@ -17,15 +15,37 @@ import { VrfComponent } from './vrf.component';
 import { of, Subject, Subscription } from 'rxjs';
 import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
-import { V2AppCentricVrfsService, Vrf } from 'client';
+import { V2AppCentricTenantsService, V2AppCentricVrfsService, V3GlobalWanFormRequestService, Vrf, WanFormRequest } from 'client';
 import { VrfModalDto } from 'src/app/models/appcentric/vrf-modal-dto';
 import { ModalMode } from 'src/app/models/other/modal-mode';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute } from '@angular/router';
 
 describe('VrfComponent', () => {
   let component: VrfComponent;
   let fixture: ComponentFixture<VrfComponent>;
+  let mockTenantService: jest.Mocked<V2AppCentricTenantsService>;
+  let mockWanFormRequestService: jest.Mocked<V3GlobalWanFormRequestService>;
+  let mockWanFormRequest: jest.Mocked<WanFormRequest>;
 
   beforeEach(() => {
+    mockWanFormRequest = {
+      id: '123',
+      tenantId: '123',
+      status: 'PENDING',
+    } as any;
+
+    const mockTenant = {
+      wanFormStatus: 'PENDING',
+      id: '123',
+      name: 'Test Tenant',
+    } as any;
+    mockTenantService = {
+      getOneTenant: jest.fn().mockReturnValue(of(mockTenant)),
+    } as any;
+    mockWanFormRequestService = {
+      getManyWanFormRequests: jest.fn().mockReturnValue(of([mockWanFormRequest])),
+    } as any;
     TestBed.configureTestingModule({
       declarations: [
         VrfComponent,
@@ -37,8 +57,14 @@ describe('VrfComponent', () => {
         MockYesNoModalComponent,
         MockComponent({ selector: 'app-vrf-modal', inputs: ['tenantId'] }),
       ],
-      imports: [RouterTestingModule, HttpClientModule],
-      providers: [MockProvider(NgxSmartModalService), MockProvider(V2AppCentricVrfsService)],
+      imports: [HttpClientTestingModule],
+      providers: [
+        MockProvider(NgxSmartModalService),
+        MockProvider(V2AppCentricVrfsService),
+        { provide: V3GlobalWanFormRequestService, useValue: mockWanFormRequestService },
+        { provide: V2AppCentricTenantsService, useValue: mockTenantService },
+        { provide: ActivatedRoute, useValue: { snapshot: { params: { tenantId: '123' } } } },
+      ],
     }).compileComponents();
   });
 

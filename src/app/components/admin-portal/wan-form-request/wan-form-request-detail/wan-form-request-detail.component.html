@@ -27,10 +27,20 @@
       <!-- Additions -->
       <div *ngIf="change.additions && change.additions.length > 0">
         <h4>Additions</h4>
-        <div *ngFor="let addition of change.additions" class="card mb-3 bg-light">
+        <div class="card mb-3 bg-light">
           <div class="card-body">
-            <h5 class="card-title">{{ addition.name || 'Route' }}</h5>
-            <pre>{{ addition | json }}</pre>
+            <div class="table-scroll-container">
+              <table mat-table [dataSource]="change.additions" class="mat-elevation-z1 w-100">
+                <!-- Dynamic column definitions -->
+                <ng-container *ngFor="let col of getColumnsFor(change.additions); trackBy: trackByColumn" [matColumnDef]="col">
+                  <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+                  <td mat-cell *matCellDef="let row">{{ formatCellValue(getCellValue(row, col)) }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="getColumnsFor(change.additions)"></tr>
+                <tr mat-row *matRowDef="let row; columns: getColumnsFor(change.additions)"></tr>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -38,10 +48,19 @@
       <!-- Modifications -->
       <div *ngIf="change.modifications && change.modifications.length > 0">
         <h4>Modifications</h4>
-        <div *ngFor="let mod of change.modifications" class="card mb-3 bg-light">
+        <div class="card mb-3 bg-light">
           <div class="card-body">
-            <h5 class="card-title">{{ mod.name || 'Route' }}</h5>
-            <pre>{{ mod | json }}</pre>
+            <div class="table-scroll-container">
+              <table mat-table [dataSource]="change.modifications" class="mat-elevation-z1 w-100">
+                <ng-container *ngFor="let col of getColumnsFor(change.modifications); trackBy: trackByColumn" [matColumnDef]="col">
+                  <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+                  <td mat-cell *matCellDef="let row">{{ formatCellValue(getCellValue(row, col)) }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="getColumnsFor(change.modifications)"></tr>
+                <tr mat-row *matRowDef="let row; columns: getColumnsFor(change.modifications)"></tr>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -49,10 +68,19 @@
       <!-- Deletions -->
       <div *ngIf="change.deletions && change.deletions.length > 0">
         <h4>Deletions</h4>
-        <div *ngFor="let deletion of change.deletions" class="card mb-3 bg-light">
+        <div class="card mb-3 bg-light">
           <div class="card-body">
-            <h5 class="card-title">{{ deletion.name || 'Route' }}</h5>
-            <pre>{{ deletion | json }}</pre>
+            <div class="table-scroll-container">
+              <table mat-table [dataSource]="change.deletions" class="mat-elevation-z1 w-100">
+                <ng-container *ngFor="let col of getColumnsFor(change.deletions); trackBy: trackByColumn" [matColumnDef]="col">
+                  <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+                  <td mat-cell *matCellDef="let row">{{ formatCellValue(getCellValue(row, col)) }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="getColumnsFor(change.deletions)"></tr>
+                <tr mat-row *matRowDef="let row; columns: getColumnsFor(change.deletions)"></tr>
+              </table>
+            </div>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSmartModalService } from 'ngx-smart-modal';
-import { of } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import {
   V1NetworkScopeFormsInternalRoutesService,
   V1NetworkScopeFormsWanFormService,
@@ -115,21 +115,18 @@ describe('InternalRoutesComponent', () => {
   describe('ngOnInit', () => {
     it('should fetch WAN form subnets on initialization', () => {
       const getInternalRoutesSpy = jest.spyOn(component, 'getInternalRoutes');
+      const getChildrenSpy = jest.spyOn(component, 'getChildren');
       component.ngOnInit();
       expect(getInternalRoutesSpy).toHaveBeenCalled();
+      expect(getChildrenSpy).toHaveBeenCalled();
     });
   });
 
   describe('getInternalRoutes', () => {
-    it('should set isLoading to true and fetch WAN form subnets', () => {
+    it('should call service and unset loading (default params)', () => {
       component.getInternalRoutes();
+      expect(mockInternalRouteService.getManyInternalRoute).toHaveBeenCalled();
       expect(component.isLoading).toBe(false);
-      expect(mockInternalRouteService.getManyInternalRoute).toHaveBeenCalledWith({
-        filter: ['wanFormId||eq||testWanFormId', undefined],
-        join: ['netcentricSubnet', 'appcentricSubnet'],
-        page: 1,
-        perPage: 20,
-      });
     });
 
     it('should update internalRoutes and set isLoading to false on success', () => {
@@ -139,24 +136,71 @@ describe('InternalRoutesComponent', () => {
       expect(component.internalRoutes).toEqual(internalRoutesMock);
       expect(component.isLoading).toBe(false);
     });
+
+    it('should apply event paging and search filter when provided', () => {
+      const evt: any = { page: 3, perPage: 50, searchColumn: 'description', searchText: 'term' };
+      mockInternalRouteService.getManyInternalRoute.mockClear();
+      component.getInternalRoutes(evt);
+      const args = mockInternalRouteService.getManyInternalRoute.mock.calls[0][0];
+      expect(args.filter).toEqual(['wanFormId||eq||testWanFormId', 'description||cont||term']);
+      expect(args.page).toBe(3);
+      expect(args.perPage).toBe(50);
+    });
+
+    it('should default page/perPage when event has nullish values and omit search filter when incomplete', () => {
+      const evt: any = { page: undefined, perPage: undefined, searchColumn: 'description', searchText: '' };
+      mockInternalRouteService.getManyInternalRoute.mockClear();
+      component.getInternalRoutes(evt);
+      const args = mockInternalRouteService.getManyInternalRoute.mock.calls[0][0];
+      expect(args.filter).toEqual(['wanFormId||eq||testWanFormId']);
+      expect(args.page).toBe(1);
+      expect(args.perPage).toBe(20);
+    });
+
+    it('should unset loading on error', () => {
+      mockInternalRouteService.getManyInternalRoute.mockReturnValue(throwError(() => new Error('boom')));
+      component.getInternalRoutes();
+      expect(component.isLoading).toBe(false);
+    });
   });
 
   describe('openModal', () => {
     it('should set modal data and open the modal', () => {
+      const subSpy = jest.spyOn(component as any, 'subscribeToModal');
       const dto = new InternalRouteModalDto();
       dto.modalMode = ModalMode.Create;
       dto.wanForm = component.wanForm;
 
       component.openModal(ModalMode.Create);
+      expect(subSpy).toHaveBeenCalled();
       expect(mockNgxSmartModalService.setModalData).toHaveBeenCalledWith(dto, 'internalRouteModal');
       expect(mockNgxSmartModalService.getModal('internalRouteModal').open).toHaveBeenCalled();
     });
   });
 
   describe('subscribeToModal', () => {
-    it('should reset modal data and fetch WAN form subnets on modal close', () => {
+    it('should reset modal data and fetch WAN form subnets on modal close without filters', () => {
+      const subject = new Subject<any>();
+      mockNgxSmartModalService.getModal.mockReturnValue({ onCloseFinished: subject.asObservable() });
+      const getSpy = jest.spyOn(component, 'getInternalRoutes');
       (component as any).subscribeToModal();
-      expect((component as any).modalSubscription).not.toBeNull();
+      expect((component as any).modalSubscription).toBeTruthy();
+      // no filteredResults
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue({});
+      subject.next({});
+      expect(mockNgxSmartModalService.resetModalData).toHaveBeenCalledWith('internalRouteModal');
+      expect(getSpy).toHaveBeenCalledWith();
+    });
+
+    it('should fetch with params when filteredResults present', () => {
+      const subject = new Subject<any>();
+      mockNgxSmartModalService.getModal.mockReturnValue({ onCloseFinished: subject.asObservable() });
+      const getSpy = jest.spyOn(component, 'getInternalRoutes');
+      (component as any).subscribeToModal();
+      const params = { filteredResults: true, page: 2, perPage: 10 } as any;
+      (mockTableContextService.getSearchLocalStorage as jest.Mock).mockReturnValue(params);
+      subject.next({});
+      expect(getSpy).toHaveBeenCalledWith(params);
     });
   });
 
@@ -180,6 +224,14 @@ describe('InternalRoutesComponent', () => {
       component.restoreInternalRoute(internalRouteMock);
       expect(mockInternalRouteService.restoreOneInternalRoute).toHaveBeenCalledWith({ id: '1' });
     });
+  });
+
+  it('onTableEvent should update dto and call getInternalRoutes with event', () => {
+    const evt = { page: 7, perPage: 15, searchColumn: 'description', searchText: 'x' } as any;
+    const spy = jest.spyOn(component, 'getInternalRoutes');
+    component.onTableEvent(evt);
+    expect(component.tableComponentDto).toBe(evt);
+    expect(spy).toHaveBeenCalledWith(evt);
   });
 
   describe('getChildren', () => {
@@ -213,6 +265,15 @@ describe('InternalRoutesComponent', () => {
       mockAppcentricSubnetService.getManyAppCentricSubnet.mockReturnValue(of(appcentricSubnetsMock));
       component.getSubnetBridgeDomains();
       expect(component.subnetBridgeDomains.get('1')).toEqual({});
+    });
+
+    it('should handle error path', () => {
+      const logSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined as any);
+      component.wanForm = { id: 'testWanFormId', tenantId: 'tenant-1' } as any;
+      mockAppcentricSubnetService.getManyAppCentricSubnet.mockReturnValue(throwError(() => new Error('fail')));
+      component.getSubnetBridgeDomains();
+      expect(logSpy).toHaveBeenCalledWith('tenant-1');
+      logSpy.mockRestore();
     });
   });
 });
