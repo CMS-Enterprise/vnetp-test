@@ -17,6 +17,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   selector: 'app-contract',
   templateUrl: './contract.component.html',
   styleUrls: ['./contract.component.css'],
+  standalone: false,
 })
 export class ContractComponent implements OnInit {
   public ModalMode = ModalMode;

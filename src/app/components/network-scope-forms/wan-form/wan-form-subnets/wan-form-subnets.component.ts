@@ -24,6 +24,7 @@ import { WanFormSubnetModalDto } from '../../../../models/network-scope-forms/wa
   selector: 'app-wan-form-subnets',
   templateUrl: './wan-form-subnets.component.html',
   styleUrl: './wan-form-subnets.component.css',
+  standalone: false,
 })
 export class WanFormSubnetsComponent {
   public wanForm: WanForm;

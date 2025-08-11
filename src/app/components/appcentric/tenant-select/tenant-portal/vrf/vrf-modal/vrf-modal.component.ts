@@ -10,6 +10,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   selector: 'app-vrf-modal',
   templateUrl: './vrf-modal.component.html',
   styleUrls: ['./vrf-modal.component.css'],
+  standalone: false,
 })
 export class VrfModalComponent implements OnInit {
   public modalMode: ModalMode;

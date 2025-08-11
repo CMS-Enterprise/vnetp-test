@@ -33,6 +33,7 @@ import { NatRuleModalHelpText } from '../../../helptext/help-text-networking';
   selector: 'app-nat-rule-modal',
   styleUrls: ['./nat-rule-modal.component.scss'],
   templateUrl: './nat-rule-modal.component.html',
+  standalone: false,
 })
 export class NatRuleModalComponent implements OnInit, OnDestroy {
   networkObjects: Array<NetworkObject>;

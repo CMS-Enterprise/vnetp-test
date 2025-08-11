@@ -11,6 +11,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
 @Component({
   selector: 'app-service-object-modal',
   templateUrl: './service-object-modal.component.html',
+  standalone: false,
 })
 export class ServiceObjectModalComponent implements OnInit {
   form: UntypedFormGroup;

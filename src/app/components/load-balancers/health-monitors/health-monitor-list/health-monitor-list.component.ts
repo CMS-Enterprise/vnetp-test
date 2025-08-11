@@ -30,6 +30,7 @@ export interface HealthMonitorView extends LoadBalancerHealthMonitor {
 @Component({
   selector: 'app-health-monitor-list',
   templateUrl: './health-monitor-list.component.html',
+  standalone: false,
 })
 export class HealthMonitorListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;

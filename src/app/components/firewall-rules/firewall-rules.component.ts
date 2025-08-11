@@ -11,6 +11,7 @@ import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 @Component({
   selector: 'app-firewall-rules',
   templateUrl: './firewall-rules.component.html',
+  standalone: false,
 })
 export class FirewallRulesComponent implements OnInit, OnDestroy {
   public currentFirewallRulePage = 1;

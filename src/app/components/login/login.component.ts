@@ -12,6 +12,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  standalone: false,
 })
 export class LoginComponent implements OnInit {
   userpass = {} as UserPass;

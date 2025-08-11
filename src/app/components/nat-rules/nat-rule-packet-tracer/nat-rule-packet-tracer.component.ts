@@ -34,6 +34,7 @@ type NatRulePacketTracerLocation = 'originalSource' | 'originalDestination' | 't
   selector: 'app-nat-rule-packet-tracer',
   templateUrl: './nat-rule-packet-tracer.component.html',
   styleUrls: ['./nat-rule-packet-tracer.component.css'],
+  standalone: false,
 })
 export class NatRulePacketTracerComponent implements OnInit {
   @Input() objects: NatRulePacketTracerDto;

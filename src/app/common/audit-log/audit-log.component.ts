@@ -39,6 +39,7 @@ import { Router } from '@angular/router';
   selector: 'app-audit-log',
   styleUrls: ['./audit-log.component.scss'],
   templateUrl: './audit-log.component.html',
+  standalone: false,
 })
 export class AuditLogComponent implements OnInit {
   @ViewChild('entityAfterTemplate') entityAfterTemplate: TemplateRef<any>;

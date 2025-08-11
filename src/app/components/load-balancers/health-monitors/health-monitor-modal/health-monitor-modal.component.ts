@@ -11,6 +11,7 @@ import { RangeValidator } from 'src/app/validators/range-validator';
 @Component({
   selector: 'app-health-monitor-modal',
   templateUrl: './health-monitor-modal.component.html',
+  standalone: false,
 })
 export class HealthMonitorModalComponent implements OnInit {
   public form: UntypedFormGroup;

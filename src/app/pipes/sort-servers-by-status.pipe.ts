@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'sortVirtualServersByStatus' })
+@Pipe({
+  name: 'sortVirtualServersByStatus',
+  standalone: false,
+})
 export class SortVirtualServersByStatusPipe implements PipeTransform {
   transform(virtualServers: any[]): any[] {
     if (!virtualServers || !Array.isArray(virtualServers)) {

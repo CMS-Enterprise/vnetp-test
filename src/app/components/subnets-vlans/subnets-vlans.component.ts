@@ -35,6 +35,7 @@ import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 @Component({
   selector: 'app-subnets-vlans',
   templateUrl: './subnets-vlans.component.html',
+  standalone: false,
 })
 export class SubnetsVlansComponent implements OnInit, OnDestroy {
   tiers: Tier[];

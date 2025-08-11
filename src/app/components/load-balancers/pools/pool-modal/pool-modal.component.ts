@@ -26,6 +26,7 @@ import { methodsLookup } from 'src/app/lookups/load-balancing-method.lookup';
 @Component({
   selector: 'app-pool-modal',
   templateUrl: './pool-modal.component.html',
+  standalone: false,
 })
 export class PoolModalComponent implements OnInit {
   public form: UntypedFormGroup;

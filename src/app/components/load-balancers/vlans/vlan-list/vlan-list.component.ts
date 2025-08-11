@@ -24,6 +24,7 @@ export interface VlanView extends LoadBalancerVlan {
 @Component({
   selector: 'app-vlan-list',
   templateUrl: './vlan-list.component.html',
+  standalone: false,
 })
 export class VlanListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;

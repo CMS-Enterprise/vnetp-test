@@ -31,6 +31,7 @@ type FirewallRulePacketTracerChecklist = {
   selector: 'app-firewall-rule-packet-tracer',
   templateUrl: './firewall-rule-packet-tracer.component.html',
   styleUrls: ['./firewall-rule-packet-tracer.component.css'],
+  standalone: false,
 })
 export class FirewallRulePacketTracerComponent implements OnInit {
   @Input() objects: FirewallRulePacketTracerDto;

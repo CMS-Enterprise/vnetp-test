@@ -5,6 +5,7 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons';
   selector: 'app-virtual-server-card',
   templateUrl: './virtual-server-card.component.html',
   styleUrls: ['./virtual-server-card.component.css'],
+  standalone: false,
 })
 export class VirtualServerCardComponent implements OnInit {
   expanded = false;

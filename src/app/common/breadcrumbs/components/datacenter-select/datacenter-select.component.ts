@@ -13,6 +13,7 @@ import { UndeployedChangesService } from '../../../../services/undeployed-change
   selector: 'app-datacenter-select',
   templateUrl: './datacenter-select.component.html',
   styleUrls: ['./datacenter-select.component.css'],
+  standalone: false,
 })
 export class DatacenterSelectComponent implements OnInit, OnDestroy {
   datacenters: Datacenter[];

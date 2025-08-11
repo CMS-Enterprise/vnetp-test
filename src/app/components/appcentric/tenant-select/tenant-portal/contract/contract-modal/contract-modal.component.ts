@@ -18,6 +18,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   selector: 'app-contract-modal',
   templateUrl: './contract-modal.component.html',
   styleUrls: ['./contract-modal.component.css'],
+  standalone: false,
 })
 export class ContractModalComponent implements OnInit {
   public isLoading = false;

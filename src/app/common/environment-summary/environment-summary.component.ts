@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
   selector: 'app-environment-summary',
   templateUrl: './environment-summary.component.html',
   styleUrls: ['./environment-summary.component.scss'],
+  standalone: false,
 })
 export class EnvironmentSummaryComponent implements OnInit, OnDestroy {
   public tenants: Tenant[];

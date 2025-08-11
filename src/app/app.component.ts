@@ -7,6 +7,7 @@ import { filter, map, mergeMap } from 'rxjs/operators';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styles: [''],
+  standalone: false,
 })
 export class AppComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private title: Title) {}

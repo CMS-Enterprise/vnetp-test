@@ -27,6 +27,7 @@ import { FilterEntryModalDto } from '../../../../../../models/appcentric/filter-
   selector: 'app-filter-modal',
   templateUrl: './filter-modal.component.html',
   styleUrls: ['./filter-modal.component.css'],
+  standalone: false,
 })
 export class FilterModalComponent implements OnInit {
   public ModalMode = ModalMode;

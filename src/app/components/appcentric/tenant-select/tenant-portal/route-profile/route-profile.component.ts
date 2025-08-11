@@ -16,6 +16,7 @@ import { AdvancedSearchAdapter } from 'src/app/common/advanced-search/advanced-s
 @Component({
   selector: 'app-route-profile',
   templateUrl: './route-profile.component.html',
+  standalone: false,
 })
 export class RouteProfileComponent implements OnInit {
   public ModalMode = ModalMode;

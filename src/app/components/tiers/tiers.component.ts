@@ -31,6 +31,7 @@ import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 @Component({
   selector: 'app-tiers',
   templateUrl: './tiers.component.html',
+  standalone: false,
 })
 export class TiersComponent implements OnInit, OnDestroy {
   public ModalMode = ModalMode;

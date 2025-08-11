@@ -10,6 +10,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 @Component({
   selector: 'app-tier-select',
   templateUrl: './tier-select.component.html',
+  standalone: false,
 })
 export class TierSelectComponent implements OnInit, OnDestroy {
   public currentTier: Tier;

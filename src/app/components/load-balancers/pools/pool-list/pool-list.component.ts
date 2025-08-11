@@ -31,6 +31,7 @@ export interface PoolView extends LoadBalancerPool {
 @Component({
   selector: 'app-pool-list',
   templateUrl: './pool-list.component.html',
+  standalone: false,
 })
 export class PoolListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;

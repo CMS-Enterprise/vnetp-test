@@ -8,6 +8,7 @@ import { ModalMode } from 'src/app/models/other/modal-mode';
   selector: 'app-global-messages-modal',
   templateUrl: './global-messages-modal.component.html',
   styleUrls: ['./global-messages-modal.component.scss'],
+  standalone: false,
 })
 export class GlobalMessagesModalComponent implements OnInit {
   form: UntypedFormGroup;

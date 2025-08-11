@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './wan-form-detail.component.html',
   styleUrls: ['./wan-form-detail.component.css'],
   encapsulation: ViewEncapsulation.ShadowDom,
+  standalone: false,
 })
 export class WanFormDetailComponent implements OnInit {
   @Input() wanForm: WanForm;

@@ -9,6 +9,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   selector: 'app-admin-portal-navbar',
   templateUrl: './admin-portal-navbar.component.html',
   styleUrls: ['./admin-portal-navbar.component.scss'],
+  standalone: false,
 })
 export class AdminPortalNavbarComponent implements OnInit, OnDestroy {
   public user: UserDto;

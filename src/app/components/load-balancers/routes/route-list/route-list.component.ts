@@ -24,6 +24,7 @@ export interface RouteView extends LoadBalancerRoute {
 @Component({
   selector: 'app-route-list',
   templateUrl: './route-list.component.html',
+  standalone: false,
 })
 export class RouteListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;

@@ -12,6 +12,7 @@ import { TableContextService } from 'src/app/services/table-context.service';
 @Component({
   selector: 'app-tenant-select',
   templateUrl: './tenant-select.component.html',
+  standalone: false,
 })
 export class TenantSelectComponent implements OnInit {
   public ModalMode = ModalMode;

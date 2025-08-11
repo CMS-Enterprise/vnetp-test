@@ -50,6 +50,7 @@ export interface TableConfig<T> {
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
+  standalone: false,
 })
 export class TableComponent<T> implements AfterViewInit {
   @Input() config: TableConfig<T>;

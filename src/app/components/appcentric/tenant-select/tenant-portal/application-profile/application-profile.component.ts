@@ -23,6 +23,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   selector: 'app-application-profile',
   templateUrl: './application-profile.component.html',
   styleUrls: ['./application-profile.component.css'],
+  standalone: false,
 })
 export class ApplicationProfileComponent implements OnInit {
   public ModalMode = ModalMode;

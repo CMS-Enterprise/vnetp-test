@@ -12,6 +12,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 @Component({
   selector: 'app-service-object-group-modal',
   templateUrl: './service-object-group-modal.component.html',
+  standalone: false,
 })
 export class ServiceObjectGroupModalComponent implements OnInit {
   form: UntypedFormGroup;

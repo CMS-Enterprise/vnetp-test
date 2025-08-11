@@ -20,6 +20,7 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-wan-form-subnets-modal',
   templateUrl: './wan-form-subnets-modal.component.html',
   styleUrl: './wan-form-subnets-modal.component.css',
+  standalone: false,
 })
 export class WanFormSubnetsModalComponent {
   public modalMode: ModalMode;

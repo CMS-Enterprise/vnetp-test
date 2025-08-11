@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-profile-modal',
   templateUrl: './profile-modal.component.html',
+  standalone: false,
 })
 export class ProfileModalComponent implements OnInit, OnDestroy {
   public form: UntypedFormGroup;

@@ -7,6 +7,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 @Component({
   selector: 'app-unused-objects-modal',
   templateUrl: './unused-objects-modal.component.html',
+  standalone: false,
 })
 export class UnusedObjectsModalComponent {
   @Input() unusedObjectsInput;

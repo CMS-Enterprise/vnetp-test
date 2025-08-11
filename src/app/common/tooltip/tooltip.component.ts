@@ -5,6 +5,7 @@ import { Component, Input, ViewChild, ElementRef } from '@angular/core';
   selector: 'tooltip',
   templateUrl: 'tooltip.component.html',
   styleUrls: ['tooltip.component.scss'],
+  standalone: false,
 })
 export class TooltipComponent {
   @Input() message: string;

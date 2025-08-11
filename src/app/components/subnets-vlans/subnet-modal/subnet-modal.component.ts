@@ -11,6 +11,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
 @Component({
   selector: 'app-subnet-modal',
   templateUrl: './subnet-modal.component.html',
+  standalone: false,
 })
 export class SubnetModalComponent implements OnInit {
   public ModalMode: ModalMode;

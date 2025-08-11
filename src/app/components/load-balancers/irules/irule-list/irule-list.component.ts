@@ -25,6 +25,7 @@ export interface IRuleView extends LoadBalancerIrule {
 @Component({
   selector: 'app-irule-list',
   templateUrl: './irule-list.component.html',
+  standalone: false,
 })
 export class IRuleListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;

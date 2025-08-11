@@ -8,6 +8,7 @@ import { ExternalRoute, V1RuntimeDataExternalRouteService } from '../../../../..
   selector: 'app-external-route-modal',
   templateUrl: './external-route-modal.component.html',
   styleUrl: './external-route-modal.component.css',
+  standalone: false,
 })
 export class ExternalRouteModalComponent {
   public form: FormGroup;

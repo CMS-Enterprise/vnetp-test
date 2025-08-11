@@ -16,6 +16,7 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-wan-form-modal',
   templateUrl: './wan-form-modal.component.html',
   styleUrls: ['./wan-form-modal.component.css'],
+  standalone: false,
 })
 export class WanFormModalComponent implements OnInit, OnDestroy {
   public modalMode: ModalMode;

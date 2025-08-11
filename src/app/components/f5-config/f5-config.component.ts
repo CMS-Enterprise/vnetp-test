@@ -6,6 +6,7 @@ import { F5ConfigService } from './f5-config.service';
   selector: 'app-f5-config',
   templateUrl: './f5-config.component.html',
   styleUrls: ['./f5-config.component.css'],
+  standalone: false,
 })
 export class F5ConfigComponent implements OnInit {
   f5Configs: F5Runtime[];

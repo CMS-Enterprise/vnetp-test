@@ -5,6 +5,7 @@ import { Papa, ParseConfig } from 'ngx-papaparse';
 @Component({
   selector: 'app-import-export',
   templateUrl: './import-export.component.html',
+  standalone: false,
 })
 export class ImportExportComponent {
   downloadHref: SafeUrl;

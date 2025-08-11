@@ -4,6 +4,7 @@ import { AuditLog } from '../../../../../client';
 @Component({
   selector: 'app-audit-log-view-modal',
   templateUrl: './audit-log-view-modal.component.html',
+  standalone: false,
 })
 export class AuditLogViewModalComponent {
   @ViewChild('changedTemplate') changedTemplate: TemplateRef<any>;

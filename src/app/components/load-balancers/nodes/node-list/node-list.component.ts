@@ -25,6 +25,7 @@ export interface NodeView extends LoadBalancerNode {
 @Component({
   selector: 'app-node-list',
   templateUrl: './node-list.component.html',
+  standalone: false,
 })
 export class NodeListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;

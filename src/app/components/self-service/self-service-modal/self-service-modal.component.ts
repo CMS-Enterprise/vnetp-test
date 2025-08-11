@@ -12,6 +12,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
   selector: 'app-self-service-modal',
   styleUrls: ['./self-service-modal.component.scss'],
   templateUrl: './self-service-modal.component.html',
+  standalone: false,
 })
 export class SelfServiceModalComponent implements OnInit {
   initialForm: UntypedFormGroup;

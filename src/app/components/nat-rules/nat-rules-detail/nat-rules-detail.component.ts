@@ -44,6 +44,7 @@ import { RuntimeDataService } from '../../../services/runtime-data.service';
   selector: 'app-nat-rules-detail',
   templateUrl: './nat-rules-detail.component.html',
   styleUrls: ['./nat-rules-detail.component.scss'],
+  standalone: false,
 })
 export class NatRulesDetailComponent implements OnInit, OnDestroy {
   public searchColumns: SearchColumnConfig[] = [

@@ -44,7 +44,7 @@ import { HttpConfigInterceptor } from './interceptors/httpconfig.interceptor';
 import { ApiModule, Configuration, ConfigurationParameters } from 'client';
 import { environment } from 'src/environments/environment';
 import { AppInitService } from './app.init';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule, inject, provideAppInitializer } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavbarModule } from './common/navbar/navbar.module';
 import { BreadcrumbsModule } from './common/breadcrumbs/breadcrumbs.module';
@@ -82,12 +82,10 @@ export function init_app(appLoadService: AppInitService) {
   ],
   providers: [
     AppInitService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: init_app,
-      deps: [AppInitService],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+      const initializerFn = init_app(inject(AppInitService));
+      return initializerFn();
+    }),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpConfigInterceptor,

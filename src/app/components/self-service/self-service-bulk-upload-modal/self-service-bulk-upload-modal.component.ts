@@ -10,6 +10,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 @Component({
   selector: 'app-self-service-bulk-upload-modal',
   templateUrl: './self-service-bulk-upload-modal.component.html',
+  standalone: false,
 })
 export class SelfServiceBulkUploadModalComponent {
   @Input() selfService;

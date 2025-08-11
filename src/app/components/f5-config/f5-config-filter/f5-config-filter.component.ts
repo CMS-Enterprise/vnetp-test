@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-f5-config-filter',
   templateUrl: './f5-config-filter.component.html',
   styleUrls: ['./f5-config-filter.component.css'],
+  standalone: false,
 })
 export class F5ConfigFilterComponent implements OnInit {
   searchQuery = '';

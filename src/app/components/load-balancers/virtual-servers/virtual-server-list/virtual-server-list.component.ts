@@ -30,6 +30,7 @@ export interface VirtualServerView extends LoadBalancerVirtualServer {
 @Component({
   selector: 'app-virtual-server-list',
   templateUrl: './virtual-server-list.component.html',
+  standalone: false,
 })
 export class VirtualServerListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;

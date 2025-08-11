@@ -31,6 +31,7 @@ export interface SelfIpView extends LoadBalancerSelfIp {
 @Component({
   selector: 'app-self-ip-list',
   templateUrl: './self-ip-list.component.html',
+  standalone: false,
 })
 export class SelfIpListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;

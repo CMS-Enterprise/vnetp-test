@@ -14,6 +14,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   selector: 'app-l3-outs-modal',
   templateUrl: './l3-outs-modal.component.html',
   styleUrls: ['./l3-outs-modal.component.css'],
+  standalone: false,
 })
 export class L3OutsModalComponent implements OnInit {
   public modalMode: ModalMode;

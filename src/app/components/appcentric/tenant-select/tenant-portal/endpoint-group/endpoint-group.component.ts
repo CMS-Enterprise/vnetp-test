@@ -24,6 +24,7 @@ import ObjectUtil from 'src/app/utils/ObjectUtil';
   selector: 'app-endpoint-group',
   templateUrl: './endpoint-group.component.html',
   styleUrls: ['./endpoint-group.component.css'],
+  standalone: false,
 })
 export class EndpointGroupComponent implements OnInit {
   public ModalMode = ModalMode;

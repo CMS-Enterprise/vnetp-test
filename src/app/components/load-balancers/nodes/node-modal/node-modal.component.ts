@@ -15,6 +15,7 @@ import { nodeTypeLookup } from 'src/app/lookups/load-balancer-node-type.lookup';
 @Component({
   selector: 'app-node-modal',
   templateUrl: './node-modal.component.html',
+  standalone: false,
 })
 export class NodeModalComponent implements OnInit, OnDestroy {
   public form: UntypedFormGroup;

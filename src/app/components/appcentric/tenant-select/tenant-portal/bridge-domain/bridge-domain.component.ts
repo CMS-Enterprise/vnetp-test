@@ -24,6 +24,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   selector: 'app-bridge-domain',
   templateUrl: './bridge-domain.component.html',
   styleUrls: ['./bridge-domain.component.css'],
+  standalone: false,
 })
 export class BridgeDomainComponent implements OnInit {
   public ModalMode = ModalMode;

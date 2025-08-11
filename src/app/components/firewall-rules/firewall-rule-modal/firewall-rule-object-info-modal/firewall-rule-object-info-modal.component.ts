@@ -4,6 +4,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 @Component({
   selector: 'app-firewall-rule-object-info-modal',
   templateUrl: './firewall-rule-object-info-modal.component.html',
+  standalone: false,
 })
 export class FirewallRuleObjectInfoModalComponent {
   modalBody;

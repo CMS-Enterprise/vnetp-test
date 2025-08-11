@@ -31,6 +31,7 @@ import FormUtils from '../../../utils/FormUtils';
   selector: 'app-firewall-rule-modal',
   styleUrls: ['./firewall-rule-modal.component.scss'],
   templateUrl: './firewall-rule-modal.component.html',
+  standalone: false,
 })
 export class FirewallRuleModalComponent implements OnInit, OnDestroy {
   form: UntypedFormGroup;

@@ -15,6 +15,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   selector: 'app-application-profile-modal',
   templateUrl: './application-profile-modal.component.html',
   styleUrls: ['./application-profile-modal.component.css'],
+  standalone: false,
 })
 export class ApplicationProfileModalComponent implements OnInit {
   public modalMode: ModalMode;

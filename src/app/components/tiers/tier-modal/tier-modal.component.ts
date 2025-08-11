@@ -9,6 +9,7 @@ import { DatacenterTierNameValidator } from 'src/app/validators/datacenter-tier-
 @Component({
   selector: 'app-tier-modal',
   templateUrl: './tier-modal.component.html',
+  standalone: false,
 })
 export class TierModalComponent implements OnInit {
   public DatacenterId: string;

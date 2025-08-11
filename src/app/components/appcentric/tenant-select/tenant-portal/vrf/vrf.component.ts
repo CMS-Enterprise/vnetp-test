@@ -17,6 +17,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   selector: 'app-vrf',
   templateUrl: './vrf.component.html',
   styleUrls: ['./vrf.component.css'],
+  standalone: false,
 })
 export class VrfComponent implements OnInit {
   public ModalMode = ModalMode;

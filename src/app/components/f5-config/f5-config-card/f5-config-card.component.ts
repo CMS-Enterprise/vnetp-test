@@ -10,6 +10,7 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons';
   selector: 'app-f5-config-card',
   templateUrl: './f5-config-card.component.html',
   styleUrls: ['./f5-config-card.component.css'],
+  standalone: false,
 })
 export class F5ConfigCardComponent implements OnInit {
   @Input() f5Config: F5Runtime;

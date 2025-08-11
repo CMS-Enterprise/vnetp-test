@@ -21,6 +21,7 @@ import { Datacenter, Tenant, V2AppCentricTenantsService } from '../../../../../c
   selector: 'app-wan-form',
   templateUrl: './wan-form.component.html',
   styleUrls: ['./wan-form.component.scss'],
+  standalone: false,
 })
 export class WanFormComponent implements OnInit, OnDestroy {
   public isLoading = false;

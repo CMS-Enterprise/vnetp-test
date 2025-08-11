@@ -13,6 +13,7 @@ import { TableContextService } from '../../services/table-context.service';
 @Component({
   selector: 'app-advanced-search-modal',
   templateUrl: './advanced-search-modal.component.html',
+  standalone: false,
 })
 export class AdvancedSearchComponent<T> implements OnInit, OnDestroy {
   @Input() formInputs: SearchColumnConfig[];

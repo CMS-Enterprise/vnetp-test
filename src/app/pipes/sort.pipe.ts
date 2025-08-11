@@ -7,7 +7,11 @@ type SortProps<T extends object> = {
   [K in keyof T]: T[K] extends string | number ? K : never;
 }[keyof T];
 
-@Pipe({ name: 'sort', pure: false })
+@Pipe({
+  name: 'sort',
+  pure: false,
+  standalone: false,
+})
 export class SortPipe implements PipeTransform {
   transform<T extends object>(values: T[], prop: SortProps<T>): T[] {
     if (!values || !prop) {

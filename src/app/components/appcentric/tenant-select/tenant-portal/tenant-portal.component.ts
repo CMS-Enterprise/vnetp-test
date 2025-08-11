@@ -17,6 +17,7 @@ const tabs = [
 @Component({
   selector: 'app-tenant-portal',
   templateUrl: './tenant-portal.component.html',
+  standalone: false,
 })
 export class TenantPortalComponent implements OnInit {
   public initialTabIndex = 0;

@@ -4,6 +4,7 @@ import { V1JobsService } from 'client';
 @Component({
   selector: 'app-jobs',
   templateUrl: './jobs.component.html',
+  standalone: false,
 })
 export class JobsComponent implements OnInit, OnDestroy {
   jobs: any;

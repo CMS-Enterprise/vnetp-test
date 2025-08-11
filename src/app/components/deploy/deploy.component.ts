@@ -57,6 +57,7 @@ interface ReportEntry {
 @Component({
   selector: 'app-deploy',
   templateUrl: './deploy.component.html',
+  standalone: false,
 })
 export class DeployComponent implements OnInit {
   currentDatacenterSubscription: Subscription;

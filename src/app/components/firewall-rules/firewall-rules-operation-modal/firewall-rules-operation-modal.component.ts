@@ -26,6 +26,7 @@ import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto'
   selector: 'app-firewall-rules-operation-modal',
   templateUrl: './firewall-rules-operation-modal.component.html',
   styleUrls: ['./firewall-rules-operation-modal.component.css'],
+  standalone: false,
 })
 export class FirewallRulesOperationModalComponent implements OnInit {
   public form: FormGroup;

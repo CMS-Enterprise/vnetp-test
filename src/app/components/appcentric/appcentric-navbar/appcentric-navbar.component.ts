@@ -9,6 +9,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   selector: 'app-appcentric-navbar',
   templateUrl: './appcentric-navbar.component.html',
   styleUrls: ['./appcentric-navbar.component.scss'],
+  standalone: false,
 })
 export class AppcentricNavbarComponent implements OnInit, OnDestroy {
   public user: UserDto;

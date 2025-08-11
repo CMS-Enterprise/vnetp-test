@@ -13,6 +13,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 @Component({
   selector: 'app-network-object-modal',
   templateUrl: './network-object-modal.component.html',
+  standalone: false,
 })
 export class NetworkObjectModalComponent implements OnInit, OnDestroy {
   form: UntypedFormGroup;

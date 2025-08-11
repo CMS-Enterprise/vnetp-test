@@ -9,6 +9,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
 @Component({
   selector: 'app-vlan-modal',
   templateUrl: './vlan-modal.component.html',
+  standalone: false,
 })
 export class VlanModalComponent implements OnInit {
   public ModalMode: ModalMode;

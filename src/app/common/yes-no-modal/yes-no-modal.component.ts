@@ -6,6 +6,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 @Component({
   selector: 'app-yes-no-modal',
   templateUrl: './yes-no-modal.component.html',
+  standalone: false,
 })
 export class YesNoModalComponent {
   @Input() allowEmptyTier = false;

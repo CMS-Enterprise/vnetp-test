@@ -5,6 +5,7 @@ import { Tab } from 'src/app/common/tabs/tabs.component';
 @Component({
   selector: 'app-self-service-artifact-review-modal',
   templateUrl: './self-service-artifact-review-modal.component.html',
+  standalone: false,
 })
 export class SelfServiceArtifactReviewModalComponent implements OnInit {
   @ViewChild('lineNumberTemplate') lineNumberTemplate: TemplateRef<any>;

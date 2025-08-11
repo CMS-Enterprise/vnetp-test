@@ -10,6 +10,7 @@ import { IpAddressIpValidator } from 'src/app/validators/network-form-validators
 @Component({
   selector: 'app-self-ip-modal',
   templateUrl: './self-ip-modal.component.html',
+  standalone: false,
 })
 export class SelfIpModalComponent implements OnInit {
   public availableVlans: LoadBalancerVlan[] = [];

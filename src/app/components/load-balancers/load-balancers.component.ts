@@ -24,6 +24,7 @@ const tabs = [
 @Component({
   selector: 'app-load-balancers',
   templateUrl: './load-balancers.component.html',
+  standalone: false,
 })
 export class LoadBalancersComponent implements OnInit, OnDestroy {
   @ContentChild('tabsRef') tabsRef: TabsComponent;

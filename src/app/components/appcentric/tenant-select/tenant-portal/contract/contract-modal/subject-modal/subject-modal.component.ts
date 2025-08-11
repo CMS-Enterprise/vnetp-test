@@ -22,7 +22,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
 @Component({
   selector: 'app-subject-modal',
   templateUrl: './subject-modal.component.html',
-  // styleUrls: ['./subject-modal.component.css'],
+  standalone: false,
 })
 export class SubjectModalComponent implements OnInit {
   public isLoading = false;

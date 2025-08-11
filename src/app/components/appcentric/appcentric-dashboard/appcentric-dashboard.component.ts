@@ -15,6 +15,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   selector: 'app-appcentric-dashboard',
   templateUrl: './appcentric-dashboard.component.html',
   styleUrls: ['./appcentric-dashboard.component.scss'],
+  standalone: false,
 })
 export class AppcentricDashboardComponent implements OnInit, OnDestroy {
   public user: UserDto;

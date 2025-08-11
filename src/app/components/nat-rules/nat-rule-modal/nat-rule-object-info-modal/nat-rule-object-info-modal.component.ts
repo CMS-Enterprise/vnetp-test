@@ -4,6 +4,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 @Component({
   selector: 'app-nat-rule-object-info-modal',
   templateUrl: './nat-rule-object-info-modal.component.html',
+  standalone: false,
 })
 export class NatRuleObjectInfoModalComponent {
   modalBody;

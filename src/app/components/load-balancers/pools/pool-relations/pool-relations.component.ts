@@ -4,6 +4,7 @@ import { LoadBalancerNodeBulkImportDto, V1LoadBalancerPoolsService } from 'clien
 @Component({
   selector: 'app-pool-relations',
   templateUrl: './pool-relations.component.html',
+  standalone: false,
 })
 export class PoolRelationsComponent {
   @Input() datacenterId: string;

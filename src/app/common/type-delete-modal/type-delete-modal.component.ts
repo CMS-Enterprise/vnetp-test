@@ -5,6 +5,7 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
 @Component({
   selector: 'app-type-delete-modal',
   templateUrl: './type-delete-modal.component.html',
+  standalone: false,
 })
 export class TypeDeleteModalComponent {
   @Input() objectToDelete;

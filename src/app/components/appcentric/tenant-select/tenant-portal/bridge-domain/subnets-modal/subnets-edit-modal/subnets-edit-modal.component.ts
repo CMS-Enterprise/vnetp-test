@@ -11,6 +11,7 @@ import { IpAddressCidrValidator } from 'src/app/validators/network-form-validato
   selector: 'app-subnets-edit-modal',
   templateUrl: './subnets-edit-modal.component.html',
   styleUrls: ['./subnets-edit-modal.component.css'],
+  standalone: false,
 })
 export class SubnetsEditModalComponent implements OnInit {
   public subnetId: string;

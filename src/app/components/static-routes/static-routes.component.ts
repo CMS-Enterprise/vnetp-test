@@ -9,6 +9,7 @@ import { TableConfig } from '../../common/table/table.component';
   selector: 'app-static-routes',
   templateUrl: './static-routes.component.html',
   styleUrls: ['./static-routes.component.scss'],
+  standalone: false,
 })
 export class StaticRoutesComponent implements OnInit, OnDestroy {
   public DatacenterId: string;

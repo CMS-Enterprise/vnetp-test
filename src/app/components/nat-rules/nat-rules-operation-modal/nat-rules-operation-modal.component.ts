@@ -25,6 +25,7 @@ import { RuleOperationModalDto } from '../../../models/rule-operation-modal.dto'
   selector: 'app-nat-rules-operation-modal',
   templateUrl: './nat-rules-operation-modal.component.html',
   styleUrls: ['./nat-rules-operation-modal.component.css'],
+  standalone: false,
 })
 export class NatRulesOperationModalComponent implements OnInit {
   public form: FormGroup;

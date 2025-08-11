@@ -22,6 +22,7 @@ const tabs = [{ name: 'Endpoint Group' }, { name: 'Consumed Contracts' }, { name
   selector: 'app-endpoint-group-modal',
   templateUrl: './endpoint-group-modal.component.html',
   styleUrls: ['./endpoint-group-modal.component.css'],
+  standalone: false,
 })
 export class EndpointGroupModalComponent implements OnInit {
   public initialTabIndex = 0;

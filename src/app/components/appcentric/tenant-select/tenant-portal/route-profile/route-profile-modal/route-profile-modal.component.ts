@@ -9,6 +9,7 @@ import { RouteProfileModalDto } from '../../../../../../models/appcentric/route-
 @Component({
   selector: 'app-route-profile-modal',
   templateUrl: './route-profile-modal.component.html',
+  standalone: false,
 })
 export class RouteProfileModalComponent implements OnInit {
   public modalMode: ModalMode;

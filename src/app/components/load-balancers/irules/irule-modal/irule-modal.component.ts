@@ -10,6 +10,7 @@ import { IRuleModalDto } from './irule-modal.dto';
 @Component({
   selector: 'app-irule-modal',
   templateUrl: './irule-modal.component.html',
+  standalone: false,
 })
 export class IRuleModalComponent implements OnInit {
   public form: UntypedFormGroup;

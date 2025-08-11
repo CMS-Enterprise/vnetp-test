@@ -18,6 +18,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   selector: 'app-l3-outs',
   templateUrl: './l3-outs.component.html',
   styleUrls: ['./l3-outs.component.css'],
+  standalone: false,
 })
 export class L3OutsComponent implements OnInit {
   public ModalMode = ModalMode;

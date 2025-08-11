@@ -12,6 +12,7 @@ import { TierContextService } from '../../services/tier-context.service';
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
+  standalone: false,
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   public user: UserDto;

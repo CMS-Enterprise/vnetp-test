@@ -11,6 +11,7 @@ import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 @Component({
   selector: 'app-nat-rules',
   templateUrl: './nat-rules.component.html',
+  standalone: false,
 })
 export class NatRulesComponent implements OnInit, OnDestroy {
   public DatacenterId: string;

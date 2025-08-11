@@ -10,6 +10,7 @@ import { LiteTableConfig } from '../../common/lite-table/lite-table.component';
   selector: 'app-aci-runtime',
   templateUrl: './aci-runtime.component.html',
   styleUrl: './aci-runtime.component.css',
+  standalone: false,
 })
 export class AciRuntimeComponent {
   @Input() vlan: Vlan | undefined;

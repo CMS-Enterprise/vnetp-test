@@ -12,6 +12,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 @Component({
   selector: 'app-policy-modal',
   templateUrl: './policy-modal.component.html',
+  standalone: false,
 })
 export class PolicyModalComponent implements OnInit, OnDestroy {
   public form: UntypedFormGroup;

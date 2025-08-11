@@ -7,6 +7,7 @@ import { LiteTableConfig } from '../../../common/lite-table/lite-table.component
 @Component({
   selector: 'app-cert-details',
   templateUrl: './certificate-details.component.html',
+  standalone: false,
 })
 export class CertificateDetailsComponent implements OnInit {
   urlF5Id: string;

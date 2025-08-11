@@ -15,6 +15,7 @@ import { TableComponentDto } from 'src/app/models/other/table-component-dto';
 @Component({
   selector: 'app-static-route-detail',
   templateUrl: './static-route-detail.component.html',
+  standalone: false,
 })
 export class StaticRouteDetailComponent implements OnInit, OnDestroy {
   public ModalMode = ModalMode;

@@ -34,6 +34,7 @@ import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 @Component({
   selector: 'app-network-objects-groups',
   templateUrl: './network-objects-groups.component.html',
+  standalone: false,
 })
 export class NetworkObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];

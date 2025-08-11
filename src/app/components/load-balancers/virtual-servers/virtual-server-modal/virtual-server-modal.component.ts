@@ -27,6 +27,7 @@ import { YesNoModalDto } from 'src/app/models/other/yes-no-modal-dto';
 @Component({
   selector: 'app-virtual-server-modal',
   templateUrl: './virtual-server-modal.component.html',
+  standalone: false,
 })
 export class VirtualServerModalComponent implements OnInit {
   public form: UntypedFormGroup;

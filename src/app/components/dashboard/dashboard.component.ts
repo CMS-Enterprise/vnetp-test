@@ -28,6 +28,7 @@ import { TableConfig } from 'src/app/common/table/table.component';
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
+  standalone: false,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   public user: UserDto;

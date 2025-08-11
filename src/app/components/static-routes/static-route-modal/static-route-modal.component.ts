@@ -10,6 +10,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
 @Component({
   selector: 'app-static-route-modal',
   templateUrl: './static-route-modal.component.html',
+  standalone: false,
 })
 export class StaticRouteModalComponent implements OnInit {
   form: UntypedFormGroup;

@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-partition-details',
   templateUrl: './partition-details.component.html',
   styleUrls: ['./partition-details.component.css'],
+  standalone: false,
 })
 export class PartitionDetailsComponent implements OnInit, OnDestroy {
   urlF5Id: string;

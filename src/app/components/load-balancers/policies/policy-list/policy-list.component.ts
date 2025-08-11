@@ -30,6 +30,7 @@ export interface PolicyView extends LoadBalancerPolicy {
 @Component({
   selector: 'app-policy-list',
   templateUrl: './policy-list.component.html',
+  standalone: false,
 })
 export class PolicyListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;

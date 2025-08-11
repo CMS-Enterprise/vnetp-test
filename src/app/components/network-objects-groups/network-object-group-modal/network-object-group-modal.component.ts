@@ -12,6 +12,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 @Component({
   selector: 'app-network-object-group-modal',
   templateUrl: './network-object-group-modal.component.html',
+  standalone: false,
 })
 export class NetworkObjectGroupModalComponent implements OnInit {
   form: UntypedFormGroup;

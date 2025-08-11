@@ -29,6 +29,7 @@ import { MacAddressValidator } from 'src/app/validators/network-form-validators'
   selector: 'app-bridge-domain-modal',
   templateUrl: './bridge-domain-modal.component.html',
   styleUrls: ['./bridge-domain-modal.component.css'],
+  standalone: false,
 })
 export class BridgeDomainModalComponent implements OnInit, OnDestroy {
   public isLoading = false;

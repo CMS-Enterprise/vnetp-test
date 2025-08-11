@@ -19,6 +19,7 @@ import SubscriptionUtil from '../../../../../../../utils/SubscriptionUtil';
   selector: 'app-filter-entry-modal',
   templateUrl: './filter-entry-modal.component.html',
   styleUrls: ['./filter-entry-modal.component.css'],
+  standalone: false,
 })
 export class FilterEntryModalComponent implements OnInit, OnDestroy {
   public filterEntryId: string;

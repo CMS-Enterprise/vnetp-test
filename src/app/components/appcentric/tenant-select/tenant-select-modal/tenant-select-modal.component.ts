@@ -10,6 +10,7 @@ import { NameValidator } from 'src/app/validators/name-validator';
   selector: 'app-tenant-select-modal',
   templateUrl: './tenant-select-modal.component.html',
   styleUrls: ['./tenant-select-modal.component.css'],
+  standalone: false,
 })
 export class TenantSelectModalComponent implements OnInit {
   public ModalMode: ModalMode;

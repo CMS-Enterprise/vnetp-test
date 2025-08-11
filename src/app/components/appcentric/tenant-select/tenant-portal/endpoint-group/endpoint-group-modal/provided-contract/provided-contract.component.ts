@@ -11,7 +11,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 @Component({
   selector: 'app-provided-contract',
   templateUrl: './provided-contract.component.html',
-  // styleUrls: ['./provided-contracts.component.css'],
+  standalone: false,
 })
 export class ProvidedContractComponent implements OnInit, OnChanges {
   @Input() public endpointGroupId: string;

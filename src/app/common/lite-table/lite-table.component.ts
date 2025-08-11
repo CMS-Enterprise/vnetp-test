@@ -10,6 +10,7 @@ export interface LiteTableConfig<T> {
   templateUrl: './lite-table.component.html',
   styleUrl: './lite-table.component.css',
   encapsulation: ViewEncapsulation.ShadowDom,
+  standalone: false,
 })
 export class LiteTableComponent {
   @Input() config: LiteTableConfig<any>;

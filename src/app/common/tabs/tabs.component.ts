@@ -9,6 +9,7 @@ export interface Tab {
   selector: 'app-tabs',
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
+  standalone: false,
 })
 export class TabsComponent implements OnInit {
   @Input() tabs: Tab[] = [];

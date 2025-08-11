@@ -8,6 +8,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   selector: 'app-admin-portal-dashboard',
   templateUrl: './admin-portal-dashboard.component.html',
   styleUrls: ['./admin-portal-dashboard.component.scss'],
+  standalone: false,
 })
 export class AdminPortalDashboardComponent implements OnInit {
   private currentUserSubscription: Subscription;

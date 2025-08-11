@@ -16,6 +16,7 @@ import { RuntimeDataService } from '../../../../services/runtime-data.service';
   selector: 'app-external-route',
   templateUrl: './external-route.component.html',
   styleUrl: './external-route.component.css',
+  standalone: false,
 })
 export class ExternalRouteComponent implements OnInit {
   wanFormId: string;

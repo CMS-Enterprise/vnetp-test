@@ -34,6 +34,7 @@ import UndeployedChangesUtil from '../../utils/UndeployedChangesUtil';
 @Component({
   selector: 'app-service-objects-groups',
   templateUrl: './service-objects-groups.component.html',
+  standalone: false,
 })
 export class ServiceObjectsGroupsComponent implements OnInit, OnDestroy {
   tiers: Tier[];

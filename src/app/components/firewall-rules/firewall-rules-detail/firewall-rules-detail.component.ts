@@ -49,6 +49,7 @@ import { RuntimeDataService } from '../../../services/runtime-data.service';
   selector: 'app-firewall-rules-detail',
   templateUrl: './firewall-rules-detail.component.html',
   styleUrls: ['./firewall-rules-detail.component.scss'],
+  standalone: false,
 })
 export class FirewallRulesDetailComponent implements OnInit, OnDestroy {
   public searchColumns: SearchColumnConfig[] = [

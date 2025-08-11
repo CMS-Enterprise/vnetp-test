@@ -32,6 +32,7 @@ export interface ProfileView extends LoadBalancerProfile {
 @Component({
   selector: 'app-profile-list',
   templateUrl: './profile-list.component.html',
+  standalone: false,
 })
 export class ProfileListComponent implements OnInit, OnDestroy {
   public currentTier: Tier;

@@ -10,6 +10,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
 @Component({
   selector: 'app-self-service',
   templateUrl: './self-service.component.html',
+  standalone: false,
 })
 export class SelfServiceComponent implements OnInit, OnDestroy {
   private selfServiceModalSubscription: Subscription;

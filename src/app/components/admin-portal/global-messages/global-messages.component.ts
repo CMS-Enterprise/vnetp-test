@@ -12,6 +12,7 @@ import SubscriptionUtil from 'src/app/utils/SubscriptionUtil';
   selector: 'app-global-messages',
   templateUrl: './global-messages.component.html',
   styleUrls: ['./global-messages.component.scss'],
+  standalone: false,
 })
 export class GlobalMessagesComponent implements OnInit {
   public globalMessageModalSubscription: Subscription;

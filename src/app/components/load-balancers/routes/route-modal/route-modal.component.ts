@@ -10,6 +10,7 @@ import { IpAddressCidrValidator, IpAddressIpValidator } from 'src/app/validators
 @Component({
   selector: 'app-route-modal',
   templateUrl: './route-modal.component.html',
+  standalone: false,
 })
 export class RouteModalComponent implements OnInit {
   public form: UntypedFormGroup;
