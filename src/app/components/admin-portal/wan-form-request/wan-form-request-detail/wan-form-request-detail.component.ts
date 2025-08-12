@@ -90,6 +90,47 @@ export class WanFormRequestDetailComponent implements OnInit {
     this.router.navigate(['/adminportal/wan-form-request'], { queryParamsHandling: 'merge' });
   }
 
+  // Derive a dynamic set of columns from the provided items
+  public getColumnsFor(items: any[] | null | undefined): string[] {
+    if (!items || items.length === 0) {
+      return [];
+    }
+
+    const columnNames = new Set<string>();
+    for (const item of items) {
+      if (item && typeof item === 'object' && !Array.isArray(item)) {
+        Object.keys(item).forEach(key => columnNames.add(key));
+      } else {
+        columnNames.add('value');
+      }
+    }
+    return Array.from(columnNames);
+  }
+
+  public trackByColumn(_index: number, column: string): string {
+    return column;
+  }
+
+  public getCellValue(row: any, column: string): any {
+    if (row && typeof row === 'object' && !Array.isArray(row)) {
+      return row[column];
+    }
+    return row;
+  }
+
+  public formatCellValue(value: any): string {
+    if (value === null || value === undefined) {
+      return '';
+    }
+    if (Array.isArray(value)) {
+      return value.map(v => (typeof v === 'object' ? JSON.stringify(v) : String(v))).join(', ');
+    }
+    if (typeof value === 'object') {
+      return JSON.stringify(value);
+    }
+    return String(value);
+  }
+
   public approveRequest(): void {
     const dto = new YesNoModalDto(
       'Approve WAN Form Request',
