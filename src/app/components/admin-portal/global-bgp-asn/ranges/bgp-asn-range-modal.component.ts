@@ -43,7 +43,6 @@ export class BgpAsnRangeModalComponent implements OnInit, OnDestroy {
   }
 
   getData(): void {
-    console.log('getData');
     const dto = Object.assign({}, this.ngx.getModalData('bgpAsnRangeModal') as any);
     this.mode = dto?.ModalMode ?? ModalMode.Create;
     if (this.mode === ModalMode.Edit && dto?.range) {
@@ -145,7 +144,7 @@ export class BgpAsnRangeModalComponent implements OnInit, OnDestroy {
       start: this.form.getRawValue().start,
       end: this.form.getRawValue().end,
     };
-    const id = (this.editingRange as any)?.id;
+    const id = this.editingRange?.id;
     if (id) {
       this.bgpService.updateGlobalBgpAsn({ id, updateGlobalBgpRangeDto: updateDto }).subscribe(() => this.close());
     } else {

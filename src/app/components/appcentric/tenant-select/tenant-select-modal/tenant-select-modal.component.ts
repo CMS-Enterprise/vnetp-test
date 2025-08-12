@@ -468,10 +468,9 @@ export class TenantSelectModalComponent implements OnInit {
     }
 
     // Validate VRF ASN selections: for each VRF, require either auto-select OR a valid ASN for both internal and external
-    const isValidAsn = (value?: number) => typeof value === 'number' && value >= 1 && value <= 4294967295;
     const vrfValidationFailed = this.vrfConfigurations.some(vrf => {
-      const internalOk = vrf.autoSelectInternalBgpAsn === true || isValidAsn(vrf.internalBgpAsn);
-      const externalOk = vrf.autoSelectExternalBgpAsn === true || isValidAsn(vrf.externalBgpAsn);
+      const internalOk = vrf.autoSelectInternalBgpAsn === true || this.isAsnValid(vrf.internalBgpAsn);
+      const externalOk = vrf.autoSelectExternalBgpAsn === true || this.isAsnValid(vrf.externalBgpAsn);
       return !internalOk || !externalOk;
     });
 
@@ -527,6 +526,35 @@ export class TenantSelectModalComponent implements OnInit {
   }
 
   // BGP ASN helpers for template bindings
+  private parseAsnValue(value: unknown): number | undefined {
+    if (typeof value === 'number') {
+      return Number.isNaN(value) ? undefined : value;
+    }
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      if (trimmed === '') {
+        return undefined;
+      }
+      const num = Number(trimmed);
+      return Number.isNaN(num) ? undefined : num;
+    }
+    return undefined;
+  }
+
+  private isAsnProvided(value: unknown): boolean {
+    if (typeof value === 'number') {
+      return !Number.isNaN(value);
+    }
+    if (typeof value === 'string') {
+      return value.trim() !== '';
+    }
+    return false;
+  }
+
+  private isAsnValid(value: unknown): boolean {
+    const num = this.parseAsnValue(value);
+    return typeof num === 'number' && num >= 1 && num <= 4294967295;
+  }
   public onInternalAutoSelectChange(vrf: VrfAdminDto): void {
     if (vrf.autoSelectInternalBgpAsn) {
       vrf.internalBgpAsn = undefined;
@@ -540,13 +568,13 @@ export class TenantSelectModalComponent implements OnInit {
   }
 
   public onInternalAsnInput(vrf: VrfAdminDto): void {
-    if (vrf.internalBgpAsn !== undefined && vrf.internalBgpAsn !== null && (vrf.internalBgpAsn as any) !== '') {
+    if (this.isAsnProvided(vrf.internalBgpAsn)) {
       vrf.autoSelectInternalBgpAsn = false;
     }
   }
 
   public onExternalAsnInput(vrf: VrfAdminDto): void {
-    if (vrf.externalBgpAsn !== undefined && vrf.externalBgpAsn !== null && (vrf.externalBgpAsn as any) !== '') {
+    if (this.isAsnProvided(vrf.externalBgpAsn)) {
       vrf.autoSelectExternalBgpAsn = false;
     }
   }
@@ -555,17 +583,13 @@ export class TenantSelectModalComponent implements OnInit {
     if (vrf.autoSelectInternalBgpAsn) {
       return false;
     }
-    const value = vrf.internalBgpAsn as any;
-    const num = typeof value === 'string' ? Number(value) : value;
-    return !(typeof num === 'number' && !isNaN(num) && num >= 1 && num <= 4294967295);
+    return !this.isAsnValid(vrf.internalBgpAsn);
   }
 
   public externalAsnInvalid(vrf: VrfAdminDto): boolean {
     if (vrf.autoSelectExternalBgpAsn) {
       return false;
     }
-    const value = vrf.externalBgpAsn as any;
-    const num = typeof value === 'string' ? Number(value) : value;
-    return !(typeof num === 'number' && !isNaN(num) && num >= 1 && num <= 4294967295);
+    return !this.isAsnValid(vrf.externalBgpAsn);
   }
 }

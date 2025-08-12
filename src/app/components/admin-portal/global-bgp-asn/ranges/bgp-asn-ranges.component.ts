@@ -51,7 +51,6 @@ export class BgpAsnRangesComponent implements OnInit {
   }
 
   openEdit(range: GlobalBgpAsnRange): void {
-    console.log('openEdit', range);
     this.ngx.setModalData({ ModalMode: ModalMode.Edit, range }, 'bgpAsnRangeModal');
     this.ngx.getModal('bgpAsnRangeModal').onCloseFinished.subscribe(() => this.load());
     this.ngx.getModal('bgpAsnRangeModal').open();
