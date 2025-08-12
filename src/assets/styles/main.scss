@@ -1,11 +1,11 @@
 // 3rd party imports
-@import 'ngx-toastr/toastr';
-@import 'ngx-smart-modal/styles';
-@import 'bootstrap/dist/css/bootstrap.min.css';
-@import '@ng-select/ng-select/themes/default.theme.css';
+@use 'ngx-toastr/toastr' as *;
+@use 'ngx-smart-modal/styles' as *;
+@use 'bootstrap/dist/css/bootstrap.min.css' as *;
+@use '@ng-select/ng-select/themes/default.theme.css' as *;
 
 // custom imports
-@import 'variables', 'buttons', 'tables', 'forms', 'modals';
+@use 'index' as *;
 
 a:hover {
   color: $c-blue-400;

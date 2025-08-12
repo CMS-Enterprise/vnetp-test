@@ -93,7 +93,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (obj of group.data; track obj) {
+          @for (obj of group.data; track trackById) {
           <tr>
             <td>{{ obj.name }}</td>
             <td>{{ obj.updatedAt }}</td>
@@ -105,7 +105,7 @@
               }
             </td>
             <td>
-              <button class="btn btn-link p-0" (click)="getObjectAuditLogEvents(obj, group.type)">Show Diff</button>
+              <button class="btn btn-link p-0" (click)="getObjectAuditLogEvents($any(obj), group.type)">Show Diff</button>
             </td>
           </tr>
           }
@@ -152,7 +152,7 @@
               @if (isArray(entry.differences)) {
               <div>
                 <ul>
-                  @for (diff of entry.differences; track diff) {
+                  @for (diff of entry?.['differences']; track diff) {
                   <li>
                     <strong>{{ diff.key }}:</strong> From "{{ diff.before }}" to "{{ diff.after }}"
                   </li>

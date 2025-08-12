@@ -108,6 +108,8 @@ export class DeployComponent implements OnInit {
     private ngx: NgxSmartModalService,
   ) {}
 
+  trackById = (index: number, item: any) => item?.id ?? index;
+
   public deployTiers(): void {
     const tiersToDeploy = this.tiers.filter(t => t.isSelected === true).map(t => t.item);
     if (!tiersToDeploy.length) {
@@ -336,7 +338,7 @@ export class DeployComponent implements OnInit {
   }
 
   getObjectAuditLogEvents(
-    object: { id: string; updatedAt: string; provisionedAt: string; createdAt: string },
+    object: any,
     type: AuditLogEntityTypeEnum,
   ) {
     let afterTimestamp;

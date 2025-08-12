@@ -28,7 +28,7 @@
   [(itemsPerPage)]="perPage"
 ></app-table>
 } @else {
-<fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+<fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
 }
 
 <ng-template #stateTemplate let-staticRoute="datum">
@@ -64,7 +64,7 @@
 </ng-template>
 
 <ng-template #loading>
-  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
 </ng-template>
 
 <app-static-route-modal></app-static-route-modal>

@@ -21,7 +21,7 @@
     @if (!loadingTabObjects) {
     <app-table [config]="config" [data]="selectedObjects"></app-table>
     } @else {
-    <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
     } }
   </main>
 </ngx-smart-modal>
@@ -52,5 +52,5 @@
 </ng-template>
 
 <ng-template #loadingObjects>
-  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
 </ng-template>

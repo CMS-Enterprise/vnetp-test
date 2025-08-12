@@ -10,10 +10,10 @@
 <app-table [config]="config" [data]="selfServices"> </app-table>
 } @else {
 <ngx-smart-modal #spinnerModal identifier="spinnerModal" customClass="xlarge-modal">
-  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
 </ngx-smart-modal>
 } } @else {
-<fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+<fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
 }
 
 <ng-template #mappedObjects let-selfService="datum">
@@ -54,12 +54,12 @@
 </ng-template>
 
 <ng-template #loading>
-  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
 </ng-template>
 
 <ng-template #openReviewModal>
   <ngx-smart-modal #spinnerModal identifier="spinnerModal" customClass="xlarge-modal">
-    <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
   </ngx-smart-modal>
 </ng-template>
 

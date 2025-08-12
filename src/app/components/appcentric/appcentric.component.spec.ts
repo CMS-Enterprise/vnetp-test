@@ -11,7 +11,7 @@ describe('AppcentricComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [AppcentricComponent, MockComponent('app-appcentric-navbar'), MockComponent('app-breadcrumb')],
-      imports: [RouterTestingModule.withRoutes([])],
+      imports: [],
     }).compileComponents();
   });
 

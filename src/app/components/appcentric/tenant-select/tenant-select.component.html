@@ -22,7 +22,7 @@
     <app-import-export [exportObject]="tenants" exportFileName="tenants" [disableJson]="false"></app-import-export>
   </section>
   } @else {
-  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
   }
 </ng-container>
 
@@ -50,7 +50,7 @@
 </ng-template>
 
 <ng-template #loading>
-  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
 </ng-template>
 
 <app-tenant-select-modal></app-tenant-select-modal>

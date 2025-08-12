@@ -6,7 +6,7 @@
     [disabled]="isRefreshingRuntimeData || isRecentlyRefreshed()"
   >
     @if (!isRefreshingRuntimeData && !isRecentlyRefreshed()) { Refresh } @if (isRefreshingRuntimeData) {
-    <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
     Refreshing... } @if (isRecentlyRefreshed() && !isRefreshingRuntimeData) { Refreshed }
   </button>
 </ng-template>
@@ -58,7 +58,7 @@
       </thead>
       <tbody>
         @if (sortedRoutes.length > 0) { @for (route of sortedRoutes; track route) {
-        <tr [class.associated]="route.isAssociated">
+        <tr [class.associated]="true">
           <td>{{ route.network }}</td>
           <td>{{ route.prefixLength }}</td>
           <td>{{ route.protocol }}</td>

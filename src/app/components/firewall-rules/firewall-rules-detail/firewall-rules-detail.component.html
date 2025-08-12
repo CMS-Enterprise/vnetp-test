@@ -34,7 +34,7 @@
   (tableEvent)="onTableEvent($event)"
 ></app-table>
 } @else {
-<fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+<fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
 }
 
 <ng-template #actionsTemplate let-firewallRule="datum">
@@ -212,7 +212,7 @@
       [disabled]="isRefreshingRuntimeData || isRecentlyRefreshed()"
     >
       @if (!isRefreshingRuntimeData && !isRecentlyRefreshed()) { Refresh Hitcount } @if (isRefreshingRuntimeData) {
-      <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
       Refreshing... } @if (isRecentlyRefreshed() && !isRefreshingRuntimeData) { Refreshed }
     </button>
   </div>

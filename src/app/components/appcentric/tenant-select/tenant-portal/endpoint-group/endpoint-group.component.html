@@ -24,7 +24,7 @@
     ></app-import-export>
   </section>
   } @else {
-  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
   }
 </ng-container>
 
@@ -59,7 +59,7 @@
 </ng-template>
 
 <ng-template #loading>
-  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
 </ng-template>
 
 <ng-template #expandedRows let-endpointGroup="datum">

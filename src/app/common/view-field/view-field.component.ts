@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-view-field',
+  standalone: false,
   templateUrl: './view-field.component.html',
   styleUrls: ['./view-field.component.scss'],
 })

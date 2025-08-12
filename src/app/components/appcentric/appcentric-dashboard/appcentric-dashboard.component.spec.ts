@@ -1,6 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   V2AppCentricBridgeDomainsService,
   V2AppCentricContractsService,
@@ -19,7 +17,7 @@ describe('AppcentricDashboardComponent', () => {
   let component: AppcentricDashboardComponent;
   let fixture: ComponentFixture<AppcentricDashboardComponent>;
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     const tenantsService = {
       getManyTenant: jest.fn(() => of({ total: 1 })),
     };
@@ -42,7 +40,7 @@ describe('AppcentricDashboardComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [AppcentricDashboardComponent, MockTooltipComponent, MockFontAwesomeComponent],
-      imports: [RouterModule, RouterTestingModule],
+      imports: [],
       providers: [
         { provide: V2AppCentricTenantsService, useValue: tenantsService },
         { provide: V2AppCentricVrfsService, useValue: vrfsService },

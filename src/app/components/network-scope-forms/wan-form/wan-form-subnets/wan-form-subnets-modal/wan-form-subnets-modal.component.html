@@ -117,8 +117,7 @@
         >
           @for (subnet of availableNetcentricSubnets; track subnet) {
           <option [value]="subnet.id">
-            {{ subnet.name }} - {{ subnet.description }} ({{ subnet.network }}, {{ subnet.gateway }}, VLAN: {{ subnet.vlan?.name }}, Tier:
-            {{ subnet.tier?.name }}, Shared: {{ subnet.sharedBetweenVrfs ? 'Yes' : 'No' }})
+            {{ subnet.name }} - {{ subnet.description }} ({{ subnet.network }}, {{ subnet.gateway }}, VLAN: {{ subnet.vlan?.name }}, Shared: {{ subnet.sharedBetweenVrfs ? 'Yes' : 'No' }})
           </option>
           }
         </select>

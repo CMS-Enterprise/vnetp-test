@@ -195,20 +195,21 @@ export class PoolModalComponent implements OnInit {
     SubscriptionUtil.subscribeToYesNoModal(modalDto, this.ngx, onConfirm);
   }
 
-  public removeNode(nodeToPool: NodeToPool): void {
+  public removeNode(node: LoadBalancerNode): void {
     const modalDto = new YesNoModalDto(
       'Remove Node',
-      `Are you sure you would like to remove node "${nodeToPool.loadBalancerNode.name}"?`,
+      `Are you sure you would like to remove node "${node.name}"?`,
       'Remove Node',
       'Cancel',
       'danger',
     );
+
     const onConfirm = () => {
       this.poolService
         .removeNodeFromPoolLoadBalancerPool({
           poolId: this.poolId,
-          nodeId: nodeToPool.loadBalancerNode.id,
-          servicePort: nodeToPool.servicePort,
+          nodeId: node.id,
+          servicePort: node?.['servicePort'],
         })
         .subscribe(() => {
           this.loadPoolResources();
@@ -302,9 +303,4 @@ export class PoolModalComponent implements OnInit {
         this.availableHealthMonitors = tier.loadBalancerHealthMonitors;
       });
   }
-}
-
-interface NodeToPool {
-  loadBalancerNode: { id: string; name: string };
-  servicePort: number;
 }

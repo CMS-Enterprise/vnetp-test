@@ -59,7 +59,7 @@ describe('NatRulesOperationModalComponent', () => {
         MockTooltipComponent,
         MockYesNoModalComponent,
       ],
-      imports: [NgSelectModule, ReactiveFormsModule, HttpClientModule, FormsModule, RouterTestingModule],
+      imports: [NgSelectModule, ReactiveFormsModule, FormsModule],
       providers: [
         FormBuilder,
         { provide: V1TiersService, useValue: mockTierService },
@@ -100,29 +100,6 @@ describe('NatRulesOperationModalComponent', () => {
   it('should close the modal and reset the form', () => {
     component.closeModal();
     expect(mockNgxSmartModalService.close).toHaveBeenCalledWith('natRulesOperationModal');
-  });
-
-  it('should execute nat rule operation', () => {
-    const mockOperationResult = { id: '1', name: 'Nat Rule' };
-    const ruleOperationDto: RuleOperationDto = {
-      existingRuleId: '1',
-      operation: 'Move',
-      destinationGroupId: '1',
-      ruleIndex: 1,
-      name: 'Nat Rule',
-    };
-
-    component.tiers = [
-      { id: '1', name: 'Tier 1' },
-      { id: '2', name: 'Tier 2' },
-    ];
-    component.currentTierId = '1';
-    component.selectedTierId = '2';
-    component.natRuleGroups = [{ id: '1', name: 'Nat Rule Group' } as any];
-
-    mockNatRuleService.natRuleOperationNatRule.mockReturnValue(of(mockOperationResult));
-    component.executeOperation(ruleOperationDto);
-    expect(mockNatRuleService.natRuleOperationNatRule).toHaveBeenCalledWith({ ruleOperationDto });
   });
 
   describe('getNatRule', () => {

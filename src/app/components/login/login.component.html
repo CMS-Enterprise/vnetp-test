@@ -114,7 +114,7 @@
           <option></option>
           @for (availableTenant of availableTenants; track availableTenant) {
           <option [ngValue]="availableTenant">
-            {{ availableTenant.tenantFullName }}
+            {{ availableTenant['tenantFullName'] }}
           </option>
           }
         </select>

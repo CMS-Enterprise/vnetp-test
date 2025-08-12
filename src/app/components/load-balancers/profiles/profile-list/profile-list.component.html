@@ -23,7 +23,7 @@
   ></app-import-export>
 </section>
 } @else {
-<fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+<fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
 }
 
 <ng-template #actionsTemplate let-profile="datum">
@@ -46,7 +46,7 @@
 </ng-template>
 
 <ng-template #loading>
-  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
 </ng-template>
 
 <app-profile-modal></app-profile-modal>

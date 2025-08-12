@@ -1,4 +1,4 @@
-@import '../../../assets/styles/variables';
+@use '../../../assets/styles/variables' as *;
 
 .nav-tabs .nav-item a {
   color: $c-gray-700;

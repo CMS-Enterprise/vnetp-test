@@ -13,24 +13,16 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "allowedCommonJsDependencies": [
-              "validator",
-              "papaparse/papaparse.min.js"
-           ],
+            "allowedCommonJsDependencies": ["validator", "papaparse/papaparse.min.js"],
             "outputPath": {
               "base": "dist/automation-ui"
             },
             "index": "src/index.html",
-            "polyfills": [
-              "src/polyfills.ts"
-            ],
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/assets/styles/main.scss"],
-            "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
-            ],
+            "styles": ["src/assets/styles/main.scss", "node_modules/@ng-select/ng-select/themes/default.theme.css"],
+            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"],
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,
@@ -68,7 +60,9 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "buildTarget": "automation-ui:build"
+            "buildTarget": "automation-ui:build",
+            "host": "0.0.0.0",
+            "allowedHosts": ["all", "localhost-east", "localhost-west"]
           },
           "configurations": {
             "production": {

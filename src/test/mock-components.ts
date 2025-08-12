@@ -1,23 +1,28 @@
-import { Component, EventEmitter } from '@angular/core';
-
 /**
  * Creates a Component to use during tests
  * @param options Either a component or just the selector name
  */
-export const MockComponent = (options: Component | string): Component => {
-  const metadata = typeof options === 'string' ? { selector: options } : { ...options };
-  metadata.template = metadata.template || '';
-  metadata.outputs = metadata.outputs || [];
-  metadata.exportAs = metadata.exportAs || '';
+import { Component, EventEmitter } from '@angular/core';
 
-  class Mock {}
+export function MockComponent(options: string | { selector: string; inputs?: string[]; outputs?: string[]; template?: string }) {
+  const meta = typeof options === 'string' ? { selector: options } : options;
 
-  metadata.outputs.forEach(method => {
-    Mock.prototype[method] = new EventEmitter<any>();
-  });
+  @Component({
+    selector: meta.selector,
+    template: meta.template ?? '',
+    standalone: false,
+    inputs: meta.inputs ?? [],
+  })
+  class Mock {
+    constructor() {
+      for (const out of meta.outputs ?? []) {
+        (this as any)[out] = new EventEmitter<any>();
+      }
+    }
+  }
 
-  return Component(metadata)(Mock as any);
-};
+  return Mock;
+}
 
 export const MockFontAwesomeComponent = MockComponent({ selector: 'fa-icon', inputs: ['icon', 'size', 'spin'] });
 export const MockTooltipComponent = MockComponent({ selector: 'tooltip', inputs: ['message'] });

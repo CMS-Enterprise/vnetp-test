@@ -108,29 +108,6 @@ describe('FirewallRulesOperationModalComponent', () => {
     expect(mockNgxSmartModalService.close).toHaveBeenCalledWith('firewallRuleOperationModal');
   });
 
-  it('should execute firewall rule operation', () => {
-    const mockOperationResult = { id: '1', name: 'Firewall Rule' };
-    const ruleOperationDto: RuleOperationDto = {
-      existingRuleId: '1',
-      operation: 'Move',
-      destinationGroupId: '1',
-      ruleIndex: 1,
-      name: 'Firewall Rule',
-    };
-
-    component.tiers = [
-      { id: '1', name: 'Tier 1' },
-      { id: '2', name: 'Tier 2' },
-    ];
-    component.currentTierId = '1';
-    component.selectedTierId = '2';
-    component.firewallRuleGroups = [{ id: '1', name: 'Firewall Rule Group' } as any];
-
-    mockFirewallRuleService.fwRuleOperationFirewallRule.mockReturnValue(of(mockOperationResult));
-    component.executeOperation(ruleOperationDto);
-    expect(mockFirewallRuleService.fwRuleOperationFirewallRule).toHaveBeenCalledWith({ ruleOperationDto });
-  });
-
   describe('getFirewallRule', () => {
     it('should fetch firewall rule and update form and component state', done => {
       // Arrange

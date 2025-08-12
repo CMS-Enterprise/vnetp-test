@@ -138,13 +138,13 @@
           @for (node of selectedNodes; track node) {
           <tr>
             <td>
-              {{ node?.loadBalancerNode?.name }}
+              {{ node?.name }}
             </td>
             <td>
-              {{ node?.servicePort }}
+              {{ node?.['servicePort'] }}
             </td>
             <td>
-              {{ node?.ratio }}
+              {{ node?.['ratio'] }}
             </td>
             <td class="table__actions">
               <app-icon-button icon="delete" label="Remove Node" (handleClick)="removeNode(node)"></app-icon-button>

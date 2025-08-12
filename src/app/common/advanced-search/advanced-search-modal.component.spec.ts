@@ -1,11 +1,9 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdvancedSearchComponent } from './advanced-search-modal.component';
 import { MockNgxSmartModalComponent } from 'src/test/mock-components';
 import { NgxSmartModalService } from 'ngx-smart-modal';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { RouterTestingModule } from '@angular/router/testing';
 import { of, Subject } from 'rxjs';
 import { TierContextService } from 'src/app/services/tier-context.service';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
@@ -32,7 +30,7 @@ describe('AdvancedSearchModalComponent', () => {
   let advancedSearchAdapterSubject: Subject<any>;
   let advancedSearchAdapter: any;
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     tierContextService = {
       currentTier: of({ id: '' }),
     };
@@ -58,7 +56,7 @@ describe('AdvancedSearchModalComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [AdvancedSearchComponentDummy, MockNgxSmartModalComponent],
-      imports: [FormsModule, ReactiveFormsModule, HttpClientModule, RouterTestingModule, NgSelectModule],
+      imports: [FormsModule, ReactiveFormsModule, NgSelectModule],
       providers: [
         { provide: NgxSmartModalService, useValue: ngxSmartModalService },
         { provide: TierContextService, useValue: tierContextService },

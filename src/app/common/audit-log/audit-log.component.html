@@ -5,7 +5,7 @@
 <app-table (tableEvent)="onAppCentricTableEvent($event)" [config]="appCentricConfig" [data]="auditLogs" [(itemsPerPage)]="perPage">
 </app-table>
 } } @else {
-<fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+<fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
 } } @else {
 <p>Select a Datacenter to display Audit Log details</p>
 }
@@ -31,7 +31,7 @@
 </ng-template>
 
 <ng-template #loading>
-  <fa-icon class="icon" [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+  <fa-icon class="icon" [icon]="['fas', 'spinner']" animation="spin"></fa-icon>
 </ng-template>
 
 <app-audit-log-view-modal [auditLog]="selectedAuditLog"></app-audit-log-view-modal>
